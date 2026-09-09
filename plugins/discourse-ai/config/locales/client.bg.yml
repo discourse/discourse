@@ -121,8 +121,6 @@ bg:
         apply: "Приложи"
         failed: "Провалени"
         unknown: "Неизвестно"
-        topic_id: "Тема ID "
-        post_id: "Публикация ID "
         time: "Време "
         when: "Кога "
         request: "Заявка"
@@ -133,6 +131,7 @@ bg:
         post_short: "Публикация %{id} "
         duration: "Продължителност"
         actions: "Действия"
+        view_details: "Детайли"
         periods:
           day: "Последните 24 часа"
           week: "Последните 7 дни"
@@ -270,8 +269,10 @@ bg:
         chat:
           summarize: "Обобщаване"
       discobot_discoveries:
-        regular_results: "Теми"
-        collapse: "Намали"
-        tooltip:
-          actions:
-            disable: "Деактивиране"
+        legacy:
+          regular_results: "Теми"
+          collapse: "Намали"
+          tooltip:
+            actions:
+              disable: "Деактивиране"
+        search_messages: "Съобщения"

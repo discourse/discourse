@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -24,7 +25,10 @@ import {
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
-import { applyBehaviorTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -42,9 +46,27 @@ const customSearchTypes = [];
 export function registerFullPageSearchType(
   translationKey,
   searchTypeId,
-  searchFunc
+  searchFunc,
+  options = {}
 ) {
-  customSearchTypes.push({ translationKey, searchTypeId, searchFunc });
+  const searchType = {
+    translationKey,
+    searchTypeId,
+    searchFunc,
+    after: options.after,
+  };
+  // Keyed by id rather than appended: this registry outlives any one
+  // application, so registering again — a second boot, a reload — must replace
+  // what is there instead of listing the type twice.
+  const existing = customSearchTypes.findIndex(
+    (type) => type.searchTypeId === searchTypeId
+  );
+
+  if (existing === -1) {
+    customSearchTypes.push(searchType);
+  } else {
+    customSearchTypes[existing] = searchType;
+  }
 }
 
 export default class FullPageSearchController extends Controller {
@@ -83,7 +105,6 @@ export default class FullPageSearchController extends Controller {
   invalidSearch = false;
   page = 1;
   resultCount = null;
-  searchTypes = null;
   additionalSearchResults = [];
   error = null;
   _searchOnSortChange = true;
@@ -96,26 +117,6 @@ export default class FullPageSearchController extends Controller {
       this.searchPreferencesManager.sortOrder ||
         this.siteSettings.search_default_sort_order
     );
-
-    const searchTypes = [
-      { name: i18n("search.type.default"), id: SEARCH_TYPE_DEFAULT },
-      {
-        name: this.siteSettings.tagging_enabled
-          ? i18n("search.type.categories_and_tags")
-          : i18n("search.type.categories"),
-        id: SEARCH_TYPE_CATS_TAGS,
-      },
-      { name: i18n("search.type.users"), id: SEARCH_TYPE_USERS },
-    ];
-
-    customSearchTypes.forEach((type) => {
-      searchTypes.push({
-        name: i18n(type.translationKey),
-        id: type.searchTypeId,
-      });
-    });
-
-    this.set("searchTypes", searchTypes);
 
     this.sortOrders = [
       { name: i18n("search.relevance"), id: 0 },
@@ -146,6 +147,17 @@ export default class FullPageSearchController extends Controller {
     this.bulkSelectHelper = new PostBulkSelectHelper(this);
   }
 
+  @computed("skip_context", "context")
+  get searchContextEnabled() {
+    return (
+      (!this.skip_context && this.context) || this.skip_context === "false"
+    );
+  }
+
+  set searchContextEnabled(val) {
+    this.set("skip_context", !val);
+  }
+
   @computed("bulkSelectHelper.selected.length")
   get hasSelection() {
     return this.bulkSelectHelper?.selected?.length > 0;
@@ -159,6 +171,69 @@ export default class FullPageSearchController extends Controller {
   @computed("resultCount")
   get hasResults() {
     return (this.resultCount || 0) > 0;
+  }
+
+  // Read rather than captured at construction: a type can be registered by a
+  // bundle that loads after this controller exists, and a list built once in
+  // `init` would have been fixed before that registration happened.
+  get searchTypes() {
+    const searchTypes = [
+      { name: i18n("search.type.default"), id: SEARCH_TYPE_DEFAULT },
+      {
+        name: this.siteSettings.tagging_enabled
+          ? i18n("search.type.categories_and_tags")
+          : i18n("search.type.categories"),
+        id: SEARCH_TYPE_CATS_TAGS,
+      },
+      { name: i18n("search.type.users"), id: SEARCH_TYPE_USERS },
+    ];
+
+    customSearchTypes.forEach((type) => {
+      const searchType = {
+        name: i18n(type.translationKey),
+        id: type.searchTypeId,
+      };
+      // `after` names the type to follow rather than an index, so a type keeps
+      // its place even as the built-in ones change around it
+      const follows = type.after
+        ? searchTypes.findIndex(({ id }) => id === type.after)
+        : -1;
+
+      if (follows === -1) {
+        searchTypes.push(searchType);
+      } else {
+        searchTypes.splice(follows + 1, 0, searchType);
+      }
+    });
+
+    return applyValueTransformer("full-page-search-types", searchTypes);
+  }
+
+  @computed("search_type")
+  get searchButtonIcon() {
+    return applyValueTransformer(
+      "full-page-search-button-icon",
+      "magnifying-glass",
+      { searchType: this.search_type }
+    );
+  }
+
+  @computed("search_type")
+  get searchButtonLabel() {
+    return applyValueTransformer(
+      "full-page-search-button-label",
+      "search.search_button",
+      { searchType: this.search_type }
+    );
+  }
+
+  @computed("hasResults", "searchActive", "search_type")
+  get showNoResults() {
+    return applyValueTransformer(
+      "full-page-search-no-results-enabled",
+      !this.hasResults && this.searchActive,
+      { searchType: this.search_type }
+    );
   }
 
   @computed("expanded")
@@ -180,17 +255,6 @@ export default class FullPageSearchController extends Controller {
       .split(/\s+/)
       .filter((t) => t !== "l")
       .join(" ");
-  }
-
-  @computed("skip_context", "context")
-  get searchContextEnabled() {
-    return (
-      (!this.skip_context && this.context) || this.skip_context === "false"
-    );
-  }
-
-  set searchContextEnabled(val) {
-    this.set("skip_context", !val);
   }
 
   @computed("context", "context_id")
@@ -221,6 +285,112 @@ export default class FullPageSearchController extends Controller {
   @computed("canCreateTopic", "siteSettings.login_required")
   get showSuggestion() {
     return this.canCreateTopic || !this.siteSettings?.login_required;
+  }
+
+  @computed("q")
+  get showLikeCount() {
+    return this.q?.includes("order:likes");
+  }
+
+  @computed("q")
+  get isPrivateMessage() {
+    return (
+      this.q &&
+      this.currentUser &&
+      (this.q.includes("in:messages") ||
+        this.q.includes("in:personal") ||
+        this.q.includes(
+          `personal_messages:${this.currentUser.get("username_lower")}`
+        ))
+    );
+  }
+
+  @computed("q")
+  get isPMOnly() {
+    return searchTermScopesToPMs(this.q);
+  }
+
+  @computed("resultCount", "noSortQ")
+  get resultCountLabel() {
+    const plus = this.resultCount % 50 === 0 ? "+" : "";
+    return i18n("search.result_count", {
+      count: this.resultCount,
+      plus,
+      term: this.noSortQ,
+    });
+  }
+
+  @computed("hasResults")
+  get canBulkSelect() {
+    return this.currentUser && this.currentUser.staff && this.hasResults;
+  }
+
+  @computed("bulkSelectHelper.selected.length", "searchResultPosts.length")
+  get hasUnselectedResults() {
+    return (
+      this.bulkSelectHelper?.selected?.length < this.searchResultPosts?.length
+    );
+  }
+
+  @computed("model.grouped_search_result.can_create_topic")
+  get canCreateTopic() {
+    return (
+      this.currentUser && this.model?.grouped_search_result?.can_create_topic
+    );
+  }
+
+  @computed("page")
+  get isLastPage() {
+    return this.page === PAGE_LIMIT;
+  }
+
+  @computed("search_type")
+  get usingDefaultSearchType() {
+    return (
+      ![SEARCH_TYPE_CATS_TAGS, SEARCH_TYPE_USERS].includes(this.search_type) &&
+      !this.customSearchType
+    );
+  }
+
+  @computed("search_type")
+  get activeSearchType() {
+    return this.usingDefaultSearchType ? SEARCH_TYPE_DEFAULT : this.search_type;
+  }
+
+  @computed("search_type")
+  get customSearchType() {
+    return customSearchTypes.find(
+      (type) => this.search_type === type["searchTypeId"]
+    );
+  }
+
+  @computed("bulkSelectEnabled")
+  get searchInfoClassNames() {
+    return this.bulkSelectEnabled
+      ? "search-info bulk-select-visible"
+      : "search-info";
+  }
+
+  @computed("model.posts", "additionalSearchResults")
+  get searchResultPosts() {
+    if (this.additionalSearchResults?.list?.length > 0) {
+      // a search type that renders its own results need not produce posts at
+      // all, and ranking against a list that is not there throws
+      return reciprocallyRankedList(
+        [this.model?.posts ?? [], this.additionalSearchResults.list],
+        ["topic_id", this.additionalSearchResults.identifier]
+      );
+    } else {
+      return this.model?.posts;
+    }
+  }
+
+  get canLoadMore() {
+    return (
+      this.get("model.grouped_search_result.more_full_page_results") &&
+      !this.loading &&
+      this.page < PAGE_LIMIT
+    );
   }
 
   setSearchTerm(term) {
@@ -277,11 +447,6 @@ export default class FullPageSearchController extends Controller {
     }
   }
 
-  @computed("q")
-  get showLikeCount() {
-    return this.q?.includes("order:likes");
-  }
-
   @observes("q")
   qChanged() {
     const model = this.model;
@@ -289,34 +454,6 @@ export default class FullPageSearchController extends Controller {
       this.setSearchTerm(this.q);
       this.send("search");
     }
-  }
-
-  @computed("q")
-  get isPrivateMessage() {
-    return (
-      this.q &&
-      this.currentUser &&
-      (this.q.includes("in:messages") ||
-        this.q.includes("in:personal") ||
-        this.q.includes(
-          `personal_messages:${this.currentUser.get("username_lower")}`
-        ))
-    );
-  }
-
-  @computed("q")
-  get isPMOnly() {
-    return searchTermScopesToPMs(this.q);
-  }
-
-  @computed("resultCount", "noSortQ")
-  get resultCountLabel() {
-    const plus = this.resultCount % 50 === 0 ? "+" : "";
-    return i18n("search.result_count", {
-      count: this.resultCount,
-      plus,
-      term: this.noSortQ,
-    });
   }
 
   @observes("model.{posts,categories,tags,users}.length", "searchResultPosts")
@@ -334,58 +471,158 @@ export default class FullPageSearchController extends Controller {
     );
   }
 
-  @computed("hasResults")
-  get canBulkSelect() {
-    return this.currentUser && this.currentUser.staff && this.hasResults;
+  reset() {
+    this.setProperties({
+      searching: false,
+      page: 1,
+      resultCount: null,
+    });
+    this.bulkSelectHelper.clearAll();
   }
 
-  @computed("bulkSelectHelper.selected.length", "searchResultPosts.length")
-  get hasUnselectedResults() {
-    return (
-      this.bulkSelectHelper?.selected?.length < this.searchResultPosts?.length
+  @action
+  afterBulkActionComplete() {
+    return Promise.resolve(this._search());
+  }
+
+  @action
+  createTopic(searchTerm, event) {
+    event?.preventDefault();
+    let topicCategory;
+    if (searchTerm.includes("category:")) {
+      const match = searchTerm.match(/category:(\S*)/);
+      if (match && match[1]) {
+        topicCategory = match[1];
+      }
+    }
+    this.composer.open({
+      action: Composer.CREATE_TOPIC,
+      draftKey: Composer.NEW_TOPIC_KEY,
+      topicCategory,
+    });
+  }
+
+  @action
+  clearSearchTerm(event) {
+    event?.preventDefault();
+    this.set("searchTerm", "");
+
+    schedule("afterRender", () => {
+      if (this.isDestroying) {
+        return;
+      }
+
+      document.querySelector("input.search-query")?.focus();
+    });
+  }
+
+  @action
+  setSearchType(searchType) {
+    this.set("search_type", searchType);
+
+    // With nothing typed yet, picking a type is the start of a search rather
+    // than a change to one, so the caret goes where the term is typed. A term
+    // already in the field means the choice was the point, and taking focus
+    // away from it would be an interruption.
+    if (this.searchTerm?.trim()) {
+      return;
+    }
+
+    schedule("afterRender", () => {
+      if (this.isDestroying) {
+        return;
+      }
+
+      document.querySelector("input.search-query")?.focus();
+    });
+  }
+
+  @action
+  addSearchResults(list, identifier) {
+    this.set("additionalSearchResults", {
+      list,
+      identifier,
+    });
+  }
+
+  @action
+  setSortOrder(value) {
+    this.set("sortOrder", value);
+    this.searchPreferencesManager.sortOrder = value;
+  }
+
+  @action
+  selectAll() {
+    addUniqueValuesToArray(
+      this.bulkSelectHelper.selected,
+      this.searchResultPosts.map((item) => item)
     );
+
+    // Doing this the proper way is a HUGE pain,
+    // we can hack this to work by observing each on the array
+    // in the component, however, when we select ANYTHING, we would force
+    // 50 traversals of the list
+    // This hack is cheap and easy
+    document
+      .querySelectorAll(".fps-result input[type=checkbox]")
+      .forEach((checkbox) => {
+        checkbox.checked = true;
+      });
   }
 
-  @computed("model.grouped_search_result.can_create_topic")
-  get canCreateTopic() {
-    return (
-      this.currentUser && this.model?.grouped_search_result?.can_create_topic
-    );
+  @action
+  clearAll() {
+    this.bulkSelectHelper.clearAll();
+
+    document
+      .querySelectorAll(".fps-result input[type=checkbox]")
+      .forEach((checkbox) => {
+        checkbox.checked = false;
+      });
   }
 
-  @computed("page")
-  get isLastPage() {
-    return this.page === PAGE_LIMIT;
+  @action
+  toggleBulkSelect() {
+    this.toggleProperty("bulkSelectEnabled");
+    this.bulkSelectHelper.clearAll();
   }
 
-  @computed("search_type")
-  get usingDefaultSearchType() {
-    return this.search_type === SEARCH_TYPE_DEFAULT;
+  @action
+  search(options = {}) {
+    if (this.searching) {
+      return;
+    }
+
+    if (options.collapseFilters) {
+      this.appEvents.trigger("full-page-search:collapse-filters");
+    }
+    this.set("page", 1);
+
+    this.appEvents.trigger("full-page-search:trigger-search");
+
+    this._search();
   }
 
-  @computed("search_type")
-  get customSearchType() {
-    return customSearchTypes.find(
-      (type) => this.search_type === type["searchTypeId"]
-    );
+  @action
+  loadMore() {
+    if (!this.canLoadMore) {
+      return;
+    }
+
+    applyBehaviorTransformer("full-page-search-load-more", () => {
+      this.incrementProperty("page");
+      this._search();
+    });
   }
 
-  @computed("bulkSelectEnabled")
-  get searchInfoClassNames() {
-    return this.bulkSelectEnabled
-      ? "search-info bulk-select-visible"
-      : "search-info";
-  }
-
-  @computed("model.posts", "additionalSearchResults")
-  get searchResultPosts() {
-    if (this.additionalSearchResults?.list?.length > 0) {
-      return reciprocallyRankedList(
-        [this.model?.posts, this.additionalSearchResults.list],
-        ["topic_id", this.additionalSearchResults.identifier]
-      );
-    } else {
-      return this.model?.posts;
+  @action
+  logClick(topicId) {
+    if (this.get("model.grouped_search_result.search_log_id") && topicId) {
+      logSearchLinkClick({
+        searchLogId: this.get("model.grouped_search_result.search_log_id"),
+        searchResultId: topicId,
+        searchResultType: "topic",
+      });
     }
   }
 
@@ -534,134 +771,6 @@ export default class FullPageSearchController extends Controller {
   _afterTransition() {
     if (Object.keys(this.model).length === 0) {
       this.reset();
-    }
-  }
-
-  reset() {
-    this.setProperties({
-      searching: false,
-      page: 1,
-      resultCount: null,
-    });
-    this.bulkSelectHelper.clearAll();
-  }
-
-  @action
-  afterBulkActionComplete() {
-    return Promise.resolve(this._search());
-  }
-
-  @action
-  createTopic(searchTerm, event) {
-    event?.preventDefault();
-    let topicCategory;
-    if (searchTerm.includes("category:")) {
-      const match = searchTerm.match(/category:(\S*)/);
-      if (match && match[1]) {
-        topicCategory = match[1];
-      }
-    }
-    this.composer.open({
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-      topicCategory,
-    });
-  }
-
-  @action
-  addSearchResults(list, identifier) {
-    this.set("additionalSearchResults", {
-      list,
-      identifier,
-    });
-  }
-
-  @action
-  setSortOrder(value) {
-    this.set("sortOrder", value);
-    this.searchPreferencesManager.sortOrder = value;
-  }
-
-  @action
-  selectAll() {
-    addUniqueValuesToArray(
-      this.bulkSelectHelper.selected,
-      this.searchResultPosts.map((item) => item)
-    );
-
-    // Doing this the proper way is a HUGE pain,
-    // we can hack this to work by observing each on the array
-    // in the component, however, when we select ANYTHING, we would force
-    // 50 traversals of the list
-    // This hack is cheap and easy
-    document
-      .querySelectorAll(".fps-result input[type=checkbox]")
-      .forEach((checkbox) => {
-        checkbox.checked = true;
-      });
-  }
-
-  @action
-  clearAll() {
-    this.bulkSelectHelper.clearAll();
-
-    document
-      .querySelectorAll(".fps-result input[type=checkbox]")
-      .forEach((checkbox) => {
-        checkbox.checked = false;
-      });
-  }
-
-  @action
-  toggleBulkSelect() {
-    this.toggleProperty("bulkSelectEnabled");
-    this.bulkSelectHelper.clearAll();
-  }
-
-  @action
-  search(options = {}) {
-    if (this.searching) {
-      return;
-    }
-
-    if (options.collapseFilters) {
-      this.appEvents.trigger("full-page-search:collapse-filters");
-    }
-    this.set("page", 1);
-
-    this.appEvents.trigger("full-page-search:trigger-search");
-
-    this._search();
-  }
-
-  get canLoadMore() {
-    return (
-      this.get("model.grouped_search_result.more_full_page_results") &&
-      !this.loading &&
-      this.page < PAGE_LIMIT
-    );
-  }
-
-  @action
-  loadMore() {
-    if (!this.canLoadMore) {
-      return;
-    }
-
-    applyBehaviorTransformer("full-page-search-load-more", () => {
-      this.incrementProperty("page");
-      this._search();
-    });
-  }
-
-  @action
-  logClick(topicId) {
-    if (this.get("model.grouped_search_result.search_log_id") && topicId) {
-      logSearchLinkClick({
-        searchLogId: this.get("model.grouped_search_result.search_log_id"),
-        searchResultId: topicId,
-        searchResultType: "topic",
-      });
     }
   }
 }

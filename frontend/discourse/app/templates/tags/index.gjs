@@ -27,9 +27,9 @@ export default <template>
     {{#if @controller.bulkCreateResults}}
       <div class="bulk-create-results alert alert-info">
         <DButton
+          class="btn-flat close"
           @action={{@controller.dismissResults}}
           @icon="xmark"
-          class="btn-flat close"
         />
 
         {{#if @controller.bulkCreateResults.created.length}}
@@ -79,22 +79,23 @@ export default <template>
               class="bulk-create-tags-form"
               {{on "submit" @controller.bulkCreateTags}}
             >
-              <label for="bulk-tags-input" class="sr-only">
+              <label class="sr-only" for="bulk-tags-input">
                 {{i18n "tagging.bulk_create_inline_placeholder"}}
               </label>
               <DExpandingTextArea
+                class="bulk-tags-input"
+                disabled={{@controller.isCreatingTags}}
+                id="bulk-tags-input"
+                placeholder={{i18n "tagging.bulk_create_inline_placeholder"}}
+                rows="1"
+                @value={{@controller.bulkTagInput}}
                 {{on
                   "input"
                   (withEventValue (fn (mut @controller.bulkTagInput)))
                 }}
-                @value={{@controller.bulkTagInput}}
-                placeholder={{i18n "tagging.bulk_create_inline_placeholder"}}
-                disabled={{@controller.isCreatingTags}}
-                rows="1"
-                id="bulk-tags-input"
-                class="bulk-tags-input"
               />
               <DButton
+                class="btn-primary"
                 @action={{@controller.bulkCreateTags}}
                 @disabled={{or
                   @controller.isCreatingTags
@@ -102,7 +103,6 @@ export default <template>
                 }}
                 @icon="tag"
                 @label="tagging.bulk_create_button"
-                class="btn-primary"
               />
             </form>
           </:content>
@@ -112,8 +112,8 @@ export default <template>
 
     <div>
       <PluginOutlet
-        @name="tags-below-title"
         @connectorTagName="div"
+        @name="tags-below-title"
         @outletArgs={{lazyHash model=@controller.model}}
       />
     </div>
@@ -135,24 +135,24 @@ export default <template>
     <div class="all-tag-lists">
       {{#each @controller.model.extras.categories as |category|}}
         <TagList
-          @tags={{category.tags}}
-          @sortProperties={{@controller.sortProperties}}
           @categoryId={{category.id}}
+          @sortProperties={{@controller.sortProperties}}
+          @tags={{category.tags}}
         />
       {{/each}}
 
       {{#each @controller.model.extras.tag_groups as |tagGroup|}}
         <TagList
-          @tags={{tagGroup.tags}}
           @sortProperties={{@controller.sortProperties}}
           @tagGroupName={{tagGroup.name}}
+          @tags={{tagGroup.tags}}
         />
       {{/each}}
 
       {{#if @controller.model.content}}
         <TagList
-          @tags={{@controller.model.content}}
           @sortProperties={{@controller.sortProperties}}
+          @tags={{@controller.model.content}}
           @titleKey={{@controller.otherTagsTitleKey}}
         />
       {{/if}}

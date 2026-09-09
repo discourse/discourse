@@ -19,6 +19,8 @@ sl:
       tool_summary:
         search: "Išči"
         time: "Čas"
+      tool_help:
+        create_category: "Ustvari novo kategorijo"
     reviewables:
       ai_tool_action:
         approve:

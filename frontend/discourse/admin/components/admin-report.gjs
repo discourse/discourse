@@ -18,7 +18,9 @@ import ReportFilterBoolComponent from "discourse/admin/components/report-filters
 import ReportFilterCategoryComponent from "discourse/admin/components/report-filters/category";
 import ReportFilterCategoryListComponent from "discourse/admin/components/report-filters/category-list";
 import ReportFilterGroupComponent from "discourse/admin/components/report-filters/group";
+import ReportFilterGroupsComponent from "discourse/admin/components/report-filters/groups";
 import ReportFilterListComponent from "discourse/admin/components/report-filters/list";
+import PostersByMemberTypeReport from "discourse/admin/components/reports/posters-by-member-type-report";
 import { REPORT_MODES } from "discourse/admin/lib/constants";
 import Report, {
   DAILY_LIMIT_DAYS,
@@ -162,6 +164,19 @@ export default class AdminReport extends Component {
     return isPresent(this.model?.data);
   }
 
+  get hasRelatedItems() {
+    return (
+      this.args.showRelatedItems &&
+      Object.values(this.model?.related_items || {}).some(
+        (items) => items.length > 0
+      )
+    );
+  }
+
+  get reportFilters() {
+    return this.args.filters?.customFilters;
+  }
+
   get disabledLabel() {
     return this.args.disabledLabel || i18n("admin.dashboard.disabled");
   }
@@ -201,37 +216,6 @@ export default class AdminReport extends Component {
     );
   }
 
-  @action
-  changeGrouping(grouping) {
-    const options = { chartGrouping: grouping };
-
-    if (!this.userHasCustomDates) {
-      const endDate = moment().endOf("day");
-      let startDate;
-
-      switch (grouping) {
-        case "daily":
-          startDate = moment().subtract(1, "month").startOf("day");
-          break;
-        case "weekly":
-          startDate = moment().subtract(3, "months").startOf("day");
-          break;
-        case "monthly":
-          startDate = moment().subtract(12, "months").startOf("day");
-          break;
-      }
-
-      if (startDate) {
-        this.dateRangeFrom = startDate;
-        this.dateRangeTo = endDate;
-        options.startDate = startDate;
-        options.endDate = endDate;
-      }
-    }
-
-    this.refreshReport(options);
-  }
-
   get displayedModes() {
     const modes = this.args.forcedModes
       ? this.args.forcedModes.split(",")
@@ -247,21 +231,6 @@ export default class AdminReport extends Component {
         icon: mode === REPORT_MODES.table ? "table" : "signal",
       };
     });
-  }
-
-  reportFilterComponent(filter) {
-    switch (filter.type) {
-      case "bool":
-        return ReportFilterBoolComponent;
-      case "category":
-        return ReportFilterCategoryComponent;
-      case "category_list":
-        return ReportFilterCategoryListComponent;
-      case "group":
-        return ReportFilterGroupComponent;
-      case "list":
-        return ReportFilterListComponent;
-    }
   }
 
   get modeComponent() {
@@ -283,6 +252,8 @@ export default class AdminReport extends Component {
         return AdminReportRadar;
       case REPORT_MODES.storage_stats:
         return AdminReportStorageStats;
+      case "posters_by_member_type":
+        return PostersByMemberTypeReport;
       default:
         if (reportModeComponent(reportMode)) {
           return reportModeComponent(reportMode);
@@ -356,6 +327,54 @@ export default class AdminReport extends Component {
   }
 
   @action
+  changeGrouping(grouping) {
+    const options = { chartGrouping: grouping };
+
+    if (!this.userHasCustomDates) {
+      const endDate = moment().endOf("day");
+      let startDate;
+
+      switch (grouping) {
+        case "daily":
+          startDate = moment().subtract(1, "month").startOf("day");
+          break;
+        case "weekly":
+          startDate = moment().subtract(3, "months").startOf("day");
+          break;
+        case "monthly":
+          startDate = moment().subtract(12, "months").startOf("day");
+          break;
+      }
+
+      if (startDate) {
+        this.dateRangeFrom = startDate;
+        this.dateRangeTo = endDate;
+        options.startDate = startDate;
+        options.endDate = endDate;
+      }
+    }
+
+    this.refreshReport(options);
+  }
+
+  reportFilterComponent(filter) {
+    switch (filter.type) {
+      case "bool":
+        return ReportFilterBoolComponent;
+      case "category":
+        return ReportFilterCategoryComponent;
+      case "category_list":
+        return ReportFilterCategoryListComponent;
+      case "group":
+        return ReportFilterGroupComponent;
+      case "groups":
+        return ReportFilterGroupsComponent;
+      case "list":
+        return ReportFilterListComponent;
+    }
+  }
+
+  @action
   onChangeDateRange(range) {
     this.userHasCustomDates = true;
     this.dateRangeFrom = range.from;
@@ -422,7 +441,7 @@ export default class AdminReport extends Component {
   fetchOrRender() {
     if (this.args.preloadedData) {
       next(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         this._renderReport(this._loadReport(this.args.preloadedData));
@@ -483,6 +502,7 @@ export default class AdminReport extends Component {
     this.model = report;
     this.currentMode = currentMode;
     this.options = this._buildOptions(currentMode, report);
+    this.args.onDataLoaded?.(report);
   }
 
   @bind
@@ -494,7 +514,7 @@ export default class AdminReport extends Component {
       let payload = this._buildPayload(["prev_period"]);
 
       const callback = (response) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -535,6 +555,10 @@ export default class AdminReport extends Component {
 
     if (this.args.filters?.customFilters) {
       payload.data.filters = this.args.filters?.customFilters;
+    }
+
+    if (this.args.showRelatedItems) {
+      payload.data.include_related_items = true;
     }
 
     return payload;
@@ -625,7 +649,7 @@ export default class AdminReport extends Component {
         {{/if}}
       </div>
     {{else}}
-      <AdminReportBody @report={{this}} @filters={{@filters}} />
+      <AdminReportBody @filters={{@filters}} @report={{this}} />
     {{/if}}
   </template>
 }

@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
 import DSegmentedControl from "discourse/components/d-segmented-control";
-import MultiSelect from "discourse/select-kit/components/multi-select";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, notEq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -26,11 +25,11 @@ const PaneSeparator = <template>
   <DResizeSeparator
     class="grippie"
     @axis="vertical"
-    @side="start"
-    @max={{@controller.maxPaneHeight}}
     @label={{i18n "explorer.resize_editor"}}
+    @max={{@controller.maxPaneHeight}}
     @measure={{@controller.panesFor}}
     @onResize={{@controller.onPaneResize}}
+    @side="start"
   />
 </template>;
 
@@ -46,15 +45,15 @@ export default class QueriesEdit extends Component {
       {{else}}
         <div class="query-edit__top-bar">
           <BackButton
-            @route="adminPlugins.show.explorer.index"
             @label="explorer.queries"
+            @route="adminPlugins.show.explorer.index"
           />
 
           {{#if @controller.aiQueriesEnabled}}
             <QueryModeSwitch
-              @value={{@controller.mode}}
-              @onChange={{@controller.setMode}}
               @editDisabled={{@controller.editDisabled}}
+              @onChange={{@controller.setMode}}
+              @value={{@controller.mode}}
             />
           {{/if}}
         </div>
@@ -63,23 +62,23 @@ export default class QueriesEdit extends Component {
           {{#if @controller.editingName}}
             <div class="name">
               <DButton
+                class="btn-default previous"
                 @action={{@controller.exitEdit}}
                 @icon="xmark"
-                class="btn-default previous"
               />
               <div class="name-text-field">
                 <DTextField
-                  @value={{@controller.model.name}}
                   @onChange={{@controller.setDirty}}
+                  @value={{@controller.model.name}}
                 />
               </div>
             </div>
 
             <div class="desc">
               <DTextarea
-                @value={{@controller.model.description}}
-                @placeholder={{i18n "explorer.description_placeholder"}}
                 @input={{@controller.setDirty}}
+                @placeholder={{i18n "explorer.description_placeholder"}}
+                @value={{@controller.model.description}}
               />
             </div>
           {{else}}
@@ -89,9 +88,9 @@ export default class QueriesEdit extends Component {
               </h1>
               {{#unless @controller.editDisabled}}
                 <DButton
+                  class="edit-query-name btn-transparent"
                   @action={{@controller.editName}}
                   @icon="pencil"
-                  class="edit-query-name btn-transparent"
                 />
               {{/unless}}
             </div>
@@ -103,11 +102,10 @@ export default class QueriesEdit extends Component {
             <div class="groups">
               <span class="label">{{i18n "explorer.allow_groups"}}</span>
               <span>
-                <MultiSelect
-                  @value={{@controller.model.group_ids}}
+                <GroupChooser
                   @content={{@controller.groupOptions}}
-                  @options={{hash allowAny=false}}
                   @onChange={{@controller.updateGroupIds}}
+                  @value={{@controller.model.group_ids}}
                 />
               </span>
             </div>
@@ -117,12 +115,12 @@ export default class QueriesEdit extends Component {
 
           {{#if (eq @controller.mode "ai")}}
             <QueryAiPrompt
-              @value={{@controller.aiPrompt}}
+              @disabled={{@controller.aiGenerating}}
+              @generating={{@controller.aiGenerating}}
               @onChange={{@controller.updateAiPrompt}}
               @onRegenerate={{@controller.regenerate}}
               @regenerateDisabled={{@controller.regenerateDisabled}}
-              @generating={{@controller.aiGenerating}}
-              @disabled={{@controller.aiGenerating}}
+              @value={{@controller.aiPrompt}}
             />
           {{else}}
             <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
@@ -137,9 +135,9 @@ export default class QueriesEdit extends Component {
                   <div class="editor-panel">
                     <AceEditor
                       @content={{@controller.model.sql}}
-                      @onChange={{@controller.updateSql}}
-                      @mode="sql"
                       @disabled={{@controller.editorDisabled}}
+                      @mode="sql"
+                      @onChange={{@controller.updateSql}}
                       @save={{@controller.save}}
                       @submit={{@controller.run}}
                     />
@@ -147,8 +145,8 @@ export default class QueriesEdit extends Component {
 
                   <div class="right-panel">
                     <ExplorerSchema
-                      @schema={{@controller.schema}}
                       @hideSchema={{@controller.hideSchema}}
+                      @schema={{@controller.schema}}
                       @updateHideSchema={{@controller.updateHideSchema}}
                     />
                   </div>
@@ -160,9 +158,9 @@ export default class QueriesEdit extends Component {
               {{else}}
                 <div class="sql">
                   <CodeView
-                    @value={{@controller.model.sql}}
                     @codeClass="sql"
                     @setDirty={{@controller.setDirty}}
+                    @value={{@controller.model.sql}}
                   />
                 </div>
               {{/if}}
@@ -180,8 +178,8 @@ export default class QueriesEdit extends Component {
           <form class="query-params-block" {{on "submit" @controller.run}}>
             <ParamInputForm
               @initialValues={{@controller.parsedParams}}
-              @paramInfo={{@controller.model.param_info}}
               @onRegisterApi={{@controller.onRegisterApi}}
+              @paramInfo={{@controller.model.param_info}}
             />
           </form>
         {{/if}}
@@ -189,24 +187,24 @@ export default class QueriesEdit extends Component {
         <div class="query-action-bar">
           <div class="query-action-bar__left">
             <QueryRunSplitButton
-              @onRun={{@controller.run}}
               @disabled={{@controller.runDisabled}}
               @label={{@controller.runButtonLabel}}
+              @onRun={{@controller.run}}
             />
             {{#if @controller.editingQuery}}
               <DButton
+                class="btn-discard-query"
                 @action={{@controller.discard}}
+                @disabled={{@controller.saveDisabled}}
                 @icon="arrow-rotate-left"
                 @label="explorer.undo"
-                @disabled={{@controller.saveDisabled}}
-                class="btn-discard-query"
               />
               <DButton
-                @action={{@controller.showHelpModal}}
-                @label="explorer.help.label"
-                @icon="circle-question"
-                @disabled={{@controller.actionsBusy}}
                 class="btn-transparent query-action-bar__help"
+                @action={{@controller.showHelpModal}}
+                @disabled={{@controller.actionsBusy}}
+                @icon="circle-question"
+                @label="explorer.help.label"
               />
             {{/if}}
           </div>
@@ -214,34 +212,34 @@ export default class QueriesEdit extends Component {
           <div class="query-action-bar__right">
             {{#if (or @controller.hasResults (eq @controller.mode "ai"))}}
               <DSegmentedControl
-                @name="query-result-view"
-                @value={{@controller.view}}
+                class="query-results-modes"
                 @items={{@controller.viewItems}}
+                @name="query-result-view"
                 @onSelect={{@controller.setView}}
                 @translatedLabel={{i18n "explorer.view.label"}}
-                class="query-results-modes"
+                @value={{@controller.view}}
               />
             {{/if}}
             <QueryResultDownloadButtons
-              @query={{@controller.model}}
               @content={{@controller.results}}
               @includeQueryExport={{true}}
+              @query={{@controller.model}}
             />
 
             {{#if @controller.model.destroyed}}
               <DButton
                 @action={{@controller.recover}}
+                @disabled={{@controller.actionsBusy}}
                 @icon="arrow-rotate-left"
                 @label="explorer.recover"
-                @disabled={{@controller.actionsBusy}}
               />
             {{else if this.showDestroyQuery}}
               <DButton
+                class="btn-danger"
                 @action={{@controller.destroyQuery}}
+                @disabled={{@controller.actionsBusy}}
                 @icon="trash-can"
                 @label="explorer.delete"
-                @disabled={{@controller.actionsBusy}}
-                class="btn-danger"
               />
             {{/if}}
           </div>
@@ -262,9 +260,9 @@ export default class QueriesEdit extends Component {
                 <div class="editor-panel">
                   <AceEditor
                     @content={{@controller.model.sql}}
-                    @onChange={{@controller.updateSql}}
-                    @mode="sql"
                     @disabled={{@controller.editorDisabled}}
+                    @mode="sql"
+                    @onChange={{@controller.updateSql}}
                     @save={{@controller.save}}
                     @submit={{@controller.run}}
                   />
@@ -272,8 +270,8 @@ export default class QueriesEdit extends Component {
 
                 <div class="right-panel">
                   <ExplorerSchema
-                    @schema={{@controller.schema}}
                     @hideSchema={{@controller.hideSchema}}
+                    @schema={{@controller.schema}}
                     @updateHideSchema={{@controller.updateHideSchema}}
                   />
                 </div>
@@ -285,9 +283,9 @@ export default class QueriesEdit extends Component {
             {{else}}
               <div class="sql">
                 <CodeView
-                  @value={{@controller.model.sql}}
                   @codeClass="sql"
                   @setDirty={{@controller.setDirty}}
+                  @value={{@controller.model.sql}}
                 />
               </div>
             {{/if}}
@@ -296,14 +294,14 @@ export default class QueriesEdit extends Component {
 
         {{#if (notEq @controller.view "sql")}}
           <QueryResultsWrapper
+            @cachedAt={{@controller.cachedAt}}
+            @content={{@controller.results}}
+            @hideHeaderActions={{true}}
+            @onSetView={{@controller.setView}}
+            @query={{@controller.model}}
             @results={{@controller.results}}
             @showResults={{@controller.showResults}}
-            @query={{@controller.model}}
-            @content={{@controller.results}}
-            @cachedAt={{@controller.cachedAt}}
             @view={{@controller.view}}
-            @onSetView={{@controller.setView}}
-            @hideHeaderActions={{true}}
           />
         {{/if}}
 

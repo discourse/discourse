@@ -1,0 +1,1299 @@
+.sidebar-section-link.voice-sidebar-link {
+  .sidebar-section-link-suffix {
+    font-size: var(--font-down-2);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &.voice-sidebar-link--connecting .sidebar-section-link-suffix .d-icon {
+    animation: spin 1s linear infinite;
+  }
+}
+
+.voice-sidebar-participant {
+  // Indent so participant avatars start where the room name text starts,
+  // making rows read unambiguously as children of the room above.
+  padding-left: calc(
+    var(--d-sidebar-row-horizontal-padding) +
+      var(--d-sidebar-section-link-prefix-width) +
+      var(--d-sidebar-section-link-prefix-margin-right)
+  );
+  position: relative;
+
+  .sidebar-section-link-prefix {
+    position: relative;
+
+    img {
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      transition:
+        opacity 0.3s ease,
+        filter 0.3s ease;
+    }
+  }
+
+  .sidebar-section-link-content-text {
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &--muted,
+  &--deafened {
+    .sidebar-section-link-prefix img {
+      opacity: 0.5;
+    }
+
+    .sidebar-section-link-content-text {
+      opacity: 0.7;
+    }
+  }
+
+  // Every applicable state icon renders together, in a fixed order
+  // (hand raised, screenshare, camera, PTT, muted, deafened), at one size
+  // and color.
+  .voice-participant-suffix {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-shrink: 0;
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    // A raised hand is a request waiting on someone — accent it so it reads
+    // over the passive state icons.
+    .d-icon-hand {
+      color: var(--tertiary);
+    }
+  }
+
+  // The hover button already reserves space on the right; without this its
+  // own auto margin would pull the suffix icons away from the right edge.
+  .sidebar-section-link-hover {
+    margin-left: 0;
+  }
+
+  &--idle,
+  &--afk {
+    .sidebar-section-link-prefix {
+      &::after {
+        content: "";
+        position: absolute;
+        right: -2px;
+        bottom: -2px;
+        height: 0.5rem;
+        width: 0.5rem;
+        background-color: var(--primary-medium);
+        border-radius: 50%;
+        border: 1.5px solid var(--secondary);
+
+        // moon (FA solid)
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath d='M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z'/%3E%3C/svg%3E");
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
+      }
+    }
+  }
+
+  &--listener {
+    .sidebar-section-link-prefix img {
+      opacity: 0.5;
+    }
+
+    .sidebar-section-link-content-text {
+      font-size: var(--font-down-2);
+      color: var(--primary-medium);
+    }
+  }
+
+  &--listeners-start {
+    border-top: 1px solid var(--primary-low);
+    padding-top: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  &--listener-count {
+    .sidebar-section-link-content-text {
+      font-size: var(--font-down-2);
+      color: var(--primary-medium);
+      font-style: italic;
+    }
+  }
+
+  &--idle {
+    .sidebar-section-link-prefix img {
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-section-link-content-text {
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+    }
+  }
+
+  &--afk {
+    .sidebar-section-link-prefix img {
+      opacity: 0.4;
+      filter: grayscale(100%);
+      transition:
+        opacity 0.3s ease,
+        filter 0.3s ease;
+    }
+
+    .sidebar-section-link-content-text {
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+  }
+
+  // While speaking, the wave takes over the avatar: the picture fades behind
+  // a backdrop disc (so the wave stays legible over photo avatars) with the
+  // animated bars centered on top. Last so it wins over the idle/afk badge.
+  &--speaking {
+    .sidebar-section-link-content-text {
+      color: var(--primary);
+    }
+
+    .sidebar-section-link-prefix {
+      img {
+        opacity: 0.25;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 1.25rem;
+        width: 1.25rem;
+        border-radius: 50%;
+        background: var(--d-sidebar-background);
+        opacity: 0.4;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 0.875rem;
+        width: 0.8125rem;
+        border: none;
+        border-radius: 0;
+        mask-image: none;
+        background:
+          linear-gradient(var(--success), var(--success)) 0 50%,
+          linear-gradient(var(--success), var(--success)) 5px 50%,
+          linear-gradient(var(--success), var(--success)) 10px 50%;
+        background-size:
+          3px 40%,
+          3px 70%,
+          3px 50%;
+        background-repeat: no-repeat;
+        animation: voice-audio-bars 0.8s ease-in-out infinite;
+
+        @media (prefers-reduced-motion: reduce) {
+          animation: none;
+        }
+      }
+    }
+  }
+}
+
+@keyframes voice-audio-bars {
+  0%,
+  100% {
+    background-size:
+      3px 40%,
+      3px 70%,
+      3px 50%;
+  }
+
+  25% {
+    background-size:
+      3px 70%,
+      3px 40%,
+      3px 80%;
+  }
+
+  50% {
+    background-size:
+      3px 50%,
+      3px 90%,
+      3px 40%;
+  }
+
+  75% {
+    background-size:
+      3px 80%,
+      3px 50%,
+      3px 70%;
+  }
+}
+
+.voice-room {
+  padding: 1.5em;
+
+  &__header {
+    margin-bottom: 1em;
+
+    h1 {
+      margin: 0;
+      font-size: var(--font-up-2);
+    }
+
+    p {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__participants {
+    margin-bottom: 1em;
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.25em;
+    }
+
+    li {
+      display: flex;
+      gap: 0.5em;
+      align-items: center;
+    }
+  }
+
+  &__controls {
+    margin-bottom: 1em;
+  }
+}
+
+.voice-voice-canvas {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+
+  audio {
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+}
+
+// Core lays the toggle field out as a single flex row, which crams the
+// description beside the control once the field goes full width. Regroup it:
+// title and description stacked on the left, control centered on the right.
+.voice-room-form__form {
+  .form-kit__field-toggle {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 1rem;
+    align-items: center;
+
+    .form-kit__container-title,
+    .form-kit__container-description {
+      grid-column: 1;
+      width: auto;
+      min-width: 0;
+    }
+
+    .form-kit__container-content {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      width: auto;
+      min-width: 0;
+    }
+  }
+
+  .voice-room-form__manage-members {
+    padding: 0;
+    font-size: var(--font-down-1);
+
+    // Keep the card height stable so toggling doesn't shift the control
+    // under the pointer mid-click.
+    &.--hidden {
+      visibility: hidden;
+    }
+  }
+}
+
+.voice-room-form {
+  .voice-admin-back {
+    margin-bottom: 1em;
+  }
+
+  .voice-room-form__form {
+    max-width: 600px;
+  }
+
+  // `.form-kit` spaces its own direct children with a flex gap; wrapping the
+  // chat fields in this container opts them out of that, so it needs the same
+  // treatment to keep a consistent rhythm with the rest of the form.
+  .voice-room-form__chat {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    align-items: flex-start;
+  }
+
+  .voice-room-form__quality {
+    align-self: stretch;
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--primary-high);
+    }
+
+    .form-kit__field {
+      margin-top: 1em;
+    }
+  }
+}
+
+.voice-create-room-modal {
+  .voice-room-form__form {
+    max-width: 100%;
+  }
+
+  .form-kit__field-toggle {
+    background: var(--primary-very-low);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+  }
+
+  .form-kit__field-input-number .form-kit__container-content {
+    width: var(--form-kit-large-input);
+  }
+}
+
+.voice-room-sidebar-context-menu {
+  .btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.voice-participant-sidebar-context-menu {
+  min-width: 200px;
+
+  .btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  &__volume {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  &__volume-label {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__volume-slider {
+    width: 100%;
+    cursor: pointer;
+  }
+
+  &__kick-btn {
+    color: var(--danger);
+
+    &:hover {
+      background: var(--danger-low);
+    }
+  }
+
+  &__mic-btn.--disabled-by-ptt {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &__ptt-hint {
+    display: block;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    padding: 0 0.75rem 0.25rem;
+  }
+
+  &__ptt-btn.--active {
+    color: var(--tertiary);
+  }
+
+  &__stage-hint {
+    display: block;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    padding: 0.25rem 0.75rem;
+    font-style: italic;
+  }
+
+  &__promote-btn {
+    color: var(--success);
+  }
+
+  &__demote-btn {
+    color: var(--primary-medium);
+  }
+}
+
+.voice-ptt-key-capture {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+
+  &__display {
+    flex: 1;
+    padding: 0.35rem 0.5rem;
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: 4px;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    text-align: center;
+
+    &--captured {
+      border-color: var(--tertiary);
+      border-style: solid;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    &--error {
+      border-color: var(--danger);
+      border-style: solid;
+      color: var(--danger);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  .btn.btn-flat.voice-ptt-key-capture__confirm:not(:disabled) {
+    color: var(--success);
+
+    .d-icon {
+      color: var(--success);
+    }
+
+    &:hover {
+      background: var(--success-low);
+    }
+  }
+
+  .btn.btn-flat.voice-ptt-key-capture__cancel {
+    color: var(--danger);
+
+    .d-icon {
+      color: var(--danger);
+    }
+
+    &:hover {
+      background: var(--danger-low);
+    }
+  }
+}
+
+.voice-sidebar-participant__ptt-badge {
+  font-size: var(--font-down-2);
+  color: var(--tertiary);
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.voice-room-info-modal {
+  .d-modal__body {
+    padding: 0;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(
+      135deg,
+      var(--tertiary-low) 0%,
+      var(--tertiary-very-low) 100%
+    );
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: var(--tertiary);
+    border-radius: 12px;
+    flex-shrink: 0;
+
+    .d-icon {
+      color: var(--secondary);
+      font-size: 1.5rem;
+    }
+  }
+
+  &__icon-badge.d-icon {
+    position: absolute;
+    top: -0.4rem;
+    right: -0.4rem;
+    font-size: var(--font-down-2);
+    padding: 0.2rem;
+    background: var(--tertiary);
+    border-radius: var(--token-radius-full);
+  }
+
+  &__header-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__room-name {
+    margin: 0 0 0.25rem;
+    font-size: var(--font-up-3);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--primary-high);
+    font-size: var(--font-0);
+    line-height: 1.4;
+  }
+
+  &__stats {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--secondary);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 0.75rem;
+    background: var(--primary-very-low);
+    border-radius: 8px;
+    text-align: center;
+    gap: 0.25rem;
+  }
+
+  &__stat-value {
+    font-size: var(--font-up-2);
+    font-weight: 700;
+    color: var(--primary);
+
+    .d-icon {
+      font-size: 1.25rem;
+      color: var(--primary-medium);
+    }
+  }
+
+  &__stat-label {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  &__members {
+    padding: 1.5rem;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--tertiary-low);
+
+    .d-icon {
+      color: var(--tertiary);
+      font-size: 1.1rem;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: var(--font-up-1);
+      font-weight: 600;
+      color: var(--primary);
+    }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem;
+    color: var(--primary-medium);
+  }
+
+  &__member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  &__member {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--primary-very-low);
+    border-radius: 8px;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: var(--primary-low);
+    }
+
+    &.--creator {
+      background: linear-gradient(
+        135deg,
+        var(--tertiary-very-low) 0%,
+        var(--primary-very-low) 100%
+      );
+      border: 1px solid var(--tertiary-low);
+
+      &:hover {
+        background: linear-gradient(
+          135deg,
+          var(--tertiary-low) 0%,
+          var(--primary-low) 100%
+        );
+      }
+    }
+  }
+
+  &__member-avatar {
+    flex-shrink: 0;
+
+    img {
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgb(0, 0, 0, 0.1);
+    }
+  }
+
+  &__member-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__member-username {
+    font-weight: 600;
+    color: var(--primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__member-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    text-transform: capitalize;
+
+    &.--creator {
+      color: var(--tertiary);
+      font-weight: 500;
+
+      .d-icon {
+        font-size: 0.75rem;
+        color: var(--tertiary);
+      }
+    }
+
+    &.--moderator {
+      color: var(--success);
+    }
+  }
+
+  &__member-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  &__role-select {
+    min-width: 110px;
+
+    .select-kit-header {
+      padding: 0.35rem 0.5rem;
+    }
+  }
+
+  &__remove-btn {
+    color: var(--primary-medium);
+    padding: 0.4rem;
+
+    &:hover {
+      color: var(--danger);
+      background: var(--danger-low);
+    }
+
+    .d-icon {
+      font-size: 0.85rem;
+    }
+  }
+
+  &__add-member {
+    padding-top: 1rem;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__add-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  &__user-chooser {
+    flex: 1;
+    min-width: 180px;
+  }
+
+  &__role-chooser {
+    width: 120px;
+    flex-shrink: 0;
+  }
+
+  &__add-btn {
+    flex-shrink: 0;
+    padding: 0.5rem 0.75rem;
+  }
+
+  &__edit-btn {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  &__edit-form {
+    padding: 1.5rem;
+
+    .voice-room-form__form {
+      max-width: 100%;
+    }
+
+    .form-kit__field-toggle {
+      background: var(--primary-very-low);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+
+    .form-kit__field-input-number .form-kit__container-content {
+      width: var(--form-kit-large-input);
+    }
+  }
+}
+
+.voice-voice-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    .combo-box {
+      width: 100%;
+    }
+  }
+
+  &__label {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+
+  &__output-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .combo-box {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  &__choose-output-btn {
+    flex: 1;
+    justify-content: flex-start;
+  }
+
+  &__meter {
+    position: relative;
+    height: 0.75rem;
+    border-radius: 0.375rem;
+    background: var(--primary-low);
+
+    &.--open .voice-voice-settings__meter-fill {
+      background: var(--success);
+    }
+  }
+
+  &__meter-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+    background: var(--primary-medium);
+    transition: width 0.05s linear;
+  }
+
+  &__meter-threshold {
+    position: absolute;
+    top: -0.15rem;
+    bottom: -0.15rem;
+    width: 2px;
+    border-radius: 1px;
+    background: var(--tertiary);
+  }
+
+  &__sensitivity-slider {
+    width: 100%;
+    cursor: pointer;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__mic-error {
+    margin: 0;
+    color: var(--danger);
+  }
+}
+
+.voice-video-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  &__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    overflow: hidden;
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__label {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+
+  &__blur-slider {
+    width: 100%;
+    cursor: pointer;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__camera-error {
+    margin: 0;
+    padding: 1rem;
+    color: var(--danger);
+  }
+}
+
+// A quiet pill: the label stays muted like any secondary metadata; only the
+// small dot carries the "live" red.
+.voice-recording-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.4em;
+  padding: 0.15em 0.65em;
+  border: 1px solid var(--primary-low-mid);
+  border-radius: 1em;
+  background: var(--primary-very-low);
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  font-weight: normal;
+  line-height: var(--line-height-medium);
+  vertical-align: middle;
+
+  .d-icon {
+    width: 0.5em;
+    height: 0.5em;
+    color: var(--danger);
+    animation: voice-recording-pulse 2s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+// Same quiet pill as the recording badge, minus the "live" red: the
+// transcript is local to this user, not a room-wide broadcast.
+.voice-transcript-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.4em;
+
+  .fk-d-tooltip__trigger-container {
+    align-items: center;
+    gap: 0.4em;
+  }
+  padding: 0.15em 0.65em;
+  border: 1px solid var(--primary-low-mid);
+  border-radius: 1em;
+  background: var(--primary-very-low);
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  font-weight: normal;
+  line-height: var(--line-height-medium);
+  vertical-align: middle;
+
+  .d-icon {
+    width: 0.85em;
+    height: 0.85em;
+    color: var(--tertiary);
+    animation: voice-recording-pulse 2s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+.fk-d-tooltip__content.voice-transcript-badge-content {
+  font-size: var(--font-down-1);
+}
+
+.voice-room-page__transcript-toggle {
+  &.--recording {
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+}
+
+.voice-call-controls__record {
+  &.--recording {
+    .d-icon {
+      color: var(--danger);
+      animation: voice-recording-pulse 2s ease-in-out infinite;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+}
+
+@keyframes voice-recording-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.voice-call-menu__device-row {
+  .d-button-label {
+    flex: 1 1 auto;
+    text-align: left;
+  }
+
+  .voice-call-menu__current-device {
+    max-width: 11em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--primary-medium);
+  }
+
+  .d-button__suffix-icon {
+    margin-left: 0;
+  }
+}
+
+.voice-invite-modal {
+  .d-modal__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__search-row,
+  &__link-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  &__user-chooser {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__section-title {
+    margin: 0 0 0.75rem;
+    font-size: var(--font-0);
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__suggestion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-height: 16rem;
+    overflow-y: auto;
+  }
+
+  &__suggestion {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+
+    &:hover {
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__suggestion-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__suggestion-username {
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__suggestion-time {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__suggestion-invited {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--success);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--success);
+    }
+  }
+
+  &__link-input {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+    color: var(--primary-medium);
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-medium);
+  }
+}
+
+.voice-mesh-privacy-warning-modal {
+  .d-modal__container {
+    max-width: 32rem;
+  }
+
+  &__body {
+    margin: 0;
+  }
+
+  &__dont-show-again {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    color: var(--primary-medium);
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+}
+
+.voice-mic-permission-modal {
+  .d-modal__container {
+    max-width: 32rem;
+  }
+
+  &__body {
+    margin: 0;
+  }
+
+  &__instructions {
+    margin: 1rem 0 0;
+  }
+}
+
+.voice-incoming-call-modal {
+  .d-modal__container {
+    max-width: 22rem;
+  }
+
+  &__caller {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 1rem 0 0.5rem;
+    text-align: center;
+  }
+
+  &__avatar {
+    position: relative;
+    margin-bottom: 1rem;
+
+    img.avatar {
+      display: block;
+    }
+
+    // Rings pulsing outward from the avatar, echoing the ringtone.
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--tertiary);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      &::before {
+        animation: voice-call-pulse 2s ease-out infinite;
+      }
+
+      &::after {
+        animation: voice-call-pulse 2s ease-out 1s infinite;
+      }
+    }
+  }
+
+  &__name {
+    font-size: var(--font-up-3);
+    font-weight: bold;
+    overflow-wrap: anywhere;
+  }
+
+  &__state {
+    color: var(--primary-medium);
+  }
+
+  .d-modal__footer {
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  // btn-primary supplies the contrast text/icon colors; only the surface
+  // changes to the universal answer-a-call green.
+  &__answer.btn-primary {
+    background: var(--success);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--success-hover);
+    }
+  }
+}
+
+@keyframes voice-call-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}

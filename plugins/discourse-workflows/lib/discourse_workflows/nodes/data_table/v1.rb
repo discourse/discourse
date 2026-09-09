@@ -250,10 +250,7 @@ module DiscourseWorkflows
             row_existence_items(config, item, operation_name, node_proxy)
           else
             raise_node_error!(
-              I18n.t(
-                "discourse_workflows.errors.data_table.unknown_operation",
-                operation: operation_name,
-              ),
+              I18n.t("discourse_workflows.errors.unknown_operation", operation: operation_name),
             )
           end
         end

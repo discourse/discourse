@@ -1,9 +1,11 @@
 import { find, render, triggerEvent } from "@ember/test-helpers";
+import "discourse/static/dev-tools/styles.css";
 import { module, test } from "qunit";
 import Toolbar from "discourse/static/dev-tools/toolbar";
 import { CORE_TOOLS } from "discourse/static/dev-tools/tools";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import { i18n } from "discourse-i18n";
 
 /**
  * The toolbar as it is meant to read, left to right. Spelled out rather than
@@ -18,6 +20,7 @@ const EXPECTED_ORDER = [
   "upcoming-changes-debug",
   "safe-mode",
   "verbose-localization",
+  "styleguide",
   "disable-dev-tools",
 ];
 
@@ -28,6 +31,7 @@ const SELECTORS = {
   "upcoming-changes-debug": ".toggle-upcoming-changes-menu",
   "safe-mode": ".toggle-safe-mode",
   "verbose-localization": ".toggle-verbose-localization",
+  styleguide: ".open-styleguide",
   "disable-dev-tools": ".disable-dev-tools",
 };
 
@@ -244,6 +248,8 @@ module("Integration | Component | DevTools | Toolbar", function (hooks) {
   });
 
   test("renders every tool, in order, between the gripper and the disable button", async function (assert) {
+    this.site.can_see_styleguide = true;
+
     await render(<template><Toolbar /></template>);
 
     assert.deepEqual(
@@ -259,6 +265,91 @@ module("Integration | Component | DevTools | Toolbar", function (hooks) {
       EXPECTED_ORDER.slice(1, -1),
       "the table lists exactly the tools the toolbar is expected to show, in that order"
     );
+  });
+
+  test("renders the styleguide link for visitors with access", async function (assert) {
+    this.site.can_see_styleguide = true;
+
+    await render(<template><Toolbar /></template>);
+
+    assert
+      .dom(".open-styleguide")
+      .hasAttribute("href", "/styleguide", "the link targets the styleguide")
+      .hasAttribute(
+        "title",
+        i18n("dev_tools.open_styleguide"),
+        "the link has a visible tooltip"
+      )
+      .hasAttribute(
+        "aria-label",
+        i18n("dev_tools.open_styleguide"),
+        "the icon-only link has an accessible name"
+      )
+      .hasAttribute(
+        "data-auto-route",
+        "true",
+        "the link performs a full navigation so filtered assets load"
+      );
+    assert
+      .dom(".open-styleguide .d-icon-paintbrush")
+      .exists("the link uses the styleguide icon");
+  });
+
+  test("styles links and buttons as consistent toolbar controls", async function (assert) {
+    this.site.can_see_styleguide = true;
+    const competingLinkStyle = document.createElement("style");
+    competingLinkStyle.textContent = "a:any-link { color: rgb(0 0 255); }";
+    document.head.append(competingLinkStyle);
+
+    await render(<template><Toolbar /></template>);
+
+    const buttonStyle = getComputedStyle(find(".toggle-plugin-outlets"));
+    const linkStyle = getComputedStyle(find(".open-styleguide"));
+    const buttonIconStyle = getComputedStyle(
+      find(".toggle-plugin-outlets .d-icon")
+    );
+    const linkIconStyle = getComputedStyle(find(".open-styleguide .d-icon"));
+
+    assert.strictEqual(
+      buttonStyle.borderTopWidth,
+      "0px",
+      "toolbar buttons have no native border"
+    );
+    assert.strictEqual(
+      buttonStyle.paddingTop,
+      "5px",
+      "toolbar buttons retain their compact padding"
+    );
+    assert.strictEqual(
+      linkStyle.borderTopWidth,
+      buttonStyle.borderTopWidth,
+      "toolbar links match the button border"
+    );
+    assert.strictEqual(
+      linkStyle.paddingTop,
+      buttonStyle.paddingTop,
+      "toolbar links match the button padding"
+    );
+    assert.strictEqual(
+      linkStyle.color,
+      buttonStyle.color,
+      "toolbar links match the button foreground color"
+    );
+    assert.strictEqual(
+      linkIconStyle.color,
+      buttonIconStyle.color,
+      "toolbar link icons match button icon colors"
+    );
+
+    competingLinkStyle.remove();
+  });
+
+  test("omits the styleguide link without access", async function (assert) {
+    await render(<template><Toolbar /></template>);
+
+    assert
+      .dom(".open-styleguide")
+      .doesNotExist("a missing capability does not expose the link");
   });
 
   test("the gripper and disable button render outside the tool list", async function (assert) {

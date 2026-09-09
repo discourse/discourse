@@ -1,6 +1,11 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/container";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import {
+  acceptance,
+  loggedInUser,
+} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Glimmer Topic Timeline", function (needs) {
   needs.user({
@@ -331,6 +336,24 @@ acceptance("Glimmer Topic Timeline", function (needs) {
         },
       });
     });
+  });
+
+  needs.hooks.afterEach(function () {
+    setDesktopScrollAreaHeight();
+  });
+
+  test("predicted composer preview does not affect the closed timeline", async function (assert) {
+    loggedInUser().set(
+      "user_option.composition_mode",
+      USER_OPTION_COMPOSITION_MODES.markdown
+    );
+    setDesktopScrollAreaHeight({ min: 600, max: 600 });
+
+    await visit("/t/internationalization-localization/280/1");
+
+    assert
+      .dom(".timeline-scrollarea")
+      .hasStyle({ height: "300px" }, "the closed composer has no effect");
   });
 
   test("has a reply-to-post button", async function (assert) {

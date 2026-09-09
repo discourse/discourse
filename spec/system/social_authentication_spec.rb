@@ -206,6 +206,7 @@ shared_examples "social authentication scenarios" do
         SiteSetting.linkedin_oidc_client_secret = "abcde"
         SiteSetting.enable_linkedin_oidc_logins = true
       end
+
       after { reset_omniauth_config(:linkedin_oidc) }
 
       it "fills the signup form" do
@@ -249,6 +250,7 @@ shared_examples "social authentication scenarios" do
         SiteSetting.auth_overrides_name = true
         SiteSetting.auth_overrides_username = true
       end
+
       after { reset_omniauth_config(:google_oauth2) }
 
       it "fills the signup form and disables the inputs" do
@@ -273,6 +275,7 @@ shared_examples "social authentication scenarios" do
         SiteSetting.enable_google_oauth2_logins = true
         SiteSetting.auth_skip_create_confirm = true
       end
+
       after { reset_omniauth_config(:google_oauth2) }
 
       it "creates the account directly" do
@@ -300,6 +303,7 @@ shared_examples "social authentication scenarios" do
         SiteSetting.enable_google_oauth2_logins = true
         SiteSetting.enable_local_logins = false
       end
+
       after { reset_omniauth_config(:google_oauth2) }
 
       context "when login is required" do
@@ -564,6 +568,7 @@ shared_examples "social authentication scenarios" do
         SiteSetting.linkedin_oidc_client_secret = "abcde"
         SiteSetting.enable_linkedin_oidc_logins = true
       end
+
       after { reset_omniauth_config(:linkedin_oidc) }
 
       it "logs in user" do

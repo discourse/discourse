@@ -131,11 +131,11 @@ export default class AiSplitTopicSuggester extends Component {
       />
     {{/if}}
     <DMenu
-      @icon="discourse-sparkles"
-      @interactive={{true}}
-      @identifier="ai-split-topic-suggestion-menu"
       class="ai-split-topic-suggestion-button"
       data-suggestion-mode={{@mode}}
+      @icon="discourse-sparkles"
+      @identifier="ai-split-topic-suggestion-menu"
+      @interactive={{true}}
       {{on "click" this.loadSuggestions}}
       as |menu|
     >
@@ -144,9 +144,9 @@ export default class AiSplitTopicSuggester extends Component {
           {{#each this.suggestions as |suggestion index|}}
             {{#if (eq @mode "suggest_category")}}
               <li
+                class="ai-split-topic-suggestion__category-result"
                 data-name={{suggestion.name}}
                 data-value={{suggestion.id}}
-                class="ai-split-topic-suggestion__category-result"
                 role="button"
                 {{on "click" (fn this.applySuggestion suggestion menu)}}
               >
@@ -157,8 +157,8 @@ export default class AiSplitTopicSuggester extends Component {
             {{else if (eq @mode "suggest_tags")}}
               <li data-name={{suggestion.name}} data-value={{index}}>
                 <DButton
-                  @translatedLabel={{suggestion.name}}
                   @action={{fn this.applySuggestion suggestion menu}}
+                  @translatedLabel={{suggestion.name}}
                 >
                   <span class="topic-count">x{{suggestion.count}}</span>
                 </DButton>
@@ -166,8 +166,8 @@ export default class AiSplitTopicSuggester extends Component {
             {{else}}
               <li data-name={{suggestion}} data-value={{index}}>
                 <DButton
-                  @translatedLabel={{suggestion}}
                   @action={{fn this.applySuggestion suggestion menu}}
+                  @translatedLabel={{suggestion}}
                 />
               </li>
             {{/if}}

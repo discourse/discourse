@@ -32,12 +32,18 @@ export const ALL_PAGES_EXCLUDED_ROUTES = [
 
 export default class WelcomeBanner extends Component {
   @service router;
+  @service site;
   @service siteSettings;
   @service currentUser;
   @service appEvents;
   @service search;
 
   checkViewport = modifier((element) => {
+    if (!this.site.can_search) {
+      this.search.welcomeBannerSearchInViewport = false;
+      return;
+    }
+
     const searchMenu =
       element.querySelector(".welcome-banner__search-menu") ?? element;
 
@@ -107,6 +113,10 @@ export default class WelcomeBanner extends Component {
   });
 
   handleKeyboardShortcut = modifier(() => {
+    if (!this.site.can_search) {
+      return;
+    }
+
     const cb = (appEvent) => {
       if (
         appEvent.type === "search" &&
@@ -141,30 +151,12 @@ export default class WelcomeBanner extends Component {
     );
   }
 
-  #shouldDisplayForRoute(
-    welcome_banner_page_visibility,
-    top_menu,
-    currentRouteName
-  ) {
-    switch (welcome_banner_page_visibility) {
-      case "top_menu_pages":
-        return top_menu
-          .split("|")
-          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
-      case "homepage":
-        return currentRouteName === `discovery.${defaultHomepage()}`;
-      case "discovery":
-        return currentRouteName.startsWith("discovery.");
-      case "all_pages":
-        return (
-          !currentRouteName.startsWith("admin") &&
-          !ALL_PAGES_EXCLUDED_ROUTES.some(
-            (routeName) => routeName === currentRouteName
-          )
-        );
-      default:
-        return false;
-    }
+  // The icon is a shortcut to advanced search; a consumer that has made the
+  // input mean more than searching can drop it.
+  get showAdvancedSearchIcon() {
+    return applyValueTransformer("search-advanced-icon-enabled", true, {
+      location: "welcome-banner",
+    });
   }
 
   get headerText() {
@@ -244,6 +236,32 @@ export default class WelcomeBanner extends Component {
     }
   }
 
+  #shouldDisplayForRoute(
+    welcome_banner_page_visibility,
+    top_menu,
+    currentRouteName
+  ) {
+    switch (welcome_banner_page_visibility) {
+      case "top_menu_pages":
+        return top_menu
+          .split("|")
+          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
+      case "homepage":
+        return currentRouteName === `discovery.${defaultHomepage()}`;
+      case "discovery":
+        return currentRouteName.startsWith("discovery.");
+      case "all_pages":
+        return (
+          !currentRouteName.startsWith("admin") &&
+          !ALL_PAGES_EXCLUDED_ROUTES.some(
+            (routeName) => routeName === currentRouteName
+          )
+        );
+      default:
+        return false;
+    }
+  }
+
   <template>
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
@@ -273,20 +291,24 @@ export default class WelcomeBanner extends Component {
             {{/if}}
           </div>
           <PluginOutlet @name="welcome-banner-below-headline" />
-          <div class="search-menu welcome-banner__search-menu">
-            <DButton
-              @icon="magnifying-glass"
-              @title="search.open_advanced"
-              @href={{getURL "/search?expanded=true"}}
-              class="search-icon"
-            />
-            <SearchMenu
-              @location="welcome-banner"
-              @searchInputId="welcome-banner-search-input"
-              @searchInputPlaceholder="welcome_banner.search_placeholder"
-              @hideResults={{not this.search.welcomeBannerSearchInViewport}}
-            />
-          </div>
+          {{#if this.site.can_search}}
+            <div class="search-menu welcome-banner__search-menu">
+              {{#if this.showAdvancedSearchIcon}}
+                <DButton
+                  class="search-icon"
+                  @href={{getURL "/search?expanded=true"}}
+                  @icon="magnifying-glass"
+                  @title="search.open_advanced"
+                />
+              {{/if}}
+              <SearchMenu
+                @hideResults={{not this.search.welcomeBannerSearchInViewport}}
+                @location="welcome-banner"
+                @searchInputId="welcome-banner-search-input"
+                @searchInputPlaceholder="welcome_banner.search_placeholder"
+              />
+            </div>
+          {{/if}}
           <PluginOutlet @name="welcome-banner-below-input" />
         </div>
       </div>

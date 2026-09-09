@@ -5,3 +5,55 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    enable_discourse_github_plugin: "啟用 discourse-github 外掛"
+    github_linkback_enabled: "將 GitHub 議題連結回論壇討論"
+    github_linkback_projects: "要建立反向連結的專案清單"
+    github_linkback_access_token: '用於發佈反向連結，以及計算提交／貢獻以授予徽章之使用者的有效存取權杖。請參閱<a href="https://meta.discourse.org/t/99895">此處</a>，了解如何取得權杖。'
+    github_linkback_maximum_links: "單一貼文可建立的反向連結數量上限。若貼文包含更多連結，則不會建立任何反向連結。"
+    github_permalinks_enabled: "啟用 GitHub 永久連結覆寫"
+    github_pr_status_enabled: "在 Onebox 中顯示 GitHub 提取要求狀態（草稿、開放、已核准、已合併、已關閉）"
+    github_webhook_secret: "用於驗證 GitHub Webhook 簽章的秘密權杖。請在 GitHub Webhook 設定中設定此值。"
+    github_permalinks_exclude: "不應套用永久連結覆寫的檔名或目錄。請只提供檔名或完整路徑：user/repository/optional-directory/filename"
+    github_badges_enabled: "啟用 GitHub 徽章"
+    github_badges_repos: "要掃描貢獻和提交的 GitHub 儲存庫網址"
+    github_silver_badge_min_commits: "銀級徽章所需的最低提交數"
+    github_gold_badge_min_commits: "金級徽章所需的最低提交數"
+    errors:
+      invalid_badge_repo: "你必須提供 GitHub 網址，或採用 github_user/repository_name 格式的儲存庫名稱"
+      invalid_badge_repo_value: "'%{repo}' 不是有效的 GitHub 網址或儲存庫名稱。請使用 github_user/repository_name 格式。"
+      invalid_github_linkback_access_token: "你必須提供有效的 GitHub 反向連結存取權杖，且該權杖能存取你所提供的徽章儲存庫。"
+      invalid_github_linkback_access_token_for_repo: "GitHub 反向連結存取權杖無法存取 '%{repo}' 儲存庫。請確認權杖有效，且儲存庫名稱正確並可供存取。"
+  github_linkback:
+    commit_template: |
+      此提交已在 **%{title}** 中被提及。該處可能有相關詳細資訊：
+
+      %{post_url}
+    pr_template: |
+      此提取要求已在 **%{title}** 中被提及。該處可能有相關詳細資訊：
+
+      %{post_url}
+    issue_template: |
+      此議題已在 **%{title}** 中被提及。該處可能有相關詳細資訊：
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "discourse-github 外掛需要處理"
+      repository_identifier_invalid_pm: |
+        discourse-github 外掛中指定的儲存庫無效：
+        %{repo_name}
+
+        應以 `user/repo` 格式指定。
+
+        在<a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github 網站設定</a>中修正名稱並重新開啟「github_badges_enabled」前，將不會授予徽章。
+      repository_not_found_pm_title: "discourse-github 外掛需要處理"
+      repository_not_found_pm: |
+        discourse-github 外掛中指定的儲存庫傳回「找不到」錯誤：%{repo_name}
+
+        在<a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github 網站設定</a>中修正名稱並重新開啟「github_badges_enabled」前，將不會授予徽章。
+      invalid_octokit_credentials_pm_title: "discourse-github 外掛需要處理"
+      invalid_octokit_credentials_pm: |
+        提供給 discourse-github 外掛的 GitHub 認證無效。「github badges enabled」網站設定已停用；在問題解決前，將不再填入提交資料。
+
+        請檢查「github linkback access token」網站設定，確認權杖正確，且可透過<a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github 網站設定</a>存取所有儲存庫。

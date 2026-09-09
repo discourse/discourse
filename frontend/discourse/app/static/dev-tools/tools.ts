@@ -2,6 +2,7 @@ import type { ComponentLike } from "@glint/template";
 import BlockDebugButton from "./block-debug/button";
 import PluginOutletDebugButton from "./plugin-outlet-debug/button";
 import SafeModeButton from "./safe-mode/button";
+import StyleguideButton from "./styleguide/button";
 import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
 import VerboseLocalizationButton from "./verbose-localization/button";
 
@@ -23,4 +24,5 @@ export const CORE_TOOLS: readonly DevTool[] = [
   { id: "upcoming-changes-debug", component: UpcomingChangesDebugButton },
   { id: "safe-mode", component: SafeModeButton },
   { id: "verbose-localization", component: VerboseLocalizationButton },
+  { id: "styleguide", component: StyleguideButton },
 ];

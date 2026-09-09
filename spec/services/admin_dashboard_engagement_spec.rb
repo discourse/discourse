@@ -112,12 +112,86 @@ describe AdminDashboardEngagement do
     end
 
     describe "posters" do
-      it "includes the posters block with rows and total" do
+      it "includes the posters block with rows, total, and the default groups selection" do
         result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
         posters = result[:posters]
 
-        expect(posters[:rows].map { |r| r[:type] }).to eq(%i[new_members returning staff])
+        expect(posters[:rows].map { |r| r[:type] }).to eq(%w[new_members returning staff])
         expect(posters).to have_key(:total)
+        expect(posters[:groups]).to eq(%w[new_members returning staff])
+      end
+
+      it "includes a persisted group, and omits it for a viewer who can't see the group" do
+        group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: ["staff", Report.group_token(group.id)],
+          },
+        )
+
+        admin_result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:admin),
+          )
+        expect(admin_result[:posters][:groups]).to eq(["staff", Report.group_token(group.id)])
+
+        regular_user_result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:user),
+          )
+        expect(regular_user_result[:posters][:groups]).to eq(["staff"])
+      end
+
+      it "omits a persisted group whose members are hidden, even when the group itself is visible" do
+        group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: ["staff", Report.group_token(group.id)],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:user),
+          )
+
+        expect(result[:posters][:groups]).to eq(["staff"])
+      end
+
+      it "falls back to the default groups when every persisted group becomes invisible" do
+        group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: [Report.group_token(group.id)],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: Fabricate(:user),
+          )
+
+        expect(result[:posters][:groups]).to eq(%w[new_members returning staff])
       end
 
       it "honours category visibility when current_user is a moderator" do

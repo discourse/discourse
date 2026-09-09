@@ -63,7 +63,7 @@ module("Component | ChatMessageInfo", function (hooks) {
 
     await render(
       <template>
-        <Info @message={{this.message}} @show={{true}} @interactive={{false}} />
+        <Info @interactive={{false}} @message={{this.message}} @show={{true}} />
       </template>
     );
 
@@ -82,9 +82,9 @@ module("Component | ChatMessageInfo", function (hooks) {
     await render(
       <template>
         <Info
+          @interactive={{false}}
           @message={{this.message}}
           @show={{false}}
-          @interactive={{false}}
         />
       </template>
     );

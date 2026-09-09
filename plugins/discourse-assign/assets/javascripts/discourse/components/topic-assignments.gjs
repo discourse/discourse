@@ -33,9 +33,9 @@ export default class TopicAssignments extends Component {
     <div class="control-group target">
       <label>{{i18n "discourse_assign.assign_modal.assignment_label"}}</label>
       <ComboBox
-        @value={{this.selectedAssignment.id}}
         @content={{this.assignmentOptions}}
         @onChange={{this.selectAssignment}}
+        @value={{this.selectedAssignment.id}}
       />
     </div>
     <Assignment

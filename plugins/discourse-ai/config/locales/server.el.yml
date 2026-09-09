@@ -52,6 +52,8 @@ el:
         silence_user: "Σίγαση χρήστη"
         unlist_topic: "Κατάργηση καταχώρισης θέματος"
         edit_post: "Επεξεργασία ανάρτησης"
+        edit_tag: "Επεξεργασία ετικέτας"
+        create_category: "Δημιουργία κατηγορίας"
         assign: "Ανάθεση θέματος"
         search: "Αναζήτηση"
         time: "Ώρα"
@@ -59,13 +61,11 @@ el:
       tool_help:
         unlist_topic: "Καταχώριση ή κατάργηση καταχώρισης θέματος"
         delete_topic: "Διαγραφή θέματος"
+        create_category: "Δημιουργία νέας κατηγορίας"
       tool_description:
         web_browser: "Γίνεται ανάγνωση <a href='%{url}'>%{url}</a>"
         unlist_topic: "Κατάργηση καταχώρισης θέματος %{topic_id} (μη καταχωρισμένο: %{unlisted})"
         time: "Η ώρα στο %{timezone} είναι %{time}"
-      discoveries:
-        continue_conversation:
-          raw: "Στην αναζήτησή μου για %{query}, μου δείξατε τις ακόλουθες πληροφορίες:\n\n%{context}\n\nΑς συνεχίσουμε τη συζήτηση."
       close_topic:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
@@ -78,10 +78,13 @@ el:
       delete_topic:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
       edit_category:
+        errors:
+          not_found: "Η κατηγορία δεν βρέθηκε."
+      change_topic_category:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
           category_not_found: "Η κατηγορία δεν βρέθηκε."

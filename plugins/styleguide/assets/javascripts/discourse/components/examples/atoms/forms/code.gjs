@@ -2,7 +2,7 @@ import Form from "discourse/components/form";
 
 export default <template>
   <Form as |form|>
-    <form.Field @title="Query" @name="query" @type="code" as |field|>
+    <form.Field @name="query" @title="Query" @type="code" as |field|>
       <field.Control />
     </form.Field>
   </Form>

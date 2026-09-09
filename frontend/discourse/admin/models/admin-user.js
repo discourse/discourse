@@ -21,6 +21,12 @@ export default class AdminUser extends User {
   static async find(user_id, opts = { raw: false }) {
     const result = await ajax(`/admin/users/${user_id}.json`);
     result.loadedDetails = true;
+
+    if (Object.hasOwn(result, "groups")) {
+      result.visibleGroups = result.groups;
+      delete result.groups;
+    }
+
     return opts?.raw ? result : AdminUser.create(result);
   }
 
@@ -32,7 +38,7 @@ export default class AdminUser extends User {
 
   adminUserView = true;
 
-  @autoTrackedArray groups;
+  @autoTrackedArray visibleGroups;
 
   @computed("active", "staged")
   get canViewProfile() {
@@ -65,11 +71,11 @@ export default class AdminUser extends User {
   }
 
   get customGroups() {
-    return this.groups?.filter((g) => !g.automatic) ?? [];
+    return this.visibleGroups?.filter((g) => !g.automatic) ?? [];
   }
 
   get automaticGroups() {
-    return this.groups?.filter((g) => g.automatic) ?? [];
+    return this.visibleGroups?.filter((g) => g.automatic) ?? [];
   }
 
   @computed("bounce_score", "reset_bounce_score_after")
@@ -99,6 +105,35 @@ export default class AdminUser extends User {
     return getURL("/admin/email-logs/bounced");
   }
 
+  @computed("suspended_till", "suspended_at")
+  get suspendDuration() {
+    const suspendedAt = moment(this.suspended_at);
+    const suspendedTill = moment(this.suspended_till);
+    return suspendedAt.format("L") + " - " + suspendedTill.format("L");
+  }
+
+  @computed("tl3_requirements")
+  get tl3Requirements() {
+    if (this.tl3_requirements) {
+      return this.store.createRecord("tl3Requirements", this.tl3_requirements);
+    }
+  }
+
+  @computed("suspended_by")
+  get suspendedBy() {
+    return this.suspended_by ? AdminUser.create(this.suspended_by) : null;
+  }
+
+  @computed("silenced_by")
+  get silencedBy() {
+    return this.silenced_by ? AdminUser.create(this.silenced_by) : null;
+  }
+
+  @computed("approved_by")
+  get approvedBy() {
+    return this.approved_by ? AdminUser.create(this.approved_by) : null;
+  }
+
   resetBounceScore() {
     return ajax(`/admin/users/${this.id}/reset-bounce-score`, {
       type: "POST",
@@ -116,14 +151,16 @@ export default class AdminUser extends User {
       data: { group_id: added.id },
     });
 
-    this.groups.push(added);
+    this.visibleGroups.push(added);
   }
 
   groupRemoved(groupId) {
     return ajax(`/admin/users/${this.id}/groups/${groupId}`, {
       type: "DELETE",
     }).then(() => {
-      this.groups = this.groups.filter((group) => group.id !== groupId);
+      this.visibleGroups = this.visibleGroups.filter(
+        (group) => group.id !== groupId
+      );
       if (this.primary_group_id === groupId) {
         this.set("primary_group_id", null);
       }
@@ -249,13 +286,6 @@ export default class AdminUser extends User {
       type: "PUT",
       data: { locked: !!locked },
     });
-  }
-
-  @computed("suspended_till", "suspended_at")
-  get suspendDuration() {
-    const suspendedAt = moment(this.suspended_at);
-    const suspendedTill = moment(this.suspended_till);
-    return suspendedAt.format("L") + " - " + suspendedTill.format("L");
   }
 
   suspend(data) {
@@ -404,28 +434,6 @@ export default class AdminUser extends User {
     this.setProperties(userProperties);
 
     return this;
-  }
-
-  @computed("tl3_requirements")
-  get tl3Requirements() {
-    if (this.tl3_requirements) {
-      return this.store.createRecord("tl3Requirements", this.tl3_requirements);
-    }
-  }
-
-  @computed("suspended_by")
-  get suspendedBy() {
-    return this.suspended_by ? AdminUser.create(this.suspended_by) : null;
-  }
-
-  @computed("silenced_by")
-  get silencedBy() {
-    return this.silenced_by ? AdminUser.create(this.silenced_by) : null;
-  }
-
-  @computed("approved_by")
-  get approvedBy() {
-    return this.approved_by ? AdminUser.create(this.approved_by) : null;
   }
 
   deleteSSORecord() {

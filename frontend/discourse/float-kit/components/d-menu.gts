@@ -9,6 +9,7 @@ import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import {
   type FloatCallback,
+  type FloatCloseOptions,
   MENU,
   type MenuOptions,
 } from "discourse/float-kit/lib/constants";
@@ -22,7 +23,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 /** The object yielded to each of the menu's blocks and passed to a rendered component. */
 export interface DMenuComponentArgs<Data = unknown> {
   /** Closes the menu. */
-  close: FloatCallback;
+  close: (options?: FloatCloseOptions) => Promise<void>;
 
   /** Opens the menu. */
   show: FloatCallback;
@@ -55,7 +56,12 @@ type DMenuOptionArgs<Data> = Partial<
   data?: Data;
 
   /** A component rendered as the content; it receives the `@data` and `@close` arguments. */
-  component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
+  component?: ComponentLike<{
+    Args: {
+      data?: Data;
+      close?: (options?: FloatCloseOptions) => Promise<void>;
+    };
+  }>;
 
   /** Called with the menu instance when it is created, so callers can control it programmatically. */
   onRegisterApi?: (instance: DMenuInstance) => void;
@@ -136,7 +142,7 @@ export default class DMenu<Data = unknown> extends Component<
     this.options.onRegisterApi?.(this.menuInstance);
 
     return () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         this.menuInstance.destroy();
       }
     };
@@ -164,39 +170,6 @@ export default class DMenu<Data = unknown> extends Component<
   });
 
   #body: HTMLElement | null = null;
-
-  @action
-  teardownFloatBody() {
-    this.#body = null;
-  }
-
-  @action
-  forwardTabToContent(event: KeyboardEvent) {
-    // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
-    const parentHandlerResult = this.args.onKeydown?.(event);
-
-    // Inline ordering owns Tab on the trigger, in the capture phase, and decides whether the
-    // panel is entered. Pulling focus into the body here would override a decision to pass over
-    // a panel that offers no stop.
-    if (!this.#body || this.options.inlineTabOrder) {
-      return parentHandlerResult;
-    }
-
-    if (event.key === "Tab") {
-      event.preventDefault();
-
-      const firstFocusable = this.#body.querySelector<HTMLElement>(
-        'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-
-      firstFocusable?.focus();
-      this.#body.focus();
-
-      return true;
-    }
-
-    return parentHandlerResult;
-  }
 
   get options(): MenuOptions {
     return this.menuInstance?.options ?? ({} as MenuOptions);
@@ -272,10 +245,42 @@ export default class DMenu<Data = unknown> extends Component<
     return properties;
   }
 
+  @action
+  teardownFloatBody() {
+    this.#body = null;
+  }
+
+  @action
+  forwardTabToContent(event: KeyboardEvent) {
+    // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
+    const parentHandlerResult = this.args.onKeydown?.(event);
+
+    // Inline ordering owns Tab on the trigger, in the capture phase, and decides whether the
+    // panel is entered. Pulling focus into the body here would override a decision to pass over
+    // a panel that offers no stop.
+    if (!this.#body || this.options.inlineTabOrder) {
+      return parentHandlerResult;
+    }
+
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      const firstFocusable = this.#body.querySelector<HTMLElement>(
+        'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      firstFocusable?.focus();
+      this.#body.focus();
+
+      return true;
+    }
+
+    return parentHandlerResult;
+  }
+
   <template>
     <this.triggerComponent
-      {{this.registerTrigger}}
-      {{this.syncDisabled @disabled}}
+      aria-expanded={{if this.menuInstance.expanded "true" "false"}}
       class={{dConcatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
@@ -283,13 +288,14 @@ export default class DMenu<Data = unknown> extends Component<
         @triggerClass
         @class
       }}
-      id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
       data-trigger
-      aria-expanded={{if this.menuInstance.expanded "true" "false"}}
-      {{on "keydown" this.forwardTabToContent}}
-      @componentArgs={{this.componentArgs}}
+      id={{this.menuInstance.id}}
       ...attributes
+      @componentArgs={{this.componentArgs}}
+      {{this.registerTrigger}}
+      {{this.syncDisabled @disabled}}
+      {{on "keydown" this.forwardTabToContent}}
     >
       {{#if (has-block "trigger")}}
         {{yield this.componentArgs to="trigger"}}
@@ -299,29 +305,30 @@ export default class DMenu<Data = unknown> extends Component<
     {{#if this.menuInstance.expanded}}
       {{#if this.menuInstance.renderInModal}}
         <DModal
-          @closeModal={{this.menuInstance.close}}
-          @hideHeader={{true}}
-          @autofocus={{this.options.autofocus}}
+          aria-label={{this.options.ariaLabel}}
           class={{dConcatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
             @contentClass
             @class
           }}
-          @inline={{(isTesting)}}
-          data-identifier={{this.options.identifier}}
           data-content
+          data-identifier={{this.options.identifier}}
+          @autofocus={{this.options.autofocus}}
+          @closeModal={{this.menuInstance.close}}
+          @hideHeader={{true}}
+          @inline={{(isTesting)}}
           {{FloatKitNotifyPositioned this.menuInstance}}
         >
-          <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
+          <div aria-hidden="true" class="fk-d-menu-modal__grip"></div>
           {{#if (has-block)}}
             {{yield this.componentArgs}}
           {{else if (has-block "content")}}
             {{yield this.componentArgs to="content"}}
           {{else if this.options.component}}
             <this.options.component
-              @data={{this.options.data}}
               @close={{this.menuInstance.close}}
+              @data={{this.options.data}}
             />
           {{else if this.options.content}}
             {{this.options.content}}
@@ -329,18 +336,18 @@ export default class DMenu<Data = unknown> extends Component<
         </DModal>
       {{else}}
         <DFloatBody
-          @instance={{this.menuInstance}}
-          @trapTab={{this.options.trapTab}}
+          @inline={{this.options.inline}}
           @inlineTabOrder={{this.options.inlineTabOrder}}
+          @innerClass="fk-d-menu__inner-content"
+          @instance={{this.menuInstance}}
           @mainClass={{dConcatClass
             "fk-d-menu"
             (concat this.options.identifier "-content")
             @class
             @contentClass
           }}
-          @innerClass="fk-d-menu__inner-content"
           @role={{this.options.contentRole}}
-          @inline={{this.options.inline}}
+          @trapTab={{this.options.trapTab}}
           {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
@@ -349,8 +356,8 @@ export default class DMenu<Data = unknown> extends Component<
             {{yield this.componentArgs to="content"}}
           {{else if this.options.component}}
             <this.options.component
-              @data={{this.options.data}}
               @close={{this.menuInstance.close}}
+              @data={{this.options.data}}
             />
           {{else if this.options.content}}
             {{this.options.content}}

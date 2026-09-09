@@ -25,7 +25,7 @@ el:
     map_events_to_color: "Ανάθεση χρώματος σε κάθε ετικέτα ή κατηγορία."
     discourse_post_event_allowed_on_groups: "Ομάδες που επιτρέπεται να δημιουργούν εκδηλώσεις."
     event_participation_buttons: "Λίστα κουμπιών συμμετοχής σε εκδήλωση που μπορούν να χρησιμοποιήσουν οι χρήστες."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         label: "Προεπιλεγμένη προβολή ημερολογίου"

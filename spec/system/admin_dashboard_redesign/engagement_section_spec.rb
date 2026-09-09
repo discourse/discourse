@@ -116,6 +116,48 @@ describe "Admin Dashboard Redesign | Engagement section" do
     expect(engagement).to have_no_selected_whos_posting_category(category_alpha)
   end
 
+  it "adds a group via the Compare groups modal and persists it across a refresh",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    support_group = Fabricate(:group, name: "support")
+    poster = Fabricate(:user, created_at: "2026-05-01")
+    Fabricate(:group_user, group: support_group, user: poster)
+    Fabricate(:post, user: poster, created_at: "2026-06-12")
+
+    dashboard.visit
+    expect(dashboard).to have_section("engagement")
+    expect(engagement).to have_no_whos_posting_bar("support")
+
+    engagement.open_compare_groups_modal
+    engagement.toggle_compare_groups_row("group:#{support_group.id}")
+    engagement.apply_compare_groups
+
+    expect(engagement).to have_whos_posting_bar("support")
+
+    dashboard.visit
+
+    expect(engagement).to have_whos_posting_bar("support")
+  end
+
+  it "does not persist a moderator's group selection",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    support_group = Fabricate(:group, name: "support")
+    poster = Fabricate(:user, created_at: "2026-05-01")
+    Fabricate(:group_user, group: support_group, user: poster)
+    Fabricate(:post, user: poster, created_at: "2026-06-12")
+    sign_in(moderator)
+
+    dashboard.visit
+    engagement.open_compare_groups_modal
+    engagement.toggle_compare_groups_row("group:#{support_group.id}")
+    engagement.apply_compare_groups
+
+    expect(engagement).to have_whos_posting_bar("support")
+
+    dashboard.visit
+
+    expect(engagement).to have_no_whos_posting_bar("support")
+  end
+
   it "shows that engagement is up when every engagement metric improves",
      time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
     Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 5, 1), dau: 1, mau: 2)

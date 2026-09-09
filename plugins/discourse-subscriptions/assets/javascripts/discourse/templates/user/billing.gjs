@@ -8,9 +8,9 @@ export default <template>
 
   <section class="user-secondary-navigation">
     <MobileNav
-      @desktopClass="action-list nav-stacked"
-      @currentPath={{@controller.router._router.currentPath}}
       class="activity-nav"
+      @currentPath={{@controller.router._router.currentPath}}
+      @desktopClass="action-list nav-stacked"
     >
       <li>
         <LinkTo @route="user.billing.subscriptions">

@@ -8,6 +8,20 @@ module DiscourseWorkflows
       @node_registration_ready == true
     end
 
+    # A node class belongs to the first plugin that claims it, and claiming it is
+    # what subscribes its trigger event. Contributing plugins are flushed before
+    # the host registers its own nodes, so a node shipped by another plugin is
+    # attributed to that plugin and stops listening when it is disabled.
+    def register_node(node_class, plugin)
+      return if node_registered?(node_class)
+
+      DiscoursePluginRegistry.register_discourse_workflows_node(
+        node_class.name || node_class,
+        plugin,
+      )
+      subscribe_node_event(node_class, plugin)
+    end
+
     def register_plugin_node_registration(plugin, registration)
       node_classes =
         if registration.respond_to?(:call)
@@ -16,11 +30,7 @@ module DiscourseWorkflows
           registration
         end
 
-      Array
-        .wrap(node_classes)
-        .each do |node_class|
-          DiscoursePluginRegistry.register_discourse_workflows_node(node_class, plugin)
-        end
+      Array.wrap(node_classes).each { |node_class| register_node(node_class, plugin) }
     end
 
     def flush_plugin_node_registrations!
@@ -31,6 +41,28 @@ module DiscourseWorkflows
           register_plugin_node_registration(plugin, registration)
         end
         plugin.discourse_workflows_node_registrations.clear
+      end
+    end
+
+    private
+
+    def node_registered?(node_class)
+      DiscoursePluginRegistry._raw_discourse_workflows_nodes.any? do |entry|
+        entry[:value] == (node_class.name || node_class)
+      end
+    end
+
+    # `Plugin::Instance#on` gates the handler on the owning plugin being enabled,
+    # so a node stops listening as soon as its plugin is turned off.
+    def subscribe_node_event(node_class, plugin)
+      event_name = node_class.event_name if node_class.respond_to?(:event_name)
+      return if event_name.blank?
+
+      # Event handlers outlive Zeitwerk reloads, so resolve named classes at dispatch.
+      node_reference = node_class.name || node_class
+      plugin.on(event_name) do |*args|
+        current_class = node_reference.is_a?(String) ? node_reference.constantize : node_reference
+        EventListener.handle(current_class, *args)
       end
     end
   end

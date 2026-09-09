@@ -63,10 +63,10 @@ export default class WizardFieldComponent extends Component {
 
       <div class="wizard-container__input">
         <this.component
-          @wizard={{@wizard}}
-          @step={{@step}}
           @field={{@field}}
           @fieldClass={{this.fieldClass}}
+          @step={{@step}}
+          @wizard={{@wizard}}
         />
       </div>
 

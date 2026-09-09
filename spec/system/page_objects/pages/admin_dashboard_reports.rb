@@ -65,7 +65,10 @@ module PageObjects
       end
 
       def manage_reports_modal
-        PageObjects::Components::ManageReportsModal.new
+        PageObjects::Components::ManageableRowListModal.new(
+          ".manage-reports",
+          "admin_js.admin.dashboard.reports_section.modal.counter",
+        )
       end
 
       def has_label_for?(identifier, label)

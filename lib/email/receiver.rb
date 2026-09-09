@@ -224,7 +224,7 @@ module Email
         # the email is a reply to *something*
         if category = post.topic&.category
           # it's a topic in a category
-          if category.mailinglist_mirror?
+          if sent_to_mailinglist_mirror?(category)
             # replies to categories that are mailing mirrors should work,
             # even if reply_by_email is not otherwise enabled
           elsif !SiteSetting.reply_by_email_enabled
@@ -852,15 +852,11 @@ module Email
         all_destinations.map { |d| Email::Receiver.check_address(d, is_bounce?) }.reject(&:blank?)
     end
 
-    def sent_to_mailinglist_mirror?
-      @sent_to_mailinglist_mirror ||=
-        begin
-          destinations.each do |destination|
-            return true if destination.is_a?(Category) && destination.mailinglist_mirror?
-          end
-
-          false
-        end
+    def sent_to_mailinglist_mirror?(category = nil)
+      destinations.any? do |destination|
+        destination.is_a?(Category) && destination.mailinglist_mirror? &&
+          (category.nil? || destination == category)
+      end
     end
 
     def self.check_address(address, include_verp = false)
@@ -1263,7 +1259,13 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      Email::MessageIdService.find_post_from_message_ids(message_ids)
+      post = Email::MessageIdService.find_post_from_message_ids(message_ids)
+      if !force && SiteSetting.find_related_post_with_key &&
+           !(post&.topic&.category && sent_to_mailinglist_mirror?(post.topic.category))
+        return
+      end
+
+      post
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)
@@ -1509,7 +1511,10 @@ module Email
 
       add_elided_to_raw!(options)
 
-      if sent_to_mailinglist_mirror?
+      topic_category = options[:topic]&.category
+      topic_category ||= Category.find_by(id: options[:category]) if options[:category]
+
+      if topic_category && sent_to_mailinglist_mirror?(topic_category)
         options[:skip_validations] = true
         options[:skip_guardian] = true
       else

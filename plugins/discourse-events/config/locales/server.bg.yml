@@ -9,7 +9,7 @@ bg:
     currently_away:
       labels:
         username: Потребителско име
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Ден"

@@ -13,12 +13,6 @@ export default class BrowseMore extends Component {
   @service topicTrackingState;
   @service siteSettings;
 
-  groupLink(groupName) {
-    return `<a class="group-link" href="${getURL(
-      `/u/${this.currentUser.username}/messages/group/${groupName}`
-    )}">${iconHTML("users")} ${groupName}</a>`;
-  }
-
   get privateMessageBrowseMoreMessage() {
     const suggestedGroupName = this.args.topic.get("suggested_group_name");
     const inboxFilter = suggestedGroupName ? "group" : "user";
@@ -68,6 +62,8 @@ export default class BrowseMore extends Component {
   }
 
   get topicBrowseMoreMessage() {
+    this.topicTrackingState.get("messageCount");
+
     let category = this.args.topic.get("category");
 
     if (category && category.id === this.site.uncategorized_category_id) {
@@ -108,6 +104,12 @@ export default class BrowseMore extends Component {
         latestLink: getURL("/latest"),
       });
     }
+  }
+
+  groupLink(groupName) {
+    return `<a class="group-link" href="${getURL(
+      `/u/${this.currentUser.username}/messages/group/${groupName}`
+    )}">${iconHTML("users")} ${groupName}</a>`;
   }
 
   <template>

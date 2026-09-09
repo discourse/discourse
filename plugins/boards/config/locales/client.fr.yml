@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    boards:
+      board:
+        remove_card: "Supprimer"
+        new_topic: "Nouveau sujet..."
+        title: "Titre"
+        tags: "Étiquettes"
+        assigned_to: "Attribué à"
+        view_topic: "Voir le sujet"
+        topic_reply_count:
+          one: "%{count} réponse"
+          other: "%{count} réponses"
+        assign: "Attribuer"
+        reassign: "Réattribuer"
+        unassign: "Annuler l'attribution"
+        unassign_from_topic: "Annuler l'attribution de @%{username} au sujet"
+        unassign_from_post: "Annuler l'attribution de @%{username} à #%{post_number}"
+        edit_assignments: "Modifier les attributions…"
+        created_by: "Créé par "
+      manage:
+        name: "Nom"
+        slug: "Identifiant"
+        constraint_categories: "Catégories"
+        constraint_tags: "Étiquettes"
+        advanced_settings: "Paramètres avancés"
+        columns:
+          remove: "Supprimer"
+          column_title: "Titre"
+          icon: "Icône"
+          color: "Couleur"
+          default_sort_priority: "Priorité"
+          tag: "Étiquette"
+          move_to_assigned_unassign: "Annuler l'attribution"
+          move_to_status_open: "Ouvert"
+          move_to_status_closed: "Fermé"
+          show_advanced: "Afficher les options avancées"
+          hide_advanced: "Masquer les options avancées"

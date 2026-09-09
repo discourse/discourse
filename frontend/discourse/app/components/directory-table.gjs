@@ -28,15 +28,15 @@ export default class DirectoryTable extends Component {
   <template>
     <DResponsiveTable {{didInsert this.setupTable}}>
       <:header>
-        <DTableHeaderToggle @field="username" @order={{@order}} @asc={{@asc}} />
+        <DTableHeaderToggle @asc={{@asc}} @field="username" @order={{@order}} />
         {{#each @columns as |column|}}
           <DTableHeaderToggle
-            @onToggle={{this.updateOrderAndAsc}}
-            @field={{column.name}}
-            @icon={{column.icon}}
-            @order={{@order}}
             @asc={{@asc}}
             @automatic={{directoryColumnIsAutomatic column=column}}
+            @field={{column.name}}
+            @icon={{column.icon}}
+            @onToggle={{this.updateOrderAndAsc}}
+            @order={{@order}}
             @translated={{column.user_field_id}}
           />
         {{/each}}
@@ -53,8 +53,8 @@ export default class DirectoryTable extends Component {
       <:body>
         {{#each @items as |item|}}
           <DirectoryItem
-            @item={{item}}
             @columns={{@columns}}
+            @item={{item}}
             @showTimeRead={{@showTimeRead}}
           />
         {{/each}}

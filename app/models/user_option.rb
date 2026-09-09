@@ -284,6 +284,7 @@ end
 #
 # Table name: user_options
 #
+#  ai_ask_ai_default                              :boolean          default(TRUE), not null
 #  ai_search_discoveries                          :boolean          default(TRUE), not null
 #  allow_private_messages                         :boolean          default(TRUE), not null
 #  auto_image_caption                             :boolean          default(FALSE), not null
@@ -292,6 +293,12 @@ end
 #  automatically_unpin_topics                     :boolean          default(TRUE), not null
 #  bookmark_auto_delete_preference                :integer          default(3), not null
 #  chat_announce_new_messages                     :boolean          default(TRUE), not null
+#  chat_channel_list_filter                       :integer          default("all"), not null
+#  chat_channel_list_filter_dms                   :integer          default("all"), not null
+#  chat_channel_list_filter_starred               :integer          default("all"), not null
+#  chat_channel_list_sort                         :integer          default("alphabetical"), not null
+#  chat_channel_list_sort_dms                     :integer          default("priority"), not null
+#  chat_channel_list_sort_starred                 :integer          default("alphabetical"), not null
 #  chat_email_frequency                           :integer          default("when_away"), not null
 #  chat_enabled                                   :boolean          default(TRUE), not null
 #  chat_header_indicator_preference               :integer          default("all_new"), not null

@@ -43,6 +43,7 @@ fa_IR:
       tool_help:
         users: "فهرست کاربران در انجمن"
         delete_topic: "حذف موضوع"
+        create_category: "ایجاد یک دسته‌بندی جدید"
       tool_description:
         summarize: "خلاصه شده <a href='%{url}'>%{title}</a>"
         dall_e: "%{prompt}"
@@ -61,10 +62,13 @@ fa_IR:
       delete_topic:
         errors:
           not_found: "موضوع پیدا نشد."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "موضوع پیدا نشد."
       edit_category:
+        errors:
+          not_found: "دسته یافت نشد."
+      change_topic_category:
         errors:
           not_found: "موضوع پیدا نشد."
           category_not_found: "دسته یافت نشد."

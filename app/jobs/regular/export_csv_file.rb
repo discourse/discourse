@@ -197,6 +197,8 @@ module Jobs
       @extra[:filters] = {}
       @extra[:filters][:category] = @extra[:category].to_i if @extra[:category].present?
       @extra[:filters][:group] = @extra[:group].to_i if @extra[:group].present?
+      @extra[:filters][:category_ids] = @extra[:category_ids] if @extra[:category_ids].present?
+      @extra[:filters][:groups] = @extra[:groups] if @extra[:groups].present?
       @extra[:filters][:include_subcategories] = !!ActiveRecord::Type::Boolean.new.cast(
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?

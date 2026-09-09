@@ -1,13 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import BlockOutlet from "discourse/blocks/block-outlet";
 import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
+import { replaceUserSidebarSections } from "discourse/lib/sidebar/helpers";
 import {
   extractDroppedWebLink,
+  linkDropEffectFor,
   WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
   webLinkPayload,
@@ -35,6 +40,7 @@ const ZONE_ARM_DELAY = 250;
 export default class SidebarUserSections extends Component {
   @service sidebarState;
   @service currentUser;
+  @service dialog;
   @service modal;
 
   /** Whether the new-section drop zone is on screen. */
@@ -53,6 +59,10 @@ export default class SidebarUserSections extends Component {
     cancel(this.#armTimer);
   }
 
+  get mainPanel() {
+    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
+  }
+
   /**
    * Arms the reveal dwell: only where link drop is enabled at all, and only
    * for a drag that declares a real URL. A drag carrying only text may well
@@ -60,12 +70,14 @@ export default class SidebarUserSections extends Component {
    */
   @action
   canDwellForNewSection({ source }) {
+    if (!this.args.enableLinkDrop) {
+      return false;
+    }
+    if (source.type === "sidebar-link") {
+      return true;
+    }
     const payload = webLinkPayload(source);
-    return (
-      Boolean(this.args.enableLinkDrop) &&
-      payload.containsURLs() &&
-      !payload.containsFiles()
-    );
+    return payload.containsURLs() && !payload.containsFiles();
   }
 
   @action
@@ -106,11 +118,24 @@ export default class SidebarUserSections extends Component {
    */
   @action
   canDropLink({ source }) {
+    if (source.type === "sidebar-link") {
+      return true;
+    }
     return !webLinkPayload(source).containsFiles();
   }
 
   @action
+  linkDropEffect({ source }) {
+    return linkDropEffectFor(source);
+  }
+
+  @action
   createSectionFromLink({ source }) {
+    if (source.type === "sidebar-link") {
+      this.#splitOutLink(source.data);
+      return;
+    }
+
     const link = extractDroppedWebLink(webLinkPayload(source));
     if (!link) {
       return;
@@ -124,8 +149,69 @@ export default class SidebarUserSections extends Component {
     });
   }
 
-  get mainPanel() {
-    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
+  /**
+   * Splits a dragged row out into a section of its own: the create form opens
+   * prefilled from the row, and only a saved creation removes the original
+   * from the section it came from. Taking a row out of a public section is a
+   * public change and asks first, like every other edit of one.
+   */
+  async #splitOutLink(dragData) {
+    if (dragData.public && !(await this.#confirmPublicChange())) {
+      return;
+    }
+
+    const result = await this.modal.show(SidebarSectionForm, {
+      model: {
+        link: {
+          icon: dragData.icon || "link",
+          name: dragData.name,
+          value: dragData.value,
+          segment: "primary",
+        },
+      },
+    });
+
+    if (result?.createdSection) {
+      await this.#removeLinkFromOrigin(dragData);
+    }
+  }
+
+  #confirmPublicChange() {
+    return new Promise((resolve) => {
+      this.dialog.yesNoConfirm({
+        message: i18n("sidebar.sections.custom.update_public_confirm"),
+        didConfirm: () => resolve(true),
+        didCancel: () => resolve(false),
+      });
+    });
+  }
+
+  async #removeLinkFromOrigin({ sectionId, linkId }) {
+    const origin = this.currentUser.sidebar_sections.find(
+      (section) => section.id === sectionId
+    );
+    if (!origin) {
+      return;
+    }
+
+    try {
+      // The whole links array rides along: the update endpoint reads order
+      // from it, and an omitted link would jump to the front of the section.
+      const response = await ajax(`/sidebar_sections/${sectionId}`, {
+        type: "PUT",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({
+          title: origin.title,
+          links: origin.links.map((link) =>
+            link.id === linkId ? { ...link, _destroy: "1" } : link
+          ),
+        }),
+      });
+      replaceUserSidebarSections(this.currentUser, [response.sidebar_section]);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   <template>
@@ -136,11 +222,11 @@ export default class SidebarUserSections extends Component {
     <div
       class="sidebar-sections"
       {{dDragAndDropAutoScroll
-        types=WEB_LINK_ADOPTION.type
+        types=(array WEB_LINK_ADOPTION.type "sidebar-link")
         externalKinds=WEB_LINK_KINDS
       }}
       {{dDragDwell
-        types=WEB_LINK_ADOPTION.type
+        types=(array WEB_LINK_ADOPTION.type "sidebar-link")
         externalKinds=WEB_LINK_KINDS
         canDwell=this.canDwellForNewSection
         onDwell=this.revealZone
@@ -151,9 +237,9 @@ export default class SidebarUserSections extends Component {
       <CustomSections
         @collapsable={{@collapsableSections}}
         @enableLinkDrop={{@enableLinkDrop}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.zoneRevealed}}
@@ -161,12 +247,12 @@ export default class SidebarUserSections extends Component {
             custom section. Pointer-only, like the drag it serves; creating a
             section by keyboard keeps its own path. }}
         <div
+          aria-hidden="true"
           class={{dConcatClass
             "sidebar-link-drop-target"
             (unless this.zoneArmed "is-arming")
             (if this.zoneHovered "is-active")
           }}
-          aria-hidden="true"
           {{dDragAndDropExternalTarget
             accepts=WEB_LINK_KINDS
             canDrop=this.canDropLink
@@ -179,9 +265,10 @@ export default class SidebarUserSections extends Component {
           {{! The same drop, for a link the browser started dragging from this
               page rather than from outside the window. }}
           {{dDragAndDropTarget
+            accepts="sidebar-link"
             adopts=WEB_LINK_ADOPTION
             canDrop=this.canDropLink
-            dropEffect="copy"
+            dropEffect=this.linkDropEffect
             indicator=false
             onDragEnter=this.trackZoneHover
             onDragLeave=this.clearZoneHover
@@ -195,9 +282,9 @@ export default class SidebarUserSections extends Component {
 
       <CategoriesSection
         @collapsable={{@collapsableSections}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.currentUser.display_sidebar_tags}}

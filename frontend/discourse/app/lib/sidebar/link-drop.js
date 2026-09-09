@@ -8,6 +8,21 @@ import { SIDEBAR_URL } from "discourse/lib/constants";
 export const WEB_LINK_KINDS = ["urls", "html", "text"];
 
 /**
+ * The drop effect a target answers a link drag with. A row being moved is taken
+ * from where it was. An incoming link is copied in.
+ *
+ * Every target that accepts both must agree. A row drags as `move`, so a target
+ * answering `copy` makes the pair incompatible. The browser then refuses the
+ * drop outright: no `drop` event, nothing logged.
+ *
+ * @param {Object} source - The source a drop target reported.
+ * @returns {"move"|"copy"} The effect for this source.
+ */
+export function linkDropEffectFor(source) {
+  return source.type === "sidebar-link" ? "move" : "copy";
+}
+
+/**
  * Lets the sidebar accept a link the browser started dragging from this page —
  * a topic row, a category, a link in a post — none of which register a drag
  * source, and there are far too many kinds to.

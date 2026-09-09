@@ -105,6 +105,11 @@ RSpec.describe Reports::ListQuery do
       expect(report_types).not_to include(*Report::LEGACY_REPORTS)
     end
 
+    it "excludes internal reports meant only to be fetched by another report's UI" do
+      report_types = result.map { |r| r[:type] }
+      expect(report_types).not_to include(*Report::INTERNAL_REPORT_TYPES)
+    end
+
     it "does not include plugin name for core reports" do
       topics_report = result.find { |r| r[:type] == "topics" }
       expect(topics_report[:plugin]).to be_nil

@@ -54,7 +54,7 @@ describe "Twitter OAuth 1.0a" do
       verified: true,
       email: email,
     }
-    stub_request(:get, "https://api.twitter.com/1.1/account/verify_credentials.json").with(
+    stub_request(:get, "https://api.x.com/1.1/account/verify_credentials.json").with(
       query: {
         include_email: true,
         include_entities: false,
@@ -68,7 +68,7 @@ describe "Twitter OAuth 1.0a" do
     SiteSetting.twitter_consumer_key = consumer_key
     SiteSetting.twitter_consumer_secret = consumer_secret
 
-    stub_request(:post, "https://api.twitter.com/oauth/request_token").to_return(
+    stub_request(:post, "https://api.x.com/oauth/request_token").to_return(
       status: 200,
       body:
         Rack::Utils.build_query(
@@ -80,7 +80,7 @@ describe "Twitter OAuth 1.0a" do
         "Content-Type" => "application/x-www-form-urlencoded",
       },
     )
-    stub_request(:post, "https://api.twitter.com/oauth/access_token").to_return(
+    stub_request(:post, "https://api.x.com/oauth/access_token").to_return(
       status: 200,
       body:
         Rack::Utils.build_query(
@@ -95,7 +95,7 @@ describe "Twitter OAuth 1.0a" do
   it "signs in the user if the API response from twitter includes an email (implies it's verified) and the email matches an existing user's" do
     post "/auth/twitter"
     expect(response.status).to eq(302)
-    expect(response.location).to start_with("https://api.twitter.com/oauth/authenticate")
+    expect(response.location).to start_with("https://api.x.com/oauth/authenticate")
 
     setup_twitter_email_stub(email: user1.email)
 
@@ -112,7 +112,7 @@ describe "Twitter OAuth 1.0a" do
     SiteSetting.enable_discourse_connect = true
     post "/auth/twitter"
     expect(response.status).to eq(302)
-    expect(response.location).to start_with("https://api.twitter.com/oauth/authenticate")
+    expect(response.location).to start_with("https://api.x.com/oauth/authenticate")
 
     setup_twitter_email_stub(email: user1.email)
 
@@ -125,7 +125,7 @@ describe "Twitter OAuth 1.0a" do
   it "doesn't sign in anyone if the API response from twitter doesn't include an email (implying the user's email on twitter isn't verified)" do
     post "/auth/twitter"
     expect(response.status).to eq(302)
-    expect(response.location).to start_with("https://api.twitter.com/oauth/authenticate")
+    expect(response.location).to start_with("https://api.x.com/oauth/authenticate")
 
     setup_twitter_email_stub(email: nil)
 

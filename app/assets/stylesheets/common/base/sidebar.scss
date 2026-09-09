@@ -558,10 +558,7 @@
   }
 
   &__shortcut-hint {
-    min-width: 26px;
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-3);
-    color: var(--d-sidebar-link-color);
+    margin-right: var(--space-2);
   }
 }
 

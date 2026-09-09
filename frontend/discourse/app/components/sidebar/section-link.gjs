@@ -10,7 +10,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { and, eq, not, or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SectionLinkPrefix from "./section-link-prefix";
@@ -42,6 +42,8 @@ export function isHex(input) {
 export default class SectionLink extends Component {
   @service capabilities;
   @service currentUser;
+  @service router;
+  @service sidebarState;
 
   @tracked hovering = false;
   @tracked hoverActionActive = false;
@@ -131,6 +133,23 @@ export default class SectionLink extends Component {
     return [];
   }
 
+  get resolvedCurrentWhen() {
+    if (this.args.exactUrlMatch) {
+      return false;
+    }
+
+    const currentWhen = this.args.currentWhen;
+
+    // Ember 7's <LinkTo> ignores @models for a string @current-when; resolve the route list against this link's models ourselves.
+    if (typeof currentWhen === "string") {
+      return currentWhen
+        .split(" ")
+        .some((route) => this.router.isActive(route, ...this.models));
+    }
+
+    return currentWhen;
+  }
+
   get prefixColor() {
     const hexCode = isHex(this.args.prefixColor);
 
@@ -142,7 +161,13 @@ export default class SectionLink extends Component {
   }
 
   get shouldRenderHoverAction() {
-    return this.args.hoverValue && !this.capabilities.touch;
+    if (!this.args.hoverValue) {
+      return false;
+    }
+
+    // on narrow touch layouts the affordance exists elsewhere; rendering
+    // the button would only clutter the panel
+    return !this.capabilities.touch || this.capabilities.viewport.sm;
   }
 
   @action
@@ -172,11 +197,43 @@ export default class SectionLink extends Component {
 
   @bind
   maybeScrollIntoView(element) {
+    this.#revealLink(element);
+  }
+
+  @bind
+  revealActiveLink(element) {
+    this.#revealLink(element, { force: true });
+  }
+
+  #revealLink(element, { force = false } = {}) {
     if (!this.args.scrollIntoView) {
       return;
     }
 
     schedule("afterRender", () => {
+      if (
+        this.isDestroying ||
+        !element.isConnected ||
+        !this.args.scrollIntoView
+      ) {
+        return;
+      }
+
+      const container = element.closest(".sidebar-sections");
+      const destination = element.querySelector("a")?.href;
+
+      // Reinserting the same destination in another section is not navigation.
+      if (
+        container &&
+        destination &&
+        !this.sidebarState.shouldRevealLink(container, destination, {
+          force,
+          linkRoute: this.args.route,
+        })
+      ) {
+        return;
+      }
+
       if (isFullyScrolledIntoView(element)) {
         return;
       }
@@ -191,29 +248,30 @@ export default class SectionLink extends Component {
   <template>
     {{#if this.shouldDisplay}}
       <li
+        class={{this.wrapperClass}}
+        data-list-item-name={{@linkName}}
+        ...attributes
         {{didInsert this.maybeScrollIntoView}}
-        {{didUpdate this.maybeScrollIntoView @scrollIntoView}}
+        {{didUpdate this.revealActiveLink @scrollIntoView}}
         {{on "mouseenter" this.hoveringSectionLink}}
         {{on "mouseleave" this.stopHoveringSectionLink}}
-        data-list-item-name={{@linkName}}
-        class={{this.wrapperClass}}
-        ...attributes
       >
         {{#if @href}}
           <a
+            class={{this.linkClass}}
+            data-link-name={{@linkName}}
+            draggable={{if @suppressNativeDrag false}}
             href={{@href}}
             rel="noopener noreferrer"
             target={{this.target}}
             title={{@title}}
-            data-link-name={{@linkName}}
-            class={{this.linkClass}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
@@ -254,10 +312,11 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{dIcon @hoverValue class="hover-icon"}}
@@ -268,20 +327,21 @@ export default class SectionLink extends Component {
           </a>
         {{else}}
           <LinkTo
-            @route={{@route}}
-            @query={{or @query (hash)}}
-            @models={{this.models}}
-            @current-when={{and (not @exactUrlMatch) @currentWhen}}
-            title={{@title}}
-            data-link-name={{@linkName}}
             class={{this.linkClass}}
+            data-link-name={{@linkName}}
+            draggable={{if @suppressNativeDrag false}}
+            title={{@title}}
+            @current-when={{this.resolvedCurrentWhen}}
+            @models={{this.models}}
+            @query={{or @query (hash)}}
+            @route={{@route}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
@@ -321,10 +381,11 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
+                  aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{dIcon @hoverValue class="hover-icon"}}

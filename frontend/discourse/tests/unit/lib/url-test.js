@@ -13,6 +13,7 @@ import DiscourseURL, {
   userPath,
 } from "discourse/lib/url";
 import Session from "discourse/models/session";
+import Site from "discourse/models/site";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | url", function (hooks) {
@@ -369,6 +370,33 @@ module("Unit | Utility | url", function (hooks) {
         DiscourseURL.redirectTo.calledWith(route),
         `${route} is redirected to server`
       );
+    }
+  });
+
+  test("routeTo redirects paths registered as server-rendered homepages", function (assert) {
+    const site = Site.current();
+    const originalOptions = site.homepage_options;
+    site.set("homepage_options", [
+      { id: "directory", path: "/directory", server_side: true },
+    ]);
+    sinon.stub(DiscourseURL, "redirectTo");
+
+    try {
+      for (const path of [
+        "/directory/people/1/example",
+        "/directory?neighborhood=mississippi",
+        "/directory#shops",
+      ]) {
+        DiscourseURL.redirectTo.resetHistory();
+        DiscourseURL.routeTo(path);
+
+        assert.true(
+          DiscourseURL.redirectTo.calledWith(path),
+          `${path} is redirected to the server`
+        );
+      }
+    } finally {
+      site.set("homepage_options", originalOptions);
     }
   });
 

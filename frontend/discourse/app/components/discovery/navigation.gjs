@@ -74,6 +74,15 @@ export default class DiscoveryNavigation extends Component {
     }
   }
 
+  get headingClasses() {
+    return dConcatClass(
+      "category-heading",
+      this.args.category?.uploaded_logo?.url
+        ? "--has-logo discovery-heading"
+        : null
+    );
+  }
+
   @action
   editCategory() {
     DiscourseURL.routeTo(`/c/${Category.slugFor(this.args.category)}/edit`);
@@ -89,15 +98,6 @@ export default class DiscoveryNavigation extends Component {
     this.modal.show(ReorderCategories);
   }
 
-  get headingClasses() {
-    return dConcatClass(
-      "category-heading",
-      this.args.category?.uploaded_logo?.url
-        ? "--has-logo discovery-heading"
-        : null
-    );
-  }
-
   <template>
     <AddCategoryTagClasses
       @category={{@category}}
@@ -105,10 +105,10 @@ export default class DiscoveryNavigation extends Component {
     />
 
     <AccessibleDiscoveryHeading
-      @category={{@category}}
-      @tag={{@tag}}
       @additionalTags={{@additionalTags}}
+      @category={{@category}}
       @filter={{this.filterMode}}
+      @tag={{@tag}}
     />
 
     {{#if @category}}
@@ -123,8 +123,8 @@ export default class DiscoveryNavigation extends Component {
       >
         {{#if @category.uploaded_logo.url}}
           <CategoryLogo
-            @category={{@category}}
             class="category-heading__logo"
+            @category={{@category}}
           />
           {{#if @category.description}}
             <div class="category-heading__content">
@@ -137,8 +137,8 @@ export default class DiscoveryNavigation extends Component {
         {{/if}}
 
         <PluginOutlet
-          @name="category-heading"
           @connectorTagName="div"
+          @name="category-heading"
           @outletArgs={{lazyHash category=@category tag=@tag}}
         />
 
@@ -154,46 +154,46 @@ export default class DiscoveryNavigation extends Component {
       }}
     >
       <DNavigation
-        @category={{@category}}
-        @tag={{@tag}}
         @additionalTags={{@additionalTags}}
-        @filterMode={{this.filterMode}}
-        @noSubcategories={{@noSubcategories}}
+        @bulkSelectHelper={{@bulkSelectHelper}}
+        @canBulkSelect={{@canBulkSelect}}
         @canCreateTopic={{this.canCreateTopic}}
         @canCreateTopicOnTag={{@canCreateTopicOnTag}}
+        @category={{@category}}
+        @createCategory={{this.createCategory}}
         @createTopic={{@createTopic}}
         @createTopicDisabled={{@createTopicDisabled}}
+        @dismissRead={{@dismissRead}}
         @draftCount={{this.currentUser.draft_count}}
         @editCategory={{this.editCategory}}
-        @showCategoryAdmin={{@showCategoryAdmin}}
-        @createCategory={{this.createCategory}}
-        @reorderCategories={{this.reorderCategories}}
-        @canBulkSelect={{@canBulkSelect}}
-        @bulkSelectHelper={{@bulkSelectHelper}}
-        @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
-        @toggleTagInfo={{@toggleTagInfo}}
-        @showTagInfo={{@showTagInfo}}
+        @filterMode={{this.filterMode}}
         @loadingTagInfo={{@loadingTagInfo}}
-        @tagNotification={{@tagNotification}}
         @model={{@model}}
+        @noSubcategories={{@noSubcategories}}
+        @reorderCategories={{this.reorderCategories}}
+        @resetNew={{@resetNew}}
+        @showCategoryAdmin={{@showCategoryAdmin}}
         @showDismissRead={{@showDismissRead}}
         @showResetNew={{@showResetNew}}
-        @dismissRead={{@dismissRead}}
-        @resetNew={{@resetNew}}
+        @showTagInfo={{@showTagInfo}}
+        @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
+        @tag={{@tag}}
+        @tagNotification={{@tagNotification}}
+        @toggleTagInfo={{@toggleTagInfo}}
       />
 
       {{#if @category}}
         <PluginOutlet
-          @name="category-navigation"
           @connectorTagName="div"
+          @name="category-navigation"
           @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       {{/if}}
 
       {{#if @tag}}
         <PluginOutlet
-          @name="tag-navigation"
           @connectorTagName="div"
+          @name="tag-navigation"
           @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       {{/if}}

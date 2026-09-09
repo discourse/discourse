@@ -42,10 +42,10 @@ module("Component | PollOptions", function (hooks) {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -67,10 +67,10 @@ module("Component | PollOptions", function (hooks) {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -92,10 +92,10 @@ module("Component | PollOptions", function (hooks) {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -117,10 +117,10 @@ module("Component | PollOptions", function (hooks) {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -142,8 +142,8 @@ module("Component | PollOptions", function (hooks) {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @options={{this.options}}
-          @votes={{this.votes}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -165,10 +165,10 @@ module("Component | PollOptions", function (hooks) {
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
-          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @options={{this.options}}
-          @votes={{this.votes}}
+          @ranked_choice_dropdown_content={{this.ranked_choice_dropdown_content}}
           @sendRadioClick={{this.toggleOption}}
+          @votes={{this.votes}}
         />
       </template>
     );
@@ -211,8 +211,8 @@ module("Component | PollOptions", function (hooks) {
           @isCheckbox={{this.isCheckbox}}
           @isRankedChoice={{this.isRankedChoice}}
           @options={{this.options}}
-          @votes={{this.votes}}
           @sendOptionSelect={{this.sendOptionSelect}}
+          @votes={{this.votes}}
         />
       </template>
     );

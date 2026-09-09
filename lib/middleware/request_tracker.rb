@@ -743,6 +743,12 @@ class Middleware::RequestTracker
     tracking_url = data["url"]&.slice(0, MAX_URL_LENGTH)
     tracking_referrer = data["referrer"]&.slice(0, MAX_URL_LENGTH)
     tracking_session_id = data["session_id"]&.slice(0, MAX_SESSION_ID_LENGTH)
+    tracking_language = data["language"]
+    if tracking_language.is_a?(String)
+      tracking_language = tracking_language.slice(0, BrowserPageviewEvent::MAX_LANGUAGE_LENGTH)
+    else
+      tracking_language = nil
+    end
     user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
     is_embed = data["embed"] == true
 
@@ -758,6 +764,7 @@ class Middleware::RequestTracker
       tracking_url: tracking_url,
       tracking_referrer: tracking_referrer,
       tracking_session_id: tracking_session_id,
+      tracking_language: tracking_language,
       user_agent: user_agent,
     }
   end
@@ -813,7 +820,7 @@ class Middleware::RequestTracker
         raise
       end
     rescue => e
-      Rails.logger.error(
+      Rails.logger.warn(
         "Failed to create BrowserPageviewEvent with payload #{payload}: #{e.message}",
       )
     end
@@ -846,6 +853,7 @@ class Middleware::RequestTracker
       asn: ip_info[:asn],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
+      language: data[:tracking_language],
       session_id: data[:tracking_session_id],
       topic_id: data[:topic_id],
       occurred_at: data[:occurred_at],

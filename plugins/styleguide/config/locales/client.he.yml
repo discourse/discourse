@@ -95,6 +95,30 @@ he:
           title: "נושאים נוספים"
         post_menu:
           title: "תפריט פוסט"
+        roving_focus:
+          toolbar:
+            bold: "מודגש"
+            italic: "נטוי"
+            copy: "העתקה"
+          tags:
+            remove: "הסרת %{tag}"
+            design: "עיצוב"
+            support: "תמיכה"
+          adjacent:
+            label: "מסננים"
+            field: "חיפוש"
+            open: "פתוח"
+            recent: "לאחרונה"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "יומי"
+            weekly: "שבועי"
+            monthly: "חודשי"
+            never: "לעולם לא"
+          tree:
+            components: "רכיבים"
+            select: "בחירה"
         modal:
           title: "מודאלי"
           header: "כותרת מודאלי"

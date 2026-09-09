@@ -119,6 +119,38 @@ describe DiscourseDataExplorer::QueryController do
       end
     end
 
+    describe "#create" do
+      fab!(:group)
+
+      it "grants the given groups access to the new query" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 description: "A description",
+                 sql: "SELECT 1",
+                 group_ids: [group.id],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([group.id])
+      end
+
+      it "creates a query without groups when none are given" do
+        post "/admin/plugins/discourse-data-explorer/queries.json",
+             params: {
+               query: {
+                 name: "My query",
+                 sql: "SELECT 1",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["group_ids"]).to eq([])
+      end
+    end
+
     describe "#update" do
       fab!(:user2, :user)
       fab!(:group2) { Fabricate(:group, users: [user2]) }
@@ -486,7 +518,7 @@ describe DiscourseDataExplorer::QueryController do
           create_post
         end
 
-        it "should limit the results in JSON response" do
+        it "limits the results in the JSON response" do
           SiteSetting.data_explorer_query_result_limit = 2
           query = make_query <<~SQL
             SELECT id FROM posts
@@ -508,7 +540,7 @@ describe DiscourseDataExplorer::QueryController do
           expect(response.status).to eq(400)
         end
 
-        it "should limit the results in CSV download" do
+        it "limits the results in the CSV download" do
           query = make_query <<~SQL
             SELECT id FROM posts
           SQL
@@ -1155,7 +1187,7 @@ describe DiscourseDataExplorer::QueryController do
     end
   end
 
-  describe "Admin" do
+  describe "Admin AI query generation" do
     fab!(:admin)
 
     before do

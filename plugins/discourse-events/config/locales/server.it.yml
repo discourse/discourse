@@ -19,8 +19,8 @@ it:
       event_started:
         title: Evento iniziato
   system_messages:
-    discourse_calendar_holiday_region_invalid: "La regione che hai fornito per le festività non esiste."
-    discourse_calendar_enable_holiday_failed: "Questa festività non può essere abilitata, è già abilitata o non è disabilitata."
+    discourse_events_holiday_region_invalid: "La regione che hai fornito per le festività non esiste."
+    discourse_events_enable_holiday_failed: "Questa festività non può essere abilitata, è già abilitata o non è disabilitata."
     discourse_post_event_bulk_invite_succeeded:
       title: "Evento: Invito collettivo riuscito"
       subject_template: "Invito collettivo elaborato correttamente"
@@ -55,7 +55,7 @@ it:
     calendar_automatic_holidays_enabled: "Imposta automaticamente lo stato di vacanza in base all'area geografica degli utenti (nota: puoi disabilitare specifiche festività automatiche nelle impostazioni del plugin)"
     event_participation_buttons: "Elenco dei pulsanti di partecipazione agli eventi che gli utenti possono utilizzare."
     sidebar_show_upcoming_events: "Mostra il link ai prossimi eventi nella barra laterale sotto \"Altro\"."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Giorno"

@@ -97,6 +97,11 @@ nl:
           solved: "zijn opgelost"
           unsolved: "zijn onopgelost"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Topic"
+            category: "Categorie"
       web_hooks:
         solved_event:
           group_name: "Oplossingsgebeurtenis"

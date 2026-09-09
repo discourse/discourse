@@ -46,6 +46,12 @@ et:
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Teema"
+            category: "Kategooriad"
     discourse_automation:
       triggerables:
         first_accepted_solution:

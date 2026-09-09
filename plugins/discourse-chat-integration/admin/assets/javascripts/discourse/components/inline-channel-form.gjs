@@ -49,18 +49,6 @@ export default class InlineChannelForm extends Component {
         <div class="inline-channel-form__fields">
           {{#each this.channelParameters as |param|}}
             <form.Field
-              @type="input"
-              @name={{param.key}}
-              @format="full"
-              @title={{i18n
-                (concat
-                  "chat_integration.provider."
-                  @provider.name
-                  ".param."
-                  param.key
-                  ".title"
-                )
-              }}
               @description={{i18n
                 (concat
                   "chat_integration.provider."
@@ -70,6 +58,18 @@ export default class InlineChannelForm extends Component {
                   ".help"
                 )
               }}
+              @format="full"
+              @name={{param.key}}
+              @title={{i18n
+                (concat
+                  "chat_integration.provider."
+                  @provider.name
+                  ".param."
+                  param.key
+                  ".title"
+                )
+              }}
+              @type="input"
               @validation="required"
               as |field|
             >
@@ -80,19 +80,19 @@ export default class InlineChannelForm extends Component {
 
         <div class="inline-channel-form__actions">
           <form.Submit
+            class="btn-primary btn-small"
+            @isLoading={{this.isSaving}}
             @label={{if
               this.isNew
               "chat_integration.add_channel"
               "chat_integration.edit_channel_modal.save"
             }}
-            @isLoading={{this.isSaving}}
-            class="btn-primary btn-small"
           />
           {{#if @onCancel}}
             <form.Button
-              @label="cancel"
-              @action={{@onCancel}}
               class="btn-default btn-small"
+              @action={{@onCancel}}
+              @label="cancel"
             />
           {{/if}}
         </div>

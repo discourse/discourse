@@ -27,8 +27,8 @@ export default class SchemaSettingTypeEnum extends Component {
   <template>
     <ComboBox
       @content={{this.content}}
-      @value={{this.value}}
       @onChange={{this.onInput}}
+      @value={{this.value}}
     />
     <FieldInputDescription @description={{@description}} />
   </template>

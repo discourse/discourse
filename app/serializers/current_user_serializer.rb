@@ -87,7 +87,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :is_impersonating,
              :impersonation_expires_at,
              :can_change_post_owner,
-             :show_site_owner_onboarding
+             :show_site_owner_onboarding,
+             :can_run_design_wizard
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -173,6 +174,18 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
+  end
+
+  # The wizard only offers the core themes and rewrites the site's design in one
+  # pass, so it stops being useful once a site has been customized past what it
+  # covers.
+  def include_can_run_design_wizard?
+    object.admin? && Theme::CORE_THEMES.value?(SiteSetting.default_theme_id) &&
+      !Theme.where.not(id: Theme::CORE_THEMES.values).exists?
+  end
+
+  def can_run_design_wizard
+    true
   end
 
   def include_show_site_owner_onboarding?

@@ -23,6 +23,20 @@ te:
           title: "పోస్ట్"
         more_topics:
           title: "మరిన్ని విషయాలు"
+        roving_focus:
+          toolbar:
+            copy: "నకలు"
+          adjacent:
+            field: "శోధించండి"
+            recent: "తాజా"
+          combobox:
+            daily: "రోజువారీ"
+            weekly: "వారానికోసారి"
+            monthly: "నెలవారీ"
+            never: "ఎప్పటికీ వద్దు"
+          tree:
+            components: "భాగాలు"
+            select: "ఎంచుకోండి"
         tooltips:
           description: "వివరణ"
           header: "హెడర్"

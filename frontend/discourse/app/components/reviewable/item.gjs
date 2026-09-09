@@ -8,7 +8,6 @@ import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
-import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
@@ -31,6 +30,7 @@ import { bind } from "discourse/lib/decorators";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { showAlert } from "discourse/lib/post-action-feedback";
+import { survivingPenalty } from "discourse/lib/reviewable-penalty";
 import { resolveReviewableComponent } from "discourse/lib/reviewable-registry";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -47,6 +47,8 @@ import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const PENALTY_TOAST_KEY = "reviewable-author-penalty";
 
 const fieldComponents = {
   category: ReviewableFieldCategory,
@@ -136,11 +138,6 @@ export default class ReviewableItem extends Component {
 
   get editing() {
     return this.state.updates !== null;
-  }
-
-  @bind
-  resolveReviewableComponent(type) {
-    return resolveReviewableComponent(getOwner(this), type);
   }
 
   get customClasses() {
@@ -241,34 +238,28 @@ export default class ReviewableItem extends Component {
   }
 
   get scoreSummary() {
-    const scoreData = this.args.reviewable?.reviewable_scores?.reduce(
-      (acc, score) => {
-        if (!acc[score.score_type.type]) {
-          acc[score.score_type.type] = {
-            title: score.score_type.title,
-            type: score.score_type.type,
-            count: 0,
-          };
-        }
+    const scores = this.args.reviewable?.reviewable_scores ?? [];
+    const summaries = {};
 
-        acc[score.score_type.type].count += 1;
-        return acc;
-      },
-      {}
-    );
+    for (const { score_type } of scores) {
+      summaries[score_type.type] ??= {
+        title: score_type.title,
+        type: score_type.type,
+        count: 0,
+      };
+      summaries[score_type.type].count += 1;
+    }
 
-    return Object.values(scoreData);
+    return Object.values(summaries);
   }
 
   get reviewableTypeLabel() {
     const { reviewable } = this.args;
 
-    // handle plugin types
     if (reviewableTypeLabels[reviewable?.type]) {
       return reviewableTypeLabels[reviewable?.type];
     }
 
-    // core types
     if (reviewable?.type === "ReviewableUser") {
       return "review.user_label";
     }
@@ -288,8 +279,287 @@ export default class ReviewableItem extends Component {
       return "review.post_flagged_as";
     }
 
-    // fallback
     return "review.flagged_as";
+  }
+
+  get permalink() {
+    return getAbsoluteURL(`/review/${this.args.reviewable.id}`);
+  }
+
+  @bind
+  resolveReviewableComponent(type) {
+    return resolveReviewableComponent(getOwner(this), type);
+  }
+
+  @action
+  clientScrub() {
+    this.modal.show(ScrubRejectedUserModal, {
+      model: {
+        confirmScrub: this.scrubRejectedUser,
+      },
+    });
+  }
+
+  @bind
+  async scrubRejectedUser(reason) {
+    const { id } = this.args.reviewable;
+
+    try {
+      await ajax({ url: `/review/${id}/scrub`, type: "PUT", data: { reason } });
+      this.store.find("reviewable", id);
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  clientSuspend(reviewable, performAction) {
+    return this._penalize("showSuspendModal", reviewable, performAction);
+  }
+
+  clientSilence(reviewable, performAction) {
+    return this._penalize("showSilenceModal", reviewable, performAction);
+  }
+
+  async clientEdit(reviewable, performAction) {
+    if (!this.currentUser) {
+      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
+    }
+
+    const post = await this.store.find("post", reviewable.post_id);
+
+    if (!post.can_edit) {
+      return false;
+    }
+
+    const topic = Topic.create(await Topic.find(post.topic_id, {}));
+    post.set("topic", topic);
+
+    return this.composer.open({
+      post,
+      action: Composer.EDIT,
+      draftKey: topic.draft_key,
+      draftSequence: topic.draft_sequence,
+      skipJumpOnSave: true,
+      onSaved: () => performAction().catch(popupAjaxError),
+    });
+  }
+
+  @action
+  switchTab(tabName, event) {
+    event.preventDefault();
+    this.state.activeTab = tabName;
+    if (tabName === "insights") {
+      this.state.insightsOpened = true;
+    }
+  }
+
+  @action
+  edit() {
+    this.state.updates = trackedObject({});
+  }
+
+  @action
+  cancelEdit() {
+    this.state.updates = null;
+  }
+
+  @action
+  saveEdit() {
+    this.updating = true;
+    return this.args.reviewable
+      .update({ ...this.state.updates })
+      .then(() => (this.state.updates = null))
+      .catch(popupAjaxError)
+      .finally(() => (this.updating = false));
+  }
+
+  @action
+  categoryChanged(categoryId) {
+    const category =
+      Category.findById(categoryId) ?? Category.findUncategorized();
+
+    this.#updateField("category_id", category.id);
+  }
+
+  @action
+  valueChanged(fieldId, event) {
+    this.#updateField(fieldId, event.target.value);
+  }
+
+  @action
+  async perform(performableAction) {
+    if (this.updating) {
+      return;
+    }
+
+    const message = performableAction.get("confirm_message");
+    const requireRejectReason = performableAction.get("require_reject_reason");
+    const actionModalClass = requireRejectReason
+      ? RejectReasonReviewableModal
+      : actionModalClassMap[performableAction.server_action];
+
+    if (message) {
+      if (await this.#claimReviewable()) {
+        const confirmOptions = {
+          message,
+          didConfirm: () => this._performConfirmed(performableAction),
+          // Claiming happens before the prompt, so release it if nothing is performed.
+          didCancel: () => this.#unclaimAutomaticReviewable(),
+        };
+
+        if (performableAction.get("confirm_destructive")) {
+          this.dialog.deleteConfirm(confirmOptions);
+        } else {
+          this.dialog.confirm(confirmOptions);
+        }
+      }
+    } else if (actionModalClass) {
+      if (await this.#claimReviewable()) {
+        this.modal.show(actionModalClass, {
+          model: {
+            reviewable: this.args.reviewable,
+            performConfirmed: this._performConfirmed,
+            action: performableAction,
+          },
+        });
+      }
+    } else {
+      return this._performConfirmed(performableAction);
+    }
+  }
+
+  @action
+  claimedByChanged(claimedBy) {
+    this.args.reviewable.claimed_by = claimedBy;
+  }
+
+  @action
+  async copyPermalink(event) {
+    const button = event.currentTarget;
+
+    // cmd/ctrl+click or middle-click to open in new tab
+    if (event.metaKey || event.ctrlKey || event.button === 1) {
+      window.open(this.permalink, "_blank");
+      return;
+    }
+
+    try {
+      await clipboardCopy(this.permalink);
+      showAlert(
+        this.args.reviewable.id,
+        "reviewable-permalink-copy",
+        "review.copy_link_feedback",
+        { actionBtn: button }
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to copy to clipboard:", error);
+    }
+  }
+
+  #showCompletedToast(performableAction, reviewable) {
+    const penalty = survivingPenalty(
+      performableAction,
+      reviewable.author_penalties
+    );
+    const author = reviewable.target_created_by;
+
+    if (!penalty || !author) {
+      this.toasts.success({
+        data: { message: performableAction.completed_message },
+      });
+      return;
+    }
+
+    this.toasts.success({
+      autoClose: false,
+      key: `${PENALTY_TOAST_KEY}-${author.id}`,
+      data: {
+        title: performableAction.completed_message,
+        message: i18n("review.author_penalty.toast.still_silenced", {
+          username: author.username,
+        }),
+        actions: [
+          {
+            label: i18n("review.author_penalty.toast.undo"),
+            class: "btn-transparent reviewable-undo-penalty",
+            action: ({ close }) => this.#liftPenalty(author, close),
+          },
+        ],
+      },
+    });
+  }
+
+  async #liftPenalty(author, close) {
+    try {
+      await ajax(`/admin/users/${author.id}/unsilence`, { type: "PUT" });
+    } catch (error) {
+      return popupAjaxError(error);
+    }
+
+    close();
+
+    this.toasts.success({
+      data: {
+        message: i18n("review.author_penalty.toast.undone", {
+          username: author.username,
+        }),
+      },
+    });
+
+    this.store.find("reviewable", this.args.reviewable.id);
+  }
+
+  async #claimReviewable() {
+    const { reviewable } = this.args;
+
+    if (!reviewable.topic) {
+      // We can't claim a reviewable without a topic, so treat it as claimed
+      return true;
+    }
+
+    if (!reviewable.claimed_by) {
+      const claim = this.store.createRecord("reviewable-claimed-topic");
+
+      try {
+        await claim.save({ topic_id: reviewable.topic.id, automatic: true });
+        reviewable.claimed_by = { user: this.currentUser, automatic: true };
+      } catch (e) {
+        popupAjaxError(e);
+        return false;
+      }
+    }
+
+    return reviewable.claimed_by?.user?.id === this.currentUser.id;
+  }
+
+  async #unclaimAutomaticReviewable() {
+    const { reviewable } = this.args;
+
+    if (!reviewable.topic || !reviewable.claimed_by?.automatic) {
+      return;
+    }
+
+    try {
+      await ajax(`/reviewable_claimed_topics/${reviewable.topic.id}`, {
+        type: "DELETE",
+        data: { automatic: true },
+      });
+      reviewable.claimed_by = null;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  #updateField(fieldId, value) {
+    const [key, nestedKey] = fieldId.split(".");
+    const updates = this.state.updates;
+
+    if (nestedKey) {
+      updates[key] = { ...updates[key], [nestedKey]: value };
+    } else {
+      updates[key] = value;
+    }
   }
 
   @bind
@@ -410,9 +680,7 @@ export default class ReviewableItem extends Component {
     }
 
     if (performableAction.completed_message) {
-      this.toasts.success({
-        data: { message: performableAction.completed_message },
-      });
+      this.#showCompletedToast(performableAction, reviewable);
     }
 
     if (this.args.remove && result.remove_reviewable_ids?.length > 0) {
@@ -426,261 +694,25 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  @action
-  clientScrub() {
-    this.modal.show(ScrubRejectedUserModal, {
-      model: {
-        confirmScrub: this.scrubRejectedUser,
-      },
-    });
-  }
-
-  @bind
-  async scrubRejectedUser(reason) {
-    const { id } = this.args.reviewable;
-
-    try {
-      await ajax({ url: `/review/${id}/scrub`, type: "PUT", data: { reason } });
-      this.store.find("reviewable", id);
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  clientSuspend(reviewable, performAction) {
-    return this._penalize("showSuspendModal", reviewable, performAction);
-  }
-
-  clientSilence(reviewable, performAction) {
-    return this._penalize("showSilenceModal", reviewable, performAction);
-  }
-
-  async clientEdit(reviewable, performAction) {
-    if (!this.currentUser) {
-      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
-    }
-    const post = await this.store.find("post", reviewable.post_id);
-    const topic_json = await Topic.find(post.topic_id, {});
-
-    const topic = Topic.create(topic_json);
-    post.set("topic", topic);
-
-    if (!post.can_edit) {
-      return false;
-    }
-
-    const opts = {
-      post,
-      action: Composer.EDIT,
-      draftKey: post.get("topic.draft_key"),
-      draftSequence: post.get("topic.draft_sequence"),
-      skipJumpOnSave: true,
-    };
-
-    this.composer.open(opts);
-
-    return performAction();
-  }
-
   _penalize(adminToolMethod, reviewable, performAction) {
-    let adminTools = this.adminTools;
-    if (adminTools) {
-      let createdBy = reviewable.target_created_by;
-      let postId = reviewable.post_id;
-      let postEdit = reviewable.raw ?? reviewable.payload?.raw;
-
-      return adminTools[adminToolMethod](createdBy, {
-        postId,
-        postEdit,
-        reviewableId: reviewable.id,
-        before: performAction,
-      });
-    }
-  }
-
-  async #claimReviewable() {
-    const { reviewable } = this.args;
-
-    if (!reviewable.topic) {
-      // We can't claim a reviewable without a topic, so treat it as claimed
-      return true;
-    }
-
-    if (!reviewable.claimed_by) {
-      const claim = this.store.createRecord("reviewable-claimed-topic");
-
-      try {
-        await claim.save({ topic_id: reviewable.topic.id, automatic: true });
-        reviewable.claimed_by = { user: this.currentUser, automatic: true };
-      } catch (e) {
-        popupAjaxError(e);
-        return false;
-      }
-    }
-
-    return reviewable.claimed_by?.user?.id === this.currentUser.id;
-  }
-
-  async #unclaimAutomaticReviewable() {
-    const { reviewable } = this.args;
-
-    if (!reviewable.topic || !reviewable.claimed_by?.automatic) {
+    if (!this.adminTools) {
       return;
     }
 
-    try {
-      await ajax(`/reviewable_claimed_topics/${reviewable.topic.id}`, {
-        type: "DELETE",
-        data: { automatic: true },
-      });
-      reviewable.claimed_by = null;
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
-  @action
-  explainReviewable(reviewable, event) {
-    event.preventDefault();
-    this.modal.show(ExplainReviewableModal, {
-      model: { reviewable },
+    return this.adminTools[adminToolMethod](reviewable.target_created_by, {
+      postId: reviewable.post_id,
+      postEdit: reviewable.raw ?? reviewable.payload?.raw,
+      reviewableId: reviewable.id,
+      before: performAction,
     });
-  }
-
-  @action
-  switchTab(tabName, event) {
-    event.preventDefault();
-    this.state.activeTab = tabName;
-    if (tabName === "insights") {
-      this.state.insightsOpened = true;
-    }
-  }
-
-  @action
-  edit() {
-    this.state.updates = trackedObject({});
-  }
-
-  @action
-  cancelEdit() {
-    this.state.updates = null;
-  }
-
-  @action
-  saveEdit() {
-    this.updating = true;
-    return this.args.reviewable
-      .update({ ...this.state.updates })
-      .then(() => (this.state.updates = null))
-      .catch(popupAjaxError)
-      .finally(() => (this.updating = false));
-  }
-
-  @action
-  categoryChanged(categoryId) {
-    const category =
-      Category.findById(categoryId) ?? Category.findUncategorized();
-
-    this.#updateField("category_id", category.id);
-  }
-
-  @action
-  valueChanged(fieldId, event) {
-    this.#updateField(fieldId, event.target.value);
-  }
-
-  #updateField(fieldId, value) {
-    const [key, nestedKey] = fieldId.split(".");
-    const updates = this.state.updates;
-
-    if (nestedKey) {
-      updates[key] = { ...updates[key], [nestedKey]: value };
-    } else {
-      updates[key] = value;
-    }
-  }
-
-  @action
-  async perform(performableAction) {
-    if (this.updating) {
-      return;
-    }
-
-    const message = performableAction.get("confirm_message");
-    const requireRejectReason = performableAction.get("require_reject_reason");
-    const actionModalClass = requireRejectReason
-      ? RejectReasonReviewableModal
-      : actionModalClassMap[performableAction.server_action];
-
-    if (message) {
-      if (await this.#claimReviewable()) {
-        const confirmOptions = {
-          message,
-          didConfirm: () => this._performConfirmed(performableAction),
-          // Claiming happens before the prompt, so release it if nothing is performed.
-          didCancel: () => this.#unclaimAutomaticReviewable(),
-        };
-
-        if (performableAction.get("confirm_destructive")) {
-          this.dialog.deleteConfirm(confirmOptions);
-        } else {
-          this.dialog.confirm(confirmOptions);
-        }
-      }
-    } else if (actionModalClass) {
-      if (await this.#claimReviewable()) {
-        this.modal.show(actionModalClass, {
-          model: {
-            reviewable: this.args.reviewable,
-            performConfirmed: this._performConfirmed,
-            action: performableAction,
-          },
-        });
-      }
-    } else {
-      return this._performConfirmed(performableAction);
-    }
-  }
-
-  @action
-  claimedByChanged(claimedBy) {
-    this.args.reviewable.claimed_by = claimedBy;
-  }
-
-  get permalink() {
-    return getAbsoluteURL(`/review/${this.args.reviewable.id}`);
-  }
-
-  @action
-  async copyPermalink(event) {
-    const button = event.currentTarget;
-
-    // cmd/ctrl+click or middle-click to open in new tab
-    if (event.metaKey || event.ctrlKey || event.button === 1) {
-      window.open(this.permalink, "_blank");
-      return;
-    }
-
-    try {
-      await clipboardCopy(this.permalink);
-      showAlert(
-        this.args.reviewable.id,
-        "reviewable-permalink-copy",
-        "review.copy_link_feedback",
-        { actionBtn: button }
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error("Failed to copy to clipboard:", error);
-    }
   }
 
   <template>
     <div class="review-container">
 
       <div
-        data-reviewable-id={{@reviewable.id}}
         class="review-item {{this.customClasses}}"
+        data-reviewable-id={{@reviewable.id}}
       >
         <div class="review-item__primary-content">
           <div class="review-item__flag-summary">
@@ -698,10 +730,10 @@ export default class ReviewableItem extends Component {
               </div>
 
               <button
+                class="btn btn-transparent reviewable-permalink-copy"
+                title={{i18n "review.copy_permalink_title"}}
                 type="button"
                 {{on "click" this.copyPermalink}}
-                title={{i18n "review.copy_permalink_title"}}
-                class="btn btn-transparent reviewable-permalink-copy"
               >
                 {{dIcon "link"}}
               </button>
@@ -719,11 +751,11 @@ export default class ReviewableItem extends Component {
                   <div class="editable-field {{dDasherize f.id}}">
                     {{#let (get fieldComponents f.type) as |FieldComponent|}}
                       <FieldComponent
+                        @categoryChanged={{this.categoryChanged}}
+                        @tagCategoryId={{this.tagCategoryId}}
                         @tagName=""
                         @value={{editableValue @reviewable f.id}}
-                        @tagCategoryId={{this.tagCategoryId}}
                         @valueChanged={{fn this.valueChanged f.id}}
-                        @categoryChanged={{this.categoryChanged}}
                       />
                     {{/let}}
                   </div>
@@ -752,8 +784,8 @@ export default class ReviewableItem extends Component {
           <div class="review-item__insights">
             <div class="d-nav-submenu">
               <DHorizontalOverflowNav
-                @ariaLabel="Review tabs"
                 class="d-nav-submenu__tabs"
+                @ariaLabel="Review tabs"
               >
                 <li
                   class={{dConcatClass
@@ -762,8 +794,8 @@ export default class ReviewableItem extends Component {
                   }}
                 >
                   <a
-                    href="#"
                     class={{if (eq this.state.activeTab "timeline") "active"}}
+                    href="#"
                     {{on "click" (fn this.switchTab "timeline")}}
                   >
                     {{i18n "review.timeline_and_notes"}}
@@ -776,8 +808,8 @@ export default class ReviewableItem extends Component {
                   }}
                 >
                   <a
-                    href="#"
                     class={{if (eq this.state.activeTab "insights") "active"}}
+                    href="#"
                     {{on "click" (fn this.switchTab "insights")}}
                   >
                     {{i18n "review.insights.title"}}
@@ -793,8 +825,8 @@ export default class ReviewableItem extends Component {
             {{/if}}
             {{#if (eq this.state.activeTab "timeline")}}
               <ReviewableTimeline
-                @reviewable={{@reviewable}}
                 @historyEvents={{@reviewable.reviewable_histories}}
+                @reviewable={{@reviewable}}
               />
             {{/if}}
           </div>
@@ -818,22 +850,23 @@ export default class ReviewableItem extends Component {
                 </h3>
                 {{#if this.editing}}
                   <DButton
+                    class="btn-primary reviewable-action save-edit"
+                    @action={{this.saveEdit}}
                     @disabled={{this.disabled}}
                     @icon="check"
-                    @action={{this.saveEdit}}
                     @label="review.save"
-                    class="btn-primary reviewable-action save-edit"
                   />
                   <DButton
+                    class="btn-danger reviewable-action cancel-edit"
+                    @action={{this.cancelEdit}}
                     @disabled={{this.disabled}}
                     @icon="xmark"
-                    @action={{this.cancelEdit}}
                     @label="review.cancel"
-                    class="btn-danger reviewable-action cancel-edit"
                   />
                 {{else}}
                   {{#each @reviewable.bundled_actions as |bundle|}}
                     <ReviewableBundledAction
+                      @authorPenalties={{@reviewable.author_penalties}}
                       @bundle={{bundle}}
                       @performAction={{this.perform}}
                       @reviewableUpdating={{this.disabled}}
@@ -842,10 +875,10 @@ export default class ReviewableItem extends Component {
 
                   {{#if @reviewable.can_edit}}
                     <DButton
-                      @disabled={{this.disabled}}
-                      @action={{this.edit}}
-                      @label="review.edit"
                       class="reviewable-action btn-default edit"
+                      @action={{this.edit}}
+                      @disabled={{this.disabled}}
+                      @label="review.edit"
                     />
                   {{/if}}
                 {{/if}}
@@ -859,16 +892,16 @@ export default class ReviewableItem extends Component {
                 <div class="review-item__assigned">
                   {{dIcon "user-plus"}}
                   <ReviewableCreatedBy
-                    @showUsername={{true}}
                     @avatarSize="small"
+                    @showUsername={{true}}
                     @user={{@reviewable.claimed_by.user}}
                   />
                 </div>
               {{/if}}
               <ReviewableClaimedTopic
-                @topicId={{this.topicId}}
                 @claimedBy={{@reviewable.claimed_by}}
                 @onClaim={{this.claimedByChanged}}
+                @topicId={{this.topicId}}
               />
             </div>
           {{/if}}

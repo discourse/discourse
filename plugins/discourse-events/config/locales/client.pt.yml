@@ -13,7 +13,7 @@ pt:
           fields:
             topic_id:
               label: ID do Tópico
-    discourse_calendar:
+    discourse_events:
       disable_holiday: "Desativar"
       enable_holiday: "Ativar"
       holidays:
@@ -29,6 +29,9 @@ pt:
         year: "Ano"
     group_timezones:
       search: "Pesquisar..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Id. do Tópico"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username}%{description}"

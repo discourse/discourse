@@ -2,6 +2,7 @@
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
+import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -66,6 +67,10 @@ import {
   _INTERNAL_SOURCE_KEY,
   CORE_SOURCE,
 } from "discourse/lib/customization-source";
+import {
+  deferClassModification,
+  lazyClassFor,
+} from "discourse/lib/deferred-class-modifications";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -222,58 +227,98 @@ class _PluginApi {
   }
 
   /**
+   * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
+   *
+   * Only the passing of components is supported, and by default the icons are added to the left of existing icons.
+   *
+   * Example: Add the chat icon to the header icons after the search icon
+   * ```
+   * api.headerIcons.add(
+   *  "chat",
+   *  ChatIconComponent,
+   *  { after: "search" }
+   * )
+   * ```
+   *
+   * Example: Remove the chat icon from the header icons
+   * ```
+   * api.headerIcons.delete("chat")
+   * ```
+   *
+   * Example: Reposition the chat icon to be before the user-menu icon and after the hamburger icon
+   * ```
+   * api.headerIcons.reposition("chat", { before: "user-menu", after: "hamburger" })
+   * ```
+   *
+   * Example: Check if the chat icon is present in the header icons (returns true of false)
+   * ```
+   * api.headerIcons.has("chat")
+   * ```
+   *
+   * If you are looking to add a button with a dropdown, you can implement a `DMenu` which has a `content` block
+   * you want create a button in the header that opens a dropdown panel with additional content.
+   *
+   * ```
+   * const IconWithDropdown = <template>
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
+   *
+   * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
+   * ```
+   *
+   **/
+  get headerIcons() {
+    return headerIconsDAG();
+  }
+
+  /**
+   * Allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
+   *
+   * Only the passing of components is supported, and by default the buttons are added to the left of existing buttons.
+   *
+   * Example: Add a `foo` button to the header buttons after the auth buttons
+   * ```
+   * api.headerButtons.add(
+   *  "foo",
+   *  FooComponent,
+   *  { after: "auth" }
+   * )
+   * ```
+   *
+   * Example: Remove the `foo` button from the header buttons
+   * ```
+   * api.headerButtons.delete("foo")
+   * ```
+   *
+   * Example: Reposition the `foo` button to be before the `bar` and after the `baz` button
+   * ```
+   * api.headerButtons.reposition("foo", { before: "bar", after: "baz" })
+   * ```
+   *
+   * Example: Check if the `foo` button is present in the header buttons (returns true of false)
+   * ```
+   * api.headerButtons.has("foo")
+   * ```
+   *
+   **/
+  get headerButtons() {
+    return headerButtonsDAG();
+  }
+
+  /**
    * Use this function to retrieve the currently logged in user within your plugin.
    * If the user is not logged in, it will be `null`.
    **/
   getCurrentUser() {
     return this._lookupContainer("service:current-user");
-  }
-
-  _lookupContainer(path) {
-    if (
-      !this.container ||
-      this.container.isDestroying ||
-      this.container.isDestroyed
-    ) {
-      return;
-    }
-
-    return this.container.lookup(path);
-  }
-
-  _resolveClass(resolverName, opts) {
-    opts = opts || {};
-    const normalized = this.container.registry.normalize(resolverName);
-    if (
-      this.container.cache[normalized] ||
-      (normalized === "model:user" &&
-        this.container.lookup("service:current-user"))
-    ) {
-      // eslint-disable-next-line no-console
-      console.error(
-        consolePrefix(),
-        `Attempted to modify "${resolverName}", but it was already initialized earlier in the boot process (e.g. via a lookup()). Remove that lookup, or move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
-      );
-      return;
-    }
-
-    let klass;
-    if (!blockedModifications.includes(normalized)) {
-      klass = this.container.factoryFor(normalized);
-    }
-
-    if (!klass) {
-      if (!opts.ignoreMissing) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          consolePrefix(),
-          `"${normalized}" was not found by modifyClass`
-        );
-      }
-      return;
-    }
-
-    return klass;
   }
 
   /**
@@ -298,8 +343,11 @@ class _PluginApi {
   modifyClass(resolverName, changes, opts) {
     this.#deprecateModifyClass(resolverName, "modifyClass");
 
-    const klass = this._resolveClass(resolverName, opts);
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      this.#deferModification(resolverName, () =>
+        this.modifyClass(resolverName, changes, opts)
+      );
       return;
     }
 
@@ -339,8 +387,11 @@ class _PluginApi {
   modifyClassStatic(resolverName, changes, opts) {
     this.#deprecateModifyClass(resolverName, "modifyClassStatic");
 
-    const klass = this._resolveClass(resolverName, opts);
+    const klass = this._resolveClass(resolverName);
     if (!klass) {
+      this.#deferModification(resolverName, () =>
+        this.modifyClassStatic(resolverName, changes, opts)
+      );
       return;
     }
 
@@ -772,19 +823,6 @@ class _PluginApi {
    */
   addTrackedTopicProperties(...names) {
     names.forEach((name) => _addTrackedTopicProperty(name));
-  }
-
-  // Resolves the `model:<name>` class; `stamp` marks it so instances can
-  // resolve their model name at construction.
-  _resolveModelClass(modelName, { stamp = false } = {}) {
-    const klass = this._resolveClass(`model:${modelName}`);
-    if (!klass) {
-      return;
-    }
-    if (stamp) {
-      stampModelClass(klass.class, modelName);
-    }
-    return klass.class;
   }
 
   /**
@@ -2129,93 +2167,6 @@ class _PluginApi {
   }
 
   /**
-   * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
-   *
-   * Only the passing of components is supported, and by default the icons are added to the left of existing icons.
-   *
-   * Example: Add the chat icon to the header icons after the search icon
-   * ```
-   * api.headerIcons.add(
-   *  "chat",
-   *  ChatIconComponent,
-   *  { after: "search" }
-   * )
-   * ```
-   *
-   * Example: Remove the chat icon from the header icons
-   * ```
-   * api.headerIcons.delete("chat")
-   * ```
-   *
-   * Example: Reposition the chat icon to be before the user-menu icon and after the hamburger icon
-   * ```
-   * api.headerIcons.reposition("chat", { before: "user-menu", after: "hamburger" })
-   * ```
-   *
-   * Example: Check if the chat icon is present in the header icons (returns true of false)
-   * ```
-   * api.headerIcons.has("chat")
-   * ```
-   *
-   * If you are looking to add a button with a dropdown, you can implement a `DMenu` which has a `content` block
-   * you want create a button in the header that opens a dropdown panel with additional content.
-   *
-   * ```
-   * const IconWithDropdown = <template>
-    *
-    <DMenu @icon="foo" title={{i18n "title"}}>
-      *
-      <:content as |args|>
-        *       dropdown content here
-        *
-        <DButton @action={{args.close}} @icon="bar" />
-        *     </:content>
-      *   </DMenu>
-    * </template>;
-   *
-   * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
-   * ```
-   *
-   **/
-  get headerIcons() {
-    return headerIconsDAG();
-  }
-
-  /**
-   * Allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
-   *
-   * Only the passing of components is supported, and by default the buttons are added to the left of existing buttons.
-   *
-   * Example: Add a `foo` button to the header buttons after the auth buttons
-   * ```
-   * api.headerButtons.add(
-   *  "foo",
-   *  FooComponent,
-   *  { after: "auth" }
-   * )
-   * ```
-   *
-   * Example: Remove the `foo` button from the header buttons
-   * ```
-   * api.headerButtons.delete("foo")
-   * ```
-   *
-   * Example: Reposition the `foo` button to be before the `bar` and after the `baz` button
-   * ```
-   * api.headerButtons.reposition("foo", { before: "bar", after: "baz" })
-   * ```
-   *
-   * Example: Check if the `foo` button is present in the header buttons (returns true of false)
-   * ```
-   * api.headerButtons.has("foo")
-   * ```
-   *
-   **/
-  get headerButtons() {
-    return headerButtonsDAG();
-  }
-
-  /**
    * @deprecated Use `api.headerIcons` instead
    */
   // eslint-disable-next-line no-unused-vars
@@ -3383,9 +3334,16 @@ class _PluginApi {
    * @param {string} translationKey
    * @param {string} searchTypeId
    * @param {function} searchFunc - Available arguments: fullPage controller, search args, searchKey.
+   * @param {Object} [options]
+   * @param {string} [options.after] - Id of the search type this one should follow; appended last when omitted or unknown.
    */
-  addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
-    registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  addFullPageSearchType(translationKey, searchTypeId, searchFunc, options) {
+    registerFullPageSearchType(
+      translationKey,
+      searchTypeId,
+      searchFunc,
+      options
+    );
   }
 
   /**
@@ -3658,6 +3616,22 @@ class _PluginApi {
   }
 
   /**
+   * Registers components that render related items for an admin report.
+   *
+   * @param {String} reportType - The report's identifier
+   * @param {Object} renderer - The related-item renderer configuration
+   * @param {Class} [renderer.relatedItemsComponent] - Component for the report detail view
+   * @param {Object} [renderer.tableSummary] - Configuration for table cell summaries
+   * @param {Class} renderer.tableSummary.itemComponent - Component for each summary item
+   * @param {String} renderer.tableSummary.itemsKey - Related-items response key
+   * @param {String} [renderer.tableSummary.listClass] - Class for the summary list
+   * @param {String} renderer.tableSummary.titleKey - Summary title translation key
+   */
+  registerAdminReportRelatedItemsRenderer(reportType, renderer) {
+    registerAdminReportRelatedItemsRenderer(reportType, renderer);
+  }
+
+  /**
    * Registers an extension for the rich editor
    *
    * EXPERIMENTAL: This API will change without warning
@@ -3923,6 +3897,14 @@ class _PluginApi {
     _registerConditionType(ConditionClass, this.source);
   }
 
+  // The module may not have been evaluated yet, and registers itself when it is.
+  #deferModification(resolverName, retry) {
+    deferClassModification(
+      this.container.registry.normalize(resolverName),
+      retry
+    );
+  }
+
   #deprecateModifyClass(resolverName, apiName) {
     if (!resolverName.startsWith("model:")) {
       return;
@@ -3935,6 +3917,50 @@ class _PluginApi {
         since: "2026.8",
       }
     );
+  }
+
+  _lookupContainer(path) {
+    if (!this.container || this.container.isDestroying) {
+      return;
+    }
+
+    return this.container.lookup(path);
+  }
+
+  _resolveClass(resolverName) {
+    const normalized = this.container.registry.normalize(resolverName);
+    if (
+      this.container.cache[normalized] ||
+      (normalized === "model:user" &&
+        this.container.lookup("service:current-user"))
+    ) {
+      // eslint-disable-next-line no-console
+      console.error(
+        consolePrefix(),
+        `Attempted to modify "${resolverName}", but it was already initialized earlier in the boot process (e.g. via a lookup()). Remove that lookup, or move the modifyClass call earlier in the boot process for changes to take effect. https://meta.discourse.org/t/262064`
+      );
+      return;
+    }
+
+    let klass;
+    if (!blockedModifications.includes(normalized)) {
+      klass = this.container.factoryFor(normalized) || lazyClassFor(normalized);
+    }
+
+    return klass;
+  }
+
+  // Resolves the `model:<name>` class; `stamp` marks it so instances can
+  // resolve their model name at construction.
+  _resolveModelClass(modelName, { stamp = false } = {}) {
+    const klass = this._resolveClass(`model:${modelName}`);
+    if (!klass) {
+      return;
+    }
+    if (stamp) {
+      stampModelClass(klass.class, modelName);
+    }
+    return klass.class;
   }
 }
 

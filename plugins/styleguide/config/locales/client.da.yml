@@ -78,6 +78,21 @@ da:
           title: "Flere emner"
         post_menu:
           title: "Send menu"
+        roving_focus:
+          toolbar:
+            copy: "Kopier"
+          adjacent:
+            field: "Søg"
+            open: "Åbn"
+            recent: "Nye"
+          combobox:
+            daily: "Dagligt"
+            weekly: "Ugentligt"
+            monthly: "Månedligt"
+            never: "Aldrig"
+          tree:
+            components: "komponenter"
+            select: "Vælg"
         modal:
           title: "Modal"
           header: "Modal titel"

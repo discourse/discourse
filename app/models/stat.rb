@@ -62,6 +62,11 @@ class Stat
       Stat.new("active_users", expose_via_api: true) { Statistics.active_users },
       Stat.new("likes", expose_via_api: true) { Statistics.likes },
       Stat.new("participating_users", expose_via_api: true) { Statistics.participating_users },
+      # Deliberately not exposed via the API: these describe how the site's own
+      # admin set the site up, which is of no interest to its members.
+      Stat.new("steps", stat_type: :onboarding) { Statistics.onboarding_steps },
+      Stat.new("panel", stat_type: :onboarding) { Statistics.onboarding_panel },
+      Stat.new("minutes_to", stat_type: :onboarding) { Statistics.onboarding_minutes_to },
     ]
 
     if SiteSetting.display_eu_visitor_stats

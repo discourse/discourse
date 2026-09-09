@@ -22,6 +22,8 @@ import onebox from "./onebox";
 import oneboxToolbar from "./onebox-toolbar";
 import orderedList from "./ordered-list";
 import overrideDragGhost from "./override-drag-ghost";
+import previewSource from "./preview-source";
+import previewToolbar from "./preview-toolbar";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import strong from "./strong";
@@ -67,6 +69,8 @@ const defaultExtensions: RichEditorExtension[] = [
   hardBreak,
   grid,
   uploadPlaceholder,
+  previewSource,
+  previewToolbar,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

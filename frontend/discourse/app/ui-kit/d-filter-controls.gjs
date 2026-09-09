@@ -17,15 +17,15 @@ import DiscourseURL, {
 import { and, eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
-import DSelect from "discourse/ui-kit/d-select";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const ResetButton = <template>
   <DButton
+    class="btn-default d-filter-controls__reset"
+    @action={{@action}}
     @icon="arrow-rotate-left"
     @label="filter_controls.reset"
-    @action={{@action}}
-    class="btn-default d-filter-controls__reset"
   />
 </template>;
 
@@ -131,13 +131,6 @@ export default class DFilterControls extends Component {
         this.args.dropdownFilterQueryParams) &&
       !("dropdownValue" in this.args)
     );
-  }
-
-  #validatedUrlValue(params, paramName, options) {
-    const value = params.get(paramName);
-    return value !== null && options.some((option) => option.value === value)
-      ? value
-      : null;
   }
 
   get array() {
@@ -283,6 +276,12 @@ export default class DFilterControls extends Component {
     return filtered;
   }
 
+  get singleDropdownLabel() {
+    return this.dropdownOptions.find(
+      (option) => option.value === this.defaultDropdownValue
+    )?.label;
+  }
+
   /**
    * Allows searchable props in the format user.name, this function gets the
    * nested value based on a dot-separated path.
@@ -310,12 +309,6 @@ export default class DFilterControls extends Component {
     const options = this.dropdownOptions[key] || [];
     return options.find((option) => option.value === this.defaultValue(key))
       ?.label;
-  }
-
-  get singleDropdownLabel() {
-    return this.dropdownOptions.find(
-      (option) => option.value === this.defaultDropdownValue
-    )?.label;
   }
 
   @action
@@ -471,6 +464,13 @@ export default class DFilterControls extends Component {
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
   }
 
+  #validatedUrlValue(params, paramName, options) {
+    const value = params.get(paramName);
+    return value !== null && options.some((option) => option.value === value)
+      ? value
+      : null;
+  }
+
   <template>
     {{yield to="aboveFilters"}}
 
@@ -494,24 +494,24 @@ export default class DFilterControls extends Component {
           <div class="d-filter-controls__inputs">
             {{#if this.showTextFilter}}
               <DFilterInput
+                class="d-filter-controls__input"
                 placeholder={{@inputPlaceholder}}
                 @filterAction={{this.onTextFilterChange}}
-                @value={{this.textFilter}}
-                class="d-filter-controls__input"
                 @icons={{hash left="magnifying-glass"}}
+                @value={{this.textFilter}}
               />
             {{/if}}
 
             {{#if this.showDropdownFilterToggle}}
               <DButton
                 class="btn-default d-filter-controls__toggle-filters"
+                @action={{this.toggleFilters}}
                 @icon={{if
                   this.showDropdownFilter
                   "filter-circle-xmark"
                   "filter"
                 }}
                 @title="filter_controls.toggle"
-                @action={{this.toggleFilters}}
               />
               {{#if (and this.showResetButton this.hasActiveFilters)}}
                 <ResetButton @action={{this.resetFilters}} />
@@ -524,10 +524,8 @@ export default class DFilterControls extends Component {
           <div class="d-filter-controls__dropdowns">
             {{#if this.hasMultipleDropdowns}}
               {{#each-in this.dropdownOptions as |key options|}}
-                <DSelect
-                  @value={{get this.dropdownFilters key}}
-                  @includeNone={{false}}
-                  @onChange={{fn this.onDropdownFilterChange key}}
+                <DNativeSelect
+                  aria-label={{this.dropdownLabel key}}
                   class={{dConcatClass
                     "d-filter-controls__dropdown"
                     (concat "d-filter-controls__dropdown--" key)
@@ -538,8 +536,10 @@ export default class DFilterControls extends Component {
                       "--active"
                     )
                   }}
-                  aria-label={{this.dropdownLabel key}}
                   data-dropdown-key={{key}}
+                  @includeNone={{false}}
+                  @onChange={{fn this.onDropdownFilterChange key}}
+                  @value={{get this.dropdownFilters key}}
                   as |select|
                 >
                   {{#each options as |option|}}
@@ -547,13 +547,11 @@ export default class DFilterControls extends Component {
                       {{option.label}}
                     </select.Option>
                   {{/each}}
-                </DSelect>
+                </DNativeSelect>
               {{/each-in}}
             {{else}}
-              <DSelect
-                @value={{this.dropdownFilter}}
-                @includeNone={{false}}
-                @onChange={{this.onDropdownFilterChange}}
+              <DNativeSelect
+                aria-label={{this.singleDropdownLabel}}
                 class={{dConcatClass
                   "d-filter-controls__dropdown"
                   (unless
@@ -561,7 +559,9 @@ export default class DFilterControls extends Component {
                     "--active"
                   )
                 }}
-                aria-label={{this.singleDropdownLabel}}
+                @includeNone={{false}}
+                @onChange={{this.onDropdownFilterChange}}
+                @value={{this.dropdownFilter}}
                 as |select|
               >
                 {{#each this.dropdownOptions as |option|}}
@@ -569,7 +569,7 @@ export default class DFilterControls extends Component {
                     {{option.label}}
                   </select.Option>
                 {{/each}}
-              </DSelect>
+              </DNativeSelect>
             {{/if}}
 
             {{yield to="additionalFilters"}}

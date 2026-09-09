@@ -1,9 +1,9 @@
 import { service } from "@ember/service";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseURL from "discourse/lib/url";
 import {
-  defaultHomepage,
   isValidDestinationUrl,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
@@ -20,6 +20,12 @@ export default class extends DiscourseRoute {
   beforeModel(transition) {
     const { from, wantsTo } = transition;
     const { currentUser, dialog, router } = this;
+
+    if (currentUser) {
+      router.replaceWith("/").followRedirects();
+      return;
+    }
+
     const { isReadOnly } = this.site;
     const { isAppWebview } = this.capabilities;
     const {
@@ -34,7 +40,9 @@ export default class extends DiscourseRoute {
     const { canSignUp } = this.controllerFor("application");
     const { isOnlyOneExternalLoginMethod, singleExternalLogin } = this.login;
     const redirect = auth_immediately || login_required || !from || wantsTo;
-    const homepage = `discovery.${login_required ? "login-required" : defaultHomepage()}`;
+    const homepage = login_required
+      ? "discovery.login-required"
+      : homepageNavigationDestination();
 
     // Can't sign up when the site is read-only
     if (isReadOnly) {
@@ -65,12 +73,10 @@ export default class extends DiscourseRoute {
     }
 
     // Automatically store the current URL (aka. the one **before** the transition)
-    if (!currentUser) {
-      if (isValidDestinationUrl(url)) {
-        cookie("destination_url", url + query);
-      } else if (DiscourseURL.isInternalTopic(referrer)) {
-        cookie("destination_url", referrer);
-      }
+    if (isValidDestinationUrl(url)) {
+      cookie("destination_url", url + query);
+    } else if (DiscourseURL.isInternalTopic(referrer)) {
+      cookie("destination_url", referrer);
     }
 
     // Automatically kick off the external login if it's the only one available

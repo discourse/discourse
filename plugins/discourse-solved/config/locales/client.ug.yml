@@ -35,6 +35,12 @@ ug:
     topic_statuses:
       solved:
         help: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "تېما"
+            category: "سەھىپە"
     discourse_automation:
       triggerables:
         first_accepted_solution:

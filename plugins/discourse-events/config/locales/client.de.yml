@@ -7,11 +7,10 @@
 de:
   admin_js:
     admin:
-      calendar: "Ereignisse"
       site_settings:
         categories:
           discourse_post_event: "Discourse Ereignis"
-          discourse_calendar: "Ereignisse"
+          discourse_events: "Ereignisse"
       web_hooks:
         calendar_event:
           group_name: "Kalenderereignis"
@@ -32,7 +31,8 @@ de:
           fields:
             topic_id:
               label: Themen-ID
-    discourse_calendar:
+    discourse_events:
+      title: "Ereignisse"
       livestream:
         zoom:
           join: "Zoom beitreten"
@@ -44,7 +44,6 @@ de:
           rsvp_to_event: "Melde dich für das Ereignis an, um mit dem Chatten zu beginnen"
           rsvp_to_event_with_link: "Melde dich bei <a href='%{url}'>dem Ereignis</a> an, um mit dem Chatten zu beginnen"
           rsvp_body: "Tausch dich vor, während und nach dem Ereignis mit anderen Teilnehmern aus."
-      invite_user_notification: "%{username} lädt dich ein zu: %{description}"
       preferences:
         all_events_description: "Alle Forum-Ereignisse"
         my_events_description: "Ereignisse, die du besuchst oder an denen du interessiert bist"
@@ -63,7 +62,7 @@ de:
       local_time: "Ortszeit"
       region:
         title: "Region"
-        none: "Keine"
+        none: "Keine Erfassung"
         use_current_region: "Aktuelle Region verwenden"
         select_region: "Region auswählen …"
         names:
@@ -338,9 +337,14 @@ de:
         week: "Woche"
         day: "Tag"
         year: "Jahr"
+    discourse_calendar:
+      invite_user_notification: "%{username} lädt dich ein zu: %{description}"
     group_timezones:
       search: "Suche …"
       group_availability: "%{group} Verfügbarkeit"
+    discourse_workflows:
+      post_event:
+        topic_id: "Themen-ID"
     discourse_post_event:
       new_event: "Neues Ereignis"
       notifications:
@@ -372,6 +376,9 @@ de:
       edit_event: "Ereignis bearbeiten"
       export_event: "Ereignis exportieren"
       created_by: "Erstellt von"
+      other_hosts:
+        one: "und %{count} andere Person"
+        other: "und %{count} andere"
       bulk_invite: "Masseneinladung"
       close_event: "Ereignis beenden"
       open_event: "Ereignis öffnen"
@@ -586,6 +593,8 @@ de:
           placeholder: "Optional, standardmäßig Titel des Themas"
         invitees:
           label: "Eingeladene Gruppen"
+        hosts:
+          label: "Hosts"
         event_type:
           label: "Art der Teilnahme"
           public:

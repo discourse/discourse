@@ -19,8 +19,8 @@ cs:
       event_started:
         title: Zahájena událost
   system_messages:
-    discourse_calendar_holiday_region_invalid: "Vámi zadaný region pro svátky neexistuje."
-    discourse_calendar_enable_holiday_failed: "Tento svátek nelze povolit, je již povolen nebo není zakázán."
+    discourse_events_holiday_region_invalid: "Vámi zadaný region pro svátky neexistuje."
+    discourse_events_enable_holiday_failed: "Tento svátek nelze povolit, je již povolen nebo není zakázán."
     discourse_post_event_bulk_invite_succeeded:
       title: "Událost – hromadné pozvání bylo úspěšné"
       subject_template: "Hromadná pozvánka byla úspěšně zpracována"
@@ -64,7 +64,7 @@ cs:
     event_participation_buttons: "Seznam tlačítek účasti na události, která mohou uživatelé použít."
     sidebar_show_upcoming_events: "Zobrazit odkaz na nadcházející události na postranním panelu pod položkou 'Více'."
     calendar_first_day_of_week: "Nastavte první den v týdnu pro zobrazení kalendáře. Možnosti jsou sobota, neděle nebo pondělí."
-  discourse_calendar:
+  discourse_events:
     category_type:
       default_calendar_view:
         day: "Den"

@@ -49,6 +49,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
       describe "topic_list_item serializer's ai_summary" do
         context "when hot topic summarization is disabled" do
           before { SiteSetting.ai_summary_gists_enabled = false }
+
           it "doesn't include summaries" do
             gist_topic = topic_query.list_hot.topics.find { |t| t.id == topic_ai_gist.target_id }
 

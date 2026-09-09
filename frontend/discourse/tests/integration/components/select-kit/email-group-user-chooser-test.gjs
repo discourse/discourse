@@ -98,6 +98,11 @@ module(
           full_name: "Team A",
           isGroup: true,
         },
+        {
+          name: "team_b",
+          full_name: null,
+          isGroup: true,
+        },
       ]);
 
       await render(
@@ -116,11 +121,23 @@ module(
       await this.subject.expand();
 
       assert
-        .dom(".email-group-user-chooser__group .identifier")
+        .dom(
+          ".email-group-user-chooser-row[data-index='0'] .email-group-user-chooser__group .identifier"
+        )
         .doesNotExist("hides the equivalent group name");
       assert
-        .dom(".email-group-user-chooser__group .name")
+        .dom(
+          ".email-group-user-chooser-row[data-index='0'] .email-group-user-chooser__group .name"
+        )
         .hasText("Team A", "keeps the full group name visible");
+      assert
+        .dom(
+          ".email-group-user-chooser-row[data-index='1'] .email-group-user-chooser__group .identifier"
+        )
+        .hasText(
+          "team_b",
+          "renders the second group identifier as expected since they have no name"
+        );
     });
 
     test("prioritizeUserNameOrdering can render the name before username", async function (assert) {

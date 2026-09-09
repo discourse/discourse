@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -15,6 +15,7 @@ import {
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
 import {
+  linkDropEffectFor,
   WEB_LINK_ADOPTION,
   WEB_LINK_KINDS,
   webLinkPayload,
@@ -61,6 +62,18 @@ export default class SidebarSection extends Component {
     this.args.willDestroy?.();
   }
 
+  get activeExpanded() {
+    return this.sidebarState.activeExpandedSections.has(this.args.sectionName);
+  }
+
+  set activeExpanded(value) {
+    if (value) {
+      this.sidebarState.activeExpandedSections.add(this.args.sectionName);
+    } else {
+      this.sidebarState.activeExpandedSections.delete(this.args.sectionName);
+    }
+  }
+
   get isCollapsed() {
     if (!this.args.collapsable) {
       return false;
@@ -81,16 +94,42 @@ export default class SidebarSection extends Component {
     return !!this.args.activeLink;
   }
 
-  get activeExpanded() {
-    return this.sidebarState.activeExpandedSections.has(this.args.sectionName);
+  get displaySectionContent() {
+    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
+      return true;
+    }
+
+    if (this.activeExpanded) {
+      return true;
+    }
+
+    return !this.sidebarState.collapsedSections.has(
+      this.collapsedSidebarSectionKey
+    );
   }
 
-  set activeExpanded(value) {
-    if (value) {
-      this.sidebarState.activeExpandedSections.add(this.args.sectionName);
-    } else {
-      this.sidebarState.activeExpandedSections.delete(this.args.sectionName);
+  get linkDropAtEnd() {
+    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
+  }
+
+  get headerCaretIcon() {
+    return this.displaySectionContent ? "angle-down" : "angle-right";
+  }
+
+  get isSingleHeaderAction() {
+    return this.args.headerActions?.length === 1;
+  }
+
+  get isMultipleHeaderActions() {
+    return this.args.headerActions?.length > 1;
+  }
+
+  get displaySection() {
+    if (this.args.displaySection === undefined) {
+      return true;
     }
+
+    return this.args.displaySection;
   }
 
   @bind
@@ -119,20 +158,6 @@ export default class SidebarSection extends Component {
     this.activeExpanded = this.args.expandWhenActive && this.isActive;
   }
 
-  get displaySectionContent() {
-    if (this.args.hideSectionHeader || !isEmpty(this.sidebarState.filter)) {
-      return true;
-    }
-
-    if (this.activeExpanded) {
-      return true;
-    }
-
-    return !this.sidebarState.collapsedSections.has(
-      this.collapsedSidebarSectionKey
-    );
-  }
-
   @action
   toggleSectionDisplay(_, event) {
     this.activeExpanded = false;
@@ -140,6 +165,9 @@ export default class SidebarSection extends Component {
     if (this.displaySectionContent) {
       this.sidebarState.collapseSection(this.args.sectionName);
     } else {
+      this.sidebarState.resetLinkReveal(
+        event.target.closest(".sidebar-sections")
+      );
       this.sidebarState.expandSection(this.args.sectionName);
     }
 
@@ -164,10 +192,6 @@ export default class SidebarSection extends Component {
     }
   }
 
-  get linkDropAtEnd() {
-    return this.linkDropActive && this.linkDropIndex === this.linkDropLinkCount;
-  }
-
   /**
    * Files are their own drag with their own destinations, and a section only
    * knows what to do with a URL. Gated here rather than by leaving the target
@@ -176,10 +200,18 @@ export default class SidebarSection extends Component {
    */
   @action
   canDropLink({ source }) {
-    return (
-      Boolean(this.args.linkDropEnabled) &&
-      !webLinkPayload(source).containsFiles()
-    );
+    if (!this.args.linkDropEnabled) {
+      return false;
+    }
+    if (source.type === "sidebar-link") {
+      return true;
+    }
+    return !webLinkPayload(source).containsFiles();
+  }
+
+  @action
+  linkDropEffect({ source }) {
+    return linkDropEffectFor(source);
   }
 
   /**
@@ -193,8 +225,10 @@ export default class SidebarSection extends Component {
   @action
   trackLinkDrop({ source, location, element }) {
     // A drag carrying only text may well turn out to hold nothing droppable, so
-    // the insertion point stays hidden until the drag declares a real URL.
-    this.linkDropActive = webLinkPayload(source).containsURLs();
+    // the insertion point stays hidden until the drag declares a real URL. A
+    // registered row drag has no native payload to ask; it always qualifies.
+    this.linkDropActive =
+      source.type === "sidebar-link" || webLinkPayload(source).containsURLs();
 
     if (!this.linkDropActive) {
       this.linkDropIndex = undefined;
@@ -235,6 +269,10 @@ export default class SidebarSection extends Component {
   dropLink({ source }) {
     const linkDropIndex = this.linkDropIndex;
     this.clearLinkDrop();
+    if (source.type === "sidebar-link") {
+      this.args.onLinkMove?.(source.data, linkDropIndex);
+      return;
+    }
     // Unwrapped here so `onLinkDrop` keeps taking a decorated payload whichever
     // target reported the drop, and the section model needs no change.
     this.args.onLinkDrop?.(webLinkPayload(source), linkDropIndex);
@@ -246,11 +284,13 @@ export default class SidebarSection extends Component {
    */
   @action
   canDwellToOpen({ source }) {
-    return (
-      !this.displaySectionContent &&
-      this.canDropLink({ source }) &&
-      webLinkPayload(source).containsURLs()
-    );
+    if (this.displaySectionContent || !this.canDropLink({ source })) {
+      return false;
+    }
+    if (source.type === "sidebar-link") {
+      return true;
+    }
+    return webLinkPayload(source).containsURLs();
   }
 
   /**
@@ -281,26 +321,6 @@ export default class SidebarSection extends Component {
     this.#collapseIfOpenedForDrag();
   }
 
-  get headerCaretIcon() {
-    return this.displaySectionContent ? "angle-down" : "angle-right";
-  }
-
-  get isSingleHeaderAction() {
-    return this.args.headerActions?.length === 1;
-  }
-
-  get isMultipleHeaderActions() {
-    return this.args.headerActions?.length > 1;
-  }
-
-  get displaySection() {
-    if (this.args.displaySection === undefined) {
-      return true;
-    }
-
-    return this.args.displaySection;
-  }
-
   #collapseIfOpenedForDrag() {
     if (this.#openedForDrag) {
       this.#openedForDrag = false;
@@ -311,6 +331,19 @@ export default class SidebarSection extends Component {
   <template>
     {{#if this.displaySection}}
       <div
+        class={{dConcatClass
+          "sidebar-section"
+          "sidebar-section-wrapper"
+          (if this.linkDropActive "is-link-drop-active")
+          (if
+            this.displaySectionContent
+            "sidebar-section--expanded"
+            "sidebar-section--collapsed"
+          )
+          (if @persistentActions "sidebar-section--persistent-actions")
+        }}
+        data-section-name={{@sectionName}}
+        ...attributes
         {{didInsert this.setExpandedState}}
         {{dDragAndDropExternalTarget
           accepts=WEB_LINK_KINDS
@@ -325,9 +358,10 @@ export default class SidebarSection extends Component {
         {{! The same drop, for a link the browser started dragging from this
             page rather than from outside the window. }}
         {{dDragAndDropTarget
+          accepts="sidebar-link"
           adopts=WEB_LINK_ADOPTION
           canDrop=this.canDropLink
-          dropEffect="copy"
+          dropEffect=this.linkDropEffect
           indicator=false
           onDragEnter=this.trackLinkDrop
           onDrag=this.trackLinkDrop
@@ -335,33 +369,21 @@ export default class SidebarSection extends Component {
           onDrop=this.dropLink
         }}
         {{dDragDwell
-          types=WEB_LINK_ADOPTION.type
+          types=(array WEB_LINK_ADOPTION.type "sidebar-link")
           externalKinds=WEB_LINK_KINDS
           canDwell=this.canDwellToOpen
           onDwell=this.openForLinkDwell
           onDwellEnd=this.endLinkDwell
         }}
-        data-section-name={{@sectionName}}
-        class={{dConcatClass
-          "sidebar-section"
-          "sidebar-section-wrapper"
-          (if this.linkDropActive "is-link-drop-active")
-          (if
-            this.displaySectionContent
-            "sidebar-section--expanded"
-            "sidebar-section--collapsed"
-          )
-        }}
-        ...attributes
       >
         {{#unless @hideSectionHeader}}
           <div class="sidebar-section-header-wrapper sidebar-row">
             <SectionHeader
               @collapsable={{@collapsable}}
+              @isActive={{this.isActive}}
+              @isExpanded={{this.displaySectionContent}}
               @sidebarSectionContentId={{this.sidebarSectionContentId}}
               @toggleSectionDisplay={{this.toggleSectionDisplay}}
-              @isExpanded={{this.displaySectionContent}}
-              @isActive={{this.isActive}}
             >
               {{#if @collapsable}}
                 <span class="sidebar-section-header-caret">
@@ -375,8 +397,8 @@ export default class SidebarSection extends Component {
 
               {{#if @indicatePublic}}
                 <DTooltip
-                  @icon="globe"
                   class="sidebar-section-header-global-indicator"
+                  @icon="globe"
                 >
                   <span
                     class="sidebar-section-header-global-indicator__content"
@@ -391,10 +413,11 @@ export default class SidebarSection extends Component {
             {{#if this.isSingleHeaderAction}}
               {{#each @headerActions as |headerAction|}}
                 <button
-                  {{on "click" headerAction.action}}
-                  type="button"
-                  title={{headerAction.title}}
+                  aria-label={{headerAction.title}}
                   class="sidebar-section-header-button btn-icon btn-flat"
+                  title={{headerAction.title}}
+                  type="button"
+                  {{on "click" headerAction.action}}
                 >
                   {{dIcon @headerActionsIcon}}
                 </button>
@@ -403,24 +426,24 @@ export default class SidebarSection extends Component {
 
             {{#if this.isMultipleHeaderActions}}
               <DMenu
-                @identifier="sidebar-section-header-dropdown-menu"
-                @title={{i18n "sidebar.sections.more_options.title"}}
-                @icon="ellipsis-vertical"
-                @onRegisterApi={{this.onRegisterApi}}
                 class="sidebar-section-header-dropdown btn-flat"
+                @icon="ellipsis-vertical"
+                @identifier="sidebar-section-header-dropdown-menu"
+                @onRegisterApi={{this.onRegisterApi}}
+                @title={{i18n "sidebar.sections.more_options.title"}}
               >
                 <:content>
                   <DDropdownMenu as |dropdown|>
                     {{#each @headerActions as |headerAction|}}
                       <dropdown.item>
                         <DButton
+                          class="btn-transparent sidebar-section-header-dropdown__item"
+                          data-menu-option-id={{headerAction.id}}
                           @action={{fn
                             this.handleHeaderActionClick
                             headerAction.action
                           }}
                           @translatedLabel={{headerAction.title}}
-                          class="btn-transparent sidebar-section-header-dropdown__item"
-                          data-menu-option-id={{headerAction.id}}
                         />
                       </dropdown.item>
                     {{/each}}
@@ -433,8 +456,8 @@ export default class SidebarSection extends Component {
 
         {{#if this.displaySectionContent}}
           <ul
-            id={{this.sidebarSectionContentId}}
             class="sidebar-section-content"
+            id={{this.sidebarSectionContentId}}
           >
             {{yield (hash linkDropIndex=this.linkDropIndex)}}
           </ul>
@@ -442,8 +465,8 @@ export default class SidebarSection extends Component {
 
         {{#if this.linkDropAtEnd}}
           <div
-            class="sidebar-section-link-drop-indicator"
             aria-hidden="true"
+            class="sidebar-section-link-drop-indicator"
           ></div>
         {{/if}}
       </div>

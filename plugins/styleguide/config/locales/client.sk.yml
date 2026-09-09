@@ -91,6 +91,24 @@ sk:
           title: "Viac tém"
         post_menu:
           title: "Ponuka príspevkov"
+        roving_focus:
+          toolbar:
+            copy: "Kopírovať"
+          adjacent:
+            label: "Filtre"
+            field: "Hľadať"
+            open: "Zahájiť"
+            recent: "Nedávne"
+          listbox:
+            apple: "Apple"
+          combobox:
+            daily: "Denne"
+            weekly: "Týždenne"
+            monthly: "Mesačne"
+            never: "Nikdy"
+          tree:
+            components: "Komponenty"
+            select: "Vyberte"
         modal:
           title: "Okno"
           header: "Nadpis okna"

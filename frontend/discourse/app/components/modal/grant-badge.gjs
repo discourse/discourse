@@ -6,6 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import {
+  grantableBadgeOptions,
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
@@ -32,6 +33,10 @@ export default class GrantBadgeModal extends Component {
     !this.availableBadges.length;
   }
 
+  get badgeOptions() {
+    return grantableBadgeOptions(this.availableBadges);
+  }
+
   get post() {
     return this.args.model.selectedPost;
   }
@@ -41,10 +46,6 @@ export default class GrantBadgeModal extends Component {
       this.saving ||
       !isBadgeGrantable(this.selectedBadgeId, this.availableBadges)
     );
-  }
-
-  #updateAvailableBadges() {
-    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
   }
 
   @action
@@ -88,14 +89,18 @@ export default class GrantBadgeModal extends Component {
     }
   }
 
+  #updateAvailableBadges() {
+    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
+  }
+
   <template>
     <DModal
+      class="grant-badge-modal"
       @bodyClass="grant-badge"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
       @title={{i18n "admin.badges.grant_badge"}}
-      class="grant-badge-modal"
       {{didInsert this.loadBadges}}
     >
       <:body>
@@ -105,10 +110,10 @@ export default class GrantBadgeModal extends Component {
           {{else}}
             <p>
               <ComboBox
-                @value={{this.selectedBadgeId}}
-                @content={{this.availableBadges}}
+                @content={{this.badgeOptions}}
                 @onChange={{fn (mut this.selectedBadgeId)}}
                 @options={{hash filterable=true none="badges.none"}}
+                @value={{this.selectedBadgeId}}
               />
             </p>
           {{/if}}
@@ -116,10 +121,10 @@ export default class GrantBadgeModal extends Component {
       </:body>
       <:footer>
         <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.performGrantBadge}}
-          @label="admin.badges.grant"
           class="btn-primary"
+          @action={{this.performGrantBadge}}
+          @disabled={{this.buttonDisabled}}
+          @label="admin.badges.grant"
         />
       </:footer>
     </DModal>

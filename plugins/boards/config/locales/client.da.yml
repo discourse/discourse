@@ -1,0 +1,35 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    boards:
+      board:
+        remove_card: "Fjern"
+        new_topic: "Nyt emne..."
+        title: "Titel"
+        tags: "Mærker"
+        assigned_to: "Tildelt til"
+        topic_reply_count:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        assign: "Tildel"
+        unassign: "Fjern tildeling"
+        created_by: "Oprettet af"
+      manage:
+        name: "Navn"
+        slug: "Alias (Slug)"
+        constraint_categories: "Kategorier"
+        constraint_tags: "Mærker"
+        columns:
+          remove: "Fjern"
+          column_title: "Titel"
+          icon: "Ikon"
+          color: "Farve"
+          tag: "Mærke"
+          move_to_assigned_unassign: "Fjern tildeling"
+          move_to_status_open: "Åbn"
+          move_to_status_closed: "Lukket"

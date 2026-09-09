@@ -612,6 +612,21 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
+    # Anonymous callers are only ever running signup, so once local registration
+    # is closed the endpoint would just be a username-existence oracle.
+    if !current_user &&
+         (!SiteSetting.allow_new_registrations || SiteSetting.enable_discourse_connect)
+      raise Discourse::InvalidAccess
+    end
+
+    # The check is advisory and `create` re-validates, so a throttled caller gets
+    # an optimistic answer rather than an error that blocks the signup form.
+    begin
+      RateLimiter.new(current_user, "check-username-#{request.remote_ip}", 60, 1.minute).performed!
+    rescue RateLimiter::LimitExceeded
+      return render_available_true
+    end
+
     if !params[:username].present?
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
@@ -626,6 +641,24 @@ class UsersController < ApplicationController
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
+  end
+
+  def generate_random_username
+    raise Discourse::NotFound if !SiteSetting.enable_random_usernames
+
+    RateLimiter.new(nil, "random-username-#{request.remote_ip}", 20, 1.minute).performed!
+
+    username = RandomUsernameGenerator.generate
+    # The word lists are admin-editable, so they can end up unusable (e.g. once
+    # unicode usernames are turned back off) while the feature is still on.
+    if username.blank?
+      return(
+        render json: failed_json.merge(errors: [I18n.t("random_username.unavailable")]),
+               status: :unprocessable_entity
+      )
+    end
+
+    render json: { username: }
   end
 
   def check_email
@@ -667,6 +700,8 @@ class UsersController < ApplicationController
   end
 
   def create
+    raise Discourse::InvalidAccess if current_user && !is_api?
+
     params.require(:email)
     params.require(:username)
     params.require(:invite_code) if SiteSetting.require_invite_code
@@ -1214,11 +1249,15 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
+      @user.lock!
+      revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
+
       primary_email = @user.primary_email
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
       if primary_email.save
+        @user.revoke_approval! if revoke_approval
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
         EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
@@ -1537,10 +1576,20 @@ class UsersController < ApplicationController
       query = query.where("created_at > ?", current_user.user_option.oldest_search_log_date)
     end
 
-    results =
-      query.group(:term).order("max(created_at) DESC").limit(MAX_RECENT_SEARCHES).pluck(:term)
+    rows =
+      query
+        .group(:term)
+        .order("max(created_at) DESC")
+        .limit(MAX_RECENT_SEARCHES)
+        .pluck(Arel.sql("term, MAX(created_at)"))
 
-    render json: success_json.merge(recent_searches: results)
+    render json:
+             success_json.merge(
+               recent_searches: rows.map(&:first),
+               # sent alongside the bare terms, which stay for existing callers,
+               # so a consumer can order these against a history of its own
+               recent_searches_detailed: rows.map { |term, at| { term: term, at: at&.iso8601 } },
+             )
   end
 
   def reset_recent_searches
@@ -1640,6 +1689,7 @@ class UsersController < ApplicationController
 
   def create_second_factor_totp
     require "rotp" if !defined?(ROTP)
+    require "rqrcode" if !defined?(RQRCode)
     totp_data = ROTP::Base32.random
     server_session["staged-totp-#{current_user.id}"] = totp_data
     qrcode_png =
@@ -2327,7 +2377,13 @@ class UsersController < ApplicationController
   end
 
   def summary_cache_key(user)
-    "user_summary:#{user.id}:#{current_user ? current_user.id : 0}:#{I18n.locale}"
+    [
+      "user_summary",
+      user.id,
+      current_user&.id.to_i,
+      I18n.locale,
+      ContentLocalization.automatically_translate?(guardian),
+    ].join(":")
   end
 
   def render_invite_error(message)

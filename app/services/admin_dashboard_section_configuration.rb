@@ -5,6 +5,7 @@ class AdminDashboardSectionConfiguration
 
   ACTIVITY_BY_CATEGORY_MAX = 10
   WHOS_POSTING_MAX = 10
+  WHOS_POSTING_GROUPS_MAX = 10
 
   SUPPORTED_SETTINGS = {
     "engagement" => {
@@ -29,7 +30,7 @@ class AdminDashboardSectionConfiguration
         end,
       },
       "whos_posting" => {
-        permit: [{ category_ids: [] }],
+        permit: [{ category_ids: [] }, { groups: [] }],
         validate: ->(attrs) do
           ids = attrs[:category_ids]
           raise Discourse::InvalidParameters.new(:category_ids) if !ids.is_a?(Array)
@@ -45,7 +46,24 @@ class AdminDashboardSectionConfiguration
             raise Discourse::InvalidParameters.new(:category_ids)
           end
 
-          { "category_ids" => parsed }
+          result = { "category_ids" => parsed }
+
+          if attrs.key?(:groups)
+            groups = attrs[:groups]
+            raise Discourse::InvalidParameters.new(:groups) if !groups.is_a?(Array)
+
+            groups = groups.map(&:to_s)
+
+            if groups.blank? || groups.size > WHOS_POSTING_GROUPS_MAX ||
+                 groups.uniq.size != groups.size ||
+                 groups.any? { |token| !Report.valid_group_token?(token) }
+              raise Discourse::InvalidParameters.new(:groups)
+            end
+
+            result["groups"] = groups
+          end
+
+          result
         end,
       },
     },

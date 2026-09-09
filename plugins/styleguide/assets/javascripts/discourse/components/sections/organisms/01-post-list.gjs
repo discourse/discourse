@@ -7,15 +7,15 @@ import StyleguideExample from "../../styleguide-example";
 
 export default <template>
   <StyleguideExample
-    @title={{i18n "styleguide.sections.post_list.empty_example"}}
     @code={{postListEmptySource}}
+    @title={{i18n "styleguide.sections.post_list.empty_example"}}
   >
     <PostListEmptyExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n "styleguide.sections.post_list.populated_example"}}
     @code={{postListSource}}
+    @title={{i18n "styleguide.sections.post_list.populated_example"}}
   >
     <PostListExample @posts={{@dummy.postList}} />
   </StyleguideExample>

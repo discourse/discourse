@@ -53,20 +53,6 @@
   .discourse-touch & {
     z-index: z("mobile-composer");
   }
-
-  .shortcut {
-    line-height: 1;
-    vertical-align: middle;
-
-    &.--apple {
-      letter-spacing: 0.25em;
-      padding-right: 0.35em;
-    }
-
-    @include viewport.until(sm) {
-      display: none;
-    }
-  }
 }
 
 .fk-d-menu[class*="toolbar-menu"] .dropdown-menu__header {
@@ -76,45 +62,33 @@
 }
 
 .toolbar-menu__options-content,
-.toolbar-menu__list-content,
-.toolbar-menu__heading-content {
-  .dropdown-menu {
-    .btn {
-      &.--active {
-        .d-button-label__active-icon {
-          visibility: visible;
-          margin-left: auto;
-        }
-      }
-    }
-
-    .d-button-label {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-      align-items: center;
-      min-width: 0; // shrink if needed
-
-      &__active-icon {
-        visibility: hidden;
-      }
-
-      .shortcut {
-        margin-left: var(--space-4);
-      }
-    }
-  }
-}
-
 .toolbar-menu__heading-content,
 .toolbar-menu__list-content {
   .dropdown-menu {
     .btn {
+      // The label is block content, so the button counts as icon-only and
+      // drops the gap after its icon; restore the labelled-button gap.
+      &.no-text .d-icon {
+        margin-right: 0.45em;
+      }
+
+      &.--active {
+        .d-button-label__active-icon {
+          visibility: visible;
+        }
+
+        // The check owns the trailing slot at rest, even for a shortcut that
+        // is otherwise always shown.
+        &:not(:hover, :focus, :focus-visible) .shortcut {
+          visibility: hidden;
+        }
+      }
+
       &:hover,
       &:focus,
       &:focus-visible {
         .shortcut {
-          display: block;
+          visibility: visible;
         }
 
         .d-button-label__active-icon {
@@ -123,29 +97,29 @@
       }
     }
 
+    // The shortcut and the active check share one trailing cell: both are
+    // laid out so the row reserves their width, and only one is shown.
     .d-button-label {
-      position: relative;
-      flex-grow: 1;
-      display: flex;
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: var(--space-4);
+      column-gap: var(--space-4);
+      min-width: 0;
 
-      &__active-icon {
+      &__text {
+        text-align: start;
+      }
+
+      &__active-icon,
+      .shortcut {
+        grid-area: 1 / 2;
+        justify-self: end;
         visibility: hidden;
       }
 
-      &__text {
-        padding-right: var(--space-8); // extra spacing for the shortcut
-      }
-
-      .shortcut {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        display: none;
-        margin: 0;
-        font-size: var(--font-down-1-rem);
+      .shortcut.--always-visible {
+        visibility: visible;
       }
     }
   }

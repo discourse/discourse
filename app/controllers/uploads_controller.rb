@@ -94,11 +94,22 @@ class UploadsController < ApplicationController
     uploads = []
 
     if params[:short_urls] && params[:short_urls].length > 0
-      PrettyText::Helpers
-        .lookup_upload_urls(params[:short_urls])
-        .each do |short_url, paths|
-          uploads << { short_url: short_url, url: paths[:url], short_path: paths[:short_path] }
+      upload_urls = PrettyText::Helpers.lookup_upload_urls(params[:short_urls])
+      uploads_by_sha1 =
+        Upload.where(
+          sha1:
+            upload_urls.values.map { |paths| Upload.sha1_from_base62_encoded(paths[:base62_sha1]) },
+        ).index_by(&:sha1)
+
+      upload_urls.each do |short_url, paths|
+        upload = uploads_by_sha1[Upload.sha1_from_base62_encoded(paths[:base62_sha1])]
+        if upload.nil? ||
+             (upload.access_control_post_id.present? && !guardian.can_see_upload?(upload))
+          next
         end
+
+        uploads << { short_url: short_url, url: paths[:url], short_path: paths[:short_path] }
+      end
     end
 
     render json: uploads.to_json
@@ -125,6 +136,8 @@ class UploadsController < ApplicationController
             Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
 
         if upload.present?
+          check_secure_upload_permission(upload) if upload.secure? && SiteSetting.secure_uploads?
+
           if !Discourse.store.internal?
             local_store = FileStore::LocalStore.new
             return render_404 unless local_store.has_been_uploaded?(upload.url)
@@ -230,6 +243,8 @@ class UploadsController < ApplicationController
     params.require(:url)
     upload = Upload.get_from_url(params[:url])
     raise Discourse::NotFound unless upload
+
+    check_secure_upload_permission(upload)
 
     render json: {
              original_filename: upload.original_filename,

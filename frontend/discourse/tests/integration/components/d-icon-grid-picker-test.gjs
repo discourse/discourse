@@ -50,7 +50,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("renders trigger with selected icon", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value="pencil" />
       </template>
     );
 
@@ -66,9 +66,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value={{currentValue}}
-          @onChange={{onChange}}
           @allowClear={{true}}
+          @onChange={{onChange}}
+          @value={{currentValue}}
         />
       </template>
     );
@@ -81,7 +81,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("does not show clear button when allowClear is false", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value="pencil" />
       </template>
     );
 
@@ -92,9 +92,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value={{null}}
-          @onChange={{noop}}
           @allowClear={{true}}
+          @onChange={{noop}}
+          @value={{null}}
         />
       </template>
     );
@@ -105,7 +105,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("renders trigger with no icon when no value", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -117,7 +117,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("displays icons in the grid after opening", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -135,7 +135,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
 
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{onChange}} />
+        <DIconGridPicker @onChange={{onChange}} @value={{null}} />
       </template>
     );
 
@@ -152,9 +152,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="heart"
-          @onChange={{noop}}
           @favorites={{favorites}}
+          @onChange={{noop}}
+          @value="heart"
         />
       </template>
     );
@@ -173,9 +173,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="heart"
-          @onChange={{noop}}
           @favorites={{favorites}}
+          @onChange={{noop}}
+          @value="heart"
         />
       </template>
     );
@@ -201,9 +201,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="heart"
           @onChange={{noop}}
           @showSelectedName={{true}}
+          @value="heart"
         />
       </template>
     );
@@ -221,7 +221,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("shows empty state when no icons match", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -244,9 +244,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="pencil"
           @onChange={{noop}}
           @showCaret={{true}}
+          @value="pencil"
         />
       </template>
     );
@@ -259,7 +259,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("does not show caret icon by default", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value="pencil" />
       </template>
     );
 
@@ -272,9 +272,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="pencil"
-          @onChange={{noop}}
           @disabled={{true}}
+          @onChange={{noop}}
+          @value="pencil"
         />
       </template>
     );
@@ -285,7 +285,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("shows default label when no value", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -297,7 +297,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("shows custom label", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} @label="Pick one" />
+        <DIconGridPicker @label="Pick one" @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -309,7 +309,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("hides label when value is set and no explicit label", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value="pencil" />
       </template>
     );
 
@@ -321,7 +321,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("applies default btn-default class to trigger", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -332,9 +332,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value={{null}}
-          @onChange={{noop}}
           @btnClass="btn-primary"
+          @onChange={{noop}}
+          @value={{null}}
         />
       </template>
     );
@@ -347,9 +347,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="pencil"
-          @onChange={{noop}}
           @iconColor="#FF0000"
+          @onChange={{noop}}
+          @value="pencil"
         />
       </template>
     );
@@ -364,7 +364,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("does not set --icon-color when @iconColor is not provided", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value="pencil" />
       </template>
     );
 
@@ -378,7 +378,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("sets data-value attribute", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value="pencil" />
       </template>
     );
 
@@ -388,7 +388,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("sets title on trigger when value is selected", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value="pencil" @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value="pencil" />
       </template>
     );
 
@@ -402,9 +402,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value={{null}}
           @onChange={{noop}}
           @onShow={{onShow}}
+          @value={{null}}
         />
       </template>
     );
@@ -420,9 +420,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value={{null}}
           @onChange={{noop}}
           @onClose={{onClose}}
+          @value={{null}}
         />
       </template>
     );
@@ -436,7 +436,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("grid wrapper has listbox role", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -450,7 +450,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
 
   test("icon buttons have option role and aria-selected on selected icon", async function (assert) {
     await render(
-      <template><DIconGridPicker @value="gear" @onChange={{noop}} /></template>
+      <template><DIconGridPicker @onChange={{noop}} @value="gear" /></template>
     );
 
     await click(".d-icon-grid-picker-trigger");
@@ -470,7 +470,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("arrow keys navigate between icons", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -492,7 +492,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("ArrowDown from filter focuses first icon", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -514,7 +514,7 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
   test("ArrowUp from first icon focuses filter", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -535,9 +535,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="pencil"
-          @onChange={{noop}}
           @iconColor="red; background: url(evil)"
+          @onChange={{noop}}
+          @value="pencil"
         />
       </template>
     );
@@ -555,9 +555,9 @@ module("Integration | Component | DIconGridPicker", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value="heart"
-          @onChange={{noop}}
           @favorites={{favorites}}
+          @onChange={{noop}}
+          @value="heart"
         />
       </template>
     );
@@ -625,7 +625,7 @@ module("Integration | Component | DIconGridPicker | paging", function (hooks) {
   test("asks for the first page and reports whether more exist", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -645,7 +645,7 @@ module("Integration | Component | DIconGridPicker | paging", function (hooks) {
   test("loads the next page when arrowing past the last icon", async function (assert) {
     await render(
       <template>
-        <DIconGridPicker @value={{null}} @onChange={{noop}} />
+        <DIconGridPicker @onChange={{noop}} @value={{null}} />
       </template>
     );
 
@@ -679,9 +679,9 @@ module("Integration | Component | DIconGridPicker | paging", function (hooks) {
     await render(
       <template>
         <DIconGridPicker
-          @value={{null}}
           @onChange={{onChange}}
           @onlyAvailable={{false}}
+          @value={{null}}
         />
       </template>
     );

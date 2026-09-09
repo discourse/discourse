@@ -171,9 +171,12 @@ class Theme < ActiveRecord::Base
 
     reload
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
+
+    stale_extra_js =
+      theme_fields.any? { |f| f.extra_js_field? && f.compiler_version != Theme.compiler_version }
     theme_fields.each(&:ensure_baked!)
 
-    update_javascript_cache! if any_extra_js_fields_changed
+    update_javascript_cache! if any_extra_js_fields_changed || stale_extra_js
 
     remove_from_cache!
     ColorScheme.hex_cache.clear
@@ -795,15 +798,15 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Theme.get_set_cache "settings_for_theme_#{id}" do
+    Theme.get_set_cache "settings_for_theme_#{id}_#{group_setting_alias_enabled?}" do
       build_settings_hash
     end
   end
 
   def cached_default_settings
-    Theme.get_set_cache "default_settings_for_theme_#{id}" do
+    Theme.get_set_cache "default_settings_for_theme_#{id}_#{group_setting_alias_enabled?}" do
       settings_hash = {}
-      settings.each { |name, setting| settings_hash[name] = setting.default }
+      settings.each { |name, setting| settings_hash[name] = setting.default_value }
 
       theme_uploads = build_theme_uploads_hash
       settings_hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -1139,6 +1142,10 @@ class Theme < ActiveRecord::Base
   private
 
   attr_accessor :theme_setting_requests_refresh
+
+  def group_setting_alias_enabled?
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+  end
 
   def theme_fields_to_tree(theme_fields_scope)
     theme_fields_scope.reduce({}) do |tree, theme_field|

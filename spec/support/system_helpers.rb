@@ -451,6 +451,63 @@ module SystemHelpers
     end
   end
 
+  # A native drag that pauses over an intermediate element before dropping, for
+  # a destination that only appears once a drag has dwelt somewhere.
+  #
+  # `drag_and_drop` cannot express this. Playwright's own drag is one atomic
+  # call, so there is no point during it at which to wait.
+  #
+  # The drag is driven by hand instead. That needs CDP drag interception, or
+  # Chromium treats the press as an OS drag and stops reporting the moves after.
+  #
+  # `over:` is the element to dwell on, `to:` the one to drop on. The block runs
+  # while the drag is still open, which is where to wait for what it reveals.
+  #
+  # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
+  # through a retrying matcher rather than a value read once.
+  def drag_and_hold(from:, over:, to:, steps: 10)
+    page.driver.with_playwright_page do |pw_page|
+      session = pw_page.context.new_cdp_session(pw_page)
+      session.send_message("Input.setInterceptDrags", params: { "enabled" => true })
+
+      start_x, start_y = viewport_centre_of(pw_page, from)
+      over_x, over_y = viewport_centre_of(pw_page, over)
+
+      pw_page.mouse.move(start_x, start_y)
+      pw_page.mouse.down
+      # Stepped, so the drag is seen crossing the threshold rather than
+      # teleporting past it, and so the dwell sees more than one move.
+      pw_page.mouse.move(over_x, over_y, steps: steps)
+    end
+
+    begin
+      # Outside the driver block, so Capybara's own matchers work normally in it.
+      yield if block_given?
+      page.driver.with_playwright_page do |pw_page|
+        drop_x, drop_y = viewport_centre_of(pw_page, to)
+        pw_page.mouse.move(drop_x, drop_y, steps: steps)
+      end
+    ensure
+      # Released even when an in-drag assertion fails, so the example does not
+      # run its remaining hooks with the button still held.
+      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+    end
+  end
+
+  # Waited for rather than queried once. `query_selector` returns nil without
+  # waiting, so a missing element fails as a NoMethodError naming nothing useful.
+  def viewport_centre_of(pw_page, selector)
+    node =
+      pw_page.wait_for_selector(
+        selector,
+        state: "visible",
+        timeout: Capybara.default_max_wait_time * 1000,
+      )
+    node.scroll_into_view_if_needed
+    box = node.bounding_box
+    [box["x"] + box["width"] / 2, box["y"] + box["height"] / 2]
+  end
+
   # Drives a press-drag-release with the real mouse, for the surfaces built on
   # pointer events rather than native drag-and-drop.
   #

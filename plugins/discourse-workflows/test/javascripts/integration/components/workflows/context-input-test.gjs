@@ -84,9 +84,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -124,9 +124,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{actionNode}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -163,9 +163,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -208,9 +208,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{actionNode}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -275,9 +275,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -367,9 +367,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{nodeTypes}}
             @session={{this.session}}
           />
@@ -430,6 +430,10 @@ module(
         '$("Trigger").item.json.trigger',
         "uses a safe linked-item expression when no item count exists"
       );
+      assert.false(
+        "text/plain" in dragged,
+        "does not make expression-disabled text controls native drop targets"
+      );
     });
 
     test("reuses one declared schema resolution across ancestor sections", async function (assert) {
@@ -487,9 +491,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{nodeTypes}}
             @session={{this.session}}
           />
@@ -540,9 +544,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -573,9 +577,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -657,9 +661,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -751,9 +755,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -825,9 +829,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{logNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -863,9 +867,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{nodes}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />
@@ -950,9 +954,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{connections}}
             @node={{currentNode}}
             @nodes={{nodes}}
-            @connections={{connections}}
             @nodeTypes={{nodeTypes}}
             @session={{this.session}}
           />
@@ -997,9 +1001,9 @@ module(
       await render(
         <template>
           <InputContext
+            @connections={{(Array)}}
             @node={{node}}
             @nodes={{Array node}}
-            @connections={{(Array)}}
             @nodeTypes={{(Array)}}
             @session={{this.session}}
           />

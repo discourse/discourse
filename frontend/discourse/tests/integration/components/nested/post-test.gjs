@@ -15,39 +15,39 @@ function renderComponent(context) {
   return render(
     <template>
       <NestedPost
-        @post={{context.post}}
-        @children={{context.children}}
-        @topic={{context.topic}}
-        @depth={{context.depth}}
-        @path={{context.path}}
-        @sort="top"
-        @replyToPost={{noop}}
-        @editPost={{noop}}
-        @deletePost={{noop}}
-        @recoverPost={{noop}}
-        @showFlags={{noop}}
-        @showHistory={{noop}}
         @changeNotice={{noop}}
         @changePostOwner={{noop}}
-        @grantBadge={{noop}}
-        @lockPost={{noop}}
-        @unlockPost={{noop}}
-        @permanentlyDeletePost={{noop}}
-        @rebakePost={{noop}}
-        @showPagePublish={{noop}}
-        @togglePostType={{noop}}
-        @toggleWiki={{noop}}
-        @unhidePost={{noop}}
+        @children={{context.children}}
+        @collapseFromDepth={{context.collapseFromDepth}}
+        @deletePost={{noop}}
+        @depth={{context.depth}}
+        @editPost={{noop}}
         @expansionState={{context.expansionState}}
         @fetchedChildrenCache={{context.fetchedChildrenCache}}
         @focusPost={{context.focusPost}}
-        @registerPost={{registerPost}}
-        @collapseFromDepth={{context.collapseFromDepth}}
+        @grantBadge={{noop}}
+        @lockPost={{noop}}
         @multiSelect={{context.multiSelect}}
-        @togglePostSelection={{context.togglePostSelection}}
-        @selectReplies={{context.selectReplies}}
-        @selectBelow={{context.selectBelow}}
+        @path={{context.path}}
+        @permanentlyDeletePost={{noop}}
+        @post={{context.post}}
         @postSelected={{context.postSelected}}
+        @rebakePost={{noop}}
+        @recoverPost={{noop}}
+        @registerPost={{registerPost}}
+        @replyToPost={{noop}}
+        @selectBelow={{context.selectBelow}}
+        @selectReplies={{context.selectReplies}}
+        @showFlags={{noop}}
+        @showHistory={{noop}}
+        @showPagePublish={{noop}}
+        @sort="top"
+        @togglePostSelection={{context.togglePostSelection}}
+        @togglePostType={{noop}}
+        @toggleWiki={{noop}}
+        @topic={{context.topic}}
+        @unhidePost={{noop}}
+        @unlockPost={{noop}}
       />
     </template>
   );
@@ -290,6 +290,99 @@ module("Integration | Component | Nested | Post", function (hooks) {
       .dom(".nested-post-children")
       .doesNotExist("does not mount the child loader");
     assert.verifySteps([], "does not request children while rendering");
+  });
+
+  test("renders server-flattened descendants once at the nesting depth cap", async function (assert) {
+    this.siteSettings.nested_replies_cap_nesting_depth = true;
+    this.siteSettings.nested_replies_max_depth = 3;
+    this.depth = 2;
+    this.post.setProperties({
+      direct_reply_count: 2,
+      total_descendant_count: 4,
+    });
+
+    const child = (id, postNumber) => ({
+      post: this.store.createRecord("post", {
+        id,
+        post_number: postNumber,
+        topic: this.topic,
+        user_id: 2,
+        username: `user-${id}`,
+        avatar_template: "/letter_avatar_proxy/v4/letter/u/25/48.png",
+        cooked: `<p>Post ${postNumber}</p>`,
+        created_at: "2026-01-01T00:00:00.000Z",
+        actions_summary: [],
+        direct_reply_count: 0,
+        total_descendant_count: 0,
+      }),
+      children: [],
+    });
+    const grandchild56 = child(56, 56);
+    const grandchild51 = child(51, 51);
+    this.children = [child(48, 48), child(49, 49), grandchild56, grandchild51];
+
+    await renderComponent(this);
+
+    const appEvents = getOwner(this).lookup("service:app-events");
+    appEvents.trigger("nested-replies:child-created", {
+      topicId: this.topic.id,
+      parentPostNumber: this.post.post_number,
+      post: grandchild56.post,
+    });
+
+    assert
+      .dom(".nested-post.--depth-3")
+      .exists({ count: 4 }, "renders every descendant at the capped depth");
+    assert
+      .dom('[data-post-id="56"]')
+      .exists({ count: 1 }, "renders a deep descendant exactly once");
+    assert
+      .dom('[data-post-id="51"]')
+      .exists({ count: 1 }, "renders descendants from each branch");
+    assert
+      .dom(".nested-post-children__load-more")
+      .doesNotExist("does not offer a fetch when every descendant is loaded");
+  });
+
+  test("recomputes capped descendant pagination when restoring child cache", async function (assert) {
+    this.siteSettings.nested_replies_cap_nesting_depth = true;
+    this.siteSettings.nested_replies_max_depth = 3;
+    this.depth = 2;
+    this.post.setProperties({
+      direct_reply_count: 2,
+      total_descendant_count: 3,
+    });
+
+    const cachedChild = this.store.createRecord("post", {
+      id: 48,
+      post_number: 48,
+      topic: this.topic,
+      user_id: 2,
+      username: "cached-user",
+      avatar_template: "/letter_avatar_proxy/v4/letter/c/25/48.png",
+      cooked: "<p>Cached post</p>",
+      created_at: "2026-01-01T00:00:00.000Z",
+      actions_summary: [],
+      direct_reply_count: 0,
+      total_descendant_count: 0,
+    });
+    this.fetchedChildrenCache.set("1:2", {
+      childNodes: [{ post: cachedChild, children: [] }],
+      page: 0,
+      hasMore: false,
+      fetchedFromServer: false,
+    });
+    this.expansionState.set(this.post.post_number, {
+      expanded: true,
+      collapsed: false,
+    });
+
+    await renderComponent(this);
+
+    assert.dom('[data-post-id="48"]').exists("restores the cached descendant");
+    assert
+      .dom(".nested-post-children__load-more")
+      .exists("offers the missing descendants despite stale cached hasMore");
   });
 
   test("renders multi-select controls", async function (assert) {

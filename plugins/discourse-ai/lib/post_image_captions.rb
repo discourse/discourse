@@ -13,7 +13,6 @@ module DiscourseAi
     RETRY_AFTER = 1.day
     COOK_ENQUEUE_POST_MAX_AGE = 1.day
     BACKFILL_RUNS_PER_HOUR = 4
-    SUPPORTED_EXTENSIONS = %w[jpg jpeg png gif webp].freeze
     MAX_CAPTION_LENGTH = 1_000
 
     module_function
@@ -238,7 +237,9 @@ module DiscourseAi
       max_age_days = SiteSetting.ai_post_image_captions_backfill_max_age_days.to_i
       original_locale_sql = "COALESCE(NULLIF(posts.locale, ''), #{default_locale})"
       supported_extensions =
-        SUPPORTED_EXTENSIONS.map { |extension| connection.quote(extension) }.join(", ")
+        Completions::UploadEncoder::SUPPORTED_IMAGE_EXTENSIONS
+          .map { |extension| connection.quote(extension) }
+          .join(", ")
       localized_targets_sql =
         if SiteSetting.content_localization_enabled
           <<~SQL
@@ -448,7 +449,7 @@ module DiscourseAi
 
     def captionable_upload?(upload, post)
       return false if upload.blank?
-      return false if !SUPPORTED_EXTENSIONS.include?(upload.extension.to_s.downcase)
+      return false if !Completions::UploadEncoder.supported_image_upload?(upload)
       return false if upload.secure? && upload.access_control_post_id != post.id
 
       true

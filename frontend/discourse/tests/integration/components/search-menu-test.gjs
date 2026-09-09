@@ -70,6 +70,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
+    assert
+      .dom("#icon-search-input")
+      .isFocused("search results keep input focus");
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
@@ -129,9 +132,9 @@ module("Integration | Component | SearchMenu", function (hooks) {
     await render(
       <template>
         <SearchMenu
+          @hideResults={{state.hidden}}
           @location="test"
           @searchInputId="icon-search-input"
-          @hideResults={{state.hidden}}
         />
       </template>
     );
@@ -167,6 +170,34 @@ module("Integration | Component | SearchMenu", function (hooks) {
     assert
       .dom("#search-term.search-term__input")
       .exists("input defaults to id of search-term");
+  });
+
+  test("updates when the input placeholder changes", async function (assert) {
+    const state = new (class {
+      @tracked placeholder = "search.title";
+    })();
+
+    await render(
+      <template>
+        <SearchMenu
+          @location="test"
+          @searchInputPlaceholder={{state.placeholder}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("#search-term")
+      .hasAttribute("placeholder", i18n("search.title"))
+      .hasAttribute("aria-label", i18n("search.title"));
+
+    state.placeholder = "welcome_banner.search_placeholder";
+    await settled();
+
+    assert
+      .dom("#search-term")
+      .hasAttribute("placeholder", i18n("welcome_banner.search_placeholder"))
+      .hasAttribute("aria-label", i18n("welcome_banner.search_placeholder"));
   });
 
   test("search-context state changes updates the UI", async function (assert) {

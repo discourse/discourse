@@ -78,14 +78,6 @@ export const POPULAR_THEMES = [
     component: true,
   },
   {
-    name: "Kanban Board",
-    value: "https://github.com/discourse/discourse-kanban-theme",
-    preview: "https://discourse.theme-creator.io/theme/Discourse/kanban-board",
-    description: "Display and organize topics using a Kanban board interface.",
-    meta_url: "https://meta.discourse.org/t/kanban-board/118164",
-    component: true,
-  },
-  {
     name: "Sidebar Theme Toggle",
     value: "https://github.com/discourse/discourse-sidebar-theme-toggle",
     description:

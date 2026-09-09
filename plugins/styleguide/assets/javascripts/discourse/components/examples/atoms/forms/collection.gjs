@@ -11,13 +11,13 @@ export default <template>
     <form.Collection @name="foo" as |collection index|>
       <form.Row as |row|>
         <row.Col @size={{6}}>
-          <collection.Field @title="Bar" @name="bar" @type="input" as |field|>
+          <collection.Field @name="bar" @title="Bar" @type="input" as |field|>
             <field.Control />
           </collection.Field>
         </row.Col>
 
         <row.Col @size={{4}}>
-          <collection.Field @title="Baz" @name="baz" @type="input" as |field|>
+          <collection.Field @name="baz" @title="Baz" @type="input" as |field|>
             <field.Control />
           </collection.Field>
         </row.Col>

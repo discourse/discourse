@@ -63,6 +63,22 @@ lt:
           title: "Svetainės antraštė"
         more_topics:
           title: "Daugiau Temų"
+        roving_focus:
+          toolbar:
+            copy: "Kopijuoti"
+          adjacent:
+            label: "Filtrai"
+            field: "Paieška"
+            open: "Atidaryti"
+            recent: "Naujausios"
+          combobox:
+            daily: "Kasdien"
+            weekly: "Kas savaitę"
+            monthly: "Kas mėnesį"
+            never: "Niekada"
+          tree:
+            components: "Komponentai"
+            select: "Pasirinkite"
         modal:
           title: "Modalinis"
           header: "Modalinis pavadinimas"

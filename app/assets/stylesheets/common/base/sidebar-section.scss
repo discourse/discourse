@@ -90,6 +90,17 @@
     }
   }
 
+  // opt out of the hover reveal above, for actions that have to be found rather
+  // than reached for
+  &.sidebar-section--persistent-actions {
+    .sidebar-section-header-wrapper {
+      .btn.sidebar-section-header-dropdown,
+      .sidebar-section-header-button {
+        opacity: 1;
+      }
+    }
+  }
+
   .sidebar-section-header {
     flex: 1 1 auto;
     align-items: center;

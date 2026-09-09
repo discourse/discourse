@@ -295,11 +295,6 @@ module("Unit | lib | LegacyArrayLikeObject", function (hooks) {
         "final-array-like:main",
         (Superclass) =>
           class extends Superclass {
-            // overriding getter from a base class works
-            get valueGetter() {
-              return super.valueGetter + " was modified";
-            }
-
             get pluginValue() {
               return (this.content[2] || 0) + this._value;
             }
@@ -314,6 +309,11 @@ module("Unit | lib | LegacyArrayLikeObject", function (hooks) {
 
             set customSetterValue(val) {
               this._customSetterValue = val * 2;
+            }
+
+            // overriding getter from a base class works
+            get valueGetter() {
+              return super.valueGetter + " was modified";
             }
 
             customMethod() {

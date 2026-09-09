@@ -7,7 +7,7 @@ module Jobs
 
     def execute(args)
       return unless SiteSetting.zendesk_enabled?
-      return if SiteSetting.zendesk_jobs_email.blank? || SiteSetting.zendesk_jobs_api_token.blank?
+      return unless DiscourseZendeskPlugin::Helper.configured?
 
       if args[:post_id].present?
         push_post!(args[:post_id])

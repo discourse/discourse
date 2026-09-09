@@ -5,8 +5,8 @@ export default <template>
   {{#if @controller.model.stream.noContent}}
     {{#unless @controller.model.stream.loading}}
       <DEmptyState
-        @title={{@controller.model.emptyState.title}}
         @body={{@controller.model.emptyState.body}}
+        @title={{@controller.model.emptyState.title}}
       />
     {{/unless}}
   {{/if}}

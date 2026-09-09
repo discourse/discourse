@@ -38,6 +38,7 @@ import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
 import { deepMerge } from "discourse/lib/object";
+import { consumeOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
@@ -152,6 +153,24 @@ export default class TopicController extends Controller {
     this.appEvents.off("post:show-revision", this, "_showRevision");
   }
 
+  @computed("site.categoriesList")
+  get categories() {
+    return this.site?.categoriesList;
+  }
+
+  set categories(value) {
+    set(this, "site.categoriesList", value);
+  }
+
+  @dependentKeyCompat
+  get canDeselectAll() {
+    return this.selectedAllPosts;
+  }
+
+  set canDeselectAll(value) {
+    this.selectedAllPosts = value;
+  }
+
   get nestedController() {
     return getOwner(this).lookup("controller:nested");
   }
@@ -186,24 +205,6 @@ export default class TopicController extends Controller {
   @computed("hasError")
   get noErrorYet() {
     return !this.hasError;
-  }
-
-  @computed("site.categoriesList")
-  get categories() {
-    return this.site?.categoriesList;
-  }
-
-  set categories(value) {
-    set(this, "site.categoriesList", value);
-  }
-
-  @dependentKeyCompat
-  get canDeselectAll() {
-    return this.selectedAllPosts;
-  }
-
-  set canDeselectAll(value) {
-    this.selectedAllPosts = value;
   }
 
   @computed(
@@ -244,29 +245,6 @@ export default class TopicController extends Controller {
     return !this.header.mainTopicTitleVisible;
   }
 
-  updateQueryParams() {
-    const filters = this.get("model.postStream.streamFilters");
-
-    if (Object.keys(filters).length > 0) {
-      this.setProperties(filters);
-    } else {
-      this.setProperties({
-        username_filters: null,
-        filter: null,
-        replies_to_post_number: null,
-      });
-    }
-  }
-
-  @observes("model.title", "category")
-  _titleChanged() {
-    const title = this.get("model.title");
-    if (!isEmpty(title)) {
-      // force update lazily loaded titles
-      this.send("refreshTitle");
-    }
-  }
-
   @computed("model.postStream.loaded", "model.is_shared_draft")
   get showSharedDraftControls() {
     return this.model?.postStream?.loaded && this.model?.is_shared_draft;
@@ -280,24 +258,6 @@ export default class TopicController extends Controller {
   @computed("model")
   get pmPath() {
     return this.currentUser && this.currentUser.pmPath(this.model);
-  }
-
-  _showRevision(postNumber, revision) {
-    const post = this.model.get("postStream").postForPostNumber(postNumber);
-
-    if (post && post.version > 1 && post.can_view_edit_history) {
-      schedule("afterRender", () => this.send("showHistory", post, revision));
-    }
-  }
-
-  gotoInbox(name) {
-    let url = userPath(`${this.get("currentUser.username_lower")}/messages`);
-
-    if (name) {
-      url = `${url}/group/${name}`;
-    }
-
-    DiscourseURL.routeTo(url);
   }
 
   @computed
@@ -383,91 +343,107 @@ export default class TopicController extends Controller {
     );
   }
 
-  _removeDeleteOnOwnerReplyBookmarks() {
-    // the user has already navigated away from the topic. the PostCreator
-    // in rails already handles deleting the bookmarks that need to be
-    // based on auto_delete_preference; this is mainly used to clean up
-    // the in-memory post stream and topic model
-    if (!this.model) {
-      return;
-    }
+  get selectedPosts() {
+    const loadedPosts = this.model.postStream.posts;
 
-    const posts = this.get("model.postStream.posts");
-    if (posts) {
-      posts
-        .filter(
-          (post) =>
-            post.bookmarked &&
-            post.bookmark_auto_delete_preference ===
-              AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
-        )
-        .forEach((post) => {
-          post.clearBookmark();
-          this.model.removeBookmark(post.bookmark_id);
-        });
+    return this.selectedPostIds
+      .map((id) => loadedPosts.find((p) => p.id === id))
+      .filter((post) => post !== undefined);
+  }
+
+  @dependentKeyCompat
+  get selectedPostsUsername() {
+    const selectedPosts = this.selectedPosts;
+    const selectedPostsCount = this.selectedPostsCount;
+
+    if (selectedPosts.length < 1 || selectedPostsCount > selectedPosts.length) {
+      return undefined;
     }
-    const forTopicBookmark = this.model.bookmarks.find(
-      (b) => b.bookmarkable_type === "Topic"
-    );
-    if (
-      forTopicBookmark?.auto_delete_preference ===
-      AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
-    ) {
-      this.model.removeBookmark(forTopicBookmark.id);
+    const username = selectedPosts[0].username;
+    return selectedPosts.every((p) => p.username === username)
+      ? username
+      : undefined;
+  }
+
+  @dependentKeyCompat
+  get selectedAllPosts() {
+    if (this.model.postStream.isMegaTopic) {
+      return this.selectedPostsCount >= this.model.posts_count;
+    } else {
+      return this.selectedPostsCount >= this.model.postStream.stream.length;
     }
   }
 
-  _updateSelectedPostIds(postIds) {
-    const smallActionsPostIds = this._smallActionPostIds();
-    this.selectedPostIds = Array.from(
-      new Set([
-        ...this.selectedPostIds,
-        ...postIds.filter((postId) => !smallActionsPostIds.has(postId)),
-      ])
+  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
+  get canSelectAll() {
+    return this.model?.postStream?.isMegaTopic ? false : !this.selectedAllPosts;
+  }
+
+  @dependentKeyCompat
+  get canDeleteSelected() {
+    const isStaff = this.currentUser?.staff;
+
+    return (
+      this.selectedPostsCount > 0 &&
+      ((this.selectedAllPosts && isStaff) ||
+        this.selectedPosts.every((p) => p.can_delete))
     );
   }
 
-  _smallActionPostIds() {
-    const smallActionsPostIds = new Set();
-    const posts = this.get("model.postStream.posts");
-    if (posts && this.site) {
-      const smallAction = this.site.get("post_types.small_action");
-      const whisper = this.site.get("post_types.whisper");
-      posts.forEach((post) => {
-        if (
-          post.post_type === smallAction ||
-          (!post.cooked && post.post_type === whisper)
-        ) {
-          smallActionsPostIds.add(post.id);
-        }
+  @computed("model.details.can_move_posts", "selectedPostsCount")
+  get canMergeTopic() {
+    return this.model?.details?.can_move_posts && this.selectedPostsCount > 0;
+  }
+
+  @computed(
+    "selectedPostsCount",
+    "selectedPostsUsername",
+    "currentUser.canChangePostOwner"
+  )
+  get canChangeOwner() {
+    return (
+      !!this.currentUser?.canChangePostOwner &&
+      this.selectedPostsCount > 0 &&
+      this.selectedPostsUsername !== undefined
+    );
+  }
+
+  @dependentKeyCompat
+  get canMergePosts() {
+    return (
+      this.selectedPostsCount > 1 &&
+      this.selectedPostsUsername !== undefined &&
+      this.selectedPosts.every((p) => p.can_delete)
+    );
+  }
+
+  @computed
+  get loadingHTML() {
+    return spinnerHTML;
+  }
+
+  updateQueryParams() {
+    const filters = this.get("model.postStream.streamFilters");
+
+    if (Object.keys(filters).length > 0) {
+      this.setProperties(filters);
+    } else {
+      this.setProperties({
+        username_filters: null,
+        filter: null,
+        replies_to_post_number: null,
       });
     }
-    return smallActionsPostIds;
   }
 
-  _loadPostIds(post) {
-    if (this.loadingPostIds) {
-      return;
+  gotoInbox(name) {
+    let url = userPath(`${this.get("currentUser.username_lower")}/messages`);
+
+    if (name) {
+      url = `${url}/group/${name}`;
     }
 
-    const postStream = this.get("model.postStream");
-    const url = `/t/${this.get("model.id")}/post_ids.json`;
-
-    this.set("loadingPostIds", true);
-
-    return ajax(url, {
-      data: deepMerge(
-        { post_number: post.get("post_number") },
-        postStream.get("streamFilters")
-      ),
-    })
-      .then((result) => {
-        result.post_ids.push(post.get("id"));
-        this._updateSelectedPostIds(result.post_ids);
-      })
-      .finally(() => {
-        this.set("loadingPostIds", false);
-      });
+    DiscourseURL.routeTo(url);
   }
 
   @action
@@ -536,22 +512,6 @@ export default class TopicController extends Controller {
         ],
       });
     }
-  }
-
-  async _startEditingTranslation() {
-    this.translationLocale = this.currentUser.effective_locale;
-
-    try {
-      const localization = await this._localizationFetchPromise;
-      this.translationTitle = localization?.title || "";
-      this._originalTranslationTitle = this.translationTitle;
-    } catch {
-      this.translationTitle = "";
-      this._originalTranslationTitle = "";
-    }
-
-    this.editingTopicLocalization = true;
-    this.set("editingTopic", true);
   }
 
   @action
@@ -1151,56 +1111,6 @@ export default class TopicController extends Controller {
     return this._openComposerForEdit(topic, post);
   }
 
-  _openComposerForEdit(topic, post) {
-    let editingSharedDraft = false;
-    let draftsCategoryId = this.get("site.shared_drafts_category_id");
-    if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
-      editingSharedDraft = post.get("firstPost");
-    }
-
-    const opts = {
-      post,
-      action: editingSharedDraft ? Composer.EDIT_SHARED_DRAFT : Composer.EDIT,
-      draftKey: post.get("topic.draft_key"),
-      draftSequence: post.get("topic.draft_sequence"),
-    };
-
-    if (editingSharedDraft) {
-      opts.destinationCategoryId = topic.get("destination_category_id");
-    }
-
-    const { composer } = this;
-    const composerModel = composer.get("model");
-    const editingSamePost =
-      opts.post.id === composerModel?.post?.id &&
-      opts.action === composerModel?.action &&
-      opts.draftKey === composerModel?.draftKey;
-
-    return editingSamePost ? composer.unshrink() : composer.open(opts);
-  }
-
-  async _openComposerForEditTranslation(topic, post) {
-    const { raw } = await ajax(`/posts/${post.id}.json`);
-
-    const composerOpts = {
-      action: Composer.ADD_TRANSLATION,
-      draftKey: "translation",
-      warningsDisabled: true,
-      hijackPreview: {
-        component: DEditorOriginalTranslationPreview,
-        model: {
-          postLocale: post.locale,
-          rawPost: raw,
-          translationText: () => this.composer.model?.reply,
-        },
-      },
-      post,
-      selectedTranslationLocale: this.currentUser?.effective_locale,
-    };
-
-    await this.composer.open(composerOpts);
-  }
-
   @action
   toggleBookmark(post) {
     if (!this.currentUser) {
@@ -1432,38 +1342,6 @@ export default class TopicController extends Controller {
     );
   }
 
-  async _saveTopicLocalization() {
-    const titleChanged =
-      this.translationTitle !== this._originalTranslationTitle;
-
-    if (!titleChanged) {
-      return;
-    }
-
-    await TopicLocalization.createOrUpdate(
-      this.model.id,
-      this.translationLocale,
-      this.translationTitle
-    );
-
-    if (this.model.fancy_title_localized) {
-      this.model.set(
-        "fancy_title",
-        fancyTitle(
-          this.translationTitle,
-          this.siteSettings.support_mixed_text_direction
-        )
-      );
-    }
-  }
-
-  _resetTranslationState() {
-    this.editingTopicLocalization = false;
-    this.translationLocale = null;
-    this.translationTitle = null;
-    this._localizationFetchPromise = null;
-  }
-
   @action
   expandHidden(post) {
     return post.expandHidden();
@@ -1658,6 +1536,568 @@ export default class TopicController extends Controller {
     this.updateQueryParams();
   }
 
+  togglePinnedState() {
+    this.send("togglePinnedForUser");
+  }
+
+  print() {
+    if (this.siteSettings.max_prints_per_hour_per_user > 0) {
+      window.open(
+        this.get("model.printUrl"),
+        "",
+        "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=315"
+      );
+    }
+  }
+
+  @bind
+  postSelected(post) {
+    return this.selectedAllPost || this.selectedPostIds.includes(post.id);
+  }
+
+  @action
+  recoverTopic() {
+    this.model.recover();
+  }
+
+  @action
+  async buildQuoteMarkdown() {
+    const { postId } = this.quoteState;
+    const postStream = this.get("model.postStream");
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
+    const loadedPost = postStream.findLoadedPost(postId);
+    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
+
+    return buildQuote(post, buffer, opts);
+  }
+
+  @action
+  deleteTopic(opts = {}) {
+    if (opts.force_destroy) {
+      return this.model.destroy(this.currentUser, opts);
+    }
+
+    if (
+      this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
+    ) {
+      this.deleteTopicModal();
+    } else {
+      this.model.destroy(this.currentUser, opts);
+    }
+  }
+
+  deleteTopicModal() {
+    this.modal.show(DeleteTopicConfirmModal, { model: { topic: this.model } });
+  }
+
+  retryOnRateLimit(times, promise, topicId) {
+    const currentTopicId = this.get("model.id");
+    topicId = topicId || currentTopicId;
+    if (topicId !== currentTopicId) {
+      // we navigated to another topic, so skip
+      return;
+    }
+
+    if (this._retryRateLimited || times <= 0) {
+      return;
+    }
+
+    if (this._retryInProgress) {
+      discourseLater(() => {
+        this.retryOnRateLimit(times, promise, topicId);
+      }, 100);
+      return;
+    }
+
+    this._retryInProgress = true;
+
+    promise()
+      .catch((e) => {
+        const xhr = e.jqXHR;
+        if (
+          xhr &&
+          xhr.status === 429 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.extras &&
+          xhr.responseJSON.extras.wait_seconds
+        ) {
+          let waitSeconds = xhr.responseJSON.extras.wait_seconds;
+          if (waitSeconds < 5) {
+            waitSeconds = 5;
+          }
+
+          this._retryRateLimited = true;
+
+          discourseLater(() => {
+            this._retryRateLimited = false;
+            this.retryOnRateLimit(times - 1, promise, topicId);
+          }, waitSeconds * 1000);
+        }
+      })
+      .finally(() => {
+        this._retryInProgress = false;
+      });
+  }
+
+  subscribe() {
+    this.unsubscribe();
+
+    this.messageBus.subscribe(
+      `/topic/${this.get("model.id")}`,
+      this.onMessage,
+      this.get("model.message_bus_last_id")
+    );
+  }
+
+  unsubscribe() {
+    // never unsubscribe when navigating from topic to topic
+    if (!this.get("model.id")) {
+      return;
+    }
+
+    this.messageBus.unsubscribe("/topic/*", this.onMessage);
+  }
+
+  @bind
+  onMessage(data) {
+    const topic = this.model;
+
+    if (isPresent(data.notification_level_change)) {
+      topic.set("details.notification_level", data.notification_level_change);
+      topic.set(
+        "details.notifications_reason_id",
+        data.notifications_reason_id
+      );
+      return;
+    }
+
+    if (this.shouldRenderNestedView) {
+      this.#onNestedTopicMessage(data);
+      return;
+    }
+
+    const postStream = this.get("model.postStream");
+    const currentPostNumber = topic.get("currentPost");
+    const opts =
+      currentPostNumber > 1 ? { post_number: currentPostNumber } : {};
+
+    if (data.reload_topic) {
+      topic.reload(opts).then(() => {
+        this.appEvents.trigger("header:update-topic", topic);
+        if (data.refresh_stream) {
+          this.send("postChangedRoute", currentPostNumber || 1);
+          postStream.refresh({ nearPost: currentPostNumber });
+        }
+      });
+
+      return;
+    }
+
+    switch (data.type) {
+      case "acted":
+        void postStream
+          .triggerChangedPost(data.id, data.updated_at, {
+            preserveCooked: true,
+          })
+          .catch(() => {});
+        break;
+      case "read": {
+        postStream.triggerReadPost(data.id, data.readers_count);
+        break;
+      }
+      case "liked":
+      case "unliked": {
+        postStream.triggerLikedPost(
+          data.id,
+          data.likes_count,
+          data.user_id,
+          data.type
+        );
+        break;
+      }
+      case "revised":
+      case "rebaked": {
+        if (!consumeOptimisticPostUpdate(data.preserve_cooked_token)) {
+          void postStream
+            .triggerChangedPost(data.id, data.updated_at)
+            .catch(() => {});
+        }
+        break;
+      }
+      case "deleted": {
+        postStream.triggerDeletedPost(data.id);
+        break;
+      }
+      case "destroyed": {
+        postStream.triggerDestroyedPost(data.id);
+        break;
+      }
+      case "recovered": {
+        void postStream.triggerRecoveredPost(data.id).catch(() => {});
+        break;
+      }
+      case "created": {
+        // The topic view filters out ignored users server-side, do the same
+        // for live updates so the stream stays consistent with a reload
+        if (this.currentUser?.ignored_users?.includes(data.username)) {
+          break;
+        }
+
+        this._newPostsInStream.push(data.id);
+
+        this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
+          const postIds = this._newPostsInStream;
+          this._newPostsInStream = [];
+
+          return postStream
+            .triggerNewPostsInStream(postIds, { background: true })
+            .catch((e) => {
+              this._newPostsInStream = postIds.concat(this._newPostsInStream);
+              throw e;
+            });
+        });
+
+        if (this.get("currentUser.id") !== data.user_id) {
+          this.documentTitle.incrementBackgroundContextCount();
+        }
+        break;
+      }
+      case "move_to_inbox": {
+        topic.set("message_archived", false);
+        break;
+      }
+      case "archived": {
+        topic.set("message_archived", true);
+        break;
+      }
+      case "stats": {
+        let updateStream = false;
+        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
+          const value = data[property];
+          if (typeof value !== "undefined") {
+            topic.set(property, value);
+            updateStream = true;
+          }
+        });
+
+        if (data["last_poster"]) {
+          topic.details.set("last_poster", data["last_poster"]);
+          updateStream = true;
+        }
+
+        if (updateStream) {
+          postStream.triggerChangedTopicStats();
+        }
+        break;
+      }
+      case "remove_allowed_user": {
+        this.router.transitionTo("userPrivateMessages", this.currentUser);
+        break;
+      }
+      default: {
+        let callback = customPostMessageCallbacks[data.type];
+        if (callback) {
+          callback(this, data);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn("unknown topic bus message type", data);
+        }
+      }
+    }
+  }
+
+  reply() {
+    this.replyToPost();
+  }
+
+  readPosts(topicId, postNumbers) {
+    if (this.shouldRenderNestedView) {
+      this.nestedController.readPosts(topicId, postNumbers);
+      return;
+    }
+
+    const topic = this.model;
+    const postStream = topic.get("postStream");
+
+    if (topic.get("id") === topicId) {
+      postStream.get("posts").forEach((post) => {
+        if (!post.read && postNumbers.includes(post.post_number)) {
+          post.set("read", true);
+        }
+      });
+
+      if (
+        this.siteSettings.automatically_unpin_topics &&
+        this.currentUser &&
+        this.currentUser.user_option.automatically_unpin_topics
+      ) {
+        // automatically unpin topics when the user reaches the bottom
+        const max = Math.max(...postNumbers);
+        if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
+          next(() => topic.clearPin());
+        }
+      }
+    }
+  }
+
+  #onNestedTopicMessage(data) {
+    const topic = this.model;
+
+    if (data.reload_topic) {
+      topic
+        .reload()
+        .then(() => this.appEvents.trigger("header:update-topic", topic));
+      return;
+    }
+
+    switch (data.type) {
+      case "created":
+      case "revised":
+      case "rebaked":
+      case "deleted":
+      case "destroyed":
+      case "recovered":
+      case "acted":
+      case "read":
+      case "liked":
+      case "unliked":
+        // The nested controller owns rendered-post updates for these messages.
+        break;
+      case "move_to_inbox":
+        topic.set("message_archived", false);
+        break;
+      case "archived":
+        topic.set("message_archived", true);
+        break;
+      case "stats":
+        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
+          const value = data[property];
+          if (typeof value !== "undefined") {
+            topic.set(property, value);
+          }
+        });
+
+        if (data["last_poster"]) {
+          topic.details.set("last_poster", data["last_poster"]);
+        }
+        break;
+      case "remove_allowed_user":
+        this.router.transitionTo("userPrivateMessages", this.currentUser);
+        break;
+      default: {
+        let callback = customPostMessageCallbacks[data.type];
+        if (callback) {
+          callback(this, data);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn("unknown topic bus message type", data);
+        }
+      }
+    }
+  }
+
+  @observes("model.title", "category")
+  _titleChanged() {
+    const title = this.get("model.title");
+    if (!isEmpty(title)) {
+      // force update lazily loaded titles
+      this.send("refreshTitle");
+    }
+  }
+
+  _showRevision(postNumber, revision) {
+    const post = this.model.get("postStream").postForPostNumber(postNumber);
+
+    if (post && post.version > 1 && post.can_view_edit_history) {
+      schedule("afterRender", () => this.send("showHistory", post, revision));
+    }
+  }
+
+  _removeDeleteOnOwnerReplyBookmarks() {
+    // the user has already navigated away from the topic. the PostCreator
+    // in rails already handles deleting the bookmarks that need to be
+    // based on auto_delete_preference; this is mainly used to clean up
+    // the in-memory post stream and topic model
+    if (!this.model) {
+      return;
+    }
+
+    const posts = this.get("model.postStream.posts");
+    if (posts) {
+      posts
+        .filter(
+          (post) =>
+            post.bookmarked &&
+            post.bookmark_auto_delete_preference ===
+              AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
+        )
+        .forEach((post) => {
+          post.clearBookmark();
+          this.model.removeBookmark(post.bookmark_id);
+        });
+    }
+    const forTopicBookmark = this.model.bookmarks.find(
+      (b) => b.bookmarkable_type === "Topic"
+    );
+    if (
+      forTopicBookmark?.auto_delete_preference ===
+      AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
+    ) {
+      this.model.removeBookmark(forTopicBookmark.id);
+    }
+  }
+
+  _updateSelectedPostIds(postIds) {
+    const smallActionsPostIds = this._smallActionPostIds();
+    this.selectedPostIds = Array.from(
+      new Set([
+        ...this.selectedPostIds,
+        ...postIds.filter((postId) => !smallActionsPostIds.has(postId)),
+      ])
+    );
+  }
+
+  _smallActionPostIds() {
+    const smallActionsPostIds = new Set();
+    const posts = this.get("model.postStream.posts");
+    if (posts && this.site) {
+      const smallAction = this.site.get("post_types.small_action");
+      const whisper = this.site.get("post_types.whisper");
+      posts.forEach((post) => {
+        if (
+          post.post_type === smallAction ||
+          (!post.cooked && post.post_type === whisper)
+        ) {
+          smallActionsPostIds.add(post.id);
+        }
+      });
+    }
+    return smallActionsPostIds;
+  }
+
+  _loadPostIds(post) {
+    if (this.loadingPostIds) {
+      return;
+    }
+
+    const postStream = this.get("model.postStream");
+    const url = `/t/${this.get("model.id")}/post_ids.json`;
+
+    this.set("loadingPostIds", true);
+
+    return ajax(url, {
+      data: deepMerge(
+        { post_number: post.get("post_number") },
+        postStream.get("streamFilters")
+      ),
+    })
+      .then((result) => {
+        result.post_ids.push(post.get("id"));
+        this._updateSelectedPostIds(result.post_ids);
+      })
+      .finally(() => {
+        this.set("loadingPostIds", false);
+      });
+  }
+
+  async _startEditingTranslation() {
+    this.translationLocale = this.currentUser.effective_locale;
+
+    try {
+      const localization = await this._localizationFetchPromise;
+      this.translationTitle = localization?.title || "";
+      this._originalTranslationTitle = this.translationTitle;
+    } catch {
+      this.translationTitle = "";
+      this._originalTranslationTitle = "";
+    }
+
+    this.editingTopicLocalization = true;
+    this.set("editingTopic", true);
+  }
+
+  _openComposerForEdit(topic, post) {
+    let editingSharedDraft = false;
+    let draftsCategoryId = this.get("site.shared_drafts_category_id");
+    if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
+      editingSharedDraft = post.get("firstPost");
+    }
+
+    const opts = {
+      post,
+      action: editingSharedDraft ? Composer.EDIT_SHARED_DRAFT : Composer.EDIT,
+      draftKey: post.get("topic.draft_key"),
+      draftSequence: post.get("topic.draft_sequence"),
+    };
+
+    if (editingSharedDraft) {
+      opts.destinationCategoryId = topic.get("destination_category_id");
+    }
+
+    const { composer } = this;
+    const composerModel = composer.get("model");
+    const editingSamePost =
+      opts.post.id === composerModel?.post?.id &&
+      opts.action === composerModel?.action &&
+      opts.draftKey === composerModel?.draftKey;
+
+    return editingSamePost ? composer.unshrink() : composer.open(opts);
+  }
+
+  async _openComposerForEditTranslation(topic, post) {
+    const { raw } = await ajax(`/posts/${post.id}.json`);
+
+    const composerOpts = {
+      action: Composer.ADD_TRANSLATION,
+      draftKey: "translation",
+      warningsDisabled: true,
+      hijackPreview: {
+        component: DEditorOriginalTranslationPreview,
+        model: {
+          postLocale: post.locale,
+          rawPost: raw,
+          translationText: () => this.composer.model?.reply,
+        },
+      },
+      post,
+      selectedTranslationLocale: this.currentUser?.effective_locale,
+    };
+
+    await this.composer.open(composerOpts);
+  }
+
+  async _saveTopicLocalization() {
+    const titleChanged =
+      this.translationTitle !== this._originalTranslationTitle;
+
+    if (!titleChanged) {
+      return;
+    }
+
+    await TopicLocalization.createOrUpdate(
+      this.model.id,
+      this.translationLocale,
+      this.translationTitle
+    );
+
+    if (this.model.fancy_title_localized) {
+      this.model.set(
+        "fancy_title",
+        fancyTitle(
+          this.translationTitle,
+          this.siteSettings.support_mixed_text_direction
+        )
+      );
+    }
+  }
+
+  _resetTranslationState() {
+    this.editingTopicLocalization = false;
+    this.translationLocale = null;
+    this.translationTitle = null;
+    this._localizationFetchPromise = null;
+  }
+
   _jumpToIndex(index) {
     const postStream = this.get("model.postStream");
 
@@ -1836,441 +2276,8 @@ export default class TopicController extends Controller {
     });
   }
 
-  togglePinnedState() {
-    this.send("togglePinnedForUser");
-  }
-
-  print() {
-    if (this.siteSettings.max_prints_per_hour_per_user > 0) {
-      window.open(
-        this.get("model.printUrl"),
-        "",
-        "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=315"
-      );
-    }
-  }
-
-  get selectedPosts() {
-    const loadedPosts = this.model.postStream.posts;
-
-    return this.selectedPostIds
-      .map((id) => loadedPosts.find((p) => p.id === id))
-      .filter((post) => post !== undefined);
-  }
-
-  @dependentKeyCompat
-  get selectedPostsUsername() {
-    const selectedPosts = this.selectedPosts;
-    const selectedPostsCount = this.selectedPostsCount;
-
-    if (selectedPosts.length < 1 || selectedPostsCount > selectedPosts.length) {
-      return undefined;
-    }
-    const username = selectedPosts[0].username;
-    return selectedPosts.every((p) => p.username === username)
-      ? username
-      : undefined;
-  }
-
-  @dependentKeyCompat
-  get selectedAllPosts() {
-    if (this.model.postStream.isMegaTopic) {
-      return this.selectedPostsCount >= this.model.posts_count;
-    } else {
-      return this.selectedPostsCount >= this.model.postStream.stream.length;
-    }
-  }
-
-  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
-  get canSelectAll() {
-    return this.model?.postStream?.isMegaTopic ? false : !this.selectedAllPosts;
-  }
-
-  @dependentKeyCompat
-  get canDeleteSelected() {
-    const isStaff = this.currentUser?.staff;
-
-    return (
-      this.selectedPostsCount > 0 &&
-      ((this.selectedAllPosts && isStaff) ||
-        this.selectedPosts.every((p) => p.can_delete))
-    );
-  }
-
-  @computed("model.details.can_move_posts", "selectedPostsCount")
-  get canMergeTopic() {
-    return this.model?.details?.can_move_posts && this.selectedPostsCount > 0;
-  }
-
-  @computed(
-    "selectedPostsCount",
-    "selectedPostsUsername",
-    "currentUser.canChangePostOwner"
-  )
-  get canChangeOwner() {
-    return (
-      !!this.currentUser?.canChangePostOwner &&
-      this.selectedPostsCount > 0 &&
-      this.selectedPostsUsername !== undefined
-    );
-  }
-
-  @dependentKeyCompat
-  get canMergePosts() {
-    return (
-      this.selectedPostsCount > 1 &&
-      this.selectedPostsUsername !== undefined &&
-      this.selectedPosts.every((p) => p.can_delete)
-    );
-  }
-
   @observes("multiSelect")
   _multiSelectChanged() {
     this.selectedPostIds = [];
-  }
-
-  @bind
-  postSelected(post) {
-    return this.selectedAllPost || this.selectedPostIds.includes(post.id);
-  }
-
-  @computed
-  get loadingHTML() {
-    return spinnerHTML;
-  }
-
-  @action
-  recoverTopic() {
-    this.model.recover();
-  }
-
-  @action
-  async buildQuoteMarkdown() {
-    const { postId } = this.quoteState;
-    const postStream = this.get("model.postStream");
-    const { markdown: buffer, opts } = await this.quoteState.markdown();
-    const loadedPost = postStream.findLoadedPost(postId);
-    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
-
-    return buildQuote(post, buffer, opts);
-  }
-
-  @action
-  deleteTopic(opts = {}) {
-    if (opts.force_destroy) {
-      return this.model.destroy(this.currentUser, opts);
-    }
-
-    if (
-      this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
-    ) {
-      this.deleteTopicModal();
-    } else {
-      this.model.destroy(this.currentUser, opts);
-    }
-  }
-
-  deleteTopicModal() {
-    this.modal.show(DeleteTopicConfirmModal, { model: { topic: this.model } });
-  }
-
-  retryOnRateLimit(times, promise, topicId) {
-    const currentTopicId = this.get("model.id");
-    topicId = topicId || currentTopicId;
-    if (topicId !== currentTopicId) {
-      // we navigated to another topic, so skip
-      return;
-    }
-
-    if (this._retryRateLimited || times <= 0) {
-      return;
-    }
-
-    if (this._retryInProgress) {
-      discourseLater(() => {
-        this.retryOnRateLimit(times, promise, topicId);
-      }, 100);
-      return;
-    }
-
-    this._retryInProgress = true;
-
-    promise()
-      .catch((e) => {
-        const xhr = e.jqXHR;
-        if (
-          xhr &&
-          xhr.status === 429 &&
-          xhr.responseJSON &&
-          xhr.responseJSON.extras &&
-          xhr.responseJSON.extras.wait_seconds
-        ) {
-          let waitSeconds = xhr.responseJSON.extras.wait_seconds;
-          if (waitSeconds < 5) {
-            waitSeconds = 5;
-          }
-
-          this._retryRateLimited = true;
-
-          discourseLater(() => {
-            this._retryRateLimited = false;
-            this.retryOnRateLimit(times - 1, promise, topicId);
-          }, waitSeconds * 1000);
-        }
-      })
-      .finally(() => {
-        this._retryInProgress = false;
-      });
-  }
-
-  subscribe() {
-    this.unsubscribe();
-
-    this.messageBus.subscribe(
-      `/topic/${this.get("model.id")}`,
-      this.onMessage,
-      this.get("model.message_bus_last_id")
-    );
-  }
-
-  unsubscribe() {
-    // never unsubscribe when navigating from topic to topic
-    if (!this.get("model.id")) {
-      return;
-    }
-
-    this.messageBus.unsubscribe("/topic/*", this.onMessage);
-  }
-
-  @bind
-  onMessage(data) {
-    const topic = this.model;
-
-    if (isPresent(data.notification_level_change)) {
-      topic.set("details.notification_level", data.notification_level_change);
-      topic.set(
-        "details.notifications_reason_id",
-        data.notifications_reason_id
-      );
-      return;
-    }
-
-    if (this.shouldRenderNestedView) {
-      this.#onNestedTopicMessage(data);
-      return;
-    }
-
-    const postStream = this.get("model.postStream");
-    const currentPostNumber = topic.get("currentPost");
-    const opts =
-      currentPostNumber > 1 ? { post_number: currentPostNumber } : {};
-
-    if (data.reload_topic) {
-      topic.reload(opts).then(() => {
-        this.appEvents.trigger("header:update-topic", topic);
-        if (data.refresh_stream) {
-          this.send("postChangedRoute", currentPostNumber || 1);
-          postStream.refresh({ nearPost: currentPostNumber });
-        }
-      });
-
-      return;
-    }
-
-    switch (data.type) {
-      case "acted":
-        postStream.triggerChangedPost(data.id, data.updated_at, {
-          preserveCooked: true,
-        });
-        break;
-      case "read": {
-        postStream.triggerReadPost(data.id, data.readers_count);
-        break;
-      }
-      case "liked":
-      case "unliked": {
-        postStream.triggerLikedPost(
-          data.id,
-          data.likes_count,
-          data.user_id,
-          data.type
-        );
-        break;
-      }
-      case "revised":
-      case "rebaked": {
-        postStream.triggerChangedPost(data.id, data.updated_at);
-        break;
-      }
-      case "deleted": {
-        postStream.triggerDeletedPost(data.id);
-        break;
-      }
-      case "destroyed": {
-        postStream.triggerDestroyedPost(data.id);
-        break;
-      }
-      case "recovered": {
-        postStream.triggerRecoveredPost(data.id);
-        break;
-      }
-      case "created": {
-        // The topic view filters out ignored users server-side, do the same
-        // for live updates so the stream stays consistent with a reload
-        if (this.currentUser?.ignored_users?.includes(data.username)) {
-          break;
-        }
-
-        this._newPostsInStream.push(data.id);
-
-        this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
-          const postIds = this._newPostsInStream;
-          this._newPostsInStream = [];
-
-          return postStream
-            .triggerNewPostsInStream(postIds, { background: true })
-            .catch((e) => {
-              this._newPostsInStream = postIds.concat(this._newPostsInStream);
-              throw e;
-            });
-        });
-
-        if (this.get("currentUser.id") !== data.user_id) {
-          this.documentTitle.incrementBackgroundContextCount();
-        }
-        break;
-      }
-      case "move_to_inbox": {
-        topic.set("message_archived", false);
-        break;
-      }
-      case "archived": {
-        topic.set("message_archived", true);
-        break;
-      }
-      case "stats": {
-        let updateStream = false;
-        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
-          const value = data[property];
-          if (typeof value !== "undefined") {
-            topic.set(property, value);
-            updateStream = true;
-          }
-        });
-
-        if (data["last_poster"]) {
-          topic.details.set("last_poster", data["last_poster"]);
-          updateStream = true;
-        }
-
-        if (updateStream) {
-          postStream.triggerChangedTopicStats();
-        }
-        break;
-      }
-      case "remove_allowed_user": {
-        this.router.transitionTo("userPrivateMessages", this.currentUser);
-        break;
-      }
-      default: {
-        let callback = customPostMessageCallbacks[data.type];
-        if (callback) {
-          callback(this, data);
-        } else {
-          // eslint-disable-next-line no-console
-          console.warn("unknown topic bus message type", data);
-        }
-      }
-    }
-  }
-
-  #onNestedTopicMessage(data) {
-    const topic = this.model;
-
-    if (data.reload_topic) {
-      topic
-        .reload()
-        .then(() => this.appEvents.trigger("header:update-topic", topic));
-      return;
-    }
-
-    switch (data.type) {
-      case "created":
-      case "revised":
-      case "rebaked":
-      case "deleted":
-      case "destroyed":
-      case "recovered":
-      case "acted":
-      case "read":
-      case "liked":
-      case "unliked":
-        // The nested controller owns rendered-post updates for these messages.
-        break;
-      case "move_to_inbox":
-        topic.set("message_archived", false);
-        break;
-      case "archived":
-        topic.set("message_archived", true);
-        break;
-      case "stats":
-        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
-          const value = data[property];
-          if (typeof value !== "undefined") {
-            topic.set(property, value);
-          }
-        });
-
-        if (data["last_poster"]) {
-          topic.details.set("last_poster", data["last_poster"]);
-        }
-        break;
-      case "remove_allowed_user":
-        this.router.transitionTo("userPrivateMessages", this.currentUser);
-        break;
-      default: {
-        let callback = customPostMessageCallbacks[data.type];
-        if (callback) {
-          callback(this, data);
-        } else {
-          // eslint-disable-next-line no-console
-          console.warn("unknown topic bus message type", data);
-        }
-      }
-    }
-  }
-
-  reply() {
-    this.replyToPost();
-  }
-
-  readPosts(topicId, postNumbers) {
-    if (this.shouldRenderNestedView) {
-      this.nestedController.readPosts(topicId, postNumbers);
-      return;
-    }
-
-    const topic = this.model;
-    const postStream = topic.get("postStream");
-
-    if (topic.get("id") === topicId) {
-      postStream.get("posts").forEach((post) => {
-        if (!post.read && postNumbers.includes(post.post_number)) {
-          post.set("read", true);
-        }
-      });
-
-      if (
-        this.siteSettings.automatically_unpin_topics &&
-        this.currentUser &&
-        this.currentUser.user_option.automatically_unpin_topics
-      ) {
-        // automatically unpin topics when the user reaches the bottom
-        const max = Math.max(...postNumbers);
-        if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
-          next(() => topic.clearPin());
-        }
-      }
-    }
   }
 }

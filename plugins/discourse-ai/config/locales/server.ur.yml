@@ -30,8 +30,6 @@ ur:
     ai_bot:
       read_post:
         unknown_post: "دھاگہ"
-      agents:
-        default_llm_required: "چیٹ کو فعال کرنے سے پہلے ڈیفالٹ LLM ماڈل درکار ہے۔"
       tool_options:
         update_artifact:
           editor_llm:
@@ -40,10 +38,14 @@ ur:
             name: "الگورتھم کو اپ ڈیٹ کریں"
             description: "ایل ایل ایم کو مکمل طور پر تبدیل کرنے کے لئے کہیں، یا اپ ڈیٹ کرنے کے لئے ڈِیف استعمال کریں"
       tool_summary:
+        edit_tag: "ٹیگ ترمیم کریں"
+        create_category: "زمرہ بنائیں"
         search: "تلاش کریں"
         time: "وقت"
         summarize: "خلاصہ"
         read: "موضوع پڑھیں"
+      tool_help:
+        create_category: "نیا زمرہ بنائیں"
       tool_description:
         time: "%{timezone} میں وقت %{time} ہے"
       close_topic:
@@ -55,10 +57,13 @@ ur:
       delete_topic:
         errors:
           not_found: "موضوع نہیں ملا."
-      edit_tags:
+      change_topic_tags:
         errors:
           not_found: "موضوع نہیں ملا."
       edit_category:
+        errors:
+          not_found: "زُمرہ نہیں ملا."
+      change_topic_category:
         errors:
           not_found: "موضوع نہیں ملا."
           category_not_found: "زُمرہ نہیں ملا."

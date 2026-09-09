@@ -7,7 +7,12 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :name, optional: true
 
   def call
-    username = UserNameSuggester.suggest(email)
+    # A random name beats the generic "userN" fallback here: there is no
+    # signup form where the user could pick one before the account exists.
+    # Sites that turn random names off fall through to that generic name.
+    username =
+      UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
+        RandomUsernameGenerator.generate || UserNameSuggester.suggest(email)
 
     user = User.where(staged: true).with_email(email).first
     user&.unstage!
@@ -31,8 +36,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user.save!
-    user
+    user.tap(&:save)
   end
 
   private

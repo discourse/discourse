@@ -65,7 +65,7 @@ export interface DragDwell<Target> {
  * `Target` must be non-nullish: `null` is reserved as the clear sentinel.
  *
  * Guide to choosing between the drag and gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ * `docs/developer-guides/docs/03-code-internals/30-drag-and-gesture-primitives.md`
  *
  * @see The `dDragDwell` modifier, which packages this for the common case of
  *   one element observed through the drag monitors.

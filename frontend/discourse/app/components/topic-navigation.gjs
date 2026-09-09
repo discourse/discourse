@@ -1,10 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import {
-  isDestroyed,
-  isDestroying,
-  registerDestructor,
-} from "@ember/destroyable";
+import { isDestroying, registerDestructor } from "@ember/destroyable";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
@@ -97,30 +93,6 @@ export default class TopicNavigation extends Component {
     this.#heightQuery?.teardown();
   }
 
-  setupAppEvents() {
-    this.appEvents
-      .on("topic:current-post-scrolled", this.topicScrolled)
-      .on("topic:jump-to-post", this.collapseFullscreen)
-      .on("topic:keyboard-trigger", this.keyboardTrigger)
-      .on("topic:toggle-progress-expansion", this.toggleProgressExpansion)
-      .on("composer:resized", this.updateComposerHeight);
-
-    registerDestructor(this, () => {
-      this.appEvents
-        .off("topic:current-post-scrolled", this.topicScrolled)
-        .off("topic:jump-to-post", this.collapseFullscreen)
-        .off("topic:keyboard-trigger", this.keyboardTrigger)
-        .off("topic:toggle-progress-expansion", this.toggleProgressExpansion)
-        .off("composer:resized", this.updateComposerHeight);
-    });
-  }
-
-  setupWidthQuery() {
-    const query = new TrackedMediaQuery(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
-    registerDestructor(this, () => query.teardown());
-    return query;
-  }
-
   get renderTimeline() {
     // Expanded == mobile fullscreen mode; always render.
     if (this.info.topicProgressExpanded) {
@@ -144,7 +116,7 @@ export default class TopicNavigation extends Component {
     }
 
     // If composer is open, check we have enough vertical space.
-    if (this.composer.isPreviewVisible) {
+    if (this.composer.isPreviewActive) {
       return this.heightQuery?.matches ?? false;
     }
 
@@ -153,20 +125,35 @@ export default class TopicNavigation extends Component {
 
   @cached
   get heightQuery() {
-    const threshold = this.composer.isPreviewVisible
+    const threshold = this.composer.isPreviewActive
       ? MIN_HEIGHT_TIMELINE + this.composerHeight + headerOffset()
       : null;
 
     return this.#buildHeightQuery(threshold);
   }
 
-  #buildHeightQuery(threshold) {
-    this.#heightQuery?.teardown();
-    this.#heightQuery =
-      threshold === null
-        ? null
-        : new TrackedMediaQuery(`(min-height: ${threshold}px)`);
-    return this.#heightQuery;
+  setupAppEvents() {
+    this.appEvents
+      .on("topic:current-post-scrolled", this.topicScrolled)
+      .on("topic:jump-to-post", this.collapseFullscreen)
+      .on("topic:keyboard-trigger", this.keyboardTrigger)
+      .on("topic:toggle-progress-expansion", this.toggleProgressExpansion)
+      .on("composer:resized", this.updateComposerHeight);
+
+    registerDestructor(this, () => {
+      this.appEvents
+        .off("topic:current-post-scrolled", this.topicScrolled)
+        .off("topic:jump-to-post", this.collapseFullscreen)
+        .off("topic:keyboard-trigger", this.keyboardTrigger)
+        .off("topic:toggle-progress-expansion", this.toggleProgressExpansion)
+        .off("composer:resized", this.updateComposerHeight);
+    });
+  }
+
+  setupWidthQuery() {
+    const query = new TrackedMediaQuery(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
+    registerDestructor(this, () => query.teardown());
+    return query;
   }
 
   @bind
@@ -203,7 +190,7 @@ export default class TopicNavigation extends Component {
       .forEach((el) => el.classList.remove("show"));
 
     discourseLater(() => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(this)) {
         return;
       }
       this.info.topicProgressExpanded = false;
@@ -293,6 +280,15 @@ export default class TopicNavigation extends Component {
       [{ transform: `translate3d(0, ${this.pxClosed}px, 0)` }],
       { fill: "forwards" }
     );
+  }
+
+  #buildHeightQuery(threshold) {
+    this.#heightQuery?.teardown();
+    this.#heightQuery =
+      threshold === null
+        ? null
+        : new TrackedMediaQuery(`(min-height: ${threshold}px)`);
+    return this.#heightQuery;
   }
 
   <template>

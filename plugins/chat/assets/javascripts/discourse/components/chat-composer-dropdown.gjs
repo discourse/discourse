@@ -42,29 +42,29 @@ export default class ChatComposerDropdown extends Component {
           "btn-flat"
           (if @hasActivePanel "has-active-panel")
         }}
-        @title={{i18n "chat.composer.toggle_toolbar"}}
-        @icon="plus"
-        @disabled={{@isDisabled}}
+        ...attributes
         @arrow={{true}}
-        @placements={{array "top" "bottom"}}
+        @disabled={{@isDisabled}}
+        @icon="plus"
         @identifier="chat-composer-dropdown__menu"
         @modalForMobile={{true}}
+        @placements={{array "top" "bottom"}}
+        @title={{i18n "chat.composer.toggle_toolbar"}}
         {{on "dblclick" this.doubleClick}}
-        ...attributes
         as |menu|
       >
         <ul class="chat-composer-dropdown__list">
           {{#each @buttons as |button|}}
             <li class={{dConcatClass "chat-composer-dropdown__item" button.id}}>
               <DButton
-                @icon={{button.icon}}
-                @action={{fn this.onButtonClick button menu.close}}
-                @label={{button.label}}
                 class={{dConcatClass
                   "chat-composer-dropdown__action-btn"
                   "btn-transparent"
                   button.id
                 }}
+                @action={{fn this.onButtonClick button menu.close}}
+                @icon={{button.icon}}
+                @label={{button.label}}
               />
             </li>
           {{/each}}

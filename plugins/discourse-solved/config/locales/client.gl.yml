@@ -31,6 +31,12 @@ gl:
       confirm_solved_removal_cancel: "Cancelar"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Tema"
+            category: "Categoría"
     discourse_automation:
       triggerables:
         first_accepted_solution:

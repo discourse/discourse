@@ -56,7 +56,7 @@ describe "Thread indicator for chat messages" do
       )
     end
 
-    it "it shows the reply count but no participant avatars when there is only one participant" do
+    it "shows the reply count but no participant avatars when there is only one participant" do
       single_user_thread =
         chat_thread_chain_bootstrap(channel: channel, users: [current_user], messages_count: 3)
 

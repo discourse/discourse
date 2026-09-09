@@ -8,6 +8,7 @@ import {
   VALID_PERIODS,
 } from "discourse/admin/lib/dashboard-date-range";
 import { countryName } from "discourse/admin/lib/format-country";
+import { languageName } from "discourse/admin/lib/format-language";
 import { i18n } from "discourse-i18n";
 
 const FILTER_KEYS = [
@@ -18,6 +19,7 @@ const FILTER_KEYS = [
   "country",
   "network",
   "browser",
+  "language",
   "ip",
 ];
 
@@ -36,6 +38,7 @@ const DIMENSION_KEYS = {
   country: "countries",
   network: "networks",
   browser: "browsers",
+  language: "languages",
   ip: "ip_addresses",
 };
 
@@ -50,6 +53,7 @@ export default class AdminSiteTrafficController extends Controller {
   @tracked country = null;
   @tracked network = null;
   @tracked browser = null;
+  @tracked language = null;
   @tracked ip = null;
   @tracked traffic = null;
   @tracked fetchError = null;
@@ -125,61 +129,6 @@ export default class AdminSiteTrafficController extends Controller {
       (count, key) => count + this.draftFilters[key].length,
       0
     );
-  }
-
-  #customDate(value, edge) {
-    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
-      return null;
-    }
-
-    const parsed = moment(value, "YYYY-MM-DD", true);
-    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
-  }
-
-  #decorateTraffic(traffic) {
-    const countries = traffic.dimensions?.countries ?? [];
-    const activeFilters = (traffic.active_filters ?? []).map((filter) =>
-      filter.key === "country"
-        ? { ...filter, label: countryName(filter.value) }
-        : filter
-    );
-    const dimensions = {
-      ...traffic.dimensions,
-      countries: countries.map((row) => ({
-        ...row,
-        label: countryName(row.value),
-      })),
-    };
-
-    for (const [filterKey, dimensionKey] of Object.entries(DIMENSION_KEYS)) {
-      const rows = dimensions[dimensionKey] ?? [];
-      const activeRows = activeFilters.filter(
-        (filter) => filter.key === filterKey
-      );
-      if (activeRows.length === 0) {
-        continue;
-      }
-
-      const activeValues = new Set(activeRows.map((filter) => filter.value));
-      const rowsByValue = new Map(rows.map((row) => [row.value, row]));
-      dimensions[dimensionKey] = [
-        ...activeRows.map(
-          (filter) =>
-            rowsByValue.get(filter.value) ?? {
-              value: filter.value,
-              label: filter.label,
-              pageviews: 0,
-            }
-        ),
-        ...rows.filter((row) => !activeValues.has(row.value)),
-      ].slice(0, DIMENSION_LIMIT);
-    }
-
-    return {
-      ...traffic,
-      dimensions,
-      active_filters: activeFilters,
-    };
   }
 
   loadTraffic(model) {
@@ -282,6 +231,73 @@ export default class AdminSiteTrafficController extends Controller {
     this.#resetDraftFilters();
     this.traffic = null;
     this.fetchError = null;
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
+    }
+
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
+  }
+
+  #decorateTraffic(traffic) {
+    const countries = traffic.dimensions?.countries ?? [];
+    const languages = traffic.dimensions?.languages ?? [];
+    const activeFilters = (traffic.active_filters ?? []).map((filter) => {
+      if (filter.key === "country") {
+        return { ...filter, label: countryName(filter.value) };
+      }
+      if (filter.key === "language") {
+        return {
+          ...filter,
+          label: languageName(filter.value) || filter.label,
+        };
+      }
+      return filter;
+    });
+    const dimensions = {
+      ...traffic.dimensions,
+      countries: countries.map((row) => ({
+        ...row,
+        label: countryName(row.value),
+      })),
+      languages: languages.map((row) => ({
+        ...row,
+        label: languageName(row.value) || row.label,
+      })),
+    };
+
+    for (const [filterKey, dimensionKey] of Object.entries(DIMENSION_KEYS)) {
+      const rows = dimensions[dimensionKey] ?? [];
+      const activeRows = activeFilters.filter(
+        (filter) => filter.key === filterKey
+      );
+      if (activeRows.length === 0) {
+        continue;
+      }
+
+      const activeValues = new Set(activeRows.map((filter) => filter.value));
+      const rowsByValue = new Map(rows.map((row) => [row.value, row]));
+      dimensions[dimensionKey] = [
+        ...activeRows.map(
+          (filter) =>
+            rowsByValue.get(filter.value) ?? {
+              value: filter.value,
+              label: filter.label,
+              pageviews: 0,
+            }
+        ),
+        ...rows.filter((row) => !activeValues.has(row.value)),
+      ].slice(0, DIMENSION_LIMIT);
+    }
+
+    return {
+      ...traffic,
+      dimensions,
+      active_filters: activeFilters,
+    };
   }
 
   #appliedValues(key) {

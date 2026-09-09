@@ -79,12 +79,10 @@ he:
       minimum_length_not_met:
         one: "ההודעה קצרה מדי, חייבת להיות באורך של תו %{count} לפחות."
         two: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
-        many: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
         other: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
       message_too_long:
         one: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד תו."
         two: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
-        many: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
         other: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
       draft_too_long: "הטיוטה ארוכה מדי."
       max_reactions_limit_reached: "רגשות חדשים אסורים בהודעה זו."
@@ -102,7 +100,6 @@ he:
       over_chat_max_direct_message_users:
         one: "אין לך אפשרות ליצור הודעות ישירות מול למעלה ממשתמש אחד נוסף."
         two: "אין לך אפשרות ליצור הודעות ישירות מול למעלה משני משתמשים נוספים."
-        many: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
         other: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
       original_message_not_found: "מקור ההודעה אליה ניסית להגיב לא נמצא או שנמחק."
       thread_invalid_for_channel: "השרשור הוא לא חלק מהערוץ שסופק."
@@ -156,14 +153,12 @@ he:
       users_invited_to_channel:
         one: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
         two: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
-        many: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
         other: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
       archive:
         first_post_raw: "הנושא הזה הוא הארכיון של ערוץ הצ׳אט [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "הודעה הועברה על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
         two: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
-        many: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
         other: "%{count} הודעות הועברו על ידי ‎@%{acting_username} לערוץ [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
@@ -171,7 +166,6 @@ he:
         multi_user_truncated:
           one: "%{comma_separated_usernames} ועוד %{count}"
           two: "%{comma_separated_usernames} ועוד %{count}"
-          many: "%{comma_separated_usernames} ועוד %{count}"
           other: "%{comma_separated_usernames} ועוד %{count}"
     mention_warning:
       dismiss: "התעלמות"
@@ -180,32 +174,27 @@ he:
       cannot_see_multiple:
         one: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
         two: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
-        many: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
         other: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
       invitations_sent:
         one: "נשלחה הזמנה"
         two: "נשלחו הזמנות"
-        many: "נשלחו הזמנות"
         other: "נשלחו הזמנות"
       invite: "הזמנה לערוץ"
       without_membership: "לא הצטרפו לערוץ הזה: %{first_identifier}."
       without_membership_multiple:
         one: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
         two: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
-        many: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
         other: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
       group_mentions_disabled: "אזכורים אסורים בקבוצה %{first_identifier}."
       group_mentions_disabled_multiple:
         one: "%{first_identifier} וקבוצה %{count} נוספת לא מרשות אזכורים."
         two: "%{first_identifier} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
-        many: "%{first_identifier} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
         other: "%{first_identifier} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
       global_mentions_disallowed: "האזכורים ‎@here (כאן) ו־‎@all (כולם) מושבתים בערוץ הזה."
       too_many_members: "בקבוצה %{first_identifier} יש יותר מדי חברים. לא נשלחו התראות."
       too_many_members_multiple:
         one: "בקבוצה %{first_identifier} וב־%{count} נוספת יש יותר מדי חברים. לא נשלחו התראות."
         two: "בקבוצה %{first_identifier} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
-        many: "בקבוצה %{first_identifier} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
         other: "בקבוצה %{first_identifier} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
     category_channel:
       errors:
@@ -225,12 +214,10 @@ he:
       x_members:
         one: "חבר %{count}"
         two: "%{count} חברים"
-        many: "%{count} חברים"
         other: "%{count} חברים"
       and_x_others:
         one: "ועוד %{count}"
         two: "ו־%{count} נוספים"
-        many: "ו־%{count} נוספים"
         other: "ו־%{count} נוספים"
     transcript:
       default_thread_title: "שרשור"
@@ -274,30 +261,25 @@ he:
       description:
         one: "יש לך הודעה חדשה בצ׳אט"
         two: "יש לך הודעות חדשות בצ׳אט"
-        many: "יש לך הודעות חדשות בצ׳אט"
         other: "יש לך הודעות חדשות בצ׳אט"
       from: "%{site_name}"
       subject:
         private_email:
           one: "[%{site_name}] הודעה חדשה"
           two: "[%{site_name}] הודעות חדשות"
-          many: "[%{site_name}] הודעות חדשות"
           other: "[%{site_name}] הודעות חדשות"
         watched_thread:
           one: "[%{site_name}] הודעת שרשור חדשה תחת %{channel}"
           two: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
-          many: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
           other: "[%{site_name}] הודעות שרשור חדשות תחת %{channel}"
         chat_dm_1:
           one: "[%{site_name}] הודעה חדשה מאת %{name}"
           two: "[%{site_name}] הודעות חדשות מאת %{name}"
-          many: "[%{site_name}] הודעות חדשות מאת %{name}"
           other: "[%{site_name}] הודעות חדשות מאת %{name}"
         chat_dm_2: "[%{site_name}] הודעות חדשות שנשלחות מאת %{name_1} וגם %{name_2}"
         chat_channel_1:
           one: "[%{site_name}] הודעה חדשה תחת %{channel}"
           two: "[%{site_name}] הודעות חדשות תחת %{channel}"
-          many: "[%{site_name}] הודעות חדשות תחת %{channel}"
           other: "[%{site_name}] הודעות חדשות תחת %{channel}"
         chat_channel_2: "[%{site_name}] הודעה חדשה בערוץ %{channel_1} ובערוץ %{channel_2}"
         chat_channel_and_dm: "[%{site_name}] הודעות חדשות בערוץ %{channel} וגם מאת %{name}"
@@ -306,12 +288,10 @@ he:
       view_messages:
         one: "הצגת הודעה"
         two: "הצגת %{count} הודעות"
-        many: "הצגת %{count} הודעות"
         other: "הצגת %{count} הודעות"
       view_more:
         one: "הצגת הודעה נוספת %{count}"
         two: "הצגת %{count} הודעות נוספות"
-        many: "הצגת %{count} הודעות נוספות"
         other: "הצגת %{count} הודעות נוספות"
       your_chat_settings: "העדפת דוא״ל צ׳אט"
   unsubscribe:

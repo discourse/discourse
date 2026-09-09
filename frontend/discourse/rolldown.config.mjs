@@ -43,29 +43,8 @@ const aliases = [
   },
 
   {
-    find: "@ember-decorators/object",
-    replacement: "@ember-decorators/object/addon",
-  },
-  {
-    find: "@ember-decorators/utils/decorator",
-    replacement: "@ember-decorators/utils/addon/decorator",
-  },
-  {
-    find: "@ember-decorators/utils/collapse-proto",
-    replacement: "@ember-decorators/utils/addon/collapse-proto",
-  },
-  {
-    find: "@ember-decorators/component",
-    replacement: "@ember-decorators/component/addon",
-  },
-
-  {
     find: "ember-exam/test-support/load",
     replacement: "ember-exam/addon-test-support/load",
-  },
-  {
-    find: "@ember/render-modifiers",
-    replacement: "@ember/render-modifiers/addon",
   },
 ];
 
@@ -80,6 +59,7 @@ export function buildConfig({ devMode } = {}) {
     tsconfig: false,
     resolve: {
       extensions,
+      conditionNames: isProduction ? ["production"] : ["development"],
     },
     experimental: {
       incrementalBuild: true,

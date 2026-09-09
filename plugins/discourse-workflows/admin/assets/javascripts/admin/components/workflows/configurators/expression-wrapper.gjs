@@ -7,6 +7,7 @@ import DSegmentedControl from "discourse/components/d-segmented-control";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import {
+  caretOffsetFromPoint,
   resolveVariableId,
   WORKFLOW_VARIABLE_MIME,
 } from "../../../lib/workflows/expression-context";
@@ -238,6 +239,21 @@ export default class ExpressionWrapper extends Component {
       this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
     const variableId = resolveVariableId(variable, prefix);
 
+    const control = event.currentTarget.querySelector(
+      "textarea, input[type='text']"
+    );
+    if (control && schemaType(this.args.schema) === "string") {
+      const value = control.value ?? "";
+      const offset =
+        caretOffsetFromPoint(control, event.clientX, event.clientY) ??
+        value.length;
+      const expression = `{{ ${variableId} }}`;
+      this.args.field.set(
+        `=${value.slice(0, offset)}${expression}${value.slice(offset)}`
+      );
+      return;
+    }
+
     this.args.field.set(`={{ ${variableId} }}`);
   }
 
@@ -254,10 +270,10 @@ export default class ExpressionWrapper extends Component {
     >
       {{#if this.expressionMode}}
         <ExpressionInput
+          @autofocus={{true}}
           @field={{@field}}
           @placeholder={{@placeholder}}
           @session={{@session}}
-          @autofocus={{true}}
         />
         {{#if @dynamicValueHint}}
           <p class="workflows-property-engine__dynamic-hint">
@@ -270,11 +286,11 @@ export default class ExpressionWrapper extends Component {
 
       {{#if @supportsExpression}}
         <DSegmentedControl
+          class="workflows-property-engine__mode-control"
           @items={{MODE_ITEMS}}
-          @value={{if this.expressionMode "dynamic" "plain"}}
           @onSelect={{this.toggleMode}}
           @size="small"
-          class="workflows-property-engine__mode-control"
+          @value={{if this.expressionMode "dynamic" "plain"}}
         />
       {{/if}}
     </div>

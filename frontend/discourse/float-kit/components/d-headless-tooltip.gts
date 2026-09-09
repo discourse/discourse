@@ -23,12 +23,12 @@ interface DHeadlessTooltipSignature {
 const DHeadlessTooltip: TemplateOnlyComponent<DHeadlessTooltipSignature> =
   <template>
     <DInlineFloat
-      @instance={{@tooltip}}
-      @trapTab={{and @tooltip.options.interactive @tooltip.options.trapTab}}
-      @mainClass="fk-d-tooltip__content"
-      @innerClass="fk-d-tooltip__inner-content"
-      @role="tooltip"
       @inline={{@inline}}
+      @innerClass="fk-d-tooltip__inner-content"
+      @instance={{@tooltip}}
+      @mainClass="fk-d-tooltip__content"
+      @role="tooltip"
+      @trapTab={{and @tooltip.options.interactive @tooltip.options.trapTab}}
     />
   </template>;
 

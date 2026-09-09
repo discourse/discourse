@@ -63,6 +63,10 @@ function loadAdsense() {
 }
 
 const DESKTOP_SETTINGS = {
+  "above-site-header": {
+    code: "adsense_above_site_header_code",
+    sizes: "adsense_above_site_header_ad_sizes",
+  },
   "topic-list-top": {
     code: "adsense_topic_list_top_code",
     sizes: "adsense_topic_list_top_ad_sizes",
@@ -82,6 +86,10 @@ const DESKTOP_SETTINGS = {
 };
 
 const MOBILE_SETTINGS = {
+  "above-site-header": {
+    code: "adsense_mobile_above_site_header_code",
+    sizes: "adsense_mobile_above_site_header_ad_size",
+  },
   "topic-list-top": {
     code: "adsense_mobile_topic_list_top_code",
     sizes: "adsense_mobile_topic_list_top_ad_size",
@@ -136,39 +144,6 @@ export default class GoogleAdsense extends AdComponent {
     this.set("ad_code", this.siteSettings[config.code]);
     this.set("publisher_id", this.siteSettings.adsense_publisher_code);
     super.init();
-  }
-
-  async _triggerAds() {
-    if (isTesting()) {
-      return; // Don't load external JS during tests
-    }
-
-    this.set("adRequested", true);
-
-    await loadAdsense();
-
-    if (this.isDestroyed || this.isDestroying) {
-      // Component removed from DOM before script loaded
-      return;
-    }
-
-    try {
-      const adsbygoogle = (window.adsbygoogle ||= []);
-      adsbygoogle.push({}); // ask AdSense to fill one ad unit
-    } catch (ex) {
-      // eslint-disable-next-line no-console
-      console.error("Adsense error:", ex);
-    }
-  }
-
-  didInsertElement() {
-    super.didInsertElement();
-
-    if (!this.get("showAd")) {
-      return;
-    }
-
-    scheduleOnce("afterRender", this, this._triggerAds);
   }
 
   @computed("ad_width")
@@ -246,6 +221,16 @@ export default class GoogleAdsense extends AdComponent {
     );
   }
 
+  didInsertElement() {
+    super.didInsertElement();
+
+    if (!this.get("showAd")) {
+      return;
+    }
+
+    scheduleOnce("afterRender", this, this._triggerAds);
+  }
+
   buildImpressionPayload() {
     return {
       ad_plugin_impression: {
@@ -254,6 +239,29 @@ export default class GoogleAdsense extends AdComponent {
         placement: this.placement,
       },
     };
+  }
+
+  async _triggerAds() {
+    if (isTesting()) {
+      return; // Don't load external JS during tests
+    }
+
+    this.set("adRequested", true);
+
+    await loadAdsense();
+
+    if (this.isDestroying) {
+      // Component removed from DOM before script loaded
+      return;
+    }
+
+    try {
+      const adsbygoogle = (window.adsbygoogle ||= []);
+      adsbygoogle.push({}); // ask AdSense to fill one ad unit
+    } catch (ex) {
+      // eslint-disable-next-line no-console
+      console.error("Adsense error:", ex);
+    }
   }
 
   <template>
@@ -276,10 +284,10 @@ export default class GoogleAdsense extends AdComponent {
         >
           <ins
             class="adsbygoogle"
-            style={{this.adInsStyle}}
             data-ad-client="ca-pub-{{this.publisher_id}}"
-            data-ad-slot={{this.ad_code}}
             data-ad-format={{this.autoAdFormat}}
+            data-ad-slot={{this.ad_code}}
+            style={{this.adInsStyle}}
           >
           </ins>
         </div>

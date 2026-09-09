@@ -51,10 +51,19 @@ zh_CN:
           x_options:
             other: "选择 <strong>%{count} 个选项</strong>。"
           between_min_and_max_options: "选择 <strong>%{min} 到 %{max} 个选项</strong>。"
+      vote_recorded: "您的投票已记录。"
+      voted_choices:
+        title: "您投票给了："
       cast-votes:
         title: "投票"
         label: "立即投票！"
+        update_title: "更新您的投票"
+        update_label: "更新投票"
+      amend-vote:
+        title: "更改您的投票"
+        label: "更改投票"
       keep-vote:
+        title: "无需更改投票即可返回"
         label: "返回"
       show-results:
         title: "显示投票结果"

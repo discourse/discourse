@@ -116,7 +116,9 @@ type NodeViewComponent = ComponentLike<{
     view: EditorView;
     getPos: () => number | undefined;
     dom: HTMLElement;
+    contentDOM?: HTMLElement;
     pluginParams: PluginParams;
+    options: Record<string, unknown>;
     onSetup: (instance: unknown) => void;
   };
 }>;
@@ -317,6 +319,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
           }
         },
         drop: (view, event) => {
+          if (view.dragging) {
+            // A drag from this editor is a move, but the browser exposes the
+            // dragged content as a file too, so keep it away from the upload
+            // drop target on an ancestor, which would upload it again.
+            event.stopPropagation();
+            return;
+          }
+
           if (
             [...event.dataTransfer.items].some((item) => item.kind === "file")
           ) {
@@ -480,12 +490,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
       {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
-          @node={{nodeView.node}}
-          @view={{nodeView.view}}
-          @getPos={{nodeView.getPos}}
+          @contentDOM={{nodeView.contentDOM}}
           @dom={{nodeView.dom}}
-          @pluginParams={{nodeView.pluginParams}}
+          @getPos={{nodeView.getPos}}
+          @node={{nodeView.node}}
           @onSetup={{nodeView.setComponentInstance}}
+          @options={{nodeView.options}}
+          @pluginParams={{nodeView.pluginParams}}
+          @view={{nodeView.view}}
         />
       {{~/in-element~}}
     {{/each}}

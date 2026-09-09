@@ -17,6 +17,7 @@ nb_NO:
       create:
         form:
           insert: Sett inn
+          save: Lagre
           format_description: "Formatet som brukes for å vise datoen for brukeren. Bruk Z til å vise forskyvningen og zz for tidssonenavnet."
           timezones_title: Tidssoner som vises
           timezones_description: Tidssoner vil brukes for å vise datoer i forhåndsvisninger og fallback.

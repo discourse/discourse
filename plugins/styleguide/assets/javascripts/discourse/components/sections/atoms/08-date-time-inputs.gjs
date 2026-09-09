@@ -16,37 +16,37 @@ import TimeInputExample from "../../examples/atoms/date-time-inputs/time-input";
 import timeInputSource from "../../examples/atoms/date-time-inputs/time-input?source=file";
 
 export default <template>
-  <StyleguideExample @title="TimeInput" @code={{timeInputSource}}>
+  <StyleguideExample @code={{timeInputSource}} @title="TimeInput">
     <TimeInputExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="DateInput" @code={{dateInputSource}}>
+  <StyleguideExample @code={{dateInputSource}} @title="DateInput">
     <DateInputExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="DateTimeInput" @code={{dateTimeInputSource}}>
+  <StyleguideExample @code={{dateTimeInputSource}} @title="DateTimeInput">
     <DateTimeInputExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DateTimeInputRange"
     @code={{dateTimeInputRangeSource}}
+    @title="DateTimeInputRange"
   >
     <DateTimeInputRangeExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="DateTimeInputRange without time"
     @code={{dateTimeInputRangeWithoutTimeSource}}
+    @title="DateTimeInputRange without time"
   >
     <DateTimeInputRangeWithoutTimeExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="FutureDateInput" @code={{futureDateInputSource}}>
+  <StyleguideExample @code={{futureDateInputSource}} @title="FutureDateInput">
     <FutureDateInputExample />
   </StyleguideExample>
 
-  <StyleguideExample @title="DatePicker" @code={{datePickerSource}}>
+  <StyleguideExample @code={{datePickerSource}} @title="DatePicker">
     <DatePickerExample />
   </StyleguideExample>
 

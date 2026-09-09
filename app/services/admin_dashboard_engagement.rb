@@ -66,12 +66,15 @@ class AdminDashboardEngagement
   def build_posters
     args = { start_date: start_date, end_date: end_date, current_user: current_user }
 
-    selected_category_ids =
-      AdminDashboardSectionConfiguration.settings_for("engagement").dig(
-        "whos_posting",
-        "category_ids",
-      )
-    args[:filters] = { category_ids: selected_category_ids } if selected_category_ids.present?
+    whos_posting_settings =
+      AdminDashboardSectionConfiguration.settings_for("engagement")["whos_posting"] || {}
+    selected_category_ids = whos_posting_settings["category_ids"]
+    selected_groups = whos_posting_settings["groups"]
+
+    filters = {}
+    filters[:category_ids] = selected_category_ids if selected_category_ids.present?
+    filters[:groups] = selected_groups if selected_groups.present?
+    args[:filters] = filters if filters.present?
 
     report = Report.find_cached("posters_by_member_type", args)
     if report.nil?
@@ -85,6 +88,7 @@ class AdminDashboardEngagement
       rows: report_data(report),
       total: report.is_a?(Hash) ? report[:total] : report.total,
       category_ids: visible_category_ids(selected_category_ids),
+      groups: visible_groups(selected_groups),
     }
   end
 
@@ -117,5 +121,22 @@ class AdminDashboardEngagement
     return category_ids if category_ids.blank?
 
     Category.secured(Guardian.new(current_user)).in_order_of(:id, category_ids).pluck(:id)
+  end
+
+  def visible_groups(groups)
+    return Reports::PostersByMemberType::DEFAULT_GROUPS if groups.blank?
+
+    guardian = Guardian.new(current_user)
+    resolved =
+      groups.select do |token|
+        parsed = Report.parse_group_token(token)
+        next false if parsed.nil?
+        next true if parsed[:type] == :synthetic
+
+        group = Group.find_by(id: parsed[:id])
+        group.present? && (guardian.is_admin? || guardian.can_see_group_and_members?(group))
+      end
+
+    resolved.presence || Reports::PostersByMemberType::DEFAULT_GROUPS
   end
 end

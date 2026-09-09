@@ -49,7 +49,7 @@ RSpec.describe Jobs::ExportCsvFile do
       end
     end
 
-    it "works" do
+    it "uploads the staff action export and sends the admin a download link" do
       action_log
 
       begin
@@ -272,6 +272,35 @@ RSpec.describe Jobs::ExportCsvFile do
       expect(report.length).to eq(2)
       expect(report.first).to contain_exactly("Day", "Desktop", "Mobile")
       expect(report.second).to contain_exactly("2010-01-03", "1", "")
+    end
+
+    it "threads comma-separated category_ids and groups filters through for posters_by_member_type" do
+      target_category = Fabricate(:category)
+      other_category = Fabricate(:category)
+      group = Fabricate(:group)
+      member = Fabricate(:user)
+      Fabricate(:group_user, group: group, user: member)
+      Fabricate(
+        :post,
+        user: member,
+        topic: Fabricate(:topic, category: target_category),
+        created_at: "2010-06-01",
+      )
+      Fabricate(
+        :post,
+        user: member,
+        topic: Fabricate(:topic, category: other_category),
+        created_at: "2010-06-01",
+      )
+
+      exporter.extra["name"] = "posters_by_member_type"
+      exporter.extra["category_ids"] = target_category.id.to_s
+      exporter.extra["groups"] = Report.group_token(group.id)
+
+      report = export_report
+
+      expect(report.first).to contain_exactly("Member type", "Posts", "Share")
+      expect(report.second).to contain_exactly(group.name, "1", "100.0%")
     end
 
     it "works with single-column reports with default label" do

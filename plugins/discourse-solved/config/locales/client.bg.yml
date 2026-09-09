@@ -33,6 +33,12 @@ bg:
       confirm_solved_removal_cancel: "Отмени"
       shared_issue:
         label_with_count: "%{label} (%{count})"
+    admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Тема"
+            category: "Категория"
     discourse_automation:
       triggerables:
         first_accepted_solution:

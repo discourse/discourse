@@ -52,6 +52,23 @@ export default class DDocument extends Component {
     );
   }
 
+  displayLogoff() {
+    if (this._showingLogout) {
+      return;
+    }
+
+    this._showingLogout = true;
+    this.messageBus.stop();
+
+    this.dialog.alert({
+      message: i18n("logout"),
+      confirmButtonLabel: "refresh",
+      didConfirm: () => logout(),
+      didCancel: () => logout(),
+      class: "dialog-container__logout-refresh",
+    });
+  }
+
   _updateNotifications(opts) {
     if (!this.currentUser) {
       return;
@@ -77,22 +94,5 @@ export default class DDocument extends Component {
     } else if (!this.hasFocus) {
       this.documentTitle.setFocus(true);
     }
-  }
-
-  displayLogoff() {
-    if (this._showingLogout) {
-      return;
-    }
-
-    this._showingLogout = true;
-    this.messageBus.stop();
-
-    this.dialog.alert({
-      message: i18n("logout"),
-      confirmButtonLabel: "refresh",
-      didConfirm: () => logout(),
-      didCancel: () => logout(),
-      class: "dialog-container__logout-refresh",
-    });
   }
 }

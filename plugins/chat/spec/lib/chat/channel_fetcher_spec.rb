@@ -41,6 +41,40 @@ describe Chat::ChannelFetcher do
 
       expect(channels).to contain_exactly(category_channel)
     end
+
+    it "returns starred public channels beyond the public channel limit" do
+      first_channel = Fabricate(:category_channel, name: "aardvark")
+      first_channel.user_chat_channel_memberships.create!(user: user1, following: true)
+
+      starred_channel = Fabricate(:category_channel, name: "zebra")
+      starred_channel.user_chat_channel_memberships.create!(
+        user: user1,
+        following: true,
+        starred: true,
+      )
+
+      stub_const(Chat::ChannelFetcher, "MAX_PUBLIC_CHANNEL_RESULTS", 1) do
+        expect(described_class.structured(guardian)[:public_channels]).to contain_exactly(
+          first_channel,
+          starred_channel,
+        )
+      end
+    end
+
+    it "returns starred direct message channels beyond the direct message limit" do
+      recent_channel = Fabricate(:direct_message_channel, users: [user1, user2])
+      recent_channel.update!(last_message: Fabricate(:chat_message, chat_channel: recent_channel))
+
+      starred_channel = Fabricate(:direct_message_channel, users: [user1, user2])
+      starred_channel.membership_for(user1).update!(starred: true)
+
+      stub_const(Chat::ChannelFetcher, "MAX_DM_CHANNEL_RESULTS", 1) do
+        expect(described_class.structured(guardian)[:direct_message_channels]).to contain_exactly(
+          recent_channel,
+          starred_channel,
+        )
+      end
+    end
   end
 
   describe ".tracking_state" do

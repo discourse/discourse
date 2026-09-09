@@ -269,6 +269,7 @@ et:
       sections:
         theme: "Kujundusteema"
         homepage: "Avaleht"
+        search: "Otsi"
       colors:
         light: "Hele"
         dark: "Tume"
@@ -493,6 +494,9 @@ et:
       user_label: "Kasutaja"
       timeline:
         target_deleted: "Postitus kustutatud"
+      author_penalty:
+        toast:
+          undo: "Ennista"
       notes:
         delete: "Kustuta"
       topic_label: "Teema"
@@ -906,7 +910,6 @@ et:
       admin: "%{user} on adminn"
       moderator_tooltip: "See kasutaja on moderaator"
       admin_tooltip: "See kasutaja on adminn"
-      silenced_tooltip: "See kasutaja on vaigistatud"
       suspended_notice: "Selle kasutaja ligipääs on ajutiselt peatatud kuni %{date}."
       suspended_permanently: "Selle kasutaja konto on peatatud."
       suspended_reason: "Põhjus:"
@@ -1472,6 +1475,8 @@ et:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      delete: "Kustuta"
+      home: "Avaleht"
     category_row:
       subcategories: "+ Alamkategooriad"
     select_kit:
@@ -1652,6 +1657,7 @@ et:
       categories: "Kategooriad"
       tags: "Sildid"
       type:
+        default: "Postitust"
         users: "Kasutajaid"
         categories: "Kategooriad"
       context:
@@ -2100,7 +2106,6 @@ et:
       reply_as_new_private_message: "Vasta uue sõnumina samadele adressaatidele"
       continue_discussion: "Jätkates vestlust viitelt %{postLink}:"
       follow_quote: "mine tsiteeritud postituse juurde"
-      show_full: "Näita kogu postitust"
       show_hidden: "Vaata eiratud sisu."
       collapse: "ahenda"
       expand_collapse: "laienda/ahenda"
@@ -2787,6 +2792,11 @@ et:
         group_traffic: "Liiklus"
         group_members: "Liikmed"
         group_other: "Muu"
+        related_items:
+          users:
+            title: "Kasutajad"
+          labels:
+            user: "Kasutaja"
       config_sections:
         account:
           title: "Konto"
@@ -2995,6 +3005,8 @@ et:
               share: "Jaga"
             whos_posting:
               staff: "Meeskond"
+              modal:
+                apply: "Salvesta"
             trust_level_pipeline:
               trust_levels:
                 "0": "Uus"
@@ -3007,6 +3019,10 @@ et:
             table:
               searches: "Otsingud"
               status: "Staatus"
+          system:
+            title: "Süsteem"
+            status: "Staatus"
+            dashboard_updated: "Töölauda on uuendatud"
         reports_section:
           header_action: "Halda"
           no_data: "Pole andmeid, mida näidata"
@@ -3036,6 +3052,13 @@ et:
           weekly: Iganädalaselt
           groups: "Kõik rühmad"
           no_data: "Pole andmeid, mida näidata."
+          posters_by_member_type_members:
+            users_count:
+              one: "%{count} kasutaja"
+              other: "%{count} kasutajat"
+            posts_count:
+              one: "%{count} postitus"
+              other: "%{count} postitust"
           sort_ascending: "ülenev"
           sort_descending: "alanev"
           filters:

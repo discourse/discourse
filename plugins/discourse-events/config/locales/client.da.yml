@@ -7,11 +7,10 @@
 da:
   admin_js:
     admin:
-      calendar: "Hændelser"
       site_settings:
         categories:
           discourse_post_event: "Discourse Begivenhed"
-          discourse_calendar: "Hændelser"
+          discourse_events: "Hændelser"
   js:
     discourse_automation:
       triggerables:
@@ -19,8 +18,8 @@ da:
           fields:
             topic_id:
               label: Emne ID
-    discourse_calendar:
-      invite_user_notification: "%{username} inviterede dig til: %{description}"
+    discourse_events:
+      title: "Hændelser"
       on_holiday: "På Ferie"
       disable_holiday: "Deaktiver"
       enable_holiday: "Aktiver"
@@ -290,9 +289,14 @@ da:
         week: "Uge"
         day: "Dag"
         year: "År"
+    discourse_calendar:
+      invite_user_notification: "%{username} inviterede dig til: %{description}"
     group_timezones:
       search: "Søg..."
       group_availability: "%{group} tilgængelighed"
+    discourse_workflows:
+      post_event:
+        topic_id: "Emne ID"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

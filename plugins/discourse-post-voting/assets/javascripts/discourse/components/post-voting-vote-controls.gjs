@@ -97,11 +97,11 @@ export default class PostVotingVoteControls extends Component {
 
       {{#if this.hasVotes}}
         <DMenu
+          @ariaLabel={{i18n "vote.toggle_voters"}}
+          @autofocus={{true}}
           @identifier="post-voting-popup"
           @interactive={{true}}
-          @autofocus={{true}}
           @title={{i18n "vote.toggle_voters"}}
-          @ariaLabel={{i18n "vote.toggle_voters"}}
           @triggerClass="post-voting-post__toggle-voters btn-transparent"
         >
           <:trigger>

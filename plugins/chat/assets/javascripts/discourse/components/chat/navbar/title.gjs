@@ -5,8 +5,8 @@ import SubTitle from "./sub-title";
 
 const ChatNavbarTitle = <template>
   <div
-    title={{@title}}
     class={{dConcatClass "c-navbar__title" (if @showFullTitle "full-title")}}
+    title={{@title}}
     ...attributes
   >
     <span class="c-navbar__title-text">

@@ -19,6 +19,7 @@ describe "integration tests" do
     let(:user) { pm.allowed_users.first }
     let(:user2) { pm.allowed_users.last }
     let(:channel) { "/private-messages/assigned" }
+
     fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     include_context "with group that is allowed to assign"
@@ -143,6 +144,7 @@ describe "integration tests" do
     fab!(:post)
     fab!(:post_2) { Fabricate(:post, topic: post.topic) }
     let(:topic) { post.topic }
+
     fab!(:user)
 
     include_context "with group that is allowed to assign"

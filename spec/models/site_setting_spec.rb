@@ -96,6 +96,12 @@ RSpec.describe SiteSetting do
     end
 
     describe "homepage" do
+      around do |example|
+        registrations = DiscoursePluginRegistry._raw_homepage_options.dup
+        example.run
+        DiscoursePluginRegistry._raw_homepage_options.replace(registrations)
+      end
+
       it "uses default_homepage when set" do
         SiteSetting.default_homepage = "bookmarks"
         expect(SiteSetting.homepage).to eq("bookmarks")
@@ -127,6 +133,43 @@ RSpec.describe SiteSetting do
         # enabling unified-new removes unread from the eligible homepage choices
         SiteSetting.enable_unified_new = true
         expect(SiteSetting.homepage).to eq("categories")
+      end
+
+      it "uses a registered plugin homepage and falls back when the plugin is disabled" do
+        plugin = Plugin::Instance.new
+        plugin.stubs(:enabled?).returns(true)
+        plugin.register_homepage(
+          "directory",
+          name: "discourse_directory.navigation.title",
+          path: "/directory",
+          route: "discourse_directory/directory#index",
+          anonymous: true,
+        )
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "directory"
+
+        expect(SiteSetting.homepage).to eq("directory")
+        expect(SiteSetting.anonymous_homepage).to eq("directory")
+
+        plugin.stubs(:enabled?).returns(false)
+        expect(SiteSetting.homepage).to eq("categories")
+        expect(SiteSetting.anonymous_homepage).to eq("categories")
+      end
+
+      it "does not use a private plugin homepage for anonymous visitors" do
+        plugin = Plugin::Instance.new
+        plugin.stubs(:enabled?).returns(true)
+        plugin.register_homepage(
+          "private_page",
+          name: "plugin.private_page",
+          path: "/private-page",
+          route: "plugin/private_page#index",
+        )
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "private_page"
+
+        expect(SiteSetting.homepage).to eq("private_page")
+        expect(SiteSetting.anonymous_homepage).to eq("categories")
       end
     end
   end
@@ -204,7 +247,7 @@ RSpec.describe SiteSetting do
   end
 
   describe "cached settings" do
-    it "should recalculate cached setting when dependent settings are changed" do
+    it "recalculates a cached setting when its dependencies change" do
       SiteSetting.blocked_attachment_filenames = "foo"
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo/)
 
@@ -363,6 +406,7 @@ RSpec.describe SiteSetting do
 
   describe "creating upload references for type objects settings with upload fields" do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
+
     fab!(:upload)
     fab!(:upload2, :upload)
 

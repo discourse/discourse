@@ -249,6 +249,7 @@ class UserAction < ActiveRecord::Base
         pu.uploaded_avatar_id,
         #{acting_cols.join(", ")},
         coalesce(p.cooked, p2.cooked) cooked,
+        coalesce(p.id, p2.id) cooked_post_id,
         CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
         p.hidden,
         p.post_type,

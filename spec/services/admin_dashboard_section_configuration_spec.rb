@@ -316,6 +316,137 @@ describe AdminDashboardSectionConfiguration do
       }.to raise_error(Discourse::InvalidParameters)
     end
 
+    it "persists groups alongside category_ids for whos_posting" do
+      group = Fabricate(:group)
+
+      described_class.update_setting(
+        section_id: "engagement",
+        key: "whos_posting",
+        attrs: {
+          category_ids: [category.id],
+          groups: ["staff", "returning", Report.group_token(group.id)],
+        },
+      )
+
+      expect(described_class.settings_for("engagement")).to eq(
+        {
+          "whos_posting" => {
+            "category_ids" => [category.id],
+            "groups" => ["staff", "returning", Report.group_token(group.id)],
+          },
+        },
+      )
+    end
+
+    it "preserves the previously persisted groups when a later update omits the key" do
+      group = Fabricate(:group)
+
+      described_class.update_setting(
+        section_id: "engagement",
+        key: "whos_posting",
+        attrs: {
+          category_ids: [],
+          groups: [Report.group_token(group.id)],
+        },
+      )
+
+      described_class.update_setting(
+        section_id: "engagement",
+        key: "whos_posting",
+        attrs: {
+          category_ids: [category.id],
+        },
+      )
+
+      expect(described_class.settings_for("engagement")["whos_posting"]).to eq(
+        { "category_ids" => [category.id], "groups" => [Report.group_token(group.id)] },
+      )
+    end
+
+    it "raises when groups is not an array" do
+      expect {
+        described_class.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: "staff",
+          },
+        )
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises when groups is empty" do
+      expect {
+        described_class.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: [],
+          },
+        )
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises when groups has more than WHOS_POSTING_GROUPS_MAX tokens" do
+      groups = Array.new(11) { Fabricate(:group) }
+
+      expect {
+        described_class.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: groups.map { |g| Report.group_token(g.id) },
+          },
+        )
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises when groups contains duplicate tokens" do
+      expect {
+        described_class.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: %w[staff staff],
+          },
+        )
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises when groups references a nonexistent group" do
+      nonexistent_token = Report.group_token(Group.unscoped.maximum(:id).to_i + 1)
+
+      expect {
+        described_class.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: [nonexistent_token],
+          },
+        )
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises when groups references the real staff automatic group" do
+      staff_token = Report.group_token(Group::AUTO_GROUPS[:staff])
+
+      expect {
+        described_class.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [],
+            groups: [staff_token],
+          },
+        )
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
     it "raises when a category with the given id does not exist" do
       expect {
         described_class.update_setting(

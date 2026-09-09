@@ -63,6 +63,18 @@ export default class BaseCustomSidebarPanel {
   }
 
   /**
+   * @returns {boolean} Controls whether the search is shown.
+   * Displays modal on click allowing searching for admin pages, site settings, themes, components and reports.
+   */
+  get searchable() {
+    return false;
+  }
+
+  get scrollActiveLinkIntoView() {
+    return false;
+  }
+
+  /**
    * @param {string} filter filter applied
    *
    * @returns {string | SafeString} Description displayed when the applied filter has no results.
@@ -74,22 +86,10 @@ export default class BaseCustomSidebarPanel {
   }
 
   /**
-   * @returns {boolean} Controls whether the search is shown.
-   * Displays modal on click allowing searching for admin pages, site settings, themes, components and reports.
-   */
-  get searchable() {
-    return false;
-  }
-
-  /**
    * @returns {Function} Action when search input is clicked.
    */
   onSearchClick() {
     return null;
-  }
-
-  get scrollActiveLinkIntoView() {
-    return false;
   }
 
   #notImplemented() {

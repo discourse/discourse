@@ -1,5 +1,8 @@
 import { module, test } from "qunit";
-import { extractDroppedWebLink } from "discourse/lib/sidebar/link-drop";
+import {
+  extractDroppedWebLink,
+  linkDropEffectFor,
+} from "discourse/lib/sidebar/link-drop";
 
 /**
  * Stands in for the decorated payload a drop target hands its consumer. Each
@@ -17,6 +20,26 @@ function externalSource({ urls = [], html = null, text = null, strings = {} }) {
 }
 
 module("Unit | Lib | Sidebar | link-drop", function () {
+  // Only a system spec can check the wiring: `effectAllowed` is not settable on
+  // the DataTransfer a synthetic drag carries. This pins the mapping.
+  test("answers a row's own drag with move, and anything else with copy", function (assert) {
+    assert.strictEqual(
+      linkDropEffectFor({ type: "sidebar-link" }),
+      "move",
+      "a row is taken from where it was"
+    );
+    assert.strictEqual(
+      linkDropEffectFor({ type: undefined }),
+      "copy",
+      "a link dragged in from elsewhere is copied"
+    );
+    assert.strictEqual(
+      linkDropEffectFor({ type: "something-else" }),
+      "copy",
+      "and so is any other registered drag"
+    );
+  });
+
   test("takes the first URL it can actually use", function (assert) {
     const link = extractDroppedWebLink(
       externalSource({

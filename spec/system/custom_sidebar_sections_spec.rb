@@ -303,6 +303,93 @@ describe "Custom sidebar sections" do
     expect(page).not_to have_css(".sidebar-section-form-link .draggable")
   end
 
+  it "reorders links in the sidebar with drag and drop" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+    Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+    Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    sign_in user
+    visit("/latest")
+
+    rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
+    expect(page).to have_css("#{rows}[data-drag-source]", count: 2)
+    # The row drags as a registered source, so its anchor must not drag too.
+    # Checked on the rendered value: the binding only works as a real boolean.
+    expect(page).to have_css("#{rows} a[draggable='false']", count: 2)
+
+    # Dropped below the target row's midpoint: its exact center sits on the
+    # boundary the insertion index is measured against.
+    drag_and_drop(
+      source: "#{rows}:first-child",
+      target: "#{rows}:last-child",
+      target_position: {
+        x: 30,
+        y: 26,
+      },
+    )
+
+    expect(page).to have_css("#{rows}:first-child [data-link-name='Sidebar Categories']")
+    expect(sidebar.primary_section_links("my-section")).to eq(
+      ["Sidebar Categories", "Sidebar Tags"],
+    )
+  end
+
+  # The browser refuses a drop whose effect mismatches the row's `effectAllowed`,
+  # with no `drop` event. A synthetic drag cannot see that, so this must be real.
+  it "splits a link out into a new section by dropping it on the zone" do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+    Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+    Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    sign_in user
+    visit("/latest")
+
+    rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
+    expect(page).to have_css("#{rows}[data-drag-source]", count: 2)
+
+    drag_and_hold(
+      from: "#{rows}:first-child",
+      over: ".sidebar-sections",
+      to: ".sidebar-link-drop-target",
+    ) { expect(page).to have_css(".sidebar-link-drop-target:not(.is-arming)") }
+
+    expect(page).to have_css(".sidebar-section-form-modal")
+    expect(find("input[name='link-name']").value).to eq("Sidebar Tags")
+
+    find("input[name='section-name']").fill_in(with: "Split out")
+    find("#save-section").click
+
+    expect(page).to have_css("[data-section-name='split-out']")
+    expect(sidebar.primary_section_links("split-out")).to eq(["Sidebar Tags"])
+    expect(sidebar.primary_section_links("my-section")).to eq(["Sidebar Categories"])
+  end
+
+  it "does not make sidebar links draggable on mobile", mobile: true do
+    sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
+    Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+    end
+
+    sign_in user
+    visit("/latest")
+    sidebar.open_on_mobile
+
+    rows = "[data-section-name='my-section'] li[data-sidebar-custom-link]"
+    expect(page).to have_css(rows)
+    expect(page).not_to have_css("#{rows}[data-drag-source]")
+    # With no registered drag to make room for, the attribute is left off and
+    # the anchor keeps the browser default.
+    expect(page).not_to have_css("#{rows} a[draggable]")
+  end
+
   it "does not allow the user to edit public section" do
     sidebar_section = Fabricate(:sidebar_section, title: "Public section", public: true)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")

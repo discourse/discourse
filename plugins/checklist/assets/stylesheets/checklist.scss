@@ -17,9 +17,29 @@ span.chcklst-stroked {
 }
 
 span.chcklst-box {
-  cursor: pointer;
+  border-radius: 0.16em;
   display: inline-flex;
+  position: relative;
   vertical-align: -0.125em;
+
+  &.is-interactive {
+    cursor: pointer;
+    touch-action: manipulation;
+
+    &.is-pending {
+      background-color: var(--primary-low);
+      box-shadow: 0 0 0 0.09em var(--primary-low);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 0.2em;
+    }
+  }
+
+  &.permanent {
+    cursor: default;
+  }
 
   &:not(.checked) {
     &.fa-square-o {
@@ -46,13 +66,12 @@ span.chcklst-box {
       );
     }
   }
+}
 
-  &.readonly {
-    pointer-events: none;
-  }
-
-  &.hidden {
-    display: none;
+@media (forced-colors: active) {
+  span.chcklst-box.is-interactive.is-pending {
+    outline: 0.09em solid CanvasText;
+    outline-offset: 0;
   }
 }
 
@@ -61,24 +80,6 @@ ul li.has-checkbox {
 
   .list-item-checkbox {
     margin-left: -1.33em;
-  }
-}
-
-.fa-spin {
-  display: inline-flex;
-  vertical-align: text-bottom;
-  animation: fa-spin 2s infinite linear;
-  width: 1em;
-  height: 1em;
-}
-
-@keyframes fa-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(1turn);
   }
 }
 

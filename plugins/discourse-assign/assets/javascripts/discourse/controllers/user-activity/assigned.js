@@ -31,11 +31,6 @@ export default class UserActivityAssigned extends UserTopicsList {
     );
   }
 
-  _setSearchTerm(searchTerm) {
-    this.set("search", searchTerm);
-    this.refreshModel();
-  }
-
   refreshModel() {
     this.set("loading", true);
     this.store
@@ -67,5 +62,10 @@ export default class UserActivityAssigned extends UserTopicsList {
   @action
   onChangeFilter(value) {
     discourseDebounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
+  }
+
+  _setSearchTerm(searchTerm) {
+    this.set("search", searchTerm);
+    this.refreshModel();
   }
 }

@@ -5,26 +5,215 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
+      placeholder: Discourse Rewind
+      title: 回顧
+      loading: "正在整理資料…"
+      viewing_other_user: "您正在查看<strong>%{username}</strong>的 Discourse Rewind 報告。"
+      cannot_view_rewind: >
+        您無法查看此 Discourse Rewind 報告。擁有者可能尚未公開分享？<br><br>$> _<br><br>
+      preferences:
+        enable_rewind: "啟用 Discourse Rewind。這會在您的個人資料與頭像上顯示年終活動摘要。"
+        share_publicly: "與其他論壇成員分享 Discourse Rewind 摘要。任何論壇成員都能查看您的 Discourse Rewind 摘要。"
+        cannot_share_when_profile_hidden: "若要分享 Rewind，您必須允許其他人查看您的公開個人資料。"
+      profile_link: "查看您的 %{rewindYear} Discourse Rewind"
       share:
         toggle_label:
           private: "私密"
           public: "公開"
+        confirm: "分享前請務必檢閱您的 Rewind，因為它可能包含私人訊息的資料。您隨時可以再次將其設為私人。"
+        confirm_button:
+          enable: "設為公開"
+          disable: "保持私人"
+        enabled_success: "現在可以與其他論壇成員分享您的 Rewind。"
+        disabled_success: "您的 Rewind 現在為私人。"
       reports:
+        activity_calendar:
+          title: 活動日曆
+          cell_title:
+            visited_no_posts: "您在 %{date} 曾造訪並瀏覽，但沒有發文。"
+            visited_no_posts_others: "%{username} 在 %{date} 曾造訪並瀏覽，但沒有發文。"
+            visited_with_posts:
+              other: "您在 %{date} 發了 %{count} 篇貼文。"
+            visited_with_posts_others:
+              other: "%{username} 在 %{date} 發了 %{count} 篇貼文。"
+            no_activity: "您在 %{date} 沒有出現。"
+            no_activity_others: "%{username} 在 %{date} 沒有出現。"
+        top_words:
+          title: 用詞習慣
         reading_time:
           title: 閱讀時間
+          book_comparison: "您花了 <code>%{readingTime}</code> 在本站閱讀！這相當於讀完<i>%{bookTitle}</i>所需的時間。"
+          book_comparison_others: "%{username} 花了 <code>%{readingTime}</code> 在本站閱讀！這相當於讀完<i>%{bookTitle}</i>所需的時間。"
+        post_used_reactions:
+          title: 主題中最常使用的反應
+          total_number: "反應總數：%{count}"
+        post_received_reactions:
+          title: 主題中收到最多的反應
+        fbff:
+          title: 您的 FBFF（永遠最好的論壇朋友）
+          title_others: "%{username} 的 FBFF（永遠最好的論壇朋友）"
+        most_viewed_categories:
+          title:
+            other: 您最常查看的 %{count} 個分類
+          title_others:
+            other: "%{username} 最常查看的 %{count} 個分類"
+        most_viewed_tags:
+          title:
+            other: 您最常查看的 %{count} 個標籤
+          title_others:
+            other: "%{username} 最常查看的 %{count} 個標籤"
+        best_topics:
+          view_topic: 查看主題
+          title:
+            other: 您最佳的 %{count} 個主題
+          title_others:
+            other: "%{username} 最佳的 %{count} 個主題"
+        best_posts:
+          view_post: 查看貼文
+          title:
+            other: 您最佳的 %{count} 篇貼文
+          title_others:
+            other: "%{username} 最佳的 %{count} 篇貼文"
+        ai_usage:
+          title: AI 使用情況
+          total_requests: 總請求數
+          total_tokens: Token 總數
+          success_rate: 成功率
+          favorite_features: 最常使用的功能
+          favorite_models: 最常使用的 AI 模型
+          wake_up: "醒醒，%{username}…"
+          system_title: "偵測到 AI 使用情況"
+          section_features: "熱門功能"
+          section_models: "熱門模型"
+        assignments:
+          title: 指派
+          total_assigned: 指派給我
+          total_assigned_others: "指派給 %{username}"
+          completed: 已完成的指派
+          pending: 待處理的指派
+          assigned_by_user: 已指派的工作
+          completion_rate: 完成率
         chat_usage:
+          title: 聊天活動
+          total_messages: 訊息總數
+          dm_messages: 私訊
+          unique_dm_channels: 私訊對話
+          reactions_received: 收到的反應
+          avg_message_length: 平均訊息長度
+          favorite_channels: 最愛的頻道
           messages: 訊息
+          bot_name: XxRewindBotxX
           author: 你
           author_others: "%{username}"
+          channel_title: "#chat-activity"
           status_online: "● 線上"
+          message_1:
+            other: "您今年傳送了 <strong>%{count}</strong> 則訊息！"
+          reply_1: "lol 太讚了 B-)"
+          message_2_MF: |
+            您與{ channel_count, plural, one {<strong>#</strong> 位個人或群組} other {<strong>#</strong> 個不同的個人或群組} }進行了{ dm_count, plural, one {<strong>#</strong> 個私訊對話} other {<strong>#</strong> 個私訊對話} }。
+          reply_2: "cOo0oL :D"
+          message_3:
+            other: "大家喜歡您的訊息！您獲得了 <strong>%{count}</strong> 個反應 ❤️"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "您的平均訊息長度為 <strong>%{length}</strong> 個字元"
+          message_5: "您最愛的頻道："
+          dancing_baby_alt: "跳舞的嬰兒"
+        favorite_gifs:
+          title:
+            other: 您最愛的 %{count} 個 GIF
+          title_others:
+            other: "%{username} 最愛的 %{count} 個 GIF"
+          total_usage:
+            other: 總共使用 %{count} 次
         invites:
           title: 邀請
+          total_invites: 發送的邀請總數
+          redeemed: 已接受的邀請
+          redemption_rate: 接受率
+          avg_trust_level: 平均信任等級
+          invitee_impact: 您邀請對象的影響力
+          invitee_impact_others: "%{username} 邀請對象的影響力"
           invitee_posts: 已發表的貼文
+          invitee_topics: 已建立的主題
           invitee_likes: 給出的讚
+          most_active_invitee: 最活躍的受邀者
+          guest_book_title: 訪客簿
+          guest_book_subtitle: 您的社群邀請
+          guest_book_subtitle_others: "%{username} 的社群邀請"
+          label_invitations_sent: "已發送邀請："
+          label_guests_joined: "已接受邀請："
+          label_acceptance_rate: "接受率："
+          section_contributions: 受邀者貢獻
+          label_posts_written: "發表的貼文："
+          label_topics_started: "建立的主題："
+          label_likes_given: "給出的讚："
+          section_most_active: 最活躍的訪客
         new_user_interactions:
+          title: 指導新使用者
+          subtitle:
+            other: 您今年協助了 %{count} 位新使用者
+          subtitle_others:
+            other: "%{username} 今年協助了 %{count} 位新使用者"
+          new_member:
+            other: "%{count} 位新成員"
+          total_interactions: 互動總數
+          unique_new_users: 不重複的新使用者
           likes_given: 給出的讚
+          replies: 回覆貼文
           mentions: 提及
+          topics_with_new_users: 含新使用者的主題
+          contributions_helped: 您的貢獻協助了
+          contributions_helped_others: "%{username} 的貢獻協助了"
+        time_of_day_activity:
+          title: 每日活動節奏
+          play_button: 將您的活動播放為聲音
+          play_button_others: "將 %{username} 的活動播放為聲音"
+          stop_button: 停止音訊播放
         writing_analysis:
+          title: 寫作分析
+          menu_file: 檔案
           menu_other: 其他
+          menu_additional: 其他
+          menu_opening: 開始
+          help_text: 按 F1 取得說明
+          app_name: DiscoStar Professional
+          release_info: CDCK 的 %{rewindYear} 年版本
+          total_words: 總字數
+          total_posts: 貼文總數
+          avg_post_length: 平均貼文長度
+          readability_score_label: 可讀性分數
+          readability_level: 可讀性等級
+          readability_score:
+            over_80:
+              1: "Ernest Hemingway"
+              2: "Raymond Carver"
+              3: "Michael Crichton"
+              4: "Roald Dahl"
+            over_60:
+              1: "C.S. Lewis"
+              2: "Stephen King"
+              3: "Agatha Christie"
+              4: "George R.R. Martin"
+            over_40:
+              1: "George Orwell"
+              2: "F. Scott Fitzgerald"
+              3: "Aldous Huxley"
+              4: "Joan Didion"
+            over_20:
+              1: "Cormac McCarthy"
+              2: "William Faulkner"
+              3: "Virgina Woolf"
+              4: "Gabriel Garcia Marquez"
+            over_0:
+              1: "James Joyce"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Fyodor Dostoevsky"

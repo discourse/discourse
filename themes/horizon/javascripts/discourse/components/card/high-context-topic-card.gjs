@@ -135,10 +135,10 @@ export default class HighContextTopicCard extends Component {
   <template>
     {{#if @bulkSelectEnabled}}
       <BulkSelectCheckbox
-        @topic={{@topic}}
+        class="hc-topic-card__bulk-select"
         @isSelected={{@isSelected}}
         @onToggle={{@onBulkSelectToggle}}
-        class="hc-topic-card__bulk-select"
+        @topic={{@topic}}
       />
     {{/if}}
 
@@ -164,8 +164,8 @@ export default class HighContextTopicCard extends Component {
         <div class="hc-topic-card__status-tags">
           {{#if this.hasSolved}}
             <span
-              class="hc-topic-card__status --solved"
               aria-label={{i18n (themePrefix "solved")}}
+              class="hc-topic-card__status --solved"
             >
               {{#if this.capabilities.viewport.sm}}
                 {{i18n (themePrefix "solved")}}
@@ -176,11 +176,11 @@ export default class HighContextTopicCard extends Component {
 
           {{#if this.statusBadge}}
             <span
+              aria-label={{i18n this.statusBadge.text}}
               class={{dConcatClass
                 "hc-topic-card__status"
                 this.statusBadge.className
               }}
-              aria-label={{i18n this.statusBadge.text}}
             >
               {{dIcon this.statusBadge.icon}}
 
@@ -195,13 +195,13 @@ export default class HighContextTopicCard extends Component {
       </div>
 
       <div class="hc-topic-card__content">
-        <div class="hc-topic-card__title" role="heading" aria-level="2">
-          <TopicStatus @topic={{@topic}} @context="topic-list" />
+        <div aria-level="2" class="hc-topic-card__title" role="heading">
+          <TopicStatus @context="topic-list" @topic={{@topic}} />
           <TopicLink
+            class="hc-topic-card__title raw-link raw-topic-link"
+            @topic={{@topic}}
             {{on "focus" this.onTitleFocus}}
             {{on "blur" this.onTitleBlur}}
-            @topic={{@topic}}
-            class="hc-topic-card__title raw-link raw-topic-link"
           />
           {{~#if @topic.featured_link~}}
             &nbsp;{{topicFeaturedLink @topic}}
@@ -219,7 +219,7 @@ export default class HighContextTopicCard extends Component {
         </div>
 
         {{#if this.hasExcerpt}}
-          <TopicExcerpt @topic={{@topic}} class="hc-topic-card__excerpt" />
+          <TopicExcerpt class="hc-topic-card__excerpt" @topic={{@topic}} />
         {{/if}}
       </div>
 
@@ -287,8 +287,8 @@ export default class HighContextTopicCard extends Component {
         <div class="hc-topic-card__stats">
           {{#if this.hasVotes}}
             <span
-              class="hc-topic-card__votes"
               aria-label={{this.voteCountLabel}}
+              class="hc-topic-card__votes"
               title={{this.voteCountLabel}}
             >
               {{dIcon "check-to-slot" skipTitle=true}}
@@ -300,8 +300,8 @@ export default class HighContextTopicCard extends Component {
 
           {{#if this.hasReplies}}
             <span
-              class="hc-topic-card__replies"
               aria-label={{this.replyCountLabel}}
+              class="hc-topic-card__replies"
               title={{this.replyCountLabel}}
             >
               {{dIcon "reply" skipTitle=true}}
@@ -313,8 +313,8 @@ export default class HighContextTopicCard extends Component {
 
           {{#if this.hasLikes}}
             <span
-              class="hc-topic-card__likes"
               aria-label={{this.likeCountLabel}}
+              class="hc-topic-card__likes"
               title={{this.likeCountLabel}}
             >
               {{dIcon "heart" skipTitle=true}}

@@ -394,6 +394,7 @@ describe PostRevisor do
       describe "with PMs" do
         fab!(:pm, :private_message_topic)
         let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }
+
         fab!(:category) { Fabricate(:category, topic_count: 1) }
         it "Does not create a category change small_action post when converting to a topic" do
           expect do
@@ -458,6 +459,29 @@ describe PostRevisor do
 
         expect(opening_post.reload).to be_whisper
       end
+    end
+
+    it "rejects a stale raw snapshot inside the persistence transaction" do
+      expected_raw = post.raw
+      Post.where(id: post.id).update_all(
+        raw: "a concurrent edit",
+        cooked: "<p>a concurrent edit</p>",
+      )
+
+      result =
+        post_revisor.revise!(post.user, { raw: "a stale replacement" }, expected_raw: expected_raw)
+
+      expect(result).to eq(false)
+      expect(post.errors.full_messages).to include(I18n.t("edit_conflict"))
+      expect(post.reload.raw).to eq("a concurrent edit")
+    end
+
+    it "allows a revision when the expected raw still matches" do
+      result =
+        post_revisor.revise!(post.user, { raw: "a current replacement" }, expected_raw: post.raw)
+
+      expect(result).to eq(true)
+      expect(post.reload.raw).to eq("a current replacement")
     end
 
     it "destroys last revision if edit is undone" do
@@ -832,12 +856,12 @@ describe PostRevisor do
             post.reload
           end
 
-          it "does create a new version after the edit window" do
+          it "increments the version after the edit window" do
             expect(post.version).to eq(3)
             expect(post.public_version).to eq(3)
           end
 
-          it "does create a new version after the edit window" do
+          it "records the revision time after the edit window" do
             expect(post.last_version_at.to_i).to eq(new_revised_at.to_i)
           end
         end
@@ -853,7 +877,7 @@ describe PostRevisor do
 
       let(:new_description) { "this is my new description." }
 
-      it "should have no description by default" do
+      it "has no description by default" do
         expect(category.description).to be_blank
       end
 
@@ -1242,7 +1266,7 @@ describe PostRevisor do
     describe "#publish_changes" do
       let!(:post) { Fabricate(:post, topic: topic) }
 
-      it "should publish topic changes to clients" do
+      it "publishes topic changes to clients" do
         revisor = PostRevisor.new(topic.ordered_posts.first, topic)
 
         message =
@@ -1756,6 +1780,7 @@ describe PostRevisor do
 
       context "with secure uploads uploads" do
         let!(:image5) { Fabricate(:secure_upload) }
+
         before do
           Jobs.run_immediately!
           setup_s3

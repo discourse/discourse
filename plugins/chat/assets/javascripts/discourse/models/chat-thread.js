@@ -66,6 +66,10 @@ export default class ChatThread {
     this.preview = ChatThreadPreview.create(args.preview);
   }
 
+  get routeModels() {
+    return [...this.channel.routeModels, this.id];
+  }
+
   resetDraft(user) {
     this.draft = ChatMessage.createDraftMessage(this.channel, {
       user,
@@ -83,9 +87,5 @@ export default class ChatThread {
 
     this.messagesManager.addMessages([message]);
     message.manager = this.messagesManager;
-  }
-
-  get routeModels() {
-    return [...this.channel.routeModels, this.id];
   }
 }

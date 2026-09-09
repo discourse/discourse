@@ -53,7 +53,7 @@ export default class SignupPageController extends Controller {
     getAuthOptionsUsername: () => this.authOptions?.username,
     getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
-    isInvalid: () => this.isDestroying || this.isDestroyed,
+    isInvalid: () => this.isDestroying,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
     updateUsernames: (username) => {
       this.accountUsername = username;
@@ -116,25 +116,6 @@ export default class SignupPageController extends Controller {
     return this.nameValidationHelper.forceValidationReason;
   }
 
-  @bind
-  actionOnEnter(event) {
-    if (!this.submitDisabled && event.key === "Enter") {
-      event.preventDefault();
-      event.stopPropagation();
-      this.createAccount();
-      return false;
-    }
-  }
-
-  @bind
-  selectKitFocus(event) {
-    const target = document.getElementById(event.target.getAttribute("for"));
-    if (target?.classList.contains("select-kit")) {
-      event.preventDefault();
-      target.querySelector(".select-kit-header").click();
-    }
-  }
-
   @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
   get showCreateForm() {
     return (
@@ -156,11 +137,6 @@ export default class SignupPageController extends Controller {
 
   get codeSignupOnEmailStep() {
     return this.codeSignupStep === "email";
-  }
-
-  @action
-  updateCodeSignupStep(step) {
-    this.codeSignupStep = step;
   }
 
   @computed("site.desktopView", "hasAuthOptions")
@@ -320,6 +296,81 @@ export default class SignupPageController extends Controller {
     });
   }
 
+  get emailDisabled() {
+    return (
+      this.authOptions?.email === this.accountEmail &&
+      this.authOptions?.email_valid
+    );
+  }
+
+  // Determines whether at least one login button is enabled
+  @computed
+  get hasAtLeastOneLoginButton() {
+    return findAll().length > 0;
+  }
+
+  @computed("hasAtLeastOneLoginButton", "canCreateLocal", "hasAuthOptions")
+  get hasNoLoginOptions() {
+    return (
+      !this.hasAtLeastOneLoginButton &&
+      !this.canCreateLocal &&
+      !this.hasAuthOptions
+    );
+  }
+
+  @computed(
+    "authOptions",
+    "hasAtLeastOneLoginButton",
+    "showCodeSignupForm",
+    "codeSignupStep"
+  )
+  get showRightSide() {
+    if (this.showCodeSignupForm && !this.codeSignupOnEmailStep) {
+      return false;
+    }
+    return !this.authOptions && this.hasAtLeastOneLoginButton;
+  }
+
+  @computed("authOptions")
+  get progressBarStep() {
+    return this.authOptions ? "activate" : "signup";
+  }
+
+  @computed("authOptions.associate_url", "authOptions.auth_provider")
+  get associateHtml() {
+    if (!this.authOptions?.associate_url) {
+      return;
+    }
+    return i18n("create_account.associate", {
+      associate_link: this.authOptions?.associate_url,
+      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
+    });
+  }
+
+  @bind
+  actionOnEnter(event) {
+    if (!this.submitDisabled && event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.createAccount();
+      return false;
+    }
+  }
+
+  @bind
+  selectKitFocus(event) {
+    const target = document.getElementById(event.target.getAttribute("for"));
+    if (target?.classList.contains("select-kit")) {
+      event.preventDefault();
+      target.querySelector(".select-kit-header").click();
+    }
+  }
+
+  @action
+  updateCodeSignupStep(step) {
+    this.codeSignupStep = step;
+  }
+
   @action
   setAccountUsername(event) {
     this.accountUsername = event.target.value;
@@ -342,7 +393,7 @@ export default class SignupPageController extends Controller {
 
     return User.checkEmail(this.accountEmail)
       .then((result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -371,13 +422,6 @@ export default class SignupPageController extends Controller {
           serverEmailValidation: null,
         });
       });
-  }
-
-  get emailDisabled() {
-    return (
-      this.authOptions?.email === this.accountEmail &&
-      this.authOptions?.email_valid
-    );
   }
 
   authProviderDisplayName(name) {
@@ -413,30 +457,6 @@ export default class SignupPageController extends Controller {
     }
   }
 
-  // Determines whether at least one login button is enabled
-  @computed
-  get hasAtLeastOneLoginButton() {
-    return findAll().length > 0;
-  }
-
-  @computed(
-    "authOptions",
-    "hasAtLeastOneLoginButton",
-    "showCodeSignupForm",
-    "codeSignupStep"
-  )
-  get showRightSide() {
-    if (this.showCodeSignupForm && !this.codeSignupOnEmailStep) {
-      return false;
-    }
-    return !this.authOptions && this.hasAtLeastOneLoginButton;
-  }
-
-  @computed("authOptions")
-  get progressBarStep() {
-    return this.authOptions ? "activate" : "signup";
-  }
-
   fetchConfirmationValue() {
     if (this._challengeDate === undefined && this._hpPromise) {
       // Request already in progress
@@ -445,7 +465,7 @@ export default class SignupPageController extends Controller {
 
     this._hpPromise = ajax("/session/hp.json")
       .then((json) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -504,7 +524,7 @@ export default class SignupPageController extends Controller {
     this.set("formSubmitted", true);
     return User.createAccount(attrs).then(
       (result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -555,17 +575,6 @@ export default class SignupPageController extends Controller {
         return this.set("flash", i18n("create_account.failed"));
       }
     );
-  }
-
-  @computed("authOptions.associate_url", "authOptions.auth_provider")
-  get associateHtml() {
-    if (!this.authOptions?.associate_url) {
-      return;
-    }
-    return i18n("create_account.associate", {
-      associate_link: this.authOptions?.associate_url,
-      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
-    });
   }
 
   @action

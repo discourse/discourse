@@ -1,0 +1,56 @@
+/* The one look for every displayed shortcut: a single chip around the whole
+   combination, keys separated by a gap. Both selectors reset everything the
+   app-wide `kbd` rule sets and outrank a surface's own `kbd` rule. */
+
+kbd.d-shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex: none;
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-half) var(--space-2);
+  border: 0;
+  border-radius: var(--d-border-radius);
+  background: var(--primary-low);
+  color: var(--primary-high);
+  font-family: var(--font-family);
+  font-size: var(--font-down-1);
+  font-weight: 600;
+  line-height: var(--line-height-medium);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.btn > .d-shortcut {
+  margin-left: var(--space-2);
+}
+
+.d-shortcut .d-shortcut__key {
+  display: inline;
+  gap: 0;
+  flex: none;
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+
+/* Keys are spaced out, except that modifier glyphs run together (⌘⇧ D). The
+   chip is always left-to-right, so the gap is logical rather than physical. */
+
+.d-shortcut .d-shortcut__key + .d-shortcut__key {
+  margin-inline-start: var(--space-2);
+}
+
+.d-shortcut .d-shortcut__key--glyph + .d-shortcut__key--glyph {
+  margin-inline-start: 0;
+}

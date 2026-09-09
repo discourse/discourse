@@ -1525,6 +1525,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def revoke_approval!
+    update!(approved: false, approved_by: nil, approved_at: nil)
+  end
+
   def change_trust_level!(level, opts = nil)
     Promotion.new(self).change_trust_level!(level, opts)
   end

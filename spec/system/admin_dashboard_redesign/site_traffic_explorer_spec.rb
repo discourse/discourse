@@ -78,7 +78,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
     Fabricate(
       :browser_pageview_session_engagement,
       session_id: "engaged-session",
-      engaged_seconds: 20,
+      engaged_seconds: 1,
     )
     Fabricate(
       :browser_pageview_event,
@@ -95,8 +95,8 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     traffic.visit(start_date: "2026-05-14", end_date: "2026-05-14")
     expect(traffic).to have_metric(label: "Distinct sessions", value: "2")
-    expect(traffic).to have_metric(label: "Bounce rate", value: "50%")
-    expect(traffic).to have_metric(label: "Average session duration", value: "10s")
+    expect(traffic).to have_metric(label: "Bounce rate", value: "100%")
+    expect(traffic).to have_metric(label: "Average session duration", value: "0.5s")
   end
 
   it "lets an admin preview traffic type filters before applying them",
@@ -158,6 +158,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "search.example/results?q=discourse",
@@ -170,6 +171,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "test.localhost/latest",
@@ -182,6 +184,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_497,
         ip_address: "198.51.100.2",
         user_agent: firefox,
+        language: "en-GB",
         session_id: "anonymous-session",
         created_at: "2026-05-11 10:00:00",
       },
@@ -273,7 +276,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
-    expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "IP addresses"])
+    expect(traffic).to have_card_tabs(
+      card: "visitors",
+      tabs: ["Browsers", "Languages", "IP addresses"],
+    )
     expect(traffic).to have_row(card: "acquisition", label: "Direct / unknown", count: "2")
     expect(traffic).to have_row(
       card: "acquisition",
@@ -325,6 +331,23 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("browser")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    expect(traffic).to have_row(card: "visitors", label: "English", count: "3")
+    traffic.filter_row(card: "visitors", label: "English")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "English")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=en&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    traffic.filter_row(card: "visitors", label: "Unknown")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "Unknown")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
 
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United States")
@@ -552,15 +575,15 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   end
 
   it "warns an admin when the selected range has incomplete traffic data",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0),
-     timezone: "UTC" do
+     time: Time.zone.local(2026, 8, 20, 12, 0, 0),
+     timezone: "Asia/Singapore" do
     sign_in(admin)
     SiteSetting.site_traffic_explorer_event_limit = 2
 
     [
-      ["/first-retained", "2026-02-15 09:00:00"],
-      ["/middle-retained", "2026-05-10 10:00:00"],
-      ["/latest-retained", "2026-05-12 10:00:00"],
+      ["/first-retained", "2026-08-17 21:00:00"],
+      ["/middle-retained", "2026-08-17 22:27:00"],
+      ["/latest-retained", "2026-08-17 23:00:00"],
     ].each do |url, created_at|
       Fabricate(
         :browser_pageview_event,
@@ -571,11 +594,11 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       )
     end
 
-    traffic.visit(start_date: "2026-01-01", end_date: "2026-05-12")
+    traffic.visit(start_date: "2026-05-01", end_date: "2026-08-17")
 
     expect(traffic).to have_partial_data_warning(
       reason:
-        "Results include the most recent 2 pageviews, beginning May 10, 2026 at 10:00 AM. Earlier pageviews in the selected date range are not included; pageview data before Feb 14, 2026 is no longer available.",
+        "Results include the most recent 2 pageviews, beginning Aug 17, 2026 at 10:27 PM. Earlier pageviews in the selected date range are not included; pageview data before May 20, 2026 is no longer available.",
     )
   end
 

@@ -130,10 +130,6 @@ export default class LoginPageController extends Controller {
     return this.application.canSignUp && !this.showSecondFactor;
   }
 
-  get adminLoginPath() {
-    return getURL("/u/admin-login");
-  }
-
   @action
   async passkeyLogin(mediation = "optional") {
     try {

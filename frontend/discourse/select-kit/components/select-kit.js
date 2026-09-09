@@ -275,48 +275,28 @@ export default class SelectKit extends Component {
     );
   }
 
-  _modifyComponentForRowWrapper(collection, item) {
-    let component = this.modifyComponentForRow(collection, item);
-    return component || SelectKitRow;
+  @computed("content.[]", "selectKit.filter")
+  get autoFilterable() {
+    return (
+      this.selectKit.filter &&
+      this.options.autoFilterable &&
+      this.content.length >= FILTER_VISIBILITY_THRESHOLD
+    );
+  }
+
+  @computed("selectedContent.[]", "mainCollection.[]", "errorsCollection.[]")
+  get collections() {
+    return this._collections.map((identifier) => {
+      return {
+        identifier,
+        content: this.selectKit.modifyContentForCollection(identifier),
+      };
+    });
   }
 
   modifyComponentForRow() {}
 
-  _modifyContentForCollectionWrapper(identifier) {
-    let collection = this.modifyContentForCollection(identifier);
-
-    if (!collection) {
-      switch (identifier) {
-        case ERRORS_COLLECTION:
-          collection = this.errorsCollection;
-          break;
-        default:
-          collection = this.mainCollection;
-          break;
-      }
-    }
-
-    return collection;
-  }
-
   modifyContentForCollection() {}
-
-  _modifyComponentForCollectionWrapper(identifier) {
-    let component = this.modifyComponentForCollection(identifier);
-
-    if (!component) {
-      switch (identifier) {
-        case ERRORS_COLLECTION:
-          component = ErrorsCollection;
-          break;
-        default:
-          component = SelectKitCollection;
-          break;
-      }
-    }
-
-    return component;
-  }
 
   modifyComponentForCollection() {}
 
@@ -427,25 +407,6 @@ export default class SelectKit extends Component {
     }
   }
 
-  @computed("content.[]", "selectKit.filter")
-  get autoFilterable() {
-    return (
-      this.selectKit.filter &&
-      this.options.autoFilterable &&
-      this.content.length >= FILTER_VISIBILITY_THRESHOLD
-    );
-  }
-
-  @computed("selectedContent.[]", "mainCollection.[]", "errorsCollection.[]")
-  get collections() {
-    return this._collections.map((identifier) => {
-      return {
-        identifier,
-        content: this.selectKit.modifyContentForCollection(identifier),
-      };
-    });
-  }
-
   createContentFromInput(input) {
     return input;
   }
@@ -484,7 +445,7 @@ export default class SelectKit extends Component {
   }
 
   clearErrors() {
-    if (!this.element || this.isDestroyed || this.isDestroying) {
+    if (!this.element || this.isDestroying) {
       return;
     }
 
@@ -513,98 +474,8 @@ export default class SelectKit extends Component {
     this.insertCollectionAtIndex(insertedIdentifier, index + 1);
   }
 
-  _onInput(event) {
-    if (this._searchPromise) {
-      cancel(this._searchPromise);
-    }
-
-    this.selectKit.set("isLoading", true);
-
-    discourseDebounce(
-      this,
-      this._debouncedInput,
-      event.target.value,
-      INPUT_DELAY
-    );
-  }
-
-  _debouncedInput(filter) {
-    this.selectKit.set("filter", filter);
-    this.triggerSearch(filter);
-  }
-
-  _onChangeWrapper(value, items) {
-    this.selectKit.set("filter", null);
-
-    return new Promise((resolve) => {
-      if (!this.selectKit.valueProperty && this.selectKit.noneItem === value) {
-        value = null;
-        items = [];
-      }
-
-      value = makeArray(value);
-      items = makeArray(items);
-
-      if (this.multiSelect) {
-        items = items.filter(
-          (i) =>
-            i !== this.newItem &&
-            i !== this.noneItem &&
-            this.getValue(i) !== null
-        );
-
-        if (this.selectKit.options.maximum === 1) {
-          value = value.slice(0, 1);
-          items = items.slice(0, 1);
-        }
-      }
-
-      if (this.singleSelect) {
-        const firstValue = value.firstObject;
-        const firstItem = items.firstObject;
-
-        value =
-          isPresent(firstValue) || (firstValue === "" && firstItem)
-            ? firstValue
-            : null;
-        items = isPresent(firstItem) ? firstItem : null;
-      }
-
-      this._boundaryActionHandler("onChange", value, items);
-
-      applyOnChangePluginApiCallbacks(value, items, this);
-
-      resolve(items);
-    }).finally(() => {
-      if (!this.isDestroying && !this.isDestroyed) {
-        if (
-          this.selectKit.options.closeOnChange ||
-          (isPresent(value) && this.selectKit.options.maximum === 1)
-        ) {
-          this.selectKit.close(event);
-        }
-
-        if (this.selectKit.options.focusAfterOnChange) {
-          this._safeAfterRender(() => {
-            this._focusFilter();
-          });
-        }
-      }
-    });
-  }
-
-  _modifyContentWrapper(content) {
-    content = this.modifyContent(content);
-
-    return applyContentPluginApiCallbacks(content, this);
-  }
-
   modifyContent(content) {
     return content;
-  }
-
-  _modifyNoSelectionWrapper() {
-    return this.modifyNoSelection();
   }
 
   modifyNoSelection() {
@@ -637,64 +508,8 @@ export default class SelectKit extends Component {
     return item;
   }
 
-  _modifySelectionWrapper(item) {
-    return this.modifySelection(item);
-  }
-
   modifySelection(item) {
     return item;
-  }
-
-  _onKeydownWrapper(event) {
-    return this._boundaryActionHandler("onKeydown", event);
-  }
-
-  _mainElement() {
-    return document.querySelector(`#${this.selectKit.uniqueID}`);
-  }
-
-  _headerElement() {
-    return this.selectKit.mainElement().querySelector("summary");
-  }
-
-  _bodyElement() {
-    return this.selectKit.mainElement().querySelector(".select-kit-body");
-  }
-
-  _onHover(value, item) {
-    throttle(this, this._highlight, item, 25, true);
-  }
-
-  _highlight(item) {
-    this.selectKit.set("highlighted", item);
-  }
-
-  _boundaryActionHandler(actionName, ...params) {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    let boundaryAction = true;
-
-    const privateActionName = `_${actionName}`;
-    const privateAction = get(this, privateActionName);
-    if (privateAction) {
-      boundaryAction = privateAction.call(this, ...params);
-    }
-
-    if (this.actions) {
-      const componentAction = get(this.actions, actionName);
-      if (boundaryAction && componentAction) {
-        boundaryAction = componentAction.call(this, ...params);
-      }
-    }
-
-    const theAction = get(this, actionName);
-    if (boundaryAction && theAction) {
-      boundaryAction = theAction.call(this, ...params);
-    }
-
-    return boundaryAction;
   }
 
   deselect() {
@@ -733,198 +548,6 @@ export default class SelectKit extends Component {
     this._searchPromise = this._searchWrapper(filter || this.selectKit.filter);
   }
 
-  _searchWrapper(filter) {
-    if (this.isDestroyed || this.isDestroying) {
-      return Promise.resolve([]);
-    }
-
-    this.clearErrors();
-    this.setProperties({
-      mainCollection: [],
-      "selectKit.isLoading": true,
-      "selectKit.enterDisabled": true,
-    });
-
-    let content = [];
-
-    return Promise.resolve(this.search(filter))
-      .then((result) => {
-        if (this.isDestroyed || this.isDestroying) {
-          return [];
-        }
-
-        if (this.selectKit.options.maximum === 0) {
-          this.set("selectKit.isLoading", false);
-          this.set("selectKit.hasNoContent", false);
-          return [];
-        }
-
-        content = content.concat(makeArray(result));
-        content = this.selectKit.modifyContent(content).filter(Boolean);
-
-        if (this.selectKit.valueProperty) {
-          content = uniqueItemsFromArray(content, this.selectKit.valueProperty);
-        } else {
-          content = uniqueItemsFromArray(content);
-        }
-
-        if (this.selectKit.options.limitMatches) {
-          content = content.slice(0, this.selectKit.options.limitMatches);
-        }
-
-        const noneItem = this.selectKit.noneItem;
-        if (
-          this.selectKit.options.allowAny &&
-          filter &&
-          this.getName(noneItem) !== filter
-        ) {
-          filter = this.createContentFromInput(filter);
-          if (this.validateCreate(filter, content)) {
-            const newItem = this.defaultItem(filter, filter);
-            if (typeof newItem === "object" && newItem !== null) {
-              newItem.isNew = true;
-            }
-            this.selectKit.set("newItem", newItem);
-            content.unshift(this.selectKit.newItem);
-          }
-        }
-
-        const hasNoContent = isEmpty(content);
-        if (
-          this.selectKit.hasSelection &&
-          noneItem &&
-          this.selectKit.options.autoInsertNoneItem
-        ) {
-          content.unshift(noneItem);
-        }
-
-        this.mainCollection = content;
-
-        this.selectKit.setProperties({
-          highlighted:
-            this.singleSelect && this.value
-              ? this.itemForValue(this.value, this.mainCollection)
-              : isEmpty(this.selectKit.filter)
-                ? null
-                : this.mainCollection[0],
-          isLoading: false,
-          hasNoContent,
-        });
-
-        this._safeAfterRender(() => {
-          if (this.selectKit.isExpanded) {
-            this._focusFilter();
-          }
-        });
-      })
-      .finally(() => {
-        if (this.isDestroyed || this.isDestroying) {
-          return;
-        }
-        this.set("selectKit.enterDisabled", false);
-      });
-  }
-
-  _safeAfterRender(fn) {
-    next(() => {
-      if (!this.element || this.isDestroyed || this.isDestroying) {
-        return;
-      }
-
-      fn();
-    });
-  }
-
-  _scrollToRow(rowItem, preventScroll = true) {
-    const value = this.getValue(rowItem);
-
-    let rowContainer;
-    if (isPresent(value)) {
-      rowContainer = this.element.querySelector(
-        `.select-kit-row[data-value="${value}"]`
-      );
-    } else {
-      rowContainer = this.element.querySelector(".select-kit-row.is-none");
-    }
-
-    rowContainer?.focus({ preventScroll });
-  }
-
-  _highlightLast() {
-    const highlighted = this.mainCollection.at(-1);
-    if (highlighted) {
-      this._scrollToRow(highlighted, false);
-      this.set("selectKit.highlighted", highlighted);
-    }
-  }
-
-  _highlightFirst() {
-    const highlighted = this.mainCollection[0];
-    if (highlighted) {
-      this._scrollToRow(highlighted, false);
-      this.set("selectKit.highlighted", highlighted);
-    }
-  }
-
-  _highlightNext() {
-    let highlightedIndex = this.mainCollection.indexOf(
-      this.selectKit.highlighted
-    );
-    const count = this.mainCollection.length;
-
-    if (highlightedIndex < count - 1) {
-      highlightedIndex = highlightedIndex + 1;
-    } else {
-      if (this.selectKit.isFilterExpanded) {
-        this._focusFilter();
-        this.set("selectKit.highlighted", null);
-        return;
-      } else {
-        highlightedIndex = 0;
-      }
-    }
-
-    const highlighted = this.mainCollection[highlightedIndex];
-    if (highlighted) {
-      this._scrollToRow(highlighted, false);
-      this.set("selectKit.highlighted", highlighted);
-    }
-  }
-
-  _highlightPrevious() {
-    let highlightedIndex = this.mainCollection.indexOf(
-      this.selectKit.highlighted
-    );
-    const count = this.mainCollection.length;
-
-    if (highlightedIndex > 0) {
-      highlightedIndex = highlightedIndex - 1;
-    } else {
-      if (this.selectKit.isFilterExpanded) {
-        this._focusFilter();
-        this.set("selectKit.highlighted", null);
-        return;
-      } else {
-        highlightedIndex = count - 1;
-      }
-    }
-
-    const highlighted = this.mainCollection[highlightedIndex];
-    if (highlighted) {
-      this._scrollToRow(highlighted, false);
-      this.set("selectKit.highlighted", highlighted);
-    }
-  }
-
-  _deselectLast() {
-    if (this.selectKit.hasSelection) {
-      const lastItem = this.value[this.value.length - 1];
-      // handle both raw values and objects with valueProperty
-      const value = this.getValue(lastItem) ?? lastItem;
-      this.deselectByValue(value);
-    }
-  }
-
   select(value, item) {
     if (typeof item?.onSelect === "function") {
       item.onSelect(this.selectKit, item);
@@ -945,87 +568,6 @@ export default class SelectKit extends Component {
 
       this.selectKit.change(value, item || this.defaultItem(value, value));
     }
-  }
-
-  _onClearSelection() {
-    this.selectKit.change(null, null);
-  }
-
-  _onOpenWrapper() {
-    return this._boundaryActionHandler("onOpen");
-  }
-
-  _cancelSearch() {
-    this._searchPromise && cancel(this._searchPromise);
-  }
-
-  _onCloseWrapper() {
-    this._cancelSearch();
-    this.set("selectKit.highlighted", null);
-
-    return this._boundaryActionHandler("onClose");
-  }
-
-  _toggle(event) {
-    if (this.selectKit.isExpanded) {
-      this._close(event);
-    } else {
-      this._open(event);
-    }
-  }
-
-  _close(event) {
-    if (!this.selectKit.isExpanded) {
-      return;
-    }
-
-    this.cleanupFloatingUi?.();
-
-    this.selectKit.mainElement().open = false;
-
-    this.clearErrors();
-
-    this.selectKit.onClose(event);
-
-    this.selectKit.setProperties({
-      isExpanded: false,
-      isPlacedAbove: false,
-      filter: null,
-    });
-  }
-
-  _open(event) {
-    if (this.selectKit.isExpanded) {
-      return;
-    }
-
-    this.selectKit.mainElement().open = true;
-    this.clearErrors();
-    this.selectKit.onOpen(event);
-
-    this.cleanupFloatingUi?.();
-    this.cleanupFloatingUi = autoUpdate(
-      this.getHeader(),
-      this._bodyElement(),
-      () => this.updateFloatingUiPosition()
-    );
-
-    this.selectKit.setProperties({
-      isExpanded: true,
-      isFilterExpanded:
-        this.selectKit.options.filterable || this.selectKit.options.allowAny,
-    });
-
-    if (this.selectKit.options.useHeaderFilter) {
-      this._focusFilterInput();
-    }
-
-    this.triggerSearch();
-
-    this._safeAfterRender(() => {
-      this._focusFilter();
-      this._scrollToCurrent();
-    });
   }
 
   updateFloatingUiPosition() {
@@ -1149,6 +691,478 @@ export default class SelectKit extends Component {
     });
   }
 
+  getFilterInput() {
+    return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
+  }
+
+  getHeader() {
+    return document.querySelector(`#${this.selectKit.uniqueID}-header`);
+  }
+
+  handleDeprecations() {
+    this._deprecateValueAttribute();
+    this._deprecateMutations();
+    this._handleDeprecatedArgs();
+  }
+
+  _modifyComponentForRowWrapper(collection, item) {
+    let component = this.modifyComponentForRow(collection, item);
+    return component || SelectKitRow;
+  }
+
+  _modifyContentForCollectionWrapper(identifier) {
+    let collection = this.modifyContentForCollection(identifier);
+
+    if (!collection) {
+      switch (identifier) {
+        case ERRORS_COLLECTION:
+          collection = this.errorsCollection;
+          break;
+        default:
+          collection = this.mainCollection;
+          break;
+      }
+    }
+
+    return collection;
+  }
+
+  _modifyComponentForCollectionWrapper(identifier) {
+    let component = this.modifyComponentForCollection(identifier);
+
+    if (!component) {
+      switch (identifier) {
+        case ERRORS_COLLECTION:
+          component = ErrorsCollection;
+          break;
+        default:
+          component = SelectKitCollection;
+          break;
+      }
+    }
+
+    return component;
+  }
+
+  _onInput(event) {
+    if (this._searchPromise) {
+      cancel(this._searchPromise);
+    }
+
+    this.selectKit.set("isLoading", true);
+
+    discourseDebounce(
+      this,
+      this._debouncedInput,
+      event.target.value,
+      INPUT_DELAY
+    );
+  }
+
+  _debouncedInput(filter) {
+    this.selectKit.set("filter", filter);
+    this.triggerSearch(filter);
+  }
+
+  _onChangeWrapper(value, items) {
+    this.selectKit.set("filter", null);
+
+    return new Promise((resolve) => {
+      if (!this.selectKit.valueProperty && this.selectKit.noneItem === value) {
+        value = null;
+        items = [];
+      }
+
+      value = makeArray(value);
+      items = makeArray(items);
+
+      if (this.multiSelect) {
+        items = items.filter(
+          (i) =>
+            i !== this.newItem &&
+            i !== this.noneItem &&
+            this.getValue(i) !== null
+        );
+
+        if (this.selectKit.options.maximum === 1) {
+          value = value.slice(0, 1);
+          items = items.slice(0, 1);
+        }
+      }
+
+      if (this.singleSelect) {
+        const firstValue = value.firstObject;
+        const firstItem = items.firstObject;
+
+        value =
+          isPresent(firstValue) || (firstValue === "" && firstItem)
+            ? firstValue
+            : null;
+        items = isPresent(firstItem) ? firstItem : null;
+      }
+
+      this._boundaryActionHandler("onChange", value, items);
+
+      applyOnChangePluginApiCallbacks(value, items, this);
+
+      resolve(items);
+    }).finally(() => {
+      if (!this.isDestroying) {
+        if (
+          this.selectKit.options.closeOnChange ||
+          (isPresent(value) && this.selectKit.options.maximum === 1)
+        ) {
+          this.selectKit.close(event);
+        }
+
+        if (this.selectKit.options.focusAfterOnChange) {
+          this._safeAfterRender(() => {
+            this._focusFilter();
+          });
+        }
+      }
+    });
+  }
+
+  _modifyContentWrapper(content) {
+    content = this.modifyContent(content);
+
+    return applyContentPluginApiCallbacks(content, this);
+  }
+
+  _modifyNoSelectionWrapper() {
+    return this.modifyNoSelection();
+  }
+
+  _modifySelectionWrapper(item) {
+    return this.modifySelection(item);
+  }
+
+  _onKeydownWrapper(event) {
+    return this._boundaryActionHandler("onKeydown", event);
+  }
+
+  _mainElement() {
+    return document.querySelector(`#${this.selectKit.uniqueID}`);
+  }
+
+  _headerElement() {
+    return this.selectKit.mainElement().querySelector("summary");
+  }
+
+  _bodyElement() {
+    return this.selectKit.mainElement().querySelector(".select-kit-body");
+  }
+
+  _onHover(value, item) {
+    throttle(this, this._highlight, item, 25, true);
+  }
+
+  _highlight(item) {
+    this.selectKit.set("highlighted", item);
+  }
+
+  _boundaryActionHandler(actionName, ...params) {
+    if (!this.element || this.isDestroying) {
+      return;
+    }
+
+    let boundaryAction = true;
+
+    const privateActionName = `_${actionName}`;
+    const privateAction = get(this, privateActionName);
+    if (privateAction) {
+      boundaryAction = privateAction.call(this, ...params);
+    }
+
+    if (this.actions) {
+      const componentAction = get(this.actions, actionName);
+      if (boundaryAction && componentAction) {
+        boundaryAction = componentAction.call(this, ...params);
+      }
+    }
+
+    const theAction = get(this, actionName);
+    if (boundaryAction && theAction) {
+      boundaryAction = theAction.call(this, ...params);
+    }
+
+    return boundaryAction;
+  }
+
+  _searchWrapper(filter) {
+    if (this.isDestroying) {
+      return Promise.resolve([]);
+    }
+
+    this.clearErrors();
+    this.setProperties({
+      mainCollection: [],
+      "selectKit.isLoading": true,
+      "selectKit.enterDisabled": true,
+    });
+
+    let content = [];
+
+    return Promise.resolve(this.search(filter))
+      .then((result) => {
+        if (this.isDestroying) {
+          return [];
+        }
+
+        if (this.selectKit.options.maximum === 0) {
+          this.set("selectKit.isLoading", false);
+          this.set("selectKit.hasNoContent", false);
+          return [];
+        }
+
+        content = content.concat(makeArray(result));
+        content = this.selectKit.modifyContent(content).filter(Boolean);
+
+        if (this.selectKit.valueProperty) {
+          content = uniqueItemsFromArray(content, this.selectKit.valueProperty);
+        } else {
+          content = uniqueItemsFromArray(content);
+        }
+
+        if (this.selectKit.options.limitMatches) {
+          content = content.slice(0, this.selectKit.options.limitMatches);
+        }
+
+        const noneItem = this.selectKit.noneItem;
+        if (
+          this.selectKit.options.allowAny &&
+          filter &&
+          this.getName(noneItem) !== filter
+        ) {
+          filter = this.createContentFromInput(filter);
+          if (this.validateCreate(filter, content)) {
+            const newItem = this.defaultItem(filter, filter);
+            if (typeof newItem === "object" && newItem !== null) {
+              newItem.isNew = true;
+            }
+            this.selectKit.set("newItem", newItem);
+            content.unshift(this.selectKit.newItem);
+          }
+        }
+
+        const hasNoContent = isEmpty(content);
+        if (
+          this.selectKit.hasSelection &&
+          noneItem &&
+          this.selectKit.options.autoInsertNoneItem
+        ) {
+          content.unshift(noneItem);
+        }
+
+        this.mainCollection = content;
+
+        this.selectKit.setProperties({
+          highlighted:
+            this.singleSelect && this.value
+              ? this.itemForValue(this.value, this.mainCollection)
+              : isEmpty(this.selectKit.filter)
+                ? null
+                : this.mainCollection[0],
+          isLoading: false,
+          hasNoContent,
+        });
+
+        this._safeAfterRender(() => {
+          if (this.selectKit.isExpanded) {
+            this._focusFilter();
+          }
+        });
+      })
+      .finally(() => {
+        if (this.isDestroying) {
+          return;
+        }
+        this.set("selectKit.enterDisabled", false);
+      });
+  }
+
+  _safeAfterRender(fn) {
+    next(() => {
+      if (!this.element || this.isDestroying) {
+        return;
+      }
+
+      fn();
+    });
+  }
+
+  _scrollToRow(rowItem, preventScroll = true) {
+    const value = this.getValue(rowItem);
+
+    let rowContainer;
+    if (isPresent(value)) {
+      rowContainer = this.element.querySelector(
+        `.select-kit-row[data-value="${value}"]`
+      );
+    } else {
+      rowContainer = this.element.querySelector(".select-kit-row.is-none");
+    }
+
+    rowContainer?.focus({ preventScroll });
+  }
+
+  _highlightLast() {
+    const highlighted = this.mainCollection.at(-1);
+    if (highlighted) {
+      this._scrollToRow(highlighted, false);
+      this.set("selectKit.highlighted", highlighted);
+    }
+  }
+
+  _highlightFirst() {
+    const highlighted = this.mainCollection[0];
+    if (highlighted) {
+      this._scrollToRow(highlighted, false);
+      this.set("selectKit.highlighted", highlighted);
+    }
+  }
+
+  _highlightNext() {
+    let highlightedIndex = this.mainCollection.indexOf(
+      this.selectKit.highlighted
+    );
+    const count = this.mainCollection.length;
+
+    if (highlightedIndex < count - 1) {
+      highlightedIndex = highlightedIndex + 1;
+    } else {
+      if (this.selectKit.isFilterExpanded) {
+        this._focusFilter();
+        this.set("selectKit.highlighted", null);
+        return;
+      } else {
+        highlightedIndex = 0;
+      }
+    }
+
+    const highlighted = this.mainCollection[highlightedIndex];
+    if (highlighted) {
+      this._scrollToRow(highlighted, false);
+      this.set("selectKit.highlighted", highlighted);
+    }
+  }
+
+  _highlightPrevious() {
+    let highlightedIndex = this.mainCollection.indexOf(
+      this.selectKit.highlighted
+    );
+    const count = this.mainCollection.length;
+
+    if (highlightedIndex > 0) {
+      highlightedIndex = highlightedIndex - 1;
+    } else {
+      if (this.selectKit.isFilterExpanded) {
+        this._focusFilter();
+        this.set("selectKit.highlighted", null);
+        return;
+      } else {
+        highlightedIndex = count - 1;
+      }
+    }
+
+    const highlighted = this.mainCollection[highlightedIndex];
+    if (highlighted) {
+      this._scrollToRow(highlighted, false);
+      this.set("selectKit.highlighted", highlighted);
+    }
+  }
+
+  _deselectLast() {
+    if (this.selectKit.hasSelection) {
+      const lastItem = this.value[this.value.length - 1];
+      // handle both raw values and objects with valueProperty
+      const value = this.getValue(lastItem) ?? lastItem;
+      this.deselectByValue(value);
+    }
+  }
+
+  _onClearSelection() {
+    this.selectKit.change(null, null);
+  }
+
+  _onOpenWrapper() {
+    return this._boundaryActionHandler("onOpen");
+  }
+
+  _cancelSearch() {
+    this._searchPromise && cancel(this._searchPromise);
+  }
+
+  _onCloseWrapper() {
+    this._cancelSearch();
+    this.set("selectKit.highlighted", null);
+
+    return this._boundaryActionHandler("onClose");
+  }
+
+  _toggle(event) {
+    if (this.selectKit.isExpanded) {
+      this._close(event);
+    } else {
+      this._open(event);
+    }
+  }
+
+  _close(event) {
+    if (!this.selectKit.isExpanded) {
+      return;
+    }
+
+    this.cleanupFloatingUi?.();
+
+    this.selectKit.mainElement().open = false;
+
+    this.clearErrors();
+
+    this.selectKit.onClose(event);
+
+    this.selectKit.setProperties({
+      isExpanded: false,
+      isPlacedAbove: false,
+      filter: null,
+    });
+  }
+
+  _open(event) {
+    if (this.selectKit.isExpanded) {
+      return;
+    }
+
+    this.selectKit.mainElement().open = true;
+    this.clearErrors();
+    this.selectKit.onOpen(event);
+
+    this.cleanupFloatingUi?.();
+    this.cleanupFloatingUi = autoUpdate(
+      this.getHeader(),
+      this._bodyElement(),
+      () => this.updateFloatingUiPosition()
+    );
+
+    this.selectKit.setProperties({
+      isExpanded: true,
+      isFilterExpanded:
+        this.selectKit.options.filterable || this.selectKit.options.allowAny,
+    });
+
+    if (this.selectKit.options.useHeaderFilter) {
+      this._focusFilterInput();
+    }
+
+    this.triggerSearch();
+
+    this._safeAfterRender(() => {
+      this._focusFilter();
+      this._scrollToCurrent();
+    });
+  }
+
   _scrollToCurrent() {
     if (this.value && this.mainCollection) {
       let highlighted;
@@ -1206,20 +1220,6 @@ export default class SelectKit extends Component {
         input.selectionStart = input.selectionEnd = input.value.length;
       }
     }
-  }
-
-  getFilterInput() {
-    return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
-  }
-
-  getHeader() {
-    return document.querySelector(`#${this.selectKit.uniqueID}-header`);
-  }
-
-  handleDeprecations() {
-    this._deprecateValueAttribute();
-    this._deprecateMutations();
-    this._handleDeprecatedArgs();
   }
 
   _computePlacementStrategy() {

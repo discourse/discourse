@@ -112,7 +112,7 @@ interface DSwipeSignature {
  * ```
  *
  * Guide to choosing between the gesture primitives:
- * `docs/developer-guides/docs/03-code-internals/29-drag-and-gesture-primitives.md`
+ * `docs/developer-guides/docs/03-code-internals/30-drag-and-gesture-primitives.md`
  *
  * @see The `dPointerDrag` modifier for a value that tracks the pointer continuously. This
  *   reports a discrete directional flick, not a continuous transform.

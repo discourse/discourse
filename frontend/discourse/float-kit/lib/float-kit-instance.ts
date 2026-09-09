@@ -1,9 +1,12 @@
+import { DEBUG } from "@glimmer/env";
 import { tracked } from "@glimmer/tracking";
-import { isDestroyed, isDestroying } from "@ember/destroyable";
+import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import type {
+  FloatCloseOptions,
   FloatKitTrigger,
   TooltipOptions,
 } from "discourse/float-kit/lib/constants";
@@ -108,9 +111,40 @@ export default abstract class FloatKitInstance {
     return this.hoverGracePeriod > 0;
   }
 
+  get triggers(): string[] {
+    const triggers = this.options.triggers;
+
+    if (typeof triggers === "object" && !Array.isArray(triggers)) {
+      return this.site.mobileView
+        ? (triggers.mobile ?? ["click"])
+        : (triggers.desktop ?? ["click"]);
+    }
+
+    return triggers ?? ["click"];
+  }
+
+  get untriggers(): string[] {
+    const untriggers = this.options.untriggers;
+
+    if (typeof untriggers === "object" && !Array.isArray(untriggers)) {
+      return this.site.mobileView
+        ? (untriggers.mobile ?? ["click"])
+        : (untriggers.desktop ?? ["click"]);
+    }
+
+    return untriggers ?? ["click"];
+  }
+
+  get shouldTrapPointerDown() {
+    return true;
+  }
+
   abstract onClick(event: MouseEvent): Promise<void>;
+
   abstract onPointerMove(event: PointerEvent): Promise<void>;
+
   abstract onPointerLeave(event: PointerEvent): Promise<void>;
+
   abstract onTrigger(event?: Event): Promise<void>;
 
   @action
@@ -119,12 +153,11 @@ export default abstract class FloatKitInstance {
   }
 
   @action
-  // `options` is part of the shared close contract (a menu uses it to decide whether to
-  // refocus its trigger); the base close has no trigger to refocus, so it ignores it.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async close(options?: { focusTrigger?: boolean }) {
+  // `options` is part of the shared close contract: the base relays its data, while a menu
+  // additionally uses it to decide whether to refocus its trigger.
+  async close(options?: FloatCloseOptions) {
     this.resetHoverCloseState();
-    await this.options.onClose?.();
+    await this.options.onClose?.(options?.data);
   }
 
   /** Drops any pending grace-period close, so the float stays open. */
@@ -234,7 +267,7 @@ export default abstract class FloatKitInstance {
     element.addEventListener("touchcancel", this.onTouchCancel, TOUCH_OPTIONS);
     element.addEventListener("touchend", this.onTouchCancel, TOUCH_OPTIONS);
     this.touchTimeout = discourseLater(() => {
-      if (isDestroying(this) || isDestroyed(this)) {
+      if (isDestroying(getOwner(this)!)) {
         return;
       }
 
@@ -294,6 +327,10 @@ export default abstract class FloatKitInstance {
       return;
     }
 
+    if (DEBUG) {
+      this.#warnUnknownUntriggers();
+    }
+
     makeArray(this.triggers)
       .filter(Boolean)
       .forEach((trigger) => {
@@ -336,6 +373,11 @@ export default abstract class FloatKitInstance {
           case "click":
             element.removeEventListener("click", this.onClick);
             break;
+          default:
+            if (DEBUG) {
+              // eslint-disable-next-line no-console
+              console.warn(`FloatKit: unknown trigger "${trigger}".`);
+            }
         }
       });
 
@@ -350,6 +392,10 @@ export default abstract class FloatKitInstance {
 
     if (!this.options?.listeners || !element) {
       return;
+    }
+
+    if (DEBUG) {
+      this.#warnUnknownUntriggers();
     }
 
     makeArray(this.triggers)
@@ -410,35 +456,30 @@ export default abstract class FloatKitInstance {
               passive: true,
             });
             break;
+          default:
+            if (DEBUG) {
+              // eslint-disable-next-line no-console
+              console.warn(`FloatKit: unknown trigger "${trigger}".`);
+            }
         }
       });
   }
 
-  get triggers(): string[] {
-    const triggers = this.options.triggers;
-
-    if (typeof triggers === "object" && !Array.isArray(triggers)) {
-      return this.site.mobileView
-        ? (triggers.mobile ?? ["click"])
-        : (triggers.desktop ?? ["click"]);
+  /** Untriggers need validation even though only triggers install listeners. */
+  #warnUnknownUntriggers() {
+    const supported = [
+      "hold",
+      "focus",
+      "focusin",
+      "hover",
+      "delayed-hover",
+      "click",
+    ];
+    for (const untrigger of makeArray(this.untriggers).filter(Boolean)) {
+      if (!supported.includes(untrigger)) {
+        // eslint-disable-next-line no-console
+        console.warn(`FloatKit: unknown untrigger "${untrigger}".`);
+      }
     }
-
-    return triggers ?? ["click"];
-  }
-
-  get untriggers(): string[] {
-    const untriggers = this.options.untriggers;
-
-    if (typeof untriggers === "object" && !Array.isArray(untriggers)) {
-      return this.site.mobileView
-        ? (untriggers.mobile ?? ["click"])
-        : (untriggers.desktop ?? ["click"]);
-    }
-
-    return untriggers ?? ["click"];
-  }
-
-  get shouldTrapPointerDown() {
-    return true;
   }
 }

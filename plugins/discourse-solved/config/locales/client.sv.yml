@@ -72,6 +72,11 @@ sv:
           solved: "är lösta"
           unsolved: "är olösta"
     admin:
+      reports:
+        related_items:
+          labels:
+            topic: "Ämne"
+            category: "Kategori"
       web_hooks:
         solved_event:
           group_name: "Löst händelse"
