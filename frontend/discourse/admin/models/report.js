@@ -242,41 +242,6 @@ export default class Report extends EmberObject {
     return this.data;
   }
 
-  valueAt(numDaysAgo) {
-    if (this.combinedData) {
-      const wantedDate = moment()
-        .subtract(numDaysAgo, "days")
-        .locale("en")
-        .format("YYYY-MM-DD");
-      const item = this.combinedData.find((d) => d.x === wantedDate);
-      if (item) {
-        return item.y;
-      }
-    }
-    return 0;
-  }
-
-  valueFor(startDaysAgo, endDaysAgo) {
-    if (this.combinedData) {
-      const earliestDate = moment().subtract(endDaysAgo, "days").startOf("day");
-      const latestDate = moment().subtract(startDaysAgo, "days").startOf("day");
-      let d,
-        sum = 0,
-        count = 0;
-      this.combinedData.forEach((datum) => {
-        d = moment(datum.x);
-        if (d >= earliestDate && d <= latestDate) {
-          sum += datum.y;
-          count++;
-        }
-      });
-      if (this.method === "average" && count > 0) {
-        sum /= count;
-      }
-      return round(sum, -2);
-    }
-  }
-
   @computed("data", "average")
   get todayCount() {
     return this.valueAt(0);
@@ -305,10 +270,6 @@ export default class Report extends EmberObject {
   @computed("data", "average")
   get lastThirtyDaysCount() {
     return this.averageCount(30, this.valueFor(1, 30));
-  }
-
-  averageCount(count, value) {
-    return this.average ? value / count : value;
   }
 
   @computed("yesterdayCount", "higher_is_better")
@@ -392,18 +353,6 @@ export default class Report extends EmberObject {
     }
   }
 
-  percentChangeString(val1, val2) {
-    const change = this._computeChange(val1, val2);
-
-    if (isNaN(change) || !isFinite(change)) {
-      return null;
-    } else if (change > 0) {
-      return `+${i18n("js.number.percent", { count: change.toFixed(0) })}`;
-    } else {
-      return `${i18n("js.number.percent", { count: change.toFixed(0) })}`;
-    }
-  }
-
   @computed("prev_period", "currentTotal", "currentAverage")
   get trendTitle() {
     let prev = this.prev_period;
@@ -426,28 +375,6 @@ export default class Report extends EmberObject {
       prev,
       current,
     });
-  }
-
-  changeTitle(valAtT1, valAtT2, prevPeriodString) {
-    const change = this.percentChangeString(valAtT1, valAtT2);
-    const title = [];
-    if (change) {
-      title.push(
-        i18n("admin.dashboard.reports.percent_change_tooltip", {
-          percent: change,
-        })
-      );
-    }
-    title.push(
-      i18n(
-        `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
-        {
-          count: valAtT1,
-          previousValue: number(valAtT1),
-        }
-      )
-    );
-    return title.join(" ");
   }
 
   @computed("yesterdayCount")
@@ -573,6 +500,79 @@ export default class Report extends EmberObject {
         },
       };
     });
+  }
+
+  valueAt(numDaysAgo) {
+    if (this.combinedData) {
+      const wantedDate = moment()
+        .subtract(numDaysAgo, "days")
+        .locale("en")
+        .format("YYYY-MM-DD");
+      const item = this.combinedData.find((d) => d.x === wantedDate);
+      if (item) {
+        return item.y;
+      }
+    }
+    return 0;
+  }
+
+  valueFor(startDaysAgo, endDaysAgo) {
+    if (this.combinedData) {
+      const earliestDate = moment().subtract(endDaysAgo, "days").startOf("day");
+      const latestDate = moment().subtract(startDaysAgo, "days").startOf("day");
+      let d,
+        sum = 0,
+        count = 0;
+      this.combinedData.forEach((datum) => {
+        d = moment(datum.x);
+        if (d >= earliestDate && d <= latestDate) {
+          sum += datum.y;
+          count++;
+        }
+      });
+      if (this.method === "average" && count > 0) {
+        sum /= count;
+      }
+      return round(sum, -2);
+    }
+  }
+
+  averageCount(count, value) {
+    return this.average ? value / count : value;
+  }
+
+  percentChangeString(val1, val2) {
+    const change = this._computeChange(val1, val2);
+
+    if (isNaN(change) || !isFinite(change)) {
+      return null;
+    } else if (change > 0) {
+      return `+${i18n("js.number.percent", { count: change.toFixed(0) })}`;
+    } else {
+      return `${i18n("js.number.percent", { count: change.toFixed(0) })}`;
+    }
+  }
+
+  changeTitle(valAtT1, valAtT2, prevPeriodString) {
+    const change = this.percentChangeString(valAtT1, valAtT2);
+    const title = [];
+    if (change) {
+      title.push(
+        i18n("admin.dashboard.reports.percent_change_tooltip", {
+          percent: change,
+        })
+      );
+    }
+    title.push(
+      i18n(
+        `admin.dashboard.reports.percent_change_tooltip_previous_value.${prevPeriodString}`,
+        {
+          count: valAtT1,
+          previousValue: number(valAtT1),
+        }
+      )
+    );
+    return title.join(" ");
   }
 
   _userLabel(properties, row) {

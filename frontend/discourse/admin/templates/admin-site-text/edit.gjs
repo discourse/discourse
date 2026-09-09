@@ -30,21 +30,21 @@ export default <template>
         <h5>{{i18n "admin.site_text.outdated.new_default"}}</h5>
         <p>{{@controller.siteText.new_default}}</p>
         <DButton
+          class="btn-default"
           @action={{@controller.dismissOutdated}}
           @label="admin.site_text.outdated.dismiss"
-          class="btn-default"
         />
       </div>
     {{/if}}
 
     <DExpandingTextArea
+      class="site-text-value"
+      rows="1"
+      value={{@controller.buffered.value}}
       {{didInsert @controller.registerTextarea}}
       {{on "input" (withEventValue (fn (mut @controller.buffered.value)))}}
       {{on "focusin" @controller.trackTextarea}}
       {{on "focusout" @controller.saveCursorPos}}
-      value={{@controller.buffered.value}}
-      rows="1"
-      class="site-text-value"
     />
 
     <AdminInterpolationKeys
@@ -53,24 +53,24 @@ export default <template>
     />
 
     <DSaveControls
-      @model={{@controller.siteText}}
       @action={{@controller.saveChanges}}
+      @model={{@controller.siteText}}
       @saved={{@controller.saved}}
       @saveDisabled={{@controller.saveDisabled}}
     >
       {{#if @controller.siteText.can_revert}}
         <DButton
+          class="revert-site-text"
           @action={{@controller.revertChanges}}
           @label="admin.site_text.revert"
-          class="revert-site-text"
         />
       {{/if}}
     </DSaveControls>
 
     <LinkTo
-      @route="adminSiteText.index"
-      @query={{hash locale=@controller.locale}}
       class="go-back"
+      @query={{hash locale=@controller.locale}}
+      @route="adminSiteText.index"
     >
       {{dIcon "arrow-left"}}
       {{i18n "admin.site_text.go_back"}}

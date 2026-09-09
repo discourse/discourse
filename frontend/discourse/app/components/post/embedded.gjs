@@ -13,11 +13,11 @@ const PostEmbedded = <template>
           <PostMetaDataPosterName @post={{@post}} />
           <div class="post-link-arrow">
             <a
-              class="post-info arrow"
               aria-label={{i18n
                 "topic.jump_reply_aria"
                 username=@post.username
               }}
+              class="post-info arrow"
               href={{@post.shareUrl}}
               title={{i18n "topic.jump_reply"}}
             >
@@ -31,8 +31,8 @@ const PostEmbedded = <template>
           </div>
         </div>
         <PostCookedHtml
-          @post={{@post}}
           @highlightTerm={{@highlightTerm}}
+          @post={{@post}}
           @streamElement={{@streamElement}}
         />
       </div>

@@ -62,8 +62,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash excludeCategoryId=2}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -77,8 +77,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash scopedCategoryId=2}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -108,8 +108,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash prioritizedCategoryId=5}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -146,8 +146,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -166,8 +166,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -183,8 +183,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -202,8 +202,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null none=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -219,8 +219,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=null none="test.root"}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -235,8 +235,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -251,8 +251,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=true none=true}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -268,8 +268,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash allowUncategorized=true none="test.root"}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -325,8 +325,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash scopedCategoryId=1}}
+            @value={{this.value}}
           />
         </template>
       );
@@ -357,8 +357,8 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{this.value}}
             @options={{hash scopedCategoryId=1}}
+            @value={{this.value}}
           />
         </template>
       );

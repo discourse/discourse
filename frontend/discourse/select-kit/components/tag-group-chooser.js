@@ -22,10 +22,6 @@ import TagChooserRow from "./tag-chooser-row";
 export default class TagGroupChooser extends MultiSelectComponent {
   @service tagUtils;
 
-  modifyComponentForRow() {
-    return TagChooserRow;
-  }
-
   @computed("tagGroups.[]")
   get value() {
     return uniqueItemsFromArray(makeArray(this.tagGroups));
@@ -36,6 +32,10 @@ export default class TagGroupChooser extends MultiSelectComponent {
     return uniqueItemsFromArray(makeArray(this.tagGroups)).map((t) =>
       this.defaultItem(t, t)
     );
+  }
+
+  modifyComponentForRow() {
+    return TagChooserRow;
   }
 
   validateCreate(filter, content) {

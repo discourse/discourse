@@ -174,17 +174,17 @@ export default class VoiceRoomInfoModal extends Component {
 
   <template>
     <DModal
+      class="voice-room-info-modal"
       @closeModal={{@closeModal}}
       @title={{if this.isEditing (i18n "voice.room.edit")}}
-      class="voice-room-info-modal"
     >
       <:body>
         {{#if this.isEditing}}
           <div class="voice-room-info-modal__edit-form">
             <VoiceRoomForm
-              @room={{this.room}}
-              @onSubmit={{this.handleEdit}}
               @onManageMembers={{this.stopEditing}}
+              @onSubmit={{this.handleEdit}}
+              @room={{this.room}}
             />
           </div>
         {{else}}
@@ -207,10 +207,10 @@ export default class VoiceRoomInfoModal extends Component {
             </div>
             {{#if this.room.can_manage}}
               <DButton
+                class="btn-flat voice-room-info-modal__edit-btn"
                 @action={{this.startEditing}}
                 @icon="pencil"
                 @title="voice.room.edit"
-                class="btn-flat voice-room-info-modal__edit-btn"
               />
             {{/if}}
           </div>
@@ -302,17 +302,17 @@ export default class VoiceRoomInfoModal extends Component {
                       {{#if (notEq membership.user_id this.room.creator_id)}}
                         <div class="voice-room-info-modal__member-actions">
                           <ComboBox
+                            class="voice-room-info-modal__role-select"
                             @content={{this.roleOptions}}
-                            @value={{membership.role_name}}
                             @onChange={{fn this.updateMemberRole membership}}
                             @options={{hash none=false}}
-                            class="voice-room-info-modal__role-select"
+                            @value={{membership.role_name}}
                           />
                           <DButton
+                            class="btn-flat btn-small voice-room-info-modal__remove-btn"
                             @action={{fn this.removeMember membership}}
                             @icon="xmark"
                             @title="voice.room_info.members.remove"
-                            class="btn-flat btn-small voice-room-info-modal__remove-btn"
                           />
                         </div>
                       {{/if}}
@@ -323,27 +323,27 @@ export default class VoiceRoomInfoModal extends Component {
                 <div class="voice-room-info-modal__add-member">
                   <div class="voice-room-info-modal__add-row">
                     <UserChooser
-                      @value={{this.selectedUsernames}}
+                      class="voice-room-info-modal__user-chooser"
                       @onChange={{this.setSelectedUsernames}}
                       @options={{hash
                         excludeCurrentUser=false
                         filterPlaceholder="voice.room_info.members.add_placeholder"
                       }}
-                      class="voice-room-info-modal__user-chooser"
+                      @value={{this.selectedUsernames}}
                     />
                     <ComboBox
+                      class="voice-room-info-modal__role-chooser"
                       @content={{this.roleOptions}}
-                      @value={{this.selectedRole}}
                       @onChange={{this.setSelectedRole}}
                       @options={{hash none=false}}
-                      class="voice-room-info-modal__role-chooser"
+                      @value={{this.selectedRole}}
                     />
                     <DButton
-                      @action={{this.addMember}}
-                      @icon="plus"
-                      @disabled={{this.addingMember}}
-                      @title="voice.room_info.members.add_button"
                       class="btn-primary voice-room-info-modal__add-btn"
+                      @action={{this.addMember}}
+                      @disabled={{this.addingMember}}
+                      @icon="plus"
+                      @title="voice.room_info.members.add_button"
                     />
                   </div>
                 </div>

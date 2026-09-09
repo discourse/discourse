@@ -52,10 +52,10 @@ module("Integration | ui-kit | DVirtualList | mount order", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @key="id"
           @estimateSize={{estimate}}
           @initialIndex={{INITIAL_INDEX}}
+          @items={{items}}
+          @key="id"
           @onRegisterApi={{onRegisterApi}}
           as |item|
         >
@@ -91,10 +91,10 @@ module("Integration | ui-kit | DVirtualList | mount order", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{items}}
-          @key="id"
           @estimateSize={{estimate}}
           @initialIndex={{INITIAL_INDEX}}
+          @items={{items}}
+          @key="id"
           @onRegisterApi={{onRegisterApi}}
           as |item|
         >

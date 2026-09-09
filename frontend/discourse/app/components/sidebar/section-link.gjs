@@ -249,8 +249,8 @@ export default class SectionLink extends Component {
   <template>
     {{#if this.shouldDisplay}}
       <li
-        data-list-item-name={{@linkName}}
         class={{this.wrapperClass}}
+        data-list-item-name={{@linkName}}
         ...attributes
         {{didInsert this.maybeScrollIntoView}}
         {{didUpdate this.revealActiveLink @scrollIntoView}}
@@ -259,20 +259,20 @@ export default class SectionLink extends Component {
       >
         {{#if @href}}
           <a
+            class={{this.linkClass}}
+            data-link-name={{@linkName}}
+            draggable={{if @suppressNativeDrag false}}
             href={{@href}}
             rel="noopener noreferrer"
             target={{this.target}}
-            draggable={{if @suppressNativeDrag false}}
             title={{@title}}
-            data-link-name={{@linkName}}
-            class={{this.linkClass}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
@@ -313,11 +313,11 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
                   aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{dIcon @hoverValue class="hover-icon"}}
@@ -328,21 +328,21 @@ export default class SectionLink extends Component {
           </a>
         {{else}}
           <LinkTo
-            @route={{@route}}
-            @query={{or @query (hash)}}
-            @models={{this.models}}
-            @current-when={{this.resolvedCurrentWhen}}
+            class={{this.linkClass}}
+            data-link-name={{@linkName}}
             draggable={{if @suppressNativeDrag false}}
             title={{@title}}
-            data-link-name={{@linkName}}
-            class={{this.linkClass}}
+            @current-when={{this.resolvedCurrentWhen}}
+            @models={{this.models}}
+            @query={{or @query (hash)}}
+            @route={{@route}}
           >
             <SectionLinkPrefix
+              @prefixBadge={{@prefixBadge}}
+              @prefixColor={{this.prefixColor}}
+              @prefixCSSClass={{@prefixCSSClass}}
               @prefixType={{@prefixType}}
               @prefixValue={{@prefixValue}}
-              @prefixCSSClass={{@prefixCSSClass}}
-              @prefixColor={{this.prefixColor}}
-              @prefixBadge={{@prefixBadge}}
             />
 
             <span
@@ -382,11 +382,11 @@ export default class SectionLink extends Component {
             {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
-                  {{on "click" this.runHoverAction}}
-                  type="button"
-                  title={{@hoverTitle}}
                   aria-label={{@hoverTitle}}
                   class="sidebar-section-hover-button btn-flat"
+                  title={{@hoverTitle}}
+                  type="button"
+                  {{on "click" this.runHoverAction}}
                 >
                   {{#if (eq @hoverType "icon")}}
                     {{dIcon @hoverValue class="hover-icon"}}

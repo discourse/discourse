@@ -323,20 +323,20 @@ const TranslationRow = <template>
       </label>
 
       <Input
-        @type="text"
-        @value={{@localization.value}}
-        id={{inputId}}
         class="sidebar-section-translations__value
           {{unless @localization.translated '--untranslated'}}"
+        id={{inputId}}
+        lang={{@localization.locale}}
         placeholder={{i18n
           "sidebar.sections.custom.localizations.untranslated"
         }}
-        lang={{@localization.locale}}
+        @type="text"
+        @value={{@localization.value}}
         {{on "input" (withEventValue (fn (mut @localization.value)))}}
       />
 
       {{#if @localization.invalidMessage}}
-        <div role="alert" aria-live="assertive" class="warning">
+        <div aria-live="assertive" class="warning" role="alert">
           {{@localization.invalidMessage}}
         </div>
       {{/if}}
@@ -412,68 +412,6 @@ export default class SidebarSectionForm extends Component {
     }
   }
 
-  initLink(link, sectionLocale) {
-    return new SectionLink({
-      router: this.router,
-      icon: link.icon,
-      name: link.name,
-      value: link.value,
-      id: link.id,
-      objectId: this.nextObjectId,
-      segment: link.segment,
-      localizations: this.initLocalizations(
-        link.localizations,
-        LinkLocalization
-      ),
-      locale: link.locale || sectionLocale,
-      canLocalize: link.can_localize ?? link.canLocalize,
-    });
-  }
-
-  initLocalizations(localizations, klass) {
-    return (localizations || []).map((localization) => new klass(localization));
-  }
-
-  create() {
-    return ajax(`/sidebar_sections`, {
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        title: this.transformedModel.title,
-        public: this.transformedModel.public,
-        locale: this.serializeSectionSourceLocale(),
-        localizations: this.serializeSectionLocalizations(),
-        links: this.transformedModel.links.map((link) => {
-          return {
-            icon: link.icon,
-            name: link.name,
-            value: link.path,
-            locale: this.serializeLinkSourceLocale(link),
-            localizations: this.serializeLinkLocalizations(link),
-          };
-        }),
-      }),
-    })
-      .then((data) => {
-        this.currentUser.set(
-          "sidebar_sections",
-          this.currentUser.sidebar_sections.concat(data.sidebar_section)
-        );
-        this.closeModal({ createdSection: data.sidebar_section });
-      })
-      .catch((e) => {
-        this.flash = sanitize(extractError(e));
-        this.flashType = "error";
-      });
-  }
-
-  update() {
-    return this.wasPublic || this.isPublic
-      ? this.#updateWithConfirm()
-      : this.#updateCall();
-  }
-
   get clearedTranslationCount() {
     const cleared = (record) =>
       record.localizations.filter(
@@ -485,73 +423,6 @@ export default class SidebarSectionForm extends Component {
       (this.showLocalizations ? cleared(this.transformedModel) : 0) +
       this.localizableLinks.reduce((count, link) => count + cleared(link), 0)
     );
-  }
-
-  #updateWithConfirm() {
-    const messages = [
-      this.isPublic
-        ? i18n("sidebar.sections.custom.update_public_confirm")
-        : i18n("sidebar.sections.custom.mark_as_private_confirm"),
-    ];
-
-    if (this.clearedTranslationCount > 0) {
-      messages.push(
-        i18n("sidebar.sections.custom.localizations.remove_cleared_confirm", {
-          count: this.clearedTranslationCount,
-        })
-      );
-    }
-
-    return this.dialog.yesNoConfirm({
-      message: messages.join("<br><br>"),
-      didConfirm: () => {
-        return this.#updateCall();
-      },
-    });
-  }
-
-  #updateCall() {
-    return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
-      type: "PUT",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify({
-        title: this.transformedModel.title,
-        public: this.transformedModel.public,
-        locale: this.serializeSectionSourceLocale(),
-        localizations: this.serializeSectionLocalizations(),
-        links: this.transformedModel.links
-          .concat(this.transformedModel?.secondaryLinks || [])
-          .map((link) => {
-            return {
-              id: link.id,
-              icon: link.icon,
-              name: link.name,
-              value: link.path,
-              segment: link.segment,
-              _destroy: link._destroy,
-              locale: this.serializeLinkSourceLocale(link),
-              localizations: this.serializeLinkLocalizations(link),
-            };
-          }),
-      }),
-    })
-      .then((data) => {
-        const newSidebarSections = this.currentUser.sidebar_sections.map(
-          (section) => {
-            if (section.id === data["sidebar_section"].id) {
-              return data["sidebar_section"];
-            }
-            return section;
-          }
-        );
-        this.currentUser.set("sidebar_sections", newSidebarSections);
-        this.closeModal();
-      })
-      .catch((e) => {
-        this.flash = sanitize(extractError(e));
-        this.flashType = "error";
-      });
   }
 
   get activeLinks() {
@@ -651,18 +522,6 @@ export default class SidebarSectionForm extends Component {
     return this.transformedModel.links
       .concat(this.transformedModel.secondaryLinks || [])
       .filter((link) => !link._destroy && this.canLocalizeLink(link));
-  }
-
-  canLocalizeLink(link) {
-    return this.transformedModel.customSection || link.canLocalize;
-  }
-
-  #activeLocalizations(record) {
-    return record.localizations.filter(
-      (localization) =>
-        !localization._destroy &&
-        !isSameLocale(localization.locale, record.locale)
-    );
   }
 
   @cached
@@ -770,48 +629,6 @@ export default class SidebarSectionForm extends Component {
     );
   }
 
-  #isTranslationTarget(locale) {
-    if (
-      this.showLocalizations &&
-      !isSameLocale(locale, this.transformedModel.locale)
-    ) {
-      return true;
-    }
-
-    return this.localizableLinks.some(
-      (link) => !isSameLocale(link.locale, locale)
-    );
-  }
-
-  #groupKey(locale) {
-    if (!this.groupKeys.has(locale)) {
-      this.groupKeys.set(locale, `group-${this.nextGroupKey++}`);
-    }
-
-    return this.groupKeys.get(locale);
-  }
-
-  #localeOptionsFor(locale) {
-    const options = this.localeOptions;
-    const own = options.some((option) => option.value === locale)
-      ? []
-      : this.#toLocaleOptions([locale]);
-
-    return [...options, ...own].map((option) => ({
-      ...option,
-      disabled:
-        option.value !== locale &&
-        this.translationLocales.includes(option.value),
-    }));
-  }
-
-  #toLocaleOptions(locales) {
-    return uniqueItemsFromArray(locales.filter(Boolean)).map((locale) => ({
-      name: this.languageNameLookup.getLanguageName(locale),
-      value: locale,
-    }));
-  }
-
   get showLocalizations() {
     return (
       this.currentUser?.admin &&
@@ -843,6 +660,76 @@ export default class SidebarSectionForm extends Component {
 
   get wasPublic() {
     return this.model?.section?.public;
+  }
+
+  get canDelete() {
+    return this.transformedModel.id && !this.transformedModel.sectionType;
+  }
+
+  initLink(link, sectionLocale) {
+    return new SectionLink({
+      router: this.router,
+      icon: link.icon,
+      name: link.name,
+      value: link.value,
+      id: link.id,
+      objectId: this.nextObjectId,
+      segment: link.segment,
+      localizations: this.initLocalizations(
+        link.localizations,
+        LinkLocalization
+      ),
+      locale: link.locale || sectionLocale,
+      canLocalize: link.can_localize ?? link.canLocalize,
+    });
+  }
+
+  initLocalizations(localizations, klass) {
+    return (localizations || []).map((localization) => new klass(localization));
+  }
+
+  create() {
+    return ajax(`/sidebar_sections`, {
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        locale: this.serializeSectionSourceLocale(),
+        localizations: this.serializeSectionLocalizations(),
+        links: this.transformedModel.links.map((link) => {
+          return {
+            icon: link.icon,
+            name: link.name,
+            value: link.path,
+            locale: this.serializeLinkSourceLocale(link),
+            localizations: this.serializeLinkLocalizations(link),
+          };
+        }),
+      }),
+    })
+      .then((data) => {
+        this.currentUser.set(
+          "sidebar_sections",
+          this.currentUser.sidebar_sections.concat(data.sidebar_section)
+        );
+        this.closeModal({ createdSection: data.sidebar_section });
+      })
+      .catch((e) => {
+        this.flash = sanitize(extractError(e));
+        this.flashType = "error";
+      });
+  }
+
+  update() {
+    return this.wasPublic || this.isPublic
+      ? this.#updateWithConfirm()
+      : this.#updateCall();
+  }
+
+  canLocalizeLink(link) {
+    return this.transformedModel.customSection || link.canLocalize;
   }
 
   @afterRender
@@ -891,10 +778,6 @@ export default class SidebarSectionForm extends Component {
     );
   }
 
-  get canDelete() {
-    return this.transformedModel.id && !this.transformedModel.sectionType;
-  }
-
   @bind
   deleteLink(link) {
     if (link.id) {
@@ -912,12 +795,6 @@ export default class SidebarSectionForm extends Component {
   showTranslations() {
     this.#syncLocalizationSlots();
     this.showingTranslations = true;
-  }
-
-  #syncLocalizationSlots() {
-    this.translationGroups
-      .map((group) => group.locale)
-      .forEach((locale) => this.#addLocalizationSlots(locale));
   }
 
   @action
@@ -981,84 +858,6 @@ export default class SidebarSectionForm extends Component {
     this.#addLocalizationSlots(locale);
   }
 
-  #moveLocalization(localizations, localization, locale) {
-    if (!localization || localization.locale === locale) {
-      return;
-    }
-
-    const occupant = localizations.find(
-      (other) => other !== localization && other.locale === locale
-    );
-
-    if (!occupant) {
-      localization.locale = locale;
-      return;
-    }
-
-    occupant.value = localization.value;
-    occupant._destroy = undefined;
-    this.#discardLocalization(localizations, localization);
-  }
-
-  #addLocalizationSlots(locale) {
-    if (
-      this.showLocalizations &&
-      !isSameLocale(locale, this.transformedModel.locale) &&
-      !this.#reclaimLocalization(this.transformedModel.localizations, locale)
-    ) {
-      this.transformedModel.localizations.push(
-        new SectionLocalization({ locale })
-      );
-    }
-
-    this.localizableLinks.forEach((link) => {
-      if (isSameLocale(link.locale, locale)) {
-        return;
-      }
-
-      if (!this.#reclaimLocalization(link.localizations, locale)) {
-        link.localizations.push(new LinkLocalization({ locale }));
-      }
-    });
-  }
-
-  #reclaimLocalization(localizations, locale) {
-    const existing = localizations.find(
-      (localization) => localization.locale === locale
-    );
-
-    if (existing) {
-      existing._destroy = undefined;
-    }
-
-    return existing;
-  }
-
-  #removeLocalizationSlots(locale) {
-    this.groupKeys.delete(locale);
-
-    this.#discardLocalizations(this.transformedModel.localizations, locale);
-    this.localizableLinks.forEach((link) =>
-      this.#discardLocalizations(link.localizations, locale)
-    );
-  }
-
-  #discardLocalizations(localizations, locale) {
-    localizations
-      .filter((localization) => localization.locale === locale)
-      .forEach((localization) =>
-        this.#discardLocalization(localizations, localization)
-      );
-  }
-
-  #discardLocalization(localizations, localization) {
-    if (localization.id) {
-      localization._destroy = "1";
-    } else {
-      removeValueFromArray(localizations, localization);
-    }
-  }
-
   @action
   setSourceLocale(locale) {
     this.transformedModel.locale = locale;
@@ -1097,24 +896,6 @@ export default class SidebarSectionForm extends Component {
     }
 
     return this.#serializeLocalizations(link.localizations);
-  }
-
-  #serializeLocalizations(localizations) {
-    return localizations
-      .map((localization) => {
-        const { id, locale, _destroy, translated } = localization;
-
-        if (_destroy || !translated) {
-          return id ? { id, locale, _destroy: "1" } : null;
-        }
-
-        return {
-          id,
-          locale,
-          [localization.constructor.key]: localization.value,
-        };
-      })
-      .filter(Boolean);
   }
 
   @action
@@ -1211,24 +992,243 @@ export default class SidebarSectionForm extends Component {
     });
   }
 
+  #updateWithConfirm() {
+    const messages = [
+      this.isPublic
+        ? i18n("sidebar.sections.custom.update_public_confirm")
+        : i18n("sidebar.sections.custom.mark_as_private_confirm"),
+    ];
+
+    if (this.clearedTranslationCount > 0) {
+      messages.push(
+        i18n("sidebar.sections.custom.localizations.remove_cleared_confirm", {
+          count: this.clearedTranslationCount,
+        })
+      );
+    }
+
+    return this.dialog.yesNoConfirm({
+      message: messages.join("<br><br>"),
+      didConfirm: () => {
+        return this.#updateCall();
+      },
+    });
+  }
+
+  #updateCall() {
+    return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
+      type: "PUT",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        locale: this.serializeSectionSourceLocale(),
+        localizations: this.serializeSectionLocalizations(),
+        links: this.transformedModel.links
+          .concat(this.transformedModel?.secondaryLinks || [])
+          .map((link) => {
+            return {
+              id: link.id,
+              icon: link.icon,
+              name: link.name,
+              value: link.path,
+              segment: link.segment,
+              _destroy: link._destroy,
+              locale: this.serializeLinkSourceLocale(link),
+              localizations: this.serializeLinkLocalizations(link),
+            };
+          }),
+      }),
+    })
+      .then((data) => {
+        const newSidebarSections = this.currentUser.sidebar_sections.map(
+          (section) => {
+            if (section.id === data["sidebar_section"].id) {
+              return data["sidebar_section"];
+            }
+            return section;
+          }
+        );
+        this.currentUser.set("sidebar_sections", newSidebarSections);
+        this.closeModal();
+      })
+      .catch((e) => {
+        this.flash = sanitize(extractError(e));
+        this.flashType = "error";
+      });
+  }
+
+  #activeLocalizations(record) {
+    return record.localizations.filter(
+      (localization) =>
+        !localization._destroy &&
+        !isSameLocale(localization.locale, record.locale)
+    );
+  }
+
+  #isTranslationTarget(locale) {
+    if (
+      this.showLocalizations &&
+      !isSameLocale(locale, this.transformedModel.locale)
+    ) {
+      return true;
+    }
+
+    return this.localizableLinks.some(
+      (link) => !isSameLocale(link.locale, locale)
+    );
+  }
+
+  #groupKey(locale) {
+    if (!this.groupKeys.has(locale)) {
+      this.groupKeys.set(locale, `group-${this.nextGroupKey++}`);
+    }
+
+    return this.groupKeys.get(locale);
+  }
+
+  #localeOptionsFor(locale) {
+    const options = this.localeOptions;
+    const own = options.some((option) => option.value === locale)
+      ? []
+      : this.#toLocaleOptions([locale]);
+
+    return [...options, ...own].map((option) => ({
+      ...option,
+      disabled:
+        option.value !== locale &&
+        this.translationLocales.includes(option.value),
+    }));
+  }
+
+  #toLocaleOptions(locales) {
+    return uniqueItemsFromArray(locales.filter(Boolean)).map((locale) => ({
+      name: this.languageNameLookup.getLanguageName(locale),
+      value: locale,
+    }));
+  }
+
+  #syncLocalizationSlots() {
+    this.translationGroups
+      .map((group) => group.locale)
+      .forEach((locale) => this.#addLocalizationSlots(locale));
+  }
+
+  #moveLocalization(localizations, localization, locale) {
+    if (!localization || localization.locale === locale) {
+      return;
+    }
+
+    const occupant = localizations.find(
+      (other) => other !== localization && other.locale === locale
+    );
+
+    if (!occupant) {
+      localization.locale = locale;
+      return;
+    }
+
+    occupant.value = localization.value;
+    occupant._destroy = undefined;
+    this.#discardLocalization(localizations, localization);
+  }
+
+  #addLocalizationSlots(locale) {
+    if (
+      this.showLocalizations &&
+      !isSameLocale(locale, this.transformedModel.locale) &&
+      !this.#reclaimLocalization(this.transformedModel.localizations, locale)
+    ) {
+      this.transformedModel.localizations.push(
+        new SectionLocalization({ locale })
+      );
+    }
+
+    this.localizableLinks.forEach((link) => {
+      if (isSameLocale(link.locale, locale)) {
+        return;
+      }
+
+      if (!this.#reclaimLocalization(link.localizations, locale)) {
+        link.localizations.push(new LinkLocalization({ locale }));
+      }
+    });
+  }
+
+  #reclaimLocalization(localizations, locale) {
+    const existing = localizations.find(
+      (localization) => localization.locale === locale
+    );
+
+    if (existing) {
+      existing._destroy = undefined;
+    }
+
+    return existing;
+  }
+
+  #removeLocalizationSlots(locale) {
+    this.groupKeys.delete(locale);
+
+    this.#discardLocalizations(this.transformedModel.localizations, locale);
+    this.localizableLinks.forEach((link) =>
+      this.#discardLocalizations(link.localizations, locale)
+    );
+  }
+
+  #discardLocalizations(localizations, locale) {
+    localizations
+      .filter((localization) => localization.locale === locale)
+      .forEach((localization) =>
+        this.#discardLocalization(localizations, localization)
+      );
+  }
+
+  #discardLocalization(localizations, localization) {
+    if (localization.id) {
+      localization._destroy = "1";
+    } else {
+      removeValueFromArray(localizations, localization);
+    }
+  }
+
+  #serializeLocalizations(localizations) {
+    return localizations
+      .map((localization) => {
+        const { id, locale, _destroy, translated } = localization;
+
+        if (_destroy || !translated) {
+          return id ? { id, locale, _destroy: "1" } : null;
+        }
+
+        return {
+          id,
+          locale,
+          [localization.constructor.key]: localization.value,
+        };
+      })
+      .filter(Boolean);
+  }
+
   <template>
     <DModal
+      class="sidebar-section-form-modal --large"
       @autofocus={{this.modalAutofocus}}
       @closeModal={{@closeModal}}
-      @inline={{@inline}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
+      @inline={{@inline}}
       @title={{i18n this.header}}
-      class="sidebar-section-form-modal --large"
     >
       <:body>
         {{#if this.showingTranslations}}
           <div class="sidebar-section-translations">
             <DButton
+              class="btn-flat btn-text sidebar-section-translations__back"
               @action={{this.hideTranslations}}
               @icon="chevron-left"
               @label="sidebar.sections.custom.localizations.back"
-              class="btn-flat btn-text sidebar-section-translations__back"
             />
 
             {{#each this.translationGroups key="key" as |group|}}
@@ -1238,28 +1238,28 @@ export default class SidebarSectionForm extends Component {
               >
                 <div class="sidebar-section-translations__language-header">
                   <DNativeSelect
-                    @value={{group.locale}}
-                    @onChange={{fn this.setGroupLocale group}}
-                    @includeNone={{false}}
-                    class="sidebar-section-translations__language-select"
                     aria-label={{i18n
                       "sidebar.sections.custom.localizations.locale"
                     }}
+                    class="sidebar-section-translations__language-select"
+                    @includeNone={{false}}
+                    @onChange={{fn this.setGroupLocale group}}
+                    @value={{group.locale}}
                     as |select|
                   >
                     {{#each group.localeOptions key="value" as |locale|}}
                       <select.Option
-                        @value={{locale.value}}
                         disabled={{locale.disabled}}
+                        @value={{locale.value}}
                       >{{locale.name}}</select.Option>
                     {{/each}}
                   </DNativeSelect>
 
                   <DButton
+                    class="btn-flat btn-text sidebar-section-translations__remove-language"
                     @action={{fn this.removeLanguage group}}
                     @icon="trash-can"
                     @label="sidebar.sections.custom.localizations.remove_language"
-                    class="btn-flat btn-text sidebar-section-translations__remove-language"
                   />
                 </div>
 
@@ -1269,8 +1269,8 @@ export default class SidebarSectionForm extends Component {
                   </div>
 
                   <TranslationRow
-                    @source={{this.transformedModel.title}}
                     @localization={{group.sectionLocalization}}
+                    @source={{this.transformedModel.title}}
                   />
                 {{/if}}
 
@@ -1281,8 +1281,8 @@ export default class SidebarSectionForm extends Component {
 
                   {{#each group.links key="link.objectId" as |entry|}}
                     <TranslationRow
-                      @source={{entry.link.name}}
                       @localization={{entry.localization}}
+                      @source={{entry.link.name}}
                     />
                   {{/each}}
                 {{/if}}
@@ -1291,10 +1291,10 @@ export default class SidebarSectionForm extends Component {
 
             {{#if this.nextTranslationLocale}}
               <DButton
+                class="btn-flat btn-text sidebar-section-translations__add-language"
                 @action={{this.addLanguage}}
                 @icon="plus"
                 @label="sidebar.sections.custom.localizations.add_language"
-                class="btn-flat btn-text sidebar-section-translations__add-language"
               />
             {{/if}}
           </div>
@@ -1307,11 +1307,11 @@ export default class SidebarSectionForm extends Component {
                 </label>
 
                 <DNativeSelect
-                  @value={{this.transformedModel.locale}}
-                  @onChange={{this.setSourceLocale}}
-                  @includeNone={{false}}
                   class="sidebar-section-form__source-locale-select"
                   id="section-source-locale"
+                  @includeNone={{false}}
+                  @onChange={{this.setSourceLocale}}
+                  @value={{this.transformedModel.locale}}
                   as |select|
                 >
                   {{#each this.sourceLocaleOptions as |locale|}}
@@ -1336,11 +1336,11 @@ export default class SidebarSectionForm extends Component {
                 </label>
 
                 <Input
+                  class={{this.transformedModel.titleCssClass}}
+                  id="section-name"
                   name="section-name"
                   @type="text"
                   @value={{this.transformedModel.title}}
-                  class={{this.transformedModel.titleCssClass}}
-                  id="section-name"
                   {{on
                     "input"
                     (withEventValue (fn (mut this.transformedModel.title)))
@@ -1356,24 +1356,24 @@ export default class SidebarSectionForm extends Component {
             {{/unless}}
 
             <div
-              id="section-links-label"
               class="sidebar-section-form__links-label"
+              id="section-links-label"
             >
               {{i18n "sidebar.sections.custom.links.title"}}
             </div>
 
             <div
-              role="table"
               aria-labelledby="section-links-label"
               aria-rowcount={{this.activeLinks.length}}
               class="sidebar-section-form__links-wrapper"
+              role="table"
             >
 
               <div class="row-wrapper header" role="row">
                 <div
+                  aria-sort="none"
                   class="input-group link-icon"
                   role="columnheader"
-                  aria-sort="none"
                 >
                   {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label>{{i18n
@@ -1382,9 +1382,9 @@ export default class SidebarSectionForm extends Component {
                 </div>
 
                 <div
+                  aria-sort="none"
                   class="input-group link-name"
                   role="columnheader"
-                  aria-sort="none"
                 >
                   {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label>{{i18n
@@ -1393,9 +1393,9 @@ export default class SidebarSectionForm extends Component {
                 </div>
 
                 <div
+                  aria-sort="none"
                   class="input-group link-url"
                   role="columnheader"
-                  aria-sort="none"
                 >
                   {{! eslint-disable-next-line ember/template-no-nested-interactive }}
                   <label>{{i18n
@@ -1406,18 +1406,18 @@ export default class SidebarSectionForm extends Component {
 
               {{#each this.activeLinks key="objectId" as |link index|}}
                 <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveLinkIndex}}
-                  @focusNameInput={{eq
-                    link.objectId
-                    this.initialFocusLinkObjectId
-                  }}
+                  @deleteLink={{this.deleteLink}}
                   @duplicateValue={{has
                     this.duplicateLinkObjectIds
                     link.objectId
                   }}
-                  @deleteLink={{this.deleteLink}}
+                  @focusNameInput={{eq
+                    link.objectId
+                    this.initialFocusLinkObjectId
+                  }}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveLinkIndex}}
+                  @link={{link}}
                   @reorderCallback={{this.reorder}}
                   @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
@@ -1425,12 +1425,12 @@ export default class SidebarSectionForm extends Component {
 
             </div>
             <DButton
+              class="btn-flat btn-text add-link"
               @action={{this.addLink}}
-              @title="sidebar.sections.custom.links.add"
+              @ariaLabel="sidebar.sections.custom.links.add"
               @icon="plus"
               @label="sidebar.sections.custom.links.add"
-              @ariaLabel="sidebar.sections.custom.links.add"
-              class="btn-flat btn-text add-link"
+              @title="sidebar.sections.custom.links.add"
             />
 
             {{#if this.transformedModel.sectionType}}
@@ -1438,25 +1438,25 @@ export default class SidebarSectionForm extends Component {
               <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
               {{#each this.activeSecondaryLinks key="objectId" as |link index|}}
                 <SectionFormLink
-                  @link={{link}}
-                  @index={{index}}
-                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
+                  @deleteLink={{this.deleteLink}}
                   @duplicateValue={{has
                     this.duplicateLinkObjectIds
                     link.objectId
                   }}
-                  @deleteLink={{this.deleteLink}}
+                  @index={{index}}
+                  @lastIndex={{this.lastActiveSecondaryLinkIndex}}
+                  @link={{link}}
                   @reorderCallback={{this.reorder}}
                   @setDraggedLinkCallback={{this.setDraggedLink}}
                 />
               {{/each}}
               <DButton
+                class="btn-flat btn-text add-link"
                 @action={{this.addSecondaryLink}}
-                @title="sidebar.sections.custom.links.add"
+                @ariaLabel="sidebar.sections.custom.links.add"
                 @icon="plus"
                 @label="sidebar.sections.custom.links.add"
-                @ariaLabel="sidebar.sections.custom.links.add"
-                class="btn-flat btn-text add-link"
+                @title="sidebar.sections.custom.links.add"
               />
             {{/if}}
 
@@ -1464,10 +1464,10 @@ export default class SidebarSectionForm extends Component {
               <hr />
 
               <DButton
+                class="btn-flat btn-text sidebar-section-form__manage-translations"
                 @action={{this.showTranslations}}
                 @icon="globe"
                 @translatedLabel={{this.translationsLabel}}
-                class="btn-flat btn-text sidebar-section-form__manage-translations"
               >
                 {{#if this.missingTranslationCount}}
                   <span class="sidebar-section-form__translations-incomplete">
@@ -1484,12 +1484,12 @@ export default class SidebarSectionForm extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
+          id="save-section"
           @action={{this.save}}
-          @label="sidebar.sections.custom.save"
           @ariaLabel="sidebar.sections.custom.save"
           @disabled={{not this.transformedModel.valid}}
-          id="save-section"
-          class="btn-primary"
+          @label="sidebar.sections.custom.save"
         />
         {{#if this.currentUser.admin}}
           <div
@@ -1499,8 +1499,8 @@ export default class SidebarSectionForm extends Component {
             <label class="checkbox-label">
               {{#if this.transformedModel.sectionType}}
                 <DTooltip
-                  @content={{i18n "sidebar.sections.custom.always_public"}}
                   class="always-public-tooltip"
+                  @content={{i18n "sidebar.sections.custom.always_public"}}
                 >
                   <:trigger>
                     {{dIcon "square-check"}}
@@ -1509,10 +1509,10 @@ export default class SidebarSectionForm extends Component {
                 </DTooltip>
               {{else}}
                 <Input
-                  @type="checkbox"
-                  @checked={{this.transformedModel.public}}
                   class="mark-public"
                   disabled={{this.transformedModel.sectionType}}
+                  @checked={{this.transformedModel.public}}
+                  @type="checkbox"
                   {{on "change" this.setPublic}}
                 />
                 <span>{{i18n "sidebar.sections.custom.public"}}</span>
@@ -1522,22 +1522,22 @@ export default class SidebarSectionForm extends Component {
         {{/if}}
         {{#if this.canDelete}}
           <DButton
-            @icon="trash-can"
-            @action={{this.delete}}
-            @label="sidebar.sections.custom.delete"
-            @ariaLabel="sidebar.sections.custom.delete"
-            id="delete-section"
             class="btn-danger delete"
+            id="delete-section"
+            @action={{this.delete}}
+            @ariaLabel="sidebar.sections.custom.delete"
+            @icon="trash-can"
+            @label="sidebar.sections.custom.delete"
           />
         {{/if}}
         {{#if this.transformedModel.sectionType}}
           <DButton
-            @action={{this.resetToDefault}}
-            @icon="arrow-rotate-left"
-            @title="sidebar.sections.custom.links.reset"
-            @label="sidebar.sections.custom.links.reset"
-            @ariaLabel="sidebar.sections.custom.links.reset"
             class="btn-flat btn-text reset-link"
+            @action={{this.resetToDefault}}
+            @ariaLabel="sidebar.sections.custom.links.reset"
+            @icon="arrow-rotate-left"
+            @label="sidebar.sections.custom.links.reset"
+            @title="sidebar.sections.custom.links.reset"
           />
         {{/if}}
       </:footer>

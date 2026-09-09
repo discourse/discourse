@@ -90,24 +90,24 @@ export default class PostEventInviteesModal extends Component {
 
   <template>
     <DModal
-      @title={{this.title}}
-      @closeModal={{@closeModal}}
       class={{dConcatClass
         (or @model.extraClass "invited")
         "post-event-invitees-modal"
       }}
+      @closeModal={{@closeModal}}
+      @title={{this.title}}
     >
       <:body>
         <input
-          {{on "input" this.onFilterChanged}}
-          type="text"
+          class="filter"
           placeholder={{i18n
             "discourse_post_event.invitees_modal.filter_placeholder"
           }}
-          class="filter"
+          type="text"
+          {{on "input" this.onFilterChanged}}
         />
 
-        <ToggleInvitees @viewType={{this.type}} @toggle={{this.toggleType}} />
+        <ToggleInvitees @toggle={{this.toggleType}} @viewType={{this.type}} />
         <DConditionalLoadingSpinner @condition={{this.isLoading}}>
           {{#if this.hasResults}}
             <ul class="invitees">
@@ -118,11 +118,11 @@ export default class PostEventInviteesModal extends Component {
                   {{#if @model.event.canActOnDiscoursePostEvent}}
                     <DButton
                       class="btn-transparent btn-danger remove-invitee"
-                      @icon="trash-can"
-                      @action={{fn this.removeInvitee invitee}}
                       title={{i18n
                         "discourse_post_event.invitees_modal.remove_invitee"
                       }}
+                      @action={{fn this.removeInvitee invitee}}
+                      @icon="trash-can"
                     />
                   {{/if}}
                 </li>
@@ -137,11 +137,11 @@ export default class PostEventInviteesModal extends Component {
                     {{#if @model.event.canActOnDiscoursePostEvent}}
                       <DButton
                         class="btn-default add-invitee"
-                        @icon="plus"
-                        @action={{fn this.addInvitee user}}
                         title={{i18n
                           "discourse_post_event.invitees_modal.add_invitee"
                         }}
+                        @action={{fn this.addInvitee user}}
+                        @icon="plus"
                       />
                     {{/if}}
                   </li>

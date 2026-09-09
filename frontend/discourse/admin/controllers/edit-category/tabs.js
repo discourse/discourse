@@ -111,73 +111,6 @@ export default class EditCategoryTabsController extends Controller {
     return this.showTooltip && this.model?.cannot_delete_reason;
   }
 
-  @action
-  initFormData() {
-    const data = getProperties(this.model, ...SIMPLIFIED_FIELD_LIST);
-
-    if (this.siteSettings.content_localization_enabled && !data.locale) {
-      data.locale = this.siteSettings.default_locale;
-    }
-
-    if (!this.model.styleType) {
-      data.style_type = "icon";
-    }
-
-    data.required_tag_groups = Array.from(
-      data.required_tag_groups ?? [],
-      (rtg) => ({
-        ...rtg,
-      })
-    );
-    data.category_setting = { ...(this.model.category_setting ?? {}) };
-    data.custom_fields = { ...(this.model.custom_fields ?? {}) };
-
-    data.category_type_site_settings = {};
-    data.category_type_settings = {
-      ...(this.model.category_type_settings ?? {}),
-    };
-    data.site_texts = {};
-    data.category_types = Object.keys(this.model.categoryTypes ?? {});
-
-    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
-      data.category_types.unshift(DISCUSSION_TYPE_ID);
-    }
-
-    Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
-      categoryType.configuration_schema.category_custom_fields?.forEach(
-        (field) => {
-          data.custom_fields[field.key] ??= field.default;
-        }
-      );
-
-      categoryType.configuration_schema.category_settings?.forEach((field) => {
-        data.category_type_settings[field.key] ??= field.default;
-      });
-
-      categoryType.configuration_schema.site_settings?.forEach((setting) => {
-        data.category_type_site_settings[setting.key] = setting.overridden
-          ? setting.current
-          : setting.default;
-      });
-
-      // Site texts are translation overrides, not stored on the category. The
-      // server provides the current value (default locale) so we can seed the
-      // field without an extra request, then diff against it on save. Keyed by
-      // the dot-free form name (the i18n key itself is not FormKit-safe).
-      categoryType.configuration_schema.site_texts?.forEach((text) => {
-        data.site_texts[text.name] = text.current ?? "";
-      });
-    });
-
-    // Customizable text is always seeded with the default locale's value, so
-    // reset the editing language to match whenever the form is (re)initialized.
-    const defaultLocale = this.siteSettings.default_locale;
-    this.siteTextsLocale = defaultLocale;
-    this.siteTextOriginals = { [defaultLocale]: { ...data.site_texts } };
-    this.siteTextEdits = { [defaultLocale]: { ...data.site_texts } };
-    this.formData = data;
-  }
-
   get availableLocales() {
     return this.siteSettings.available_locales;
   }
@@ -246,6 +179,83 @@ export default class EditCategoryTabsController extends Controller {
 
   get _visibleSiteTexts() {
     return this.formApi?.get("site_texts") ?? {};
+  }
+
+  get _siteTextEntries() {
+    const entries = [];
+    Object.values(this.model?.categoryTypes ?? {}).forEach((categoryType) => {
+      categoryType.configuration_schema.site_texts?.forEach((entry) =>
+        entries.push(entry)
+      );
+    });
+    return entries;
+  }
+
+  @action
+  initFormData() {
+    const data = getProperties(this.model, ...SIMPLIFIED_FIELD_LIST);
+
+    if (this.siteSettings.content_localization_enabled && !data.locale) {
+      data.locale = this.siteSettings.default_locale;
+    }
+
+    if (!this.model.styleType) {
+      data.style_type = "icon";
+    }
+
+    data.required_tag_groups = Array.from(
+      data.required_tag_groups ?? [],
+      (rtg) => ({
+        ...rtg,
+      })
+    );
+    data.category_setting = { ...(this.model.category_setting ?? {}) };
+    data.custom_fields = { ...(this.model.custom_fields ?? {}) };
+
+    data.category_type_site_settings = {};
+    data.category_type_settings = {
+      ...(this.model.category_type_settings ?? {}),
+    };
+    data.site_texts = {};
+    data.category_types = Object.keys(this.model.categoryTypes ?? {});
+
+    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
+      data.category_types.unshift(DISCUSSION_TYPE_ID);
+    }
+
+    Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
+      categoryType.configuration_schema.category_custom_fields?.forEach(
+        (field) => {
+          data.custom_fields[field.key] ??= field.default;
+        }
+      );
+
+      categoryType.configuration_schema.category_settings?.forEach((field) => {
+        data.category_type_settings[field.key] ??= field.default;
+      });
+
+      categoryType.configuration_schema.site_settings?.forEach((setting) => {
+        data.category_type_site_settings[setting.key] = setting.overridden
+          ? setting.current
+          : setting.default;
+      });
+
+      // Site texts are translation overrides, not stored on the category. The
+      // server provides the current value (default locale) so we can seed the
+      // field without an extra request, then diff against it on save. Keyed by
+      // the dot-free form name (the i18n key itself is not FormKit-safe).
+      categoryType.configuration_schema.site_texts?.forEach((text) => {
+        data.site_texts[text.name] = text.current ?? "";
+      });
+    });
+
+    // Customizable text is always seeded with the default locale's value, so
+    // reset the editing language to match whenever the form is (re)initialized.
+    const defaultLocale = this.siteSettings.default_locale;
+    this.siteTextsLocale = defaultLocale;
+    this.siteTextOriginals = { [defaultLocale]: { ...data.site_texts } };
+    this.siteTextEdits = { [defaultLocale]: { ...data.site_texts } };
+    this.formData = data;
   }
 
   @action
@@ -362,29 +372,6 @@ export default class EditCategoryTabsController extends Controller {
     return (
       !name.startsWith("editCategory.tabs") &&
       !name.startsWith("newCategory.tabs")
-    );
-  }
-
-  _wouldLoseAccess(category = this.model) {
-    if (this.currentUser.admin) {
-      return false;
-    }
-
-    const permissions = category.permissions;
-    if (!permissions?.length) {
-      return false;
-    }
-
-    const userGroupIds = new Set(
-      this.currentUser.visibleGroups.map((g) => g.id)
-    );
-
-    // TODO (martin) Update this with granular_anonymous_and_logged_in_groups_permissions to
-    // do a server-side check, since this is only checking against the current user's visible
-    // groups, it should check against _all_ their groups.
-    return !permissions.some(
-      (p) =>
-        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
     );
   }
 
@@ -507,74 +494,6 @@ export default class EditCategoryTabsController extends Controller {
     }
   }
 
-  _stashVisibleSiteTexts() {
-    this.siteTextEdits = {
-      ...this.siteTextEdits,
-      [this.siteTextsLocale]: { ...this._visibleSiteTexts },
-    };
-  }
-
-  async _fetchSiteTexts(locale) {
-    const entries = this._siteTextEntries;
-    const responses = await Promise.all(
-      entries.map((entry) =>
-        ajax(
-          `/admin/customize/site_texts/${encodeURIComponent(entry.key)}.json`,
-          { data: { locale } }
-        ).catch(() => ({ site_text: { value: "" } }))
-      )
-    );
-
-    const values = {};
-    entries.forEach((entry, index) => {
-      values[entry.name] = responses[index].site_text?.value ?? "";
-    });
-    return values;
-  }
-
-  async _saveSiteTexts() {
-    this._stashVisibleSiteTexts();
-
-    const entries = this._siteTextEntries;
-    let changed = false;
-
-    for (const [locale, values] of Object.entries(this.siteTextEdits)) {
-      const originals = this.siteTextOriginals[locale] ?? {};
-
-      for (const entry of entries) {
-        const newValue = values[entry.name] ?? "";
-        if (newValue === (originals[entry.name] ?? "")) {
-          continue;
-        }
-
-        const url = `/admin/customize/site_texts/${encodeURIComponent(
-          entry.key
-        )}?locale=${encodeURIComponent(locale)}`;
-        if (newValue.trim() === "") {
-          await ajax(url, { type: "DELETE" });
-        } else {
-          await ajax(url, {
-            type: "PUT",
-            data: { site_text: { value: newValue, locale } },
-          });
-        }
-        changed = true;
-      }
-    }
-
-    return changed;
-  }
-
-  get _siteTextEntries() {
-    const entries = [];
-    Object.values(this.model?.categoryTypes ?? {}).forEach((categoryType) => {
-      categoryType.configuration_schema.site_texts?.forEach((entry) =>
-        entries.push(entry)
-      );
-    });
-    return entries;
-  }
-
   @action
   deleteCategory() {
     if (this.deleteDisabled) {
@@ -643,5 +562,86 @@ export default class EditCategoryTabsController extends Controller {
         });
       }
     }
+  }
+
+  _wouldLoseAccess(category = this.model) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const permissions = category.permissions;
+    if (!permissions?.length) {
+      return false;
+    }
+
+    const userGroupIds = new Set(
+      this.currentUser.visibleGroups.map((g) => g.id)
+    );
+
+    // TODO (martin) Update this with granular_anonymous_and_logged_in_groups_permissions to
+    // do a server-side check, since this is only checking against the current user's visible
+    // groups, it should check against _all_ their groups.
+    return !permissions.some(
+      (p) =>
+        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
+    );
+  }
+
+  _stashVisibleSiteTexts() {
+    this.siteTextEdits = {
+      ...this.siteTextEdits,
+      [this.siteTextsLocale]: { ...this._visibleSiteTexts },
+    };
+  }
+
+  async _fetchSiteTexts(locale) {
+    const entries = this._siteTextEntries;
+    const responses = await Promise.all(
+      entries.map((entry) =>
+        ajax(
+          `/admin/customize/site_texts/${encodeURIComponent(entry.key)}.json`,
+          { data: { locale } }
+        ).catch(() => ({ site_text: { value: "" } }))
+      )
+    );
+
+    const values = {};
+    entries.forEach((entry, index) => {
+      values[entry.name] = responses[index].site_text?.value ?? "";
+    });
+    return values;
+  }
+
+  async _saveSiteTexts() {
+    this._stashVisibleSiteTexts();
+
+    const entries = this._siteTextEntries;
+    let changed = false;
+
+    for (const [locale, values] of Object.entries(this.siteTextEdits)) {
+      const originals = this.siteTextOriginals[locale] ?? {};
+
+      for (const entry of entries) {
+        const newValue = values[entry.name] ?? "";
+        if (newValue === (originals[entry.name] ?? "")) {
+          continue;
+        }
+
+        const url = `/admin/customize/site_texts/${encodeURIComponent(
+          entry.key
+        )}?locale=${encodeURIComponent(locale)}`;
+        if (newValue.trim() === "") {
+          await ajax(url, { type: "DELETE" });
+        } else {
+          await ajax(url, {
+            type: "PUT",
+            data: { site_text: { value: newValue, locale } },
+          });
+        }
+        changed = true;
+      }
+    }
+
+    return changed;
   }
 }

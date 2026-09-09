@@ -336,11 +336,6 @@ export default class KeyboardShortcutsHelp extends Component {
     return shortcuts;
   }
 
-  @action
-  filterShortcuts(event) {
-    this.searchTerm = event.target.value.toLowerCase();
-  }
-
   get filteredShortcuts() {
     const searchTokens = this.searchTerm.trim().split(/\s+/).filter(Boolean);
     return Object.entries(this.shortcuts).reduce(
@@ -384,6 +379,11 @@ export default class KeyboardShortcutsHelp extends Component {
       },
       {}
     );
+  }
+
+  @action
+  filterShortcuts(event) {
+    this.searchTerm = event.target.value.toLowerCase();
   }
 
   _buildExtraShortcuts(shortcuts) {
@@ -442,21 +442,21 @@ export default class KeyboardShortcutsHelp extends Component {
 
   <template>
     <DModal
-      @title={{i18n "keyboard_shortcuts_help.title"}}
-      @closeModal={{@closeModal}}
       class="keyboard-shortcuts-modal --max"
+      @closeModal={{@closeModal}}
+      @title={{i18n "keyboard_shortcuts_help.title"}}
     >
       <:body>
         <div id="keyboard-shortcuts-help">
 
-          <label for="keyboard-shortcuts-help-search" class="sr-only">
+          <label class="sr-only" for="keyboard-shortcuts-help-search">
             {{i18n "keyboard_shortcuts_help.search_label"}}
           </label>
           <DFilterInput
+            id="keyboard-shortcuts-help-search"
+            placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
             @filterAction={{this.filterShortcuts}}
             @value={{this.searchTerm}}
-            placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
-            id="keyboard-shortcuts-help-search"
           />
 
           <div class="keyboard-shortcuts-help__container">

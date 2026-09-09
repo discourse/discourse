@@ -52,24 +52,24 @@ export default class DDateTimeInputRange extends Component {
   <template>
     <div class="d-date-time-input-range" ...attributes>
       <DDateTimeInput
+        class="from"
         @date={{this.from}}
         @onChange={{fn this.onChangeRanges (hash prop="from")}}
-        @showTime={{this.showFromTime}}
         @placeholder={{i18n "dates.from_placeholder"}}
+        @showTime={{this.showFromTime}}
         @timezone={{@timezone}}
-        class="from"
       />
 
       <DDateTimeInput
-        @date={{this.to}}
-        @relativeDate={{this.from}}
-        @onChange={{fn this.onChangeRanges (hash prop="to")}}
-        @timeFirst={{this.toTimeFirst}}
-        @showTime={{this.showToTime}}
-        @clearable={{this.clearable}}
-        @placeholder={{i18n "dates.to_placeholder"}}
-        @timezone={{@timezone}}
         class="to"
+        @clearable={{this.clearable}}
+        @date={{this.to}}
+        @onChange={{fn this.onChangeRanges (hash prop="to")}}
+        @placeholder={{i18n "dates.to_placeholder"}}
+        @relativeDate={{this.from}}
+        @showTime={{this.showToTime}}
+        @timeFirst={{this.toTimeFirst}}
+        @timezone={{@timezone}}
       />
     </div>
   </template>

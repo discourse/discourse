@@ -72,8 +72,8 @@ module("Integration | ui-kit | DDateTimeInput", function (hooks) {
       <template>
         <DDateTimeInput
           @date={{this.date}}
-          @timezone={{this.timezone}}
           @onChange={{this.onChange}}
+          @timezone={{this.timezone}}
         />
       </template>
     );

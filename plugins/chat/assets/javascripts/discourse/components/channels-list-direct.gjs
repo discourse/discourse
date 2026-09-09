@@ -79,6 +79,7 @@ export default class ChannelsListDirect extends Component {
         {{#if this.inSidebar}}
           <span
             class="title-caret"
+            data-toggleable="direct-message-channels"
             id="direct-message-channels-caret"
             role="button"
             title="toggle nav list"
@@ -86,7 +87,6 @@ export default class ChannelsListDirect extends Component {
               "click"
               (fn this.toggleChannelSection "direct-message-channels")
             }}
-            data-toggleable="direct-message-channels"
           >
             {{dIcon "angle-up"}}
           </span>
@@ -96,34 +96,34 @@ export default class ChannelsListDirect extends Component {
 
         {{#if this.canCreateDirectMessageChannel}}
           <DButton
-            @icon="plus"
             class="no-text btn-flat open-new-message-btn"
-            @action={{this.openNewMessageModal}}
             title={{i18n this.createDirectMessageChannelLabel}}
+            @action={{this.openNewMessageModal}}
+            @icon="plus"
           />
         {{/if}}
       </div>
     {{/if}}
 
     <div
-      id="direct-message-channels"
       class={{dConcatClass
         "channels-list-container"
         "direct-message-channels"
         (if this.inSidebar "collapsible-sidebar-section")
         (if this.directMessageChannelsEmpty "center-empty-channels-list")
       }}
+      id="direct-message-channels"
     >
       {{#if this.directMessageChannelsEmpty}}
         <DEmptyState
-          @identifier="empty-channels-list"
-          @svgContent={{ChatZero}}
-          @title={{i18n "chat.no_direct_message_channels"}}
+          @ctaAction={{this.openNewMessageModal}}
           @ctaLabel={{if
             this.canCreateDirectMessageChannel
             (i18n "chat.no_direct_message_channels_cta")
           }}
-          @ctaAction={{this.openNewMessageModal}}
+          @identifier="empty-channels-list"
+          @svgContent={{ChatZero}}
+          @title={{i18n "chat.no_direct_message_channels"}}
         />
       {{else}}
         {{#each this.channelList as |channel|}}

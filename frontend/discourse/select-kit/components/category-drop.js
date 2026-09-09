@@ -75,16 +75,6 @@ export default class CategoryDrop extends ComboBoxComponent {
     return this.siteSettings.allow_uncategorized_topics;
   }
 
-  modifyComponentForCollection(collection) {
-    if (collection === MORE_COLLECTION) {
-      return CategoryDropMoreCollection;
-    }
-  }
-
-  modifyComponentForRow() {
-    return CategoryRow;
-  }
-
   @computed("selectKit.options.noSubcategories")
   get noSubcategories() {
     return this.selectKit.options.noSubcategories;
@@ -149,6 +139,31 @@ export default class CategoryDrop extends ComboBoxComponent {
     return this.shortcuts.concat(results);
   }
 
+  @computed("parentCategoryName", "selectKit.options.subCategory")
+  get allCategoriesLabel() {
+    if (this.editingCategory) {
+      return this.noCategoriesLabel;
+    }
+
+    if (this.selectKit.options.subCategory) {
+      return i18n("categories.remove_filter", {
+        categoryName: this.parentCategoryName,
+      });
+    }
+
+    return i18n("categories.all");
+  }
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_COLLECTION) {
+      return CategoryDropMoreCollection;
+    }
+  }
+
+  modifyComponentForRow() {
+    return CategoryRow;
+  }
+
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
       return this.defaultItem(
@@ -179,21 +194,6 @@ export default class CategoryDrop extends ComboBoxComponent {
     }
 
     return content;
-  }
-
-  @computed("parentCategoryName", "selectKit.options.subCategory")
-  get allCategoriesLabel() {
-    if (this.editingCategory) {
-      return this.noCategoriesLabel;
-    }
-
-    if (this.selectKit.options.subCategory) {
-      return i18n("categories.remove_filter", {
-        categoryName: this.parentCategoryName,
-      });
-    }
-
-    return i18n("categories.all");
   }
 
   async search(filter) {

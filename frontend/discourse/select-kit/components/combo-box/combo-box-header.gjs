@@ -67,18 +67,18 @@ export default class ComboBoxHeader extends SingleSelectHeaderComponent {
         as |SelectedNameComponent|
       }}
         <SelectedNameComponent
-          @tabindex={{this.tabindex}}
           @item={{this.selectedContent}}
           @selectKit={{this.selectKit}}
+          @tabindex={{this.tabindex}}
         />
       {{/let}}
 
       {{#if this.shouldDisplayClearableButton}}
         <DButton
-          @icon="xmark"
+          class="btn-clear btn-transparent"
           @action={{this.selectKit.onClearSelection}}
           @ariaLabel="clear_input"
-          class="btn-clear btn-transparent"
+          @icon="xmark"
         />
       {{/if}}
 

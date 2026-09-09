@@ -280,12 +280,12 @@ export default class ComboBoxField extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       {{#if this.showActionButton}}
         <div class="workflows-property-engine__select-with-action">
@@ -293,8 +293,6 @@ export default class ComboBoxField extends Component {
             @content={{this.options}}
             @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
             @nameProperty="name"
-            @value={{@field.value}}
-            @valueProperty="id"
             @onChange={{this.handleChange}}
             @options={{hash
               filterable=this.filterable
@@ -302,12 +300,14 @@ export default class ComboBoxField extends Component {
               translatedNone=this.translatedNone
               castInteger=this.castInteger
             }}
+            @value={{@field.value}}
+            @valueProperty="id"
           />
           <DButton
-            @action={{this.performAction}}
-            @label={{this.actionLabel}}
-            @icon={{this.actionIcon}}
             class="btn-default"
+            @action={{this.performAction}}
+            @icon={{this.actionIcon}}
+            @label={{this.actionLabel}}
           />
         </div>
       {{else}}
@@ -315,8 +315,6 @@ export default class ComboBoxField extends Component {
           @content={{this.options}}
           @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
           @nameProperty="name"
-          @value={{@field.value}}
-          @valueProperty="id"
           @onChange={{this.handleChange}}
           @options={{hash
             filterable=this.filterable
@@ -324,6 +322,8 @@ export default class ComboBoxField extends Component {
             translatedNone=this.translatedNone
             castInteger=this.castInteger
           }}
+          @value={{@field.value}}
+          @valueProperty="id"
         />
       {{/if}}
     </ExpressionWrapper>

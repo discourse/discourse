@@ -27,7 +27,6 @@ export default class Dialogs extends Component {
       <StyleguideComponent @tag="alert">
         <:actions>
           <DButton
-            @translatedLabel="Trigger"
             @action={{fn
               this.openDialog
               (hash
@@ -40,6 +39,7 @@ export default class Dialogs extends Component {
                 )
               )
             }}
+            @translatedLabel="Trigger"
           />
 
           <span>&nbsp;{{this.alertOutput}}</span>
@@ -48,11 +48,11 @@ export default class Dialogs extends Component {
       <StyleguideComponent @tag="notice">
         <:actions>
           <DButton
-            @translatedLabel="Trigger"
             @action={{fn
               this.openDialog
               (hash name="notice" options="message")
             }}
+            @translatedLabel="Trigger"
           />
           <span>&nbsp;{{this.noticeOutput}}</span>
         </:actions>
@@ -60,7 +60,6 @@ export default class Dialogs extends Component {
       <StyleguideComponent @tag="yesNoConfirm">
         <:actions>
           <DButton
-            @translatedLabel="Trigger"
             @action={{fn
               this.openDialog
               (hash
@@ -73,6 +72,7 @@ export default class Dialogs extends Component {
                 )
               )
             }}
+            @translatedLabel="Trigger"
           />
           <span>&nbsp;{{this.yesNoConfirmOutput}}</span>
         </:actions>
@@ -80,7 +80,6 @@ export default class Dialogs extends Component {
       <StyleguideComponent @tag="deleteConfirm">
         <:actions>
           <DButton
-            @translatedLabel="Trigger"
             @action={{fn
               this.openDialog
               (hash
@@ -93,6 +92,7 @@ export default class Dialogs extends Component {
                 )
               )
             }}
+            @translatedLabel="Trigger"
           />
           <span>&nbsp;{{this.deleteConfirmOutput}}</span>
         </:actions>
@@ -100,7 +100,6 @@ export default class Dialogs extends Component {
       <StyleguideComponent @tag="confirm">
         <:actions>
           <DButton
-            @translatedLabel="Trigger"
             @action={{fn
               this.openDialog
               (hash
@@ -113,6 +112,7 @@ export default class Dialogs extends Component {
                 )
               )
             }}
+            @translatedLabel="Trigger"
           />
           <span>&nbsp;{{this.confirmOutput}}</span>
         </:actions>

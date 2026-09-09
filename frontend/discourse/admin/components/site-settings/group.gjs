@@ -29,10 +29,10 @@ export default class Group extends Component {
   <template>
     <div ...attributes>
       <ComboBox
-        @value={{@value}}
         @content={{this.groupChoices}}
         @onChange={{this.onChange}}
         @options={{hash clearable=true}}
+        @value={{@value}}
       />
     </div>
   </template>

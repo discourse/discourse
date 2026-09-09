@@ -13,7 +13,7 @@ async function setupBuilder() {
 
   await render(
     <template>
-      <PollUiBuilder @inline={{true}} @model={{model}} @closeModal={{noop}} />
+      <PollUiBuilder @closeModal={{noop}} @inline={{true}} @model={{model}} />
     </template>
   );
 

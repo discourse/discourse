@@ -2,12 +2,12 @@ import NotificationsTracking from "discourse/components/notifications-tracking";
 
 const GroupNotificationsTracking = <template>
   <NotificationsTracking
-    @onChange={{@onChange}}
+    class="group-notifications-tracking"
     @levelId={{@levelId}}
+    @onChange={{@onChange}}
+    @prefix="groups.notifications"
     @showCaret={{false}}
     @showFullTitle={{false}}
-    @prefix="groups.notifications"
-    class="group-notifications-tracking"
   />
 </template>;
 

@@ -183,14 +183,19 @@ const DEFAULT_GROUP = "main";
 export class ToolbarBase {
   /** Buttons and menu options keyed by keyboard shortcut. */
   shortcuts: Record<string, ToolbarButton | PopupMenuOption>;
+
   /** Editor callbacks used by toolbar actions. */
   context: ToolbarContext;
+
   /** Ordered groups rendered by the toolbar. */
   groups: ToolbarGroup[];
+
   /** Client settings used to configure toolbar behavior. */
   siteSettings: Record<string, unknown>;
+
   /** Browser capabilities used to configure toolbar behavior. */
   capabilities: Partial<CapabilitiesService>;
+
   /** Site state used to configure toolbar behavior. */
   site: Partial<Site>;
 

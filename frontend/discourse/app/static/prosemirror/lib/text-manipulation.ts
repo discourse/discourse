@@ -761,32 +761,6 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
     this.convertFromMarkdown = convertFromMarkdown;
   }
 
-  #revokeBlobUrl(node: Node): void {
-    if (node.attrs.src?.startsWith("blob:")) {
-      URL.revokeObjectURL(node.attrs.src);
-    }
-  }
-
-  #findPlaceholder(fileId: string): FoundPlaceholder | null {
-    let result: FoundPlaceholder | null = null;
-    this.view.state.doc.descendants((node, pos) => {
-      if (result) {
-        return false;
-      }
-      if (
-        (node.type === this.schema.nodes.image &&
-          node.attrs.placeholder &&
-          node.attrs.title === fileId) ||
-        (node.type === this.schema.nodes.upload_placeholder &&
-          node.attrs.fileId === fileId)
-      ) {
-        result = { node, pos };
-        return false;
-      }
-    });
-    return result;
-  }
-
   insert(file: UppyFile): void {
     const isImage = file.data?.type?.startsWith("image/");
     const isEmptyParagraph =
@@ -899,5 +873,31 @@ class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
     }
 
     this.view.dispatch(tr);
+  }
+
+  #revokeBlobUrl(node: Node): void {
+    if (node.attrs.src?.startsWith("blob:")) {
+      URL.revokeObjectURL(node.attrs.src);
+    }
+  }
+
+  #findPlaceholder(fileId: string): FoundPlaceholder | null {
+    let result: FoundPlaceholder | null = null;
+    this.view.state.doc.descendants((node, pos) => {
+      if (result) {
+        return false;
+      }
+      if (
+        (node.type === this.schema.nodes.image &&
+          node.attrs.placeholder &&
+          node.attrs.title === fileId) ||
+        (node.type === this.schema.nodes.upload_placeholder &&
+          node.attrs.fileId === fileId)
+      ) {
+        result = { node, pos };
+        return false;
+      }
+    });
+    return result;
   }
 }

@@ -14,6 +14,20 @@ export default class GroupSelector extends Component {
     this.initializeSelectedGroups();
   }
 
+  get placeholder() {
+    return this.args.placeholderKey ? i18n(this.args.placeholderKey) : "";
+  }
+
+  get loadFn() {
+    return async (term) => {
+      if (!this.args.groupFinder) {
+        return [];
+      }
+
+      return this.args.groupFinder(term);
+    };
+  }
+
   initializeSelectedGroups() {
     const groupNames = this.args.groupNames;
     if (isEmpty(groupNames)) {
@@ -31,20 +45,6 @@ export default class GroupSelector extends Component {
     this.selectedGroups = names
       .filter((name) => name && name.length > 0)
       .map((name) => ({ id: name, name }));
-  }
-
-  get placeholder() {
-    return this.args.placeholderKey ? i18n(this.args.placeholderKey) : "";
-  }
-
-  get loadFn() {
-    return async (term) => {
-      if (!this.args.groupFinder) {
-        return [];
-      }
-
-      return this.args.groupFinder(term);
-    };
   }
 
   @action
@@ -73,16 +73,16 @@ export default class GroupSelector extends Component {
   <template>
     <div class="group-selector-wrapper">
       <DMultiSelect
-        @selection={{this.selectedGroups}}
-        @loadFn={{this.loadFn}}
-        @onChange={{this.handleSelectionChange}}
-        @label={{this.placeholder}}
-        @compareFn={{this.compareGroups}}
-        @placement="bottom-start"
-        @allowedPlacements={{array "top-start" "bottom-start"}}
-        @matchTriggerWidth={{true}}
-        @matchTriggerMinWidth={{true}}
         class="group-selector"
+        @allowedPlacements={{array "top-start" "bottom-start"}}
+        @compareFn={{this.compareGroups}}
+        @label={{this.placeholder}}
+        @loadFn={{this.loadFn}}
+        @matchTriggerMinWidth={{true}}
+        @matchTriggerWidth={{true}}
+        @onChange={{this.handleSelectionChange}}
+        @placement="bottom-start"
+        @selection={{this.selectedGroups}}
       >
         <:selection as |group|>
           {{group.name}}

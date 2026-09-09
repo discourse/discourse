@@ -74,39 +74,39 @@ export default <template>
           <td class="d-table__cell --controls backup-controls">
             <div class="d-table__cell-actions">
               <DButton
-                @action={{fn @controller.download backup}}
-                @title="admin.backups.operations.download.title"
-                @label="admin.backups.operations.download.label"
                 class="btn-default btn-small backup-item-row__download"
+                @action={{fn @controller.download backup}}
+                @label="admin.backups.operations.download.label"
+                @title="admin.backups.operations.download.title"
               />
 
               {{#if @controller.siteSettings.enable_backups}}
                 <DMenu
+                  class="btn-default btn-small"
+                  @icon="ellipsis-vertical"
                   @identifier="backup-item-menu"
                   @title={{i18n "more_options"}}
-                  @icon="ellipsis-vertical"
-                  class="btn-default btn-small"
                 >
                   <:content>
                     <DDropdownMenu as |dropdown|>
                       <dropdown.item>
                         <DButton
-                          @icon="play"
+                          class="btn-transparent backup-item-row__restore"
                           @action={{fn (routeAction "startRestore") backup}}
                           @disabled={{@controller.status.restoreDisabled}}
-                          @title={{@controller.restoreTitle}}
+                          @icon="play"
                           @label="admin.backups.operations.restore.label"
-                          class="btn-transparent backup-item-row__restore"
+                          @title={{@controller.restoreTitle}}
                         />
                       </dropdown.item>
                       <dropdown.item>
                         <DButton
-                          @icon="trash-can"
+                          class="btn-transparent --danger backup-item-row__delete"
                           @action={{fn (routeAction "destroyBackup") backup}}
                           @disabled={{@controller.status.isOperationRunning}}
-                          @title={{@controller.deleteTitle}}
+                          @icon="trash-can"
                           @label="admin.backups.operations.destroy.title"
-                          class="btn-transparent --danger backup-item-row__delete"
+                          @title={{@controller.deleteTitle}}
                         />
                       </dropdown.item>
                     </DDropdownMenu>

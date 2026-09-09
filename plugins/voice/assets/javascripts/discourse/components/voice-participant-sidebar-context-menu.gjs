@@ -342,12 +342,12 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
       {{#if this.canSpotlight}}
         <dropdown.item>
           <DButton
+            class="voice-participant-sidebar-context-menu__spotlight-btn"
             @action={{this.toggleSpotlight}}
+            @ariaPressed={{this.isSpotlighted}}
             @icon="person-chalkboard"
             @translatedLabel={{this.spotlightLabel}}
             @translatedTitle={{this.spotlightLabel}}
-            @ariaPressed={{this.isSpotlighted}}
-            class="voice-participant-sidebar-context-menu__spotlight-btn"
           />
         </dropdown.item>
       {{/if}}
@@ -355,7 +355,10 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
         {{#unless this.isListenerInStage}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__mic-btn
+                {{if this.micDisabledByPtt '--disabled-by-ptt'}}"
               @action={{this.toggleMic}}
+              @disabled={{this.micDisabledByPtt}}
               @icon={{this.micIcon}}
               @translatedLabel={{this.micLabel}}
               @translatedTitle={{if
@@ -363,9 +366,6 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
                 (i18n "voice.ptt.controlled_by_ptt")
                 this.micLabel
               }}
-              @disabled={{this.micDisabledByPtt}}
-              class="voice-participant-sidebar-context-menu__mic-btn
-                {{if this.micDisabledByPtt '--disabled-by-ptt'}}"
             />
             {{#if this.micDisabledByPtt}}
               <span
@@ -376,38 +376,38 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
         {{/unless}}
         <dropdown.item>
           <DButton
+            class="voice-participant-sidebar-context-menu__deafen-btn"
             @action={{this.toggleDeafen}}
             @icon={{this.deafenIcon}}
             @translatedLabel={{this.deafenLabel}}
             @translatedTitle={{this.deafenLabel}}
-            class="voice-participant-sidebar-context-menu__deafen-btn"
           />
         </dropdown.item>
         {{#unless this.isListenerInStage}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__ptt-btn
+                {{if this.isPttEnabled '--active'}}"
               @action={{this.togglePtt}}
               @icon={{if this.isPttEnabled "walkie-talkie" "walkie-talkie"}}
               @translatedLabel={{this.pttToggleLabel}}
               @translatedTitle={{this.pttToggleLabel}}
-              class="voice-participant-sidebar-context-menu__ptt-btn
-                {{if this.isPttEnabled '--active'}}"
             />
           </dropdown.item>
           {{#if this.isPttEnabled}}
             <dropdown.item>
               {{#if this.showKeyCapture}}
                 <VoicePttKeyCapture
-                  @onConfirm={{this.onKeyCaptureConfirm}}
                   @onCancel={{this.onKeyCaptureCancel}}
+                  @onConfirm={{this.onKeyCaptureConfirm}}
                 />
               {{else}}
                 <DButton
+                  class="voice-participant-sidebar-context-menu__ptt-key-btn"
                   @action={{this.openKeyCapture}}
                   @icon="keyboard"
                   @translatedLabel={{this.pttKeyLabel}}
                   @translatedTitle={{this.pttKeyLabel}}
-                  class="voice-participant-sidebar-context-menu__ptt-key-btn"
                 />
               {{/if}}
             </dropdown.item>
@@ -415,16 +415,17 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
         {{/unless}}
         <dropdown.item>
           <DButton
+            class="voice-participant-sidebar-context-menu__voice-settings-btn"
             @action={{this.openVoiceSettings}}
             @icon="gear"
             @label="voice.voice_settings.open"
             @title="voice.voice_settings.open"
-            class="voice-participant-sidebar-context-menu__voice-settings-btn"
           />
         </dropdown.item>
         {{#if this.showAutoStatusToggle}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__auto-status-btn"
               @action={{this.toggleAutoStatus}}
               @icon={{if
                 this.voiceWebrtc.autoStatusEnabled
@@ -433,19 +434,18 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
               }}
               @translatedLabel={{this.autoStatusLabel}}
               @translatedTitle={{this.autoStatusLabel}}
-              class="voice-participant-sidebar-context-menu__auto-status-btn"
             />
           </dropdown.item>
         {{/if}}
         {{#if this.isListenerInStage}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__raise-hand-btn
+                {{if this.handRaised '--active'}}"
               @action={{this.toggleRaiseHand}}
               @icon="hand"
               @translatedLabel={{this.raiseHandLabel}}
               @translatedTitle={{this.raiseHandLabel}}
-              class="voice-participant-sidebar-context-menu__raise-hand-btn
-                {{if this.handRaised '--active'}}"
             />
           </dropdown.item>
           <dropdown.item>
@@ -461,21 +461,21 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
               {{i18n "voice.participant.volume"}}
             </label>
             <input
-              type="range"
-              min="0"
-              max="100"
-              value={{this.volume}}
               class="voice-participant-sidebar-context-menu__volume-slider"
+              max="100"
+              min="0"
+              type="range"
+              value={{this.volume}}
               {{on "input" this.onVolumeChange}}
             />
           </dropdown.item>
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__mute-btn"
               @action={{this.toggleMute}}
               @icon={{this.muteIcon}}
               @translatedLabel={{this.muteLabel}}
               @translatedTitle={{this.muteLabel}}
-              class="voice-participant-sidebar-context-menu__mute-btn"
             />
           </dropdown.item>
         {{else if (not this.isStageRoom)}}
@@ -484,76 +484,76 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
               {{i18n "voice.participant.volume"}}
             </label>
             <input
-              type="range"
-              min="0"
-              max="100"
-              value={{this.volume}}
               class="voice-participant-sidebar-context-menu__volume-slider"
+              max="100"
+              min="0"
+              type="range"
+              value={{this.volume}}
               {{on "input" this.onVolumeChange}}
             />
           </dropdown.item>
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__mute-btn"
               @action={{this.toggleMute}}
               @icon={{this.muteIcon}}
               @translatedLabel={{this.muteLabel}}
               @translatedTitle={{this.muteLabel}}
-              class="voice-participant-sidebar-context-menu__mute-btn"
             />
           </dropdown.item>
         {{/if}}
         {{#if this.canPromoteToSpeaker}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__promote-btn"
               @action={{this.promoteToSpeaker}}
               @icon="microphone"
               @label="voice.stage.make_speaker"
               @title="voice.stage.make_speaker"
-              class="voice-participant-sidebar-context-menu__promote-btn"
             />
           </dropdown.item>
         {{/if}}
         {{#if this.canDemoteToListener}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__demote-btn"
               @action={{this.demoteToListener}}
               @icon="volume-xmark"
               @label="voice.stage.move_to_listeners"
               @title="voice.stage.move_to_listeners"
-              class="voice-participant-sidebar-context-menu__demote-btn"
             />
           </dropdown.item>
         {{/if}}
         {{#if this.canDismissRequest}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__dismiss-request-btn"
               @action={{this.dismissRequest}}
               @icon="xmark"
               @label="voice.stage.dismiss_request_menu"
               @title="voice.stage.dismiss_request_menu"
-              class="voice-participant-sidebar-context-menu__dismiss-request-btn"
             />
           </dropdown.item>
         {{/if}}
         {{#if this.canFlag}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__flag-btn"
               @action={{this.flag}}
               @icon="flag"
               @label="voice.participant.flag"
               @title="voice.participant.flag"
-              class="voice-participant-sidebar-context-menu__flag-btn"
             />
           </dropdown.item>
         {{/if}}
         {{#if this.canKick}}
           <dropdown.item>
             <DButton
+              class="voice-participant-sidebar-context-menu__kick-btn btn-danger"
               @action={{this.kick}}
               @icon="right-from-bracket"
               @label="voice.participant.kick"
               @title="voice.participant.kick"
-              class="voice-participant-sidebar-context-menu__kick-btn btn-danger"
             />
           </dropdown.item>
         {{/if}}

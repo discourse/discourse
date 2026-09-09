@@ -38,9 +38,9 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   test("custom class attribute for link", async function (assert) {
     const template = <template>
       <SectionLink
+        @linkClass="123 abc"
         @linkName="Test Meta"
         @route="discovery.latest"
-        @linkClass="123 abc"
       />
     </template>;
 
@@ -57,7 +57,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
 
   test("target attribute for link", async function (assert) {
     const template = <template>
-      <SectionLink @linkName="test" @href="https://discourse.org" />
+      <SectionLink @href="https://discourse.org" @linkName="test" />
     </template>;
     await render(template);
 
@@ -67,7 +67,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   test("target attribute for link when user set external links in new tab", async function (assert) {
     this.currentUser.user_option.external_links_in_new_tab = true;
     const template = <template>
-      <SectionLink @linkName="test" @href="https://discourse.org" />
+      <SectionLink @href="https://discourse.org" @linkName="test" />
     </template>;
     await render(template);
 
@@ -79,10 +79,10 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
 
     const template = <template>
       <SectionLink
-        @linkName="test"
-        @route="discovery.latest"
         @hoverType="icon"
         @hoverValue="ellipsis-vertical"
+        @linkName="test"
+        @route="discovery.latest"
       />
     </template>;
 
@@ -103,10 +103,10 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
 
     const template = <template>
       <SectionLink
-        @linkName="test"
-        @route="discovery.latest"
         @hoverType="icon"
         @hoverValue="ellipsis-vertical"
+        @linkName="test"
+        @route="discovery.latest"
       />
     </template>;
 
@@ -122,10 +122,10 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
 
     const template = <template>
       <SectionLink
-        @linkName="test"
-        @route="discovery.latest"
         @hoverType="icon"
         @hoverValue="ellipsis-vertical"
+        @linkName="test"
+        @route="discovery.latest"
       />
     </template>;
 

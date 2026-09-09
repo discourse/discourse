@@ -13,16 +13,6 @@ export default class SchemaSettingTypeModels extends Component {
   max = this.args.spec.validations?.max;
   type;
 
-  @action
-  onInput(newValue) {
-    this.value = newValue;
-    this.args.onChange(this.onChange(newValue));
-  }
-
-  onChange(newValue) {
-    return newValue;
-  }
-
   get validationErrorMessage() {
     const isValueBlank = isBlank(this.value);
 
@@ -38,5 +28,15 @@ export default class SchemaSettingTypeModels extends Component {
         count: this.min || 1,
       });
     }
+  }
+
+  @action
+  onInput(newValue) {
+    this.value = newValue;
+    this.args.onChange(this.onChange(newValue));
+  }
+
+  onChange(newValue) {
+    return newValue;
   }
 }

@@ -33,11 +33,11 @@ export default class TagSettingsLocalizations extends Component {
     {{#if @localizations.length}}
       <@form.Collection @name="localizations" as |collection index|>
         <collection.Field
-          @name="tag_id"
-          @type="input-hidden"
-          @title="tag_id"
-          @showTitle={{false}}
           @disabled={{true}}
+          @name="tag_id"
+          @showTitle={{false}}
+          @title="tag_id"
+          @type="input-hidden"
           as |field|
         >
           <field.Control @value={{@tagId}} />
@@ -47,8 +47,8 @@ export default class TagSettingsLocalizations extends Component {
           <row.Col @size={{2}}>
             <collection.Field
               @name="locale"
-              @type="select"
               @title={{i18n "tagging.localization.locale"}}
+              @type="select"
               @validation="required"
               as |field|
             >
@@ -65,8 +65,8 @@ export default class TagSettingsLocalizations extends Component {
           <row.Col @size={{3}}>
             <collection.Field
               @name="name"
-              @type="input"
               @title={{i18n "tagging.localization.name"}}
+              @type="input"
               @validation="required|length:1,50"
               as |field|
             >
@@ -80,8 +80,8 @@ export default class TagSettingsLocalizations extends Component {
           <row.Col @size={{6}}>
             <collection.Field
               @name="description"
-              @type="composer"
               @title={{i18n "tagging.localization.description"}}
+              @type="composer"
               @validation="length:0,1000"
               as |field|
             >
@@ -92,9 +92,9 @@ export default class TagSettingsLocalizations extends Component {
           <row.Col @size={{1}}>
             <@form.Button
               class="btn-danger"
+              @action={{fn collection.remove index}}
               @icon="trash-can"
               @title="tagging.localization.remove"
-              @action={{fn collection.remove index}}
             />
           </row.Col>
         </@form.Row>
@@ -102,13 +102,13 @@ export default class TagSettingsLocalizations extends Component {
     {{/if}}
     <@form.Button
       class="btn-default"
-      @icon="plus"
-      @label="tagging.localization.add"
       @action={{fn
         @form.addItemToCollection
         "localizations"
         (hash tag_id=@tagId locale="" name="" description="")
       }}
+      @icon="plus"
+      @label="tagging.localization.add"
     />
   </template>
 }

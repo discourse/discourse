@@ -15,13 +15,16 @@ export default class ActiveDescendantStrategy {
   #config: DRovingFocusConfig;
   #controller: HTMLElement | null;
   #activeId: string | null = null;
+
   /** Tracks minted item ids so teardown never removes an author-supplied id. */
   #mintedIds = new Set<string>();
+
   /**
    * A one-shot observer owed only when an entry seed found no items; it disconnects before
    * reconciling so later row churn cannot repeatedly return the cursor to the start.
    */
   #pendingSeed: MutationObserver | null = null;
+
   /** Pending restoration of the temporarily dropped `aria-activedescendant`. */
   #reannounceTimer?: ReturnType<typeof nextRunloop>;
   #destroyed = false;

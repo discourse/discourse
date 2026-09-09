@@ -8,14 +8,14 @@ class A11ySkipLinksContainer extends Component {
   <template>
     {{#if this.a11y.showSkipLinks}}
       <div
-        id="skip-links__container"
-        class="skip-links"
         aria-label={{i18n "skip_links_label"}}
+        class="skip-links"
+        id="skip-links__container"
       >
         <div>
           {{! wrapper used to render the skip links }}
         </div>
-        <a href="#main-container" class="skip-link">
+        <a class="skip-link" href="#main-container">
           {{i18n "skip_to_main_content"}}
         </a>
       </div>

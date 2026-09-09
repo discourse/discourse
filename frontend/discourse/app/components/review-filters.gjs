@@ -19,9 +19,9 @@ export default <template>
         {{i18n "review.filters.status"}}
       </label>
       <ComboBox
-        @value={{@controller.filterStatus}}
         @content={{@controller.statuses}}
         @onChange={{fn (mut @controller.filterStatus)}}
+        @value={{@controller.filterStatus}}
       />
     </div>
 
@@ -30,18 +30,18 @@ export default <template>
         {{i18n "review.filters.type.title"}}
       </label>
       <ComboBox
-        @value={{@controller.filterType}}
         @content={{@controller.allTypes}}
         @onChange={{fn (mut @controller.filterType)}}
         @options={{hash none="review.filters.type.all"}}
+        @value={{@controller.filterType}}
       />
     </div>
 
     {{#if @controller.filtersExpanded}}
 
       <PluginOutlet
-        @name="above-review-filters"
         @connectorTagName="div"
+        @name="above-review-filters"
         @outletArgs={{lazyHash
           model=@controller.model
           additionalFilters=@controller.additionalFilters
@@ -54,7 +54,6 @@ export default <template>
             {{i18n "review.filtered_claimed_by"}}
           </label>
           <EmailGroupUserChooser
-            @value={{@controller.filterClaimedBy}}
             @onChange={{@controller.updateFilterClaimedBy}}
             @options={{hash
               maximum=1
@@ -62,6 +61,7 @@ export default <template>
               fullWidthWrap=true
               customSearchOptions=(hash canReview=true)
             }}
+            @value={{@controller.filterClaimedBy}}
           />
         </div>
       {{/unless}}
@@ -71,10 +71,10 @@ export default <template>
           {{i18n "review.filters.score_type.title"}}
         </label>
         <ComboBox
-          @value={{@controller.filterScoreType}}
           @content={{@controller.allScoreTypes}}
           @onChange={{fn (mut @controller.filterScoreType)}}
           @options={{hash none="review.filters.score_type.all"}}
+          @value={{@controller.filterScoreType}}
         />
       </div>
 
@@ -83,9 +83,9 @@ export default <template>
           {{i18n "review.filters.priority.title"}}
         </label>
         <ComboBox
-          @value={{@controller.filterPriority}}
           @content={{@controller.priorities}}
           @onChange={{fn (mut @controller.filterPriority)}}
+          @value={{@controller.filterPriority}}
         />
       </div>
 
@@ -94,9 +94,9 @@ export default <template>
           {{i18n "review.filters.category"}}
         </label>
         <CategoryChooser
-          @value={{@controller.filterCategoryId}}
           @onChange={{fn (mut @controller.filterCategoryId)}}
           @options={{hash none="review.filters.all_categories" clearable=true}}
+          @value={{@controller.filterCategoryId}}
         />
       </div>
 
@@ -105,13 +105,13 @@ export default <template>
           {{i18n "review.filtered_flagged_by"}}
         </label>
         <EmailGroupUserChooser
-          @value={{@controller.filterFlaggedBy}}
           @onChange={{@controller.updateFilterFlaggedBy}}
           @options={{hash
             maximum=1
             excludeCurrentUser=false
             fullWidthWrap=true
           }}
+          @value={{@controller.filterFlaggedBy}}
         />
       </div>
 
@@ -120,13 +120,13 @@ export default <template>
           {{i18n "review.filtered_reviewed_by"}}
         </label>
         <EmailGroupUserChooser
-          @value={{@controller.filterReviewedBy}}
           @onChange={{@controller.updateFilterReviewedBy}}
           @options={{hash
             maximum=1
             excludeCurrentUser=false
             fullWidthWrap=true
           }}
+          @value={{@controller.filterReviewedBy}}
         />
       </div>
 
@@ -135,14 +135,14 @@ export default <template>
           {{i18n "review.filtered_user"}}
         </label>
         <EmailGroupUserChooser
-          @value={{@controller.filterUsername}}
+          class="user-selector"
           @onChange={{@controller.updateFilterUsername}}
           @options={{hash
             maximum=1
             excludeCurrentUser=false
             fullWidthWrap=true
           }}
-          class="user-selector"
+          @value={{@controller.filterUsername}}
         />
       </div>
 
@@ -152,10 +152,10 @@ export default <template>
             {{i18n "review.filtered_topic"}}
           </label>
           <DButton
-            @label="review.show_all_topics"
-            @icon="xmark"
-            @action={{@controller.resetTopic}}
             class="btn-default"
+            @action={{@controller.resetTopic}}
+            @icon="xmark"
+            @label="review.show_all_topics"
           />
         </div>
       {{/if}}
@@ -165,9 +165,9 @@ export default <template>
           {{i18n "review.order_by"}}
         </label>
         <ComboBox
-          @value={{@controller.filterSortOrder}}
           @content={{@controller.sortOrders}}
           @onChange={{fn (mut @controller.filterSortOrder)}}
+          @value={{@controller.filterSortOrder}}
         />
       </div>
 
@@ -177,27 +177,27 @@ export default <template>
         </label>
         <DDateTimeInputRange
           @from={{@controller.filterFromDate}}
-          @to={{@controller.filterToDate}}
           @onChange={{@controller.setRange}}
           @showFromTime={{false}}
           @showToTime={{false}}
+          @to={{@controller.filterToDate}}
         />
       </div>
     {{/if}}
 
     <div class="reviewable-filters-actions">
       <DButton
+        class="btn-primary refresh"
+        @action={{@controller.refresh}}
         @icon="arrows-rotate"
         @label="review.filters.refresh"
-        @action={{@controller.refresh}}
-        class="btn-primary refresh"
       />
 
       <DButton
-        @label="show_help"
-        @icon={{@controller.toggleFiltersIcon}}
-        @action={{@controller.toggleFilters}}
         class="btn-default expand-secondary-filters"
+        @action={{@controller.toggleFilters}}
+        @icon={{@controller.toggleFiltersIcon}}
+        @label="show_help"
       />
 
     </div>

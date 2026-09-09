@@ -40,16 +40,16 @@ class WorkflowShowPage extends Component {
   <template>
     {{htmlClass "workflows-page"}}
     <DBreadcrumbsItem
-      @path={{this.workflowPath}}
       @label={{this.workflow.name}}
+      @path={{this.workflowPath}}
     />
 
     <div class="admin-config-page__main-area">
       <div class="workflows-header">
         <div class="workflows-header__title-area">
           <WorkflowEditableTitle
-            @value={{this.workflow.name}}
             @onSave={{this.updateName}}
+            @value={{this.workflow.name}}
           />
 
           <WorkflowTagsEditor @workflow={{this.workflow}} />
@@ -61,21 +61,21 @@ class WorkflowShowPage extends Component {
       <div class="workflows-show-nav">
         <DHorizontalOverflowNav>
           <DNavItem
-            @route="adminPlugins.show.discourse-workflows.show.index"
             @currentWhen="adminPlugins.show.discourse-workflows.show.index adminPlugins.show.discourse-workflows.show.node"
             @label="discourse_workflows.tabs.workflow"
+            @route="adminPlugins.show.discourse-workflows.show.index"
           />
           <DNavItem
-            @route="adminPlugins.show.discourse-workflows.show.executions"
             @label="discourse_workflows.tabs.executions"
+            @route="adminPlugins.show.discourse-workflows.show.executions"
           />
           <DNavItem
-            @route="adminPlugins.show.discourse-workflows.show.settings"
             @label="discourse_workflows.tabs.settings"
+            @route="adminPlugins.show.discourse-workflows.show.settings"
           />
           <DNavItem
-            @route="adminPlugins.show.discourse-workflows.show.versions"
             @label="discourse_workflows.tabs.versions"
+            @route="adminPlugins.show.discourse-workflows.show.versions"
           />
         </DHorizontalOverflowNav>
 

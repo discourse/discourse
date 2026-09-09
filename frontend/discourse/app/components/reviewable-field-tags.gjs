@@ -20,9 +20,9 @@ export default class ReviewableFieldTags extends Component {
 
   <template>
     <MiniTagChooser
-      @value={{this.value}}
       @onChange={{this.onChange}}
       @options={{hash categoryId=this.tagCategoryId}}
+      @value={{this.value}}
     />
   </template>
 }

@@ -20,50 +20,50 @@ export default <template>
   </p>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".keycaps_example")}}
-    @description={{i18n (concat KEY ".keycaps_description")}}
-    @note={{i18n (concat KEY ".keycaps_note")}}
-    @kind="component"
     @code={{keycapsSource}}
+    @description={{i18n (concat KEY ".keycaps_description")}}
+    @kind="component"
+    @note={{i18n (concat KEY ".keycaps_note")}}
+    @title={{i18n (concat KEY ".keycaps_example")}}
   >
     <KeycapsExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".block_example")}}
-    @description={{i18n (concat KEY ".block_description")}}
-    @tryThis={{i18n (concat KEY ".block_try_this")}}
-    @note={{i18n (concat KEY ".block_note")}}
-    @kind="component"
     @code={{blockSource}}
+    @description={{i18n (concat KEY ".block_description")}}
+    @kind="component"
+    @note={{i18n (concat KEY ".block_note")}}
+    @title={{i18n (concat KEY ".block_example")}}
+    @tryThis={{i18n (concat KEY ".block_try_this")}}
   >
     <BlockExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".string_form_example")}}
-    @description={{i18n (concat KEY ".string_form_description")}}
-    @tryThis={{i18n (concat KEY ".string_form_try_this")}}
     @code={{stringFormSource}}
+    @description={{i18n (concat KEY ".string_form_description")}}
+    @title={{i18n (concat KEY ".string_form_example")}}
+    @tryThis={{i18n (concat KEY ".string_form_try_this")}}
   >
     <StringFormExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".spellings_example")}}
+    @code={{spellingsSource}}
     @description={{i18n (concat KEY ".spellings_description")}}
     @note={{i18n (concat KEY ".spellings_note")}}
-    @code={{spellingsSource}}
+    @title={{i18n (concat KEY ".spellings_example")}}
   >
     <SpellingsExample />
   </StyleguideExample>
 
   <StyleguideExample
-    @title={{i18n (concat KEY ".keyboard_gate_example")}}
-    @description={{i18n (concat KEY ".keyboard_gate_description")}}
-    @tryThis={{i18n (concat KEY ".keyboard_gate_try_this")}}
-    @note={{i18n (concat KEY ".keyboard_gate_note")}}
     @code={{keyboardGateSource}}
+    @description={{i18n (concat KEY ".keyboard_gate_description")}}
+    @note={{i18n (concat KEY ".keyboard_gate_note")}}
+    @title={{i18n (concat KEY ".keyboard_gate_example")}}
+    @tryThis={{i18n (concat KEY ".keyboard_gate_try_this")}}
   >
     <KeyboardGateExample />
   </StyleguideExample>

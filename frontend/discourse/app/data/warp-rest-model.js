@@ -61,6 +61,37 @@ export default class WarpRestModel {
     return this.#resource;
   }
 
+  updateFromJson(json) {
+    if (json == null) {
+      return this;
+    }
+    const Klass = this.constructor;
+    const document = Klass.normalize(json);
+    if (!document || Array.isArray(document.data)) {
+      return this;
+    }
+    warpStore().push(document);
+    this._adoptResource(document.data?.id);
+    return this;
+  }
+
+  async save(data) {
+    const Klass = this.constructor;
+    const store = warpStore();
+    const result = await store.request(Klass.builders.save(this, data));
+    this._adoptResource(result.content?.data?.id);
+    return this;
+  }
+
+  async destroy() {
+    const Klass = this.constructor;
+    const id = this.id;
+    if (id == null) {
+      return;
+    }
+    await warpStore().request(Klass.builders.delete(id));
+  }
+
   // Attributes the schema doesn't declare never reach the cache; re-attach the
   // ones normalization retained for this identity. Called on construction and
   // whenever the wrapper adopts a cached record — subclasses with their own
@@ -91,37 +122,6 @@ export default class WarpRestModel {
       this.#resource = cached;
     }
     this._applyExtraAttributes(id);
-  }
-
-  updateFromJson(json) {
-    if (json == null) {
-      return this;
-    }
-    const Klass = this.constructor;
-    const document = Klass.normalize(json);
-    if (!document || Array.isArray(document.data)) {
-      return this;
-    }
-    warpStore().push(document);
-    this._adoptResource(document.data?.id);
-    return this;
-  }
-
-  async save(data) {
-    const Klass = this.constructor;
-    const store = warpStore();
-    const result = await store.request(Klass.builders.save(this, data));
-    this._adoptResource(result.content?.data?.id);
-    return this;
-  }
-
-  async destroy() {
-    const Klass = this.constructor;
-    const id = this.id;
-    if (id == null) {
-      return;
-    }
-    await warpStore().request(Klass.builders.delete(id));
   }
 }
 

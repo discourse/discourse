@@ -174,41 +174,6 @@ export default class RestCompatModel extends WarpRestModel {
     );
   }
 
-  // Runs `fn` between the registered `addModelCallback` before/after callbacks
-  // for `kind` ("Create" | "Update" | "Destroy").
-  async #withCallbacks(kind, props, fn) {
-    const modelName = this.#modelName;
-    await applyModelCallbacks(modelName, `before${kind}`, this, props);
-    const res = await fn();
-    await applyModelCallbacks(modelName, `after${kind}`, this, res);
-    return res;
-  }
-
-  // Merges plugin-registered save properties (see `addModelSaveProperty`) into
-  // the outgoing payload.
-  #withSaveProperties(data) {
-    const extras = extraSavePropertiesFor(this.#modelName, this);
-    return Object.keys(extras).length ? { ...data, ...extras } : data;
-  }
-
-  async _saveNew(props) {
-    props = this.#withSaveProperties(props);
-    return this.#withSaving(() => {
-      this.beforeCreate(props);
-      return this.#withCallbacks("Create", props, async () => {
-        const adapter = this.store.adapterFor(this.__type);
-        const res = await adapter.createRecord(this.store, this.__type, props);
-        if (res.payload) {
-          this.setProperties(this.constructor.munge(res.payload));
-          this.__state = "created";
-        }
-        res.target = this;
-        this.afterCreate(res);
-        return res;
-      });
-    });
-  }
-
   async update(props) {
     props = this.#withSaveProperties(props);
     return this.#withSaving(() => {
@@ -241,6 +206,23 @@ export default class RestCompatModel extends WarpRestModel {
     await this.#withCallbacks("Destroy", undefined, () => super.destroy());
   }
 
+  // Runs `fn` between the registered `addModelCallback` before/after callbacks
+  // for `kind` ("Create" | "Update" | "Destroy").
+  async #withCallbacks(kind, props, fn) {
+    const modelName = this.#modelName;
+    await applyModelCallbacks(modelName, `before${kind}`, this, props);
+    const res = await fn();
+    await applyModelCallbacks(modelName, `after${kind}`, this, res);
+    return res;
+  }
+
+  // Merges plugin-registered save properties (see `addModelSaveProperty`) into
+  // the outgoing payload.
+  #withSaveProperties(data) {
+    const extras = extraSavePropertiesFor(this.#modelName, this);
+    return Object.keys(extras).length ? { ...data, ...extras } : data;
+  }
+
   async #withSaving(fn) {
     if (this.isSaving) {
       return Promise.reject(new Error("model is already saving"));
@@ -251,5 +233,23 @@ export default class RestCompatModel extends WarpRestModel {
     } finally {
       this.isSaving = false;
     }
+  }
+
+  async _saveNew(props) {
+    props = this.#withSaveProperties(props);
+    return this.#withSaving(() => {
+      this.beforeCreate(props);
+      return this.#withCallbacks("Create", props, async () => {
+        const adapter = this.store.adapterFor(this.__type);
+        const res = await adapter.createRecord(this.store, this.__type, props);
+        if (res.payload) {
+          this.setProperties(this.constructor.munge(res.payload));
+          this.__state = "created";
+        }
+        res.target = this;
+        this.afterCreate(res);
+        return res;
+      });
+    });
   }
 }

@@ -120,6 +120,20 @@ export default class RestModel extends EmberObject {
       .finally(() => this.set("isSaving", false));
   }
 
+  createProperties() {
+    throw new Error(
+      "You must overwrite `createProperties()` before saving a record"
+    );
+  }
+
+  save(props) {
+    return this.isNew ? this._saveNew(props) : this.update(props);
+  }
+
+  destroyRecord() {
+    return this.store.destroyRecord(this.__type, this);
+  }
+
   _saveNew(props) {
     if (this.isSaving) {
       return Promise.reject();
@@ -161,19 +175,5 @@ export default class RestModel extends EmberObject {
         );
       })
       .finally(() => this.set("isSaving", false));
-  }
-
-  createProperties() {
-    throw new Error(
-      "You must overwrite `createProperties()` before saving a record"
-    );
-  }
-
-  save(props) {
-    return this.isNew ? this._saveNew(props) : this.update(props);
-  }
-
-  destroyRecord() {
-    return this.store.destroyRecord(this.__type, this);
   }
 }
