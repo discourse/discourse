@@ -225,8 +225,8 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
           path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
+          key: rspec-runtime-v2-${{ matrix.target }}-${{ matrix.build_type }}-${{ github.run_id }}
+          restore-keys: rspec-runtime-v2-${{ matrix.target }}-${{ matrix.build_type }}-
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'

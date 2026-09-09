@@ -13,7 +13,7 @@ plugin/theme revisions and cache behavior when assessing noisy results.
 
 1. Measure the original workflows on this documentation-only baseline commit.
 2. Change one optimization at a time and push one candidate revision.
-3. Launch the canonical tgx-ci watcher for the new PR head and wait for its
+3. Launch a CI watcher pinned to the new PR head and wait for its
    verdict. Collect completed workflow and job timings for that exact revision.
 4. Reject failures and coverage reductions. Keep measured improvements; revert
    regressions with a new commit. Record the hypothesis, SHA, run IDs, timings,
