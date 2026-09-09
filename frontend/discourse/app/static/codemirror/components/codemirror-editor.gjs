@@ -31,6 +31,67 @@ export default class CodemirrorEditor extends Component {
   #suppressChange = false;
   #language = new Compartment();
   #readOnly = new Compartment();
+  #placeholder = new Compartment();
+  #container = null;
+  #lastWarnings = null;
+
+  get #commandKeymap() {
+    const bindings = [];
+
+    if (this.args.save) {
+      bindings.push({
+        key: "Mod-s",
+        preventDefault: true,
+        run: () => {
+          this.args.save();
+          return true;
+        },
+      });
+    }
+
+    if (this.args.submit) {
+      bindings.push({
+        key: "Mod-Enter",
+        preventDefault: true,
+        run: () => {
+          this.args.submit();
+          return true;
+        },
+      });
+    }
+
+    return bindings;
+  }
+
+  /**
+   * A placeholder is plain text unless the caller opts in, in which case it is
+   * markup the caller is responsible for having sanitised.
+   */
+  get #placeholderContent() {
+    if (!this.args.htmlPlaceholder) {
+      return this.args.placeholder;
+    }
+
+    const element = document.createElement("div");
+    element.innerHTML = this.args.placeholder;
+    return element;
+  }
+
+  get #placeholderExtension() {
+    if (!this.args.placeholder) {
+      return [];
+    }
+
+    return placeholder(this.#placeholderContent);
+  }
+
+  get #readOnlyExtensions() {
+    if (!this.args.readOnly) {
+      return [];
+    }
+
+    return [EditorState.readOnly.of(true), EditorView.editable.of(false)];
+  }
 
   @action
   setup(container) {
@@ -41,6 +102,7 @@ export default class CodemirrorEditor extends Component {
       keymap.of([...defaultKeymap, ...historyKeymap]),
       this.#language.of([]),
       this.#readOnly.of(this.#readOnlyExtensions),
+      this.#placeholder.of(this.#placeholderExtension),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           const value = update.state.doc.toString();
@@ -58,10 +120,6 @@ export default class CodemirrorEditor extends Component {
         }
       }),
     ];
-
-    if (this.args.placeholder) {
-      extensions.push(placeholder(this.#placeholderContent));
-    }
 
     if (this.args.lineNumbers) {
       extensions.push(lineNumbers());
@@ -133,60 +191,18 @@ export default class CodemirrorEditor extends Component {
 
     // A handle for callers that only have the element: page objects driving
     // the document, and anything else outside the component tree.
+    this.#container = container;
     container.codemirrorView = this.view;
 
     this.updateLanguage();
     this.args.onSetup?.(this.view);
   }
 
-  get #commandKeymap() {
-    const bindings = [];
-
-    if (this.args.save) {
-      bindings.push({
-        key: "Mod-s",
-        preventDefault: true,
-        run: () => {
-          this.args.save();
-          return true;
-        },
-      });
-    }
-
-    if (this.args.submit) {
-      bindings.push({
-        key: "Mod-Enter",
-        preventDefault: true,
-        run: () => {
-          this.args.submit();
-          return true;
-        },
-      });
-    }
-
-    return bindings;
-  }
-
-  /**
-   * A placeholder is plain text unless the caller opts in, in which case it is
-   * markup the caller is responsible for having sanitised.
-   */
-  get #placeholderContent() {
-    if (!this.args.htmlPlaceholder) {
-      return this.args.placeholder;
-    }
-
-    const element = document.createElement("div");
-    element.innerHTML = this.args.placeholder;
-    return element;
-  }
-
-  get #readOnlyExtensions() {
-    if (!this.args.readOnly) {
-      return [];
-    }
-
-    return [EditorState.readOnly.of(true), EditorView.editable.of(false)];
+  @bind
+  updatePlaceholder() {
+    this.view?.dispatch({
+      effects: this.#placeholder.reconfigure(this.#placeholderExtension),
+    });
   }
 
   @bind
@@ -239,6 +255,14 @@ export default class CodemirrorEditor extends Component {
         return { from, to, severity: "warning", message };
       });
 
+    // Callers commonly rebuild this list on every render; only the editor can
+    // tell that nothing actually changed.
+    const signature = JSON.stringify(diagnostics);
+    if (signature === this.#lastWarnings) {
+      return;
+    }
+    this.#lastWarnings = signature;
+
     this.view.dispatch(setDiagnostics(this.view.state, diagnostics));
   }
 
@@ -276,6 +300,11 @@ export default class CodemirrorEditor extends Component {
   teardown() {
     this.view?.destroy();
     this.view = null;
+
+    if (this.#container) {
+      delete this.#container.codemirrorView;
+      this.#container = null;
+    }
   }
 
   <template>
@@ -285,6 +314,7 @@ export default class CodemirrorEditor extends Component {
       {{didUpdate this.updateValue @value}}
       {{didUpdate this.updateLanguage @language}}
       {{didUpdate this.updateReadOnly @readOnly}}
+      {{didUpdate this.updatePlaceholder @placeholder}}
       {{didUpdate this.updateWarnings @lineWarnings}}
       {{willDestroy this.teardown}}
     ></div>

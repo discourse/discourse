@@ -75,6 +75,56 @@
     color: var(--primary-medium);
   }
 
+  // CodeMirror injects a light-only baseTheme for its tooltips, so they need
+  // overriding to follow the colour scheme.
+  .cm-tooltip {
+    z-index: z("dropdown");
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .cm-tooltip-autocomplete > ul {
+    font-family: var(--d-font-family--monospace), monospace;
+
+    > li {
+      padding: 1px 0.4em;
+      color: var(--primary);
+    }
+
+    > li[aria-selected] {
+      background: var(--tertiary-low);
+      color: var(--primary);
+    }
+  }
+
+  .cm-completionDetail {
+    color: var(--primary-medium);
+    font-style: normal;
+  }
+
+  .cm-completionMatchedText {
+    color: var(--tertiary);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  // Diagnostics: the squiggle is drawn by CodeMirror, its panel is not themed.
+  .cm-diagnostic {
+    color: var(--primary);
+  }
+
+  .cm-diagnostic-warning {
+    border-left-color: var(--highlight-medium);
+  }
+
+  .cm-diagnostic-error {
+    border-left-color: var(--danger);
+  }
+
   &[data-disabled="true"] {
     opacity: 0.5;
 

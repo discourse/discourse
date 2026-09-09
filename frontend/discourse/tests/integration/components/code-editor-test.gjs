@@ -91,7 +91,7 @@ module("Integration | Component | code-editor", function (hooks) {
 
     await render(
       <template>
-        <CodeEditor @value="" @onChange={{onChange}} @onSetup={{onSetup}} />
+        <CodeEditor @onChange={{onChange}} @onSetup={{onSetup}} @value="" />
       </template>
     );
     await waitFor(".cm-editor");
@@ -109,7 +109,7 @@ module("Integration | Component | code-editor", function (hooks) {
 
     await render(
       <template>
-        <CodeEditor @value="fixed" @disabled={{state.disabled}} />
+        <CodeEditor @disabled={{state.disabled}} @value="fixed" />
       </template>
     );
     await waitFor(".cm-editor");
@@ -132,7 +132,7 @@ module("Integration | Component | code-editor", function (hooks) {
 
     await render(
       <template>
-        <CodeEditor @value="" @save={{save}} @submit={{submit}} />
+        <CodeEditor @save={{save}} @submit={{submit}} @value="" />
       </template>
     );
     await waitFor(".cm-editor");
@@ -158,8 +158,8 @@ module("Integration | Component | code-editor", function (hooks) {
         <CodeEditor
           @language="sql"
           @languageOptions={{languageOptions}}
-          @value="SELECT badges."
           @onSetup={{onSetup}}
+          @value="SELECT badges."
         />
       </template>
     );
@@ -190,7 +190,7 @@ module("Integration | Component | code-editor", function (hooks) {
 
     await render(
       <template>
-        <CodeEditor @value={{value}} @lineWarnings={{state.warnings}} />
+        <CodeEditor @lineWarnings={{state.warnings}} @value={{value}} />
       </template>
     );
     await waitUntil(() => document.querySelector(".cm-lintRange"));
@@ -208,9 +208,72 @@ module("Integration | Component | code-editor", function (hooks) {
       .doesNotExist("clearing the warnings unmarks it");
   });
 
+  test("shows a placeholder that arrives after the editor is built", async function (assert) {
+    class State {
+      @tracked placeholder = "";
+    }
+    const state = new State();
+
+    await render(
+      <template>
+        <CodeEditor @placeholder={{state.placeholder}} @value="" />
+      </template>
+    );
+    await waitFor(".cm-editor");
+
+    assert
+      .dom(".cm-placeholder")
+      .doesNotExist("nothing to show while the placeholder is empty");
+
+    state.placeholder = "Write something";
+    await settled();
+    await waitUntil(() => document.querySelector(".cm-placeholder"));
+
+    assert
+      .dom(".cm-placeholder")
+      .hasText(
+        "Write something",
+        "a later placeholder still reaches the editor"
+      );
+
+    state.placeholder = "";
+    await settled();
+    await waitUntil(() => !document.querySelector(".cm-placeholder"));
+
+    assert.dom(".cm-placeholder").doesNotExist("and clearing it removes it");
+  });
+
+  test("releases the element handle when torn down", async function (assert) {
+    class State {
+      @tracked shown = true;
+    }
+    const state = new State();
+
+    await render(
+      <template>{{#if state.shown}}<CodeEditor @value="" />{{/if}}</template>
+    );
+    await waitFor(".cm-editor");
+
+    const container = this.element.querySelector(".codemirror-editor");
+    assert.strictEqual(
+      typeof container.codemirrorView?.dispatch,
+      "function",
+      "the handle is live while mounted"
+    );
+
+    state.shown = false;
+    await settled();
+
+    assert.strictEqual(
+      container.codemirrorView,
+      undefined,
+      "a destroyed view is not left reachable from the element"
+    );
+  });
+
   test("resizable adds a drag handle", async function (assert) {
     await render(
-      <template><CodeEditor @value="" @resizable={{true}} /></template>
+      <template><CodeEditor @resizable={{true}} @value="" /></template>
     );
     await waitFor(".cm-editor");
 
