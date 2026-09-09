@@ -202,8 +202,7 @@ function buildGrip(kind, view, getPos, pluginParams, activeGestures) {
   grip.draggable = false;
   grip.tabIndex = -1;
   grip.setAttribute("aria-expanded", "false");
-  // Pointer events carry the drag and open the menu on release. A click handler
-  // remains for assistive technology that synthesizes activation directly.
+  // Open on click so a touch's delayed click cannot land on the new backdrop.
   const context = {
     kind,
     view,
@@ -211,6 +210,7 @@ function buildGrip(kind, view, getPos, pluginParams, activeGestures) {
     pluginParams,
     activeGestures,
     grip,
+    dragged: false,
   };
   grip.addEventListener("mousedown", (event) => event.preventDefault());
   grip.addEventListener("pointerdown", (event) =>
@@ -226,6 +226,7 @@ function onGripPointerDown(event, context) {
     return;
   }
   event.preventDefault();
+  context.dragged = false;
 
   const target = locateGrip(context);
   if (!target) {
@@ -236,13 +237,12 @@ function onGripPointerDown(event, context) {
   trackDrag(event, context, target);
 }
 
-// An assistive click has no pointer press to establish the target first.
 function onGripClick(event, context) {
   if (!context.view.editable) {
     return;
   }
 
-  if (event.detail !== 0) {
+  if (event.detail !== 0 && context.dragged) {
     return;
   }
 
@@ -373,6 +373,7 @@ function trackDrag(startEvent, context, target) {
     event.preventDefault();
     if (!dragging) {
       dragging = true;
+      context.dragged = true;
       inner.classList.add("is-reordering");
       moving.forEach((cell) => cell.classList.add("is-moving"));
       avatar = dragAvatar(grip, kind);
@@ -392,20 +393,6 @@ function trackDrag(startEvent, context, target) {
     const landed = event.type === "pointercancel" ? null : dropIndex;
     stop();
 
-    if (!dragging && event.type !== "pointercancel") {
-      requestAnimationFrame(() => {
-        const anchorGrip = currentGrip(context, target);
-        if (
-          view.editable &&
-          view.state.doc.nodeAt(target.table.pos) === target.table.node &&
-          anchorGrip.isConnected
-        ) {
-          openGripMenu({ ...context, grip: anchorGrip }, target);
-        }
-      });
-      return;
-    }
-
     if (dragging) {
       if (landed !== null) {
         const command =
@@ -421,15 +408,6 @@ function trackDrag(startEvent, context, target) {
 
   const stopTracking = trackPointer(startEvent, move, finish);
   activeGestures.add(stop);
-}
-
-function currentGrip({ kind, grip, view }, target) {
-  const table = view.nodeDOM(target.table.pos);
-  const index = kind === "row" ? target.row : target.col;
-
-  return table instanceof Element
-    ? (table.querySelectorAll(`.composer-table__grip.--${kind}`)[index] ?? grip)
-    : grip;
 }
 
 function announceMove({ kind, pluginParams, view }, index, landed) {

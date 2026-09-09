@@ -97,7 +97,7 @@ async function pressGrip(
   grip,
   {
     activate = false,
-    click: withClick = false,
+    click: withClick = activate,
     moveBy = 0,
     pointerType = "mouse",
   } = {}
@@ -620,6 +620,29 @@ module(
       assert
         .dom(".composer-table-menu__duplicate-row")
         .exists("the row actions render in a touch-friendly sheet");
+    });
+
+    test("a mobile grip can reopen its drawer after closing", async function (assert) {
+      forceMobile();
+      await setupRichEditor(assert, TABLE, { withMenus: true });
+      const grip = findAll(".composer-table__grip.--row")[1];
+      const selector =
+        '.fk-d-menu-modal[data-identifier="composer-table-menu"]';
+
+      for (let attempt = 0; attempt < 3; attempt++) {
+        await pressGrip(grip, {
+          activate: true,
+          pointerType: "touch",
+          click: true,
+        });
+        assert.dom(selector).exists(`tap ${attempt + 1} opens the drawer`);
+        await this.owner
+          .lookup("service:menu")
+          .getByIdentifier("composer-table-menu")
+          .close();
+        await settled();
+        assert.dom(selector).doesNotExist("the drawer closes");
+      }
     });
 
     test("an active mobile grip does not expose vertical table scrolling", async function (assert) {
