@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import resolvePermalink from "discourse/lib/permalink-check";
 import PreloadStore from "discourse/lib/preload-store";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import Category from "discourse/models/category";
@@ -29,14 +30,28 @@ class AbstractCategoryRoute extends DiscourseRoute {
   templateName = "discovery/list";
 
   async model(params, transition) {
-    const category = this.site.lazy_load_categories
-      ? await Category.asyncFindBySlugPathWithID(
-          params.category_slug_path_with_id
-        )
-      : Category.findBySlugPathWithID(params.category_slug_path_with_id);
+    let category;
+
+    try {
+      category = this.site.lazy_load_categories
+        ? await Category.asyncFindBySlugPathWithID(
+            params.category_slug_path_with_id
+          )
+        : Category.findBySlugPathWithID(params.category_slug_path_with_id);
+    } catch (error) {
+      if (error?.jqXHR?.status !== 404) {
+        throw error;
+      }
+    }
 
     if (!category) {
-      this.router.replaceWith("/404");
+      const result = await resolvePermalink(
+        `/c/${params.category_slug_path_with_id}`,
+        transition
+      );
+      if (result.type === "not-found") {
+        this.router.replaceWith("/404");
+      }
       return;
     }
 
