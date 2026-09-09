@@ -70,7 +70,6 @@
     "@warp-drive/json-api": "5.9.0-alpha.15",
     "@warp-drive/legacy": "5.9.0-alpha.15",
     "@warp-drive/utilities": "5.9.0-alpha.15",
-    "ace-builds": "^1.44.0",
     "chart.js": "4.5.1",
     "chartjs-adapter-moment": "^1.0.1",
     "chartjs-plugin-datalabels": "2.2.0",

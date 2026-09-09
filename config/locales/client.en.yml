@@ -4,8 +4,6 @@ en:
       disabled: "Admin registration only"
       approved_domains: "CIMD from approved domains"
       any_domain: "CIMD from any domain"
-    ace_editor:
-      resize: "Resize code editor"
     code_editor:
       resize: "Resize code editor"
     user_api_key:
