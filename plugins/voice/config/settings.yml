@@ -11,6 +11,9 @@ plugins:
       learn_more_url: "https://meta.discourse.org/t/-/411337"
       requires_plugin_enabled: false
       permanent_warning: false
+  voice_verbose_logging:
+    default: false
+    client: true
   voice_allowed_groups:
     type: group_list
     list_type: compact

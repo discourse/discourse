@@ -1,5 +1,6 @@
 en:
   site_settings:
+    voice_verbose_logging: "Log voice diagnostic information and warnings in server logs and browser consoles. Disabled by default. Logs exclude credentials, transcripts, signaling payloads, and raw error details."
     voice_enabled: "Voice brings integrated voice and video rooms to Discourse, with screen sharing, background blur, noise suppression, live subtitles, direct calls, room chat, and group-based permissions. Members can keep browsing while they talk, with no external app required."
     voice_allowed_groups: "Groups that can access voice rooms."
     voice_create_room_allowed_groups: "Groups that can create new voice rooms."

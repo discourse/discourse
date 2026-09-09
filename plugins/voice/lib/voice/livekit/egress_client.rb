@@ -20,8 +20,8 @@ module Voice
           if SiteSetting.voice_livekit_recording_s3_bucket.present?
             validator = VoiceLivekitRecordingS3BucketValidator.new
             unless validator.valid_value?(SiteSetting.voice_livekit_recording_s3_bucket)
-              Rails.logger.warn(
-                "[voice-livekit] StartRoomCompositeEgress refused: #{validator.error_message}",
+              Voice.warn(
+                "[voice-livekit] StartRoomCompositeEgress refused: invalid recording storage configuration",
               )
               return { ok: false, error: validator.error_message }
             end
@@ -73,11 +73,9 @@ module Voice
           if response.status == 200
             { ok: true, data: JSON.parse(response.body) }
           else
-            # The upstream body goes to the log for the operator; the result
-            # surfaced to the UI only carries the status code.
-            Rails.logger.warn(
+            Voice.warn(
               "[voice-livekit] #{method} failed: " \
-                "HTTP #{response.status} #{redact_credentials(response.body).truncate(200)}",
+                "HTTP #{response.status}",
             )
             { ok: false, error: "HTTP #{response.status}" }
           end
@@ -88,7 +86,7 @@ module Voice
           }
         rescue StandardError => e
           message = redact_credentials(e.message)
-          Rails.logger.warn("[voice-livekit] #{method} failed: #{e.class} #{message}")
+          Voice.warn("[voice-livekit] #{method} failed: #{e.class}")
           { ok: false, error: "#{e.class}: #{message}" }
         end
 
