@@ -48,12 +48,24 @@ RSpec.describe NestedTopic::ShowContext do
     context "when target post is soft-deleted" do
       before { PostDestroyer.new(Discourse.system_user, target, context: "spec").destroy }
 
-      it { is_expected.to run_successfully }
+      it { is_expected.to fail_to_find_a_model(:target_post) }
 
-      it "resolves the deleted post and serializes it via the placeholder path" do
-        response = result[:response]
-        expect(response[:target_post][:id]).to eq(target.id)
-        expect(response[:target_post][:deleted_post_placeholder]).to eq(true)
+      context "when viewed by staff" do
+        fab!(:admin)
+
+        let(:topic_view) do
+          TopicView.new(topic.id, admin, skip_custom_fields: true, skip_post_loading: true)
+        end
+        let(:dependencies) { { guardian: admin.guardian, topic_view: topic_view } }
+
+        it { is_expected.to run_successfully }
+
+        it "resolves the deleted post and preserves its content" do
+          response = result[:response]
+          expect(response[:target_post][:id]).to eq(target.id)
+          expect(response[:target_post][:deleted_post_placeholder]).to eq(true)
+          expect(response[:target_post][:cooked]).to be_present
+        end
       end
     end
 

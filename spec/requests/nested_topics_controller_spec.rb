@@ -732,33 +732,48 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     describe "deleted post placeholders" do
-      it "shows deleted root as placeholder for non-staff" do
+      it "hides a deleted root with no visible replies from non-staff" do
         root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
         root.update!(deleted_at: Time.current)
         sign_in(user)
 
         get show_url(topic)
         json = response.parsed_body
-        root_json = json["roots"].find { |r| r["id"] == root.id }
-        expect(root_json).to be_present
-        expect(root_json["deleted_post_placeholder"]).to eq(true)
-        expect(root_json["cooked"]).to eq("")
-        expect(root_json["raw"]).to be_nil
-        expect(root_json["actions_summary"]).to eq([])
+
+        expect(json["roots"].map { |post| post["id"] }).not_to include(root.id)
       end
 
-      it "preserves children under deleted root for non-staff" do
+      it "preserves deleted ancestors needed to expose visible replies for non-staff" do
         root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
-        child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        deleted_child =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        visible_grandchild =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: deleted_child.post_number,
+          )
+        deleted_leaf =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
         root.update!(deleted_at: Time.current)
+        deleted_child.update!(deleted_at: Time.current)
+        deleted_leaf.update!(deleted_at: Time.current)
         sign_in(user)
 
         get show_url(topic)
-        json = response.parsed_body
-        root_json = json["roots"].find { |r| r["id"] == root.id }
-        expect(root_json["children"]).to be_an(Array)
-        expect(root_json["children"].length).to eq(1)
-        expect(root_json["children"].first["id"]).to eq(child.id)
+        root_json = response.parsed_body["roots"].find { |post| post["id"] == root.id }
+        expect(root_json["children"].map { |post| post["id"] }).to eq([deleted_child.id])
+        child_json = root_json["children"].first
+
+        expect(root_json["deleted_post_placeholder"]).to eq(true)
+        expect(root_json["direct_reply_count"]).to eq(1)
+        expect(root_json["total_descendant_count"]).to eq(2)
+        expect(child_json["id"]).to eq(deleted_child.id)
+        expect(child_json["deleted_post_placeholder"]).to eq(true)
+        expect(child_json["direct_reply_count"]).to eq(1)
+        expect(child_json["total_descendant_count"]).to eq(1)
+        expect(child_json["children"].map { |post| post["id"] }).to eq([visible_grandchild.id])
       end
 
       it "shows deleted root as placeholder for staff but preserves content" do
@@ -773,6 +788,17 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_json["deleted_post_placeholder"]).to eq(true)
         expect(root_json["cooked"]).to be_present
         expect(root_json["cooked"]).not_to eq("")
+      end
+
+      it "leaves non-nested topic post-stream visibility unchanged" do
+        deleted_reply = Fabricate(:post, topic: topic, user: user)
+        deleted_reply.update!(deleted_at: Time.current)
+        sign_in(user)
+
+        get "/t/#{topic.id}.json"
+
+        post_ids = response.parsed_body.dig("post_stream", "posts").map { |post| post["id"] }
+        expect(post_ids).not_to include(deleted_reply.id)
       end
 
       it "lets staff view a fully-deleted topic so they can recover it" do
@@ -1372,19 +1398,15 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     describe "deleted post placeholders" do
-      it "shows deleted child as placeholder for non-staff" do
+      it "hides a deleted child with no visible replies from non-staff" do
         child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
         child.update!(deleted_at: Time.current)
         sign_in(user)
 
         get children_url(topic, root.post_number)
         json = response.parsed_body
-        child_json = json["children"].find { |c| c["id"] == child.id }
-        expect(child_json).to be_present
-        expect(child_json["deleted_post_placeholder"]).to eq(true)
-        expect(child_json["cooked"]).to eq("")
-        expect(child_json["raw"]).to be_nil
-        expect(child_json["actions_summary"]).to eq([])
+
+        expect(json["children"].map { |post| post["id"] }).not_to include(child.id)
       end
 
       it "preserves children of a deleted post" do

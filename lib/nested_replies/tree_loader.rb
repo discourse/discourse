@@ -103,7 +103,48 @@ module NestedReplies
             whisper: Post.types[:whisper],
           )
       end
-      scope
+      scope.where(renderable_post_sql)
+    end
+
+    # Non-staff need deleted posts only when they connect the tree to a reply
+    # they can see. Starting from every visible, non-deleted post and walking
+    # upward identifies exactly those structural placeholders, including a
+    # chain of multiple deleted ancestors.
+    def renderable_post_sql(posts_table = "posts")
+      return "TRUE" if guardian.can_see_deleted_posts?(topic.category)
+
+      @renderable_post_sql ||= {}
+      @renderable_post_sql[posts_table] ||= <<~SQL.squish
+        (
+          #{posts_table}.deleted_at IS NULL
+          OR #{posts_table}.post_number IN (
+            WITH RECURSIVE visible_ancestors(post_number) AS (
+              SELECT visible_posts.reply_to_post_number
+              FROM posts visible_posts
+              WHERE visible_posts.topic_id = #{topic.id.to_i}
+                AND visible_posts.deleted_at IS NULL
+                AND visible_posts.post_type IN (#{visible_post_types.join(", ")})
+                AND (
+                  visible_posts.post_type != #{Post.types[:whisper]}
+                  OR visible_posts.action_code IS NULL
+                  OR visible_posts.action_code = ''
+                )
+
+              UNION
+
+              SELECT ancestor_posts.reply_to_post_number
+              FROM posts ancestor_posts
+              JOIN visible_ancestors
+                ON visible_ancestors.post_number = ancestor_posts.post_number
+              WHERE ancestor_posts.topic_id = #{topic.id.to_i}
+                AND ancestor_posts.reply_to_post_number IS NOT NULL
+            )
+            SELECT post_number
+            FROM visible_ancestors
+            WHERE post_number IS NOT NULL
+          )
+        )
+      SQL
     end
 
     def batch_preload_tree(starting_posts, sort, max_depth:, starting_depth: 0)
@@ -144,6 +185,7 @@ module NestedReplies
                 WHERE posts.topic_id = :topic_id
                   AND posts.reply_to_post_number IN (:parent_numbers)
                   AND posts.post_type IN (:post_types)
+                  AND #{renderable_post_sql}
                   AND posts.post_number > 1
               ) ranked
               WHERE rn <= :limit
@@ -305,6 +347,7 @@ module NestedReplies
             WHERE posts.topic_id = :topic_id
               AND posts.id IN (:starting_post_ids)
               AND posts.post_type IN (:post_types)
+              AND #{renderable_post_sql}
               AND (
                 posts.post_type != :whisper_post_type
                 OR posts.action_code IS NULL
@@ -333,6 +376,7 @@ module NestedReplies
                 AND posts.reply_to_post_number = preload_tree.post_number
                 AND posts.post_number > 1
                 AND posts.post_type IN (:post_types)
+                AND #{renderable_post_sql}
                 AND (
                   posts.post_type != :whisper_post_type
                   OR posts.action_code IS NULL
@@ -381,7 +425,11 @@ module NestedReplies
         order_expr = NestedReplies::Sort.sql_order_expression(sort)
         hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql : ""
 
-        visibility_conditions = +"posts.post_type IN (:post_types) AND posts.post_number > 1"
+        visibility_conditions = <<~SQL.squish
+          posts.post_type IN (:post_types)
+          AND posts.post_number > 1
+          AND #{renderable_post_sql}
+        SQL
         sql_params = {
           topic_id: topic.id,
           parent_numbers: parent_numbers,
@@ -492,6 +540,7 @@ module NestedReplies
                AND posts.post_number = descendants.post_number
               #{hot_join}
               WHERE posts.post_type IN (:post_types)
+                AND #{renderable_post_sql}
             )
             SELECT root_post_number, post_number
             FROM ranked
@@ -575,13 +624,9 @@ module NestedReplies
     def direct_reply_counts(post_numbers)
       return {} if post_numbers.empty?
 
-      Post
-        .with_deleted
-        .where(topic_id: topic.id)
-        .where(reply_to_post_number: post_numbers)
-        .where(post_type: visible_post_types)
-        .group(:reply_to_post_number)
-        .count
+      apply_visibility(
+        Post.with_deleted.where(topic_id: topic.id).where(reply_to_post_number: post_numbers),
+      ).group(:reply_to_post_number).count
     end
 
     def tree_counts(posts)
@@ -598,7 +643,13 @@ module NestedReplies
       post_records = posts.select { |post| post.respond_to?(:post_number) }
       post_ids = posts.map { |post| post.respond_to?(:post_number) ? post.id : post }.compact.uniq
 
-      stat_counts = cached_total_descendant_counts(post_ids)
+      stat_counts =
+        if guardian.can_see_deleted_posts?(topic.category) ||
+             !topic.posts.with_deleted.where.not(deleted_at: nil).exists?
+          cached_total_descendant_counts(post_ids)
+        else
+          {}
+        end
 
       return stat_counts if post_records.empty?
 
@@ -648,10 +699,14 @@ module NestedReplies
             WHERE child.post_number > 1
               AND descendants.depth < :max_cte_depth
           )
-          SELECT root_post_number, COUNT(*) AS total_descendant_count
+          SELECT descendants.root_post_number, COUNT(*) AS total_descendant_count
           FROM descendants
-          WHERE post_type IN (:post_types)
-          GROUP BY root_post_number
+          JOIN posts descendant_posts
+            ON descendant_posts.topic_id = :topic_id
+           AND descendant_posts.post_number = descendants.post_number
+          WHERE descendants.post_type IN (:post_types)
+            AND #{renderable_post_sql("descendant_posts")}
+          GROUP BY descendants.root_post_number
         SQL
           topic_id: topic.id,
           post_ids: post_ids_by_number.values,
