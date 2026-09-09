@@ -51,8 +51,6 @@ RSpec.describe DiscourseVips do
     end
 
     it "recovers after an operation times out" do
-      skip "per-operation timeouts require fork isolation" if RUBY_PLATFORM.include?("darwin")
-
       Dir.mktmpdir do |directory|
         input_path = File.join(directory, "blocked.png")
         File.mkfifo(input_path)

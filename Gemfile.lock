@@ -316,7 +316,7 @@ GEM
       simpleidn (~> 0.2)
     jwt (2.10.3)
       base64
-    landlock (0.5)
+    landlock (0.5.1)
     language_server-protocol (3.17.0.6)
     libv8-node (24.12.0.1-aarch64-linux)
     libv8-node (24.12.0.1-aarch64-linux-musl)
@@ -1112,7 +1112,7 @@ CHECKSUMS
   json_completer (1.2.0) sha256=4665749172634eccb208c562eb59ea81dd7a612a1fa9a36df441ac473ff177b1
   json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
   jwt (2.10.3) sha256=e4d9352fbc7309b1a7448c7dd713dfe4d8c47077af80759cdbed8f878ea0b484
-  landlock (0.5) sha256=fbe450a0f73be398a7dd75e7b731bcf3764442228c8a259b6fa651affb431d33
+  landlock (0.5.1) sha256=4c66c5ea238ce0fb4dbf0ea8697da3af01f396f86b34f1f5c323969bc524eba0
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   libv8-node (24.12.0.1-aarch64-linux) sha256=22bd0246cde85d70c88cf772727ac3677a20ac1d169105f82efe5f1f7c39f755
   libv8-node (24.12.0.1-aarch64-linux-musl) sha256=791b5960f79525e87d1bd1e5f2bf3715ef2a38bac6c97f297853e98a8411ba89
