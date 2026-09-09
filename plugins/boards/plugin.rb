@@ -29,7 +29,8 @@ after_initialize do
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
       require_relative "lib/discourse_workflows/nodes/create_board/v1"
-      [DiscourseWorkflows::Nodes::CreateBoard::V1]
+      require_relative "lib/discourse_workflows/nodes/create_board_column/v1"
+      [DiscourseWorkflows::Nodes::CreateBoard::V1, DiscourseWorkflows::Nodes::CreateBoardColumn::V1]
     end
   end
 

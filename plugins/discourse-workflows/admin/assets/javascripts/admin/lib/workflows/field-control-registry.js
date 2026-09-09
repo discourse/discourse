@@ -78,6 +78,7 @@ const FIELD_CONTROL_REGISTRY = {
   },
   select: { kind: "field", type: "select", renderer: SelectControl },
   icon: { kind: "field", type: "icon", renderer: IconControl },
+  color: { kind: "field", type: "color", renderer: DefaultInputControl },
   checkbox: { kind: "field", type: "checkbox", renderer: DefaultInputControl },
   textarea: { kind: "field", type: "textarea", renderer: DefaultInputControl },
   time: { kind: "field", type: "input-time", renderer: DefaultInputControl },

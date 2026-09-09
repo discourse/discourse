@@ -4,9 +4,21 @@ en:
       node_unavailable:
         requires_boards: "Requires Boards to be enabled"
       nodes:
+        "action:create_board_column": "Create board column"
         "action:create_board": "Create board"
       node_descriptions:
+        "action:create_board_column": "Create a column on a board with an optional icon, color, tag, and default sort"
         "action:create_board": "Create a board with access permissions and optional tag and category constraints"
+      create_board_column:
+        board_id: "Board"
+        board_id_description: "Select a board or use a board ID from a previous step."
+        title: "Title"
+        icon: "Icon"
+        color: "Color"
+        tag_name: "Tag"
+        default_sort: "Default sort"
+        default_sort_priority: "Priority"
+        default_sort_recency: "Recency"
       create_board:
         name: "Name"
         slug: "Slug"

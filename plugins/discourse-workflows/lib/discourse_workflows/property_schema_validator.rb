@@ -94,6 +94,7 @@ module DiscourseWorkflows
     ].freeze
 
     KNOWN_UI_CONTROLS = %i[
+      color
       access_control
       actor
       boolean

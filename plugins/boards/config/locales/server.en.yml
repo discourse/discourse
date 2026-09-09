@@ -1,6 +1,11 @@
 en:
   discourse_workflows:
     errors:
+      create_board_column:
+        board_not_found: "Could not find the board for this column."
+        forbidden: "The workflow execution user does not have permission to manage this board."
+        invalid_params: "Could not create board column: %{errors}"
+        failed: "Could not create the board column."
       create_board:
         forbidden: "The workflow execution user does not have permission to create boards."
         invalid_params: "Could not create board: %{errors}"
