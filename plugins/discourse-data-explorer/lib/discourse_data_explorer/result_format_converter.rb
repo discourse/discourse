@@ -36,7 +36,7 @@ module DiscourseDataExplorer
         success: true,
         errors: [],
         duration: (result[:duration_secs].to_f * 1000).round(1),
-        result_count: pg_result.values.length || 0,
+        result_count: pg_result.ntuples,
         params: opts[:query_params],
         columns: cols,
         default_limit: SiteSetting.data_explorer_query_result_limit,
