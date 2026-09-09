@@ -469,7 +469,7 @@ class DiscourseVipsWorker
     def self.gif_icc_profile(input_path)
       File.open(input_path, "rb") do |file|
         header = read_gif_bytes(file: file, length: 13)
-        unless %w[GIF87a GIF89a].include?(header.byteslice(0, 6))
+        unless header.start_with?("GIF87a", "GIF89a")
           raise InvalidImage, "invalid GIF header"
         end
         packed = header.getbyte(10)
