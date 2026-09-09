@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
 import { eq, or } from "discourse/truth-helpers";
-import DButton from "discourse/ui-kit/d-button";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import DUserLink from "discourse/ui-kit/d-user-link";
@@ -170,19 +170,16 @@ export default class BoardsPage extends Component {
           </div>
         </:content>
         <:customEmptyState>
-          <div class="discourse-boards-boards-empty">
-            {{dIcon "table-columns"}}
-            <h3>{{i18n "boards.manage.empty_title"}}</h3>
-            {{#if @canManageBoards}}
-              <p>{{i18n "boards.manage.get_started"}}</p>
-              <DButton
-                @action={{this.openNewBoardModal}}
-                @icon="plus"
-                @label="boards.manage.new"
-                class="btn-primary"
-              />
-            {{/if}}
-          </div>
+          <DEmptyState
+            class="discourse-boards-boards-empty"
+            @identifier="boards-list"
+            @icon="table-columns"
+            @title={{i18n "boards.manage.empty_title"}}
+            @body={{if @canManageBoards (i18n "boards.manage.get_started")}}
+            @ctaLabel={{if @canManageBoards (i18n "boards.manage.new")}}
+            @ctaAction={{this.openNewBoardModal}}
+            @ctaIcon="plus"
+          />
         </:customEmptyState>
       </DFilterControls>
     </div>

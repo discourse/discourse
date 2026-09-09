@@ -45,6 +45,13 @@
   &__text {
     cursor: pointer;
 
+    // A title reads as text, so it keeps the input's alignment and wrapping
+    // rather than the button defaults it now sits on.
+    justify-content: flex-start;
+    text-align: left;
+    white-space: normal;
+    background: transparent;
+
     &:hover {
       background: var(--primary-very-low);
     }
@@ -147,32 +154,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1em;
-  }
-
-  .discourse-boards-boards-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3em 1em;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    text-align: center;
-
-    > .d-icon {
-      font-size: 2.5em;
-      color: var(--primary-medium);
-      margin-bottom: 0.4em;
-    }
-
-    h3 {
-      margin: 0 0 0.25em;
-    }
-
-    p {
-      color: var(--primary-medium);
-      margin: 0 0 1em;
-    }
   }
 }
 
@@ -293,5 +274,47 @@
 
   &--restricted .d-icon {
     color: var(--primary-medium);
+  }
+}
+
+// The boards list's empty state, keyed on the shared component's own modifier.
+.empty-state__container.--boards-list {
+  padding: 3em 1em;
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-state__image {
+    margin-top: 0;
+  }
+
+  .empty-state__image .d-icon {
+    width: 2.5em;
+    height: 2.5em;
+    color: var(--primary-medium);
+    margin-bottom: 0.4em;
+  }
+
+  // As on the board's empty state: this was a heading, so it keeps a heading's
+  // size and weight.
+  .empty-state__title {
+    margin: 0 0 0.25em;
+    font-size: var(--font-up-2);
+    font-weight: var(--heading-font-weight);
+  }
+
+  .empty-state__body p {
+    color: var(--primary-medium);
+    margin: 0;
+  }
+
+  .empty-state__cta {
+    margin-top: 1em;
   }
 }

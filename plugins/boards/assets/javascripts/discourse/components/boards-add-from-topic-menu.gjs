@@ -9,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DSkeleton from "discourse/ui-kit/d-skeleton";
 import { i18n } from "discourse-i18n";
 import Board from "discourse/plugins/boards/discourse/models/board";
 import BoardsAddFromTopicColumnSubmenu from "./boards-add-from-topic-column-submenu";
@@ -20,8 +21,11 @@ const BoardSkeleton = <template>
     class="discourse-boards-add-from-topic-menu__skeleton"
     aria-hidden="true"
   >
-    <div class="discourse-boards-add-from-topic-menu__skeleton-label"></div>
-    <div class="discourse-boards-add-from-topic-menu__skeleton-icon"></div>
+    <DSkeleton class="discourse-boards-add-from-topic-menu__skeleton-label" />
+    <DSkeleton
+      class="discourse-boards-add-from-topic-menu__skeleton-icon"
+      @variant="rect"
+    />
   </div>
 </template>;
 

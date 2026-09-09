@@ -8,18 +8,17 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import TopicStatus from "discourse/components/topic-status";
 import DMenu from "discourse/float-kit/components/d-menu";
-import renderTags from "discourse/lib/render-tags";
-import { emojiUnescape } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
-import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
@@ -49,10 +48,6 @@ export default class BoardsCard extends Component {
     return this.args.card.fancyTitle;
   }
 
-  get renderedTopicTitle() {
-    return trustHTML(emojiUnescape(escapeExpression(this.cardTitle || "")));
-  }
-
   get inlineOneboxData() {
     const data = this.args.card.inline_onebox_data;
     return data?.url && data?.title ? data : null;
@@ -76,21 +71,18 @@ export default class BoardsCard extends Component {
     });
   }
 
-  get tagsHtml() {
+  get cardTags() {
     if (this.isTopicCard) {
       if (!this.args.board.show_tags || !this.topic?.tags) {
-        return null;
+        return [];
       }
 
-      const filtered = this.topic.tags.filter(
+      return this.topic.tags.filter(
         (tag) => !this.columnTagNames.has(tag.toLowerCase())
       );
-
-      return filtered.length ? renderTags(null, { tags: filtered }) : null;
     }
 
-    const tags = this.visibleFloaterTags;
-    return tags.length ? renderTags(null, { tags }) : null;
+    return this.visibleFloaterTags;
   }
 
   get category() {
@@ -222,14 +214,6 @@ export default class BoardsCard extends Component {
             group_name: a.group_name,
           }),
     }));
-  }
-
-  get floaterTagsHtml() {
-    const tags = this.args.card.tags;
-    if (this.isTopicCard || !tags?.length) {
-      return null;
-    }
-    return renderTags(null, { tags });
   }
 
   @action
@@ -448,7 +432,7 @@ export default class BoardsCard extends Component {
             {{#if this.topicStatusModel}}
               <TopicStatus @topic={{this.topicStatusModel}} />
             {{/if}}
-            {{this.renderedTopicTitle}}
+            {{dReplaceEmoji this.cardTitle}}
           </span>
         {{else}}
           <span class="discourse-boards-card__title">
@@ -514,9 +498,9 @@ export default class BoardsCard extends Component {
         {{/unless}}
       </div>
 
-      {{#if this.tagsHtml}}
+      {{#if this.cardTags.length}}
         <div class="discourse-boards-card__row discourse-boards-card__tags">
-          {{trustHTML this.tagsHtml}}
+          {{dDiscourseTags null tags=this.cardTags}}
         </div>
       {{/if}}
 
