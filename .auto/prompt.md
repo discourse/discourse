@@ -10,8 +10,8 @@ tests into additional jobs. A skipped test suite is not a successful optimizatio
 Use this draft PR as the measurement environment. Keep the base revision fixed
 at 0708de39bcebe79c8469dfd88cd568c8e71b42c7 during the experiment. Record external
 plugin/theme revisions and cache behavior when assessing noisy results.
-Temporarily check out this PR head during measurements so updates to main do not
-change the tested sources. Remove the checkout pin before final merge validation.
+Controlled measurements used a temporary PR-head checkout to prevent updates to
+main from changing tested sources. Final validation restores normal merge checkout.
 
 ## Procedure
 
@@ -37,7 +37,14 @@ step took 690 seconds and core backend RSpec took 512 seconds. Setup overlap
 alone cannot reach the target. Explore worker utilization, runtime-based balancing,
 and setup efficiency within the existing jobs. Do not add test jobs.
 
-This file establishes a baseline without changing workflow behavior. Local
-measurement scripts and raw results live beside it and are excluded from commits.
+The first six-candidate run did not reach 480 seconds. Its best controlled run
+was 636 seconds with no retries and matching test counts. Dependency overlap saved
+2-10 seconds per job, and recorded timings improved theme worker balancing.
+Backend YJIT and fourteen core-system workers were reverted after showing no
+measured benefit and higher memory use. Twelve core-system workers remain
+provisional because execution times varied substantially.
+
+Local measurement scripts and raw results are excluded from commits. The commit
+history records each candidate, measurement and revert.
 The experiment follows https://github.com/davebcn87/pi-autoresearch using Codex
 as the coordinator and GitHub Actions as the benchmark executor.
