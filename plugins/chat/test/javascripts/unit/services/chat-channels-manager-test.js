@@ -569,6 +569,45 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
       );
     });
 
+    test("sorts unread channels alphabetically before read channels", function (assert) {
+      this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.UNREAD_FIRST;
+      this.buildChannel({ id: 1, slug: "alpha-read", createdAt: "2026-09-04" });
+      this.buildChannel({
+        id: 2,
+        slug: "zulu-unread",
+        createdAt: "2026-09-01",
+        unreadCount: 1,
+      });
+      this.buildChannel({
+        id: 3,
+        slug: "mike-mention",
+        createdAt: "2026-08-30",
+        mentionCount: 1,
+      });
+      this.buildChannel({ id: 4, slug: "bravo-read", createdAt: "2026-09-03" });
+      this.buildChannel({
+        id: 5,
+        slug: "charlie-muted",
+        createdAt: "2026-09-05",
+        unreadCount: 3,
+        muted: true,
+      });
+
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels.map(
+          (channel) => channel.slug
+        ),
+        [
+          "mike-mention",
+          "zulu-unread",
+          "alpha-read",
+          "bravo-read",
+          "charlie-muted",
+        ],
+        "unread channels come first, each tier alphabetical, muted counts as read"
+      );
+    });
+
     test("filters channels by recent activity", function (assert) {
       const clock = sinon.useFakeTimers(new Date("2026-09-03T12:00:00Z"));
 
