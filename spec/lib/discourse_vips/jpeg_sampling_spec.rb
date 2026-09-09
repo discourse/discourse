@@ -3,7 +3,7 @@
 require "vips"
 
 RSpec.describe DiscourseVips do
-  %i[convert_to_jpeg auto_orient].each do |operation|
+  %i[downsize convert_to_jpeg auto_orient].each do |operation|
     describe ".#{operation}" do
       it "retains full chroma detail when the source uses uncommon sampling" do
         Dir.mktmpdir do |directory|
@@ -13,6 +13,13 @@ RSpec.describe DiscourseVips do
             output_path = File.join(directory, "output-#{sampling}.jpg")
             arguments = { input_path:, output_path:, timeout: 20 }
             case operation
+            when :downsize
+              arguments.merge!(
+                input_format: "jpeg",
+                output_format: "jpeg",
+                geometry: "50%",
+                quality: 89,
+              )
             when :convert_to_jpeg
               arguments.merge!(input_format: "jpeg", quality: 89)
             when :auto_orient
@@ -24,8 +31,10 @@ RSpec.describe DiscourseVips do
             output = Vips::Image.jpegload(output_path)
             expect(output.get("jpeg-chroma-subsample")).to eq("4:4:4")
             expect(File.binread(input_path)).to eq(source_bytes)
-            source = Vips::Image.jpegload(input_path)
-            expect((source - output).abs.avg).to be < 2
+            if %i[convert_to_jpeg auto_orient].include?(operation)
+              source = Vips::Image.jpegload(input_path)
+              expect((source - output).abs.avg).to be < 2
+            end
           end
         end
       end
@@ -48,6 +57,13 @@ RSpec.describe DiscourseVips do
             output_path = File.join(directory, "output-#{subsample_mode}.jpg")
             arguments = { input_path:, output_path:, timeout: 20 }
             case operation
+            when :downsize
+              arguments.merge!(
+                input_format: "jpeg",
+                output_format: "jpeg",
+                geometry: "50%",
+                quality:,
+              )
             when :convert_to_jpeg
               arguments.merge!(input_format: "jpeg", quality:)
             when :auto_orient

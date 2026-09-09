@@ -73,6 +73,15 @@ class DiscourseVipsWorker
           output_path: arguments[1],
           source_quality: arguments[2],
         )
+      when "downsize"
+        downsize(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          input_format: arguments[2],
+          output_format: arguments[3],
+          geometry: arguments[4],
+          quality: arguments[5],
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -340,7 +349,7 @@ class DiscourseVipsWorker
 
         block_loaders(allowed: %w[VipsForeignLoadPng])
         begin
-          DiscourseVips::IcoImage.load(input_path).autorot.pngsave(output_path)
+          DiscourseVips::IcoImage.load(input_path:).autorot.pngsave(output_path)
         rescue Vips::Error, ArgumentError => error
           raise InvalidImage, error.message
         end
@@ -559,6 +568,224 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :auto_orient
+
+    def self.downsize(input_path:, output_path:, input_format:, output_format:, geometry:, quality:)
+      require "discourse_vips/ico_image" if input_format == "ico"
+
+      read_paths = [input_path]
+      read_paths.concat(%w[/etc/fonts /var/cache/fontconfig]) if input_format == "svg"
+
+      new(read_paths:, write_paths: [File.dirname(output_path)]) do
+        begin
+          if File.identical?(input_path, output_path)
+            raise ArgumentError, "input and output must be different files"
+          end
+
+          quality = Integer(quality, exception: false)
+          if %w[jpg jpeg webp avif].include?(output_format) && !quality&.between?(1, 100)
+            raise ArgumentError, "encoder quality is required"
+          end
+
+          block_loaders(
+            allowed: %w[
+              VipsForeignLoadJpeg
+              VipsForeignLoadPng
+              VipsForeignLoadNsgif
+              VipsForeignLoadWebp
+              VipsForeignLoadHeif
+              VipsForeignLoadSvg
+            ],
+          )
+          image = load_downsize_image(input_path:, input_format:).autorot
+          width, height = downsize_dimensions(width: image.width, height: image.height, geometry:)
+          image = resize_downsize_image(image:, width:, height:, input_format:, output_format:)
+          save_downsize_image(image:, input_path:, output_path:, output_format:, quality:)
+        rescue Vips::Error, ArgumentError, Nokogiri::XML::SyntaxError => error
+          raise InvalidImage, error.message
+        end
+        nil
+      end
+    end
+    private_class_method :downsize
+
+    def self.load_downsize_image(input_path:, input_format:)
+      case input_format
+      when "jpg", "jpeg"
+        load_image_for_orientation(input_path:, loader: :jpegload)
+      when "png"
+        load_image_for_orientation(input_path:, loader: :pngload)
+      when "gif"
+        image = Vips::Image.gifload(input_path, page: 0, n: 1, access: :sequential)
+        profile = gif_icc_profile(input_path)
+        image.set_type(Vips::BLOB_TYPE, "icc-profile-data", profile) if profile
+        image
+      when "webp"
+        load_image_for_orientation(input_path:, loader: :webpload, page: 0, n: 1)
+      when "avif"
+        load_image_for_orientation(input_path:, loader: :heifload, page: 0, n: 1)
+      when "svg"
+        load_svg(input_path).flatten(background: [255, 255, 255])
+      when "ico"
+        DiscourseVips::IcoImage.load(input_path:, page: 0)
+      else
+        raise ArgumentError, "unsupported input format"
+      end
+    end
+    private_class_method :load_downsize_image
+
+    def self.downsize_dimensions(width:, height:, geometry:)
+      scale =
+        case geometry
+        when /\A(\d+(?:\.\d+)?)%\z/
+          Regexp.last_match(1).to_f / 100
+        when /\A(\d+)x(\d+)>\z/
+          [Regexp.last_match(1).to_f / width, Regexp.last_match(2).to_f / height, 1.0].min
+        when /\A(\d+)@\z/
+          Math.sqrt(Regexp.last_match(1).to_f / width / height)
+        else
+          raise ArgumentError, "unsupported resize geometry"
+        end
+      raise ArgumentError, "invalid resize geometry" if !scale.finite? || !scale.positive?
+
+      [[(width * scale).round, 1].max, [(height * scale).round, 1].max]
+    end
+    private_class_method :downsize_dimensions
+
+    def self.resample_image(image:, width:, height:, kernel:)
+      if width < image.width || height < image.height
+        image =
+          image.resize(
+            [width.to_f / image.width, 1.0].min,
+            vscale: [height.to_f / image.height, 1.0].min,
+            kernel:,
+          )
+      end
+      return image if width == image.width && height == image.height
+
+      image.affine(
+        [width.to_f / image.width, 0, 0, height.to_f / image.height],
+        interpolate: Vips::Interpolate.new("bicubic"),
+        idx: 0.5,
+        idy: 0.5,
+        odx: -0.5,
+        ody: -0.5,
+        oarea: [0, 0, width, height],
+        extend: :copy,
+        premultiplied: true,
+      )
+    end
+    private_class_method :resample_image
+
+    def self.resize_downsize_image(image:, width:, height:, input_format:, output_format:)
+      return image if width == image.width && height == image.height
+
+      palette = image.get_typeof("palette-bit-depth") != 0 || input_format == "gif"
+      kernel =
+        (
+          if image.has_alpha? || palette || width > image.width || height > image.height
+            :mitchell
+          else
+            :lanczos3
+          end
+        )
+      alpha = image.has_alpha?
+      pixel_format = image.format
+      image = image.cast(:float) if pixel_format == :ushort
+      image = image.premultiply if alpha
+      image = resample_image(image:, width:, height:, kernel:)
+      image = image.unpremultiply if alpha
+      if (alpha || pixel_format == :ushort) && output_format != "gif"
+        image = image.round(:rint).cast(pixel_format)
+      end
+      image
+    end
+    private_class_method :resize_downsize_image
+
+    def self.save_downsize_image(
+      image:,
+      input_path:,
+      output_path:,
+      output_format:,
+      quality:,
+      strip_metadata: false
+    )
+      metadata_options = strip_metadata ? { keep: :icc } : {}
+      case output_format
+      when "jpg", "jpeg"
+        image = image.extract_band(0, n: image.bands - 1) if image.has_alpha?
+        image.jpegsave(
+          output_path,
+          Q: quality,
+          interlace: false,
+          subsample_mode: jpeg_subsample_mode(image:, input_path:),
+          **metadata_options,
+        )
+      when "png"
+        image.pngsave(output_path, interlace: false, **metadata_options)
+      when "gif"
+        if image.has_alpha?
+          max_alpha = %i[rgb16 grey16].include?(image.interpretation) ? 65_535 : 255
+          alpha = image[image.bands - 1] > max_alpha / 2.0
+          image =
+            image
+              .extract_band(0, n: image.bands - 1)
+              .colourspace(:srgb)
+              .round(:rint)
+              .cast(:uchar)
+              .bandjoin(alpha)
+        end
+        if image.get_typeof("icc-profile-data") == 0
+          image.gifsave(output_path, bitdepth: 8, interlace: false, **metadata_options)
+        else
+          contents = image.gifsave_buffer(bitdepth: 8, interlace: false, **metadata_options)
+          packed = contents.getbyte(10)
+          header_length = 13 + (packed.anybits?(0x80) ? 3 * 2**((packed & 7) + 1) : 0)
+          profile = image.get("icc-profile-data")
+          File.open(output_path, "wb") do |file|
+            file.write(contents.byteslice(0, header_length))
+            file.write("\x21\xFF\x0BICCRGBG1012".b)
+            offset = 0
+            while offset < profile.bytesize
+              block = profile.byteslice(offset, 255)
+              file.write([block.bytesize].pack("C"))
+              file.write(block)
+              offset += block.bytesize
+            end
+            file.write("\0".b)
+            file.write(contents.byteslice(header_length..))
+          end
+        end
+      when "webp"
+        image.webpsave(
+          output_path,
+          Q: quality,
+          lossless: quality == 100,
+          effort: 4,
+          **metadata_options,
+        )
+      when "avif"
+        image.heifsave(
+          output_path,
+          compression: :av1,
+          Q: quality,
+          lossless: quality == 100,
+          effort: 3,
+          subsample_mode: :on,
+          **metadata_options,
+        )
+      when "ico"
+        image = image.colourspace(:srgb).cast(:uchar, shift: true)
+        payload = image.pngsave_buffer(strip: true)
+        header = [0, 1, 1].pack("v3")
+        entry = [image.width % 256, image.height % 256, 0, 0, 1, 32, payload.bytesize, 22].pack(
+          "C4v2V2",
+        )
+        File.binwrite(output_path, header + entry + payload)
+      else
+        raise ArgumentError, "unsupported output format"
+      end
+    end
+    private_class_method :save_downsize_image
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
