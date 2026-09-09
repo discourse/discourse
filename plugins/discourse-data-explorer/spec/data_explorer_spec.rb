@@ -474,6 +474,64 @@ describe DiscourseDataExplorer::DataExplorer do
         expect(relations.keys).not_to include(:group, :category)
       end
 
+      it "reports relations hidden by the guardian" do
+        SiteSetting.detailed_404 = true
+        pm_post = Fabricate(:private_message_post)
+        pm = pm_post.topic
+        query =
+          Fabricate(
+            :query,
+            sql:
+              "SELECT #{pm.id} AS topic_id, #{pm_post.id} AS post_id, #{topic.id} AS other_topic_id",
+          )
+
+        relations, _, hidden =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: Fabricate(:user).guardian,
+          )
+
+        expect(hidden).to eq({ topic: [pm.id], post: [pm_post.id] })
+        expect(relations[:topic].as_json.map { |t| t[:id] }).to eq([topic.id])
+      end
+
+      it "does not report hidden relations when detailed 404s are disabled" do
+        SiteSetting.detailed_404 = false
+        pm_post = Fabricate(:private_message_post)
+        query =
+          Fabricate(:query, sql: "SELECT #{pm_post.topic_id} AS topic_id, #{pm_post.id} AS post_id")
+
+        relations, _, hidden =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: Fabricate(:user).guardian,
+          )
+
+        expect(hidden).to eq({})
+        expect(relations[:post].as_json).to be_empty
+      end
+
+      it "resolves post visibility without a query per post" do
+        query_counts =
+          [2, 8].map do |post_count|
+            posts = Fabricate.times(post_count, :private_message_post)
+            query = Fabricate(:query, sql: "SELECT unnest(ARRAY#{posts.map(&:id)}) AS post_id")
+            pg_result = described_class.run_query(query)[:pg_result]
+            guardian = Fabricate(:user).guardian
+            relations = nil
+
+            queries =
+              track_sql_queries do
+                relations, _ = described_class.add_extra_data(pg_result, guardian:)
+              end
+
+            expect(relations[:post].as_json).to be_empty
+            queries.size
+          end
+
+        expect(query_counts.first).to eq(query_counts.last)
+      end
+
       describe "serializing models to serializer" do
         it "serializes correctly to BasicTopicSerializer for topic relations" do
           topic = Fabricate(:topic, locale: "ja")

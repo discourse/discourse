@@ -240,6 +240,8 @@ export default class QueryResult extends Component {
       return [];
     }
 
+    const hiddenRelations = this.args.content.hidden_relations ?? {};
+
     return this.columns.map((_, idx) => {
       const type = this.colRender[idx] || "text";
 
@@ -247,6 +249,7 @@ export default class QueryResult extends Component {
         name: type,
         component: VIEW_COMPONENTS[type],
         table: this._relationTables[type],
+        hidden: hiddenRelations[type],
       };
     });
   }

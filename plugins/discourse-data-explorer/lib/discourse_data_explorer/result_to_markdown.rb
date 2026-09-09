@@ -8,7 +8,7 @@ module DiscourseDataExplorer
     SANITIZABLE_REGEX = /[<>&%]/
 
     def self.convert(pg_result, render_url_columns: false)
-      relations, colrender = DataExplorer.add_extra_data(pg_result)
+      relations, colrender = DataExplorer.add_extra_data(pg_result, guardian: nil)
       relations.transform_values! { |related| related.object.index_by(&:id) }
 
       column_renders =

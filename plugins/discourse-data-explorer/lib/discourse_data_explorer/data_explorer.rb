@@ -357,10 +357,11 @@ module DiscourseDataExplorer
       column_regexes.find { |rgx, _| rgx.match?(col) }&.last
     end
 
-    def self.add_extra_data(pg_result, guardian: nil)
+    def self.add_extra_data(pg_result, guardian:)
       needed_classes = {}
       ret = {}
       col_map = {}
+      hidden = {}
       pg_result.fields.each_with_index do |col, idx|
         if (cls = relation_for(col))
           (needed_classes[cls] ||= []) << idx
@@ -396,16 +397,30 @@ module DiscourseDataExplorer
             .order(:id)
 
         if guardian
-          all_objs =
-            case cls
-            when :post
-              all_objs.select { |post| guardian.can_see_post?(post) }
-            when :topic
-              allowed_topic_ids = guardian.can_see_topic_ids(topic_ids: ids)
-              all_objs.where(id: allowed_topic_ids)
-            else
-              all_objs
-            end
+          case cls
+          when :post
+            allowed = guardian.can_see_topic_ids(topic_ids: all_objs.map(&:topic_id)).to_set
+            visible_post_types = Topic.visible_post_types(guardian.user)
+
+            all_objs, denied =
+              all_objs.partition do |post|
+                next true if guardian.is_admin?
+                next false if !allowed.include?(post.topic_id)
+                next false if visible_post_types.exclude?(post.post_type)
+                if guardian.is_moderator? ||
+                     guardian.is_category_group_moderator?(post.topic.category)
+                  next true
+                end
+
+                (!post.trashed? || guardian.can_see_deleted_post?(post)) &&
+                  (!post.hidden? || guardian.can_see_hidden_post?(post))
+              end
+          when :topic
+            allowed = guardian.can_see_topic_ids(topic_ids: ids).to_set
+            all_objs, denied = all_objs.partition { |topic| allowed.include?(topic.id) }
+          end
+
+          hidden[cls] = denied.map(&:id) if denied.present? && SiteSetting.detailed_404
         end
 
         opts = { each_serializer: support_info[:serializer] }
@@ -413,7 +428,7 @@ module DiscourseDataExplorer
         opts[:scope] = guardian if guardian
         ret[cls] = ActiveModel::ArraySerializer.new(all_objs, **opts)
       end
-      [ret, col_map]
+      [ret, col_map, hidden]
     end
 
     def self.sensitive_column_names

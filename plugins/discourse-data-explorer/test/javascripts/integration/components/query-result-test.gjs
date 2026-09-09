@@ -180,6 +180,24 @@ module("Integration | Component | QueryResult", function (hooks) {
       .hasAttribute("href", "1", "renders a numeric url cell as a link");
   });
 
+  test("marks relations hidden from the current user", async function (assert) {
+    const content = {
+      colrender: { 0: "topic" },
+      relations: { topic: [] },
+      hidden_relations: { topic: [42] },
+      result_count: 2,
+      columns: ["topic_id"],
+      rows: [[42], [43]],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom(`${cell(1, 1)} .query-result-hidden`)
+      .hasText("42", "keeps the id");
+    assert.dom(`${cell(2, 1)} svg`).doesNotExist("unresolved ids stay plain");
+  });
+
   test("renders a post in query results", async function (assert) {
     const content = {
       colrender: { 0: "post" },
