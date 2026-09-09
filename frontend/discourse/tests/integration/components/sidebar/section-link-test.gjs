@@ -275,8 +275,8 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
           <ul style="height: 600px; margin: 0">
             {{#unless this.state.moved}}
               <SectionLink
-                @linkName="original"
                 @href="/latest"
+                @linkName="original"
                 @scrollIntoView={{true}}
               />
             {{/unless}}
@@ -284,8 +284,8 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
           <ul style="height: 600px; margin: 0">
             {{#if this.state.moved}}
               <SectionLink
-                @linkName="moved"
                 @href="/latest"
+                @linkName="moved"
                 @scrollIntoView={{true}}
               />
             {{/if}}
@@ -332,8 +332,8 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
           <ul>
             {{#each this.state.destinations as |destination|}}
               <SectionLink
-                @linkName="destination"
                 @href={{destination}}
+                @linkName="destination"
                 @scrollIntoView={{this.state.active}}
               />
             {{/each}}
@@ -377,14 +377,14 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
           style="height: 200px; overflow-y: auto; display: block"
         >
           <Section
-            @sectionName="reveal-test"
-            @headerLinkText="Test"
             @collapsable={{true}}
+            @headerLinkText="Test"
+            @sectionName="reveal-test"
           >
             <li style="height: 600px"></li>
             <SectionLink
-              @linkName="destination"
               @href="/latest"
+              @linkName="destination"
               @scrollIntoView={{true}}
             />
           </Section>

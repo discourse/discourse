@@ -359,267 +359,6 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
     });
   });
 
-  module("#starredChannelsByActivity", function () {
-    test("sorts starred channels with unreads first", function (assert) {
-      const channelWithUnread = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "channel-with-unread",
-        }),
-      });
-      const channelNoUnread = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "channel-no-unread",
-        }),
-      });
-
-      channelWithUnread.currentUserMembership =
-        UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-      channelNoUnread.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-
-      channelWithUnread.tracking.unreadCount = 5;
-      channelNoUnread.tracking.unreadCount = 0;
-
-      this.subject.store(channelNoUnread);
-      this.subject.store(channelWithUnread);
-
-      const result = this.subject.starredChannelsByActivity;
-
-      assert.strictEqual(
-        result[0].id,
-        channelWithUnread.id,
-        "channel with unreads comes first"
-      );
-      assert.strictEqual(
-        result[1].id,
-        channelNoUnread.id,
-        "channel without unreads comes second"
-      );
-    });
-
-    test("includes both public and DM starred channels", function (assert) {
-      const publicChannel = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "public",
-        }),
-      });
-      const dmChannel = this.fabricators.channel({
-        chatable: this.fabricators.directMessage(),
-        title: "DM User",
-      });
-
-      publicChannel.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-      dmChannel.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-
-      this.subject.store(publicChannel);
-      this.subject.store(dmChannel);
-
-      const result = this.subject.starredChannelsByActivity;
-
-      assert.strictEqual(result.length, 2, "returns both channels");
-    });
-
-    test("prioritizes unread status over channel type", function (assert) {
-      const readPublicChannel = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "read-public",
-        }),
-      });
-      const unreadDmChannel = this.fabricators.channel({
-        chatable: this.fabricators.directMessage(),
-        title: "Unread DM",
-      });
-
-      readPublicChannel.currentUserMembership =
-        UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-      unreadDmChannel.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-
-      readPublicChannel.tracking.unreadCount = 0;
-      unreadDmChannel.tracking.unreadCount = 3;
-
-      this.subject.store(readPublicChannel);
-      this.subject.store(unreadDmChannel);
-
-      const result = this.subject.starredChannelsByActivity;
-
-      assert.strictEqual(
-        result[0].id,
-        unreadDmChannel.id,
-        "unread DM comes before read public channel"
-      );
-      assert.strictEqual(
-        result[1].id,
-        readPublicChannel.id,
-        "read public channel comes after unread DM"
-      );
-    });
-
-    test("sorts unread public channels before unread DMs", function (assert) {
-      const unreadPublicChannel = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "unread-public",
-        }),
-      });
-      const unreadDmChannel = this.fabricators.channel({
-        chatable: this.fabricators.directMessage(),
-        title: "Unread DM",
-      });
-
-      unreadPublicChannel.currentUserMembership =
-        UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-      unreadDmChannel.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-
-      unreadPublicChannel.tracking.unreadCount = 2;
-      unreadDmChannel.tracking.unreadCount = 5;
-
-      this.subject.store(unreadDmChannel);
-      this.subject.store(unreadPublicChannel);
-
-      const result = this.subject.starredChannelsByActivity;
-
-      assert.strictEqual(
-        result[0].id,
-        unreadPublicChannel.id,
-        "unread public channel comes first"
-      );
-      assert.strictEqual(
-        result[1].id,
-        unreadDmChannel.id,
-        "unread DM comes second"
-      );
-    });
-
-    test("sorts read public channels before read DMs", function (assert) {
-      const readPublicChannel = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "read-public",
-        }),
-      });
-      const readDmChannel = this.fabricators.channel({
-        chatable: this.fabricators.directMessage(),
-        title: "Read DM",
-      });
-
-      readPublicChannel.currentUserMembership =
-        UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-      readDmChannel.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-
-      readPublicChannel.tracking.unreadCount = 0;
-      readDmChannel.tracking.unreadCount = 0;
-
-      this.subject.store(readDmChannel);
-      this.subject.store(readPublicChannel);
-
-      const result = this.subject.starredChannelsByActivity;
-
-      assert.strictEqual(
-        result[0].id,
-        readPublicChannel.id,
-        "read public channel comes first"
-      );
-      assert.strictEqual(
-        result[1].id,
-        readDmChannel.id,
-        "read DM comes second"
-      );
-    });
-
-    test("complete ordering: unread public, unread DM, read public, read DM", function (assert) {
-      const readPublicChannel = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "read-public",
-        }),
-      });
-      const unreadPublicChannel = this.fabricators.channel({
-        chatable: this.fabricators.coreFabricators.category({
-          slug: "unread-public",
-        }),
-      });
-      const readDmChannel = this.fabricators.channel({
-        chatable: this.fabricators.directMessage(),
-        title: "Read DM",
-      });
-      const unreadDmChannel = this.fabricators.channel({
-        chatable: this.fabricators.directMessage(),
-        title: "Unread DM",
-      });
-
-      readPublicChannel.currentUserMembership =
-        UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-      unreadPublicChannel.currentUserMembership =
-        UserChatChannelMembership.create({
-          following: true,
-          starred: true,
-        });
-      readDmChannel.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-      unreadDmChannel.currentUserMembership = UserChatChannelMembership.create({
-        following: true,
-        starred: true,
-      });
-
-      readPublicChannel.tracking.unreadCount = 0;
-      unreadPublicChannel.tracking.unreadCount = 2;
-      readDmChannel.tracking.unreadCount = 0;
-      unreadDmChannel.tracking.unreadCount = 3;
-
-      this.subject.store(readDmChannel);
-      this.subject.store(unreadDmChannel);
-      this.subject.store(readPublicChannel);
-      this.subject.store(unreadPublicChannel);
-
-      const result = this.subject.starredChannelsByActivity;
-
-      assert.strictEqual(result.length, 4, "returns all 4 channels");
-      assert.strictEqual(
-        result[0].id,
-        unreadPublicChannel.id,
-        "1st: unread public channel"
-      );
-      assert.strictEqual(result[1].id, unreadDmChannel.id, "2nd: unread DM");
-      assert.strictEqual(
-        result[2].id,
-        readPublicChannel.id,
-        "3rd: read public channel"
-      );
-      assert.strictEqual(result[3].id, readDmChannel.id, "4th: read DM");
-    });
-  });
-
   module("#sortDirectMessageChannels with starred channels", function () {
     test("prioritizes starred DM channels over unstarred", function (assert) {
       const dmA = this.fabricators.channel({
@@ -786,7 +525,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
     });
 
     test("sorts channels by recent activity", function (assert) {
-      this.preferences.sort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+      this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
       this.buildChannel({ id: 1, slug: "older", createdAt: "2026-09-01" });
       this.buildChannel({ id: 2, slug: "newer", createdAt: "2026-09-03" });
       const emptyChannel = this.buildChannel({
@@ -806,7 +545,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
     });
 
     test("sorts urgent, unread, and read channels by priority", function (assert) {
-      this.preferences.sort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
+      this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
       this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
       this.buildChannel({
         id: 2,
@@ -834,7 +573,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
       const clock = sinon.useFakeTimers(new Date("2026-09-03T12:00:00Z"));
 
       try {
-        this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.ACTIVE;
+        this.preferences.channelsFilter = CHAT_CHANNEL_LIST_FILTERS.ACTIVE;
         this.buildChannel({
           id: 1,
           slug: "active",
@@ -864,7 +603,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
     });
 
     test("keeps the active channel visible when it does not match", function (assert) {
-      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      this.preferences.channelsFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
       const activeChannel = this.buildChannel({
         id: 1,
         slug: "active",
@@ -908,7 +647,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         muted: true,
       });
 
-      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      this.preferences.channelsFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
       assert.deepEqual(
         this.subject.sidebarPublicMessageChannels.map(
           (channel) => channel.slug
@@ -917,7 +656,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         "all visible unread activity is included"
       );
 
-      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.MENTIONS;
+      this.preferences.channelsFilter = CHAT_CHANNEL_LIST_FILTERS.MENTIONS;
       assert.deepEqual(
         this.subject.sidebarPublicMessageChannels.map(
           (channel) => channel.slug
@@ -928,7 +667,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
     });
 
     test("falls back to showing channels for an unknown filter", function (assert) {
-      this.preferences.filter = "unknown";
+      this.preferences.channelsFilter = "unknown";
       this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
 
       assert.deepEqual(
@@ -1032,10 +771,12 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         createdAt: "2026-09-03",
         starred: true,
       });
-      this.preferences.sort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+      this.preferences.dmsSort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
 
       assert.deepEqual(
-        this.subject.sidebarStarredChannels.map((channel) => channel.title),
+        this.subject.starredChannelsByPreference.map(
+          (channel) => channel.title
+        ),
         ["Newer", "Older"],
         "starred channels honor the selected activity sort"
       );
@@ -1065,7 +806,7 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         mentionCount: 1,
         starred: true,
       });
-      this.preferences.filter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      this.preferences.dmsFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
 
       assert.deepEqual(
         this.subject.sidebarDirectMessageChannels.map(
@@ -1075,10 +816,623 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
         "only non-muted unstarred direct messages with activity remain"
       );
       assert.deepEqual(
-        this.subject.sidebarStarredChannels.map((channel) => channel.title),
-        ["Starred unread"],
-        "the unread filter also applies to starred direct messages"
+        this.subject.starredChannelsByPreference.map(
+          (channel) => channel.title
+        ),
+        ["Starred read", "Starred unread"],
+        "the dms unread filter does not leak into the starred list"
       );
     });
   });
+
+  module("#publicMessageChannelsByPreference", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      this.buildChannel = ({
+        id,
+        slug,
+        createdAt,
+        starred = false,
+        unreadCount = 0,
+        mentionCount = 0,
+        muted = false,
+      }) => {
+        const channel = this.fabricators.channel({
+          id,
+          chatable: this.fabricators.coreFabricators.category({ slug }),
+        });
+        channel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred,
+          muted,
+        });
+        channel.lastMessage = this.fabricators.message({
+          id: id * 10,
+          channel,
+          created_at: createdAt,
+        });
+        channel.tracking.unreadCount = unreadCount;
+        channel.tracking.mentionCount = mentionCount;
+        this.subject.store(channel);
+        return channel;
+      };
+    });
+
+    test("includes starred channels and sorts alphabetically by default", function (assert) {
+      this.buildChannel({ id: 1, slug: "zulu", createdAt: "2026-09-01" });
+      this.buildChannel({ id: 2, slug: "alpha", createdAt: "2026-09-03" });
+      this.buildChannel({
+        id: 3,
+        slug: "beta",
+        createdAt: "2026-09-02",
+        starred: true,
+      });
+
+      assert.deepEqual(
+        this.subject.publicMessageChannelsByPreference.map(
+          (channel) => channel.slug
+        ),
+        ["alpha", "beta", "zulu"],
+        "starred channels stay in the channels list and sort by slug"
+      );
+    });
+
+    test("sorts by recent activity", function (assert) {
+      this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+      this.buildChannel({ id: 1, slug: "older", createdAt: "2026-09-01" });
+      this.buildChannel({ id: 2, slug: "newer", createdAt: "2026-09-03" });
+
+      assert.deepEqual(
+        this.subject.publicMessageChannelsByPreference.map(
+          (channel) => channel.slug
+        ),
+        ["newer", "older"],
+        "channels with newer activity sort first"
+      );
+    });
+
+    test("sorts urgent, unread, and read channels by priority", function (assert) {
+      this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
+      this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
+      this.buildChannel({
+        id: 2,
+        slug: "unread",
+        createdAt: "2026-09-01",
+        unreadCount: 1,
+      });
+      this.buildChannel({
+        id: 3,
+        slug: "urgent",
+        createdAt: "2026-08-30",
+        mentionCount: 1,
+      });
+
+      assert.deepEqual(
+        this.subject.publicMessageChannelsByPreference.map(
+          (channel) => channel.slug
+        ),
+        ["urgent", "unread", "read"],
+        "priority places urgent, then unread, then read channels"
+      );
+    });
+
+    test("applies the channels filter", function (assert) {
+      this.preferences.channelsFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      this.buildChannel({ id: 1, slug: "read", createdAt: "2026-09-03" });
+      this.buildChannel({
+        id: 2,
+        slug: "unreaded",
+        createdAt: "2026-09-01",
+        unreadCount: 1,
+      });
+
+      assert.deepEqual(
+        this.subject.publicMessageChannelsByPreference.map(
+          (channel) => channel.slug
+        ),
+        ["unreaded"],
+        "read channels are hidden by the unread filter"
+      );
+    });
+  });
+
+  module("#directMessageChannelsByPreference", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      this.buildDirectMessageChannel = ({
+        id,
+        title,
+        createdAt = "2026-09-03",
+        starred = false,
+      }) => {
+        const channel = this.fabricators.channel({
+          id,
+          chatable: this.fabricators.directMessage(),
+          title,
+        });
+        channel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred,
+        });
+        channel.lastMessage = this.fabricators.message({
+          id: id * 10,
+          channel,
+          created_at: createdAt,
+        });
+        this.subject.store(channel);
+        return channel;
+      };
+    });
+
+    test("includes starred channels and sorts alphabetically by title", function (assert) {
+      this.buildDirectMessageChannel({ id: 1, title: "Zulu" });
+      this.buildDirectMessageChannel({ id: 2, title: "Alpha" });
+      this.buildDirectMessageChannel({ id: 3, title: "Beta", starred: true });
+
+      assert.deepEqual(
+        this.subject.directMessageChannelsByPreference.map(
+          (channel) => channel.title
+        ),
+        ["Alpha", "Beta", "Zulu"],
+        "starred DMs stay in the DM list and sort by title"
+      );
+    });
+
+    test("sorts by recent activity with empty channels last", function (assert) {
+      this.preferences.dmsSort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+      this.buildDirectMessageChannel({
+        id: 1,
+        title: "Older",
+        createdAt: "2026-09-01",
+      });
+      this.buildDirectMessageChannel({
+        id: 2,
+        title: "Newer",
+        createdAt: "2026-09-02",
+      });
+      const emptyChannel = this.buildDirectMessageChannel({
+        id: 3,
+        title: "Empty",
+        createdAt: "2026-09-04",
+      });
+      emptyChannel.lastMessage = null;
+
+      const result = this.subject.directMessageChannelsByPreference;
+      assert.deepEqual(
+        result.map((channel) => channel.title),
+        ["Newer", "Older", "Empty"],
+        "channels without a last message sort after those with activity"
+      );
+    });
+
+    test("applies the dms filter", function (assert) {
+      this.preferences.dmsFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      const unreadDm = this.buildDirectMessageChannel({
+        id: 1,
+        title: "Unreaded",
+      });
+      unreadDm.tracking.unreadCount = 1;
+      this.buildDirectMessageChannel({ id: 2, title: "Read" });
+
+      assert.deepEqual(
+        this.subject.directMessageChannelsByPreference.map(
+          (channel) => channel.title
+        ),
+        ["Unreaded"],
+        "read DMs are hidden by the unread filter"
+      );
+    });
+  });
+
+  module("#starredChannelsByPreference", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.preferences = getOwner(this).lookup(
+        "service:chat-channel-list-preferences"
+      );
+      this.buildPublic = ({ id, slug, createdAt }) => {
+        const channel = this.fabricators.channel({
+          id,
+          chatable: this.fabricators.coreFabricators.category({ slug }),
+        });
+        channel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+        channel.lastMessage = this.fabricators.message({
+          id: id * 10,
+          channel,
+          created_at: createdAt,
+        });
+        this.subject.store(channel);
+        return channel;
+      };
+      this.buildDirectMessage = ({
+        id,
+        title,
+        createdAt,
+        mentionCount = 0,
+      }) => {
+        const channel = this.fabricators.channel({
+          id,
+          chatable: this.fabricators.directMessage(),
+          title,
+        });
+        channel.currentUserMembership = UserChatChannelMembership.create({
+          following: true,
+          starred: true,
+        });
+        channel.lastMessage = this.fabricators.message({
+          id: id * 10,
+          channel,
+          created_at: createdAt,
+        });
+        channel.tracking.mentionCount = mentionCount;
+        this.subject.store(channel);
+        return channel;
+      };
+      this.channelName = (channel) =>
+        channel.isDirectMessageChannel ? channel.title : channel.slug;
+    });
+
+    test("sorts public channels then direct messages alphabetically", function (assert) {
+      this.buildDirectMessage({ id: 4, title: "A dm" });
+      this.buildPublic({
+        id: 1,
+        slug: "zulu",
+        createdAt: "2026-09-03",
+      });
+      this.buildPublic({
+        id: 2,
+        slug: "alpha",
+        createdAt: "2026-09-01",
+      });
+
+      assert.deepEqual(
+        this.subject.starredChannelsByPreference.map(this.channelName),
+        ["alpha", "zulu", "A dm"],
+        "public channels precede direct messages and each group sorts by name"
+      );
+    });
+
+    test("sorts by recent activity across public and direct messages", function (assert) {
+      this.preferences.starredSort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+      this.buildPublic({
+        id: 1,
+        slug: "oldpub",
+        createdAt: "2026-09-01",
+      });
+      this.buildDirectMessage({
+        id: 2,
+        title: "New dm",
+        createdAt: "2026-09-03",
+      });
+
+      assert.deepEqual(
+        this.subject.starredChannelsByPreference.map(this.channelName),
+        ["New dm", "oldpub"],
+        "the most recently active starred channel sorts first"
+      );
+    });
+
+    test("sorts by priority with mentions first", function (assert) {
+      this.preferences.starredSort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
+      this.buildDirectMessage({
+        id: 1,
+        title: "Read dm",
+        createdAt: "2026-09-03",
+      });
+      this.buildDirectMessage({
+        id: 2,
+        title: "Mentioned dm",
+        createdAt: "2026-09-01",
+        mentionCount: 1,
+      });
+
+      assert.deepEqual(
+        this.subject.starredChannelsByPreference.map(this.channelName),
+        ["Mentioned dm", "Read dm"],
+        "starred channels with mentions sort first"
+      );
+    });
+
+    test("applies the starred filter across public and direct messages", function (assert) {
+      this.preferences.starredFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+      const unreadPublic = this.buildPublic({
+        id: 1,
+        slug: "unreaded",
+        createdAt: "2026-09-01",
+      });
+      unreadPublic.tracking.unreadCount = 1;
+      this.buildDirectMessage({
+        id: 2,
+        title: "Read dm",
+        createdAt: "2026-09-03",
+      });
+
+      assert.deepEqual(
+        this.subject.starredChannelsByPreference.map(this.channelName),
+        ["unreaded"],
+        "read starred channels are hidden by the unread filter"
+      );
+    });
+  });
+  module(
+    "per-section filter preferences are independent",
+    function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        this.preferences = getOwner(this).lookup(
+          "service:chat-channel-list-preferences"
+        );
+        this.buildPublicChannel = ({
+          id,
+          slug,
+          createdAt,
+          unreadCount = 0,
+          mentionCount = 0,
+          muted = false,
+        }) => {
+          const channel = this.fabricators.channel({
+            id,
+            chatable: this.fabricators.coreFabricators.category({ slug }),
+          });
+          channel.currentUserMembership = UserChatChannelMembership.create({
+            following: true,
+            muted,
+          });
+          channel.lastMessage = this.fabricators.message({
+            id: id * 10,
+            channel,
+            created_at: createdAt,
+          });
+          channel.tracking.unreadCount = unreadCount;
+          channel.tracking.mentionCount = mentionCount;
+          this.subject.store(channel);
+          return channel;
+        };
+        this.buildStarred = (args) => {
+          const channel = this.buildPublicChannel(args);
+          channel.currentUserMembership.starred = true;
+          return channel;
+        };
+        this.buildDirectMessage = ({
+          id,
+          title,
+          createdAt,
+          unreadCount = 0,
+          mentionCount = 0,
+        }) => {
+          const channel = this.fabricators.channel({
+            id,
+            chatable: this.fabricators.directMessage(),
+            title,
+          });
+          channel.currentUserMembership = UserChatChannelMembership.create({
+            following: true,
+          });
+          channel.lastMessage = this.fabricators.message({
+            id: id * 10,
+            channel,
+            created_at: createdAt,
+          });
+          channel.tracking.unreadCount = unreadCount;
+          channel.tracking.mentionCount = mentionCount;
+          this.subject.store(channel);
+          return channel;
+        };
+      });
+
+      test("changing the channels filter does not change starred or dms lists", function (assert) {
+        this.buildPublicChannel({
+          id: 1,
+          slug: "read",
+          createdAt: "2026-09-03",
+        });
+        this.buildPublicChannel({
+          id: 2,
+          slug: "unread",
+          createdAt: "2026-09-03",
+          unreadCount: 1,
+        });
+        this.buildStarred({
+          id: 3,
+          slug: "zulu",
+          createdAt: "2026-09-04",
+          unreadCount: 1,
+        });
+        this.buildStarred({ id: 4, slug: "alpha", createdAt: "2026-09-02" });
+        this.buildDirectMessage({
+          id: 5,
+          title: "Zulu dm",
+          createdAt: "2026-09-04",
+          unreadCount: 1,
+        });
+        this.buildDirectMessage({
+          id: 6,
+          title: "Alpha dm",
+          createdAt: "2026-09-02",
+        });
+
+        this.preferences.channelsFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+
+        assert.deepEqual(
+          this.subject.sidebarPublicMessageChannels.map((c) => c.slug),
+          ["unread"],
+          "channels honor their own unread filter"
+        );
+        assert.deepEqual(
+          this.subject.starredChannelsByPreference.map((c) => c.slug),
+          ["alpha", "zulu"],
+          "starred shows all channels, unaffected by the channels filter"
+        );
+        assert.deepEqual(
+          this.subject.sidebarDirectMessageChannels.map((c) => c.title),
+          ["Alpha dm", "Zulu dm"],
+          "dms show all direct messages, unaffected by the channels filter"
+        );
+      });
+
+      test("changing the dms filter only affects the direct messages list", function (assert) {
+        this.buildPublicChannel({
+          id: 1,
+          slug: "read",
+          createdAt: "2026-09-03",
+        });
+        this.buildPublicChannel({
+          id: 2,
+          slug: "unread",
+          createdAt: "2026-09-03",
+          unreadCount: 1,
+        });
+        this.buildDirectMessage({
+          id: 5,
+          title: "Read dm",
+          createdAt: "2026-09-04",
+        });
+        this.buildDirectMessage({
+          id: 6,
+          title: "Unread dm",
+          createdAt: "2026-09-02",
+          unreadCount: 1,
+        });
+
+        this.preferences.dmsFilter = CHAT_CHANNEL_LIST_FILTERS.UNREAD;
+
+        assert.deepEqual(
+          this.subject.sidebarDirectMessageChannels.map((c) => c.title),
+          ["Unread dm"],
+          "dms honor their own unread filter"
+        );
+        assert.deepEqual(
+          this.subject.sidebarPublicMessageChannels.map((c) => c.slug),
+          ["read", "unread"],
+          "channels show all channels, unaffected by the dms filter"
+        );
+      });
+    }
+  );
+  module(
+    "per-section sort preferences are independent",
+    function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        this.preferences = getOwner(this).lookup(
+          "service:chat-channel-list-preferences"
+        );
+        this.buildPublicChannel = ({ id, slug, createdAt }) => {
+          const channel = this.fabricators.channel({
+            id,
+            chatable: this.fabricators.coreFabricators.category({ slug }),
+          });
+          channel.currentUserMembership = UserChatChannelMembership.create({
+            following: true,
+          });
+          channel.lastMessage = this.fabricators.message({
+            id: id * 10,
+            channel,
+            created_at: createdAt,
+          });
+          this.subject.store(channel);
+          return channel;
+        };
+        this.buildStarred = ({ id, slug, createdAt }) => {
+          const channel = this.buildPublicChannel({ id, slug, createdAt });
+          channel.currentUserMembership.starred = true;
+          return channel;
+        };
+        this.buildDirectMessage = ({ id, title, createdAt }) => {
+          const channel = this.fabricators.channel({
+            id,
+            chatable: this.fabricators.directMessage(),
+            title,
+          });
+          channel.currentUserMembership = UserChatChannelMembership.create({
+            following: true,
+          });
+          channel.lastMessage = this.fabricators.message({
+            id: id * 10,
+            channel,
+            created_at: createdAt,
+          });
+          this.subject.store(channel);
+          return channel;
+        };
+      });
+
+      test("changing the channels sort does not change starred or dms sorting", function (assert) {
+        this.buildPublicChannel({
+          id: 1,
+          slug: "older",
+          createdAt: "2026-09-01",
+        });
+        this.buildPublicChannel({
+          id: 2,
+          slug: "newer",
+          createdAt: "2026-09-03",
+        });
+        this.buildStarred({ id: 3, slug: "zulu", createdAt: "2026-09-04" });
+        this.buildStarred({ id: 4, slug: "alpha", createdAt: "2026-09-02" });
+        this.buildDirectMessage({
+          id: 5,
+          title: "Zulu dm",
+          createdAt: "2026-09-04",
+        });
+        this.buildDirectMessage({
+          id: 6,
+          title: "Alpha dm",
+          createdAt: "2026-09-02",
+        });
+
+        // Channels: recent activity first (starred channels stay in the list).
+        this.preferences.channelsSort = CHAT_CHANNEL_LIST_SORTS.RECENT_ACTIVITY;
+
+        assert.deepEqual(
+          this.subject.publicMessageChannelsByPreference.map((c) => c.slug),
+          ["zulu", "newer", "alpha", "older"],
+          "channels use the channels sort"
+        );
+        assert.deepEqual(
+          this.subject.starredChannelsByPreference.map((c) => c.slug),
+          ["alpha", "zulu"],
+          "starred still sorts by its own default, alphabetical"
+        );
+        assert.deepEqual(
+          this.subject.directMessageChannelsByPreference.map((c) => c.title),
+          ["Alpha dm", "Zulu dm"],
+          "dms still sorts by its own default, alphabetical"
+        );
+      });
+
+      test("changing the starred sort only affects the starred section", function (assert) {
+        this.buildPublicChannel({
+          id: 1,
+          slug: "older",
+          createdAt: "2026-09-01",
+        });
+        this.buildPublicChannel({
+          id: 2,
+          slug: "newer",
+          createdAt: "2026-09-03",
+        });
+        this.buildStarred({ id: 3, slug: "zulu", createdAt: "2026-09-04" });
+        this.buildStarred({ id: 4, slug: "alpha", createdAt: "2026-09-02" });
+
+        // Starred: priority, then recency (all read → newest first).
+        this.preferences.starredSort = CHAT_CHANNEL_LIST_SORTS.PRIORITY;
+
+        assert.deepEqual(
+          this.subject.starredChannelsByPreference.map((c) => c.slug),
+          ["zulu", "alpha"],
+          "starred honors its own priority sort"
+        );
+        assert.deepEqual(
+          this.subject.publicMessageChannelsByPreference.map((c) => c.slug),
+          ["alpha", "newer", "older", "zulu"],
+          "channels keeps its own alphabetical sort, not affected by starred"
+        );
+      });
+    }
+  );
 });

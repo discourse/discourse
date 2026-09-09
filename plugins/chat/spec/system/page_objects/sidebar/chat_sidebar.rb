@@ -37,10 +37,14 @@ module PageObjects
       end
 
       def open_channel_list_options
-        channels_section.hover
+        open_list_options(PUBLIC_CHANNELS_SECTION_SELECTOR)
+      end
+
+      def open_list_options(selector)
+        find(selector).hover
         menu =
           PageObjects::Components::DMenu.new(
-            "#{PUBLIC_CHANNELS_SECTION_SELECTOR} .sidebar-section-header-button",
+            "#{selector} .sidebar-section-header-button",
             "chat-channel-list-options-menu",
           )
         menu.expand
@@ -48,7 +52,19 @@ module PageObjects
       end
 
       def set_channel_filter(filter)
-        menu = open_channel_list_options
+        set_list_filter(PUBLIC_CHANNELS_SECTION_SELECTOR, filter)
+      end
+
+      def set_starred_filter(filter)
+        set_list_filter(STARRED_CHANNELS_SECTION_SELECTOR, filter)
+      end
+
+      def set_dm_filter(filter)
+        set_list_filter(DM_CHANNELS_SECTION_SELECTOR, filter)
+      end
+
+      def set_list_filter(selector, filter)
+        menu = open_list_options(selector)
         filter_trigger = menu.option('[data-menu-option-id="filterChannels"]')
         filter_trigger.click
         submenu =

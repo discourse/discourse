@@ -19,7 +19,7 @@ module PageObjects
 
       def open_browse
         mouseout
-        find("#{VISIBLE_DRAWER} .open-browse-page-btn").click
+        channels_index.open_browse
       end
 
       def close
@@ -122,8 +122,8 @@ module PageObjects
         channels_index.has_no_channel?(channel)
       end
 
-      def has_no_browse_page_button?
-        channels_index.has_no_browse_page_button?
+      def has_no_channel_list_options_button?
+        channels_index.has_no_channel_list_options_button?
       end
 
       def has_channel_at_position?(channel, position)
