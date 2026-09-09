@@ -17,6 +17,21 @@ RSpec.describe OptimizedImage do
       end
     end
 
+    it "retains lossless WebP encoding selected by the first animation frame" do
+      source = Rails.root.join("spec/fixtures/images/webp-quality-first-frame.webp").to_s
+      Dir.mktmpdir do |directory|
+        [false, true].each do |enable_vips|
+          global_setting :enable_vips_image_processing, enable_vips
+          output = File.join(directory, "#{enable_vips}.webp")
+
+          result = described_class.downsize(source, output, "384x1>", raise_on_error: true)
+
+          expect(result).to eq(true)
+          expect(ImageMagick.image_quality(input_path: output, timeout: 5)).to eq(100)
+        end
+      end
+    end
+
     it "preserves the destination when native decoding fails and honors raise_on_error" do
       global_setting :enable_vips_image_processing, true
 
