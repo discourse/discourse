@@ -402,9 +402,6 @@ jobs:
           pattern: flaky-test-reports-*
           delete-merged: true
 
-      - uses: actions/checkout@v7
-        if: steps.merge-flaky-test-reports.outputs.artifact-id != ''
-
       - name: Notify Patch Triage about flaky tests
         if: steps.merge-flaky-test-reports.outputs.artifact-id != ''
         continue-on-error: true
@@ -413,4 +410,35 @@ jobs:
           PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET: ${{ secrets.PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET }}
           REPORT_ARTIFACT_ID: ${{ steps.merge-flaky-test-reports.outputs.artifact-id }}
           SCREENSHOT_ARTIFACT_ID: ${{ steps.merge-failed-system-test-artifacts.outputs.artifact-id }}
-        run: script/notify_patch_triage_of_flaky_tests
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_URL:-}" || -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET:-}" ]]; then
+            echo "::warning::Patch Triage flaky-test delivery secrets are not configured; skipping notification"
+            exit 0
+          fi
+
+          payload=$(jq -nc \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --argjson workflow_run_id "$GITHUB_RUN_ID" \
+            --argjson run_attempt "$GITHUB_RUN_ATTEMPT" \
+            --argjson report_artifact_id "$REPORT_ARTIFACT_ID" \
+            --arg screenshot_artifact_id "${SCREENSHOT_ARTIFACT_ID:-}" \
+            '{
+              repository: $repository,
+              workflow_run_id: $workflow_run_id,
+              run_attempt: $run_attempt,
+              report_artifact_id: $report_artifact_id
+            } + if $screenshot_artifact_id == "" then {} else {
+              screenshot_artifact_id: ($screenshot_artifact_id | tonumber)
+            } end')
+
+          curl --fail-with-body \
+            --retry 3 \
+            --retry-all-errors \
+            --connect-timeout 5 \
+            --max-time 30 \
+            --header "Content-Type: application/json" \
+            --header "Authorization: Bearer $PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" \
+            --data-binary "$payload" \
+            "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL"
