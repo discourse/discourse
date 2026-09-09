@@ -14,6 +14,7 @@ import ModalContainer from "discourse/components/modal-container";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 import ChatChannelListFilterMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-filter-menu";
 import ChatChannelListOptionsButton from "discourse/plugins/chat/discourse/components/chat-channel-list-options-button";
 import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
@@ -51,19 +52,38 @@ module(
 
       assert
         .dom('[data-menu-option-id="browseChannels"]')
-        .hasText("Browse channels", "the browse action is shown");
+        .hasText(
+          i18n("chat.channels_list_popup.browse"),
+          "the browse action is shown"
+        );
       assert
         .dom('[data-menu-option-id="filterChannels"]')
         .hasAttribute("aria-expanded", "false", "the filter submenu is closed")
         .hasAttribute("aria-haspopup", "menu", "the filter exposes its submenu")
-        .hasAttribute("aria-label", "Filter: Unreads")
-        .hasText("Unreads", "the current filter is shown");
+        .hasAttribute(
+          "aria-label",
+          i18n("chat.channel_list.options.current_filter", {
+            filter: i18n("chat.channel_list.filter.unread"),
+          })
+        )
+        .hasText(
+          i18n("chat.channel_list.filter.unread"),
+          "the current filter is shown"
+        );
       assert
         .dom('[data-menu-option-id="sortChannels"]')
         .hasAttribute("aria-expanded", "false", "the sort submenu is closed")
         .hasAttribute("aria-haspopup", "menu", "the sort exposes its submenu")
-        .hasAttribute("aria-label", "Sort: Priority")
-        .hasText("Priority", "the current sort is shown");
+        .hasAttribute(
+          "aria-label",
+          i18n("chat.channel_list.options.current_sort", {
+            sort: i18n("chat.channel_list.sort.priority"),
+          })
+        )
+        .hasText(
+          i18n("chat.channel_list.sort.priority"),
+          "the current sort is shown"
+        );
     });
 
     test("opens the filter submenu", async function (assert) {
@@ -156,7 +176,10 @@ module(
 
       assert
         .dom('[data-menu-option-id="startDm"]')
-        .hasText("Create a personal chat", "the new message action is shown");
+        .hasText(
+          i18n("chat.direct_messages.new"),
+          "the new message action is shown"
+        );
       assert
         .dom('[data-menu-option-id="browseChannels"]')
         .doesNotExist("the browse option is hidden");
@@ -265,7 +288,10 @@ module(
 
       assert
         .dom('[data-menu-option-id="createChannel"]')
-        .hasText("New channel", "the create channel action is shown for staff");
+        .hasText(
+          i18n("chat.channels_list_popup.create"),
+          "the create channel action is shown for staff"
+        );
 
       await click('[data-menu-option-id="createChannel"]');
 
@@ -553,8 +579,10 @@ module("Integration | Component | ChatChannelListFilterMenu", function (hooks) {
     assert
       .dom(".chat-channel-list-filter-menu__active")
       .hasAttribute("aria-checked", "true", "active is selected")
-      .includesText("Active only")
-      .includesText("New activity in last 30 days");
+      .includesText(i18n("chat.channel_list.filter.active"))
+      .includesText(
+        i18n("chat.channel_list.filter.active_description", { days: 30 })
+      );
     assert
       .dom(".chat-channel-list-filter-menu__active .d-icon")
       .exists("the selected option has a checkmark");
@@ -592,8 +620,8 @@ module("Integration | Component | ChatChannelListSortMenu", function (hooks) {
         "sort choices have radio semantics"
       )
       .hasAttribute("aria-checked", "true", "the current sort is selected")
-      .includesText("Priority")
-      .includesText("Mentions, then unreads, then recent activity");
+      .includesText(i18n("chat.channel_list.sort.priority"))
+      .includesText(i18n("chat.channel_list.sort.priority_description"));
 
     await click(".chat-channel-list-sort-menu__recent-activity");
 
@@ -644,7 +672,7 @@ module(
         .dom(".chat-sidebar-channels-filter-empty-state")
         .hasTagName("li", "the state is valid section-list content")
         .includesText(
-          "No channels match this filter.",
+          i18n("chat.channel_list.empty.filtered"),
           "the empty state explains the filter"
         );
 
@@ -710,7 +738,7 @@ module(
       assert
         .dom(".empty-state__title")
         .hasText(
-          "No channels match this filter.",
+          i18n("chat.channel_list.empty.filtered"),
           "the title explains the filter"
         );
 

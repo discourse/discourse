@@ -213,7 +213,6 @@ export default class SectionLink extends Component {
     schedule("afterRender", () => {
       if (
         this.isDestroying ||
-        this.isDestroyed ||
         !element.isConnected ||
         !this.args.scrollIntoView
       ) {

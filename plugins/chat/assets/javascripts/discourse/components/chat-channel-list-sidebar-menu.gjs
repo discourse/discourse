@@ -128,7 +128,8 @@ export default class ChatChannelListSidebarMenu extends Component {
             data-menu-option-id="createChannel"
             role="menuitem"
             @action={{this.openCreateChannel}}
-            @label="chat.create_channel.title"
+            @label="chat.channels_list_popup.create"
+            @suffixIcon="plus"
           />
         </dropdown.item>
       {{/if}}
@@ -151,6 +152,7 @@ export default class ChatChannelListSidebarMenu extends Component {
             role="menuitem"
             @action={{this.openNewMessage}}
             @label="chat.direct_messages.new"
+            @suffixIcon="plus"
           />
         </dropdown.item>
       {{/if}}

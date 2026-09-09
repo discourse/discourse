@@ -3,6 +3,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 import ChannelsListStarred from "discourse/plugins/chat/discourse/components/channels-list-starred";
 import { CHAT_CHANNEL_LIST_FILTERS } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
@@ -38,7 +39,7 @@ module("Integration | Component | ChannelsListStarred", function (hooks) {
     assert
       .dom(".empty-state .empty-state__title")
       .hasText(
-        "No channels match this filter.",
+        i18n("chat.channel_list.empty.filtered"),
         "the filtered empty state explains the filter"
       );
 

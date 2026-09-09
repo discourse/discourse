@@ -4,6 +4,7 @@ import ModalContainer from "discourse/components/modal-container";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { i18n } from "discourse-i18n";
 import ChatNavbarChannelListOptionsButton from "discourse/plugins/chat/discourse/components/chat/navbar/channel-list-options-button";
 
 module(
@@ -48,8 +49,8 @@ module(
         .exists("the shared options menu opens from the mobile navbar");
       assert
         .dom(".chat-channel-list-options-menu")
-        .hasText(
-          /Browse channels/,
+        .includesText(
+          i18n("chat.channels_list_popup.browse"),
           "the channels options are shown for the channels section"
         );
     });
