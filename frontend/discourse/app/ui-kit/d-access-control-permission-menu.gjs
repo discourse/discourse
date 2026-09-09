@@ -10,9 +10,9 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const PermissionTrigger = <template>
   <button
-    type="button"
     class="btn btn-default d-access-control__permission d-access-control-permission-menu"
     disabled={{@disabled}}
+    type="button"
     ...attributes
   >
     <span class="d-button-label">{{@label}}</span>

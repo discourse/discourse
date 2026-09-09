@@ -8,7 +8,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { i18n } from "discourse-i18n";
-import initializer from "discourse/plugins/boards/discourse/initializers/boards-workflows";
+import Field from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field";
+import { createNode } from "discourse/plugins/discourse-workflows/admin/components/workflows/editor/node-factory";
 
 module("Integration | Component | BoardsWorkflows", function (hooks) {
   setupRenderingTest(hooks);
@@ -16,12 +17,10 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
   hooks.beforeEach(function () {
     this.siteSettings.enable_discourse_workflows = true;
     this.siteSettings.boards_manage_board_allowed_groups = "1|2";
+    const initializer =
+      require("discourse/plugins/boards/discourse/initializers/boards-workflows").default;
     initializer.initialize(this.owner, this.owner);
-    this.fieldComponent =
-      require("discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field").default;
-    this.createNode =
-      require("discourse/plugins/discourse-workflows/admin/components/workflows/editor/node-factory").createNode;
-    this.node = this.createNode("action:create_board", []);
+    this.node = createNode("action:create_board", []);
     this.onSubmit = sinon.spy();
     this.schema = {
       type: "object",
@@ -65,7 +64,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
       "new nodes use the board settings defaults"
     );
     this.siteSettings.boards_manage_board_allowed_groups = "1|5";
-    const node = this.createNode("action:create_board", []);
+    const node = createNode("action:create_board", []);
     assert.deepEqual(
       node.configuration.acl.map(({ id, permission }) => ({ id, permission })),
       [
@@ -74,7 +73,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
       ],
       "logged-in managers are not duplicated"
     );
-    const explicit = this.createNode("action:create_board", [], null, {
+    const explicit = createNode("action:create_board", [], null, {
       configOverrides: { acl: [] },
     });
     assert.deepEqual(
@@ -83,7 +82,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
       "keeps explicitly supplied ACLs"
     );
     assert.false(
-      Object.hasOwn(this.createNode("action:example", []).configuration, "acl"),
+      Object.hasOwn(createNode("action:example", []).configuration, "acl"),
       "does not add defaults to other nodes"
     );
   });
@@ -96,7 +95,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
           @onSubmit={{this.onSubmit}}
           as |form data|
         >
-          <this.fieldComponent
+          <Field
             @configuration={{data}}
             @fieldName="acl"
             @form={{form}}
@@ -185,7 +184,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
           @onSubmit={{this.onSubmit}}
           as |form data|
         >
-          <this.fieldComponent
+          <Field
             @configuration={{data}}
             @fieldName="acl"
             @form={{form}}
@@ -215,7 +214,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
     await render(
       <template>
         <Form @data={{this.configuration}} as |form data|>
-          <this.fieldComponent
+          <Field
             @configuration={{data}}
             @fieldName="acl"
             @form={{form}}

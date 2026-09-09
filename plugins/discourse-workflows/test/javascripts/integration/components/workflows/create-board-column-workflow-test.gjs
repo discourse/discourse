@@ -7,16 +7,14 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import Field from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field";
+import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 
 module("Integration | Component | CreateBoardColumnWorkflow", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     this.siteSettings.enable_discourse_workflows = true;
-    this.fieldComponent =
-      require("discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field").default;
-    this.variableMime =
-      require("discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context").WORKFLOW_VARIABLE_MIME;
     this.data = {};
     this.onSubmit = sinon.spy();
     this.boardSchema = {
@@ -43,7 +41,7 @@ module("Integration | Component | CreateBoardColumnWorkflow", function (hooks) {
     await render(
       <template>
         <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form data|>
-          <this.fieldComponent
+          <Field
             @configuration={{data}}
             @fieldName="board_id"
             @form={{form}}
@@ -66,7 +64,7 @@ module("Integration | Component | CreateBoardColumnWorkflow", function (hooks) {
     );
     await triggerEvent(".workflows-property-engine__control-wrapper", "drop", {
       dataTransfer: {
-        types: [this.variableMime],
+        types: [WORKFLOW_VARIABLE_MIME],
         getData: () => JSON.stringify({ id: "board_id" }),
       },
     });
@@ -85,7 +83,7 @@ module("Integration | Component | CreateBoardColumnWorkflow", function (hooks) {
     await render(
       <template>
         <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form data|>
-          <this.fieldComponent
+          <Field
             @configuration={{data}}
             @fieldName="color"
             @form={{form}}
@@ -108,7 +106,7 @@ module("Integration | Component | CreateBoardColumnWorkflow", function (hooks) {
       clientX: 0,
       clientY: 0,
       dataTransfer: {
-        types: [this.variableMime],
+        types: [WORKFLOW_VARIABLE_MIME],
         getData: () => JSON.stringify({ id: "color" }),
       },
     });

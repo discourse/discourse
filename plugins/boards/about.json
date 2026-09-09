@@ -1,5 +1,0 @@
-{
-  "tests": {
-    "requiredPlugins": ["discourse-workflows"]
-  }
-}
