@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import getURL from "discourse/lib/get-url";
+import HiddenViewComponent from "./result-types/hidden";
 import TextViewComponent from "./result-types/text";
 
 const BASE_URI = getURL("");
@@ -26,7 +27,12 @@ export default class QueryRowContent extends Component {
         ctx[componentDefinition.name] = componentDefinition.table[id];
 
         if (!ctx[componentDefinition.name]) {
-          return { component: TextViewComponent, textValue: value.toString() };
+          return {
+            component: componentDefinition.hidden?.includes(id)
+              ? HiddenViewComponent
+              : TextViewComponent,
+            textValue: value.toString(),
+          };
         }
       }
 

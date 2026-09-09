@@ -45,9 +45,10 @@ module DiscourseDataExplorer
 
       if !opts[:download]
         guardian = Guardian.new(opts[:current_user])
-        relations, colrender = DataExplorer.add_extra_data(pg_result, guardian:)
+        relations, colrender, hidden = DataExplorer.add_extra_data(pg_result, guardian:)
         json[:relations] = relations
         json[:colrender] = colrender
+        json[:hidden_relations] = hidden
       end
 
       json[:rows] = pg_result.values
