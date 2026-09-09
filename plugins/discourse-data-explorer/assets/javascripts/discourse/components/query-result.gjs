@@ -3,11 +3,9 @@ import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { capitalize } from "@ember/string";
 import moment from "moment";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import Badge from "discourse/models/badge";
-import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
@@ -236,21 +234,21 @@ export default class QueryResult extends Component {
     });
   }
 
+  @cached
   get columnComponents() {
     if (!this.columns) {
       return [];
     }
-    return this.columns.map((_, idx) => {
-      let type = "text";
-      if (this.colRender[idx]) {
-        type = this.colRender[idx];
-      }
-      return { name: type, component: VIEW_COMPONENTS[type] };
-    });
-  }
 
-  get colCount() {
-    return this.columns.length;
+    return this.columns.map((_, idx) => {
+      const type = this.colRender[idx] || "text";
+
+      return {
+        name: type,
+        component: VIEW_COMPONENTS[type],
+        table: this._relationTables[type],
+      };
+    });
   }
 
   get resultCount() {
@@ -277,64 +275,34 @@ export default class QueryResult extends Component {
     });
   }
 
-  get parameterAry() {
-    let arr = [];
-    for (let key in this.params) {
-      if (this.params.hasOwnProperty(key)) {
-        arr.push({ key, value: this.params[key] });
+  @cached
+  get _relationTables() {
+    const { relations = {} } = this.args.content;
+    const tables = {
+      group: this.site.groupsById,
+      category: transformedRelTable(this.site.categories),
+    };
+
+    for (const [type, table] of Object.entries(relations)) {
+      if (tables[type]) {
+        continue;
       }
+
+      tables[type] = transformedRelTable(
+        table,
+        type === "badge" ? Badge : undefined
+      );
     }
-    return arr;
-  }
 
-  get transformedUserTable() {
-    return transformedRelTable(this.args.content.relations.user);
-  }
-
-  get transformedBadgeTable() {
-    return transformedRelTable(this.args.content.relations.badge, Badge);
-  }
-
-  get transformedPostTable() {
-    return transformedRelTable(this.args.content.relations.post);
-  }
-
-  get transformedTopicTable() {
-    return transformedRelTable(this.args.content.relations.topic);
-  }
-
-  get transformedTagGroupTable() {
-    return transformedRelTable(this.args.content.relations.tag_group);
-  }
-
-  get transformedGroupTable() {
-    return transformedRelTable(this.site.groups);
+    return tables;
   }
 
   get chartLabels() {
-    const labelSelectors = {
-      user: (user) => user.username,
-      badge: (badge) => badge.name,
-      topic: (topic) => topic.title,
-      group: (group) => group.name,
-      category: (category) => category.name,
-    };
+    const table = this._relationTables[this.colRender[0]];
 
-    const relationName = this.colRender[0];
-    if (relationName) {
-      const lookupFunc = this[`lookup${capitalize(relationName)}`];
-      const labelSelector = labelSelectors[relationName];
-
-      if (lookupFunc && labelSelector) {
-        return this.rows.map((r) => {
-          const relation = lookupFunc.call(this, r[0]);
-          const label = labelSelector(relation);
-          return this._cutChartLabel(label);
-        });
-      }
-    }
-
-    return this.rows.map((r) => this._cutChartLabel(r[0]));
+    return this.rows.map((r) =>
+      this._cutChartLabel(relationLabel(table?.[r[0]]) ?? r[0])
+    );
   }
 
   @action
@@ -372,34 +340,6 @@ export default class QueryResult extends Component {
   @action
   expandTable() {
     this.tableExpanded = true;
-  }
-
-  lookupUser(id) {
-    return this.transformedUserTable[id];
-  }
-
-  lookupBadge(id) {
-    return this.transformedBadgeTable[id];
-  }
-
-  lookupPost(id) {
-    return this.transformedPostTable[id];
-  }
-
-  lookupTopic(id) {
-    return this.transformedTopicTable[id];
-  }
-
-  lookupTagGroup(id) {
-    return this.transformedTagGroupTable[id];
-  }
-
-  lookupGroup(id) {
-    return this.transformedGroupTable[id];
-  }
-
-  lookupCategory(id) {
-    return Category.findById(id);
   }
 
   _cutChartLabel(label) {
@@ -520,21 +460,7 @@ export default class QueryResult extends Component {
                 {{#each this.rows as |row|}}
                   <QueryRowContent
                     @columnComponents={{this.columnComponents}}
-                    @lookupBadge={{this.lookupBadge}}
-                    @lookupCategory={{this.lookupCategory}}
-                    @lookupGroup={{this.lookupGroup}}
-                    @lookupPost={{this.lookupPost}}
-                    @lookupTagGroup={{this.lookupTagGroup}}
-                    @lookupTopic={{this.lookupTopic}}
-                    @lookupUser={{this.lookupUser}}
                     @row={{row}}
-                    @site={{this.site}}
-                    @transformedBadgeTable={{this.transformedBadgeTable}}
-                    @transformedGroupTable={{this.transformedGroupTable}}
-                    @transformedPostTable={{this.transformedPostTable}}
-                    @transformedTagGroupTable={{this.transformedTagGroupTable}}
-                    @transformedTopicTable={{this.transformedTopicTable}}
-                    @transformedUserTable={{this.transformedUserTable}}
                   />
                 {{/each}}
               </tbody>
@@ -556,13 +482,14 @@ export default class QueryResult extends Component {
 }
 
 function transformedRelTable(table, modelClass) {
-  const result = {};
-  table?.forEach((item) => {
-    if (modelClass) {
-      result[item.id] = modelClass.create(item);
-    } else {
-      result[item.id] = item;
-    }
-  });
-  return result;
+  return Object.fromEntries(
+    (table ?? []).map((item) => [
+      item.id,
+      modelClass ? modelClass.create(item) : item,
+    ])
+  );
+}
+
+function relationLabel(relation) {
+  return relation?.username ?? relation?.title ?? relation?.name;
 }

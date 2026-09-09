@@ -1,54 +1,43 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { classify } from "@ember/string";
 import getURL from "discourse/lib/get-url";
 import TextViewComponent from "./result-types/text";
+
+const BASE_URI = getURL("");
 
 export default class QueryRowContent extends Component {
   @cached
   get results() {
     return this.args.columnComponents.map((componentDefinition, idx) => {
-      const value = this.args.row[idx],
-        id = parseInt(value, 10);
+      const value = this.args.row[idx];
 
-      const ctx = {
-        value,
-        id,
-        baseuri: getURL(""),
-      };
-
-      if (this.args.row[idx] === null) {
-        return {
-          component: TextViewComponent,
-          textValue: "NULL",
-        };
-      } else if (componentDefinition.name === "text") {
-        return {
-          component: TextViewComponent,
-          textValue: this.args.row[idx].toString(),
-        };
+      if (value === null) {
+        return { component: TextViewComponent, textValue: "NULL" };
       }
 
-      const lookupFunc =
-        this.args[`lookup${classify(componentDefinition.name)}`];
-      if (lookupFunc) {
-        ctx[componentDefinition.name] = lookupFunc.call(this.args, id);
+      if (componentDefinition.name === "text") {
+        return { component: TextViewComponent, textValue: value.toString() };
+      }
+
+      const id = parseInt(value, 10);
+      const ctx = { value, id, baseuri: BASE_URI };
+
+      if (componentDefinition.table) {
+        ctx[componentDefinition.name] = componentDefinition.table[id];
+
+        if (!ctx[componentDefinition.name]) {
+          return { component: TextViewComponent, textValue: value.toString() };
+        }
       }
 
       if (componentDefinition.name === "url") {
-        let [url, name] = guessUrl(value);
-        ctx["href"] = url;
-        ctx["target"] = name;
+        [ctx.href, ctx.target] = guessUrl(value);
       }
 
-      try {
-        return {
-          component: componentDefinition.component || TextViewComponent,
-          ctx,
-        };
-      } catch {
-        return "error";
-      }
+      return {
+        component: componentDefinition.component || TextViewComponent,
+        ctx,
+      };
     });
   }
 
@@ -58,7 +47,6 @@ export default class QueryRowContent extends Component {
         <td class="query-result-cell">
           <result.component
             @ctx={{result.ctx}}
-            @params={{result.params}}
             @textValue={{result.textValue}}
           />
         </td>
@@ -68,14 +56,7 @@ export default class QueryRowContent extends Component {
 }
 
 function guessUrl(columnValue) {
-  let [dest, name] = [columnValue, columnValue];
-
-  const split = columnValue.split(/,(.+)/);
-
-  if (split.length > 1) {
-    name = split[0];
-    dest = split[1];
-  }
+  const [name, dest = columnValue] = String(columnValue).split(/,(.+)/);
 
   return [dest, name];
 }
