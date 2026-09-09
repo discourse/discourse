@@ -133,16 +133,17 @@ jobs:
         run: |
           ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
-      - name: Setup gems
-        run: |
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle install --jobs $(($(nproc) - 1))
-          bundle clean
+      - parallel:
+          - name: Setup gems
+            run: |
+              bundle config --local path vendor/bundle
+              bundle config --local deployment true
+              bundle config --local without development
+              bundle install --jobs $(($(nproc) - 1))
+              bundle clean
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
+          - name: pnpm install
+            run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'official-plugins' || matrix.target == 'plugins'
