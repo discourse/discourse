@@ -5,11 +5,16 @@ module JsonApiKit
     class << self
       private
 
-      def build(raw, resource:, urls:, glossary:)
-        parameters = Request::Parameters.new(raw.to_hash.deep_stringify_keys, glossary:, resource:)
-        contract = contract_class.for(parameters.to_h, resource:, glossary:)
+      def build(raw, resource:, client:)
+        parameters =
+          Request::Parameters.new(
+            raw.to_hash.deep_stringify_keys,
+            resource:,
+            glossary: client.glossary,
+          )
+        contract = contract_class.for(parameters.to_h, resource:, glossary: client.glossary)
         return Errors.new(*contract.refusals) if contract.invalid?
-        assemble(new(yield(contract.to_hash), urls:, glossary:, fieldsets: parameters.fieldsets))
+        assemble(new(yield(contract.to_hash), client:, fieldsets: parameters.fieldsets))
       rescue Error => error
         Errors.new(error)
       end
@@ -17,10 +22,11 @@ module JsonApiKit
       def assemble(document) = document.tap(&:to_h)
     end
 
-    def initialize(query, urls:, glossary:, fieldsets:)
+    delegate :urls, to: :client, private: true
+
+    def initialize(query, client:, fieldsets:)
       @query = query
-      @urls = urls
-      @glossary = glossary
+      @client = client
       @fieldsets = fieldsets
     end
 
@@ -30,14 +36,14 @@ module JsonApiKit
 
     private
 
-    attr_reader :query, :urls, :glossary, :fieldsets
+    attr_reader :query, :client, :fieldsets
 
     def contents = @contents ||= Contents.new(primary_records, query.included)
 
     def links = { self: { href: urls.current.to_s, type: Pagination::Profile::MEDIA_TYPE } }
 
     def included
-      contents.related.map { ResourceObject.new(it, urls:, glossary:, fieldsets:).to_h }
+      contents.related.map { ResourceObject.new(it, client:, fieldsets:).to_h }
     end
   end
 end

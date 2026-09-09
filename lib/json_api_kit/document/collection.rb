@@ -6,8 +6,10 @@ module JsonApiKit
       class << self
         def contract_class = Request::Contract::Collection
 
-        def for(parameters, resource:, guardian:, urls:, glossary:, scoped_to: nil)
-          build(parameters, resource:, urls:, glossary:) { resource.all(it, guardian:, scoped_to:) }
+        def for(parameters, resource:, client:, scoped_to: nil)
+          build(parameters, resource:, client:) do
+            resource.all(it, guardian: client.guardian, scoped_to:)
+          end
         end
       end
 
@@ -17,7 +19,7 @@ module JsonApiKit
 
       def data
         contents.primary.map do
-          ResourceObject.new(it, urls:, glossary:, fieldsets:, meta: page_meta(it)).to_h
+          ResourceObject.new(it, client:, fieldsets:, meta: page_meta(it)).to_h
         end
       end
 

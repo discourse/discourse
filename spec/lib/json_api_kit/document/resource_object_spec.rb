@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::ResourceObject do
-  subject(:resource_object) { described_class.new(record, urls:, glossary:, fieldsets:, meta:) }
+  subject(:resource_object) { described_class.new(record, client:, fieldsets:, meta:) }
 
   fab!(:topic) { Fabricate(:topic, title: "A row a document renders") }
   let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
   let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:guardian) { Guardian.new }
   let(:resource) do
