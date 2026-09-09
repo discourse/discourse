@@ -165,6 +165,9 @@ export default class SidebarSection extends Component {
     if (this.displaySectionContent) {
       this.sidebarState.collapseSection(this.args.sectionName);
     } else {
+      this.sidebarState.resetLinkReveal(
+        event.target.closest(".sidebar-sections")
+      );
       this.sidebarState.expandSection(this.args.sectionName);
     }
 
