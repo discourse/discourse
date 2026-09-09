@@ -1,6 +1,6 @@
 # Image-processing migration evidence
 
-Completed operation evidence contains input fixtures, exact operation source files, a standalone benchmark harness, and raw results. Completed rendering evidence also includes both backend outputs. Draft notes for operations still being measured identify pending results explicitly. These artifacts support separate operation PRs; this evidence branch is not intended to merge into Discourse.
+Completed operation evidence contains input fixtures, exact operation source files, a standalone benchmark harness, and raw results. Completed rendering evidence also includes both backend outputs. Earlier operation notes preserve their measured-source limitations; current publication and review status is recorded below. These artifacts support separate operation PRs; this evidence branch is not intended to merge into Discourse.
 
 Benchmarks ran as the `discourse` user on the designated Linux server (2 CPUs, 2 GiB RAM), with Landlock enabled, in `discourse/base:2.0.20260812-0036` at digest `sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5`. This is the official launcher default; confirmation against the deployed image remains pending. Measurements include the actual operation wrapper, IPC, sandbox child, and codec work; Rails boot is excluded. Warm measurements alternate backends over 31 iterations per input. Five fresh-worker operation calls include both startup and conversion; they do not isolate startup cost.
 
@@ -18,9 +18,9 @@ The JPEG, ICO, SVG asset, and topic OG bundles now include the returned Linux ou
 
 Each of these directories keeps production outputs under `outputs/`, the measured bundle under `benchmark/`, and any supplementary development-environment captures under `local-dv/`. The development captures are not evidence of production font parity. The timing tables describe recorded snapshots and make no claim about final tests or PR CI.
 
-The eleven operation review branches are recorded in the [review source map](review-source-map.md) and its exact manifest. Animation, SVG dimensions, SVG assets, topic OG, and HEIF have published draft PRs. The remaining six branches are local. Measured cumulative snapshots do not establish that extracted review heads passed tests or CI. `OptimizedImage.downsize`, `.crop`, and `.resize` select the native facade under the existing flag while retaining the shared optimizer boundary.
+All twelve operation draft PRs are published. See the [current head manifest](published-prs.json), [current source alignment](current-stack-source-alignment.md), and [final three-reviewer verdicts](review-final-verdicts.md). The source snapshots in each benchmark remain distinct from the extracted PR heads. The final cumulative source was reviewed by Grok, Claude Code and Codex; all three returned satisfied with no outstanding findings. Final CI is recorded separately in the head manifest.
 
-Native quality probing and its integration remain pending. The staged `OptimizedImage.vips_quality` helper still calls `ImageMagick.image_quality` for source JPEG/WebP quality, and the upload downsize path also retains an ImageMagick quality probe. Explicit-quality encoder measurements do not establish parity for inferred quality. The current fallback values and source-quality behavior remain subject to the quality-policy decision and its validation; the migration must not be described as fully free of ImageMagick.
+[Native quality probing](quality/benchmark/RESULTS.md) now covers all three enabled-path quality callers. The 26 representative outcomes and 500-case JPEG matrix match the production ImageMagick helper. The [first-frame WebP supplement](webp-first-frame/README.md) covers compatible lossless geometry encoding, and the [crop-depth supplement](crop-depth/README.md) verifies the corrected 8-bit/16-bit metadata policy.
 
 Geometry and orientation benchmark evidence is complete:
 
@@ -33,4 +33,4 @@ The resize operation includes the user-approved removal of the unused `colors` o
 
 Shared compatibility evidence includes the [80-case JPEG sampling comparison](jpeg-sampling/README.md) and [50-case SVG geometry comparison](svg-geometry/README.md). These supplements isolate encoding and background behavior; they do not supply operation timing or complete upload-pipeline measurements.
 
-The [optimizer supplement](optimizer/README.md) records the final post-transform checks, including metadata changes, ICO byte preservation, and both sides of the PNG quantization threshold. The [review order](review-risk-order.md) ranks operations by risk separately from the stack merge order; the [remaining call-site audit](remaining-callsite-audit.md) identifies the still-unmigrated quality probes.
+The [optimizer supplement](optimizer/README.md) records the final post-transform checks, including metadata changes, ICO byte preservation, and both sides of the PNG quantization threshold. The [review order](review-risk-order.md) ranks operations by risk separately from the stack merge order; the [remaining call-site audit](remaining-callsite-audit.md) records the completed enabled-path call-site audit.

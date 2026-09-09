@@ -1,0 +1,35 @@
+{
+  "pass1_source": "28582e86c45dd1c791b01fc876382fbb8e444f07",
+  "pass2_source": "a3c50521c64a57b149bb6c317449708ee06c0841",
+  "findings": [
+    {
+      "id": "webp-first-frame",
+      "priority": "P1",
+      "status": "resolved-pass-2",
+      "evidence": "Grok, Claude Code and Codex accepted the fix at a3c50521c64a57b149bb6c317449708ee06c0841; all three returned satisfied."
+    },
+    {
+      "id": "crop-depth",
+      "priority": "P2",
+      "status": "resolved-pass-3-all-three-reviewers",
+      "decision": "Fix itl. (2026-09-10)"
+    },
+    {
+      "id": "ico-backfill",
+      "priority": "P3",
+      "status": "dismissed-preexisting",
+      "evidence": "Entire Upload#calculate_dominant_color! method is byte-identical at base0708de39 and reviewedhead a3c50521; see ico-backfill-preexisting-proof.txt."
+    },
+    {
+      "id": "og-selectors",
+      "priority": "P3",
+      "status": "dismissed-hypothetical-rename"
+    }
+  ],
+  "pass3_source": "81f71327e66f0db320939fc8def0826e2e4ea1e0",
+  "pass3_verdicts": {
+    "Grok grok-4.6 high": "satisfied; no new P0/P1/P2/P3",
+    "Claude Code fable high": "satisfied; no new P0/P1/P2/P3",
+    "Codex gpt-6-astra low": "satisfied; no new P0/P1/P2/P3"
+  }
+}

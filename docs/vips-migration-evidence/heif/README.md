@@ -1,5 +1,7 @@
 HEIF uploads need JPEG conversion before Discourse adopts the image for normal upload processing. That conversion currently invokes ImageMagick.
 
+Current publication and review status: all twelve draft PRs are open and the final cumulative source passed all three selected reviewers. See [current heads](../published-prs.json), [source alignment](../current-stack-source-alignment.md), and [review verdicts](../review-final-verdicts.md). Any pending-head statements below describe the historical benchmark snapshot, not current status.
+
 This commit converts HEIF uploads through the existing sandboxed libvips worker when `GlobalSetting.enable_vips_image_processing` is enabled. It retains white flattening, JPEG output, container rotation/mirroring, and the caller’s temporary-file adoption and cleanup behavior.
 
 The measured worker SHA-256 is `817c1eab89ffbf9fead9905de81f297abe5a8891276d19e1184eb89f9abbd97e`. [Raw results](results.json) and [the source manifest](benchmark/source-manifest.json) identify the complete measured snapshot. The benchmark supplies seven successful HEIF inputs: 8/12-bit opaque and alpha grids, container rotation and mirroring, and a natural photograph.

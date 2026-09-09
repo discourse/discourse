@@ -69,5 +69,5 @@ docker run --rm --user discourse --cpus 2 --memory 2g --memory-swap 3g \
   -v /root/discourse-vips-migration-01a0846e/animation/gems:/gems \
   -w /bench -e BUNDLE_PATH=/gems -e OPERATION=downsize \
   discourse/base:2.0.20260812-0036 \
-  bundle exec ruby -r ./boot.rb geometry_evidence.rb
+  bundle exec ruby boot.rb
 ```

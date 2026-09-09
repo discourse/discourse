@@ -1,5 +1,7 @@
 Previously, SVG logos and other SVG assets used by topic Open Graph cards were rasterized through ImageMagick.
 
+Current publication and review status: all twelve draft PRs are open and the final cumulative source passed all three selected reviewers. See [current heads](../published-prs.json), [source alignment](../current-stack-source-alignment.md), and [review verdicts](../review-final-verdicts.md). Any pending-head statements below describe the historical benchmark snapshot, not current status.
+
 This commit rasterizes those assets through the existing sandboxed libvips worker when `GlobalSetting.enable_vips_image_processing` is enabled. It retains intrinsic sizing, white flattening, and the existing 10-second timeout.
 
 The measured source is `074eb1c476555694fc135c99a6e391deeeef908a`. This operation depends on the SVG dimension loader and is separate from full Open Graph card rendering. No explicit output size or PNG compression override is added. The worker rejects identical input/output files and retains narrowly scoped input, output, and font access.

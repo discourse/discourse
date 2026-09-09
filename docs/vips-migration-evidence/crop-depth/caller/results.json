@@ -1,0 +1,274 @@
+[
+  {
+    "name": "rgb16",
+    "strip": false,
+    "vips": false,
+    "result": true,
+    "output": "rgb16-strip-false-vips-false.png",
+    "bytes": 1763650,
+    "sha256": "c20a53dbfc5e18bb8b5397c0c65e0449e041bbc27c8338a426411f4d9842187f",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 3,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "rgb16",
+    "strip": false,
+    "vips": true,
+    "result": true,
+    "output": "rgb16-strip-false-vips-true.png",
+    "bytes": 1794448,
+    "sha256": "3b9423074f75f66dc98a7a0f2afdbba060fd9c6a64898babf703af0e3abb0fba",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 3,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "rgb16",
+    "strip": true,
+    "vips": false,
+    "result": true,
+    "output": "rgb16-strip-true-vips-false.png",
+    "bytes": 874938,
+    "sha256": "10e9b9fdd787eaa8071aa583190e3d8e5680ccafd0fed396276822285fadca04",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 3,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "rgb16",
+    "strip": true,
+    "vips": true,
+    "result": true,
+    "output": "rgb16-strip-true-vips-true.png",
+    "bytes": 896775,
+    "sha256": "e0fc275f81d7993a79425ed5eba1fc7a86c6c68b6674a4faff67add83d2febe6",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 3,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "rgba16",
+    "strip": false,
+    "vips": false,
+    "result": true,
+    "output": "rgba16-strip-false-vips-false.png",
+    "bytes": 2445472,
+    "sha256": "bda9287d9cc2bcb200b081072f4e0fb9a8c972d6a52bc77001e3ea819f4ac96f",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 4,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "rgba16",
+    "strip": false,
+    "vips": true,
+    "result": true,
+    "output": "rgba16-strip-false-vips-true.png",
+    "bytes": 2453322,
+    "sha256": "45bf3184d55505b996a7ba52cd656dccfcd96352c960ebd9a32395a60e89e548",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 4,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "rgba16",
+    "strip": true,
+    "vips": false,
+    "result": true,
+    "output": "rgba16-strip-true-vips-false.png",
+    "bytes": 1123091,
+    "sha256": "c6b320443ba834a2c3843d7160cb27716a6edeed3789999cef7a7bd34d2e9c53",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 4,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "rgba16",
+    "strip": true,
+    "vips": true,
+    "result": true,
+    "output": "rgba16-strip-true-vips-true.png",
+    "bytes": 1150463,
+    "sha256": "f4c94e2e69a3fe0b80be7526aa558741d74d52795d54a7e5aa4818956ac918ab",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 4,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "grey16",
+    "strip": false,
+    "vips": false,
+    "result": true,
+    "output": "grey16-strip-false-vips-false.png",
+    "bytes": 589054,
+    "sha256": "4e688f2909aa501ac1ce0f129be8ebfccf7707d2b0ac588d13d62dedd0c5be8c",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 1,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "grey16",
+    "strip": false,
+    "vips": true,
+    "result": true,
+    "output": "grey16-strip-false-vips-true.png",
+    "bytes": 598988,
+    "sha256": "febaa3fd7e3a9fd6ef8c49348bd62886c46c924b1c303eb65651ec6eb5203b23",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 1,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "grey16",
+    "strip": true,
+    "vips": false,
+    "result": true,
+    "output": "grey16-strip-true-vips-false.png",
+    "bytes": 292009,
+    "sha256": "a50f7dc2d3b5eff553dbdf5bd0ace1f8514fc984dd6a1fb162b276efb60e8062",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 1,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "grey16",
+    "strip": true,
+    "vips": true,
+    "result": true,
+    "output": "grey16-strip-true-vips-true.png",
+    "bytes": 299439,
+    "sha256": "2768118e1ed6f860ccb09e03a0b9489d45352f406e79e182b578fccc863b02ad",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 1,
+    "alpha": false,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "greya16",
+    "strip": false,
+    "vips": false,
+    "result": true,
+    "output": "greya16-strip-false-vips-false.png",
+    "bytes": 1225338,
+    "sha256": "4e3b3c7225424747428e0995ccf108364830fa4cd157b6bb92a68b8599b9ead5",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 2,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "greya16",
+    "strip": false,
+    "vips": true,
+    "result": true,
+    "output": "greya16-strip-false-vips-true.png",
+    "bytes": 1228004,
+    "sha256": "e9ef51e74ffd2b81697c22b815a4eb022e9982563323e5a8a2db66126f3bcb68",
+    "png_bit_depth": 16,
+    "format": "ushort",
+    "bands": 2,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "greya16",
+    "strip": true,
+    "vips": false,
+    "result": true,
+    "output": "greya16-strip-true-vips-false.png",
+    "bytes": 569920,
+    "sha256": "6598f50c0a3bc9314a30940e239545469e43389cab59c9931b808d2c7856dad3",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 2,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  },
+  {
+    "name": "greya16",
+    "strip": true,
+    "vips": true,
+    "result": true,
+    "output": "greya16-strip-true-vips-true.png",
+    "bytes": 583179,
+    "sha256": "dac9e31dcfaf9af19880529359228fd57c89725c69305dcacd1fb73ef19a196e",
+    "png_bit_depth": 8,
+    "format": "uchar",
+    "bands": 2,
+    "alpha": true,
+    "dimensions": [
+      640,
+      480
+    ]
+  }
+]

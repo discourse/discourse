@@ -1,0 +1,11 @@
+The Gemfile's dependencies are satisfied
+
+Randomized with seed 65240
+[{"vips":false,"success":true,"bytes":656280,"png_bit_depth":8,"format":"uchar","pixel":[232.0,255.0,225.0]},{"vips":true,"success":true,"bytes":672570,"png_bit_depth":8,"format":"uchar","pixel":[218.0,255.0,220.0]}]
+.
+
+Finished in 0.49647 seconds (files took 0.93135 seconds to load)
+1 example, 0 failures
+
+Randomized with seed 65240
+

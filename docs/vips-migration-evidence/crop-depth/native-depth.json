@@ -1,0 +1,334 @@
+{
+  "process_uid": 1000,
+  "image_digest": "sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "samples": [
+    {
+      "name": "rgb16-strip-false",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/rgb16-strip-false-imagemagick.png",
+          "sha256": "aa9b073ddfddc1f6ba81497f32ed79eded16f99ac43364ea3d60610877b26b67",
+          "bytes": 1768132,
+          "png_bit_depth": 16,
+          "png_color_type": 2,
+          "format": "ushort",
+          "interpretation": "rgb16",
+          "bands": 3,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/rgb16-strip-false-libvips.png",
+          "sha256": "ae2c1a304305a684e35c3a68de50149917e7772ef3ea93084a1602bbb7bfd4b7",
+          "bytes": 1808664,
+          "png_bit_depth": 16,
+          "png_color_type": 2,
+          "format": "ushort",
+          "interpretation": "rgb16",
+          "bands": 3,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 974.5275043402778,
+        "maximum": 4133.0,
+        "units": "ushort",
+        "hidden_rgb_included": true
+      }
+    },
+    {
+      "name": "rgb16-strip-true",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/rgb16-strip-true-imagemagick.png",
+          "sha256": "5bfdfe7461284eb5dcfdadf73181e039817800d7b1fbca7f1856656158c42f18",
+          "bytes": 896715,
+          "png_bit_depth": 8,
+          "png_color_type": 2,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "bands": 3,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/rgb16-strip-true-libvips.png",
+          "sha256": "4aafa4434ab0322a35e4d4bcb87c1cf06d056a17743d0eff06cfa0594227043d",
+          "bytes": 901112,
+          "png_bit_depth": 8,
+          "png_color_type": 2,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "bands": 3,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 5.504918619791667,
+        "maximum": 53.0,
+        "units": "uchar",
+        "hidden_rgb_included": true
+      }
+    },
+    {
+      "name": "rgba16-strip-false",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/rgba16-strip-false-imagemagick.png",
+          "sha256": "60adc820e6c9dec2ab3a65a6a9033c55fb1bc6e887540b424bf89b6673c2c675",
+          "bytes": 2462739,
+          "png_bit_depth": 16,
+          "png_color_type": 6,
+          "format": "ushort",
+          "interpretation": "rgb16",
+          "bands": 4,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/rgba16-strip-false-libvips.png",
+          "sha256": "1f83fa2519d48aa9f278a67a0fd88f79496b1e2e75b44c818e123857c588de66",
+          "bytes": 2461726,
+          "png_bit_depth": 16,
+          "png_color_type": 6,
+          "format": "ushort",
+          "interpretation": "rgb16",
+          "bands": 4,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 861.5153605143229,
+        "maximum": 65535.0,
+        "units": "ushort",
+        "hidden_rgb_included": true
+      }
+    },
+    {
+      "name": "rgba16-strip-true",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/rgba16-strip-true-imagemagick.png",
+          "sha256": "46fb70dd28351f47ace83c70d683c89ee7a29e9d6afd0e27b744795a060d6af4",
+          "bytes": 1125821,
+          "png_bit_depth": 8,
+          "png_color_type": 6,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "bands": 4,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/rgba16-strip-true-libvips.png",
+          "sha256": "8dec567a7bcce78025be0e1bbf9fa03bb5ea352dd47ec0b6957430849a04310b",
+          "bytes": 1168263,
+          "png_bit_depth": 8,
+          "png_color_type": 6,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "bands": 4,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 5.402236328125,
+        "maximum": 255.0,
+        "units": "uchar",
+        "hidden_rgb_included": true
+      }
+    },
+    {
+      "name": "grey16-strip-false",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/grey16-strip-false-imagemagick.png",
+          "sha256": "d29abd1b54bea39a23a8fd5bb9abe8894e2f8af44f8dcdddf076ded5f2d5ee36",
+          "bytes": 591929,
+          "png_bit_depth": 16,
+          "png_color_type": 0,
+          "format": "ushort",
+          "interpretation": "grey16",
+          "bands": 1,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/grey16-strip-false-libvips.png",
+          "sha256": "3f7507232e40ead4953ae5486dd4a3f91d8c48877c8eecc46669cb05d5580b8f",
+          "bytes": 603589,
+          "png_bit_depth": 16,
+          "png_color_type": 0,
+          "format": "ushort",
+          "interpretation": "grey16",
+          "bands": 1,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 975.03537109375,
+        "maximum": 4550.0,
+        "units": "ushort",
+        "hidden_rgb_included": true
+      }
+    },
+    {
+      "name": "grey16-strip-true",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/grey16-strip-true-imagemagick.png",
+          "sha256": "d35533b47c5af53428ea0672820cab3586dfab2449a21416488f8367a5aa7cb2",
+          "bytes": 300522,
+          "png_bit_depth": 8,
+          "png_color_type": 0,
+          "format": "uchar",
+          "interpretation": "b-w",
+          "bands": 1,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/grey16-strip-true-libvips.png",
+          "sha256": "8354bc247881e44b6ec31415ca8a70122546ad2ded0a045f06262ec66f0e2dbb",
+          "bytes": 300749,
+          "png_bit_depth": 8,
+          "png_color_type": 0,
+          "format": "uchar",
+          "interpretation": "b-w",
+          "bands": 1,
+          "alpha": false,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 5.6778125,
+        "maximum": 50.0,
+        "units": "uchar",
+        "hidden_rgb_included": true
+      }
+    },
+    {
+      "name": "greya16-strip-false",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/greya16-strip-false-imagemagick.png",
+          "sha256": "4353aca9a37265e447e48a1fbcd0cbd4c73494c9fcf6239b6c11b5e8e8d0a573",
+          "bytes": 1231921,
+          "png_bit_depth": 16,
+          "png_color_type": 4,
+          "format": "ushort",
+          "interpretation": "grey16",
+          "bands": 2,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/greya16-strip-false-libvips.png",
+          "sha256": "4826b0f5ba42d2d1917c87840a50ebf53a50fda6b999110223e1c1a336d3583e",
+          "bytes": 1231605,
+          "png_bit_depth": 16,
+          "png_color_type": 4,
+          "format": "ushort",
+          "interpretation": "grey16",
+          "bands": 2,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 859.904736328125,
+        "maximum": 3738.0,
+        "units": "ushort",
+        "hidden_rgb_included": true
+      }
+    },
+    {
+      "name": "greya16-strip-true",
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/crop/greya16-strip-true-imagemagick.png",
+          "sha256": "ffe959c072a05fd54f1af846216923bfb9f1cfc6337bb755344b30d8d36603c5",
+          "bytes": 574608,
+          "png_bit_depth": 8,
+          "png_color_type": 4,
+          "format": "uchar",
+          "interpretation": "b-w",
+          "bands": 2,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        },
+        "libvips": {
+          "path": "outputs/crop/greya16-strip-true-libvips.png",
+          "sha256": "cbe6d6f26f4c5e21047703a876da0b37dae821e74a40a13698d5a083c09d7170",
+          "bytes": 589601,
+          "png_bit_depth": 8,
+          "png_color_type": 4,
+          "format": "uchar",
+          "interpretation": "b-w",
+          "bands": 2,
+          "alpha": true,
+          "dimensions": [
+            640,
+            480
+          ]
+        }
+      },
+      "native_sample_difference": {
+        "mean": 5.471197916666667,
+        "maximum": 255.0,
+        "units": "uchar",
+        "hidden_rgb_included": true
+      }
+    }
+  ]
+}

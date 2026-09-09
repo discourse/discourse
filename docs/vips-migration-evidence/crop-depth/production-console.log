@@ -1,0 +1,10 @@
+["discourse/base@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5"]
+{"name":"rgb16-strip-false","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":496.2005796842277,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":238.3327060379088,"dimensions":[640,480]}},"error":null}
+{"name":"rgb16-strip-true","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":286.1092179082334,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":137.09449488669634,"dimensions":[640,480]}},"error":null}
+{"name":"rgba16-strip-false","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":439.4764108583331,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":242.449508048594,"dimensions":[640,480]}},"error":null}
+{"name":"rgba16-strip-true","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":392.1740669757128,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":229.80415215715766,"dimensions":[640,480]}},"error":null}
+{"name":"grey16-strip-false","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":206.5591369755566,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":117.43878200650215,"dimensions":[640,480]}},"error":null}
+{"name":"grey16-strip-true","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":593.5993152670562,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":120.22482510656118,"dimensions":[640,480]}},"error":null}
+{"name":"greya16-strip-false","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":267.94481882825494,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":160.02895263954997,"dimensions":[640,480]}},"error":null}
+{"name":"greya16-strip-true","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":256.0171699151397,"dimensions":[640,480]},"libvips":{"status":"ok","elapsed_ms":168.41551521793008,"dimensions":[640,480]}},"error":null}
+/bench/crop-results.json

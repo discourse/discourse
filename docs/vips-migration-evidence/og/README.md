@@ -1,5 +1,7 @@
 Previously, topic Open Graph cards rasterized their generated SVG through ImageMagick.
 
+Current publication and review status: all twelve draft PRs are open and the final cumulative source passed all three selected reviewers. See [current heads](../published-prs.json), [source alignment](../current-stack-source-alignment.md), and [review verdicts](../review-final-verdicts.md). Any pending-head statements below describe the historical benchmark snapshot, not current status.
+
 This commit uses the libvips worker when `GlobalSetting.enable_vips_image_processing` is enabled and measures title and category text to keep it inside the card.
 
 The benchmark used source `58c29b709d914d66a4ffd729475f19c341c23efc`. Exact source files, input hashes, raw timings, and output hashes are retained in [results.json](results.json) and [the standalone bundle](benchmark/).

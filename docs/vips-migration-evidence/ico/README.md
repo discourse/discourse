@@ -1,5 +1,7 @@
 Previously, favicon conversion used ImageMagick to decode the final ICO frame.
 
+Current publication and review status: all twelve draft PRs are open and the final cumulative source passed all three selected reviewers. See [current heads](../published-prs.json), [source alignment](../current-stack-source-alignment.md), and [review verdicts](../review-final-verdicts.md). Any pending-head statements below describe the historical benchmark snapshot, not current status.
+
 This commit decodes that frame through the sandboxed native worker when `GlobalSetting.enable_vips_image_processing` is enabled, preserving palette colors, transparency, and PNG output.
 
 The benchmark used source `da0c0d17db42e5b096a5c530700b3a33f607897a`. Exact source files, input hashes, raw timings, and output hashes are retained in [results.json](results.json) and [the standalone bundle](benchmark/).
