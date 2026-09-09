@@ -38,6 +38,10 @@ ur:
           title: "تاریخ / وقت کی معلومات"
         menus:
           title: "مینوز"
+        context_menu:
+          actions:
+            duplicate: "نقل"
+            delete: "مٹائیں"
         multi_select:
           title: "ملٹی سلیکٹ"
         toasts:

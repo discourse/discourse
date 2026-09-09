@@ -136,7 +136,7 @@ hu:
         process_started: "A csatorna törlése megkezdődött. Ez a kérdésablak hamarosan bezárul, és már nem fogja látni a törölt csatornát."
       channels_list_popup:
         browse: "Csatornák böngészése"
-        create: "Új csatorna"
+        create: "Új csatorna..."
       close: "Lezárás"
       remove: "Eltávolítás"
       collapse: "Csevegési fiók összecsukása"
@@ -151,8 +151,6 @@ hu:
       muted: "némítva"
       joined: "csatlakozott"
       empty_state:
-        direct_message_cta: "Személyes csevegés indítása"
-        direct_message: "Személyes csevegést is indíthat egy vagy több felhasználóval."
         title: "Nem található csatorna"
         my_threads: "Még nincsenek szálai. A szálak, amelyekben részt vesz, itt fognak megjelenni."
       email_frequency:
@@ -489,14 +487,18 @@ hu:
       direct_messages:
         title: "PÜ-k"
         aria_label: "Váltás privát üzenetekre"
-        new: "Személyes csevegés létrehozása"
         create: "Ugrás"
-        leave: "Személyes csevegés elhagyása"
-        close: "Személyes csevegés bezárása"
+        leave: "Csatorna elhagyása"
+        close: "Csatorna bezárása"
         cannot_create: "Sajnos nem tud közvetlen üzeneteket küldeni."
       channel_list:
         title: "Csatornák"
         aria_label: "Váltás a csatornalistára"
+        options:
+          filter: "Szűr"
+        filter:
+          all: "Összes csatorna"
+          mentions: "Említések"
       incoming_webhooks:
         back: "Vissza"
         channel_placeholder: "Válasszon csatornát"
@@ -651,11 +653,6 @@ hu:
           direct_html: '<span>%{username}</span> <span>megemlítette Önt a következő csatornán: „%{channel}”</span>'
           other_plain: 'megemlítette %{identifier} felhasználót a következő csatornán: „%{channel}”'
           other_html: '<span>%{username}</span> <span>megemlítette %{identifier} felhasználót a következő csatornán: „%{channel}”</span>'
-        direct_message_chat_mention:
-          direct: "megemlítette Önt egy személyes csevegésben"
-          direct_html: "<span>%{username}</span> <span>megemlítette Önt egy személyes csevegésben</span>"
-          other_plain: "megemlítette %{identifier} felhasználót egy személyes csevegésben"
-          other_html: "<span>%{username}</span> <span>megemlítette %{identifier} felhasználót egy személyes csevegésben</span>"
         chat_message: "Új csevegőüzenet"
         chat_quoted: "%{username} idézte a csevegőüzenetét"
       titles:
@@ -725,9 +722,6 @@ hu:
         chat:
           title: Csevegés
     sidebar:
-      start_new_dm:
-        text: Új privát beszélgetés
-        title: Személyes csevegés létrehozása
       panels:
         chat:
           label: "Csevegés"

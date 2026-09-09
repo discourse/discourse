@@ -69,7 +69,7 @@ pt:
         title: "Apagar canal"
       channels_list_popup:
         browse: "Navegar canais"
-        create: "Novo canal"
+        create: "Novo canal..."
       close: "Fechar"
       remove: "Remover"
       collapse: "Colapsar gaveta de Chat"
@@ -79,9 +79,6 @@ pt:
       edited: "editado"
       muted: "silenciado"
       joined: "juntou-se"
-      empty_state:
-        direct_message_cta: "Iniciar um Chat pessoal"
-        direct_message: "Você também pode iniciar um Chat pessoal com um ou mais utilizadores."
       email_frequency:
         never: "Nunca"
       header_indicator_preference:
@@ -186,8 +183,15 @@ pt:
         sort:
           relevance: "Relevância"
           latest: "Mais Recente"
+      direct_messages:
+        leave: "Sair do canal"
+        close: "Fechar canal"
       channel_list:
         title: "Canais"
+        options:
+          filter: "Filtrar"
+        filter:
+          mentions: "Menções"
       incoming_webhooks:
         back: "Retroceder"
         description: "Descrição"
@@ -249,10 +253,6 @@ pt:
       types:
         reviewable_chat_message:
           title: "Mensagem sinalizada em conversa"
-    sidebar:
-      start_new_dm:
-        text: Iniciar novo DM
-        title: Criar uma conversação pessoal
     discourse_workflows:
       chat_message_created:
         channel_id: "Canal"
