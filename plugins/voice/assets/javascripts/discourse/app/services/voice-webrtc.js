@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import { confirmMeshPrivacy } from "../../components/modal/voice-mesh-privacy-warning";
@@ -537,12 +538,12 @@ export default class VoiceWebrtcService extends Service {
   }
 
   get remoteStreams() {
-    this.remoteStreamsRevision;
+    manuallyTrack(this.remoteStreamsRevision);
     return this.#remoteStreamRegistry.allStreams();
   }
 
   get remoteScreenAudioStreams() {
-    this.remoteStreamsRevision;
+    manuallyTrack(this.remoteStreamsRevision);
     return this.#remoteStreamRegistry.allScreenAudioStreams();
   }
 
@@ -641,7 +642,7 @@ export default class VoiceWebrtcService extends Service {
   }
 
   remoteStreamsFor(roomId) {
-    this.remoteStreamsRevision;
+    manuallyTrack(this.remoteStreamsRevision);
     return this.#remoteStreamRegistry.streamsFor(roomId);
   }
 
@@ -652,12 +653,12 @@ export default class VoiceWebrtcService extends Service {
   }
 
   remoteStreamFor(roomId, userId) {
-    this.remoteStreamsRevision;
+    manuallyTrack(this.remoteStreamsRevision);
     return this.#remoteStreamRegistry.streamFor(roomId, userId);
   }
 
   connectionStateFor(roomId) {
-    this.connectionRevision;
+    manuallyTrack(this.connectionRevision);
     if (this.#connectingRoomIds.has(roomId)) {
       return "connecting";
     }

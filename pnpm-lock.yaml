@@ -43,8 +43,8 @@ importers:
   .:
     devDependencies:
       '@discourse/lint-configs':
-        specifier: ^3.6.0
-        version: 3.6.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))
+        specifier: ^3.7.0
+        version: 3.7.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1879,8 +1879,8 @@ packages:
       prettier: 3.8.1
       stylelint: 17.5.0
 
-  '@discourse/lint-configs@3.6.0':
-    resolution: {integrity: sha512-nXV9Svx0E4a6zFs+G9paO9e3cwSl7TjrYw7yDb0Q2ih7GaBAHRGPNl89GAmMikLNq5ZIp3Lv2j2jK14KPAOHzg==}
+  '@discourse/lint-configs@3.7.0':
+    resolution: {integrity: sha512-neUanixZ9MfPscEElger0BNx05/wAw3BZXlBmGfUHscZ+iKBVygko6nDiZZHDBPGZYeZ53JxQXysknSunQpDQQ==}
     peerDependencies:
       eslint: 10.6.0
       prettier: 3.8.1
@@ -9614,7 +9614,7 @@ snapshots:
       - postcss
       - supports-color
 
-  '@discourse/lint-configs@3.6.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))':
+  '@discourse/lint-configs@3.7.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/eslint-parser': 8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0))
