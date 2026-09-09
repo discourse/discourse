@@ -64,6 +64,62 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "#google_universal_analytics_json" do
+    fab!(:user)
+    fab!(:moderator)
+    fab!(:admin)
+
+    it "returns an empty config for anonymous users" do
+      helper.stubs(:current_user).returns(nil)
+
+      expect(JSON.parse(helper.google_universal_analytics_json)).to eq({})
+    end
+
+    it "includes only the user id for regular users when mark_staff_traffic_as_internal is enabled" do
+      SiteSetting.mark_staff_traffic_as_internal = true
+      helper.stubs(:current_user).returns(user)
+
+      expect(JSON.parse(helper.google_universal_analytics_json)).to eq("userId" => user.id)
+    end
+
+    it "marks staff traffic as internal when mark_staff_traffic_as_internal is enabled" do
+      SiteSetting.mark_staff_traffic_as_internal = true
+
+      helper.stubs(:current_user).returns(moderator)
+      expect(JSON.parse(helper.google_universal_analytics_json)).to eq(
+        "userId" => moderator.id,
+        "traffic_type" => "internal",
+      )
+
+      helper.stubs(:current_user).returns(admin)
+      expect(JSON.parse(helper.google_universal_analytics_json)).to eq(
+        "userId" => admin.id,
+        "traffic_type" => "internal",
+      )
+    end
+
+    it "omits traffic_type for staff when mark_staff_traffic_as_internal is disabled" do
+      SiteSetting.mark_staff_traffic_as_internal = false
+      helper.stubs(:current_user).returns(admin)
+
+      expect(JSON.parse(helper.google_universal_analytics_json)).to eq("userId" => admin.id)
+    end
+  end
+
+  describe "#google_tag_manager_json" do
+    fab!(:admin)
+
+    it "includes traffic_type in the data layer for staff when mark_staff_traffic_as_internal is enabled" do
+      SiteSetting.mark_staff_traffic_as_internal = true
+      helper.stubs(:current_user).returns(admin)
+
+      expect(JSON.parse(helper.google_tag_manager_json)).to eq(
+        "userId" => admin.id,
+        "traffic_type" => "internal",
+      )
+    end
+  end
+
   describe "preload_script" do
     def script_tag(url, entrypoint, nonce)
       <<~HTML
