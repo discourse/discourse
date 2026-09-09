@@ -139,37 +139,6 @@ body.discourse-boards-board {
     min-height: 0;
   }
 
-  &__empty-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 16.5rem;
-    height: 50%;
-    padding: 2em 1em;
-    border: 1px dashed var(--primary-300);
-    border-radius: var(--d-border-radius);
-    background: var(--primary-50);
-    text-align: center;
-
-    > .d-icon {
-      font-size: 2em;
-      color: var(--primary-medium);
-      margin-bottom: 0.4em;
-    }
-
-    h3 {
-      margin: 0 0 0.25em;
-      font-size: var(--font-0);
-    }
-
-    p {
-      color: var(--primary-medium);
-      margin: 0 0 1em;
-      font-size: var(--font-down-1);
-    }
-  }
-
   &.discourse-boards-board-viewer--fullscreen {
     position: fixed;
     inset: 0;
@@ -394,6 +363,9 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     font-size: var(--font-down-1);
     padding: var(--space-2);
 
+    // The column is too narrow for the button default of a single line.
+    white-space: normal;
+
     &:hover,
     &:focus {
       color: var(--tertiary-hover);
@@ -502,7 +474,9 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     border-left: 2px solid var(--discourse-boards-column-color);
   }
 
-  &[draggable="false"] {
+  // The primitive owns registration, so a card that is not a registered source
+  // is the one that cannot be dragged.
+  &:not([data-drag-source]) {
     cursor: default;
   }
 
@@ -962,5 +936,54 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     margin-bottom: 0;
     color: var(--primary-medium);
     font-size: $font-down-2;
+  }
+}
+
+// The board's empty state, keyed on the shared component's own modifier rather
+// than a wrapper class. Sized and bordered as a placeholder column, so an empty
+// board still reads as a board rather than as a bare message.
+.empty-state__container.--boards-board {
+  width: 16.5rem;
+  height: 50%;
+  padding: 2em 1em;
+  border: 1px dashed var(--primary-300);
+  border-radius: var(--d-border-radius);
+  background: var(--primary-50);
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .empty-state__image {
+    margin-top: 0;
+  }
+
+  .empty-state__image .d-icon {
+    width: 2em;
+    height: 2em;
+    color: var(--primary-medium);
+    margin-bottom: 0.4em;
+  }
+
+  // The title was a heading before it became the shared component's element, so
+  // it keeps a heading's weight.
+  .empty-state__title {
+    margin: 0 0 0.25em;
+    font-size: var(--font-0);
+    font-weight: var(--heading-font-weight);
+  }
+
+  .empty-state__body p {
+    color: var(--primary-medium);
+    margin: 0;
+    font-size: var(--font-down-1);
+  }
+
+  .empty-state__cta {
+    margin-top: 1em;
   }
 }

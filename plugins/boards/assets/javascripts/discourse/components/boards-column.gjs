@@ -1,22 +1,27 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
+import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { autoScrollSpeedForPointer } from "../lib/boards-auto-scroll";
 import { isRecencyColumn } from "../lib/boards-card-ordering";
 import {
   columnColorVariable,
   hasColumnColor,
 } from "../lib/boards-column-helpers";
-import { animateCardReorder, captureCardRects } from "../lib/boards-motion";
+import {
+  animateCardReorder,
+  boardsMotionEnabled,
+  captureCardRects,
+} from "../lib/boards-motion";
 import BoardsCard from "./boards-card";
 import BoardsAddTopicAsCardModal from "./modal/boards-add-topic-as-card";
 import BoardsCardDetailModal from "./modal/boards-card-detail";
@@ -28,42 +33,24 @@ export function recencyTimestamp(card) {
   return Number.isFinite(value) ? value : 0;
 }
 
-export function recencyDropIndicatorInsertBefore(
-  cardsContainer,
-  cardElements,
-  draggedCardId
-) {
-  return (
-    cardElements.find((cardEl) => {
-      const elCardId = parseInt(cardEl.dataset.cardId, 10);
-      return elCardId !== draggedCardId;
-    }) || cardsContainer.querySelector(".discourse-boards-column__show-all")
-  );
-}
-
-export function shouldAnimateDropIndicatorPlacement({
-  hadIndicator,
-  columnId,
-  fromColumnId,
-  hasPlacedIndicator,
-}) {
-  return hadIndicator || columnId !== fromColumnId || hasPlacedIndicator;
-}
-
 export default class BoardsColumn extends Component {
   @service modal;
 
   @tracked showAllCards = false;
 
-  autoScrollFrame = null;
-  autoScrollSpeed = 0;
-  autoScrollContainer = null;
-  autoScrollHasDocumentListeners = false;
-  stopAutoScroll = () => this.#stopAutoScroll();
+  /** True while a compatible drag is over this column, which hides the empty message. */
+  @tracked dragOver = false;
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.#stopAutoScroll();
+  /** The scrollable cards element, held by a modifier rather than queried. */
+  @tracked cardsElement = null;
+
+  @action
+  registerCardsElement(element) {
+    this.cardsElement = element;
+  }
+
+  get cardsContainer() {
+    return this.cardsElement;
   }
 
   get cardCount() {
@@ -169,303 +156,112 @@ export default class BoardsColumn extends Component {
     this.args.onDeleteColumn(this.args.column);
   }
 
+  /**
+   * Whether this column accepts the in-flight card at all. A recency column
+   * orders itself, so reordering within it is meaningless and is refused
+   * outright rather than accepted and ignored.
+   *
+   * @param {object} feedback - The target's gate feedback.
+   * @returns {boolean} Whether the drop may land here.
+   */
   @action
-  dragOver(event) {
-    event.preventDefault();
-    const dragData = this.args.dragData;
-    if (!dragData) {
-      this.#stopAutoScroll();
-      return;
-    }
-
-    event.currentTarget.classList.add("discourse-boards-column--drag-target");
-
-    const cardsContainer = event.currentTarget.querySelector(
-      ".discourse-boards-column__cards"
+  canDropCard({ source }) {
+    return !(
+      this.isRecencySorted && source.data?.fromColumnId === this.args.column.id
     );
-    if (!cardsContainer) {
-      this.#stopAutoScroll();
-      return;
-    }
-
-    this.#updateAutoScroll(cardsContainer, event.clientY);
-
-    if (this.isRecencySorted && dragData.fromColumnId === this.args.column.id) {
-      this.removeDropIndicator(event.currentTarget, { animate: true });
-      return;
-    }
-
-    let indicator = cardsContainer.querySelector(
-      ".discourse-boards-column__drop-indicator"
-    );
-    const hadIndicator = !!indicator;
-    if (!indicator) {
-      indicator = document.createElement("div");
-      indicator.className = "discourse-boards-column__drop-indicator";
-    }
-    indicator.style.height = `${dragData.cardHeight}px`;
-
-    const cardElements = [
-      ...cardsContainer.querySelectorAll(".discourse-boards-card"),
-    ];
-    let insertBefore = null;
-
-    if (this.isRecencySorted) {
-      insertBefore = recencyDropIndicatorInsertBefore(
-        cardsContainer,
-        cardElements,
-        dragData.cardId
-      );
-    } else {
-      for (const cardEl of cardElements) {
-        const elCardId = parseInt(cardEl.dataset.cardId, 10);
-        if (elCardId === dragData.cardId) {
-          continue;
-        }
-        const rect = cardEl.getBoundingClientRect();
-        if (event.clientY <= rect.top + rect.height / 2) {
-          insertBefore = cardEl;
-          break;
-        }
-      }
-    }
-
-    const emptyMsg = cardsContainer.querySelector(
-      ".discourse-boards-column__empty"
-    );
-    if (emptyMsg) {
-      emptyMsg.hidden = true;
-    }
-
-    if (
-      this.#indicatorMatchesPosition(cardsContainer, indicator, insertBefore)
-    ) {
-      return;
-    }
-
-    const shouldAnimate = shouldAnimateDropIndicatorPlacement({
-      hadIndicator,
-      columnId: this.args.column.id,
-      fromColumnId: dragData.fromColumnId,
-      hasPlacedIndicator: dragData.hasPlacedIndicator,
-    });
-
-    const previousRects = shouldAnimate
-      ? captureCardRects(cardsContainer, {
-          skipCardIds: [dragData.cardId],
-        })
-      : null;
-
-    indicator.classList.remove(
-      "discourse-boards-column__drop-indicator--source"
-    );
-
-    if (insertBefore) {
-      cardsContainer.insertBefore(indicator, insertBefore);
-    } else {
-      cardsContainer.appendChild(indicator);
-    }
-
-    if (shouldAnimate) {
-      animateCardReorder(cardsContainer, previousRects, {
-        skipCardIds: [dragData.cardId],
-      });
-    }
-
-    dragData.hasPlacedIndicator = true;
   }
 
+  /**
+   * Translates the target's position, which is relative to the single card the
+   * pointer is over, into the `afterCardId` the board API expects: the id of
+   * the card the dropped one should follow, or null to insert at the head.
+   *
+   * @param {number} overCardId - The card the pointer resolved against.
+   * @param {object} event - The target's drop event.
+   */
   @action
-  dragLeave(event) {
-    event.preventDefault();
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      event.currentTarget.classList.remove(
-        "discourse-boards-column--drag-target"
-      );
-      this.removeDropIndicator(event.currentTarget, { animate: true });
-      this.#stopAutoScroll();
-    }
+  onDropOnCard(_overCardId, event) {
+    this.#dispatchDrop(event);
   }
 
+  /**
+   * Drop that landed in the column but over no card: an empty column, the
+   * space past the last one, or a gap between two.
+   */
   @action
-  drop(event) {
-    event.preventDefault();
-    event.currentTarget.classList.remove(
-      "discourse-boards-column--drag-target"
-    );
-    this.#stopAutoScroll();
-
-    const dragData = this.args.dragData;
-    if (!dragData) {
-      this.removeDropIndicator(event.currentTarget, { animate: false });
-      return;
-    }
-
-    if (this.isRecencySorted && dragData.fromColumnId === this.args.column.id) {
-      this.removeDropIndicator(event.currentTarget, { animate: false });
-      return;
-    }
-
-    const cardsContainer = event.currentTarget.querySelector(
-      ".discourse-boards-column__cards"
-    );
-    let afterCardId = null;
-
-    if (cardsContainer && !this.isRecencySorted) {
-      const cardElements = [
-        ...cardsContainer.querySelectorAll(".discourse-boards-card"),
-      ];
-      for (const cardEl of cardElements) {
-        const elCardId = parseInt(cardEl.dataset.cardId, 10);
-        if (elCardId === dragData.cardId) {
-          continue;
-        }
-        const rect = cardEl.getBoundingClientRect();
-        if (event.clientY > rect.top + rect.height / 2) {
-          afterCardId = elCardId;
-        }
-      }
-    }
-
-    this.removeDropIndicator(event.currentTarget, { animate: false });
-
-    this.args.onDrop(
-      dragData.cardId,
-      this.args.column.id,
-      afterCardId,
-      dragData.fromColumnId
-    );
+  onDropOnColumn(event) {
+    this.#dispatchDrop(event);
   }
 
-  removeDropIndicator(columnEl, { animate = false } = {}) {
-    const cardsContainer = columnEl.querySelector(
-      ".discourse-boards-column__cards"
-    );
-    const indicator = columnEl.querySelector(
-      ".discourse-boards-column__drop-indicator"
-    );
-    const dragData = this.args.dragData;
+  /**
+   * Resolves the drop from the pointer rather than from the target's own
+   * position, so which element happened to be under the cursor cannot change
+   * the outcome. `afterCardId` is the last card whose midpoint the pointer is
+   * strictly past, skipping the dragged card so it is never its own neighbour.
+   */
+  #dispatchDrop({ source, location }) {
+    this.dragOver = false;
 
-    if (!indicator) {
-      columnEl
-        .querySelector(".discourse-boards-column__empty")
-        ?.removeAttribute("hidden");
-      return;
-    }
+    const data = source.data;
+    const draggedId = data.cardId;
 
-    const previousRects =
-      animate && cardsContainer
-        ? captureCardRects(cardsContainer, {
-            skipCardIds: dragData ? [dragData.cardId] : [],
-          })
-        : null;
+    // A recency column places by recency, so the pointer carries no ordering
+    // information; only the column membership changes.
+    const after = this.isRecencySorted
+      ? null
+      : this.#afterCardForPointer(location.current.input.clientY, draggedId);
 
-    indicator.remove();
-
-    const emptyMsg = columnEl.querySelector(".discourse-boards-column__empty");
-    if (emptyMsg) {
-      emptyMsg.hidden = false;
-    }
-
-    if (cardsContainer && previousRects) {
-      animateCardReorder(cardsContainer, previousRects, {
-        skipCardIds: dragData ? [dragData.cardId] : [],
-      });
-    }
+    this.args.onDrop(draggedId, this.args.column.id, after, data.fromColumnId);
   }
 
-  #updateAutoScroll(cardsContainer, clientY) {
-    const speed = autoScrollSpeedForPointer(
-      clientY,
-      cardsContainer.getBoundingClientRect()
-    );
+  #afterCardForPointer(clientY, draggedId) {
+    const cards =
+      this.cardsElement?.querySelectorAll(".discourse-boards-card") ?? [];
 
-    if (
-      (speed < 0 && cardsContainer.scrollTop <= 0) ||
-      (speed > 0 &&
-        cardsContainer.scrollTop + cardsContainer.clientHeight >=
-          cardsContainer.scrollHeight)
-    ) {
-      this.#stopAutoScroll();
-      return;
-    }
-
-    this.autoScrollSpeed = speed;
-    this.autoScrollContainer = cardsContainer;
-    this.#ensureAutoScrollDocumentListeners();
-
-    if (speed === 0) {
-      this.#stopAutoScroll();
-      return;
-    }
-
-    if (!this.autoScrollFrame) {
-      this.#autoScroll();
-    }
-  }
-
-  #autoScroll() {
-    this.autoScrollFrame = requestAnimationFrame(() => {
-      this.autoScrollFrame = null;
-
-      const container = this.autoScrollContainer;
-      if (!container || this.autoScrollSpeed === 0) {
-        return;
+    let after = null;
+    for (const cardElement of cards) {
+      const id = parseInt(cardElement.dataset.cardId, 10);
+      if (id === draggedId) {
+        continue;
       }
 
-      const previousScrollTop = container.scrollTop;
-      container.scrollTop += this.autoScrollSpeed;
-
-      if (container.scrollTop === previousScrollTop) {
-        this.#stopAutoScroll();
-        return;
+      const rect = cardElement.getBoundingClientRect();
+      if (clientY > rect.top + rect.height / 2) {
+        after = id;
       }
-
-      this.#autoScroll();
-    });
+    }
+    return after;
   }
 
-  #ensureAutoScrollDocumentListeners() {
-    if (this.autoScrollHasDocumentListeners) {
+  /**
+   * The empty-column message would otherwise sit under the drop indicator, so
+   * it is hidden while a compatible drag is over the column.
+   */
+  @action
+  onDragEnterColumn() {
+    this.dragOver = true;
+  }
+
+  /**
+   * Restores the empty message and plays the reorder animation for the cards
+   * that shifted. The animation is boards' own, not the primitive's, so it
+   * stays driven from here.
+   */
+  @action
+  onDragLeaveColumn({ source }) {
+    this.dragOver = false;
+    this.#animateSettle(source?.data?.cardId);
+  }
+
+  #animateSettle(draggedId) {
+    const container = this.cardsContainer;
+    if (!container || !boardsMotionEnabled()) {
       return;
     }
 
-    document.addEventListener("dragend", this.stopAutoScroll, true);
-    document.addEventListener("drop", this.stopAutoScroll, true);
-    this.autoScrollHasDocumentListeners = true;
-  }
-
-  #removeAutoScrollDocumentListeners() {
-    if (!this.autoScrollHasDocumentListeners) {
-      return;
-    }
-
-    document.removeEventListener("dragend", this.stopAutoScroll, true);
-    document.removeEventListener("drop", this.stopAutoScroll, true);
-    this.autoScrollHasDocumentListeners = false;
-  }
-
-  #stopAutoScroll() {
-    if (this.autoScrollFrame) {
-      cancelAnimationFrame(this.autoScrollFrame);
-      this.autoScrollFrame = null;
-    }
-
-    this.autoScrollSpeed = 0;
-    this.autoScrollContainer = null;
-    this.#removeAutoScrollDocumentListeners();
-  }
-
-  #indicatorMatchesPosition(cardsContainer, indicator, insertBefore) {
-    if (indicator.parentElement !== cardsContainer) {
-      return false;
-    }
-
-    if (insertBefore) {
-      return indicator.nextElementSibling === insertBefore;
-    }
-
-    return indicator === cardsContainer.lastElementChild;
+    const skipCardIds = draggedId == null ? [] : [draggedId];
+    const previousRects = captureCardRects(container, { skipCardIds });
+    animateCardReorder(container, previousRects, { skipCardIds });
   }
 
   <template>
@@ -478,9 +274,17 @@ export default class BoardsColumn extends Component {
       data-column-id={{@column.id}}
       data-default-sort={{@column.default_sort}}
       style={{columnColorVariable @column.color}}
-      {{on "dragover" this.dragOver}}
-      {{on "dragleave" this.dragLeave}}
-      {{on "drop" this.drop}}
+      {{! The fallback for a drop that lands in the column but over no card:
+      an empty column, or the space past the last one. A card target always
+      wins over this, since only the deepest accepted target is dispatched. }}
+      {{dDragAndDropTarget
+        accepts="boards-card"
+        position="inside"
+        canDrop=this.canDropCard
+        onDrop=this.onDropOnColumn
+        onDragEnter=this.onDragEnterColumn
+        onDragLeave=this.onDragLeaveColumn
+      }}
     >
       <div class="discourse-boards-column__header">
         <span class="discourse-boards-column__header-content">
@@ -550,7 +354,11 @@ export default class BoardsColumn extends Component {
         {{/if}}
       </div>
 
-      <div class="discourse-boards-column__cards">
+      <div
+        class="discourse-boards-column__cards"
+        {{dDragAndDropAutoScroll types="boards-card" axis="vertical"}}
+        {{didInsert this.registerCardsElement}}
+      >
         {{#if this.visibleCards.length}}
           {{#each this.visibleCards key="id" as |card|}}
             <BoardsCard
@@ -565,6 +373,8 @@ export default class BoardsColumn extends Component {
               @isLinkHighlighted={{eq @linkHighlightCardId card.id}}
               @onDragStart={{@onDragStart}}
               @onDragEnd={{@onDragEnd}}
+              @canDropCard={{this.canDropCard}}
+              @onDropOnCard={{this.onDropOnCard}}
               @onUpdateCard={{@onUpdateCard}}
               @onDeleteCard={{@onDeleteCard}}
               @onPromoteToTopic={{fn @onPromoteToTopic card.id}}
@@ -573,19 +383,20 @@ export default class BoardsColumn extends Component {
             />
           {{/each}}
         {{else if (eq this.cardCount 0)}}
-          <div class="discourse-boards-column__empty">
+          <div class="discourse-boards-column__empty" hidden={{this.dragOver}}>
             {{i18n "boards.board.no_cards"}}
           </div>
         {{/if}}
 
         {{#if this.hiddenCardCount}}
-          <button
-            type="button"
-            class="discourse-boards-column__show-all"
-            {{on "click" this.showAllOlderCards}}
-          >
-            {{i18n "boards.board.show_older_cards" count=this.hiddenCardCount}}
-          </button>
+          <DButton
+            class="btn-flat discourse-boards-column__show-all"
+            @action={{this.showAllOlderCards}}
+            @translatedLabel={{i18n
+              "boards.board.show_older_cards"
+              count=this.hiddenCardCount
+            }}
+          />
         {{/if}}
       </div>
 

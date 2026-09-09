@@ -187,6 +187,7 @@ export default class BoardsAddTopicAsCard extends Component {
       {{on "keydown" this.keyDown}}
       {{on "mousedown" this.mouseDown}}
       @closeModal={{@closeModal}}
+      @inline={{@inline}}
       @title={{i18n "boards.board.add_topic_as_card"}}
       @bodyClass="insert-link"
       class="discourse-boards-add-topic-as-card-modal"

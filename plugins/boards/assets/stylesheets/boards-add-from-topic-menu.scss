@@ -23,41 +23,24 @@
     min-width: 12rem;
     padding: var(--space-2) var(--space-3);
     pointer-events: none;
+
+    // The real row's label sits inside a button, which resets the line box.
+    // Matching it here is what lets the placeholder inherit the same height.
+    line-height: normal;
   }
 
-  &__skeleton-label,
-  &__skeleton-icon {
-    position: relative;
-    overflow: hidden;
-    height: 0.75rem;
-    background: var(--primary-low);
-    border-radius: var(--d-border-radius);
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      transform: translateX(-100%);
-      background: linear-gradient(
-        90deg,
-        rgb(var(--skeleton-shimmer-rgb), 0) 0,
-        rgb(var(--skeleton-shimmer-rgb), 0.3) 50%,
-        rgb(var(--skeleton-shimmer-rgb), 0.5) 100%
-      );
-
-      @media (prefers-reduced-motion: no-preference) {
-        animation: discourse-boards-add-from-topic-shimmer 1.25s infinite;
-      }
-    }
-  }
-
+  // Stands in for the board name. The height comes from the row's own line box,
+  // so only the width is set here.
   &__skeleton-label {
     width: 8rem;
   }
 
+  // Stands in for the row's trailing chevron.
   &__skeleton-icon {
-    width: 0.75rem;
     margin-left: auto;
+
+    --d-skeleton-item-width: 1em;
+    --d-skeleton-item-height: 1em;
   }
 
   .dropdown-menu__subheader {
@@ -79,11 +62,5 @@
     > .d-icon {
       color: var(--discourse-boards-column-icon-color);
     }
-  }
-}
-
-@keyframes discourse-boards-add-from-topic-shimmer {
-  100% {
-    transform: translateX(100%);
   }
 }
