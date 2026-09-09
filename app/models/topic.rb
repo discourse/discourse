@@ -1409,6 +1409,7 @@ class Topic < ActiveRecord::Base
         self,
         moved_by,
         post_ids,
+        guardian: opts.fetch(:guardian) { moved_by.guardian },
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
         options: {
           freeze_original: opts[:freeze_original],
