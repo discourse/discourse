@@ -123,7 +123,7 @@ module(
       );
     });
 
-    test("the poll summary reflects the settings, not any votes", async function (assert) {
+    test("the poll summary shows settings and a zero voter count", async function (assert) {
       await setupRichEditor(
         assert,
         "[poll type=multiple min=1 max=2 results=on_vote close=2050-01-01 dynamic=true]\n* Option 1\n* Option 2\n\n[/poll]\n\n"
@@ -131,34 +131,32 @@ module(
 
       assert
         .dom(".composer-poll-node__info .poll-info_counts")
-        .hasText("0 voters", "shows no votes, because there are none yet");
+        .hasText("0 voters", "shows zero voters");
       assert
         .dom(".composer-poll-node__info .multiple-help-text")
-        .exists("explains how many options can be picked");
+        .exists("shows the selection limit");
       assert
         .dom(".composer-poll-node__info .is-dynamic")
-        .exists("mentions that options can change after posting");
+        .exists("shows that options can change after posting");
       assert
         .dom(".composer-poll-node__info li[title]")
-        .exists("says when the poll closes");
+        .exists("shows the close date");
       assert
         .dom(".composer-poll-node__info .poll-info_instructions li")
         .exists(
           { count: 3 },
-          "and leaves out only what it cannot know, such as votes cast"
+          "shows the dynamic-options, selection-limit, and close-date instructions"
         );
-      // whether results visibility is stated depends on who is reading, which
-      // this harness has no user for: the browser is where that one shows
       assert
         .dom(".poll")
         .hasAttribute(
           "data-poll-results",
           "on_vote",
-          "and carries the setting the post reads it from"
+          "preserves the results visibility attribute"
         );
       assert
         .dom(".composer-poll-node__info .poll-info_counts-count")
-        .exists({ count: 1 }, "claims no vote totals it cannot have");
+        .exists({ count: 1 }, "renders only the voter-count element");
     });
 
     test("a multiple choice poll without bounds still phrases its hint", async function (assert) {
