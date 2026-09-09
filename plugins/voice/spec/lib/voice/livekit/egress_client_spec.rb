@@ -119,7 +119,8 @@ RSpec.describe Voice::Livekit::EgressClient do
       expect(stub).not_to have_been_requested
     end
 
-    it "redacts recording credentials echoed in upstream errors" do
+    it "omits response bodies containing recording credentials from verbose logs" do
+      SiteSetting.voice_verbose_logging = true
       configure_recording_s3
       credentials = [
         SiteSetting.voice_livekit_recording_s3_access_key_id,
@@ -133,7 +134,7 @@ RSpec.describe Voice::Livekit::EgressClient do
           expect(result).to eq(ok: false, error: "HTTP 400")
         end
 
-      expect(logs.warnings.join).to include("[FILTERED]")
+      expect(logs.warnings).to eq(["[voice-livekit] StartRoomCompositeEgress failed: HTTP 400"])
       credentials.each { |credential| expect(logs.warnings.join).not_to include(credential) }
     end
 

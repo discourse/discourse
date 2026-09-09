@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import { confirmMeshPrivacy } from "../../components/modal/voice-mesh-privacy-warning";
 import { reportMicAcquisitionFailure } from "../../components/modal/voice-mic-permission";
 import AudioMonitor from "../../lib/voice/audio-monitor";
@@ -728,8 +729,7 @@ export default class VoiceWebrtcService extends Service {
       }
     }
 
-    // eslint-disable-next-line no-console
-    console.log(`[voice] joining room ${room.id}`);
+    voiceLog.info(`[voice] joining room ${room.id}`);
 
     this.#registerRoomHandler(room.id);
 
@@ -757,9 +757,8 @@ export default class VoiceWebrtcService extends Service {
         type: "POST",
         data: joinData,
       });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to join room", error);
+    } catch {
+      voiceLog.warn("[voice] failed to join room");
       this.#handleJoinFailure(room.id);
       return;
     }
@@ -772,11 +771,7 @@ export default class VoiceWebrtcService extends Service {
       return;
     }
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] join response, active_participants:`,
-      response?.room?.active_participants
-    );
+    voiceLog.info("[voice] join response received");
 
     this.#roomTransports.set(room.id, response?.transport ?? "mesh");
     if (response?.participant_session_id) {
@@ -1011,16 +1006,14 @@ export default class VoiceWebrtcService extends Service {
           if (error?.name === "NotAllowedError") {
             schedulePlaybackResume(element, this.#pendingPlaybackElements);
           } else {
-            // eslint-disable-next-line no-console
-            console.warn("[voice] audio element failed to play", error);
+            voiceLog.warn("[voice] audio element failed to play");
           }
         });
       } catch (error) {
         if (error?.name === "NotAllowedError") {
           schedulePlaybackResume(element, this.#pendingPlaybackElements);
         } else {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] audio element failed to play", error);
+          voiceLog.warn("[voice] audio element failed to play");
         }
       }
     }
@@ -1272,9 +1265,8 @@ export default class VoiceWebrtcService extends Service {
     const keepVideo = options.keepVideo === true;
     const stoppingVideo = !watching && !keepVideo && !!this.localVideoKind;
     if (stoppingVideo) {
-      this.#localVideo.stop({ broadcast: false }).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to stop video on page leave", error);
+      this.#localVideo.stop({ broadcast: false }).catch(() => {
+        voiceLog.warn("[voice] failed to stop video on page leave");
       });
     }
 
@@ -1479,9 +1471,8 @@ export default class VoiceWebrtcService extends Service {
           this.#cameraPreferred(userId) &&
           this.canPublishVideo(roomId),
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to restore preferred camera state", error);
+      .catch(() => {
+        voiceLog.warn("[voice] failed to restore preferred camera state");
       });
     this.#cameraRestorePromise = restorePromise;
 
@@ -1652,16 +1643,14 @@ export default class VoiceWebrtcService extends Service {
         }
         return this.#processRoomMessage(roomId, payload);
       })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to process room message", error);
+      .catch(() => {
+        voiceLog.warn("[voice] failed to process room message");
       });
   }
 
   async #processRoomMessage(roomId, payload) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] 📨 MessageBus message: room=${roomId}, type=${payload.type}, active=${this.#activeRoomIds.has(roomId)}`
+    voiceLog.info(
+      `[voice] 📨 MessageBus message: room=${roomId}, active=${this.#activeRoomIds.has(roomId)}`
     );
 
     if (!this.#activeRoomIds.has(roomId)) {
@@ -1710,8 +1699,7 @@ export default class VoiceWebrtcService extends Service {
   }
 
   #handleKicked(roomId) {
-    // eslint-disable-next-line no-console
-    console.log(`[voice] kicked from room ${roomId}`);
+    voiceLog.info(`[voice] kicked from room ${roomId}`);
     this.leave({ id: roomId });
   }
 
@@ -1762,9 +1750,8 @@ export default class VoiceWebrtcService extends Service {
   #registerRemoteTrack(roomId, userId, track, streams) {
     const room = this.voiceRooms?.roomById(roomId);
     if (!remoteTrackAllowed(room, userId, track, streams)) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[voice] dropping ${track?.kind} track from user ${userId}: not allowed to publish in room ${roomId}`
+      voiceLog.warn(
+        `[voice] dropping ${track?.kind} track from peer: not allowed to publish in room ${roomId}`
       );
       try {
         track?.stop();

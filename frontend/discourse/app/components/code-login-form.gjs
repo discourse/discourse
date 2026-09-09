@@ -22,7 +22,10 @@ import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
@@ -323,10 +326,15 @@ export default class CodeLoginForm extends Component {
       const endpoint = this.isPasswordReset
         ? "/session/password-reset-code/verify"
         : "/session/login-code/verify";
-      const result = await ajax(endpoint, {
-        type: "POST",
-        data,
-      });
+      const verify = () =>
+        ajax(endpoint, {
+          type: "POST",
+          data,
+        });
+      const result =
+        this.isSignup && this.isCodeStep
+          ? await applyBehaviorTransformer("create-account", verify)
+          : await verify();
 
       if (
         (result?.user_fields_required || result?.name_required) &&
@@ -847,6 +855,13 @@ export default class CodeLoginForm extends Component {
               {{this.codeInstructions}}
             </p>
           {{/unless}}
+
+          {{#if this.isSignup}}
+            <PluginOutlet
+              @name="code-login-after-code"
+              @outletArgs={{lazyHash context=@context}}
+            />
+          {{/if}}
 
           {{#each this.otpGenerationArray as |generation|}}
             <DOtp
