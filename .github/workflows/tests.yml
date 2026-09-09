@@ -413,24 +413,19 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_URL:-}" || -z "${PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET:-}" ]]; then
+          if [[ -z "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL" || -z "$PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" ]]; then
             echo "::warning::Patch Triage flaky-test delivery secrets are not configured; skipping notification"
             exit 0
           fi
 
-          payload=$(jq -nc \
-            --arg repository "$GITHUB_REPOSITORY" \
-            --argjson workflow_run_id "$GITHUB_RUN_ID" \
-            --argjson run_attempt "$GITHUB_RUN_ATTEMPT" \
-            --argjson report_artifact_id "$REPORT_ARTIFACT_ID" \
-            --arg screenshot_artifact_id "${SCREENSHOT_ARTIFACT_ID:-}" \
-            '{
-              repository: $repository,
-              workflow_run_id: $workflow_run_id,
-              run_attempt: $run_attempt,
-              report_artifact_id: $report_artifact_id
-            } + if $screenshot_artifact_id == "" then {} else {
-              screenshot_artifact_id: ($screenshot_artifact_id | tonumber)
+          payload=$(jq -nc '
+            {
+              repository: env.GITHUB_REPOSITORY,
+              workflow_run_id: (env.GITHUB_RUN_ID | tonumber),
+              run_attempt: (env.GITHUB_RUN_ATTEMPT | tonumber),
+              report_artifact_id: (env.REPORT_ARTIFACT_ID | tonumber)
+            } + if env.SCREENSHOT_ARTIFACT_ID == "" then {} else {
+              screenshot_artifact_id: (env.SCREENSHOT_ARTIFACT_ID | tonumber)
             } end')
 
           curl --fail-with-body \
