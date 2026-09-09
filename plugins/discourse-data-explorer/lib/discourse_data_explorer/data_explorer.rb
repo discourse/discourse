@@ -314,7 +314,7 @@ module DiscourseDataExplorer
         },
         topic: {
           class: Topic,
-          fields: %i[id title slug posts_count locale],
+          fields: %i[id title fancy_title slug posts_count locale],
           serializer: BasicTopicSerializer,
         },
         tag_group: {
