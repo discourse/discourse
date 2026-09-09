@@ -10,11 +10,6 @@ import { TopicDetailsSchema } from "discourse/data/schemas/topic-details";
 import { UserBadgeSchema } from "discourse/data/schemas/user-badge";
 import { badgeGroupingDisplayName } from "discourse/models/badge-grouping";
 
-// `has_badge` is viewer-relative and the badge endpoints are the only ones
-// that compute it — they omit it instead of sending `false`, so `grantsKnown`
-// callers clear it. Everywhere else a badge is sideloaded by a payload that
-// knows nothing about the viewer's grants, and must leave the cache alone:
-// overwriting would flip the flag under whatever is on screen.
 function badgeResource(raw, includedIds, { grantsKnown = false } = {}) {
   const resource = resourceFrom("badge", BadgeSchema, raw);
   if (grantsKnown) {
