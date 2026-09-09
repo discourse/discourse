@@ -52,6 +52,8 @@ class DiscourseVipsWorker
         animated(*arguments)
       when "svg-dimensions"
         svg_dimensions(*arguments)
+      when "svg-to-png"
+        svg_to_png(input_path: arguments[0], output_path: arguments[1])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -168,6 +170,26 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :svg_dimensions
+
+    def self.svg_to_png(input_path:, output_path:)
+      new(
+        read_paths: [input_path, "/etc/fonts", "/var/cache/fontconfig"],
+        write_paths: [File.dirname(output_path)],
+      ) do
+        if File.exist?(output_path) && File.identical?(input_path, output_path)
+          raise ArgumentError, "SVG input and PNG output must be different files"
+        end
+
+        block_loaders(allowed: %w[VipsForeignLoadSvg])
+        begin
+          load_svg(input_path).flatten(background: [255, 255, 255]).pngsave(output_path)
+        rescue Vips::Error, Nokogiri::XML::SyntaxError => error
+          raise InvalidImage, error.message
+        end
+        nil
+      end
+    end
+    private_class_method :svg_to_png
 
     def self.load_svg(input_path)
       Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)

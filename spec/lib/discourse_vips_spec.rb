@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe DiscourseVips do
   describe ".version" do
     it "returns the libvips version" do
@@ -144,6 +146,96 @@ RSpec.describe DiscourseVips do
       expect { described_class.svg_dimensions(input_path: file.path, timeout: 5) }.to raise_error(
         DiscourseVips::InvalidImage,
       )
+    end
+  end
+
+  describe ".svg_to_png" do
+    it "renders transparent pixels against a white background" do
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="4">
+          <rect width="4" height="4" fill="#ff0000"/>
+          <rect x="4" width="4" height="4" fill="#00ff00" fill-opacity="0.5"/>
+        </svg>
+      SVG
+      file = file_from_contents(svg, "transparency.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        described_class.svg_to_png(input_path: file.path, output_path:, timeout: 5)
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png.width, png.height]).to eq([12, 4])
+        expect([png[2, 2], png[10, 2]]).to eq(
+          [ChunkyPNG::Color.rgb(255, 0, 0), ChunkyPNG::Color.rgb(255, 255, 255)],
+        )
+        blended_pixel = png[6, 2]
+        expect([ChunkyPNG::Color.r(blended_pixel), ChunkyPNG::Color.b(blended_pixel)]).to all(
+          be_within(1).of(128),
+        )
+        expect([ChunkyPNG::Color.g(blended_pixel), ChunkyPNG::Color.a(blended_pixel)]).to eq(
+          [255, 255],
+        )
+      end
+    end
+
+    { "tiny.svg" => [115, 86], "zero_sized.svg" => [120, 90] }.each do |filename, dimensions|
+      it "renders #{filename} at its intrinsic dimensions" do
+        Dir.mktmpdir do |directory|
+          output_path = File.join(directory, "output.png")
+
+          described_class.svg_to_png(
+            input_path: file_from_fixtures(filename).path,
+            output_path:,
+            timeout: 5,
+          )
+
+          png = ChunkyPNG::Image.from_file(output_path)
+          expect([png.width, png.height]).to eq(dimensions)
+        end
+      end
+    end
+
+    it "rejects malformed SVGs without writing a PNG" do
+      file = file_from_contents('<svg width="100" height="50">', "invalid.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        expect {
+          described_class.svg_to_png(input_path: file.path, output_path:, timeout: 5)
+        }.to raise_error(DiscourseVips::InvalidImage)
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "rejects non-SVG images" do
+      Dir.mktmpdir do |directory|
+        expect {
+          described_class.svg_to_png(
+            input_path: file_from_fixtures("cropped.png").path,
+            output_path: File.join(directory, "output.png"),
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage)
+      end
+    end
+
+    it "preserves the SVG when the output points to the input file" do
+      svg = '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "input.svg")
+        output_path = File.join(directory, "output.png")
+        File.write(input_path, svg)
+        File.link(input_path, output_path)
+
+        expect { described_class.svg_to_png(input_path:, output_path:, timeout: 5) }.to raise_error(
+          DiscourseVips::Error,
+          "SVG input and PNG output must be different files",
+        )
+        expect(File.read(input_path)).to eq(svg)
+      end
     end
   end
 

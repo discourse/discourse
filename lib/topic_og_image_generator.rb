@@ -324,14 +324,18 @@ class TopicOgImageGenerator
       svg_path = File.join(directory, "#{basename}.svg")
       png_path = File.join(directory, "#{basename}.png")
       File.binwrite(svg_path, bytes)
-      ImageMagick.magick(
-        "MSVG:#{svg_path}",
-        png_path,
-        operation: :topic_og_asset_render,
-        read: [svg_path],
-        write: [directory],
-        timeout: 10,
-      )
+      if GlobalSetting.enable_vips_image_processing
+        DiscourseVips.svg_to_png(input_path: svg_path, output_path: png_path, timeout: 10)
+      else
+        ImageMagick.magick(
+          "MSVG:#{svg_path}",
+          png_path,
+          operation: :topic_og_asset_render,
+          read: [svg_path],
+          write: [directory],
+          timeout: 10,
+        )
+      end
       return png_path if File.exist?(png_path)
 
       return nil
@@ -346,7 +350,7 @@ class TopicOgImageGenerator
     path = File.join(directory, "#{basename}.#{extension}")
     File.binwrite(path, bytes)
     path
-  rescue ArgumentError, Discourse::Utils::CommandError => error
+  rescue ArgumentError, Discourse::Utils::CommandError, DiscourseVips::Error => error
     Discourse.warn(
       "Failed to materialize topic OG image asset",
       topic_id: @topic.id,
