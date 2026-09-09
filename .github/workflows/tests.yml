@@ -410,4 +410,30 @@ jobs:
           PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET: ${{ secrets.PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET }}
           REPORT_ARTIFACT_ID: ${{ steps.merge-flaky-test-reports.outputs.artifact-id }}
           SCREENSHOT_ARTIFACT_ID: ${{ steps.merge-failed-system-test-artifacts.outputs.artifact-id }}
-        run: script/notify_patch_triage_of_flaky_tests
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL" || -z "$PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" ]]; then
+            echo "::warning::Patch Triage flaky-test delivery secrets are not configured; skipping notification"
+            exit 0
+          fi
+
+          payload=$(jq -nc '
+            {
+              repository: env.GITHUB_REPOSITORY,
+              workflow_run_id: (env.GITHUB_RUN_ID | tonumber),
+              run_attempt: (env.GITHUB_RUN_ATTEMPT | tonumber),
+              report_artifact_id: (env.REPORT_ARTIFACT_ID | tonumber)
+            } + if env.SCREENSHOT_ARTIFACT_ID == "" then {} else {
+              screenshot_artifact_id: (env.SCREENSHOT_ARTIFACT_ID | tonumber)
+            } end')
+
+          curl --fail-with-body \
+            --retry 3 \
+            --retry-all-errors \
+            --connect-timeout 5 \
+            --max-time 30 \
+            --header "Content-Type: application/json" \
+            --header "Authorization: Bearer $PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" \
+            --data-binary "$payload" \
+            "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL"
