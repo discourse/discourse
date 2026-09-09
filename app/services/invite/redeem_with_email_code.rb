@@ -47,6 +47,7 @@ class Invite::RedeemWithEmailCode
     end
   end
 
+  only_if(:user_requires_activation?) { step :activate_user }
   only_if(:welcome_message_pending?) { step :send_welcome_message }
   only_if(:staff_user?) { step :refresh_automatic_groups }
   step :create_topic_notifications
@@ -116,7 +117,7 @@ class Invite::RedeemWithEmailCode
   def redeem_invite(existing_user:, invite:, params:, ip_address:)
     attributes =
       if existing_user
-        { redeeming_user: existing_user }
+        { redeeming_user: existing_user, email: params.email, email_verified: true }
       else
         {
           email: params.email,
@@ -128,6 +129,14 @@ class Invite::RedeemWithEmailCode
       end
 
     invite.redeem(**attributes)
+  end
+
+  def user_requires_activation?(user:)
+    !user.active?
+  end
+
+  def activate_user(user:)
+    user.activate
   end
 
   def welcome_message_pending?(user:)

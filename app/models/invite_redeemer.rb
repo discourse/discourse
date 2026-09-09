@@ -74,7 +74,7 @@ class InviteRedeemer
 
     if email.blank? && @invite.is_email_invite?
       @email = @invite.email
-    elsif @redeeming_user.present?
+    elsif @redeeming_user.present? && !email_verified
       @email = @redeeming_user.email
     else
       @email = email
@@ -198,7 +198,7 @@ class InviteRedeemer
     # prefill the email and do not let the user modify it.
     #
     # Note that an invite link can also have a domain scope which must be checked.
-    email_to_check = redeeming_user&.email || email
+    email_to_check = email_verified ? email : (redeeming_user&.email || email)
 
     if invite.email.present? && !invite.email_matches?(email_to_check)
       raise ActiveRecord::RecordNotSaved.new(I18n.t("invite.not_matching_email"))

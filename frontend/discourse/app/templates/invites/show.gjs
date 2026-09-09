@@ -106,6 +106,16 @@ export default <template>
                   @inviteKey={{@controller.model.token}}
                   @onStepChange={{@controller.updateCodeInviteStep}}
                 />
+                {{#if
+                  (and
+                    @controller.showInviteIntroduction
+                    @controller.disclaimerHtml
+                  )
+                }}
+                  <div class="disclaimer">
+                    {{trustHTML @controller.disclaimerHtml}}
+                  </div>
+                {{/if}}
               {{else}}
                 <form>
                   {{#if @controller.isInviteLink}}

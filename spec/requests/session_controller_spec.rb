@@ -921,6 +921,38 @@ RSpec.describe SessionController do
         expect(login_code.reload.consumed_at).to be_present
       end
 
+      it "activates an existing inactive invitee and keeps them signed in" do
+        user.update!(email: invite.email, active: false)
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to be_nil
+        expect(invite.reload).to be_redeemed
+        expect(login_code.reload.consumed_at).to be_present
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
+      end
+
+      it "redeems an invite addressed to an existing user's secondary email" do
+        Fabricate(:secondary_email, user:, email: invite.email)
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to be_nil
+        expect(invite.reload).to be_redeemed
+        expect(login_code.reload.consumed_at).to be_present
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
+      end
+
       it "does not consume the code when the invite expires before verification" do
         invite.update!(expires_at: 1.day.ago)
 
@@ -953,6 +985,29 @@ RSpec.describe SessionController do
     context "when verifying a code for a domain-scoped invite" do
       let(:invite) { Fabricate(:invite, email: nil, domain: "allowed.example") }
       let(:login_code) { EmailLoginCode.generate!(email: "person@blocked.example") }
+
+      it "accepts a verified secondary email when the primary email is outside the allowed domain" do
+        user.update!(email: "person@blocked.example")
+        secondary_email = Fabricate(:secondary_email, user:, email: "person@allowed.example")
+        secondary_code = EmailLoginCode.generate!(email: secondary_email.email)
+
+        post "/session/login-code/verify.json",
+             params: {
+               invite_key: invite.invite_key,
+               email: secondary_email.email,
+               code: secondary_code.code,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to be_nil
+        expect(invite.reload).to be_redeemed
+        expect(secondary_code.reload.consumed_at).to be_present
+
+        get "/session/current.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
+      end
 
       it "rejects an email outside the allowed domain without consuming its code" do
         post "/session/login-code/verify.json",
