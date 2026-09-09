@@ -76,20 +76,6 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    describe ".resize_instructions" do
-      let(:image) { "#{Rails.root.join("spec/fixtures/images/logo.png")}" }
-
-      it "doesn't return any color options by default" do
-        instructions = described_class.resize_instructions(image, image, "50x50")
-        expect(instructions).to_not include("-colors")
-      end
-
-      it "supports an optional color option" do
-        instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
-        expect(instructions).to include("-colors")
-      end
-    end
-
     describe ".resize" do
       it "handles an invalid extension" do
         original_path = Dir::Tmpname.create(%w[origin .bin]) { nil }

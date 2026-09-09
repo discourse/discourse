@@ -106,4 +106,38 @@ module DiscourseVips
     end
     nil
   end
+
+  def self.resize(
+    input_path:,
+    output_path:,
+    input_format:,
+    output_format:,
+    width:,
+    height:,
+    quality:,
+    strip_metadata:,
+    timeout:
+  )
+    Tempfile.create(["resize-", ".#{output_format}"], File.dirname(output_path)) do |output|
+      output.close
+      Client.call(
+        [
+          "resize",
+          input_path,
+          output.path,
+          input_format,
+          output_format,
+          width,
+          height,
+          quality,
+          strip_metadata,
+        ],
+        operation: :optimized_image_resize,
+        timeout:,
+        nice: 10,
+      )
+      File.rename(output.path, output_path)
+    end
+    nil
+  end
 end
