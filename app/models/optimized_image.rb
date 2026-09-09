@@ -386,7 +386,8 @@ class OptimizedImage < ActiveRecord::Base
           input_format:,
           timeout: Upload::MAX_IDENTIFY_SECONDS,
         )
-      return source_quality if input_format != "webp" || source_quality == 100
+      return source_quality if input_format != "webp"
+      return 100 if source_quality.to_s.start_with?("100")
     end
 
     output_format == "webp" ? 75 : 92
