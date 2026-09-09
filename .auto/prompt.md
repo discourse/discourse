@@ -16,8 +16,9 @@ plugin/theme revisions and cache behavior when assessing noisy results.
 3. Launch a CI watcher pinned to the new PR head and wait for its
    verdict. Collect completed workflow and job timings for that exact revision.
 4. Reject failures and coverage reductions. Keep measured improvements; revert
-   regressions with a new commit. Record the hypothesis, SHA, run IDs, timings,
-   test counts, retries, and decision in the local experiment log.
+   regressions with a new commit. Keep every experiment on this PR. Use commit
+   messages to record hypotheses, prior run IDs, summarized timings, and decisions.
+   Keep detailed test counts, retries, and raw evidence in the local experiment log.
 5. Repeat the best candidate to distinguish improvement from runner variation.
    Require three complete successful measurements at or below 480 seconds before
    declaring the target achieved. Report every measurement, including outliers.
