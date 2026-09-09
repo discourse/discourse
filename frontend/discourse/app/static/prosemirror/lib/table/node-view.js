@@ -59,6 +59,10 @@ export class TableCellView {
   }
 }
 
+/**
+ * @param {import("discourse/lib/composer/rich-editor-extensions").PluginParams} pluginParams
+ * @returns {new (...args: Parameters<import("prosemirror-view").NodeViewConstructor>) => import("prosemirror-view").NodeView}
+ */
 export function buildTableNodeView(pluginParams) {
   return class TableNodeView {
     #hovered = null;
