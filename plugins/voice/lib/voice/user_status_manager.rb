@@ -20,6 +20,7 @@ module Voice
     def self.set_voice_status(user, room)
       return unless SiteSetting.enable_user_status
       return unless SiteSetting.voice_auto_status_enabled
+      return clear_voice_status(user) if !room.public?
       return if user_has_non_voice_status?(user)
 
       set_status(user, status_description(room), EMOJI)
@@ -27,6 +28,7 @@ module Voice
 
     def self.set_afk_status(user, room)
       return unless SiteSetting.enable_user_status
+      return clear_voice_status(user) if !room.public?
       return unless voice_status_active?(user)
 
       set_status(user, status_description(room, afk: true), AFK_EMOJI)
@@ -77,15 +79,10 @@ module Voice
       status && !status.expired? && voice_emoji?(status.emoji)
     end
 
-    # Statuses are visible site-wide, so a non-public room's name must not
-    # appear in them — even room members get the generic description.
+    # Only public rooms publish a site-wide status.
     private_class_method def self.status_description(room, afk: false)
       prefix = afk ? "afk_" : ""
-      if room.public?
-        I18n.t("voice.user_status.#{prefix}in_room", room_name: room.name)
-      else
-        I18n.t("voice.user_status.#{prefix}in_private_room")
-      end
+      I18n.t("voice.user_status.#{prefix}in_room", room_name: room.name)
     end
 
     # Without an expiry to roll, an unchanged status needs no upsert — this

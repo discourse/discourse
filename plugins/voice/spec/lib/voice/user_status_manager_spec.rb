@@ -31,12 +31,10 @@ RSpec.describe Voice::UserStatusManager do
       expect(messages).to be_empty
     end
 
-    it "does not leak the name of a private room" do
+    it "does not publish a status for a private room" do
       described_class.set_voice_status(user, private_room)
 
-      user.reload
-      expect(user.user_status.description).to eq("In a voice room")
-      expect(user.user_status.description).not_to include(private_room.name)
+      expect(user.reload.user_status).to be_nil
     end
 
     it "skips when user already has a non-Voice status" do
@@ -93,13 +91,11 @@ RSpec.describe Voice::UserStatusManager do
       expect(user.user_status.ends_at).to be_nil
     end
 
-    it "does not leak the name of a private room" do
+    it "does not publish an AFK status for a private room" do
       described_class.set_voice_status(user, private_room)
       described_class.set_afk_status(user, private_room)
 
-      user.reload
-      expect(user.user_status.description).to eq("AFK in a voice room")
-      expect(user.user_status.description).not_to include(private_room.name)
+      expect(user.reload.user_status).to be_nil
     end
 
     it "skips when the user has a non-Voice status" do
@@ -115,6 +111,45 @@ RSpec.describe Voice::UserStatusManager do
       described_class.set_afk_status(user, room)
 
       expect(user.user_status).to be_nil
+    end
+  end
+
+  %i[set_voice_status set_afk_status].each do |method|
+    describe ".#{method} in private rooms" do
+      it "clears an existing public-room status and releases ownership" do
+        described_class.set_voice_status(user, room)
+
+        described_class.public_send(method, user, private_room)
+
+        expect(user.reload.user_status).to be_nil
+        expect(Discourse.redis.smembers(described_class::OWNERS_KEY)).not_to include(user.id.to_s)
+      end
+
+      it "clears an existing AFK status" do
+        described_class.set_voice_status(user, room)
+        described_class.set_afk_status(user, room)
+
+        described_class.public_send(method, user, private_room)
+
+        expect(user.reload.user_status).to be_nil
+      end
+
+      it "clears a private-room status created before private statuses were disabled" do
+        user.set_status!("In a voice room", "studio_microphone")
+
+        described_class.public_send(method, user, private_room)
+
+        expect(user.reload.user_status).to be_nil
+      end
+
+      it "preserves a custom user status" do
+        user.set_status!("On vacation", "palm_tree")
+
+        described_class.public_send(method, user, private_room)
+
+        expect(user.reload.user_status.description).to eq("On vacation")
+        expect(user.user_status.emoji).to eq("palm_tree")
+      end
     end
   end
 
