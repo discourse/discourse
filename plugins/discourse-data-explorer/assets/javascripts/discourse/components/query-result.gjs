@@ -9,7 +9,12 @@ import Badge from "discourse/models/badge";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import { chartability, defaultView, looksLikeDate } from "../lib/chart-helpers";
+import {
+  chartability,
+  chartDatasets,
+  defaultView,
+  hasDates,
+} from "../lib/chart-helpers";
 import { dataExplorerStore } from "../lib/data-explorer-store";
 import DataExplorerChart from "./data-explorer-chart";
 import QueryChartEmptyState from "./query-chart-empty-state";
@@ -111,14 +116,6 @@ export default class QueryResult extends Component {
     return this.chartability.numericIndices;
   }
 
-  get ignoredColumnNames() {
-    return this.chartability.ignoredColumns;
-  }
-
-  get ignoredColumnsText() {
-    return this.ignoredColumnNames.join(", ");
-  }
-
   get viewItems() {
     return [
       { value: "chart", icon: "signal" },
@@ -177,8 +174,9 @@ export default class QueryResult extends Component {
     return this.hasDates && this.numericColumnIndices.length === 2;
   }
 
+  @cached
   get hasDates() {
-    return this.rows?.length > 0 && looksLikeDate(String(this.rows[0][0]));
+    return hasDates(this.rows);
   }
 
   get defaultChartForm() {
@@ -211,11 +209,13 @@ export default class QueryResult extends Component {
     return this.chartForm === "dual-axis";
   }
 
+  @cached
   get chartDatasets() {
-    return this.numericColumnIndices.map((colIdx) => ({
-      label: this.columnNames[colIdx],
-      values: this.rows.map((r) => Number(r[colIdx])),
-    }));
+    return chartDatasets(
+      this.rows,
+      this.numericColumnIndices,
+      this.columnNames
+    );
   }
 
   get columnNames() {
@@ -297,6 +297,7 @@ export default class QueryResult extends Component {
     return tables;
   }
 
+  @cached
   get chartLabels() {
     const table = this._relationTables[this.colRender[0]];
 
@@ -423,11 +424,11 @@ export default class QueryResult extends Component {
               @labels={{this.chartLabels}}
               @stacked={{this.isStacked}}
             />
-            {{#if this.ignoredColumnNames.length}}
+            {{#if this.chartability.ignoredColumns.length}}
               <p class="query-results-chart__footnote">
                 {{i18n
                   "explorer.chart_footnote.ignored"
-                  columns=this.ignoredColumnsText
+                  columns=(joinNames this.chartability.ignoredColumns)
                 }}
               </p>
             {{/if}}
@@ -488,6 +489,10 @@ function transformedRelTable(table, modelClass) {
       modelClass ? modelClass.create(item) : item,
     ])
   );
+}
+
+function joinNames(names) {
+  return names.join(", ");
 }
 
 function relationLabel(relation) {
