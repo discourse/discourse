@@ -119,38 +119,21 @@ class SharedAiConversation < ActiveRecord::Base
   end
 
   def html_excerpt
-    html = +""
-    populated_context.each do |post|
-      text = PrettyText.excerpt(post.cooked, 400, strip_links: true, strip_details: true)
-      username = ERB::Util.html_escape(post.user.username)
-
-      html << "<p><b>#{username}</b>: #{text}</p>"
-      if html.length > 1000
-        html << "<p>...</p>"
-        break
-      end
-    end
-    html << "<a href='#{url}'>#{I18n.t("discourse_ai.share_ai.read_more")}</a>"
-    html
+    ApplicationController.render(
+      partial: "discourse_ai/ai_bot/shared_ai_conversations/excerpt",
+      locals: {
+        conversation: self,
+      },
+    )
   end
 
   def onebox
-    escaped_title = ERB::Util.html_escape(title)
-    <<~HTML
-    <div>
-      <aside class="onebox allowlistedgeneric" data-onebox-src="#{url}">
-      <header class="source">
-        <span class="onebox-ai-llm-title">#{I18n.t("discourse_ai.share_ai.onebox_title", llm_name: llm_name)}</span>
-        <a href="#{url}" target="_blank" rel="nofollow ugc noopener" tabindex="-1">#{Discourse.base_uri}</a>
-      </header>
-      <article class="onebox-body">
-      <h3><a href="#{url}" rel="nofollow ugc noopener" tabindex="-1">#{escaped_title}</a></h3>
-    #{html_excerpt}
-    </article>
-    <div style="clear: both"></div>
-    </aside>
-    </div>
-    HTML
+    ApplicationController.render(
+      partial: "discourse_ai/ai_bot/shared_ai_conversations/onebox",
+      locals: {
+        conversation: self,
+      },
+    )
   end
 
   def self.excerpt(posts)
