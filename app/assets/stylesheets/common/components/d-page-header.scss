@@ -9,12 +9,17 @@ $mobile-breakpoint: 700px;
     align-items: stretch;
     margin-bottom: var(--space-2);
 
+    // Keyed on the title classes as well as the tags: a subheader nested under
+    // another heading picks its own level, and its styling must not depend on
+    // which level it picked.
     h1,
-    h2 {
+    h2,
+    .d-page-header__title,
+    .d-page-subheader__title {
       margin: 0;
     }
 
-    h2 {
+    .d-page-subheader__title {
       font-size: var(--font-up-2);
     }
 

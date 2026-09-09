@@ -611,7 +611,212 @@ module("Integration | ui-kit | d-pointer-drag", function (hooks) {
       assert.deepEqual(
         calls,
         ["start", "end:2"],
-        "the threshold gates onDrag only: a click on a thresholded handle still commits, so a consumer must read the position rather than assume movement"
+        "the threshold does not gate the ends of the gesture: a click on a thresholded handle still commits, so a consumer must read the position rather than assume movement"
+      );
+    });
+
+    test("the dragging class is held back until a thresholded gesture engages", async function (assert) {
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag threshold=5 draggingClass="--dragging"}}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      stubPointerCapture(target);
+
+      await triggerEvent(target, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      assert
+        .dom(target)
+        .doesNotHaveClass(
+          "--dragging",
+          "the press alone is not yet a drag, so it carries no dragging class"
+        );
+
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 4,
+        clientY: 0,
+      });
+      assert
+        .dom(target)
+        .doesNotHaveClass(
+          "--dragging",
+          "nor does movement that stays inside the threshold"
+        );
+
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 5,
+        clientY: 0,
+      });
+      assert
+        .dom(target)
+        .hasClass(
+          "--dragging",
+          "reaching the threshold engages the gesture and marks it"
+        );
+
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 1,
+        clientY: 0,
+      });
+      assert
+        .dom(target)
+        .hasClass(
+          "--dragging",
+          "and returning inside the threshold keeps the mark, as the engagement latch does"
+        );
+
+      await triggerEvent(target, "pointerup", {
+        pointerId: 1,
+        clientX: 1,
+        clientY: 0,
+      });
+      assert
+        .dom(target)
+        .doesNotHaveClass("--dragging", "release clears it as usual");
+    });
+
+    test("the body class is held back until a thresholded gesture engages", async function (assert) {
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag threshold=5 bodyClass="dragging"}}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      stubPointerCapture(target);
+
+      await triggerEvent(target, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "dragging",
+          "the press alone leaves the body unmarked"
+        );
+
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 4,
+        clientY: 0,
+      });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass("dragging", "as does movement inside the threshold");
+
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 5,
+        clientY: 0,
+      });
+      assert
+        .dom(document.body)
+        .hasClass("dragging", "reaching the threshold marks the body");
+
+      // Two further moves past the latch. The body class is held by a counted
+      // lease, so an implementation that re-takes one per move would need as
+      // many releases as it took, and the single release below would leave the
+      // class stranded on the body.
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 9,
+        clientY: 0,
+      });
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 14,
+        clientY: 0,
+      });
+
+      await triggerEvent(target, "pointerup", {
+        pointerId: 1,
+        clientX: 14,
+        clientY: 0,
+      });
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "dragging",
+          "release unmarks it, however many moves the gesture saw"
+        );
+    });
+
+    test("a click on a thresholded handle applies neither gesture class", async function (assert) {
+      const calls = [];
+      const onDragStart = () => calls.push("start");
+      const onDragEnd = () => calls.push("end");
+
+      await render(
+        <template>
+          <div
+            class="dpd-target"
+            {{dPointerDrag
+              threshold=5
+              draggingClass="--dragging"
+              bodyClass="dragging"
+              onDragStart=onDragStart
+              onDragEnd=onDragEnd
+            }}
+          ></div>
+        </template>
+      );
+
+      const target = find(".dpd-target");
+      stubPointerCapture(target);
+
+      await triggerEvent(target, "pointerdown", {
+        button: 0,
+        pointerId: 1,
+        clientX: 0,
+        clientY: 0,
+      });
+      await triggerEvent(target, "pointermove", {
+        pointerId: 1,
+        clientX: 2,
+        clientY: 0,
+      });
+
+      // Read while the press is still held. Waiting for the release would prove
+      // nothing: the gesture clears both classes on the way out, so a press that
+      // wrongly applied them looks identical to one that never did.
+      assert
+        .dom(target)
+        .doesNotHaveClass(
+          "--dragging",
+          "a press that never became a drag never looks like one"
+        );
+      assert
+        .dom(document.body)
+        .doesNotHaveClass("dragging", "and never marks the body either");
+
+      await triggerEvent(target, "pointerup", {
+        pointerId: 1,
+        clientX: 2,
+        clientY: 0,
+      });
+
+      assert.deepEqual(
+        calls,
+        ["start", "end"],
+        "and the gesture still runs its lifecycle, so withholding the classes is not withholding the gesture"
       );
     });
 
