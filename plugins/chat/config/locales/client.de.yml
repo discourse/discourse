@@ -136,7 +136,7 @@ de:
         process_started: "Der Löschvorgang für den Kanal hat begonnen. Dieser Modal-Dialog wird in Kürze geschlossen und du wirst den gelöschten Kanal nirgendwo mehr sehen."
       channels_list_popup:
         browse: "Kanäle durchsuchen"
-        create: "Neuer Kanal"
+        create: "Neuer Kanal..."
       close: "Schließen"
       remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
@@ -151,8 +151,6 @@ de:
       muted: "stummgeschaltet"
       joined: "beigetreten"
       empty_state:
-        direct_message_cta: "Persönlichen Chat beginnen"
-        direct_message: "Du kannst auch einen persönlichen Chat mit einem oder mehreren Benutzern beginnen."
         title: "Keine Kanäle gefunden"
         my_threads: "Du hast noch keine Threads. Threads, an denen du teilnimmst, werden hier angezeigt."
       email_frequency:
@@ -599,14 +597,20 @@ de:
       direct_messages:
         title: "DN"
         aria_label: "Zu Direktnachrichten wechseln"
-        new: "Persönlichen Chat erstellen"
         create: "Los"
-        leave: "Diesen persönlichen Chat verlassen"
-        close: "Schließe diesen persönlichen Chat"
+        leave: "Kanal verlassen"
+        close: "Kanal schließen"
         cannot_create: "Du kannst leider keine Direktnachrichten senden."
       channel_list:
         title: "Kanäle"
         aria_label: "Zur Kanalliste wechseln"
+        options:
+          filter: "Filter"
+        filter:
+          all: "Alle Kanäle"
+          mentions: "Erwähnungen"
+        sort:
+          priority: "Priorität"
       incoming_webhooks:
         back: "Zurück"
         channel_placeholder: "Kanal auswählen"
@@ -761,11 +765,6 @@ de:
           direct_html: '<span>%{username}</span> <span>hat dich in „%{channel}“ erwähnt</span>'
           other_plain: 'hat %{identifier} in „%{channel}“ erwähnt'
           other_html: '<span>%{username}</span> <span>hat %{identifier} in „%{channel}“ erwähnt</span>'
-        direct_message_chat_mention:
-          direct: "hat dich im persönlichen Chat erwähnt"
-          direct_html: "<span>%{username}</span> <span>hat dich im persönlichen Chat erwähnt</span>"
-          other_plain: "hat %{identifier} im persönlichen Chat erwähnt"
-          other_html: "<span>%{username}</span> <span>hat %{identifier} im persönlichen Chat erwähnt</span>"
         chat_message: "Neue Chat-Nachricht"
         chat_quoted: "%{username} hat deine Chat-Nachricht zitiert"
       titles:
@@ -835,9 +834,6 @@ de:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        text: Neue DN starten
-        title: Persönlichen Chat erstellen
       panels:
         chat:
           label: "Chat"

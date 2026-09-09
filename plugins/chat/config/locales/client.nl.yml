@@ -136,7 +136,7 @@ nl:
         process_started: "Het proces om het kanaal te verwijderen is gestart. Dit venster wordt over enkele ogenblikken gesloten, je ziet het verwijderde kanaal nergens meer."
       channels_list_popup:
         browse: "Kanalen bekijken"
-        create: "Nieuw kanaal"
+        create: "Nieuw kanaal..."
       close: "Sluiten"
       remove: "Verwijderen"
       collapse: "Chatlade samenvouwen"
@@ -151,8 +151,6 @@ nl:
       muted: "gedempt"
       joined: "lid sinds"
       empty_state:
-        direct_message_cta: "Start een privéchat"
-        direct_message: "Je kunt ook een privéchat starten met een of meer gebruikers."
         title: "Geen kanalen gevonden"
         my_threads: "Je hebt nog geen threads. Threads waaraan je deelneemt, worden hier weergegeven."
       email_frequency:
@@ -553,14 +551,20 @@ nl:
       direct_messages:
         title: "Directe berichten"
         aria_label: "Wisselen naar privéberichten"
-        new: "Maak een persoonlijke chat"
         create: "Gaan"
-        leave: "Deze privéchat verlaten"
-        close: "Deze privéchat sluiten"
+        leave: "Kanaal verlaten"
+        close: "Kanaal sluiten"
         cannot_create: "Sorry, je kunt geen directe berichten sturen."
       channel_list:
         title: "Kanalen"
         aria_label: "Wisselen naar kanalenlijst"
+        options:
+          filter: "Filter"
+        filter:
+          all: "Alle kanalen"
+          mentions: "Vermeldingen"
+        sort:
+          priority: "Prioriteit"
       incoming_webhooks:
         back: "Terug"
         channel_placeholder: "Selecteer een kanaal"
@@ -715,11 +719,6 @@ nl:
           direct_html: '<span>%{username}</span> <span>heeft je genoemd in "%{channel}"</span>'
           other_plain: 'heeft %{identifier} genoemd in "%{channel}"'
           other_html: '<span>%{username}</span> <span>heeft %{identifier} genoemd in "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "heeft je genoemd in een privéchat"
-          direct_html: "<span>%{username}</span> <span>heeft je genoemd in een privéchat</span>"
-          other_plain: "heeft %{identifier} genoemd in een privéchat"
-          other_html: "<span>%{username}</span> <span>heeft %{identifier} genoemd in een privéchat</span>"
         chat_message: "Nieuw chatbericht"
         chat_quoted: "%{username} heeft je chatbericht geciteerd"
       titles:
@@ -789,9 +788,6 @@ nl:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        text: Ster toevoegen aan nieuwe direct bericht
-        title: Maak een persoonlijke chat
       panels:
         chat:
           label: "Chat"

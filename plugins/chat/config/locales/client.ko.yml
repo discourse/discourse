@@ -64,7 +64,7 @@ ko:
         instructions: "<p><strong>%{name}</strong> 채널과 채팅 기록을 삭제합니다. 반응과 업로드 같은 모든 메시지와 관련된 데이터가 영구적으로 삭제됩니다. 채널 기록을 보존하고 삭제하고 싶다면, 채널 보관을 고려하세요.</p> <p>정말로 채널을 <strong>영구적으로 삭제</strong>하시겠습니까? 확인을 위해, 채널의 이름을 아래에 입력하세요.</p>"
       channels_list_popup:
         browse: "채널 찾아보기"
-        create: "새 채널"
+        create: "새 채널..."
       close: "닫기"
       remove: "제거"
       expand: "채팅창 확장"
@@ -75,7 +75,6 @@ ko:
       muted: "알림끔"
       joined: "가입"
       empty_state:
-        direct_message_cta: "개인 채팅 시작"
         title: "채널을 찾을 수 없습니다."
       email_frequency:
         never: "알림 받지 않기"
@@ -276,10 +275,16 @@ ko:
           latest: "최신"
       direct_messages:
         create: "이동"
-        leave: "이 개인 채팅에서 나가기"
+        leave: "채널 나가기"
+        close: "채널 닫기"
         cannot_create: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
       channel_list:
         title: "채널"
+        options:
+          filter: "필터"
+        filter:
+          all: "모든 채널"
+          mentions: "언급"
       incoming_webhooks:
         back: "뒤로"
         channel_placeholder: "채널 선택"
@@ -386,9 +391,6 @@ ko:
         chat:
           title: 채팅
     sidebar:
-      start_new_dm:
-        text: 새로운 채팅 시작
-        title: 개인 채팅 시작
       panels:
         chat:
           label: "채팅"

@@ -23,6 +23,10 @@ el:
           title: "Εισαγωγές ημερομηνίας/ώρας"
         menus:
           title: "Μενού"
+        context_menu:
+          actions:
+            duplicate: "Διπλότυπο"
+            delete: "Διαγραφή"
         multi_select:
           title: "Πολλαπλή επιλογή"
         font_scale:
