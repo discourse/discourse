@@ -19,6 +19,21 @@ RSpec.describe VoiceLivekitRecordingS3BucketValidator do
     expect(validator.valid_value?("voice-recordings")).to eq(true)
   end
 
+  it "validates the configured bucket name regex when saving the setting" do
+    ["voice-recordings/folder", "Voice-recordings", "ab", "a" * 64].each do |bucket|
+      expect { SiteSetting.voice_livekit_recording_s3_bucket = bucket }.to raise_error(
+        Discourse::InvalidParameters,
+        "voice_livekit_recording_s3_bucket: #{I18n.t("site_settings.errors.regex_mismatch")}",
+      )
+    end
+
+    SiteSetting.voice_livekit_recording_s3_bucket = "voice-recordings"
+    expect(SiteSetting.voice_livekit_recording_s3_bucket).to eq("voice-recordings")
+
+    SiteSetting.voice_livekit_recording_s3_bucket = ""
+    expect(SiteSetting.voice_livekit_recording_s3_bucket).to eq("")
+  end
+
   it "requires both recording credentials" do
     SiteSetting.voice_livekit_recording_s3_access_key_id = ""
     expect(validator.valid_value?("voice-recordings")).to eq(false)

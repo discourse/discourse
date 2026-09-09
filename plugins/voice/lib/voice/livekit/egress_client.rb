@@ -20,6 +20,9 @@ module Voice
           if SiteSetting.voice_livekit_recording_s3_bucket.present?
             validator = VoiceLivekitRecordingS3BucketValidator.new
             unless validator.valid_value?(SiteSetting.voice_livekit_recording_s3_bucket)
+              Rails.logger.warn(
+                "[voice-livekit] StartRoomCompositeEgress refused: #{validator.error_message}",
+              )
               return { ok: false, error: validator.error_message }
             end
 
