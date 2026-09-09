@@ -57,6 +57,18 @@ describe Admin::McpAuthorizationsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["authorizations"].pluck("id")).to eq([matching_authorization.id])
     end
+
+    it "returns an authorization that references a deleted user" do
+      authorization = create_authorization(user: user, client_id: "deleted-user-client")
+      User.where(id: user.id).delete_all
+
+      get "/admin/mcp/authorizations.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["authorizations"]).to contain_exactly(
+        include("id" => authorization.id, "username" => nil, "status" => "user_unavailable"),
+      )
+    end
   end
 
   def create_authorization(user:, client_id:)

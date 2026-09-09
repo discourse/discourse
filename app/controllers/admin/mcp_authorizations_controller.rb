@@ -41,7 +41,7 @@ class Admin::McpAuthorizationsController < Admin::AdminController
       end
     {
       id: authorization.id,
-      username: authorization.user.username,
+      username: authorization.user&.username,
       client_name: authorization.client.name,
       client_id: authorization.client.client_id,
       resource: authorization.resource,
