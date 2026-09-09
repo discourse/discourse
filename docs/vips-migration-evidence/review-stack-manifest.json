@@ -211,7 +211,7 @@
       "path": "/tmp/discourse-vips-review-07-jpeg-01a0846e",
       "branch": "tgxworld/vips-review-07-jpeg",
       "base": "a29087e9804520698437ca32cbfd7888749d96a4",
-      "head": "04940386277b10722d9dc296fa9a98a851ccda6f",
+      "head": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df",
       "sources": [
         "b3f7fbecca87eaf62f32ffc257fa23df899ec2b7",
         "33debf50a19d9468128e33b95f2fa0695a76239b",
@@ -253,15 +253,24 @@
           "head": "83d09d9b023c095e0bd3afba560ab321f873eb91",
           "base": "7bd1abcfdeefa54ddc3cb1280f1e6710672da71b",
           "reason": "before approved frozen headers"
+        },
+        {
+          "head": "04940386277b10722d9dc296fa9a98a851ccda6f",
+          "base": "a29087e9804520698437ca32cbfd7888749d96a4",
+          "reason": "published before ordinary GIF lint fix/parent merge"
         }
       ],
-      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d",
+      "git_parents": [
+        "04940386277b10722d9dc296fa9a98a851ccda6f"
+      ],
+      "gif_header_fix": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df"
     },
     {
       "path": "/tmp/discourse-vips-review-08-orientation-01a0846e",
       "branch": "tgxworld/vips-review-08-orientation",
-      "base": "04940386277b10722d9dc296fa9a98a851ccda6f",
-      "head": "871a32ddf21e33322c6fdab41afe89d766d9dd74",
+      "base": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df",
+      "head": "7548d192b0fc01607b0df1b7abf6abb768a15d51",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -302,15 +311,25 @@
           "head": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
           "base": "83d09d9b023c095e0bd3afba560ab321f873eb91",
           "reason": "before approved frozen headers"
+        },
+        {
+          "head": "871a32ddf21e33322c6fdab41afe89d766d9dd74",
+          "base": "04940386277b10722d9dc296fa9a98a851ccda6f",
+          "reason": "published before ordinary GIF lint fix/parent merge"
         }
       ],
-      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d",
+      "git_parents": [
+        "871a32ddf21e33322c6fdab41afe89d766d9dd74",
+        "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df"
+      ],
+      "gif_header_fix": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df"
     },
     {
       "path": "/tmp/discourse-vips-review-09-downsize-01a0846e",
       "branch": "tgxworld/vips-review-09-downsize",
-      "base": "871a32ddf21e33322c6fdab41afe89d766d9dd74",
-      "head": "8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8",
+      "base": "7548d192b0fc01607b0df1b7abf6abb768a15d51",
+      "head": "5a9c7942712d9338e2cdd5fbdec4399ca9a4b4ea",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -351,15 +370,25 @@
           "head": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
           "base": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
           "reason": "before approved frozen headers"
+        },
+        {
+          "head": "8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8",
+          "base": "871a32ddf21e33322c6fdab41afe89d766d9dd74",
+          "reason": "published before ordinary GIF lint fix/parent merge"
         }
       ],
-      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d",
+      "git_parents": [
+        "8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8",
+        "7548d192b0fc01607b0df1b7abf6abb768a15d51"
+      ],
+      "gif_header_fix": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df"
     },
     {
       "path": "/tmp/discourse-vips-review-10-resize-01a0846e",
       "branch": "tgxworld/vips-review-10-resize",
-      "base": "8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8",
-      "head": "79abe3aae19814a2ce8e63a586fa9682567a6a0e",
+      "base": "5a9c7942712d9338e2cdd5fbdec4399ca9a4b4ea",
+      "head": "d88b4e83bd92d15c1a76131a46eb9761df501882",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -401,15 +430,25 @@
           "head": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
           "base": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
           "reason": "before approved frozen headers"
+        },
+        {
+          "head": "79abe3aae19814a2ce8e63a586fa9682567a6a0e",
+          "base": "8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8",
+          "reason": "published before ordinary GIF lint fix/parent merge"
         }
       ],
-      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d",
+      "git_parents": [
+        "79abe3aae19814a2ce8e63a586fa9682567a6a0e",
+        "5a9c7942712d9338e2cdd5fbdec4399ca9a4b4ea"
+      ],
+      "gif_header_fix": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df"
     },
     {
       "path": "/tmp/discourse-vips-review-11-crop-01a0846e",
       "branch": "tgxworld/vips-review-11-crop",
-      "base": "79abe3aae19814a2ce8e63a586fa9682567a6a0e",
-      "head": "a72c194e07357fddd533eec94dc52a9add4f8201",
+      "base": "d88b4e83bd92d15c1a76131a46eb9761df501882",
+      "head": "381562e9e9b8502a9847dc4d08f49e8dc97f0979",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -451,13 +490,24 @@
           "head": "e65d0762d8eda0bf3452e6f56ac298d0ad48ef3d",
           "base": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
           "reason": "before approved frozen headers"
+        },
+        {
+          "head": "a72c194e07357fddd533eec94dc52a9add4f8201",
+          "base": "79abe3aae19814a2ce8e63a586fa9682567a6a0e",
+          "reason": "published before ordinary GIF lint fix/parent merge"
         }
       ],
-      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d",
+      "git_parents": [
+        "a72c194e07357fddd533eec94dc52a9add4f8201",
+        "d88b4e83bd92d15c1a76131a46eb9761df501882"
+      ],
+      "gif_header_fix": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df"
     }
   ],
   "initial_verified_reference": "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948",
   "final_source_reference": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
   "verification_scope": "Branch topology, operation deltas, staged contents, fixture hashes, and clean worktrees checked; runtime results belong to the separately recorded tested snapshots.",
-  "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
+  "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d",
+  "topology": "One operation per parent-branch diff; ordinary fix commit and parent merges preserve published ancestry."
 }

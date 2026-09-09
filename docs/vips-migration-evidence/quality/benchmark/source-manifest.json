@@ -1,0 +1,229 @@
+{
+  "commit": "28582e86c45dd1c791b01fc876382fbb8e444f07",
+  "files": {
+    "lib/discourse_vips.rb": "a1f9fdd8f06b1e3a2d7f312024a956d50487ffb2edfd593a47003e38df852e5e",
+    "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+    "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+    "lib/discourse_vips/ico_image.rb": "adeb274ef3319c875a41b522f419d6adf40e434effa5590ef30caff0de6bbe35",
+    "lib/discourse_vips/jpeg_quality.rb": "da4f091bacebd865b998c19164725fe094de12377d10a6737ace75efe1407a08",
+    "lib/discourse_vips/jpeg_quality.LICENSE": "131447ad0099069beaa32acf1700716eea294a5bdf936d8211d7026b1849e5d4",
+    "lib/discourse_vips/jpeg_quality.NOTICE": "a58570cb757bd9223bed229f74cd85c3117c622d23553766427b4e816e65e1e1",
+    "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+    "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+    "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+    "script/discourse_vips_worker": "5372dd867ddb7f2240b52cf2285174be05824494355d3fb9118677a1bc7b7ca8"
+  },
+  "inputs": [
+    {
+      "name": "jpeg-photo",
+      "input_format": "jpeg",
+      "path": "inputs/jpeg-photo.jpg",
+      "origin": "public/discourse-task/jpeg-benchmark/inputs/photo.jpg",
+      "sha256": "f819dbad7ebd7007bd9104617147acc303b815bb9e3b85dad308d39a728851eb",
+      "bytes": 296310
+    },
+    {
+      "name": "jpeg-grayscale",
+      "input_format": "jpeg",
+      "path": "inputs/jpeg-grayscale.jpg",
+      "origin": "public/discourse-task/jpeg-benchmark/inputs/gray.jpg",
+      "sha256": "90f0e3ba7d930487c8a6885a1a628c5a1d4bc0e7bea5304abcdae23f21b8c210",
+      "bytes": 487
+    },
+    {
+      "name": "jpeg-progressive",
+      "input_format": "jpeg",
+      "path": "inputs/jpeg-progressive.jpg",
+      "origin": "public/discourse-task/orientation-benchmark/inputs/photo-progressive-orientation-6.jpg",
+      "sha256": "689327e82836e034600b837ba7f9367c2e6c8d698bbec5d43a7c4121447daaee",
+      "bytes": 276716
+    },
+    {
+      "name": "jpeg-matrix-source",
+      "input_format": "jpeg",
+      "path": "inputs/jpeg-matrix-source.jpg",
+      "origin": "spec/fixtures/images/exif_orientation.jpg",
+      "sha256": "1c91c763f7c37a3d1d51b75fb00f1dd937de5355eb13c4560fb1ddd531ac5daf",
+      "bytes": 718
+    },
+    {
+      "name": "jpeg-logo",
+      "input_format": "jpeg",
+      "path": "inputs/jpeg-logo.jpg",
+      "origin": "spec/fixtures/images/logo.jpg",
+      "sha256": "ad163c50a1a180d20695a4399e209a619c0ed8afde214cfd6d7cfe90ee555802",
+      "bytes": 26729
+    },
+    {
+      "name": "png",
+      "input_format": "png",
+      "path": "inputs/png.png",
+      "origin": "spec/fixtures/images/smallest.png",
+      "sha256": "ebf4f635a17d10d6eb46ba680b70142419aa3220f228001a036d311a22ee9d2a",
+      "bytes": 67
+    },
+    {
+      "name": "svg",
+      "input_format": "svg",
+      "path": "inputs/svg.svg",
+      "origin": "spec/fixtures/images/image.svg",
+      "sha256": "14ec1484e7e8badb25663a887e7686ded0a28fa40cab858d629ee34d139eeb26",
+      "bytes": 141
+    },
+    {
+      "name": "gif-static",
+      "input_format": "gif",
+      "path": "inputs/gif-static.gif",
+      "origin": "spec/fixtures/images/static.gif",
+      "sha256": "86976a133313408fb5dd53f4126550a6bde033eef79beed3e2ca860d6ac71e70",
+      "bytes": 62
+    },
+    {
+      "name": "gif-animated",
+      "input_format": "gif",
+      "path": "inputs/gif-animated.gif",
+      "origin": "spec/fixtures/images/animated.gif",
+      "sha256": "1a9b34fc78ac562790a10b7042d10ad359c2214ca99e644e6c9dd25b6de5a08d",
+      "bytes": 309071
+    },
+    {
+      "name": "gif-tiny-animated",
+      "input_format": "gif",
+      "path": "inputs/gif-tiny-animated.gif",
+      "origin": "spec/fixtures/images/tiny_animated.gif",
+      "sha256": "d3255fd4446c581da6fe23847ca3df8b2b9b729f60bad432cbb2bca2319951c5",
+      "bytes": 91
+    },
+    {
+      "name": "webp-static",
+      "input_format": "webp",
+      "path": "inputs/webp-static.webp",
+      "origin": "spec/fixtures/images/static.webp",
+      "sha256": "2fbaf43c86a30bc0bb7edfe34a454ebb09455c19407d7eb9fd33ed4285caf0b5",
+      "bytes": 280
+    },
+    {
+      "name": "webp-animated",
+      "input_format": "webp",
+      "path": "inputs/webp-animated.webp",
+      "origin": "spec/fixtures/images/animated.webp",
+      "sha256": "4a6b6b239d6da08999d4a2d5f2debb49cda6f1eedec4b241da8ee1d5c65cf1e0",
+      "bytes": 531018
+    },
+    {
+      "name": "webp-lossless-static",
+      "input_format": "webp",
+      "path": "inputs/webp-lossless-static.webp",
+      "origin": "public/discourse-task/downsize/grid-lossless.webp",
+      "sha256": "6927cf1a3a3551206d3f46d271474faa61f313ce3652b4e3ca55973b1e24cb20",
+      "bytes": 294
+    },
+    {
+      "name": "webp-lossless-animated",
+      "input_format": "webp",
+      "path": "inputs/webp-lossless-animated.webp",
+      "origin": "public/discourse-task/animated-quality-probe/lossless.webp",
+      "sha256": "21907dde09dc198141f11d8c224d2d7d08dbccf5e24374315db2bf639867e81e",
+      "bytes": 140
+    },
+    {
+      "name": "avif-static",
+      "input_format": "avif",
+      "path": "inputs/avif-static.avif",
+      "origin": "spec/fixtures/images/static.avif",
+      "sha256": "5e7acd7ee20124f83316f40ef3c395286b2d0e402468d3d97a0f18659540c0c6",
+      "bytes": 534
+    },
+    {
+      "name": "avif-multipage",
+      "input_format": "avif",
+      "path": "inputs/avif-multipage.avif",
+      "origin": "spec/fixtures/images/multipage.avif",
+      "sha256": "88ea0be3530a6a83f0e719aa6fd36ec96884d945512aeb52747ce7200b36eced",
+      "bytes": 851
+    },
+    {
+      "name": "ico-single",
+      "input_format": "ico",
+      "path": "inputs/ico-single.ico",
+      "origin": "spec/fixtures/images/smallest.ico",
+      "sha256": "fdd0193be40d4ad721501de57d7133a727e19ac0430189bc745c3e83f4cfd376",
+      "bytes": 70
+    },
+    {
+      "name": "ico-multi",
+      "input_format": "ico",
+      "path": "inputs/ico-multi.ico",
+      "origin": "spec/fixtures/images/ico-last-png.ico",
+      "sha256": "c9aead7b3c862fc4b309e8fd34368b834380c95c8624033b159e48dc19aecd09",
+      "bytes": 7737
+    },
+    {
+      "name": "jxl",
+      "input_format": "jxl",
+      "path": "inputs/jxl.jxl",
+      "origin": "spec/fixtures/images/dominant-color-float.jxl",
+      "sha256": "5e913cff60dc0e2797b084500d8edf270eb584e7f2080460a047c4c3b87231c5",
+      "bytes": 75,
+      "expected_outcome": "unsupported",
+      "reason": "Pinned production ImageMagick has no JXL delegate; the native quality operation intentionally rejects JXL and the Upload caller rescues to zero."
+    },
+    {
+      "name": "webp-inheritance-first-100-then-ordinary",
+      "input_format": "webp",
+      "path": "inputs/webp-inheritance-first-100-then-ordinary.webp",
+      "origin": "public/discourse-task/webp-quality-inheritance-fixtures/first-100-then-ordinary.webp",
+      "sha256": "6e72200b9f8ce6c0a6b478445fd4a78eb808038518ee25948afb20896d89815e",
+      "bytes": 640,
+      "expected_quality_integer": 100100,
+      "generation_manifest": "reference/webp-quality-inheritance-fixtures/manifest.json"
+    },
+    {
+      "name": "webp-inheritance-ordinary-then-100",
+      "input_format": "webp",
+      "path": "inputs/webp-inheritance-ordinary-then-100.webp",
+      "origin": "public/discourse-task/webp-quality-inheritance-fixtures/ordinary-then-100.webp",
+      "sha256": "91073adad5e96905c4bb69be2645ff1c75e43a3c3728f26fd5bdb553089cb9ec",
+      "bytes": 640,
+      "expected_quality_integer": 92100,
+      "generation_manifest": "reference/webp-quality-inheritance-fixtures/manifest.json"
+    },
+    {
+      "name": "webp-inheritance-later-100-not-sticky",
+      "input_format": "webp",
+      "path": "inputs/webp-inheritance-later-100-not-sticky.webp",
+      "origin": "public/discourse-task/webp-quality-inheritance-fixtures/later-100-not-sticky.webp",
+      "sha256": "3c0b84aca36db795f83e68fc516b9feaae9567b9ceb2dcf66d0decefef86096e",
+      "bytes": 938,
+      "expected_quality_integer": 9210092,
+      "generation_manifest": "reference/webp-quality-inheritance-fixtures/manifest.json"
+    },
+    {
+      "name": "webp-inheritance-ordinary-control",
+      "input_format": "webp",
+      "path": "inputs/webp-inheritance-ordinary-control.webp",
+      "origin": "public/discourse-task/webp-quality-inheritance-fixtures/ordinary-control.webp",
+      "sha256": "a8a6ea9d9ff35f41375fac8df750f162926deda647d90fc5cb3b4fa30ca5d471",
+      "bytes": 640,
+      "expected_quality_integer": 9292,
+      "generation_manifest": "reference/webp-quality-inheritance-fixtures/manifest.json"
+    }
+  ],
+  "dependency_source": "/tmp/discourse-vips-evidence-01a0846e/public/discourse-task/geometry-benchmark",
+  "dependency_hashes": {
+    "Gemfile": "f2cc2c492b57826eb7857ffaaad36085772eba989cadb0f2a543fa5f4bc8fc92",
+    "Gemfile.lock": "4bab9d22287a112da89b1b6d147444f16b76a8b139ae4845fa0fb57b44f67346"
+  },
+  "reference_hashes": {
+    "reference/check_jpeg_quality.rb": "f0bf834542f1c311c863c9689fb9db3e88eee72939d6dfc1e222821d78032b5b",
+    "reference/generate_webp_quality_inheritance.rb": "2d86481e8a1e0d0503948de70a20430e0970642690db0d48cbad171578e4141f",
+    "reference/webp-quality-inheritance-fixtures/classified_100-static.webp": "302b05686b7de918e45cad2106359142e593588bdb441bde7899962a020c200b",
+    "reference/webp-quality-inheritance-fixtures/first-100-then-ordinary.webp": "6e72200b9f8ce6c0a6b478445fd4a78eb808038518ee25948afb20896d89815e",
+    "reference/webp-quality-inheritance-fixtures/later-100-not-sticky.webp": "3c0b84aca36db795f83e68fc516b9feaae9567b9ceb2dcf66d0decefef86096e",
+    "reference/webp-quality-inheritance-fixtures/manifest.json": "1043d45b8d8fe934f5e1ace16a0c3ea12e0849e4fc404d2f40723898ac89e6d8",
+    "reference/webp-quality-inheritance-fixtures/ordinary-control.webp": "a8a6ea9d9ff35f41375fac8df750f162926deda647d90fc5cb3b4fa30ca5d471",
+    "reference/webp-quality-inheritance-fixtures/ordinary-then-100.webp": "91073adad5e96905c4bb69be2645ff1c75e43a3c3728f26fd5bdb553089cb9ec",
+    "reference/webp-quality-inheritance-fixtures/ordinary_92-static.webp": "9ac7c80cc3ae0041250823325cbf5e3f9603e49b9d36a3b4171d817299336169"
+  },
+  "scope": "Exact frozen production source; existing representative corpus plus bounded generated JPEG cases and four previously validated WebP inheritance animations. No benchmark runtime result is implied."
+}

@@ -1,0 +1,1 @@
+Final benchmark and matrix ran as discourse, UID/GID 1000, and exited 0. Independently checked all 500 matching query pairs and matrix file SHA-256 hashes, 26 compatible representative outcomes, 25 timed pairs with 31 iterations per backend, and five fresh workers. Source: 28582e86c45dd1c791b01fc876382fbb8e444f07.

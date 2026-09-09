@@ -1,0 +1,1 @@
+{"samples":26,"corpus":"/bench/corpus.json"}

@@ -1,0 +1,93 @@
+{
+  "generator_sha256": "2d86481e8a1e0d0503948de70a20430e0970642690db0d48cbad171578e4141f",
+  "libvips": "8.18.4",
+  "dimensions": [
+    3072,
+    8
+  ],
+  "source_recipe": "3072x8 constantRGB70,130,210; libvips lossyWebP Q75 effort0 striptrue; set only the VP8 width-word horizontal scaling field from0 to1 (5/4), preserving lower14-bit width3072 and all compressed pixels",
+  "format_reference": "https://www.rfc-editor.org/rfc/rfc6386.html#section-9.1",
+  "decoder_reference": "https://github.com/webmproject/libwebp/blob/main/src/dec/vp8_dec.c",
+  "baseline_fragment_marker": 12,
+  "changed_fragment_marker": 76,
+  "native_static_pixels_identical": true,
+  "expectation_scope": "ImageMagick7.1.2-27 fragment-offset15 classification and first-frame quality inheritance, not true lossless detection",
+  "fragments": {
+    "classified_100": {
+      "fragment_byte_15": 76,
+      "fragment_sha256": "36c427cfc21837a81c01d3f1d4e06445db0033bed4ef463d113fca883d2fad87",
+      "static_filename": "classified_100-static.webp",
+      "static_sha256": "302b05686b7de918e45cad2106359142e593588bdb441bde7899962a020c200b"
+    },
+    "ordinary_92": {
+      "fragment_byte_15": 12,
+      "fragment_sha256": "a08df367e8a9350b4ee8e331ab8f48e6d1c6d5067c64ed39e91fe5b33775878c",
+      "static_filename": "ordinary_92-static.webp",
+      "static_sha256": "9ac7c80cc3ae0041250823325cbf5e3f9603e49b9d36a3b4171d817299336169"
+    }
+  },
+  "cases": [
+    {
+      "filename": "first-100-then-ordinary.webp",
+      "sha256": "6e72200b9f8ce6c0a6b478445fd4a78eb808038518ee25948afb20896d89815e",
+      "bytes": 640,
+      "frame_labels": [
+        "classified_100",
+        "ordinary_92"
+      ],
+      "expected_imagemagick_frame_qualities": [
+        100,
+        100
+      ],
+      "expected_quality_integer": 100100,
+      "native_decode_validated": true
+    },
+    {
+      "filename": "ordinary-then-100.webp",
+      "sha256": "91073adad5e96905c4bb69be2645ff1c75e43a3c3728f26fd5bdb553089cb9ec",
+      "bytes": 640,
+      "frame_labels": [
+        "ordinary_92",
+        "classified_100"
+      ],
+      "expected_imagemagick_frame_qualities": [
+        92,
+        100
+      ],
+      "expected_quality_integer": 92100,
+      "native_decode_validated": true
+    },
+    {
+      "filename": "later-100-not-sticky.webp",
+      "sha256": "3c0b84aca36db795f83e68fc516b9feaae9567b9ceb2dcf66d0decefef86096e",
+      "bytes": 938,
+      "frame_labels": [
+        "ordinary_92",
+        "classified_100",
+        "ordinary_92"
+      ],
+      "expected_imagemagick_frame_qualities": [
+        92,
+        100,
+        92
+      ],
+      "expected_quality_integer": 9210092,
+      "native_decode_validated": true
+    },
+    {
+      "filename": "ordinary-control.webp",
+      "sha256": "a8a6ea9d9ff35f41375fac8df750f162926deda647d90fc5cb3b4fa30ca5d471",
+      "bytes": 640,
+      "frame_labels": [
+        "ordinary_92",
+        "ordinary_92"
+      ],
+      "expected_imagemagick_frame_qualities": [
+        92,
+        92
+      ],
+      "expected_quality_integer": 9292,
+      "native_decode_validated": true
+    }
+  ]
+}
