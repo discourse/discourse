@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "vips"
+
 RSpec.describe OptimizedImage do
   describe ".downsize" do
     [false, true].each do |enable_vips|
@@ -85,6 +87,29 @@ RSpec.describe OptimizedImage do
   end
 
   describe ".crop" do
+    it "keeps stripped 16-bit PNG crops at eight bits after optimization with either backend" do
+      SiteSetting.strip_image_metadata = true
+
+      Dir.mktmpdir do |directory|
+        source = File.join(directory, "source.png")
+        Vips::Image
+          .new_from_memory(Random.new(123).bytes(512 * 512 * 3 * 2), 512, 512, 3, :ushort)
+          .copy(interpretation: :rgb16)
+          .pngsave(source, bitdepth: 16)
+
+        [false, true].each do |enable_vips|
+          global_setting :enable_vips_image_processing, enable_vips
+          output = File.join(directory, "#{enable_vips}.png")
+
+          result = described_class.crop(source, output, 480, 480, raise_on_error: true)
+
+          expect(result).to eq(true)
+          expect(FastImage.size(output)).to eq([480, 480])
+          expect(File.binread(output, 25).getbyte(24)).to eq(8)
+        end
+      end
+    end
+
     [false, true].each do |enable_vips|
       it "crops an image in place with libvips #{enable_vips ? "enabled" : "disabled"}" do
         global_setting :enable_vips_image_processing, enable_vips
