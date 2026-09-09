@@ -1,0 +1,218 @@
+[
+  {
+    "operation": "downsize",
+    "name": "ico-to-ico",
+    "input_sha256": {
+      "imagemagick": "690656812bf1680d0118b824a4f57ec77e2e7e0ec46ca6cfaa96753b93d54052",
+      "libvips": "76660474ca514561309e1560ef0d400f6786c1a1615a43fa5300690231a221c7"
+    },
+    "provenance": {
+      "report": "downsize-final-selective.json",
+      "source": {
+        "base_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+        "snapshot": "working-tree contents; base commit alone does not identify this source",
+        "files": {
+          "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+          "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+          "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+          "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+          "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+          "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+          "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+          "script/discourse_vips_worker": "0b204e2c3056bc9ce3a577cb35cc6bddb43e1088b1a9215fe4d23edc83a19d8a",
+          "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+          "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+          "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+          "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+        }
+      },
+      "transform_strip_metadata": false
+    },
+    "input_bytes": {
+      "imagemagick": 4286,
+      "libvips": 209
+    },
+    "imagemagick": "/benchmark-sources/geometry/outputs/downsize/ico-to-ico-imagemagick.ico",
+    "libvips": "/benchmark-sources/geometry/outputs/downsize/ico-to-ico-libvips.ico"
+  },
+  {
+    "operation": "downsize",
+    "name": "large-ico",
+    "input_sha256": {
+      "imagemagick": "39e2d2a1dc421052a3eb2420f2a5e19b4c846e9a0c112907b764353ee153a637",
+      "libvips": "84a6b22e6bf7aad1a474db69f2136f2761be0e95884eb594550b9619f80c5f43"
+    },
+    "provenance": {
+      "report": "downsize-final-selective.json",
+      "source": {
+        "base_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+        "snapshot": "working-tree contents; base commit alone does not identify this source",
+        "files": {
+          "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+          "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+          "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+          "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+          "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+          "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+          "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+          "script/discourse_vips_worker": "0b204e2c3056bc9ce3a577cb35cc6bddb43e1088b1a9215fe4d23edc83a19d8a",
+          "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+          "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+          "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+          "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+        }
+      },
+      "transform_strip_metadata": false
+    },
+    "input_bytes": {
+      "imagemagick": 248062,
+      "libvips": 1871
+    },
+    "imagemagick": "/benchmark-sources/geometry/outputs/downsize/large-ico-imagemagick.ico",
+    "libvips": "/benchmark-sources/geometry/outputs/downsize/large-ico-libvips.ico"
+  },
+  {
+    "operation": "downsize",
+    "name": "png-to-ico",
+    "input_sha256": {
+      "imagemagick": "dbc45e17f08236d0767f132cc5a140701b3266d1156662057e51161d1b1bc3d6",
+      "libvips": "f6e5fddc46af6a636925e2d3d1ce074f7597a66d413900220ffcfbd60284f7ef"
+    },
+    "provenance": {
+      "report": "downsize-final-selective.json",
+      "source": {
+        "base_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+        "snapshot": "working-tree contents; base commit alone does not identify this source",
+        "files": {
+          "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+          "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+          "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+          "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+          "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+          "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+          "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+          "script/discourse_vips_worker": "0b204e2c3056bc9ce3a577cb35cc6bddb43e1088b1a9215fe4d23edc83a19d8a",
+          "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+          "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+          "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+          "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+        }
+      },
+      "transform_strip_metadata": false
+    },
+    "input_bytes": {
+      "imagemagick": 2542,
+      "libvips": 203
+    },
+    "imagemagick": "/benchmark-sources/geometry/outputs/downsize/png-to-ico-imagemagick.ico",
+    "libvips": "/benchmark-sources/geometry/outputs/downsize/png-to-ico-libvips.ico"
+  },
+  {
+    "operation": "downsize",
+    "name": "alpha-png-to-ico",
+    "input_sha256": {
+      "imagemagick": "1d016b76837c73fc6f9f9eb5d9e7f4b97175f33d2b677f733c4e72ec8b9290ca",
+      "libvips": "4bb7a3c587917f701fa4e146528dad6d6d972429d86f2847201c63605adf8fc9"
+    },
+    "provenance": {
+      "report": "downsize-final-selective.json",
+      "source": {
+        "base_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+        "snapshot": "working-tree contents; base commit alone does not identify this source",
+        "files": {
+          "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+          "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+          "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+          "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+          "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+          "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+          "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+          "script/discourse_vips_worker": "0b204e2c3056bc9ce3a577cb35cc6bddb43e1088b1a9215fe4d23edc83a19d8a",
+          "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+          "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+          "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+          "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+        }
+      },
+      "transform_strip_metadata": false
+    },
+    "input_bytes": {
+      "imagemagick": 2542,
+      "libvips": 286
+    },
+    "imagemagick": "/benchmark-sources/geometry/outputs/downsize/alpha-png-to-ico-imagemagick.ico",
+    "libvips": "/benchmark-sources/geometry/outputs/downsize/alpha-png-to-ico-libvips.ico"
+  },
+  {
+    "operation": "resize",
+    "name": "first-ico-strip-false",
+    "input_sha256": {
+      "imagemagick": "c10f39b1efdc260a1473d1fcc2b276d29e1db80150c3bce867ed1bc05dd1a590",
+      "libvips": "3aa37de1233b6329a7277804a3e7c2851dab5b419fc81a6597b4d0998ff490c9"
+    },
+    "provenance": {
+      "report": "resize-final-white.json",
+      "source": {
+        "base_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+        "snapshot": "working-tree contents; base commit alone does not identify this source",
+        "files": {
+          "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+          "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+          "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+          "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+          "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+          "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+          "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+          "script/discourse_vips_worker": "1c90781d234ecdc99abbfb23adae95b4f2a4c0f6e7c14e4986f8eddfafaf80a3",
+          "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+          "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+          "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+          "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+        }
+      },
+      "transform_strip_metadata": false
+    },
+    "input_bytes": {
+      "imagemagick": 2542,
+      "libvips": 219
+    },
+    "imagemagick": "/benchmark-sources/geometry/outputs/resize/first-ico-strip-false-imagemagick.ico",
+    "libvips": "/benchmark-sources/geometry/outputs/resize/first-ico-strip-false-libvips.ico"
+  },
+  {
+    "operation": "resize",
+    "name": "first-ico-strip-true",
+    "input_sha256": {
+      "imagemagick": "7082f47087c0a6fede5a6a2ca4a944dd3ff40701ba913141e9202c4a538f634a",
+      "libvips": "08bbaca9b9beaeebf1a5d4b12d607e9d49807df586e96b8c2ab3adde918d917a"
+    },
+    "provenance": {
+      "report": "resize-final-white.json",
+      "source": {
+        "base_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+        "snapshot": "working-tree contents; base commit alone does not identify this source",
+        "files": {
+          "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+          "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+          "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+          "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+          "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+          "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+          "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+          "script/discourse_vips_worker": "1c90781d234ecdc99abbfb23adae95b4f2a4c0f6e7c14e4986f8eddfafaf80a3",
+          "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+          "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+          "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+          "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+        }
+      },
+      "transform_strip_metadata": true
+    },
+    "input_bytes": {
+      "imagemagick": 2542,
+      "libvips": 262
+    },
+    "imagemagick": "/benchmark-sources/geometry/outputs/resize/first-ico-strip-true-imagemagick.ico",
+    "libvips": "/benchmark-sources/geometry/outputs/resize/first-ico-strip-true-libvips.ico"
+  }
+]

@@ -32,3 +32,5 @@ Geometry and orientation benchmark evidence is complete:
 The resize operation includes the user-approved removal of the unused `colors` option. Both backends now ignore that removed option; the historical colors12 cases are retained only as removed-API evidence and are excluded from migration performance claims. No PaletteImage or libimagequant dependency is introduced by the final resize branch.
 
 Shared compatibility evidence includes the [80-case JPEG sampling comparison](jpeg-sampling/README.md) and [50-case SVG geometry comparison](svg-geometry/README.md). These supplements isolate encoding and background behavior; they do not supply operation timing or complete upload-pipeline measurements.
+
+The [optimizer supplement](optimizer/README.md) records the final post-transform checks, including metadata changes, ICO byte preservation, and both sides of the PNG quantization threshold. The [review order](review-risk-order.md) ranks operations by risk separately from the stack merge order; the [remaining call-site audit](remaining-callsite-audit.md) identifies the still-unmigrated quality probes.

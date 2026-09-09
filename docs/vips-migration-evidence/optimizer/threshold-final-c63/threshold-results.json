@@ -1,0 +1,263 @@
+{
+  "source": {
+    "base_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+    "snapshot": "working-tree contents; base commit alone does not identify this source",
+    "files": {
+      "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+      "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+      "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+      "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+      "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "script/discourse_vips_worker": "1c90781d234ecdc99abbfb23adae95b4f2a4c0f6e7c14e4986f8eddfafaf80a3",
+      "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+      "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+      "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+    }
+  },
+  "manifest_sha256": "a1c9d347f56042cdabec9657d48aeca3da61a448dd1509d64e5554aefe78407a",
+  "harness_sha256": "44320608592e5319eb91e8f29bf5cb970468ac0336fb7f24bc43d58372401d86",
+  "purpose": "Supplemental real geometry outputs for the >=500000-byte pngquant exclusion branch; no timing or performance claim",
+  "ruby": "ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [x86_64-linux]",
+  "libvips": "8.18.4",
+  "landlock": true,
+  "seed": 20260909,
+  "input": {
+    "path": "seeded-rgb.png",
+    "sha256": "9328d288ba657cb52aad32b650350dc2f5d6bd0a5da96b1944a065e2219195ab",
+    "dimensions": [
+      1024,
+      768
+    ],
+    "bytes": 2364516
+  },
+  "samples": [
+    {
+      "operation": "downsize",
+      "name": "threshold-seeded-rgb-downsize-strip-false",
+      "strip_metadata": false,
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/threshold-seeded-rgb-downsize-strip-false-imagemagick.png",
+          "sha256": "ac2e81c8e84a150561e4423fd845846c6632fbcd6a8ac08b4607460fbb864300",
+          "bytes": 1300701,
+          "dimensions": [
+            768,
+            576
+          ]
+        },
+        "libvips": {
+          "path": "outputs/threshold-seeded-rgb-downsize-strip-false-libvips.png",
+          "sha256": "58a6b18bc644399c3b7c6c845d151f42da99e57f5737b03655d6bea77ef2f706",
+          "bytes": 1279287,
+          "dimensions": [
+            768,
+            576
+          ]
+        }
+      },
+      "status": "ok",
+      "instructions": [
+        "png:/benchmark-sources/optimizer/threshold-final-c63/seeded-rgb.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "75%",
+        "-profile",
+        "/benchmark-sources/geometry/vendor/data/RT_sRGB.icm",
+        "png:/benchmark-sources/optimizer/threshold-final-c63/outputs/threshold-seeded-rgb-downsize-strip-false-imagemagick.png"
+      ]
+    },
+    {
+      "operation": "crop",
+      "name": "threshold-seeded-rgb-crop-strip-false",
+      "strip_metadata": false,
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/threshold-seeded-rgb-crop-strip-false-imagemagick.png",
+          "sha256": "423b06668c15f74da92b30cc1ce8497215f0d7aff0427184cd4e5bd2d7cc7c22",
+          "bytes": 1330521,
+          "dimensions": [
+            768,
+            576
+          ]
+        },
+        "libvips": {
+          "path": "outputs/threshold-seeded-rgb-crop-strip-false-libvips.png",
+          "sha256": "dd0c4503a0937429fa7d1282a7c7986952799f84a6db0d9d5ea1728d6aef26a5",
+          "bytes": 1310033,
+          "dimensions": [
+            768,
+            576
+          ]
+        }
+      },
+      "status": "ok",
+      "instructions": [
+        "png:/benchmark-sources/optimizer/threshold-final-c63/seeded-rgb.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "768x576^",
+        "-crop",
+        "768x576+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/benchmark-sources/geometry/vendor/data/RT_sRGB.icm",
+        "png:/benchmark-sources/optimizer/threshold-final-c63/outputs/threshold-seeded-rgb-crop-strip-false-imagemagick.png"
+      ]
+    },
+    {
+      "operation": "crop",
+      "name": "threshold-seeded-rgb-crop-strip-true",
+      "strip_metadata": true,
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/threshold-seeded-rgb-crop-strip-true-imagemagick.png",
+          "sha256": "43c532c658f2a7966b62087849cdf6d5a68b122e2c30f8e193703c9e44fcf5ab",
+          "bytes": 1330631,
+          "dimensions": [
+            768,
+            576
+          ]
+        },
+        "libvips": {
+          "path": "outputs/threshold-seeded-rgb-crop-strip-true-libvips.png",
+          "sha256": "f0b83fde83ec9db4157a06223f59360bd440b11431340a8f10537bb3dcad7654",
+          "bytes": 1309841,
+          "dimensions": [
+            768,
+            576
+          ]
+        }
+      },
+      "status": "ok",
+      "instructions": [
+        "png:/benchmark-sources/optimizer/threshold-final-c63/seeded-rgb.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "768x576^",
+        "-crop",
+        "768x576+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/benchmark-sources/geometry/vendor/data/RT_sRGB.icm",
+        "png:/benchmark-sources/optimizer/threshold-final-c63/outputs/threshold-seeded-rgb-crop-strip-true-imagemagick.png"
+      ]
+    },
+    {
+      "operation": "resize",
+      "name": "threshold-seeded-rgb-resize-strip-false",
+      "strip_metadata": false,
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/threshold-seeded-rgb-resize-strip-false-imagemagick.png",
+          "sha256": "734a6ef0bd5d030600893ee03c09f2dfe06d4969bfc10fb588426edf3a7e134c",
+          "bytes": 1506953,
+          "dimensions": [
+            768,
+            576
+          ]
+        },
+        "libvips": {
+          "path": "outputs/threshold-seeded-rgb-resize-strip-false-libvips.png",
+          "sha256": "dd0c4503a0937429fa7d1282a7c7986952799f84a6db0d9d5ea1728d6aef26a5",
+          "bytes": 1310033,
+          "dimensions": [
+            768,
+            576
+          ]
+        }
+      },
+      "status": "ok",
+      "instructions": [
+        "png:/benchmark-sources/optimizer/threshold-final-c63/seeded-rgb.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-resize",
+        "768x576^",
+        "-extent",
+        "768x576",
+        "-interpolate",
+        "catrom",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/benchmark-sources/geometry/vendor/data/RT_sRGB.icm",
+        "png:/benchmark-sources/optimizer/threshold-final-c63/outputs/threshold-seeded-rgb-resize-strip-false-imagemagick.png"
+      ]
+    },
+    {
+      "operation": "resize",
+      "name": "threshold-seeded-rgb-resize-strip-true",
+      "strip_metadata": true,
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/threshold-seeded-rgb-resize-strip-true-imagemagick.png",
+          "sha256": "d3e096133ff4d909ffa3d054d2754144378b8a10412147d30825a93f2ebca0f6",
+          "bytes": 1509473,
+          "dimensions": [
+            768,
+            576
+          ]
+        },
+        "libvips": {
+          "path": "outputs/threshold-seeded-rgb-resize-strip-true-libvips.png",
+          "sha256": "f0b83fde83ec9db4157a06223f59360bd440b11431340a8f10537bb3dcad7654",
+          "bytes": 1309841,
+          "dimensions": [
+            768,
+            576
+          ]
+        }
+      },
+      "status": "ok",
+      "instructions": [
+        "png:/benchmark-sources/optimizer/threshold-final-c63/seeded-rgb.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "768x576^",
+        "-extent",
+        "768x576",
+        "-interpolate",
+        "catrom",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/benchmark-sources/geometry/vendor/data/RT_sRGB.icm",
+        "png:/benchmark-sources/optimizer/threshold-final-c63/outputs/threshold-seeded-rgb-resize-strip-true-imagemagick.png"
+      ]
+    }
+  ]
+}
