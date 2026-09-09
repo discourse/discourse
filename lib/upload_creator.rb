@@ -196,18 +196,25 @@ class UploadCreator
           # consistently whether it's running from our docker container or not
           begin
             w, h =
-              ImageMagick
-                .identify(
-                  "-ping",
-                  "-format",
-                  "%w %h",
-                  "MSVG:#{@file.path}",
-                  operation: :upload_svg_dimensions,
-                  read: [@file.path],
+              if GlobalSetting.enable_vips_image_processing
+                DiscourseVips.svg_dimensions(
+                  input_path: @file.path,
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
-                .split(" ")
-                .map(&:to_i)
+              else
+                ImageMagick
+                  .identify(
+                    "-ping",
+                    "-format",
+                    "%w %h",
+                    "MSVG:#{@file.path}",
+                    operation: :upload_svg_dimensions,
+                    read: [@file.path],
+                    timeout: Upload::MAX_IDENTIFY_SECONDS,
+                  )
+                  .split(" ")
+                  .map(&:to_i)
+              end
           rescue StandardError
             # use default 0, 0
           end

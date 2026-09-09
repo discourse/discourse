@@ -861,57 +861,77 @@ RSpec.describe UploadCreator do
         expect(FastImage.size(stored_path)).to eq([1, 1])
       end
     end
-  end
 
-  describe "svg sizes expressed in units other than pixels" do
-    let(:tiny_svg_filename) { "tiny.svg" }
-    let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
+    [false, true].each do |enable_vips|
+      context "with SVG dimensions and libvips #{enable_vips ? "enabled" : "disabled"}" do
+        before { global_setting :enable_vips_image_processing, enable_vips }
 
-    let(:massive_svg_filename) { "massive.svg" }
-    let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+        let(:tiny_svg_filename) { "tiny.svg" }
+        let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
 
-    let(:zero_sized_svg_filename) { "zero_sized.svg" }
-    let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+        let(:massive_svg_filename) { "massive.svg" }
+        let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
 
-    it "remains viewable when a dimension is fractional" do
-      upload =
-        UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
-          user.id,
-        )
+        let(:zero_sized_svg_filename) { "zero_sized.svg" }
+        let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+        it "remains viewable when a dimension is fractional" do
+          upload =
+            UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
+              user.id,
+            )
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-    end
+          expect(upload.width).to be > 50
+          expect(upload.height).to be > 50
 
-    it "does not exceed the maximum thumbnail size" do
-      upload =
-        UploadCreator.new(massive_svg_file, massive_svg_filename, force_optimize: true).create_for(
-          user.id,
-        )
+          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+        end
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+        it "does not exceed the maximum thumbnail size" do
+          upload =
+            UploadCreator.new(
+              massive_svg_file,
+              massive_svg_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-    end
+          expect(upload.width).to be > 50
+          expect(upload.height).to be > 50
 
-    it "handles files with a zero dimension" do
-      upload =
-        UploadCreator.new(
-          zero_sized_svg_file,
-          zero_sized_svg_filename,
-          force_optimize: true,
-        ).create_for(user.id)
+          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+        end
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+        it "handles files with a zero dimension" do
+          upload =
+            UploadCreator.new(
+              zero_sized_svg_file,
+              zero_sized_svg_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+          expect(upload.width).to be > 50
+          expect(upload.height).to be > 50
+
+          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+        end
+
+        it "stores zero dimensions when the SVG has no usable dimensions" do
+          file =
+            file_from_contents(
+              '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"/>',
+              "zero.svg",
+            )
+
+          upload = described_class.new(file, "zero.svg").create_for(user.id)
+
+          expect(upload).to be_persisted
+          expect([upload.width, upload.height]).to eq([0, 0])
+          expect([upload.thumbnail_width, upload.thumbnail_height]).to eq([0, 0])
+        end
+      end
     end
   end
 

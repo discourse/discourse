@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "rubygems"
 require "landlock"
 require "msgpack"
+require "nokogiri"
 require "socket"
 require "tmpdir"
 require "vips"
@@ -48,6 +50,8 @@ class DiscourseVipsWorker
         dominant_color(*arguments)
       when "animated"
         animated(*arguments)
+      when "svg-dimensions"
+        svg_dimensions(*arguments)
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -149,6 +153,49 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :animated
+
+    def self.svg_dimensions(input_path)
+      new(read_paths: [input_path]) do
+        raise ArgumentError, "invalid SVG dimensions arguments" if !input_path
+
+        block_loaders(allowed: %w[VipsForeignLoadSvg])
+        begin
+          image = load_svg(input_path)
+          [image.width, image.height]
+        rescue Vips::Error, Nokogiri::XML::SyntaxError => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :svg_dimensions
+
+    def self.load_svg(input_path)
+      Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)
+    rescue Vips::Error => error
+      document = Nokogiri.XML(File.read(input_path)) { |config| config.strict.nonet }
+      root = document.root
+      raise error if root&.name != "svg" || !root["viewBox"]
+
+      viewbox = root["viewBox"].strip.split(/[\s,]+/).map { |value| Float(value, exception: false) }
+      if viewbox.length != 4 || !viewbox.all? { |value| value&.finite? } || !viewbox[2].positive? ||
+           !viewbox[3].positive?
+        raise error
+      end
+
+      zero_dimensions =
+        %w[width height].filter do |dimension|
+          root[dimension]&.strip&.match?(
+            /\A[+-]?(?:0+(?:\.0*)?|\.0+)(?:e[+-]?\d+)?(?:px|in|cm|mm|pt|pc|em|ex|%)?\z/i,
+          )
+        end
+      raise error if zero_dimensions.empty?
+
+      zero_dimensions.each do |dimension|
+        root[dimension] = viewbox[dimension == "width" ? 2 : 3].to_s
+      end
+      Vips::Image.svgload_buffer(document.to_xml, dpi: 96, scale: 0.75)
+    end
+    private_class_method :load_svg
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
