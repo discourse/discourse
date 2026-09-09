@@ -1,5 +1,8 @@
+import {
+  writeForeignPage,
+  writeShellFixture,
+} from "discourse/tests/helpers/panel-dock-window-shell";
 import { PanelWindowHostBase } from "discourse/ui-kit/panel-dock/-internals/window-host";
-import { writeSkeleton } from "discourse/ui-kit/panel-dock/-internals/window-skeleton";
 
 const DEFAULT_GEOMETRY = Object.freeze({
   width: 731,
@@ -43,8 +46,10 @@ export class IframeWindowHost extends PanelWindowHostBase {
   openCount = 0;
   openKeys = [];
   resolveCount = 0;
+  resolutions = [];
 
   #acquiredHandles = new Set();
+  #connections = new Set();
   #frames = [];
   #mountlessWindows = new Set();
   #nextResolveRefused = false;
@@ -157,11 +162,11 @@ export class IframeWindowHost extends PanelWindowHostBase {
     return this.#createWindow(name).window;
   }
 
-  seedPreparedWindow(name, key, title = "Previously prepared panel") {
+  seedPreparedWindow(name, key) {
     const record = this.#createWindow(name);
-    const skeleton = writeSkeleton(record.window.document, key, title);
-    skeleton.dispose();
-    return { mount: skeleton.mount, window: record.window };
+    const { mount } = writeShellFixture(record.window.document, key);
+    record.arrived = true;
+    return { mount, window: record.window };
   }
 
   setMeasurement(name, geometry) {
@@ -169,6 +174,11 @@ export class IframeWindowHost extends PanelWindowHostBase {
   }
 
   teardown() {
+    for (const connection of this.#connections) {
+      connection.cancel();
+    }
+    this.#connections.clear();
+
     for (const handle of this.#acquiredHandles) {
       handle.dispose();
     }
@@ -189,22 +199,141 @@ export class IframeWindowHost extends PanelWindowHostBase {
     return this.#recordFor(name).listeners.get(type)?.size ?? 0;
   }
 
-  resolveWindow(name, geometry) {
+  resolveWindow(name, resolution) {
     this.resolveCount++;
+    this.resolutions.push(resolution);
 
     if (this.#nextResolveRefused) {
       this.#nextResolveRefused = false;
       return null;
     }
 
-    let record = this.#windows.get(name);
+    const existing = this.#windows.get(name);
+
+    // Adopting reveals whatever is already under the name and navigates
+    // nothing, which is the whole reason it can answer synchronously.
+    if (resolution.intent === "adopt") {
+      return (
+        existing && !existing.closed ? existing : this.#createWindow(name)
+      ).window;
+    }
+
+    const geometry = resolution.geometry;
+    let record = existing;
+
     if (!record || record.closed) {
       record = this.#createWindow(name, geometry);
     } else if (geometry) {
       record.geometry = { ...geometry };
     }
 
+    // Opening navigates, so whatever was in it is on its way out.
+    record.arrived = false;
     return record.window;
+  }
+
+  /**
+   * `Window.document` is unforgeable, so a window that has gone somewhere we
+   * cannot look is expressed here rather than on the window itself.
+   */
+  readDocument(panelWindow) {
+    for (const record of this.#windows.values()) {
+      if (record.window === panelWindow && record.unreachable) {
+        return null;
+      }
+    }
+
+    return super.readDocument(panelWindow);
+  }
+
+  /** The seam the host schedules readiness probes through. */
+  scheduleProbe(name, run) {
+    const record = this.#recordFor(name);
+    const entry = { run };
+    record.probes.push(entry);
+
+    return () => {
+      const at = record.probes.indexOf(entry);
+      if (at !== -1) {
+        record.probes.splice(at, 1);
+      }
+    };
+  }
+
+  /** Runs exactly one queued probe, the way one turn of the budget would. */
+  tick(name) {
+    const record = this.#recordFor(name);
+    const entry = record.probes.shift();
+
+    if (!entry) {
+      throw new Error(
+        `no probe is queued for "${name}"; the connection has stopped looking`
+      );
+    }
+
+    entry.run();
+  }
+
+  /** Ticks until the connection gives up, so a test never counts by hand. */
+  expireConnection(name) {
+    const record = this.#recordFor(name);
+
+    for (let spent = 0; spent < 200; spent++) {
+      if (record.probes.length === 0) {
+        return;
+      }
+
+      this.tick(name);
+    }
+
+    throw new Error(`"${name}" never stopped probing`);
+  }
+
+  /** The served shell arrives in the window. */
+  finishLoad(name) {
+    const record = this.#recordFor(name);
+
+    // A navigation replaces the window's global, so anything registered on the
+    // one that was there before it is gone. Nothing that survives that in the
+    // double would survive it in a browser.
+    for (const [type, callbacks] of record.listeners) {
+      for (const callback of callbacks) {
+        record.window.removeEventListener(type, callback);
+      }
+      callbacks.clear();
+    }
+
+    writeShellFixture(record.window.document, name);
+    record.arrived = true;
+  }
+
+  /** The window finishes loading something that is not the shell. */
+  loadForeignPage(name) {
+    const record = this.#recordFor(name);
+    writeForeignPage(record.window.document);
+    record.arrived = true;
+  }
+
+  /** Reading the window's document throws, as a cross-origin hop makes it. */
+  makeDocumentUnreachable(name) {
+    this.#recordFor(name).unreachable = true;
+  }
+
+  /** The message the served shell posts once it has rendered. */
+  announceReady(name, { source } = {}) {
+    const record = this.#recordFor(name);
+    const event = new MessageEvent("message", {
+      data: { type: "d-panel-dock:ready", key: name },
+    });
+
+    // `source` is read-only on a constructed MessageEvent, and forging it is
+    // exactly what one of these tests needs to do.
+    Object.defineProperty(event, "source", {
+      configurable: true,
+      value: source === undefined ? record.window : source,
+    });
+
+    this.openerEvents.dispatchEvent(event);
   }
 
   #createWindow(name, geometry = DEFAULT_GEOMETRY) {
@@ -226,8 +355,25 @@ export class IframeWindowHost extends PanelWindowHostBase {
       listeners: new Map(),
       measureCalls: 0,
       nextAnimationFrame: 1,
+      probes: [],
+      arrived: false,
+      unreachable: false,
       window: frame.contentWindow,
     };
+
+    // What the host tells "still on its way" from "arrived somewhere". A real
+    // window sits on a blank document until its navigation commits; an iframe
+    // written into by hand never changes URL, so the double says so explicitly.
+    Object.defineProperties(record.window.document, {
+      URL: {
+        configurable: true,
+        get: () => (record.arrived ? "/panel-window/served" : "about:blank"),
+      },
+      readyState: {
+        configurable: true,
+        get: () => (record.arrived ? "complete" : "loading"),
+      },
+    });
 
     const addEventListener = record.window.addEventListener.bind(record.window);
     const removeEventListener = record.window.removeEventListener.bind(
@@ -358,20 +504,41 @@ export class IframeWindowHost extends PanelWindowHostBase {
     return record;
   }
 
+  /** Counts a handle the way the double's assertions expect, however it arrived. */
+  #track(handle, name) {
+    if (this.#mountlessWindows.delete(name)) {
+      Object.defineProperty(handle, "mount", { value: null });
+    }
+
+    const record = this.#recordFor(name);
+    const dispose = handle.dispose.bind(handle);
+    handle.dispose = () => {
+      record.disposeCalls++;
+      dispose();
+    };
+    this.#acquiredHandles.add(handle);
+  }
+
   #remember(outcome, name) {
     if (outcome.status === "acquired") {
-      if (this.#mountlessWindows.delete(name)) {
-        Object.defineProperty(outcome.handle, "mount", { value: null });
-      }
-
-      const record = this.#recordFor(name);
-      const dispose = outcome.handle.dispose.bind(outcome.handle);
-      outcome.handle.dispose = () => {
-        record.disposeCalls++;
-        dispose();
-      };
-      this.#acquiredHandles.add(outcome.handle);
+      this.#track(outcome.handle, name);
+      return outcome;
     }
+
+    // A connection is not a handle yet, so it is followed rather than tracked:
+    // whatever it becomes still has to be counted, still has to honour a
+    // withheld mount, and still has to be released by teardown.
+    if (outcome.status === "connecting") {
+      this.#connections.add(outcome.connection);
+      outcome.connection.onReady((handle) => {
+        this.#connections.delete(outcome.connection);
+        this.#track(handle, name);
+      });
+      outcome.connection.onFailed(() =>
+        this.#connections.delete(outcome.connection)
+      );
+    }
+
     return outcome;
   }
 }

@@ -129,6 +129,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
     );
 
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "window-rendering");
 
     const panel = popupPanel(this.host, "window-rendering");
     assert
@@ -172,6 +173,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
     );
 
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "picker-state");
 
     const doc = this.host.windowFor("picker-state").document;
     assert
@@ -222,6 +224,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
     state.storageKey = "other-key";
     await settled();
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "construction-key");
 
     assert.deepEqual(
       this.host.openKeys,
@@ -262,6 +265,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "side-return");
     this.host.setMeasurement("side-return", geometry);
 
     await click(popupButton(this.host, "side-return", ".--bottom"));
@@ -301,6 +305,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "focus-existing");
 
     await click(popupButton(this.host, "focus-existing", WINDOW_BUTTON));
 
@@ -363,7 +368,11 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       title: "Already held",
       note: { title: "Away", body: "Still away" },
     });
-    assert.strictEqual(first.status, "acquired", "the competing lease exists");
+    assert.strictEqual(
+      first.status,
+      "connecting",
+      "the competing lease exists"
+    );
     const warn = sinon.stub(console, "warn");
 
     await render(
@@ -756,6 +765,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
         </template>
       );
       await click(WINDOW_BUTTON);
+      await loadWindow(this.host, key);
       this.host.setMeasurement(key, geometry);
 
       this.host[readerAction](key);
@@ -795,6 +805,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "close-panel");
     this.host.setMeasurement("close-panel", geometry);
 
     state.isOpen = false;
@@ -826,6 +837,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, key);
 
     run(() => {
       state.isOpen = false;
@@ -865,6 +877,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, key);
 
     run(() => {
       state.windowable = false;
@@ -898,6 +911,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "disable-windowable");
 
     state.windowable = false;
     await settled();
@@ -925,6 +939,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "destroy-windowed");
 
     await clearRender();
 
@@ -969,8 +984,13 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
 
+    // Loaded inside the same turn, so a handle exists but its branch has not
+    // rendered yet — which is the state this watchdog is about. Destroying
+    // before the window arrives at all is the connecting case, tested apart.
     run(() => {
       document.querySelector(WINDOW_BUTTON).click();
+      this.host.finishLoad(key);
+      this.host.tick(key);
       state.renderPanel = false;
     });
     await settled();
@@ -1007,6 +1027,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       </template>
     );
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "resize-window");
 
     this.host.resizeReader("resize-window", geometry);
     await flushWindowResize(this.host, "resize-window");
@@ -1055,6 +1076,7 @@ module("Integration | Component | panel dock window mode", function (hooks) {
       );
 
     await click(WINDOW_BUTTON);
+    await loadWindow(this.host, "unclamped-window");
 
     assert.deepEqual(
       this.host.measurementFor("unclamped-window"),

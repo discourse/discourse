@@ -12,8 +12,8 @@ import DTooltips from "discourse/float-kit/components/d-tooltips";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import { adjacentTabStop } from "discourse/float-kit/lib/tab-order";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { writeShellFixture } from "discourse/tests/helpers/panel-dock-window-shell";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
-import { writeSkeleton } from "discourse/ui-kit/panel-dock/-internals/window-skeleton";
 
 /**
  * Oracle for float-kit rendering into a document that is not the one the
@@ -35,13 +35,7 @@ module(
       this.frames.forEach((frame) => frame.remove());
     });
 
-    /**
-     * A blank document in another realm, with none of a panel window's shell.
-     *
-     * The shell deliberately hides its document until the stylesheets it clones
-     * have settled, which would make every element in it unfocusable — real
-     * behaviour, but not what these cases are about.
-     */
+    /** A blank document in another realm, with none of a panel window's shell. */
     function bareDocument(context) {
       const frame = document.createElement("iframe");
       frame.setAttribute("aria-hidden", "true");
@@ -62,9 +56,8 @@ module(
       context.frames.push(frame);
 
       const doc = frame.contentDocument;
-      const skeleton = writeSkeleton(doc, "float-kit-oracle", "Oracle");
-      context.frames.push({ remove: () => skeleton.dispose() });
-      return { doc, mount: skeleton.mount };
+      const { mount } = writeShellFixture(doc, "float-kit-oracle");
+      return { doc, mount };
     }
 
     test("foreign document menu content renders into that document's outlet", async function (assert) {

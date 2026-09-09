@@ -10,7 +10,6 @@ import {
   windowHostFor,
 } from "discourse/ui-kit/panel-dock/-internals/window-host";
 import { shellKey } from "discourse/ui-kit/panel-dock/-internals/window-shell";
-import { skeletonKey } from "discourse/ui-kit/panel-dock/-internals/window-skeleton";
 
 const STRINGS = Object.freeze({
   title: "Window host oracle",
@@ -20,7 +19,10 @@ const STRINGS = Object.freeze({
   },
 });
 
-const NOTE_SELECTOR = "main.d-panel-dock-window__reconnecting";
+// Permanent in the served shell and toggled by `hidden`, rather than inserted
+// and removed the way the opener-written skeleton did it — so "showing" has to
+// be part of the selector or every assertion about it is true at once.
+const NOTE_SELECTOR = ".d-panel-dock-window__reconnecting:not([hidden])";
 
 function acquired(outcome, assert) {
   assert.strictEqual(outcome.status, "acquired", "the lease is acquired");
@@ -38,6 +40,20 @@ function watch(connection) {
   connection.onReady((handle) => events.ready.push(handle));
   connection.onFailed((reason) => events.failed.push(reason));
   return events;
+}
+
+/** Drives an open all the way through the load its connection waits for. */
+function opened(host, key, assert, geometry) {
+  const events = watch(connecting(host.open(key, STRINGS, geometry), assert));
+  host.finishLoad(key);
+  host.tick(key);
+  assert.strictEqual(
+    events.ready.length,
+    1,
+    "the loaded window is delivered to the connection"
+  );
+
+  return events.ready[0];
 }
 
 async function flushResize(host, name) {
@@ -75,7 +91,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       top: baseline.screenY + 29,
     };
 
-    const handle = acquired(host.open(key, STRINGS, measured), assert);
+    const handle = opened(host, key, assert, measured);
 
     assert.deepEqual(
       handle.measure(),
@@ -83,7 +99,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       "the geometry comes from the caller without accidental clamping"
     );
     assert.strictEqual(
-      skeletonKey(handle.mount.ownerDocument),
+      shellKey(handle.mount.ownerDocument),
       key,
       "the fresh document is marked with its lease key"
     );
@@ -105,7 +121,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       "a refused browser window is unavailable"
     );
 
-    const retry = acquired(host.open("blocked-window", STRINGS), assert);
+    const retry = opened(host, "blocked-window", assert);
     assert.false(retry.closed, "the refusal did not leave a phantom lease");
     assert.strictEqual(
       host.resolveCount,
@@ -182,7 +198,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
     const firstHost = hostFor(this);
     const secondHost = hostFor(this);
     const key = "shared-lease";
-    const first = acquired(firstHost.open(key, STRINGS), assert);
+    const first = opened(firstHost, key, assert);
 
     assert.deepEqual(
       secondHost.adopt(key, STRINGS),
@@ -201,14 +217,12 @@ module("Integration | Component | panel dock window host", function (hooks) {
     const firstHost = hostFor(this);
     const secondHost = hostFor(this);
     const key = "closed-before-open";
-    const stale = acquired(firstHost.open(key, STRINGS), assert);
+    const stale = opened(firstHost, key, assert);
     firstHost.closeAsReader(key);
 
-    const outcome = secondHost.open(key, STRINGS);
-    const replacementClosed = outcome.handle?.closed;
+    const replacementClosed = opened(secondHost, key, assert).closed;
 
     assert.true(stale.closed, "the stale handle observes its closed window");
-    assert.strictEqual(outcome.status, "acquired", "open reclaims the lease");
     assert.false(replacementClosed, "open acquires a fresh live window");
     assert.strictEqual(
       firstHost.listenerCount("pagehide"),
@@ -221,7 +235,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
     const firstHost = hostFor(this);
     const secondHost = hostFor(this);
     const key = "closed-before-adopt";
-    acquired(firstHost.open(key, STRINGS), assert);
+    opened(firstHost, key, assert);
     firstHost.closeAsReader(key);
     const prepared = secondHost.seedPreparedWindow(key, key);
 
@@ -246,7 +260,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
     const owner = hostFor(this);
     const contender = hostFor(this);
     const key = "leased-before-refusal";
-    const first = acquired(owner.open(key, STRINGS), assert);
+    const first = opened(owner, key, assert);
     contender.armNextResolveRefusal();
 
     assert.deepEqual(
@@ -275,12 +289,19 @@ module("Integration | Component | panel dock window host", function (hooks) {
       previous.window,
       "adoption reuses the named browser window"
     );
-    assert.notStrictEqual(
+    // The mount is the one the server rendered, so adoption takes it over
+    // rather than replacing it — what must not survive is the previous page's
+    // tree inside it.
+    assert.strictEqual(
       handle.mount,
       previous.mount,
-      "adoption creates a new mount for the new page"
+      "adoption takes over the served mount"
     );
-    assert.false(previous.mount.isConnected, "the orphaned tree is removed");
+    assert.strictEqual(
+      handle.mount.childElementCount,
+      0,
+      "the orphaned tree is removed"
+    );
     assert.strictEqual(
       handle.mount.childElementCount,
       0,
@@ -305,7 +326,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
     );
     assert.strictEqual(host.closeCount(key), 1, "it is closed exactly once");
 
-    const retry = acquired(host.open(key, STRINGS), assert);
+    const retry = opened(host, key, assert);
     assert.notStrictEqual(
       retry.mount.ownerDocument.defaultView,
       blank,
@@ -319,7 +340,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
     const previous = host.seedPreparedWindow(key, "some-other-key");
     previous.mount.appendChild(previous.window.document.createElement("aside"));
 
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
 
     assert.strictEqual(
       handle.mount.ownerDocument.defaultView,
@@ -336,7 +357,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       "the old rendered tree is orphaned"
     );
     assert.strictEqual(
-      skeletonKey(handle.mount.ownerDocument),
+      shellKey(handle.mount.ownerDocument),
       key,
       "the new key wins"
     );
@@ -347,9 +368,9 @@ module("Integration | Component | panel dock window host", function (hooks) {
     const secondHost = hostFor(this);
     const thirdHost = hostFor(this);
     const key = "generation-guard";
-    const first = acquired(firstHost.open(key, STRINGS), assert);
+    const first = opened(firstHost, key, assert);
     first.dispose();
-    const second = acquired(secondHost.open(key, STRINGS), assert);
+    const second = opened(secondHost, key, assert);
 
     first.dispose();
     assert.deepEqual(
@@ -363,7 +384,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
     );
 
     second.dispose();
-    const third = acquired(thirdHost.open(key, STRINGS), assert);
+    const third = opened(thirdHost, key, assert);
     assert.true(
       third.generation > second.generation,
       "a later successful lease never reuses a generation"
@@ -373,7 +394,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host focuses and measures the live window while preserving a good measurement", function (assert) {
     const host = hostFor(this);
     const key = "focus-and-measure";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
     const liveMeasurement = host.measurementFor(key);
 
     handle.focus();
@@ -413,15 +434,21 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host drives the shell note without replacing its mount", function (assert) {
     const host = hostFor(this);
     const key = "manual-note";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
+    // A handle only meets an unloading page once the panel has rendered
+    // into its window; an uncommitted one is closed rather than handed on.
+    handle.commit();
     const mount = handle.mount;
     const doc = mount.ownerDocument;
 
     handle.showNote();
     assert.dom(NOTE_SELECTOR, doc).exists("the lease note is shown");
     assert
+      .dom(`${NOTE_SELECTOR} [role="status"]`, doc)
+      .hasText(STRINGS.note.body, "the page writes the sentence it announces");
+    assert
       .dom(`${NOTE_SELECTOR} .empty-state__title`, doc)
-      .hasText(STRINGS.note.title, "the resolved note title is used");
+      .hasAnyText("the heading came with the served shell");
     assert.strictEqual(
       handle.mount,
       mount,
@@ -440,7 +467,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host reports reader pagehide only while its lease is live", function (assert) {
     const host = hostFor(this);
     const key = "reader-pagehide";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
     let calls = 0;
     handle.onPagehide(() => calls++);
 
@@ -455,7 +482,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host reports reader resize only while its lease is live", async function (assert) {
     const host = hostFor(this);
     const key = "reader-resize";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
     let calls = 0;
     handle.onResize(() => calls++);
     const initial = host.measurementFor(key);
@@ -492,7 +519,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host coalesces resize work on the popup animation frame", function (assert) {
     const host = hostFor(this);
     const key = "popup-resize-frame";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
     const openingFrames = new Map();
     let nextFrame = 1;
     let calls = 0;
@@ -521,7 +548,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host reader close updates closed and invokes pagehide", function (assert) {
     const host = hostFor(this);
     const key = "reader-close";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
     let calls = 0;
     handle.onPagehide(() => calls++);
 
@@ -543,7 +570,10 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host keeps a bfcache lease mounted and resumes it in place", async function (assert) {
     const host = hostFor(this);
     const key = "bfcache-resume";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
+    // A handle only meets an unloading page once the panel has rendered
+    // into its window; an uncommitted one is closed rather than handed on.
+    handle.commit();
     const generation = handle.generation;
     const mount = handle.mount;
     let pagehideCalls = 0;
@@ -609,7 +639,10 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host persisted pageshow does not resume a suspended handle", async function (assert) {
     const host = hostFor(this);
     const key = "suspended-after-pause";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
+    // A handle only meets an unloading page once the panel has rendered
+    // into its window; an uncommitted one is closed rather than handed on.
+    handle.commit();
     let pagehideCalls = 0;
     let resizeCalls = 0;
     handle.onPagehide(() => pagehideCalls++);
@@ -642,7 +675,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host attempts every popup cleanup operation when listener removal throws", function (assert) {
     const host = hostFor(this);
     const key = "independent-popup-cleanup";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
     handle.onResize(() => {});
     host.resizeReader(key, host.measurementFor(key));
     host.failWindowOperation(key, "removeEventListener:pagehide");
@@ -662,7 +695,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
     for (const transition of ["pause", "suspend", "dispose"]) {
       const host = hostFor(this);
       const key = `failed-frame-cancellation-${transition}`;
-      const handle = acquired(host.open(key, STRINGS), assert);
+      const handle = opened(host, key, assert);
       let calls = 0;
       handle.onResize(() => calls++);
       host.resizeReader(key, host.measurementFor(key));
@@ -689,7 +722,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host ignores a queued resize frame after pause and resume when cancellation throws", function (assert) {
     const host = hostFor(this);
     const key = "failed-frame-cancellation-resume";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
     let calls = 0;
     handle.onResize(() => calls++);
     host.resizeReader(key, host.measurementFor(key));
@@ -709,7 +742,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host stale resize frame cannot discard its successor", function (assert) {
     const host = hostFor(this);
     const key = "superseded-resize-frame";
-    acquired(host.open(key, STRINGS), assert);
+    opened(host, key, assert);
     host.resizeReader(key, host.measurementFor(key));
     const staleFrame = host.popupAnimationFrameCallback(key);
 
@@ -731,7 +764,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       const firstHost = hostFor(this);
       const secondHost = hostFor(this);
       const key = `throwing-dispose-${operation}`;
-      const handle = acquired(firstHost.open(key, STRINGS), assert);
+      const handle = opened(firstHost, key, assert);
       let pagehideCalls = 0;
       let disposeError;
       handle.onPagehide(() => pagehideCalls++);
@@ -762,7 +795,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       );
       assert.strictEqual(
         secondHost.open(key, STRINGS).status,
-        "acquired",
+        "connecting",
         `${operation} errors do not retain the lease`
       );
     }
@@ -771,7 +804,10 @@ module("Integration | Component | panel dock window host", function (hooks) {
   test("window host permanent pagehide suspends teardown without closing the window", function (assert) {
     const host = hostFor(this);
     const key = "reload-suspension";
-    const handle = acquired(host.open(key, STRINGS), assert);
+    const handle = opened(host, key, assert);
+    // A handle only meets an unloading page once the panel has rendered
+    // into its window; an uncommitted one is closed rather than handed on.
+    handle.commit();
     const panelWindow = host.windowFor(key);
 
     host.fireOpenerPagehide(false);
@@ -824,7 +860,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       "an idle host installs nothing"
     );
 
-    const first = acquired(host.open("listener-first", STRINGS), assert);
+    const first = opened(host, "listener-first", assert);
     assert.strictEqual(
       host.listenerCount("pagehide"),
       1,
@@ -836,7 +872,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       "the first lease installs pageshow"
     );
 
-    const second = acquired(host.open("listener-second", STRINGS), assert);
+    const second = opened(host, "listener-second", assert);
     assert.strictEqual(
       host.listenerCount("pagehide"),
       1,
@@ -869,8 +905,8 @@ module("Integration | Component | panel dock window host", function (hooks) {
 
   test("window host willDestroy releases every held window and lease", function (assert) {
     const host = hostFor(this);
-    const first = acquired(host.open("destroy-first", STRINGS), assert);
-    const second = acquired(host.open("destroy-second", STRINGS), assert);
+    const first = opened(host, "destroy-first", assert);
+    const second = opened(host, "destroy-second", assert);
 
     host.willDestroy();
 
@@ -883,8 +919,8 @@ module("Integration | Component | panel dock window host", function (hooks) {
     );
 
     const replacement = hostFor(this);
-    acquired(replacement.open("destroy-first", STRINGS), assert);
-    acquired(replacement.open("destroy-second", STRINGS), assert);
+    opened(replacement, "destroy-first", assert);
+    opened(replacement, "destroy-second", assert);
   });
 
   test("window host owner destruction releases every held window and lease", async function (assert) {
@@ -898,8 +934,8 @@ module("Integration | Component | panel dock window host", function (hooks) {
     const addEventListener = sinon.spy(window, "addEventListener");
     const removeEventListener = sinon.spy(window, "removeEventListener");
     const host = windowHostFor(owner);
-    acquired(host.open("owner-destroy-first", STRINGS), assert);
-    acquired(host.open("owner-destroy-second", STRINGS), assert);
+    connecting(host.open("owner-destroy-first", STRINGS), assert);
+    connecting(host.open("owner-destroy-second", STRINGS), assert);
     const pagehideListener = addEventListener
       .getCalls()
       .find((call) => call.args[0] === "pagehide").args[1];
@@ -925,8 +961,8 @@ module("Integration | Component | panel dock window host", function (hooks) {
     );
 
     const replacement = hostFor(this);
-    acquired(replacement.open("owner-destroy-first", STRINGS), assert);
-    acquired(replacement.open("owner-destroy-second", STRINGS), assert);
+    opened(replacement, "owner-destroy-first", assert);
+    opened(replacement, "owner-destroy-second", assert);
 
     host.willDestroy();
   });
@@ -950,7 +986,7 @@ module("Integration | Component | panel dock window host", function (hooks) {
       firstLookup,
       "the owner returns one shared host"
     );
-    acquired(firstLookup.open("registered-host", STRINGS), assert);
+    opened(firstLookup, "registered-host", assert);
   });
 
   /*

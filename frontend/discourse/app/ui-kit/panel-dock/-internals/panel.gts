@@ -31,6 +31,7 @@ import {
   SIDES,
 } from "discourse/ui-kit/panel-dock/-internals/sides";
 import {
+  type PanelWindowConnection,
   type PanelWindowGeometry,
   type PanelWindowHandle,
   type PanelWindowHost,
@@ -204,7 +205,14 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    */
   @service declare siteSettings: Record<string, unknown>;
 
-  /** Retries a held adoption once the panel is rendered and allowed to. */
+  /**
+   * The docked branch's own lifetime.
+   *
+   * It retries a held adoption, and it is also the only thing still rendered
+   * while a window is on its way — so it is what notices a panel closing out
+   * from under one, which never reaches the redocking path because the panel
+   * is already docked.
+   */
   openedGuard = modifier((_element, [windowable]: [boolean | undefined]) => {
     if (this.#adoptionPending && windowable) {
       // A full turn, not a render pass: at render time a panel that is being
@@ -216,6 +224,21 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
         }
       });
     }
+
+    return () => {
+      // Deferred and re-read, because at cleanup time a panel that merely
+      // moved into its window looks exactly like one that closed, and a panel
+      // that closed and reopened inside a turn is still waiting legitimately.
+      next(() => {
+        if (this.#isReleasing || !this._connecting) {
+          return;
+        }
+
+        if (!this.args.isOpen || !this.args.windowable) {
+          this.#cancelConnection();
+        }
+      });
+    };
   });
 
   /**
@@ -240,6 +263,14 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
       // Deferred a full turn, and re-checked when it runs, because at cleanup
       // time a panel that is being taken apart still looks like a live one.
       next(() => {
+        // The generation again, and not only the mount count: by the time this
+        // runs the panel may have returned and asked for a *second* window,
+        // which has mounted no branch of its own yet — so the count still
+        // matches while the placement it was captured for is long gone.
+        if (this.#generation !== generation) {
+          return;
+        }
+
         // A panel that closed and opened again inside one turn is already back
         // in its window, and returning it now would close a live one.
         if (!this.#isReleasing && this.#branchMounts === mount) {
@@ -338,6 +369,15 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    */
   @tracked _handle: PanelWindowHandle | null = null;
 
+  /**
+   * The window this panel asked for and has not been given yet.
+   *
+   * Not a mode: the panel stays docked and unchanged for the whole wait, and
+   * stores and reports nothing. A window that never arrives has to cost the
+   * reader nothing.
+   */
+  @tracked _connecting: PanelWindowConnection | null = null;
+
   constructor(owner: Owner, args: PanelDockChassisSignature["Args"]) {
     super(owner, args);
 
@@ -365,6 +405,7 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
 
     registerDestructor(this, () => {
       this.#releasing = true;
+      this.#cancelConnection();
       this._handle?.dispose();
     });
   }
@@ -557,6 +598,13 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
       return;
     }
 
+    // The lease would refuse a second request anyway, but warning at a reader
+    // for pressing twice is noise. Raise what they already asked for.
+    if (this._connecting) {
+      this._connecting.focus();
+      return;
+    }
+
     if (!this.#windowKey) {
       return;
     }
@@ -585,7 +633,12 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
       return;
     }
 
-    this.#takeWindow(outcome.handle);
+    if (outcome.status === "acquired") {
+      this.#takeWindow(outcome.handle);
+      return;
+    }
+
+    this.#beginWindow(outcome.connection);
   }
 
   /**
@@ -595,6 +648,8 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    * begun closing reports nothing worth keeping.
    */
   #redock() {
+    this.#cancelConnection();
+
     if (!this.isWindowed) {
       return;
     }
@@ -668,6 +723,80 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    * because there was nothing to render into — would otherwise leave the
    * window leased with no panel in it and nothing to release it.
    */
+  /**
+   * Waits for a window without moving into it.
+   *
+   * The panel stays where it is for the whole wait: nothing is stored, nothing
+   * is reported, and no branch is torn down. Only an arrival moves it.
+   */
+  #beginWindow(connection: PanelWindowConnection) {
+    this._connecting = connection;
+
+    // Captured rather than bumped. Everything that gives the attempt up bumps
+    // the generation, so a settlement that arrives afterwards recognizes itself
+    // as stale without having to know which of them ran.
+    const generation = this.#generation;
+
+    connection.onReady((handle) => {
+      if (this.#generation !== generation) {
+        return;
+      }
+
+      this._connecting = null;
+
+      // Re-read here rather than trusted from when the window was asked for:
+      // an argument can change without the generation moving, so the panel may
+      // have closed or lost permission while the window was still coming.
+      if (!this.#mayWindow) {
+        handle.dispose();
+        return;
+      }
+
+      this.#takeWindow(handle);
+    });
+
+    connection.onFailed(() => {
+      if (this.#generation !== generation) {
+        return;
+      }
+
+      this._connecting = null;
+
+      if (this.#isReleasing) {
+        return;
+      }
+
+      warn("The panel's window never arrived, so it stays docked.", false, {
+        id: "discourse.panel-dock.window-unavailable",
+      });
+    });
+  }
+
+  /** Whether a window would still be the right place for this panel to be. */
+  get #mayWindow() {
+    return !this.#isReleasing && !!this.args.isOpen && !!this.args.windowable;
+  }
+
+  /** Gives up a window that has not arrived, closing it if it since has. */
+  #cancelConnection() {
+    const connection = this._connecting;
+
+    if (!connection) {
+      return;
+    }
+
+    // Bumped before cancelling, because cancelling settles the connection
+    // synchronously and the handlers armed above have to read as stale by the
+    // time they run.
+    this.#generation++;
+
+    if (!this.#isReleasing) {
+      this._connecting = null;
+    }
+
+    connection.cancel();
+  }
+
   #takeWindow(handle: PanelWindowHandle) {
     this.#enter("window", handle);
     this.#awaitingWindow = true;
@@ -722,6 +851,11 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
 
     this.#awaitingWindow = false;
     this._handle?.clearNote();
+
+    // From here the stored placement says "window", so a later page has
+    // something telling it to come looking and the window may be handed on
+    // rather than closed when this one unloads.
+    this._handle?.commit();
     this.#persist();
     this.#report("window");
   }

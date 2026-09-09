@@ -7,18 +7,26 @@
  * window it left behind and take it over rather than opening a second one.
  *
  * The lease also outlives the page in one direction only. When the page goes
- * away for good the window stays open showing a note, because closing it would
- * destroy work the reader can still see; when the page is merely suspended the
- * window keeps its whole rendered tree and is resumed in place.
+ * away for good a window the reader can still see stays open showing a note,
+ * because closing it would destroy work in front of them; when the page is
+ * merely suspended the window keeps its whole rendered tree and is resumed in
+ * place. A window the *storage* does not know about yet is the exception, and
+ * is closed: nothing records it, so no later page would ever come for it.
+ *
+ * Opening is asynchronous and adopting is not. The window is a page the server
+ * renders, so a new one arrives over the network, while re-opening an existing
+ * one by name hands back the same window without navigating it — which is what
+ * lets a panel that belongs in a window be taken back into it before the first
+ * render, with no flash against an edge on the way.
  */
 
 import type Owner from "@ember/owner";
+import getURL from "discourse/lib/get-url";
 import {
-  type PanelWindowNote,
-  type PanelWindowSkeleton,
-  skeletonKey,
-  writeSkeleton,
-} from "discourse/ui-kit/panel-dock/-internals/window-skeleton";
+  adoptShell,
+  type PanelWindowShell,
+  shellKey,
+} from "discourse/ui-kit/panel-dock/-internals/window-shell";
 
 /** The registration a host is looked up under, so a test can supply its own. */
 export const WINDOW_HOST_REGISTRATION = "panel-dock:window-host";
@@ -36,6 +44,20 @@ export interface PanelWindowGeometry {
 
   /** The window's distance from the top of the screen, in pixels. */
   top: number;
+}
+
+/** What a window's note says, kept apart from the markup the server rendered. */
+export interface PanelWindowNote {
+  /** The heading, which the server has already rendered into the shell. */
+  title: string;
+
+  /**
+   * The body, written into the shell's live region at the moment it is shown.
+   *
+   * Not served populated: a live region that already holds its text and is
+   * merely unhidden is not a content change, and does not announce.
+   */
+  body: string;
 }
 
 /** The text a window needs, resolved once per lease so later writes are pure DOM. */
@@ -105,26 +127,89 @@ export interface PanelWindowHandle {
    * window standing. Safe to call more than once.
    */
   dispose(): void;
+
+  /**
+   * Records that the panel really is in this window and something says so.
+   *
+   * Until this is called nothing outside the page knows the window exists, so
+   * a page that unloads before it must close the window rather than hand it
+   * on: no later page would have anything telling it to come looking.
+   */
+  commit(): void;
 }
+
+/**
+ * A window that has been asked for and has not arrived.
+ *
+ * Deliberately not a {@link PanelWindowHandle}: holding a handle means holding
+ * a live mount, and this has none yet. It does hold the key, from the moment
+ * it is asked for, so two presses cannot race for one window.
+ */
+export interface PanelWindowConnection {
+  /** The generation the eventual handle will carry, reserved at lease time. */
+  readonly generation: number;
+
+  /** Raises the window on its way, for a reader who asked a second time. */
+  focus(): void;
+
+  /** Fires once, when the window has loaded a shell this panel may take. */
+  onReady(callback: (handle: PanelWindowHandle) => void): void;
+
+  /**
+   * Fires once, when the window is given up on.
+   *
+   * The lease is already released and the window already closed by the time
+   * this runs, so a caller may ask for another window from inside it.
+   */
+  onFailed(callback: (reason: PanelWindowFailure) => void): void;
+
+  /** Gives up: stops probing, closes the window, releases the key. */
+  cancel(): void;
+}
+
+/** Why a window that was asked for never became one the panel could use. */
+export type PanelWindowFailure =
+  /** It went away before it arrived. */
+  | "closed"
+  /** It never finished arriving within the budget it was given. */
+  | "timeout"
+  /** It finished arriving as something that is not this panel's shell. */
+  | "foreign";
 
 /**
  * What came of asking for a window.
  *
- * The three cases are deliberately distinct rather than a nullable handle,
- * because only `unavailable` means "there is no window to be had" and may
- * rewrite a stored layout. `already-leased` means another panel holds this
- * key and the caller must change nothing.
+ * The cases are deliberately distinct rather than a nullable handle, because
+ * only `unavailable` means "there is no window to be had" and may rewrite a
+ * stored layout. `already-leased` means another panel holds this key and the
+ * caller must change nothing.
  */
 export type PanelWindowOutcome =
   | { status: "acquired"; handle: PanelWindowHandle }
+  | { status: "connecting"; connection: PanelWindowConnection }
   | { status: "already-leased" }
   | { status: "unavailable" };
+
+/**
+ * What a window is being resolved for.
+ *
+ * Only one of the two carries a URL, because naming an existing window with
+ * one navigates it — destroying the very tree adoption exists to take over.
+ * Making that a type rather than a rule is the point.
+ */
+export type WindowResolution =
+  | { intent: "open"; url: string; geometry?: PanelWindowGeometry | null }
+  | { intent: "adopt" };
 
 /** Supplies panel windows and holds the leases on them. */
 export interface PanelWindowHost {
   /**
    * Opens a new window. Must be called synchronously from the gesture that
    * asked for it, or the browser will refuse it.
+   *
+   * The key is held from here, but the window is a page that has to arrive, so
+   * this answers `connecting` and the caller waits. Only a refused popup is
+   * still answerable in the same breath.
    *
    * @param geometry - Where to put it, when a previous session measured it.
    */
@@ -148,36 +233,50 @@ export interface PanelWindowHost {
  * browser: two hosts asking for the same key are asking for the same window,
  * and the lease has to be at least as wide as the thing it guards.
  */
-const leases = new Map<string, PanelWindow>();
+const leases = new Map<string, Lease>();
 
 let lastGeneration = 0;
 
 /**
- * The handle currently holding a key, if one still has anything to hold.
+ * What a key can be held by.
  *
- * A window the reader closed leaves its handle behind until the panel notices,
- * and treating that as a live lease would strand the key for the rest of the
- * page's life. Reaping it here means asking for a window is always answerable.
+ * A window still loading holds its key exactly as firmly as one that arrived,
+ * or a second press would open a rival window onto the same name.
  */
-function heldLease(key: string): PanelWindow | undefined {
-  const handle = leases.get(key);
+interface Lease {
+  readonly closed: boolean;
+  dispose(): void;
+}
 
-  if (!handle) {
+/**
+ * The lease currently holding a key, if one still has anything to hold.
+ *
+ * A window the reader closed leaves its lease behind until the panel notices,
+ * and treating that as live would strand the key for the rest of the page's
+ * life. Reaping it here means asking for a window is always answerable.
+ */
+function heldLease(key: string): Lease | undefined {
+  const held = leases.get(key);
+
+  if (!held) {
     return undefined;
   }
 
-  if (handle.closed) {
-    handle.dispose();
+  if (held.closed) {
+    held.dispose();
     return undefined;
   }
 
-  return handle;
+  return held;
 }
 
 /** How a leased window reports back to the host holding it. */
 interface LeaseHolder {
   /** Called once the handle has let go of its window. */
   released(handle: PanelWindow): void;
+
+  /** Called once a connection has settled, either way. */
+  settled(connection: PendingWindow): void;
 }
 
 /**
@@ -188,9 +287,10 @@ interface LeaseHolder {
  * page's own lifecycle.
  */
 class PanelWindow implements PanelWindowHandle {
-  readonly generation = ++lastGeneration;
+  readonly generation: number;
   readonly mount: HTMLElement;
 
+  #committed = false;
   #holder: LeaseHolder;
   #key: string;
   #pagehideCallbacks: (() => void)[] = [];
@@ -199,7 +299,7 @@ class PanelWindow implements PanelWindowHandle {
   #resizeCallbacks: (() => void)[] = [];
   #resizeFrame?: number;
   #resizeGeneration = 0;
-  #skeleton: PanelWindowSkeleton;
+  #shell: PanelWindowShell;
   #strings: PanelWindowStrings;
   #suspended = false;
   #window: Window;
@@ -241,19 +341,33 @@ class PanelWindow implements PanelWindowHandle {
   };
 
   constructor(options: {
+    generation?: number;
     holder: LeaseHolder;
     key: string;
-    skeleton: PanelWindowSkeleton;
+    shell: PanelWindowShell;
     strings: PanelWindowStrings;
     window: Window;
   }) {
+    // Reserved when the window was asked for, when there is a connection to
+    // inherit it from: one lease is one generation, whether it arrived at once
+    // or over the network.
+    this.generation = options.generation ?? ++lastGeneration;
     this.#holder = options.holder;
     this.#key = options.key;
-    this.#skeleton = options.skeleton;
+    this.#shell = options.shell;
     this.#strings = options.strings;
     this.#window = options.window;
-    this.mount = options.skeleton.mount;
+    this.mount = options.shell.mount;
+
+    // Listening starts here rather than when the window was asked for, because
+    // a handle only exists once the window has finished arriving. A navigation
+    // replaces the window's global, so anything registered on the one that was
+    // there beforehand is gone by now.
     this.#listen();
+  }
+
+  commit(): void {
+    this.#committed = true;
   }
 
   get closed(): boolean {
@@ -273,7 +387,7 @@ class PanelWindow implements PanelWindowHandle {
       return;
     }
 
-    this.#skeleton.setNote(null);
+    this.#shell.setNote(null);
   }
 
   close(): void {
@@ -296,7 +410,7 @@ class PanelWindow implements PanelWindowHandle {
     // abandon it half done by throwing.
     try {
       this.#ignore();
-      this.#skeleton.dispose();
+      this.#shell.dispose();
     } catch {
       // Nothing reachable to clean up.
     }
@@ -365,7 +479,7 @@ class PanelWindow implements PanelWindowHandle {
 
     this.#paused = true;
     this.#ignore();
-    this.#skeleton.setNote(this.#strings.note);
+    this.#shell.setNote(this.#strings.note.body);
   }
 
   /** Reports again to a page that came back, under the same lease. */
@@ -376,11 +490,11 @@ class PanelWindow implements PanelWindowHandle {
 
     this.#paused = false;
     this.#listen();
-    this.#skeleton.setNote(null);
+    this.#shell.setNote(null);
   }
 
   showNote(): void {
-    this.#skeleton.setNote(this.#strings.note);
+    this.#shell.setNote(this.#strings.note.body);
   }
 
   /**
@@ -395,7 +509,16 @@ class PanelWindow implements PanelWindowHandle {
       return;
     }
 
-    this.#skeleton.setNote(this.#strings.note);
+    // A window nothing has recorded yet is not handed on, it is closed. The
+    // stored placement is what sends the next page looking for a window, and
+    // it does not say "window" until the panel has actually rendered into this
+    // one — so leaving it standing would strand it with nobody ever coming.
+    if (!this.#committed) {
+      this.dispose();
+      return;
+    }
+
+    this.#shell.setNote(this.#strings.note.body);
     this.#suspended = true;
     this.#ignore();
   }
@@ -437,6 +560,213 @@ class PanelWindow implements PanelWindowHandle {
   }
 }
 
+/** How many probes a window gets before it is given up on. */
+const CONNECT_TICKS = 60;
+
+/** How long between probes, in milliseconds. */
+const TICK_MS = 250;
+
+/**
+ * A window that has been asked for and is still arriving.
+ *
+ * It holds the key from the moment it is created, because the alternative is
+ * that a second press opens a rival window onto the same name while the first
+ * is still in flight.
+ *
+ * Readiness is settled by looking at the document, never by being told. The
+ * shell posts a message when it loads, and that is taken only as a hint to
+ * look now — a message cannot make an unready document ready, and cannot spend
+ * the budget either, or unrelated traffic on the page would exhaust it.
+ */
+class PendingWindow implements PanelWindowConnection, Lease {
+  readonly generation = ++lastGeneration;
+
+  #cancelProbe?: () => void;
+  #failedCallbacks: ((reason: PanelWindowFailure) => void)[] = [];
+  #holder: PanelWindowHostBase;
+  #key: string;
+  #readyCallbacks: ((handle: PanelWindowHandle) => void)[] = [];
+  #settled = false;
+  #strings: PanelWindowStrings;
+  #ticksLeft = CONNECT_TICKS;
+  #window: Window;
+
+  constructor(options: {
+    holder: PanelWindowHostBase;
+    key: string;
+    strings: PanelWindowStrings;
+    window: Window;
+  }) {
+    this.#holder = options.holder;
+    this.#key = options.key;
+    this.#strings = options.strings;
+    this.#window = options.window;
+    this.#armProbe();
+  }
+
+  get closed(): boolean {
+    try {
+      return this.#window.closed;
+    } catch {
+      return true;
+    }
+  }
+
+  /** Whether a message came from the window this connection is waiting on. */
+  wasSentBy(source: MessageEventSource | null): boolean {
+    return source === this.#window;
+  }
+
+  /** Looks at the window now, without spending any of its budget. */
+  probe(): void {
+    if (this.#settled) {
+      return;
+    }
+
+    if (this.closed) {
+      this.#fail("closed");
+      return;
+    }
+
+    const document = this.#holder.readDocument(this.#window);
+
+    // Unreadable means the window is somewhere we are not allowed to look,
+    // which our own route never is. It cannot become this panel's shell from
+    // there, so waiting only leaves a stranger's page on the reader's screen.
+    if (!document) {
+      this.#fail("foreign");
+      return;
+    }
+
+    const shell = adoptShell(document, this.#key);
+
+    if (shell) {
+      this.#succeed(shell);
+      return;
+    }
+
+    // Arrived as something else: a login redirect, a 404, an error page. A
+    // window that has not navigated yet is not this, and is left to keep
+    // trying.
+    if (hasArrived(document)) {
+      this.#fail("foreign");
+    }
+  }
+
+  /** Spends one probe of the budget. */
+  spendTick(): void {
+    if (this.#settled) {
+      return;
+    }
+
+    this.probe();
+
+    if (this.#settled) {
+      return;
+    }
+
+    if (--this.#ticksLeft <= 0) {
+      this.#fail("timeout");
+      return;
+    }
+
+    this.#armProbe();
+  }
+
+  cancel(): void {
+    if (this.#settled) {
+      return;
+    }
+
+    this.#settled = true;
+    this.#stopProbing();
+    this.#release();
+
+    if (!this.closed) {
+      closeQuietly(this.#window);
+    }
+
+    this.#readyCallbacks = [];
+    this.#failedCallbacks = [];
+  }
+
+  dispose(): void {
+    this.cancel();
+  }
+
+  focus(): void {
+    reachable(() => this.#window.focus());
+  }
+
+  onFailed(callback: (reason: PanelWindowFailure) => void): void {
+    this.#failedCallbacks.push(callback);
+  }
+
+  onReady(callback: (handle: PanelWindowHandle) => void): void {
+    this.#readyCallbacks.push(callback);
+  }
+
+  #armProbe(): void {
+    this.#cancelProbe = this.#holder.scheduleProbe(
+      this.#key,
+      () => this.spendTick(),
+      TICK_MS
+    );
+  }
+
+  #fail(reason: PanelWindowFailure): void {
+    this.#settled = true;
+    this.#stopProbing();
+    this.#release();
+
+    // A window the reader already closed is not closed again: that is their
+    // decision already carried out, and repeating it is a second close nobody
+    // asked for.
+    if (!this.closed) {
+      closeQuietly(this.#window);
+    }
+
+    // Copied first: a caller is allowed to ask for another window from inside
+    // this, and that must not append to the list being walked.
+    const callbacks = this.#failedCallbacks;
+    this.#failedCallbacks = [];
+    this.#readyCallbacks = [];
+    callbacks.forEach((callback) => callback(reason));
+  }
+
+  #release(): void {
+    if (leases.get(this.#key) === this) {
+      leases.delete(this.#key);
+    }
+
+    this.#holder.settled(this);
+  }
+
+  #stopProbing(): void {
+    this.#cancelProbe?.();
+    this.#cancelProbe = undefined;
+  }
+
+  #succeed(shell: PanelWindowShell): void {
+    this.#settled = true;
+    this.#stopProbing();
+    this.#holder.settled(this);
+
+    const handle = this.#holder.takeOver({
+      generation: this.generation,
+      key: this.#key,
+      shell,
+      strings: this.#strings,
+      window: this.#window,
+    });
+
+    const callbacks = this.#readyCallbacks;
+    this.#readyCallbacks = [];
+    this.#failedCallbacks = [];
+    callbacks.forEach((callback) => callback(handle));
+  }
+}
+
 /**
  * The lease bookkeeping every host shares, independent of where the windows
  * themselves come from.
@@ -453,14 +783,26 @@ export abstract class PanelWindowHostBase
     return new (this as unknown as new () => PanelWindowHostBase)();
   }
 
+  #connections = new Set<PendingWindow>();
   #handles = new Set<PanelWindow>();
   #listening = false;
   #onOpenerPagehide = (event: Event): void => {
+    const persisted = (event as PageTransitionEvent).persisted;
+
     for (const handle of [...this.#handles]) {
-      if ((event as PageTransitionEvent).persisted) {
+      if (persisted) {
         handle.pause();
       } else {
         handle.suspend();
+      }
+    }
+
+    // A window still arriving is nobody's to hand on. Nothing has recorded it,
+    // and the page that asked for it is going away, so the only alternative to
+    // closing it is leaving a blank window on the reader's screen for good.
+    if (!persisted) {
+      for (const connection of [...this.#connections]) {
+        connection.cancel();
       }
     }
   };
@@ -474,8 +816,31 @@ export abstract class PanelWindowHostBase
     }
   };
 
+  /**
+   * A shell announcing itself, taken as a reason to look rather than as the
+   * answer.
+   *
+   * It spends none of the connection's budget and carries no information we
+   * act on, so traffic from anywhere else on the page costs one wasted look at
+   * a document and can neither exhaust a window's budget nor make an unready
+   * one ready.
+   */
+  #onOpenerMessage = (event: Event): void => {
+    const source = (event as MessageEvent).source;
+
+    for (const connection of [...this.#connections]) {
+      if (connection.wasSentBy(source)) {
+        connection.probe();
+      }
+    }
+  };
+
   /** Releases every window this host still holds. */
   willDestroy(): void {
+    for (const connection of [...this.#connections]) {
+      connection.cancel();
+    }
+
     for (const handle of [...this.#handles]) {
       handle.dispose();
     }
@@ -511,16 +876,52 @@ export abstract class PanelWindowHostBase
    */
   abstract resolveWindow(
     key: string,
-    geometry?: PanelWindowGeometry | null
+    resolution: WindowResolution
   ): Window | null;
+
+  /**
+   * Where a key's shell is served from.
+   *
+   * On the base rather than the browser host because it is the same page in
+   * every environment; a host serving a stand-in overrides it.
+   */
+  shellUrlFor(key: string): string {
+    return getURL(`/panel-window/${encodeURIComponent(key)}`);
+  }
+
+  /**
+   * Reads a window's document, or `null` when it is somewhere we cannot look.
+   *
+   * A seam because `Window.document` cannot be replaced — the spec marks it
+   * unforgeable — so a test with no cross-origin window to hand has nowhere
+   * else to say "this one is out of reach".
+   */
+  readDocument(panelWindow: Window): Document | null {
+    return readableDocument(panelWindow);
+  }
+
+  /**
+   * Schedules the next look at a window that is still arriving.
+   *
+   * A seam rather than a bare timer so a test can drive a loading window one
+   * probe at a time instead of waiting on a clock.
+   *
+   * @returns How to cancel the scheduled probe.
+   */
+  scheduleProbe(_key: string, run: () => void, delayMs: number): () => void {
+    const token = setTimeout(run, delayMs);
+    return () => clearTimeout(token);
+  }
 
   adopt(key: string, strings: PanelWindowStrings): PanelWindowOutcome {
     if (heldLease(key)) {
       return { status: "already-leased" };
     }
 
-    const panelWindow = this.resolveWindow(key);
-    const document = readableDocument(panelWindow);
+    // Deliberately without a URL: naming an existing window with one navigates
+    // it, and the whole point here is to find out what is already in it.
+    const panelWindow = this.resolveWindow(key, { intent: "adopt" });
+    const document = panelWindow ? this.readDocument(panelWindow) : null;
 
     if (!panelWindow || !document) {
       closeQuietly(panelWindow);
@@ -528,14 +929,24 @@ export abstract class PanelWindowHostBase
     }
 
     // A window the browser has just made for us looks exactly like the one a
-    // previous visit left behind, so the mark is the only thing that separates
-    // adopting from stranding an empty window on the reader's screen.
-    if (skeletonKey(document) !== key) {
+    // previous visit left behind, so the mark the server rendered is the only
+    // thing separating adopting from stranding an empty window on the screen.
+    if (shellKey(document) !== key) {
       closeQuietly(panelWindow);
       return { status: "unavailable" };
     }
 
-    return this.#lease(key, panelWindow, document, strings);
+    const shell = adoptShell(document, key);
+
+    if (!shell) {
+      closeQuietly(panelWindow);
+      return { status: "unavailable" };
+    }
+
+    return {
+      status: "acquired",
+      handle: this.takeOver({ key, shell, strings, window: panelWindow }),
+    };
   }
 
   open(
@@ -547,21 +958,69 @@ export abstract class PanelWindowHostBase
       return { status: "already-leased" };
     }
 
-    const panelWindow = this.resolveWindow(key, geometry);
-    const document = readableDocument(panelWindow);
+    const panelWindow = this.resolveWindow(key, {
+      intent: "open",
+      url: this.shellUrlFor(key),
+      geometry,
+    });
 
-    if (!panelWindow || !document) {
-      closeQuietly(panelWindow);
+    // The one failure still answerable in the same breath as the gesture: a
+    // blocked popup never becomes a window, so no lease is taken for it.
+    if (!panelWindow) {
       return { status: "unavailable" };
     }
 
-    return this.#lease(key, panelWindow, document, strings);
+    const connection = new PendingWindow({
+      holder: this,
+      key,
+      strings,
+      window: panelWindow,
+    });
+
+    leases.set(key, connection);
+    this.#connections.add(connection);
+    this.#listenToOpener();
+
+    return { status: "connecting", connection };
+  }
+
+  /** Turns a window that has finished arriving into the lease that holds it. */
+  takeOver(options: {
+    generation?: number;
+    key: string;
+    shell: PanelWindowShell;
+    strings: PanelWindowStrings;
+    window: Window;
+  }): PanelWindowHandle {
+    // The served page titles itself generically, because it is rendered before
+    // anyone knows which panel it will hold. Naming it here is what lets two
+    // panel windows be told apart in a window switcher.
+    reachable(() => {
+      options.shell.mount.ownerDocument.title = options.strings.title;
+    });
+
+    const handle = new PanelWindow({ holder: this, ...options });
+
+    leases.set(options.key, handle);
+    this.#handles.add(handle);
+    this.#listenToOpener();
+
+    return handle;
+  }
+
+  /** Called by a connection once it has stopped holding anything. */
+  settled(connection: PendingWindow): void {
+    this.#connections.delete(connection);
+    this.#releaseOpenerWhenIdle();
   }
 
   released(handle: PanelWindow): void {
     this.#handles.delete(handle);
+    this.#releaseOpenerWhenIdle();
+  }
 
-    if (this.#handles.size === 0) {
+  #releaseOpenerWhenIdle(): void {
+    if (this.#handles.size === 0 && this.#connections.size === 0) {
       this.#ignoreOpener();
     }
   }
@@ -574,28 +1033,7 @@ export abstract class PanelWindowHostBase
     this.#listening = false;
     this.openerEvents.removeEventListener("pagehide", this.#onOpenerPagehide);
     this.openerEvents.removeEventListener("pageshow", this.#onOpenerPageshow);
-  }
-
-  #lease(
-    key: string,
-    panelWindow: Window,
-    document: Document,
-    strings: PanelWindowStrings
-  ): PanelWindowOutcome {
-    const skeleton = writeSkeleton(document, key, strings.title);
-    const handle = new PanelWindow({
-      holder: this,
-      key,
-      skeleton,
-      strings,
-      window: panelWindow,
-    });
-
-    leases.set(key, handle);
-    this.#handles.add(handle);
-    this.#listenToOpener();
-
-    return { status: "acquired", handle };
+    this.openerEvents.removeEventListener("message", this.#onOpenerMessage);
   }
 
   #listenToOpener(): void {
@@ -606,6 +1044,7 @@ export abstract class PanelWindowHostBase
     this.#listening = true;
     this.openerEvents.addEventListener("pagehide", this.#onOpenerPagehide);
     this.openerEvents.addEventListener("pageshow", this.#onOpenerPageshow);
+    this.openerEvents.addEventListener("message", this.#onOpenerMessage);
   }
 }
 
@@ -615,11 +1054,20 @@ export default class BrowserWindowHost extends PanelWindowHostBase {
     return window;
   }
 
-  resolveWindow(
-    key: string,
-    geometry?: PanelWindowGeometry | null
-  ): Window | null {
-    return window.open("", windowNameFor(key), windowFeaturesFor(geometry));
+  resolveWindow(key: string, resolution: WindowResolution): Window | null {
+    const name = windowNameFor(key);
+
+    if (resolution.intent === "adopt") {
+      // The empty URL is load-bearing: it reveals the window already under
+      // this name without navigating it, which is what adoption depends on.
+      return window.open("", name);
+    }
+
+    return window.open(
+      resolution.url,
+      name,
+      windowFeaturesFor(resolution.geometry)
+    );
   }
 }
 
@@ -656,6 +1104,21 @@ function closeQuietly(panelWindow: Window | null): void {
  * @returns The window's document, or `null` when there is none to read — a
  * window that navigated somewhere else is no longer ours to write into.
  */
+/**
+ * Whether a window has finished going somewhere.
+ *
+ * A window that was just opened sits on a blank document until the navigation
+ * it was given commits, and that is not the same as having arrived somewhere
+ * that is not ours — one is worth waiting for and the other is not.
+ */
+function hasArrived(doc: Document): boolean {
+  try {
+    return doc.readyState !== "loading" && doc.URL !== "about:blank";
+  } catch {
+    return false;
+  }
+}
+
 function readableDocument(panelWindow: Window | null): Document | null {
   if (!panelWindow) {
     return null;
