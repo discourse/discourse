@@ -1,3 +1,4 @@
+import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
@@ -113,6 +114,8 @@ export default class TextareaTextManipulation implements TextManipulation {
   @service declare siteSettings: SiteSettings;
 
   @service declare capabilities: CapabilitiesService;
+
+  autocompletes: object[] = [];
 
   allowPreview = true;
 
@@ -1004,13 +1007,21 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
   }
 
-  autocomplete(options: AutocompleteOptions): unknown {
-    return dAutocomplete.setupAutocomplete(
+  autocomplete(options: AutocompleteOptions | "destroy"): unknown {
+    if (options === "destroy") {
+      this.autocompletes.forEach((modifier) => destroy(modifier));
+      this.autocompletes = [];
+      return;
+    }
+
+    const modifier = dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.textarea,
       this.autocompleteHandler,
       options
     );
+    this.autocompletes.push(modifier);
+    return modifier;
   }
 
   #applyWholeLineSurround(

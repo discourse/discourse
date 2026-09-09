@@ -1,3 +1,4 @@
+import { destroy } from "@ember/destroyable";
 import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
@@ -90,6 +91,8 @@ function isPlainTextFragment(fragment: Fragment, schema: Schema): boolean {
 }
 
 export default class ProsemirrorTextManipulation implements TextManipulation {
+  autocompletes: object[] = [];
+
   allowPreview = false;
 
   schema: Schema;
@@ -181,13 +184,21 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     });
   }
 
-  autocomplete(options: AutocompleteOptions): unknown {
-    return dAutocomplete.setupAutocomplete(
+  autocomplete(options: AutocompleteOptions | "destroy"): unknown {
+    if (options === "destroy") {
+      this.autocompletes.forEach((modifier) => destroy(modifier));
+      this.autocompletes = [];
+      return;
+    }
+
+    const modifier = dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.view.dom,
       this.autocompleteHandler,
       options
     );
+    this.autocompletes.push(modifier);
+    return modifier;
   }
 
   applySurroundSelection(

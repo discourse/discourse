@@ -146,7 +146,7 @@ export default class UppyUpload {
         `upload-mixin:${this.config.id}:cancel-upload`,
         this.cancelSingleUpload
       );
-      this.uppyWrapper.uppyInstance.close?.();
+      this.uppyWrapper.uppyInstance.destroy();
     }
   }
 
