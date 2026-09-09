@@ -48,6 +48,14 @@ module DiscourseVips
     )
   end
 
+  def self.heif_to_jpeg(input_path:, output_path:, timeout:)
+    Client.call(
+      ["heif-to-jpeg", input_path, output_path],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
   def self.before_fork
     Client.before_fork
   end

@@ -518,19 +518,125 @@ RSpec.describe UploadCreator do
     end
 
     describe "converting HEIF to jpeg" do
+      include ImageOrientationHelpers
+
       let(:filename) { "should_be_jpeg.heic" }
       let(:file) { file_from_fixtures(filename, "images") }
+      let(:palette) do
+        {
+          red: [255, 0, 0],
+          green: [0, 255, 0],
+          blue: [0, 0, 255],
+          cyan: [0, 255, 255],
+          magenta: [255, 0, 255],
+          yellow: [255, 255, 0],
+          white: [255, 255, 255],
+          pale_green: [128, 255, 128],
+        }
+      end
 
-      it "stores the upload with the expected extension" do
-        expect do
-          UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
-        end.to change { Upload.count }.by(1)
+      [false, true].each do |vips_enabled|
+        it "stores a JPEG with vips #{vips_enabled ? "enabled" : "disabled"}" do
+          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
 
-        upload = Upload.last
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+          stored_path = Discourse.store.path_for(upload)
 
-        expect(upload.extension).to eq("jpeg")
-        expect(File.extname(upload.url)).to eq(".jpeg")
-        expect(upload.original_filename).to eq("should_be_jpeg.jpg")
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(
+            extension: "jpeg",
+            original_filename: "should_be_jpeg.jpg",
+            width: 846,
+            height: 1129,
+          )
+          expect(File.extname(upload.url)).to eq(".jpeg")
+          expect(FastImage.type(stored_path)).to eq(:jpeg)
+          expect(FastImage.size(stored_path)).to eq([846, 1129])
+        end
+
+        it "removes conversion tempfiles after an invalid HEIF with vips #{vips_enabled ? "enabled" : "disabled"}" do
+          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+          source_file = file_from_fixtures("heif-truncated-payload.heic")
+          error_class = vips_enabled ? DiscourseVips::InvalidImage : Discourse::Utils::CommandError
+
+          Dir.mktmpdir do |directory|
+            Dir.stubs(:tmpdir).returns(directory)
+
+            expect {
+              described_class.new(source_file, "invalid.heic", force_optimize: true).create_for(
+                user.id,
+              )
+            }.to raise_error(error_class)
+
+            expect(Dir.children(directory)).to eq([])
+            expect(source_file).to be_closed
+          end
+        end
+
+        {
+          "heif-color-grid-rotated.heic" => [
+            40,
+            60,
+            [%i[blue yellow], %i[green magenta], %i[red cyan]],
+          ],
+          "heif-color-grid-mirrored.heic" => [
+            60,
+            40,
+            [%i[cyan magenta yellow], %i[red green blue]],
+          ],
+        }.each do |grid_filename, (width, height, expected_colors)|
+          it "applies the container transform of #{grid_filename} once with vips #{vips_enabled ? "enabled" : "disabled"}" do
+            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+
+            upload =
+              described_class.new(
+                file_from_fixtures(grid_filename),
+                grid_filename,
+                force_optimize: true,
+              ).create_for(user.id)
+            stored_path = Discourse.store.path_for(upload)
+
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(extension: "jpeg", width:, height:)
+            expect(
+              stored_color_grid(
+                upload:,
+                rows: expected_colors.length,
+                columns: expected_colors.first.length,
+                palette:,
+              ),
+            ).to eq(expected_colors)
+            expect(
+              ImageMagick.identify(
+                "-format",
+                "%[orientation]",
+                stored_path,
+                operation: :upload_quality_probe,
+                read: [stored_path],
+              ).strip,
+            ).to be_in(%w[Undefined TopLeft])
+          end
+        end
+
+        {
+          "heif-color-grid-8bit.heic" => [%i[red green blue], %i[cyan magenta yellow]],
+          "heif-color-grid-alpha-8bit.heic" => [%i[white pale_green blue], %i[cyan magenta yellow]],
+        }.each do |grid_filename, expected_colors|
+          it "preserves the colors of #{grid_filename} with vips #{vips_enabled ? "enabled" : "disabled"}" do
+            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+
+            upload =
+              UploadCreator.new(
+                file_from_fixtures(grid_filename),
+                grid_filename,
+                force_optimize: true,
+              ).create_for(user.id)
+
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(extension: "jpeg", width: 60, height: 40)
+            expect(stored_color_grid(upload:, rows: 2, columns: 3, palette:)).to eq(expected_colors)
+          end
+        end
       end
     end
 

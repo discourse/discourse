@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "chunky_png"
+require "vips"
 
 RSpec.describe DiscourseVips do
   describe ".version" do
@@ -314,6 +315,133 @@ RSpec.describe DiscourseVips do
           described_class.topic_og_render(input_path:, output_path:, timeout: 5)
         }.to raise_error(DiscourseVips::Error, "SVG input and PNG output must be different files")
         expect(File.read(input_path)).to eq(svg)
+      end
+    end
+  end
+
+  describe ".heif_to_jpeg" do
+    {
+      "heif-color-grid-12bit.heic" => [
+        [255, 0, 0],
+        [0, 255, 0],
+        [0, 0, 255],
+        [0, 255, 255],
+        [255, 0, 255],
+        [255, 255, 0],
+      ],
+      "heif-color-grid-alpha-12bit.heic" => [
+        [255, 255, 255],
+        [128, 255, 128],
+        [0, 0, 255],
+        [0, 255, 255],
+        [255, 0, 255],
+        [255, 255, 0],
+      ],
+    }.each do |filename, expected_colors|
+      it "preserves the colors of #{filename} when converting to JPEG" do
+        input_path = file_from_fixtures(filename).path
+
+        Dir.mktmpdir do |directory|
+          output_path = File.join(directory, "converted.jpg")
+          png_path = File.join(directory, "converted.png")
+
+          described_class.heif_to_jpeg(input_path:, output_path:, timeout: 20)
+
+          ImageMagick.magick(
+            output_path,
+            png_path,
+            operation: :upload_format_conversion,
+            read: [output_path],
+            write: [directory],
+          )
+          image = ChunkyPNG::Image.from_file(png_path)
+
+          expect([image.width, image.height]).to eq([60, 40])
+          expected_colors.each_with_index do |expected_rgb, index|
+            pixel = image[10 + (index % 3) * 20, 10 + (index / 3) * 20]
+            actual_rgb = [
+              ChunkyPNG::Color.r(pixel),
+              ChunkyPNG::Color.g(pixel),
+              ChunkyPNG::Color.b(pixel),
+            ]
+
+            expect(actual_rgb).to match(expected_rgb.map { |channel| be_within(5).of(channel) })
+          end
+        end
+      end
+    end
+
+    it "preserves image dimensions and its color profile in a nonprogressive JPEG" do
+      input_path = file_from_fixtures("should_be_jpeg.heic").path
+      original_content = File.binread(input_path)
+      original_profile = Vips::Image.heifload(input_path).get("icc-profile-data")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.heif_to_jpeg(input_path:, output_path:, timeout: 20)
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(FastImage.size(output_path)).to eq([846, 1129])
+        expect(File.binread(input_path)).to eq(original_content)
+        expect(Vips::Image.jpegload(output_path).get("icc-profile-data")).to eq(original_profile)
+        jpeg_metadata =
+          ImageMagick.identify(
+            "-format",
+            "%[interlace] %[profiles]",
+            output_path,
+            operation: :upload_quality_probe,
+            read: [output_path],
+          ).split
+        expect(jpeg_metadata.first).to eq("None")
+        expect(jpeg_metadata.last.split(",")).to include("icc")
+      end
+    end
+
+    it "rejects a different image format without changing the source" do
+      input_path = file_from_fixtures("logo.png").path
+      original_content = File.binread(input_path)
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        expect {
+          described_class.heif_to_jpeg(input_path:, output_path:, timeout: 20)
+        }.to raise_error(DiscourseVips::InvalidImage)
+
+        expect(File.binread(input_path)).to eq(original_content)
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "rejects overwriting the source image" do
+      original_content = File.binread(file_from_fixtures("should_be_jpeg.heic").path)
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.heic")
+        File.binwrite(input_path, original_content)
+
+        expect {
+          described_class.heif_to_jpeg(input_path:, output_path: input_path, timeout: 20)
+        }.to raise_error(DiscourseVips::Error, "input and output must be different files")
+
+        expect(File.binread(input_path)).to eq(original_content)
+      end
+    end
+
+    it "stops when reading the source exceeds the timeout" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "blocked.heic")
+        output_path = File.join(directory, "converted.jpg")
+        File.mkfifo(input_path)
+
+        File.open(input_path, File::RDWR) do
+          expect {
+            described_class.heif_to_jpeg(input_path:, output_path:, timeout: 0.05)
+          }.to raise_error(DiscourseVips::OperationTimeout)
+        end
+
+        expect(File.exist?(output_path)).to eq(false)
       end
     end
   end

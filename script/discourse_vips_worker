@@ -54,6 +54,8 @@ class DiscourseVipsWorker
         svg_dimensions(*arguments)
       when "svg-to-png"
         svg_to_png(input_path: arguments[0], output_path: arguments[1])
+      when "heif-to-jpeg"
+        heif_to_jpeg(input_path: arguments[0], output_path: arguments[1])
       when "topic-og-render"
         topic_og_render(input_path: arguments[0], output_path: arguments[1])
       else
@@ -288,6 +290,30 @@ class DiscourseVipsWorker
       Vips::Image.svgload_buffer(document.to_xml, dpi: 96, scale: 0.75)
     end
     private_class_method :load_svg
+
+    def self.heif_to_jpeg(input_path:, output_path:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        if File.identical?(input_path, output_path)
+          raise ArgumentError, "input and output must be different files"
+        end
+
+        block_loaders(allowed: %w[VipsForeignLoadHeif])
+
+        begin
+          image = Vips::Image.heifload(input_path, access: :sequential)
+          if image.has_alpha?
+            white = image.interpretation == :rgb16 ? 65_535 : 255
+            image = image.flatten(background: [white, white, white])
+          end
+          image.jpegsave(output_path, Q: 92, interlace: false)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+
+        nil
+      end
+    end
+    private_class_method :heif_to_jpeg
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
