@@ -361,16 +361,26 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(png_tempfile.path)]
 
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.ico_to_png(
+        input_path: @file.path,
+        output_path: png_tempfile.path,
+        timeout: MAX_CONVERT_FORMAT_SECONDS,
+      )
+    else
+      begin
+        execute_convert(from, to, opts, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, to, opts.merge(debug: true), read:, write:)
+      end
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = png_tempfile
     extract_image_info!
+  ensure
+    png_tempfile&.close! if png_tempfile != @file
   end
 
   def convert_to_jpeg!

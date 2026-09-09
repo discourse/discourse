@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "chunky_png"
 require "file_store/s3_store"
 
 RSpec.describe UploadCreator do
@@ -953,18 +954,131 @@ RSpec.describe UploadCreator do
     context "when the upload is an ICO favicon" do
       let(:filename) { "smallest.ico" }
       let(:file) { file_from_fixtures(filename, "images") }
+      let(:colors) do
+        {
+          red: ChunkyPNG::Color.rgba(255, 0, 0, 255),
+          green: ChunkyPNG::Color.rgba(0, 255, 0, 255),
+          blue: ChunkyPNG::Color.rgba(0, 0, 255, 255),
+          cyan: ChunkyPNG::Color.rgba(0, 255, 255, 255),
+          magenta: ChunkyPNG::Color.rgba(255, 0, 255, 255),
+          yellow: ChunkyPNG::Color.rgba(255, 255, 0, 255),
+          transparent_red: ChunkyPNG::Color.rgba(255, 0, 0, 0),
+          translucent_green: ChunkyPNG::Color.rgba(0, 255, 0, 128),
+        }
+      end
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      it "stores it as a PNG" do
-        upload = described_class.new(file, filename).create_for(user.id)
-        stored_path = Discourse.store.path_for(upload)
+      [false, true].each do |vips_enabled|
+        it "removes conversion tempfiles after an invalid ICO with vips #{vips_enabled ? "enabled" : "disabled"}" do
+          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+          source_file = file_from_fixtures("ico-truncated-bitmap.ico")
+          error_class = vips_enabled ? DiscourseVips::InvalidImage : Discourse::Utils::CommandError
 
-        expect(upload).to be_persisted
-        expect(upload.extension).to eq("png")
-        expect(upload.original_filename).to eq("smallest.png")
-        expect(FastImage.type(stored_path)).to eq(:png)
-        expect(FastImage.size(stored_path)).to eq([1, 1])
+          Dir.mktmpdir do |directory|
+            Dir.stubs(:tmpdir).returns(directory)
+
+            expect {
+              described_class.new(source_file, "invalid.ico").create_for(user.id)
+            }.to raise_error(error_class)
+
+            expect(Dir.children(directory)).to eq([])
+            expect(source_file).to be_closed
+          end
+        end
+
+        it "preserves odd-width bitmap colors and transparency masks with vips #{vips_enabled ? "enabled" : "disabled"}" do
+          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+          expected_pixels = [
+            colors[:transparent_red],
+            colors[:blue],
+            colors[:red],
+            colors[:blue],
+            colors[:red],
+            colors[:blue],
+            colors[:transparent_red],
+            colors[:blue],
+            colors[:red],
+            colors[:blue],
+            colors[:red],
+            colors[:blue],
+            colors[:transparent_red],
+            colors[:blue],
+            colors[:red],
+          ]
+
+          [1, 4, 8, 24].each do |depth|
+            filename = "ico-odd-mask-#{depth}bit.ico"
+
+            upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
+            image = ChunkyPNG::Image.from_file(Discourse.store.path_for(upload))
+
+            aggregate_failures(filename) do
+              expect(upload).to be_persisted
+              expect([image.width, image.height]).to eq([5, 3])
+              expect(image.pixels).to eq(expected_pixels)
+            end
+          end
+        end
+
+        it "stores it as a PNG with vips #{vips_enabled ? "enabled" : "disabled"}" do
+          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+
+          upload = described_class.new(file, filename).create_for(user.id)
+          stored_path = Discourse.store.path_for(upload)
+
+          expect(upload).to be_persisted
+          expect(upload.extension).to eq("png")
+          expect(upload.original_filename).to eq("smallest.png")
+          expect(FastImage.type(stored_path)).to eq(:png)
+          expect(FastImage.size(stored_path)).to eq([1, 1])
+          expect(ChunkyPNG::Image.from_file(stored_path)[0, 0]).to eq(
+            ChunkyPNG::Color.rgba(255, 0, 0, 255),
+          )
+        end
+
+        {
+          "ico-bmp-1bit.ico" => [60, 40, %i[red blue red blue red blue]],
+          "ico-bmp-4bit.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
+          "ico-bmp-8bit.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
+          "ico-bmp-24bit.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
+          "ico-bmp-32bit.ico" => [
+            60,
+            40,
+            %i[transparent_red translucent_green blue cyan magenta yellow],
+          ],
+          "ico-png-alpha.ico" => [
+            30,
+            20,
+            %i[transparent_red translucent_green blue cyan magenta yellow],
+          ],
+          "ico-last-bmp.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
+          "ico-last-png.ico" => [
+            30,
+            20,
+            %i[transparent_red translucent_green blue cyan magenta yellow],
+          ],
+        }.each do |grid_filename, (width, height, expected_colors)|
+          it "preserves the last image of #{grid_filename} with vips #{vips_enabled ? "enabled" : "disabled"}" do
+            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+
+            upload =
+              described_class.new(file_from_fixtures(grid_filename), grid_filename).create_for(
+                user.id,
+              )
+            image = ChunkyPNG::Image.from_file(Discourse.store.path_for(upload))
+
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(extension: "png", width:, height:)
+            expect([image.width, image.height]).to eq([width, height])
+            expected_colors.each_with_index do |color, index|
+              x = (index % 3 * 2 + 1) * width / 6
+              y = (index / 3 * 2 + 1) * height / 4
+
+              expect(image[x, y]).to eq(colors.fetch(color))
+            end
+          end
+        end
       end
     end
 
