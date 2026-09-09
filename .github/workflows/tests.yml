@@ -261,11 +261,7 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        env:
-          RUBY_YJIT_ENABLE: "1"
-        run: |
-          bin/rails runner 'abort "YJIT is not enabled" unless defined?(RubyVM::YJIT) && RubyVM::YJIT.enabled?; puts "CI_YJIT enabled=true"'
-          LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
 
       - name: Ember Build
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
@@ -290,10 +286,7 @@ jobs:
 
       - name: Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        env:
-          RUBY_YJIT_ENABLE: "1"
         run: |
-          bin/rails runner 'abort "YJIT is not enabled" unless defined?(RubyVM::YJIT) && RubyVM::YJIT.enabled?; puts "CI_YJIT enabled=true"'
           LD_PRELOAD="$RUBY_ALLOCATOR" bin/rake plugin:turbo_spec['*','--format=progress --use-runtime-info']
 
       - name: Plugins QUnit
