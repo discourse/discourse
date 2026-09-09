@@ -1,13 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
   DEFAULT_USER_PREFERENCES,
   SITE_SETTING_REQUIRES_CONFIRMATION_TYPES,
 } from "discourse/admin/lib/constants";
 import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 import { ajax } from "discourse/lib/ajax";
+import BufferedProxy from "discourse/lib/buffered-proxy";
 import { bind } from "discourse/lib/decorators";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -86,7 +86,9 @@ export default class SiteSetting extends EmberObject {
 
   constructor() {
     super(...arguments);
-    this.buffered = BufferedProxy.create({ content: this });
+    this.buffered = /** @type {BufferedProxy} */ (
+      BufferedProxy.create({ content: this })
+    );
   }
 
   @computed("settingObjectHelper.overridden")

@@ -74,7 +74,6 @@ patchedDependencies:
   "@warp-drive/legacy@5.9.0-alpha.15": "patches/@warp-drive__legacy@5.9.0-alpha.15.patch"
   "ember-source@7.2.0": "patches/ember-source@7.2.0.patch"
   "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
-  "ember-buffered-proxy": "patches/ember-buffered-proxy.patch"
   "pikaday": "patches/pikaday.patch"
 peerDependencyRules:
   allowedVersions:

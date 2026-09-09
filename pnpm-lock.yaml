@@ -20,9 +20,6 @@ patchedDependencies:
   babel-plugin-debug-macros@0.3.4:
     hash: 387f93bad78f3a98b20dc742f4f0b7a165c7e6ebc65cc60356748346c0725c7f
     path: patches/babel-plugin-debug-macros@0.3.4.patch
-  ember-buffered-proxy:
-    hash: 6f462c5d8fcc3ebcc27fc038b7be66b9337f0c848ad18e37a2101cb62b29ede5
-    path: patches/ember-buffered-proxy.patch
   ember-source@7.2.0:
     hash: 0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102
     path: patches/ember-source@7.2.0.patch
@@ -599,9 +596,6 @@ importers:
       ember-async-data:
         specifier: ^2.0.1
         version: 2.0.1(@babel/core@7.29.7)
-      ember-buffered-proxy:
-        specifier: ^2.1.1
-        version: 2.1.1(patch_hash=6f462c5d8fcc3ebcc27fc038b7be66b9337f0c848ad18e37a2101cb62b29ede5)(@babel/core@7.29.7)
       ember-cli:
         specifier: ~7.2.0
         version: 7.2.0(@babel/core@7.29.7)(@types/node@26.4.0)(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
@@ -3359,12 +3353,6 @@ packages:
       '@babel/core': ^7.0.0
       webpack: '>=2'
 
-  babel-plugin-debug-macros@0.2.0:
-    resolution: {integrity: sha512-Wpmw4TbhR3Eq2t3W51eBAQSdKlr+uAyF0GI4GtPfMCD12Y4cIdpKC9l0RjNTH/P9isFypSqqewMPm7//fnZlNA==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-beta.42
-
   babel-plugin-debug-macros@0.3.4:
     resolution: {integrity: sha512-wfel/vb3pXfwIDZUrkoDrn5FHmlWI96PCJ3UCDv2a86poJ3EQrnArNW5KfHSVJ9IOgxHbo748cQt7sDU+0KCEw==}
     engines: {node: '>=6'}
@@ -4310,10 +4298,6 @@ packages:
     resolution: {integrity: sha512-MjxJK2nfCJmmQI/rju2TrycmAa1AxmTarfvygbcrrgW0s4WeZHtbGXCO2z1lW9wfrShqeTo/o+3Mgk+9xcDTWg==}
     engines: {node: 12.* || 14.* || >= 16}
 
-  ember-buffered-proxy@2.1.1:
-    resolution: {integrity: sha512-eF9m36dm+rYegmND3lTSg4HJVH67oQXmcHLZmWUIxZC9zKK+/tO8QEgXjbquixBCNyUFw+fTNeyCG2PGApjXDA==}
-    engines: {node: 12.* || 14.* || >= 16}
-
   ember-cli-babel-plugin-helpers@1.1.1:
     resolution: {integrity: sha512-sKvOiPNHr5F/60NLd7SFzMpYPte/nnGkq/tMIfXejfKHIhaiIkYFqX8Z9UFTKWLLn+V7NOaby6niNPZUdvKCRw==}
     engines: {node: 6.* || 8.* || >= 10.*}
@@ -4376,10 +4360,6 @@ packages:
     resolution: {integrity: sha512-EafquLJ+EVHz0nNo32NWwAfHr5UxTXn9zdlukuKZFSFrR4G6RRStmBPQ5O0bLSaQVDtU+jOe5gGTHSS4Xy3uQA==}
     engines: {node: '>= 20.19.0'}
     hasBin: true
-
-  ember-compatibility-helpers@1.2.7:
-    resolution: {integrity: sha512-BtkjulweiXo9c3yVWrtexw2dTmBrvavD/xixNC6TKOBdrixUwU+6nuOO9dufDWsMxoid7MvtmDpzc9+mE8PdaA==}
-    engines: {node: 10.* || >= 12.*}
 
   ember-curry-component@0.5.0:
     resolution: {integrity: sha512-8N1WWt1KuMntWvB+i9ShwXFMU0tliJO7XinLJB+fihSl/ip+72UWAW3UCRttpiirKuIXJPpwqt6VCmlKbL8C4A==}
@@ -11265,11 +11245,6 @@ snapshots:
       make-dir: 3.1.0
       schema-utils: 2.7.1
 
-  babel-plugin-debug-macros@0.2.0(@babel/core@7.29.7):
-    dependencies:
-      '@babel/core': 7.29.7
-      semver: 5.7.2
-
   babel-plugin-debug-macros@0.3.4(patch_hash=387f93bad78f3a98b20dc742f4f0b7a165c7e6ebc65cc60356748346c0725c7f)(@babel/core@7.29.7):
     dependencies:
       '@babel/core': 7.29.7
@@ -12323,14 +12298,6 @@ snapshots:
       - supports-color
       - webpack
 
-  ember-buffered-proxy@2.1.1(patch_hash=6f462c5d8fcc3ebcc27fc038b7be66b9337f0c848ad18e37a2101cb62b29ede5)(@babel/core@7.29.7):
-    dependencies:
-      ember-cli-babel: 7.26.11
-      ember-compatibility-helpers: 1.2.7(@babel/core@7.29.7)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
-
   ember-cli-babel-plugin-helpers@1.1.1: {}
 
   ember-cli-babel@7.26.11:
@@ -12625,17 +12592,6 @@ snapshots:
       - velocityjs
       - walrus
       - whiskers
-
-  ember-compatibility-helpers@1.2.7(@babel/core@7.29.7):
-    dependencies:
-      babel-plugin-debug-macros: 0.2.0(@babel/core@7.29.7)
-      ember-cli-version-checker: 5.1.2
-      find-up: 5.0.0
-      fs-extra: 9.1.0
-      semver: 5.7.2
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
 
   ember-curry-component@0.5.0(@babel/core@7.29.7)(@glint/template@1.9.0):
     dependencies:
