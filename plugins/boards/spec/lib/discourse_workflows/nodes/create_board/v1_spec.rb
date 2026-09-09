@@ -57,7 +57,6 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
         acl_target_type: "Boards::Board",
         acl_target_key: Boards::Board.acl_target_key,
         acl_target_name: "boards.manage.board",
-        required_permissions: ["manage"],
         permissions: %w[view edit manage],
       },
     )

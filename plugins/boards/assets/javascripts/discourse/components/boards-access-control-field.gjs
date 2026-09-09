@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
 import DAccessControlField from "discourse/ui-kit/d-access-control-field";
 import { i18n } from "discourse-i18n";
 import { boardPermissionOptions } from "../lib/boards-access-control";
@@ -19,7 +18,6 @@ export default class BoardsAccessControlField extends Component {
       @aclTarget={{this.aclTarget}}
       @description={{@description}}
       @form={{@form}}
-      @mustHavePermissions={{array "manage"}}
       @name={{@name}}
       @onAccessLossConfirmed={{@onAccessLossConfirmed}}
       @onChange={{@onChange}}

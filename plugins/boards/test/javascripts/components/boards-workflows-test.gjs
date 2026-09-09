@@ -31,7 +31,6 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
       control_options: {
         acl_target_type: "Boards::Board",
         acl_target_key: "Boards::Board",
-        required_permissions: ["manage"],
         permissions: ["view", "edit", "manage"],
       },
     };
@@ -175,8 +174,7 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
     );
   });
 
-  test("requires a manager when there is no mandatory manager or dynamic input", async function (assert) {
-    this.site.access_control.mandatory_acl = {};
+  test("relies on mandatory ACL for manager access", async function (assert) {
     this.configuration = {
       acl: [{ type: "group", id: 5, permission: "view" }],
     };
@@ -200,10 +198,13 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
       </template>
     );
     await formKit().submit();
-    assert.false(this.onSubmit.called, "requires an explicit manager grant");
+    assert.true(
+      this.onSubmit.calledOnce,
+      "accepts viewer-only configuration because manager access is mandatory"
+    );
     assert
-      .dom(".form-kit__errors")
-      .includesText("manage", "explains the missing permission");
+      .dom('.d-access-control__row[data-row-id="1"]')
+      .hasClass("--mandatory", "retains mandatory admin access");
   });
 
   test("leaves other nodes on the generic ACL renderer", async function (assert) {
