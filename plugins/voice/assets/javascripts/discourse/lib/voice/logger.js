@@ -1,7 +1,8 @@
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import sanitizeError from "./sanitize-error";
 
-// Only pass diagnostic messages and trusted scalar metadata; never errors,
-// response bodies, participant objects, transcripts, SDP, or ICE candidates.
+// The diagnostic message must contain only trusted metadata. Error details
+// belong in the optional error argument so they pass through sanitization.
 export default {
   info(message) {
     if (
@@ -13,13 +14,14 @@ export default {
     }
   },
 
-  warn(message) {
+  warn(message, error) {
     if (
       getOwnerWithFallback()?.lookup("service:site-settings")
         ?.voice_verbose_logging
     ) {
+      const details = sanitizeError(error);
       // eslint-disable-next-line no-console
-      console.warn(message);
+      console.warn(message, ...(details ? [details] : []));
     }
   },
 };

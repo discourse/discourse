@@ -52,9 +52,9 @@ module("Voice | Unit | Lib | logger", function (hooks) {
     );
   });
 
-  test("raw error and payload arguments are excluded", function (assert) {
+  test("only sanitized error fields are logged", function (assert) {
     this.siteSettings.voice_verbose_logging = true;
-    const error = new Error("secret credential and transcript");
+    const error = new Error("publish failed: token=secret");
     const payload = { candidate: "private IP address", token: "secret token" };
 
     voiceLog.info("[voice] received signal", payload);
@@ -67,8 +67,11 @@ module("Voice | Unit | Lib | logger", function (hooks) {
     );
     assert.deepEqual(
       this.warn.firstCall.args,
-      ["[voice] failed to obtain local stream"],
-      "errors are omitted"
+      [
+        "[voice] failed to obtain local stream",
+        { name: "Error", message: "publish failed: [FILTERED]" },
+      ],
+      "only sanitized error details are included"
     );
   });
 });

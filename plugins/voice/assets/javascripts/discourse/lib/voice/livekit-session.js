@@ -340,9 +340,10 @@ export default class LivekitRoomSession {
         try {
           await this.connect(minted.url, minted.token);
           return this.#closed ? "aborted" : "reconnected";
-        } catch {
+        } catch (error) {
           voiceLog.warn(
-            `[voice-livekit] reconnect attempt failed for room ${this.#roomId}`
+            `[voice-livekit] reconnect attempt failed for room ${this.#roomId}`,
+            error
           );
         }
       }
@@ -411,9 +412,10 @@ export default class LivekitRoomSession {
         options
       );
       this.#videoKind = kind;
-    } catch {
+    } catch (error) {
       voiceLog.warn(
-        `[voice-livekit] failed to publish ${kind} video for room ${this.#roomId}`
+        `[voice-livekit] failed to publish ${kind} video for room ${this.#roomId}`,
+        error
       );
     }
   }
@@ -437,9 +439,10 @@ export default class LivekitRoomSession {
           dtx: false,
           audioBitrate: SCREEN_AUDIO_BITRATE,
         });
-    } catch {
+    } catch (error) {
       voiceLog.warn(
-        `[voice-livekit] failed to publish screen audio for room ${this.#roomId}`
+        `[voice-livekit] failed to publish screen audio for room ${this.#roomId}`,
+        error
       );
     }
   }
@@ -456,9 +459,10 @@ export default class LivekitRoomSession {
         publication.track,
         false
       );
-    } catch {
+    } catch (error) {
       voiceLog.warn(
-        `[voice-livekit] failed to unpublish a track for room ${this.#roomId}`
+        `[voice-livekit] failed to unpublish a track for room ${this.#roomId}`,
+        error
       );
     }
   }
@@ -571,9 +575,10 @@ export default class LivekitRoomSession {
 
       // A server-side permission update (e.g. a promotion synced by the
       // backend) lets the mic publish without a reconnect.
-      this.refreshPublications().catch(() => {
+      this.refreshPublications().catch((error) => {
         voiceLog.warn(
-          `[voice-livekit] failed to refresh publications for room ${this.#roomId}`
+          `[voice-livekit] failed to refresh publications for room ${this.#roomId}`,
+          error
         );
       });
     });
@@ -661,12 +666,13 @@ export default class LivekitRoomSession {
         track,
         micOptions
       );
-    } catch {
+    } catch (error) {
       // A rejected publish (e.g. a stale token after a role change) must
       // not fail the join — the user can still listen.
 
       voiceLog.warn(
-        `[voice-livekit] failed to publish microphone for room ${this.#roomId}`
+        `[voice-livekit] failed to publish microphone for room ${this.#roomId}`,
+        error
       );
     }
   }

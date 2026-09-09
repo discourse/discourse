@@ -241,7 +241,8 @@ export default class LivekitCoordinator {
       onTrack: (id, userId, track, streams) =>
         this.#onTrack(id, userId, track, streams),
       onParticipantGone: (id, userId) => this.#removeRemoteStream(id, userId),
-      onDisconnected: (kind) => this.#handleDisconnected(roomId, kind),
+      onDisconnected: (kind, reason) =>
+        this.#handleDisconnected(roomId, kind, reason),
       onConnectionChange: () => this.#bumpConnectionRevision(),
       mintToken: async () => {
         const response = await ajax(`/voice/rooms/${roomId}/livekit_token`, {
@@ -259,14 +260,14 @@ export default class LivekitCoordinator {
     });
   }
 
-  async #handleDisconnected(roomId, kind) {
+  async #handleDisconnected(roomId, kind, reason) {
     const session = this.#sessions.get(roomId);
     if (!session || !this.#isActiveRoom(roomId)) {
       return;
     }
 
     voiceLog.warn(
-      `[voice-livekit] disconnected from the media server for room ${roomId}`
+      `[voice-livekit] disconnected from the media server for room ${roomId} (${reason})`
     );
 
     if (kind === "duplicate_identity") {
