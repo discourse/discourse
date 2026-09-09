@@ -5,7 +5,7 @@ import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -67,12 +67,11 @@ export default class EmailStylesEditor extends Component {
 
   <template>
     <div ...attributes>
-      <AceEditor
-        @content={{this.editorContents}}
-        @editorId={{this.editorId}}
-        @mode={{this.currentEditorMode}}
+      <CodeEditor
+        @language={{this.currentEditorMode}}
         @onChange={{fn (mut this.editorContents)}}
         @save={{@save}}
+        @value={{this.editorContents}}
       />
 
       <div class="admin-footer">

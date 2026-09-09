@@ -21,6 +21,9 @@ import { i18n } from "discourse-i18n";
  * @param {Function} [onChange] called with the document on every edit
  * @param {boolean} [disabled] renders the content read-only
  * @param {boolean} [resizable] adds a drag handle for the editor's height
+ * @param {boolean} [autofocus] focuses the editor once it is ready
+ * @param {boolean} [htmlPlaceholder] treats the placeholder as trusted markup
+ * @param {Array<{line: number, message: string}>} [lineWarnings] warnings to mark, 1-based
  * @param {Function} [save] bound to the platform's save shortcut
  * @param {Function} [submit] bound to the platform's submit shortcut
  */
@@ -41,7 +44,7 @@ export default class CodeEditor extends Component {
   async loadEditor() {
     const Editor = await loadCodemirrorEditor();
 
-    if (this.isDestroying || this.isDestroyed) {
+    if (this.isDestroying) {
       return;
     }
 
@@ -62,27 +65,30 @@ export default class CodeEditor extends Component {
     <div
       class="code-editor"
       data-disabled={{if @disabled "true" "false"}}
+      ...attributes
       {{didInsert this.loadEditor}}
       {{didInsert this.registerElement}}
-      ...attributes
     >
       <DConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
         {{#if this.Editor}}
           <this.Editor
-            @value={{@value}}
+            @autofocus={{@autofocus}}
             @change={{@onChange}}
-            @language={{@language}}
-            @languageOptions={{@languageOptions}}
             @extensions={{@extensions}}
-            @readOnly={{@disabled}}
-            @placeholder={{@placeholder}}
-            @lineNumbers={{this.lineNumbers}}
-            @lineWrapping={{@lineWrapping}}
-            @save={{@save}}
-            @submit={{@submit}}
-            @onSetup={{@onSetup}}
             @focusIn={{@onFocusIn}}
             @focusOut={{@onFocusOut}}
+            @htmlPlaceholder={{@htmlPlaceholder}}
+            @language={{@language}}
+            @languageOptions={{@languageOptions}}
+            @lineNumbers={{this.lineNumbers}}
+            @lineWarnings={{@lineWarnings}}
+            @lineWrapping={{@lineWrapping}}
+            @onSetup={{@onSetup}}
+            @placeholder={{@placeholder}}
+            @readOnly={{@disabled}}
+            @save={{@save}}
+            @submit={{@submit}}
+            @value={{@value}}
           />
         {{/if}}
       </DConditionalLoadingSpinner>
@@ -91,10 +97,10 @@ export default class CodeEditor extends Component {
         <DResizeSeparator
           class="grippie"
           @axis="vertical"
-          @side="start"
-          @measure={{this.editorElement}}
           @label={{i18n "code_editor.resize"}}
+          @measure={{this.editorElement}}
           @onResize={{this.handleResize}}
+          @side="start"
         />
       {{/if}}
     </div>

@@ -25,7 +25,6 @@ const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
-  @service appEvents;
   @service siteSettings;
   @service messageBus;
   @service toasts;
@@ -253,7 +252,6 @@ export default class PluginsExplorerController extends Controller {
     }
 
     panes.style.height = `${size}px`;
-    this.appEvents.trigger("ace:resize");
   }
 
   /** Lets go of the panes. Called by the route on exit. */

@@ -11,6 +11,7 @@ import {
   completionStatus,
 } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { setDiagnostics } from "@codemirror/lint";
 import { Compartment, EditorState } from "@codemirror/state";
 import {
   EditorView,
@@ -59,7 +60,7 @@ export default class CodemirrorEditor extends Component {
     ];
 
     if (this.args.placeholder) {
-      extensions.push(placeholder(this.args.placeholder));
+      extensions.push(placeholder(this.#placeholderContent));
     }
 
     if (this.args.lineNumbers) {
@@ -124,6 +125,11 @@ export default class CodemirrorEditor extends Component {
     });
 
     this.#lastValue = initialValue;
+    this.updateWarnings();
+
+    if (this.args.autofocus) {
+      this.view.focus();
+    }
 
     // A handle for callers that only have the element: page objects driving
     // the document, and anything else outside the component tree.
@@ -159,6 +165,20 @@ export default class CodemirrorEditor extends Component {
     }
 
     return bindings;
+  }
+
+  /**
+   * A placeholder is plain text unless the caller opts in, in which case it is
+   * markup the caller is responsible for having sanitised.
+   */
+  get #placeholderContent() {
+    if (!this.args.htmlPlaceholder) {
+      return this.args.placeholder;
+    }
+
+    const element = document.createElement("div");
+    element.innerHTML = this.args.placeholder;
+    return element;
   }
 
   get #readOnlyExtensions() {
@@ -199,6 +219,27 @@ export default class CodemirrorEditor extends Component {
           : []
       ),
     });
+  }
+
+  /**
+   * Line-numbered warnings, mapped onto document ranges. Callers report the
+   * lines they found rather than positions they would have to derive.
+   */
+  @bind
+  updateWarnings() {
+    if (!this.view) {
+      return;
+    }
+
+    const doc = this.view.state.doc;
+    const diagnostics = (this.args.lineWarnings || [])
+      .filter(({ line }) => line >= 1 && line <= doc.lines)
+      .map(({ line, message }) => {
+        const { from, to } = doc.line(line);
+        return { from, to, severity: "warning", message };
+      });
+
+    this.view.dispatch(setDiagnostics(this.view.state, diagnostics));
   }
 
   @bind
@@ -244,6 +285,7 @@ export default class CodemirrorEditor extends Component {
       {{didUpdate this.updateValue @value}}
       {{didUpdate this.updateLanguage @language}}
       {{didUpdate this.updateReadOnly @readOnly}}
+      {{didUpdate this.updateWarnings @lineWarnings}}
       {{willDestroy this.teardown}}
     ></div>
   </template>

@@ -181,6 +181,33 @@ module("Integration | Component | code-editor", function (hooks) {
     );
   });
 
+  test("marks the lines a caller reports as warnings", async function (assert) {
+    class State {
+      @tracked warnings = [{ line: 2, message: "Avoid this" }];
+    }
+    const state = new State();
+    const value = ["fine", "suspect", "fine"].join("\n");
+
+    await render(
+      <template>
+        <CodeEditor @value={{value}} @lineWarnings={{state.warnings}} />
+      </template>
+    );
+    await waitUntil(() => document.querySelector(".cm-lintRange"));
+
+    assert
+      .dom(".cm-lintRange")
+      .exists({ count: 1 }, "only the reported line is marked");
+
+    state.warnings = [];
+    await settled();
+    await waitUntil(() => !document.querySelector(".cm-lintRange"));
+
+    assert
+      .dom(".cm-lintRange")
+      .doesNotExist("clearing the warnings unmarks it");
+  });
+
   test("resizable adds a drag handle", async function (assert) {
     await render(
       <template><CodeEditor @value="" @resizable={{true}} /></template>
