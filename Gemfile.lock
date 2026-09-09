@@ -721,7 +721,7 @@ GEM
       rack (>= 2.2.4, < 3.3)
       redis-client (>= 0.23.0, < 1)
     simplecov (1.1.1)
-    simpleidn (0.2.3)
+    simpleidn (0.3.0)
     smarter_json (1.2.6)
       bigdecimal
     snaky_hash (2.0.7)
@@ -1285,7 +1285,7 @@ CHECKSUMS
   shoulda-matchers (8.0.1) sha256=5dbb46e5765b9da225111b085e0819e8c8a121ff94bba430a153eb1ea2c60288
   sidekiq (7.3.10) sha256=781eb4f65ef36042534ad73d72f211283afb7fee82eec786ada4ed1972ef8e3c
   simplecov (1.1.1) sha256=25825ef13f0b2e74694d769817dad6ab8e90131dabdaa666e522fea105521e78
-  simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
+  simpleidn (0.3.0) sha256=12ca730bed2f3db04d11e9bfd1bca3e11fb37f55b21eb2e9793fb5814bf54d03
   smarter_json (1.2.6) sha256=6638a2d23954e26d268212b4c8f5b9871d31b72f3d169371cca1082c1a722b45
   snaky_hash (2.0.7) sha256=7d02c70012a3f932e48860cd024577908300c9aa615e0cb9b450aaa749cbcb4d
   sqlite3 (2.9.6-aarch64-linux-gnu) sha256=d8b1f7d23efd7abac285775a9566562fc7debfef79d594e3a20354406fb7907c
