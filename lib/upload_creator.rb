@@ -696,8 +696,10 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          frames =
-            begin
+          begin
+            if GlobalSetting.enable_vips_image_processing
+              DiscourseVips.animated?(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+            else
               ImageMagick.identify(
                 "-ping",
                 "-format",
@@ -706,12 +708,11 @@ class UploadCreator
                 operation: :upload_animation_probe,
                 read: [@file.path],
                 timeout: Upload::MAX_IDENTIFY_SECONDS,
-              ).to_i
-            rescue StandardError
-              1
+              ).to_i > 1
             end
-
-          frames > 1
+          rescue StandardError
+            false
+          end
         else
           false
         end

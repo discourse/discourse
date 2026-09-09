@@ -33,6 +33,35 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".animated?" do
+    %w[tiny_animated.gif animated.gif animated.webp multipage.avif].each do |filename|
+      it "detects animation in #{filename}" do
+        input_path = file_from_fixtures(filename).path
+
+        expect(described_class.animated?(input_path:, timeout: 5)).to eq(true)
+      end
+    end
+
+    %w[static.gif static.webp static.avif].each do |filename|
+      it "identifies #{filename} as static" do
+        input_path = file_from_fixtures(filename).path
+
+        expect(described_class.animated?(input_path:, timeout: 5)).to eq(false)
+      end
+    end
+
+    it "rejects an unreadable image" do
+      Tempfile.create(%w[unreadable .gif]) do |file|
+        file.write("invalid image")
+        file.flush
+
+        expect { described_class.animated?(input_path: file.path, timeout: 5) }.to raise_error(
+          DiscourseVips::InvalidImage,
+        )
+      end
+    end
+  end
+
   describe "worker lifecycle" do
     it "recovers after the worker exits unexpectedly" do
       described_class.version
