@@ -1107,6 +1107,9 @@ class DiscourseVipsWorker
           resized_width = [(image.width * scale).round, width].max
           resized_height = [(image.height * scale).round, height].max
           if strip_metadata
+            if %i[rgb16 grey16].include?(image.interpretation)
+              image = image.colourspace(image.interpretation == :grey16 ? :b_w : :srgb)
+            end
             image =
               resize_thumbnail_image(
                 image:,

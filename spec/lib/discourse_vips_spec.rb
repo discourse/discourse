@@ -848,6 +848,50 @@ RSpec.describe DiscourseVips do
   end
 
   describe ".crop" do
+    { rgb16: [32_768, 8192, 65_535], grey16: [32_768] }.each do |interpretation, channels|
+      [false, true].each do |alpha|
+        it "preserves #{interpretation} channel values with alpha #{alpha} across crop depth modes" do
+          Dir.mktmpdir do |directory|
+            input_path = File.join(directory, "source.png")
+            source_channels = alpha ? channels + [32_768] : channels
+            Vips::Image
+              .black(60, 40)
+              .cast(:ushort)
+              .new_from_image(source_channels)
+              .copy(interpretation:)
+              .pngsave(input_path, bitdepth: 16)
+
+            [false, true].each do |strip_metadata|
+              output_path = File.join(directory, "cropped-#{strip_metadata}.png")
+
+              described_class.crop(
+                input_path:,
+                output_path:,
+                input_format: "png",
+                output_format: "png",
+                width: 21,
+                height: 21,
+                quality: nil,
+                strip_metadata:,
+                timeout: 20,
+              )
+
+              expect(File.binread(output_path, 25).getbyte(24)).to eq(strip_metadata ? 8 : 16)
+              image = Vips::Image.pngload(output_path)
+              expect([image.width, image.height]).to eq([21, 21])
+              expect(image.has_alpha?).to eq(alpha)
+              expected_channels =
+                strip_metadata ? source_channels.map { |channel| channel / 256 } : source_channels
+              image
+                .getpoint(10, 10)
+                .zip(expected_channels)
+                .each { |actual, expected| expect(actual).to be_within(1).of(expected) }
+            end
+          end
+        end
+      end
+    end
+
     it "rasterizes SVG input over the existing white background" do
       Dir.mktmpdir do |directory|
         input_path = File.join(directory, "source.svg")
