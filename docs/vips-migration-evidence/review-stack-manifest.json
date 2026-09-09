@@ -157,7 +157,7 @@
       "path": "/tmp/discourse-vips-review-06-ico-01a0846e",
       "branch": "tgxworld/vips-review-06-ico",
       "base": "4c106c0a96e78cb6d3b0547967e436e31fc198fa",
-      "head": "7bd1abcfdeefa54ddc3cb1280f1e6710672da71b",
+      "head": "a29087e9804520698437ca32cbfd7888749d96a4",
       "sources": [
         "da0c0d17db42e5b096a5c530700b3a33f607897a",
         "5bba606a5d2326d30cf31f68224839cd394d73b5"
@@ -197,13 +197,21 @@
       ],
       "original_head": "08ca44eea36dd03104fb13867455ab8279921e37",
       "original_base": "36b59fd34321fd60fbfa23af9a97b9754a86fe47",
-      "clean": true
+      "clean": true,
+      "rewrite_history": [
+        {
+          "head": "7bd1abcfdeefa54ddc3cb1280f1e6710672da71b",
+          "base": "4c106c0a96e78cb6d3b0547967e436e31fc198fa",
+          "reason": "before approved frozen headers"
+        }
+      ],
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
     },
     {
       "path": "/tmp/discourse-vips-review-07-jpeg-01a0846e",
       "branch": "tgxworld/vips-review-07-jpeg",
-      "base": "7bd1abcfdeefa54ddc3cb1280f1e6710672da71b",
-      "head": "83d09d9b023c095e0bd3afba560ab321f873eb91",
+      "base": "a29087e9804520698437ca32cbfd7888749d96a4",
+      "head": "04940386277b10722d9dc296fa9a98a851ccda6f",
       "sources": [
         "b3f7fbecca87eaf62f32ffc257fa23df899ec2b7",
         "33debf50a19d9468128e33b95f2fa0695a76239b",
@@ -239,13 +247,21 @@
         "82ea614a8c798f65c6f76b83627ccf1eb1b38402",
         "2ba8357019543403265a8b4cd24c906815484efe"
       ],
-      "clean": true
+      "clean": true,
+      "rewrite_history": [
+        {
+          "head": "83d09d9b023c095e0bd3afba560ab321f873eb91",
+          "base": "7bd1abcfdeefa54ddc3cb1280f1e6710672da71b",
+          "reason": "before approved frozen headers"
+        }
+      ],
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
     },
     {
       "path": "/tmp/discourse-vips-review-08-orientation-01a0846e",
       "branch": "tgxworld/vips-review-08-orientation",
-      "base": "83d09d9b023c095e0bd3afba560ab321f873eb91",
-      "head": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
+      "base": "04940386277b10722d9dc296fa9a98a851ccda6f",
+      "head": "871a32ddf21e33322c6fdab41afe89d766d9dd74",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -280,13 +296,21 @@
         "82ea614a8c798f65c6f76b83627ccf1eb1b38402",
         "2ba8357019543403265a8b4cd24c906815484efe"
       ],
-      "clean": true
+      "clean": true,
+      "rewrite_history": [
+        {
+          "head": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
+          "base": "83d09d9b023c095e0bd3afba560ab321f873eb91",
+          "reason": "before approved frozen headers"
+        }
+      ],
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
     },
     {
       "path": "/tmp/discourse-vips-review-09-downsize-01a0846e",
       "branch": "tgxworld/vips-review-09-downsize",
-      "base": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
-      "head": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
+      "base": "871a32ddf21e33322c6fdab41afe89d766d9dd74",
+      "head": "8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -321,13 +345,21 @@
         "2ba8357019543403265a8b4cd24c906815484efe",
         "c63ee831d4d2e332c466f1a272793eec94d9c22d"
       ],
-      "clean": true
+      "clean": true,
+      "rewrite_history": [
+        {
+          "head": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
+          "base": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
+          "reason": "before approved frozen headers"
+        }
+      ],
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
     },
     {
       "path": "/tmp/discourse-vips-review-10-resize-01a0846e",
       "branch": "tgxworld/vips-review-10-resize",
-      "base": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
-      "head": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
+      "base": "8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8",
+      "head": "79abe3aae19814a2ce8e63a586fa9682567a6a0e",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -363,13 +395,21 @@
         "2ba8357019543403265a8b4cd24c906815484efe",
         "c63ee831d4d2e332c466f1a272793eec94d9c22d"
       ],
-      "clean": true
+      "clean": true,
+      "rewrite_history": [
+        {
+          "head": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
+          "base": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
+          "reason": "before approved frozen headers"
+        }
+      ],
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
     },
     {
       "path": "/tmp/discourse-vips-review-11-crop-01a0846e",
       "branch": "tgxworld/vips-review-11-crop",
-      "base": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
-      "head": "e65d0762d8eda0bf3452e6f56ac298d0ad48ef3d",
+      "base": "79abe3aae19814a2ce8e63a586fa9682567a6a0e",
+      "head": "a72c194e07357fddd533eec94dc52a9add4f8201",
       "sources": [
         "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
       ],
@@ -405,10 +445,19 @@
         "2ba8357019543403265a8b4cd24c906815484efe",
         "c63ee831d4d2e332c466f1a272793eec94d9c22d"
       ],
-      "clean": true
+      "clean": true,
+      "rewrite_history": [
+        {
+          "head": "e65d0762d8eda0bf3452e6f56ac298d0ad48ef3d",
+          "base": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
+          "reason": "before approved frozen headers"
+        }
+      ],
+      "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
     }
   ],
   "initial_verified_reference": "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948",
   "final_source_reference": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
-  "verification_scope": "Branch topology, operation deltas, staged contents, fixture hashes, and clean worktrees checked; runtime results belong to the separately recorded tested snapshots."
+  "verification_scope": "Branch topology, operation deltas, staged contents, fixture hashes, and clean worktrees checked; runtime results belong to the separately recorded tested snapshots.",
+  "approved_headers_source": "fa39599e6aa0050750f1014228b374b7f4f74c4d"
 }

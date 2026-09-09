@@ -7,11 +7,11 @@ The eleven review branches form one linear stack, with one operation added per c
 | 03-svg-assets | `tgxworld/vips-review-03-svg-assets` | `60ee5446c33c68e5d9711ab717e6e8a29449dd32` | `3f82276023c2765e39a1a724dc62e71af0c126ac` |
 | 04-og | `tgxworld/vips-review-04-og` | `3f82276023c2765e39a1a724dc62e71af0c126ac` | `9c2219b3bec399bc736fde3ddbec58f29df4420f` |
 | 05-heif | `tgxworld/vips-review-05-heif` | `9c2219b3bec399bc736fde3ddbec58f29df4420f` | `4c106c0a96e78cb6d3b0547967e436e31fc198fa` |
-| 06-ico | `tgxworld/vips-review-06-ico` | `4c106c0a96e78cb6d3b0547967e436e31fc198fa` | `7bd1abcfdeefa54ddc3cb1280f1e6710672da71b` |
-| 07-jpeg | `tgxworld/vips-review-07-jpeg` | `7bd1abcfdeefa54ddc3cb1280f1e6710672da71b` | `83d09d9b023c095e0bd3afba560ab321f873eb91` |
-| 08-orientation | `tgxworld/vips-review-08-orientation` | `83d09d9b023c095e0bd3afba560ab321f873eb91` | `f7ff3f7cf849e9173fff8704ab1600aa31866c62` |
-| 09-downsize | `tgxworld/vips-review-09-downsize` | `f7ff3f7cf849e9173fff8704ab1600aa31866c62` | `d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb` |
-| 10-resize | `tgxworld/vips-review-10-resize` | `d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb` | `110509b7f7f5807d467b7c93ba6a9159d2f45e5f` |
-| 11-crop | `tgxworld/vips-review-11-crop` | `110509b7f7f5807d467b7c93ba6a9159d2f45e5f` | `e65d0762d8eda0bf3452e6f56ac298d0ad48ef3d` |
+| 06-ico | `tgxworld/vips-review-06-ico` | `4c106c0a96e78cb6d3b0547967e436e31fc198fa` | `a29087e9804520698437ca32cbfd7888749d96a4` |
+| 07-jpeg | `tgxworld/vips-review-07-jpeg` | `a29087e9804520698437ca32cbfd7888749d96a4` | `04940386277b10722d9dc296fa9a98a851ccda6f` |
+| 08-orientation | `tgxworld/vips-review-08-orientation` | `04940386277b10722d9dc296fa9a98a851ccda6f` | `871a32ddf21e33322c6fdab41afe89d766d9dd74` |
+| 09-downsize | `tgxworld/vips-review-09-downsize` | `871a32ddf21e33322c6fdab41afe89d766d9dd74` | `8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8` |
+| 10-resize | `tgxworld/vips-review-10-resize` | `8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8` | `79abe3aae19814a2ce8e63a586fa9682567a6a0e` |
+| 11-crop | `tgxworld/vips-review-11-crop` | `79abe3aae19814a2ce8e63a586fa9682567a6a0e` | `a72c194e07357fddd533eec94dc52a9add4f8201` |
 
-Branch 07 introduces JPEG sampling helpers, conversion coverage, and 4:2:2/4:4:0 fixtures; branch 08 adds orientation sampling coverage. Branches 09–11 introduce downsize, resize, and crop sampling/SVG coverage with each operation. Branch 10 retains the approved removal of the unused resize colors option. The orientation and geometry callers still use ImageMagick for quality estimation. Missing frozen-string directives remain a known lint gate pending approval; none were added during this rewrite.
+Branch 07 introduces JPEG sampling helpers, conversion coverage, and 4:2:2/4:4:0 fixtures; branch 08 adds orientation sampling coverage. Branches 09–11 introduce downsize, resize, and crop sampling/SVG coverage with each operation. Branch 10 retains the approved removal of the unused resize colors option. The orientation and geometry callers still use ImageMagick for quality estimation. The required frozen-string directives were approved and added in their introduction commits; the five-file root lint check passed.

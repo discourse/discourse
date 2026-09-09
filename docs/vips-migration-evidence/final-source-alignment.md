@@ -4,12 +4,12 @@ The comparison reads the relevant facade method and worker operation, follows it
 
 | Branch | Exact head | Measured source scope | Alignment |
 | --- | --- | --- | --- |
-| 06 | `7bd1abcfdeefa54ddc3cb1280f1e6710672da71b` | `ico/benchmark` | Operation + loader blocking exact; IcoImage formatting differences only. |
-| 07 | `83d09d9b023c095e0bd3afba560ab321f873eb91` | `jpeg/final-selective` | All 8 relevant worker methods and facade exact. |
-| 08 | `f7ff3f7cf849e9173fff8704ab1600aa31866c62` | `orientation/final-selective` | All 5 relevant worker methods and facade exact in corrected 13-case bundle. |
-| 09 | `d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb` | `downsize/benchmark; downsize/svg-white/benchmark` | 13/14 worker methods exact in raster bundle; all 14 exact in SVG rerun. |
-| 10 | `110509b7f7f5807d467b7c93ba6a9159d2f45e5f` | `resize/benchmark` | All 15 relevant worker methods and facade exact. |
-| 11 | `e65d0762d8eda0bf3452e6f56ac298d0ad48ef3d` | `crop/benchmark; crop/svg-white-{false,true}/benchmark` | 14/15 worker methods exact in raster bundle; all 15 exact in each SVG rerun. |
+| 06 | `a29087e9804520698437ca32cbfd7888749d96a4` | `ico/benchmark` | Operation + loader blocking exact; IcoImage formatting differences only. |
+| 07 | `04940386277b10722d9dc296fa9a98a851ccda6f` | `jpeg/final-selective` | All 8 relevant worker methods and facade exact. |
+| 08 | `871a32ddf21e33322c6fdab41afe89d766d9dd74` | `orientation/final-selective` | All 5 relevant worker methods and facade exact in corrected 13-case bundle. |
+| 09 | `8eebe47e5c1c630f2ccd77afbc58a5900f6f92b8` | `downsize/benchmark; downsize/svg-white/benchmark` | 13/14 worker methods exact in raster bundle; all 14 exact in SVG rerun. |
+| 10 | `79abe3aae19814a2ce8e63a586fa9682567a6a0e` | `resize/benchmark` | All 15 relevant worker methods and facade exact. |
+| 11 | `a72c194e07357fddd533eec94dc52a9add4f8201` | `crop/benchmark; crop/svg-white-{false,true}/benchmark` | 14/15 worker methods exact in raster bundle; all 15 exact in each SVG rerun. |
 
 For downsize and crop, the only worker-method difference in the older raster bundles is `load_downsize_image`'s SVG arm: review code adds `.flatten(background: [255, 255, 255])`. Non-SVG loader arms remain exact. The separate white-background SVG bundles match the complete current method, including that arm. Their reports must remain separate source snapshots, not be presented as one run.
 
@@ -21,4 +21,6 @@ Final orientation comparison used `/tmp/discourse-vips-orientation-01a0846e/publ
 
 Worker/facade method ordering differs because review commits introduce operations one at a time. No whole-worker hash identity is claimed. Staged sampling tests are scoped to available operations; branch 07 has three direct conversion examples, branches 08/09 omit invariant metadata loops, and branches 10/11 retain varying metadata modes. SVG tests reflect white-background semantics. Those spec changes are not benchmark runtime implementation changes. Branch 10 also contains the explicitly approved removal of legacy resize `colors` handling and its two obsolete tests; historical colors-option measurements are excluded.
 
-This audit does not establish complete UploadCreator/OptimizedImage caller behavior, source-quality estimator equivalence, post-optimizer output equivalence, or final-head tests. Missing frozen-string directives and publication evidence links remain separate gates. Source and evidence files were not modified by this comparison.
+This audit does not establish complete UploadCreator/OptimizedImage caller behavior, source-quality estimator equivalence, post-optimizer output equivalence, or final-head tests. Required frozen-string directives have now been approved and added; publication evidence links and final-head validation remain separate gates. Source and evidence files were not modified by this comparison.
+
+The review heads above include the approved directives from `fa39599e6aa0050750f1014228b374b7f4f74c4d`. Compared with the previous aligned heads, every changed file differs only by the two-line frozen-string header. Operation method bodies remain byte-identical. Full ICO helper-file identity against geometry benchmarks now differs by that header alone; freezing can affect runtime strings, so this source comparison does not replace the scheduled behavioral tests. Benchmark source files remain untouched.
