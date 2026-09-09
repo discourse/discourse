@@ -342,6 +342,24 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "checks the category when combined options select another destination" do
+        [
+          { destination_topic_id: dest_topic.id },
+          { archetype: Archetype.default },
+        ].each do |options|
+          post "/t/#{topic.id}/move-posts.json",
+               params: {
+                 title: "Logan is a good movie",
+                 post_ids: [p2.id],
+                 category_id: staff_category.id,
+               }.merge(options)
+
+          expect(response).to be_forbidden
+          expect(response.parsed_body["errors"]).to be_present
+          expect(p2.reload.topic_id).to eq(topic.id)
+        end
+      end
+
       it "ignores unrelated post IDs without exposing their reviewables" do
         restricted_category = Fabricate(:private_category, group: Fabricate(:group))
         restricted_topic = Fabricate(:topic, category: restricted_category)
@@ -629,6 +647,44 @@ RSpec.describe TopicsController do
              }
 
         expect(response).to be_forbidden
+      end
+
+      it "returns JSON success through a hijacked response" do
+        io = StringIO.new
+
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               post_ids: [p2.id],
+               destination_topic_id: dest_topic.id,
+             },
+             env: {
+               "rack.hijack" => -> { io },
+             }
+
+        headers, body = io.string.split("\r\n\r\n", 2)
+        expect(headers).to start_with("HTTP/1.1 200 OK\r\n")
+        expect(JSON.parse(body)).to eq("success" => true, "url" => dest_topic.relative_url)
+        expect(p2.reload.topic_id).to eq(dest_topic.id)
+      end
+
+      it "returns JSON permission errors through a hijacked response without moving posts" do
+        dest_topic.update!(category: staff_category)
+        io = StringIO.new
+
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               post_ids: [p2.id],
+               destination_topic_id: dest_topic.id,
+             },
+             env: {
+               "rack.hijack" => -> { io },
+             }
+
+        headers, body = io.string.split("\r\n\r\n", 2)
+        expect(headers).to start_with("HTTP/1.1 403 Forbidden\r\n")
+        expect(JSON.parse(body)["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
+        expect(topic.reload.deleted_at).to be_nil
       end
 
       it "does not allow posts outside of the category to be moved" do
@@ -945,6 +1001,42 @@ RSpec.describe TopicsController do
         post "/t/#{topic.id}/merge-topic.json", params: { destination_topic_id: dest_topic.id }
 
         expect(response).to be_forbidden
+      end
+
+      it "returns JSON success through a hijacked response" do
+        io = StringIO.new
+
+        post "/t/#{topic.id}/merge-topic.json",
+             params: {
+               destination_topic_id: dest_topic.id,
+             },
+             env: {
+               "rack.hijack" => -> { io },
+             }
+
+        headers, body = io.string.split("\r\n\r\n", 2)
+        expect(headers).to start_with("HTTP/1.1 200 OK\r\n")
+        expect(JSON.parse(body)).to eq("success" => true, "url" => dest_topic.relative_url)
+        expect(p2.reload.topic_id).to eq(dest_topic.id)
+      end
+
+      it "returns JSON permission errors through a hijacked response without moving posts" do
+        dest_topic.update!(category: staff_category)
+        io = StringIO.new
+
+        post "/t/#{topic.id}/merge-topic.json",
+             params: {
+               destination_topic_id: dest_topic.id,
+             },
+             env: {
+               "rack.hijack" => -> { io },
+             }
+
+        headers, body = io.string.split("\r\n\r\n", 2)
+        expect(headers).to start_with("HTTP/1.1 403 Forbidden\r\n")
+        expect(JSON.parse(body)["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
+        expect(topic.reload.deleted_at).to be_nil
       end
 
       it "does not allow posts outside of the category to be moved" do
