@@ -1,9 +1,11 @@
 # CI runtime experiment
 
 Reach 480 seconds elapsed from PR workflow creation until the last applicable
-check completes. Track queued time and aggregate runner seconds separately.
+check completes. Track queued time, aggregate runner seconds, runner capacity,
+and peak job-container memory separately. Record OOM counters and test retries.
 Preserve the complete test matrix, test selection, assertions, retries, and
-failure reporting. A skipped test suite is not a successful optimization.
+failure reporting. Keep the existing job count and test groups; do not split
+tests into additional jobs. A skipped test suite is not a successful optimization.
 
 Use this draft PR as the measurement environment. Keep the base revision fixed
 at 0708de39bcebe79c8469dfd88cd568c8e71b42c7 during the experiment. Record external
@@ -30,8 +32,8 @@ confirmation measurements, unless the user changes this limit.
 
 Main Tests run 34313007095 took approximately 13 minutes. Its core system-test
 step took 690 seconds and core backend RSpec took 512 seconds. Setup overlap
-alone cannot reach the target. Start with worker utilization and suite balancing;
-consider exhaustive sharding if needed, while reporting additional runner cost.
+alone cannot reach the target. Explore worker utilization, runtime-based balancing,
+and setup efficiency within the existing jobs. Do not add test jobs.
 
 This file establishes a baseline without changing workflow behavior. Local
 measurement scripts and raw results live beside it and are excluded from commits.
