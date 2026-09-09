@@ -1862,7 +1862,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           <template>
             <div id="row" {{dDragAndDropSource type="row"}}>
               row
-              <a id="link" href="/somewhere">link</a>
+              <a href="/somewhere" id="link">link</a>
             </div>
           </template>
         );
@@ -1898,8 +1898,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           >
             <button
               id="grip"
-              type="button"
               style="width: 30px"
+              type="button"
               {{didInsert state.captureHandle}}
             >grip</button>
           </div>
@@ -2984,9 +2984,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         await render(
           <template>
             <div
-              id="tgt"
               class="positioned --drag-above"
               data-drop-target
+              id="tgt"
             >tgt</div>
           </template>
         );
@@ -3001,7 +3001,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       test("a drop target that positions nothing still gets the containing block the line needs", async function (assert) {
         await render(
           <template>
-            <div id="tgt" class="--drag-above" data-drop-target>tgt</div>
+            <div class="--drag-above" data-drop-target id="tgt">tgt</div>
           </template>
         );
 

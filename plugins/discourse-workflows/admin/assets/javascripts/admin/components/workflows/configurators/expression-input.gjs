@@ -186,51 +186,6 @@ export default class ExpressionInput extends Component {
     this.#armPickerDismiss();
   }
 
-  // CodeMirror swallows pointerdowns before float-kit's outside-click detector
-  // sees them, so dismiss on a capture listener instead.
-  #armPickerDismiss() {
-    this.#teardownPickerDismiss();
-    const editor = this.wrapperElement?.querySelector(".cm-editor");
-    if (!editor) {
-      return;
-    }
-    this.#pickerEditorElement = editor;
-    this.#pickerDismiss = (event) => {
-      // A pointerdown on the pill that owns the open dropdown is left to the
-      // pill's own click handler, which toggles it shut — closing here too
-      // would make it close and immediately reopen.
-      const openPill = this.#pickerTrigger?.closest?.(".cm-wf-reference-pill");
-      if (
-        openPill &&
-        event.target?.closest?.(".cm-wf-reference-pill") === openPill
-      ) {
-        return;
-      }
-      this.#closeReferencePicker();
-    };
-    editor.addEventListener("pointerdown", this.#pickerDismiss, {
-      capture: true,
-    });
-  }
-
-  #teardownPickerDismiss() {
-    if (this.#pickerEditorElement && this.#pickerDismiss) {
-      this.#pickerEditorElement.removeEventListener(
-        "pointerdown",
-        this.#pickerDismiss,
-        { capture: true }
-      );
-    }
-    this.#pickerEditorElement = null;
-    this.#pickerDismiss = null;
-  }
-
-  #closeReferencePicker() {
-    this.#pickerTrigger = null;
-    this.menu.close(REFERENCE_PICKER_IDENTIFIER);
-    this.#teardownPickerDismiss();
-  }
-
   @action
   handleChange(value) {
     this.args.field.set(`=${value}`);
@@ -277,15 +232,60 @@ export default class ExpressionInput extends Component {
     this.wrapperElement = element;
   }
 
+  // CodeMirror swallows pointerdowns before float-kit's outside-click detector
+  // sees them, so dismiss on a capture listener instead.
+  #armPickerDismiss() {
+    this.#teardownPickerDismiss();
+    const editor = this.wrapperElement?.querySelector(".cm-editor");
+    if (!editor) {
+      return;
+    }
+    this.#pickerEditorElement = editor;
+    this.#pickerDismiss = (event) => {
+      // A pointerdown on the pill that owns the open dropdown is left to the
+      // pill's own click handler, which toggles it shut — closing here too
+      // would make it close and immediately reopen.
+      const openPill = this.#pickerTrigger?.closest?.(".cm-wf-reference-pill");
+      if (
+        openPill &&
+        event.target?.closest?.(".cm-wf-reference-pill") === openPill
+      ) {
+        return;
+      }
+      this.#closeReferencePicker();
+    };
+    editor.addEventListener("pointerdown", this.#pickerDismiss, {
+      capture: true,
+    });
+  }
+
+  #teardownPickerDismiss() {
+    if (this.#pickerEditorElement && this.#pickerDismiss) {
+      this.#pickerEditorElement.removeEventListener(
+        "pointerdown",
+        this.#pickerDismiss,
+        { capture: true }
+      );
+    }
+    this.#pickerEditorElement = null;
+    this.#pickerDismiss = null;
+  }
+
+  #closeReferencePicker() {
+    this.#pickerTrigger = null;
+    this.menu.close(REFERENCE_PICKER_IDENTIFIER);
+    this.#teardownPickerDismiss();
+  }
+
   <template>
     <div {{didInsert this.registerWrapper}}>
       <VariableInput
-        @onSetup={{this.labelEditor}}
-        @value={{this.displayValue}}
-        @onChange={{this.handleChange}}
         @extensions={{this.buildExtensions}}
+        @onChange={{this.handleChange}}
         @onFocusIn={{this.handleFocusIn}}
         @onFocusOut={{this.handleFocusOut}}
+        @onSetup={{this.labelEditor}}
+        @value={{this.displayValue}}
       />
     </div>
     <ExpressionPreview

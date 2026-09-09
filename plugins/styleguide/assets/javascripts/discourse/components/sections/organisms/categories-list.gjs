@@ -3,7 +3,7 @@ import CategoriesOnlyExample from "../../examples/organisms/categories-only";
 import categoriesOnlySource from "../../examples/organisms/categories-only?source=file";
 
 export default <template>
-  <StyleguideExample @title="<CategoriesOnly>" @code={{categoriesOnlySource}}>
+  <StyleguideExample @code={{categoriesOnlySource}} @title="<CategoriesOnly>">
     <CategoriesOnlyExample />
   </StyleguideExample>
 </template>

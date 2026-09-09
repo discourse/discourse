@@ -1084,6 +1084,9 @@ zh_TW:
         note_added: "管理員備註"
         note_added_by: "管理員備註：%{username} · %{relativeDate}"
         no_events: "沒有可顯示的時間軸事件"
+      author_penalty:
+        toast:
+          undo: "復原"
       notes:
         add_note_description: "新增備註，為其他管理員提供背景資訊。"
         add_note_button: "新增備註"
@@ -1728,7 +1731,6 @@ zh_TW:
       admin: "%{user} 是管理員"
       moderator_tooltip: "該使用者為板主"
       admin_tooltip: "該使用者為管理員"
-      silenced_tooltip: "該使用者已被禁言"
       suspended_notice: "該使用者已被停權至 %{date}。"
       suspended_permanently: "該使用者已被停權。"
       suspended_reason: "原因: "

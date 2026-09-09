@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
+import { trackedArray } from "@ember/reactive/collections";
 import {
   removeAllowedTopicGroup,
   removeAllowedTopicUser,
@@ -41,15 +42,6 @@ export default class TopicDetails extends RestCompatModel {
   constructor(topicId) {
     super();
     this.#topicId = topicId == null ? null : String(topicId);
-  }
-
-  // Topic's `_details` field initializer runs before Topic.id is assigned, so
-  // back-fill lazily from `this.topic.id` on first access.
-  #effectiveTopicId() {
-    if (this.#topicId == null && this.topic?.id != null) {
-      this.#topicId = String(this.topic.id);
-    }
-    return this.#topicId;
   }
 
   // `#topicId in this` is only true once `super()` has returned and our own
@@ -94,8 +86,12 @@ export default class TopicDetails extends RestCompatModel {
       return;
     }
     const wrapped = { ...details };
+    // Inviting a user appends here in place; inviting a group reloads the
+    // topic instead, so `allowed_groups` needs no equivalent.
     if (details.allowed_users) {
-      wrapped.allowed_users = details.allowed_users.map((u) => User.create(u));
+      wrapped.allowed_users = trackedArray(
+        details.allowed_users.map((u) => User.create(u))
+      );
     }
     if (details.participants) {
       const topic = this.topic;
@@ -134,9 +130,18 @@ export default class TopicDetails extends RestCompatModel {
     await store.request(
       removeAllowedTopicUser(this.#effectiveTopicId(), username)
     );
-    this.allowed_users = this.allowed_users.filter(
-      (u) => u.username !== username
+    this.allowed_users = trackedArray(
+      this.allowed_users.filter((u) => u.username !== username)
     );
+  }
+
+  // Topic's `_details` field initializer runs before Topic.id is assigned, so
+  // back-fill lazily from `this.topic.id` on first access.
+  #effectiveTopicId() {
+    if (this.#topicId == null && this.topic?.id != null) {
+      this.#topicId = String(this.topic.id);
+    }
+    return this.#topicId;
   }
 }
 

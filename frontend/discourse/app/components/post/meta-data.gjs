@@ -108,14 +108,14 @@ export default class PostMetaData extends Component {
         {{! do not include PluginOutlets here, use the DAG API instead }}
         {{#each this.availableInfoComponents key="key" as |item|}}
           <item.InfoComponent
-            @post={{@post}}
             @editPost={{@editPost}}
             @hasRepliesAbove={{@hasRepliesAbove}}
             @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
+            @post={{@post}}
             @repliesAbove={{@repliesAbove}}
             @selectBelow={{@selectBelow}}
-            @selectReplies={{@selectReplies}}
             @selected={{@selected}}
+            @selectReplies={{@selectReplies}}
             @showHistory={{@showHistory}}
             @showRawEmail={{@showRawEmail}}
             @togglePostSelection={{@togglePostSelection}}

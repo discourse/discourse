@@ -31,8 +31,8 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     await render(
       <template>
         <DUserInfo
-          @user={{this.currentUser}}
           @includeLink={{this.includeLink}}
+          @user={{this.currentUser}}
         />
       </template>
     );
@@ -50,8 +50,8 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     await render(
       <template>
         <DUserInfo
-          @user={{this.currentUser}}
           @includeAvatar={{this.includeAvatar}}
+          @user={{this.currentUser}}
         />
       </template>
     );
@@ -69,7 +69,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -81,7 +81,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -94,7 +94,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{false}} />
+        <DUserInfo @showStatus={{false}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -116,7 +116,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} />
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} />
       </template>
     );
 
@@ -132,9 +132,9 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
     await render(
       <template>
         <DUserInfo
-          @user={{this.currentUser}}
           @showStatus={{true}}
           @showStatusDescription={{true}}
+          @user={{this.currentUser}}
         />
       </template>
     );
@@ -150,7 +150,7 @@ module("Integration | ui-kit | DUserInfo", function (hooks) {
 
     await render(
       <template>
-        <DUserInfo @user={{this.currentUser}} @showStatus={{true}} /><DTooltips
+        <DUserInfo @showStatus={{true}} @user={{this.currentUser}} /><DTooltips
         />
       </template>
     );

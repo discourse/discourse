@@ -12,6 +12,19 @@ export default class DTemplatesService extends Service {
   @service dTemplatesModal;
   @service composer;
 
+  get isComposerFocused() {
+    const activeElement = document.activeElement;
+
+    const composerModel = getOwner(this).lookup("service:composer").model;
+    const composerElement = document.querySelector(".d-editor");
+
+    return composerModel && composerElement?.contains(activeElement);
+  }
+
+  get isTextAreaFocused() {
+    return this.#isTextArea(document.activeElement);
+  }
+
   showComposerUI() {
     const onInsertTemplate = this.#insertTemplateIntoComposer.bind(this);
 
@@ -43,19 +56,6 @@ export default class DTemplatesService extends Service {
         onInsertTemplate(textarea, template, extractVariables())
       );
     }
-  }
-
-  get isComposerFocused() {
-    const activeElement = document.activeElement;
-
-    const composerModel = getOwner(this).lookup("service:composer").model;
-    const composerElement = document.querySelector(".d-editor");
-
-    return composerModel && composerElement?.contains(activeElement);
-  }
-
-  get isTextAreaFocused() {
-    return this.#isTextArea(document.activeElement);
   }
 
   #isTextArea(element) {

@@ -2203,8 +2203,6 @@ pt:
         title: "Sim"
       approve_and_unhide:
         title: "Sim"
-      delete_post:
-        complete: "Publicação eliminada"
       silence_user:
         title: "Silenciar utilizador"
       delete_user:

@@ -58,11 +58,11 @@ export default class AdminEmailLogsBounced extends Component {
 
   <template>
     <EmailLogsList
-      @status="bounced"
-      @logType="bounced"
-      @headers={{BOUNCED_HEADERS}}
       @filters={{BOUNCED_FILTERS}}
+      @headers={{BOUNCED_HEADERS}}
+      @logType="bounced"
       @onShowEmail={{this.showIncomingEmail}}
+      @status="bounced"
     >
       <:default
         as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
@@ -72,7 +72,7 @@ export default class AdminEmailLogsBounced extends Component {
           <td>
             {{#if emailLog.user}}
               <span class="email-logs-user">
-                <LinkTo @route="adminUser" @model={{emailLog.user}}>
+                <LinkTo @model={{emailLog.user}} @route="adminUser">
                   {{dAvatar emailLog.user imageSize="tiny"}}
                   {{emailLog.user.username}}
                 </LinkTo>
@@ -89,8 +89,8 @@ export default class AdminEmailLogsBounced extends Component {
             {{#if emailLog.has_bounce_key}}
               <a
                 href
-                {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
                 title={{i18n "admin.email.details_title"}}
+                {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
               >
                 {{dIcon "circle-info"}}
               </a>

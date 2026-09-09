@@ -56,15 +56,15 @@ export default class CreateTopicButton extends Component {
   <template>
     {{#if @canCreateTopic}}
       <TopicDraftsDropdown
+        ...attributes
         @action={{@action}}
-        @label={{this.label}}
-        @icon={{@icon}}
+        @btnClasses={{this.btnClasses}}
         @btnId={{this.btnId}}
         @btnTypeClass={{this.btnTypeClass}}
-        @btnClasses={{this.btnClasses}}
         @draftMenuClasses={{this.draftMenuClasses}}
+        @icon={{@icon}}
+        @label={{this.label}}
         @showDrafts={{@showDrafts}}
-        ...attributes
       />
     {{/if}}
   </template>

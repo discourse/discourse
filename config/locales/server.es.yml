@@ -5021,8 +5021,6 @@ es:
         complete: "Publicación oculta, se ha notificado al usuario."
       agree_and_edit:
         title: "Editar publicación"
-        description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
-        complete: "Denuncia reconocida, ahora puedes editar la publicación."
       delete:
         title: "Eliminar"
         complete: "Publicación eliminada."
@@ -5126,30 +5124,6 @@ es:
       approve_and_unhide:
         title: "Sí"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
-      post_actions:
-        bundle_title: "¿Qué quieres hacer con la publicación?"
-      delete_post:
-        title: "Eliminar publicación"
-        description: "Eliminar esta publicación"
-        complete: "Publicación eliminada"
-      hide_post:
-        title: "Ocultar publicación"
-        description: "Ocultar esta publicación de la vista pública"
-        complete: "Publicación ocultada"
-      unhide_post:
-        title: "Dejar de ocultar la publicación"
-        description: "Volver que esta publicación sea visible para todos los usuarios"
-        complete: "La publicación ya no está oculta"
-      restore_post:
-        title: "Restaurar publicación"
-        description: "Restaurar la publicación eliminada"
-        complete: "Publicación restaurada"
-      edit_post:
-        title: "Editar publicación"
-        description: "Editar el contenido de esta publicación"
-        complete: "Publicación editada"
-      user_actions:
-        bundle_title: "¿Qué quieres hacer con el usuario?"
       silence_user:
         title: "Silenciar al usuario"
         complete: "Usuario silenciado"

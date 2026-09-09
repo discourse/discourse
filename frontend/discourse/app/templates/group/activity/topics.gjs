@@ -3,11 +3,11 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DLoadMore from "discourse/ui-kit/d-load-more";
 
 export default <template>
-  <DLoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
+  <DLoadMore class="paginated-topics-list" @action={{@controller.loadMore}}>
     <BasicTopicList
-      @topicList={{@controller.model}}
-      @showPosters={{true}}
       @listContext="group-activity"
+      @showPosters={{true}}
+      @topicList={{@controller.model}}
     />
     <DConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
   </DLoadMore>

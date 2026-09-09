@@ -226,7 +226,7 @@ RSpec.describe SearchController do
     end
 
     context "when searching by topic id" do
-      it "should not be restricted by minimum search term length" do
+      it "is not restricted by the minimum search-term length" do
         SiteSetting.min_search_term_length = 20_000
 
         get "/search/query.json",
@@ -242,7 +242,7 @@ RSpec.describe SearchController do
         expect(data["topics"][0]["id"]).to eq(awesome_post.topic_id)
       end
 
-      it "should return the right result" do
+      it "returns the topic matching the requested ID" do
         get "/search/query.json",
             params: {
               term: user_post.topic_id,

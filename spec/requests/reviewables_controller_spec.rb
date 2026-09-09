@@ -306,7 +306,7 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"]).to be_present
       end
 
-      it "will use the ReviewableUser serializer for its fields" do
+      it "uses the ReviewableUser serializer for its fields" do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true
         user = Fabricate(:user)

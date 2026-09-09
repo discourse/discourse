@@ -1013,6 +1013,9 @@ hu:
         note_added: "Moderátori megjegyzés"
         note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"
         no_events: "Nincsenek megjeleníthető idővonal-események"
+      author_penalty:
+        toast:
+          undo: "Visszavonás"
       notes:
         add_note_description: "Adj hozzá egy megjegyzést, amely kontextust biztosít más moderátoroknak."
         add_note_button: "Megjegyzés hozzáadása"
@@ -1658,7 +1661,6 @@ hu:
       admin: "%{user} egy adminisztrátor"
       moderator_tooltip: "Ez a felhasználó egy moderátor"
       admin_tooltip: "Ez a felhasználó egy adminisztrátor"
-      silenced_tooltip: "Ez a felhasználó némítva van"
       suspended_notice: "Ez a felhasználó eddig felfüggesztett: %{date}."
       suspended_permanently: "Ez a felhasználó felfüggesztett."
       suspended_reason: "Ok: "

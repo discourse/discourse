@@ -306,6 +306,7 @@ shared_examples "login scenarios" do
   context "with two-factor authentication" do
     let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
     let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
+
     fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
 
     before do

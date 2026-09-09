@@ -173,7 +173,7 @@ RSpec.describe PostMover do
 
         context "with post replies" do
           describe "when a post with replies is moved" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               topic.move_posts(
                 user,
                 [p2.id],
@@ -198,7 +198,7 @@ RSpec.describe PostMover do
           end
 
           describe "when replies of a post have been moved" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               p5 =
                 Fabricate(
                   :post,
@@ -221,7 +221,7 @@ RSpec.describe PostMover do
           end
 
           context "when only one reply is left behind" do
-            it "should update post replies correctly" do
+            it "updates post replies correctly" do
               p5 =
                 Fabricate(
                   :post,
@@ -2998,6 +2998,7 @@ RSpec.describe PostMover do
       fab!(:user)
 
       before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
+
       let(:modifier_block) do
         Proc.new do |is_currently_allowed_to_delete, topic, who_is_merging|
           expect(is_currently_allowed_to_delete).to eq(false)
@@ -3005,6 +3006,7 @@ RSpec.describe PostMover do
           user.id == who_is_merging.id
         end
       end
+
       it "lets user merge topics immediately" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:is_allowed_to_delete_after_merge, &modifier_block)
@@ -3208,6 +3210,7 @@ RSpec.describe PostMover do
         fab!(:user)
 
         before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
+
         let(:modifier_block) { Proc.new { |continue, _| false } }
 
         it "does not create small action post when modifier returns false" do

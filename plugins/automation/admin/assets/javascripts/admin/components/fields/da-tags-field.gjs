@@ -21,15 +21,15 @@ export default class TagsField extends BaseField {
   <template>
     <section class="field tags-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <TagChooser
-            @tags={{readonly @field.metadata.value}}
             @everyTag={{true}}
-            @unlimitedTagCount={{true}}
-            @options={{hash allowAny=false disabled=@field.isDisabled}}
             @onChange={{this.onChangeTags}}
+            @options={{hash allowAny=false disabled=@field.isDisabled}}
+            @tags={{readonly @field.metadata.value}}
+            @unlimitedTagCount={{true}}
           />
 
           <DAFieldDescription @description={{@description}} />

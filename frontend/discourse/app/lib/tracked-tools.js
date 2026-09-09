@@ -171,6 +171,14 @@ export class DeferredTrackedSet {
     this.#set = trackedSet(value);
   }
 
+  get size() {
+    return this.#set.size;
+  }
+
+  get [Symbol.toStringTag]() {
+    return this.#set[Symbol.toStringTag];
+  }
+
   has(value) {
     return this.#set.has(value);
   }
@@ -191,16 +199,8 @@ export class DeferredTrackedSet {
     return this.#set.forEach(fn);
   }
 
-  get size() {
-    return this.#set.size;
-  }
-
   [Symbol.iterator]() {
     return this.#set[Symbol.iterator]();
-  }
-
-  get [Symbol.toStringTag]() {
-    return this.#set[Symbol.toStringTag];
   }
 
   add(value) {

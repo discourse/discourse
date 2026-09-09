@@ -15,6 +15,12 @@ export default class TopicListAdapter extends RestAdapter {
     return result;
   }
 
+  async applyTransformations(results) {
+    for (const topicList of results) {
+      await Topic.applyTransformations(topicList.topics);
+    }
+  }
+
   // The server preloads whichever list it rendered under a single key, so it is
   // only usable when it is the list we asked for. Falls through when either side
   // cannot be identified.
@@ -62,11 +68,5 @@ export default class TopicListAdapter extends RestAdapter {
     }
 
     return url;
-  }
-
-  async applyTransformations(results) {
-    for (const topicList of results) {
-      await Topic.applyTransformations(topicList.topics);
-    }
   }
 }

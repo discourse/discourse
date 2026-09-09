@@ -32,9 +32,9 @@ export default class AiPostImageCaptionEditorModal extends Component {
 
   <template>
     <DModal
+      class="ai-post-image-caption-editor-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "discourse_ai.post_image_captions.title"}}
-      class="ai-post-image-caption-editor-modal"
     >
       <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
         <form.Field
@@ -46,8 +46,8 @@ export default class AiPostImageCaptionEditorModal extends Component {
           as |field|
         >
           <field.Control
-            @height={{120}}
             class="ai-post-image-caption-editor-modal__textarea"
+            @height={{120}}
           />
         </form.Field>
 

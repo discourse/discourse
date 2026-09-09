@@ -7,9 +7,9 @@ export default <template>
   <MessagesSecondaryNav>
 
     <DNavigationItem
-      @route="userPrivateMessages.group.index"
-      @ariaCurrentContext="subNav"
       class="user-nav__messages-group-latest"
+      @ariaCurrentContext="subNav"
+      @route="userPrivateMessages.group.index"
     >
       {{dIcon "envelope"}}
       <span>{{i18n "categories.latest"}}</span>
@@ -17,27 +17,27 @@ export default <template>
 
     {{#if @controller.viewingSelf}}
       <DNavigationItem
-        @route="userPrivateMessages.group.new"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-group-new"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.group.new"
       >
         {{dIcon "circle-exclamation"}}
         <span>{{@controller.newLinkText}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userPrivateMessages.group.unread"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-group-unread"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.group.unread"
       >
         {{dIcon "circle-plus"}}
         <span>{{@controller.unreadLinkText}}</span>
       </DNavigationItem>
 
       <DNavigationItem
-        @route="userPrivateMessages.group.archive"
-        @ariaCurrentContext="subNav"
         class="user-nav__messages-group-archive"
+        @ariaCurrentContext="subNav"
+        @route="userPrivateMessages.group.archive"
       >
         {{dIcon "box-archive"}}
         <span>{{i18n "user.messages.archive"}}</span>

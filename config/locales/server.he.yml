@@ -4999,8 +4999,6 @@ he:
         complete: "הפוסט הוסתר, המשתמש קיבל הודעה."
       agree_and_edit:
         title: "עריכת פוסט"
-        description: "להסכים עם הסימון ולפתוח חלון עריכת הודעה כדי לערוך את הפוסט."
-        complete: "הדגל אושר, עכשיו אפשר לערוך את הפוסט"
       delete:
         title: "מחיקה"
         complete: "פוסט נמחק."
@@ -5090,30 +5088,6 @@ he:
       approve_and_unhide:
         title: "כן"
         complete: "הפוסט אושר והוצג מחדש"
-      post_actions:
-        bundle_title: "מה לעשות עם הפוסט?"
-      delete_post:
-        title: "מחיקת פוסט"
-        description: "למחוק את הפוסט הזה"
-        complete: "פוסט נמחק"
-      hide_post:
-        title: "הסתרת פוסט"
-        description: "הסתרת הפוסט הזה מעיני הציבור"
-        complete: "פוסט הוסתר"
-      unhide_post:
-        title: "חשיפת פוסט"
-        description: "לחשוף את הפוסט הזה בפני כל המשתמשים"
-        complete: "הפוסט נחשף"
-      restore_post:
-        title: "שחזור פוסט"
-        description: "שחזור הפוסט המחוק הזה"
-        complete: "הפוסט שוחזר"
-      edit_post:
-        title: "עריכת פוסט"
-        description: "עריכת תוכן הפוסט הזה"
-        complete: "פוסט נערך"
-      user_actions:
-        bundle_title: "מה לעשות עם המשתמש/ת?"
       silence_user:
         title: "השתקת משתמש"
         complete: "משתמש הושתק"

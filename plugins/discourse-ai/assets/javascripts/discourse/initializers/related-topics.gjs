@@ -5,16 +5,16 @@ import { i18n } from "discourse-i18n";
 
 const RelatedTopics = <template>
   <div
-    role="complementary"
     aria-labelledby="related-topics-title"
-    id="related-topics"
     class="more-topics__list"
+    id="related-topics"
+    role="complementary"
   >
-    <h3 id="related-topics-title" class="more-topics__list-title">
+    <h3 class="more-topics__list-title" id="related-topics-title">
       {{dIcon "discourse-sparkles"}}{{i18n "discourse_ai.related_topics.title"}}
     </h3>
     <div class="topics">
-      <BasicTopicList @topics={{@topic.relatedTopics}} @listContext="related" />
+      <BasicTopicList @listContext="related" @topics={{@topic.relatedTopics}} />
     </div>
   </div>
 </template>;

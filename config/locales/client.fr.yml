@@ -1083,6 +1083,9 @@ fr:
         note_added: "Note du modérateur"
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
         no_events: "Aucun événement de la chronologie à afficher"
+      author_penalty:
+        toast:
+          undo: "Annuler"
       notes:
         add_note_description: "Ajoutez une note pour fournir plus de contexte aux autres modérateurs."
         add_note_button: "Ajouter une note"
@@ -1743,7 +1746,6 @@ fr:
       admin: "%{user} a le rôle d'administrateur(rice)"
       moderator_tooltip: "Cet utilisateur a le rôle de modérateur(rice)"
       admin_tooltip: "Cet utilisateur a le rôle d'administrateur(rice)"
-      silenced_tooltip: "Cet utilisateur est mis en sourdine"
       suspended_notice: "L'utilisateur est suspendu jusqu'au %{date}."
       suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison : "

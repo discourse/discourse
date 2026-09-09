@@ -67,6 +67,20 @@ export default class MeshSignalHandler {
     return iCanSpeak || theyCanSpeak;
   }
 
+  // The relay batches one envelope per recipient (payload.events, in send
+  // order); a single-event payload.data is still accepted for compatibility.
+  async handle(roomId, payload) {
+    const events = Array.isArray(payload.events)
+      ? payload.events
+      : payload.data
+        ? [payload.data]
+        : [];
+
+    for (const data of events) {
+      await this.#handleEvent(roomId, payload, data);
+    }
+  }
+
   // A relayed signal is server-attested proof the sender holds a live
   // participant session in this room: the server only relays for senders who
   // joined and only to recipients still present. The local roster
@@ -96,20 +110,6 @@ export default class MeshSignalHandler {
       (signalType === "offer" || signalType === "candidate") &&
       this.#canEngageEarlyOffer(roomId)
     );
-  }
-
-  // The relay batches one envelope per recipient (payload.events, in send
-  // order); a single-event payload.data is still accepted for compatibility.
-  async handle(roomId, payload) {
-    const events = Array.isArray(payload.events)
-      ? payload.events
-      : payload.data
-        ? [payload.data]
-        : [];
-
-    for (const data of events) {
-      await this.#handleEvent(roomId, payload, data);
-    }
   }
 
   async #handleEvent(roomId, payload, data) {

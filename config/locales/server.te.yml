@@ -2573,12 +2573,6 @@ te:
         title: "అవును"
       approve_and_unhide:
         title: "అవును"
-      delete_post:
-        title: "పోస్ట్ తొలగించండి"
-      hide_post:
-        title: "పోస్ట్ను దాచండి"
-      restore_post:
-        title: "పోస్ట్‌ని పునరుద్ధరించండి"
       silence_user:
         title: "సభ్యుని నిశ్శబ్దం చేయండి"
       suspend_user:

@@ -57,14 +57,6 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
     return newUserMsgs + unreadUserMsgs + groupMsgsCount;
   }
 
-  _lookupCount({ type, inboxFilter, groupName }) {
-    const opts = { inboxFilter };
-    return this.pmTopicTrackingState.lookupCount(
-      type,
-      groupName ? { ...opts, groupName } : opts
-    );
-  }
-
   get showCount() {
     return this.currentUser.sidebarShowCountOfNewItems;
   }
@@ -93,5 +85,13 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
 
   get currentWhen() {
     return "userPrivateMessages";
+  }
+
+  _lookupCount({ type, inboxFilter, groupName }) {
+    const opts = { inboxFilter };
+    return this.pmTopicTrackingState.lookupCount(
+      type,
+      groupName ? { ...opts, groupName } : opts
+    );
   }
 }

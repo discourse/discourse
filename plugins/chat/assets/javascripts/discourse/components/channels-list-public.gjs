@@ -57,7 +57,7 @@ export default class ChannelsListPublic extends Component {
 
   <template>
     {{#if (and this.site.desktopView this.inSidebar this.shouldShowMyThreads)}}
-      <LinkTo @route="chat.threads" class="chat-channel-row --threads">
+      <LinkTo class="chat-channel-row --threads" @route="chat.threads">
         <span class="chat-channel-title">
           {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
           {{i18n "chat.my_threads.title"}}
@@ -77,11 +77,11 @@ export default class ChannelsListPublic extends Component {
         {{#if this.inSidebar}}
           <span
             class="title-caret"
+            data-toggleable="public-channels"
             id="public-channels-caret"
             role="button"
             title="toggle nav list"
             {{on "click" (fn this.toggleChannelSection "public-channels")}}
-            data-toggleable="public-channels"
           >
             {{dIcon "angle-up"}}
           </span>
@@ -91,9 +91,9 @@ export default class ChannelsListPublic extends Component {
 
         {{#if this.canBrowseChannels}}
           <LinkTo
-            @route="chat.browse"
             class="btn no-text btn-flat open-browse-page-btn title-action"
             title={{i18n "chat.channels_list_popup.browse"}}
+            @route="chat.browse"
           >
             {{dIcon "pencil"}}
           </LinkTo>
@@ -102,18 +102,16 @@ export default class ChannelsListPublic extends Component {
     {{/if}}
 
     <div
-      id="public-channels"
       class={{dConcatClass
         "channels-list-container"
         "public-channels"
         (if this.inSidebar "collapsible-sidebar-section")
       }}
+      id="public-channels"
     >
       {{#if this.chatChannelsManager.publicMessageChannelsEmpty}}
         <DEmptyState
-          @identifier="empty-channels-list"
-          @svgContent={{ChatZero}}
-          @title={{i18n "chat.no_public_channels"}}
+          @ctaAction={{if this.canBrowseChannels this.openBrowseChannels}}
           @ctaLabel={{if
             (and
               this.canBrowseChannels
@@ -121,7 +119,9 @@ export default class ChannelsListPublic extends Component {
             )
             (i18n "chat.no_public_channels_cta")
           }}
-          @ctaAction={{if this.canBrowseChannels this.openBrowseChannels}}
+          @identifier="empty-channels-list"
+          @svgContent={{ChatZero}}
+          @title={{i18n "chat.no_public_channels"}}
         />
       {{else}}
         {{#each this.channelList as |channel|}}

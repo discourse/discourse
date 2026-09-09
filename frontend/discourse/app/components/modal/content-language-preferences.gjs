@@ -85,14 +85,6 @@ export default class ContentLanguagePreferencesModal extends Component {
     return getURL("/login");
   }
 
-  #toOptions(locales) {
-    return (locales ?? []).map(({ value }) => ({
-      name: this.languageNameLookup.getLanguageName(value),
-      value,
-      id: value,
-    }));
-  }
-
   @action
   registerFormApi(formApi) {
     this.formApi = formApi;
@@ -169,28 +161,36 @@ export default class ContentLanguagePreferencesModal extends Component {
     }
   }
 
+  #toOptions(locales) {
+    return (locales ?? []).map(({ value }) => ({
+      name: this.languageNameLookup.getLanguageName(value),
+      value,
+      id: value,
+    }));
+  }
+
   <template>
     <DModal
-      @title={{i18n "content_localization.preferences.title"}}
+      class="content-language-preferences-modal"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="content-language-preferences-modal"
+      @title={{i18n "content_localization.preferences.title"}}
     >
       <:body>
         <Form
           @data={{this.data}}
-          @onSubmit={{this.save}}
           @onRegisterApi={{this.registerFormApi}}
+          @onSubmit={{this.save}}
           as |form|
         >
           <form.Field
-            @name="interfaceLanguage"
-            @type="select"
-            @title={{i18n "user.locale.title"}}
-            @validation="required"
-            @format="full"
-            @onSet={{this.setInterfaceLanguage}}
             @disabled={{this.interfaceLanguageReadOnly}}
+            @format="full"
+            @name="interfaceLanguage"
+            @onSet={{this.setInterfaceLanguage}}
+            @title={{i18n "user.locale.title"}}
+            @type="select"
+            @validation="required"
             as |field|
           >
             <field.Control as |select|>
@@ -204,25 +204,25 @@ export default class ContentLanguagePreferencesModal extends Component {
 
           {{#if this.currentUser}}
             <form.Field
-              @name="understoodLanguages"
-              @type="custom"
-              @title={{i18n "user.content_languages.understood"}}
               @description={{i18n
                 "user.content_languages.understood_description"
               }}
-              @showOptional={{false}}
               @format="full"
+              @name="understoodLanguages"
               @onSet={{this.setUnderstoodLanguages}}
+              @showOptional={{false}}
+              @title={{i18n "user.content_languages.understood"}}
+              @type="custom"
               as |field|
             >
               <field.Control>
                 <MultiSelect
-                  @valueProperty="value"
-                  @langProperty="value"
                   @content={{this.allLanguageOptions}}
-                  @value={{field.value}}
+                  @langProperty="value"
                   @onChange={{field.set}}
                   @options={{hash filterable=true}}
+                  @value={{field.value}}
+                  @valueProperty="value"
                 />
               </field.Control>
             </form.Field>
@@ -236,10 +236,10 @@ export default class ContentLanguagePreferencesModal extends Component {
           {{/if}}
 
           <form.Field
-            @name="automaticallyTranslate"
-            @type="checkbox"
-            @title={{i18n "user.automatically_translate"}}
             @format="full"
+            @name="automaticallyTranslate"
+            @title={{i18n "user.automatically_translate"}}
+            @type="checkbox"
             as |field|
           >
             <field.Control data-test-automatically-translate />
@@ -249,10 +249,10 @@ export default class ContentLanguagePreferencesModal extends Component {
 
       <:footer>
         <DButton
-          @label="save"
+          class="btn-primary"
           @action={{this.submit}}
           @disabled={{this.saving}}
-          class="btn-primary"
+          @label="save"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

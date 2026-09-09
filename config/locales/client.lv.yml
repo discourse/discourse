@@ -521,6 +521,9 @@ lv:
       user_label: "Lietotājs"
       timeline:
         target_deleted: "Ieraksts dzēsts"
+      author_penalty:
+        toast:
+          undo: "Atsaukt"
       notes:
         delete: "Dzēst"
       topic_label: "Tēmas"
@@ -993,7 +996,6 @@ lv:
       admin: "%{user} ir administrators"
       moderator_tooltip: "Šis lietotājs ir moderators"
       admin_tooltip: "Šis lietotājs ir administrators"
-      silenced_tooltip: "Šis lietotājs ir izslēgts"
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_permanently: "Šī lietotāja darbība ir apturēta."
       suspended_reason: "Iemesls:"

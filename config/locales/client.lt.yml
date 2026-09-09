@@ -856,6 +856,9 @@ lt:
       timeline:
         target_deleted: "Įrašas ištrintas"
         target_deleted_by: "Įrašą ištrynė %{username} · %{relativeDate}"
+      author_penalty:
+        toast:
+          undo: "Anuliuoti"
       notes:
         delete: "Pašalinti"
       topic_label: "Tema"
@@ -1442,7 +1445,6 @@ lt:
       admin: "%{user} yra administratorius"
       moderator_tooltip: "Šis vartotojas yra moderatorius"
       admin_tooltip: "Šis vartotojas yra administratorius"
-      silenced_tooltip: "Šis narys nutildytas"
       suspended_notice: "Šis vartotojas nušalintas iki %{date}."
       suspended_permanently: "Šis narys suspenduotas"
       suspended_reason: "Priežastis:"

@@ -3281,9 +3281,6 @@ da:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      delete_post:
-        title: "Slet indlæg"
-        complete: "Indlæg slettet"
       delete_user:
         title: "Slet bruger"
         complete: "Bruger slettet"

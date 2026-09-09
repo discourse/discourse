@@ -61,7 +61,7 @@ describe "Reviewables" do
         expect(post.reload.raw).to eq("This post has been edited by a moderator.")
       end
 
-      it "should open a modal when suspending a user" do
+      it "opens a modal when suspending a user" do
         visit("/review")
 
         select_kit =
@@ -76,7 +76,7 @@ describe "Reviewables" do
         )
       end
 
-      it "should show a toast when disagreeing with a flag flag" do
+      it "shows a toast when disagreeing with a flag" do
         visit("/review")
 
         select_kit = PageObjects::Components::SelectKit.new(".dropdown-select-box.post-disagree")

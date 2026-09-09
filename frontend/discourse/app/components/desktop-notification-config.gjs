@@ -10,18 +10,18 @@ export default class DesktopNotificationsConfig extends Component {
     <div class="controls">
       {{#if this.desktopNotifications.isNotSupported}}
         <DButton
+          class="btn-default"
+          @disabled="true"
           @icon="bell-slash"
           @label="user.desktop_notifications.not_supported"
-          @disabled="true"
-          class="btn-default"
         />
       {{/if}}
       {{#if this.desktopNotifications.isDeniedPermission}}
         <DButton
+          class="btn-default"
+          @disabled="true"
           @icon="bell-slash"
           @label="user.desktop_notifications.perm_denied_btn"
-          @disabled="true"
-          class="btn-default"
         />
         <span>
           {{i18n "user.desktop_notifications.perm_denied_expl"}}
@@ -29,17 +29,17 @@ export default class DesktopNotificationsConfig extends Component {
       {{else}}
         {{#if this.desktopNotifications.isSubscribed}}
           <DButton
+            class="btn-default"
+            @action={{this.desktopNotifications.disable}}
             @icon="far-bell-slash"
             @label="user.desktop_notifications.disable"
-            @action={{this.desktopNotifications.disable}}
-            class="btn-default"
           />
         {{else}}
           <DButton
+            class="btn-default"
+            @action={{this.desktopNotifications.enable}}
             @icon="far-bell"
             @label="user.desktop_notifications.enable"
-            @action={{this.desktopNotifications.enable}}
-            class="btn-default"
           />
         {{/if}}
       {{/if}}

@@ -12,9 +12,9 @@ const Post = <template>
         <div class="quote-controls">
           {{! eslint-disable ember/template-no-invalid-link-text }}
           <a
+            class="quote-other-topic"
             href="{{@ctx.baseuri}}/t/via-quote/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
             title="go to the quoted post"
-            class="quote-other-topic"
           >
           </a>
         </div>

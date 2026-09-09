@@ -26,14 +26,6 @@ export default class UserApiKeyNewController extends Controller {
     "expires_in_seconds",
   ];
 
-  reset(model) {
-    this.page = model;
-    this.result = null;
-    this.error = null;
-    this.isLoading = false;
-    this.copied = false;
-  }
-
   get ready() {
     return this.page?.state === USER_API_KEY_AUTHORIZATION_STATES.READY;
   }
@@ -81,6 +73,14 @@ export default class UserApiKeyNewController extends Controller {
     }
 
     return data;
+  }
+
+  reset(model) {
+    this.page = model;
+    this.result = null;
+    this.error = null;
+    this.isLoading = false;
+    this.copied = false;
   }
 
   @action

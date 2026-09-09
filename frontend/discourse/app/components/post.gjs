@@ -465,7 +465,7 @@ export default class Post extends Component {
         }}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              id={{@elementId}}
+              aria-labelledby={{concat "post-heading-" @post.post_number}}
               class={{dConcatClass
                 "boxed"
                 "onscreen-post"
@@ -479,10 +479,10 @@ export default class Post extends Component {
                 (if @post.via_email "post--via-email via-email")
                 this.additionalArticleClasses
               }}
-              aria-labelledby={{concat "post-heading-" @post.post_number}}
               data-post-id={{@post.id}}
               data-topic-id={{@post.topicId}}
               data-user-id={{@post.user_id}}
+              id={{@elementId}}
               {{this.addEventListeners this.customEventListeners}}
             >
               <PluginOutlet
@@ -492,8 +492,8 @@ export default class Post extends Component {
                 {{#if this.hasRepliesAbove}}
                   <div class="post__row row">
                     <section
-                      id={{concat "embedded-posts__top--" @post.post_number}}
                       class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
+                      id={{concat "embedded-posts__top--" @post.post_number}}
                     >
                       <DButton
                         class="btn-default btn-small post__collapse-button post__collapse-button-down collapse-down"
@@ -503,9 +503,9 @@ export default class Post extends Component {
                       />
                       {{#each this.repliesAbove.value key="id" as |reply|}}
                         <PostEmbedded
-                          @post={{reply}}
                           @above={{true}}
                           @highlightTerm={{@highlightTerm}}
+                          @post={{reply}}
                           @streamElement={{@streamElement}}
                         />
                       {{/each}}
@@ -519,9 +519,9 @@ export default class Post extends Component {
                 {{/if}}
                 <div class="post__row row">
                   <PostAvatar
-                    @post={{@post}}
                     @decoratorState={{this.decoratorState}}
                     @keyboardSelected={{@keyboardSelected}}
+                    @post={{@post}}
                   />
                   <div class="post__body topic-body clearfix">
                     <PluginOutlet
@@ -529,15 +529,15 @@ export default class Post extends Component {
                       @outletArgs={{postOutletArgs}}
                     >
                       <PostMetaData
-                        @post={{@post}}
                         @editPost={{@editPost}}
                         @hasRepliesAbove={{this.hasRepliesAbove}}
                         @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
                         @multiSelect={{@multiSelect}}
+                        @post={{@post}}
                         @repliesAbove={{this.repliesAbove}}
                         @selectBelow={{@selectBelow}}
-                        @selectReplies={{@selectReplies}}
                         @selected={{@selected}}
+                        @selectReplies={{@selectReplies}}
                         @showHistory={{@showHistory}}
                         @showRawEmail={{@showRawEmail}}
                         @togglePostSelection={{@togglePostSelection}}
@@ -559,9 +559,9 @@ export default class Post extends Component {
                         @outletArgs={{postOutletArgs}}
                       >
                         <PostCookedHtml
-                          @post={{@post}}
-                          @highlightTerm={{@highlightTerm}}
                           @decoratorState={{this.decoratorState}}
+                          @highlightTerm={{@highlightTerm}}
+                          @post={{@post}}
                           @streamElement={{@streamElement}}
                         />
                       </PluginOutlet>
@@ -604,14 +604,11 @@ export default class Post extends Component {
                       {{/if}}
 
                       <section
+                        aria-label={{i18n "post.controls.menu_label"}}
                         class="post__menu-area post-menu-area clearfix"
                         role="group"
-                        aria-label={{i18n "post.controls.menu_label"}}
                       >
                         <PostMenu
-                          @post={{@post}}
-                          @prevPost={{@prevPost}}
-                          @nextPost={{@nextPost}}
                           @canCreatePost={{@canCreatePost}}
                           @changeNotice={{@changeNotice}}
                           @changePostOwner={{@changePostOwner}}
@@ -621,11 +618,14 @@ export default class Post extends Component {
                           @filteredRepliesView={{this.filteredRepliesView}}
                           @grantBadge={{@grantBadge}}
                           @lockPost={{@lockPost}}
+                          @nextPost={{@nextPost}}
                           @permanentlyDeletePost={{@permanentlyDeletePost}}
+                          @post={{@post}}
+                          @prevPost={{@prevPost}}
                           @rebakePost={{@rebakePost}}
                           @recoverPost={{@recoverPost}}
-                          @repliesShown={{this.repliesShown}}
                           @repliesButtonDisabled={{this.isTogglingReplies}}
+                          @repliesShown={{this.repliesShown}}
                           @replyToPost={{@replyToPost}}
                           @share={{this.share}}
                           @showFlags={{@showFlags}}
@@ -643,22 +643,22 @@ export default class Post extends Component {
 
                       {{#if this.repliesBelow}}
                         <section
+                          class="post__embedded-posts post__embedded-posts--bottom embedded-posts bottom"
                           id={{concat
                             "embedded-posts__bottom--"
                             @post.post_number
                           }}
-                          class="post__embedded-posts post__embedded-posts--bottom embedded-posts bottom"
                         >
                           {{#each this.repliesBelow key="id" as |reply|}}
                             <PostEmbedded
-                              role="region"
                               aria-label={{i18n
                                 "post.sr_embedded_reply_description"
                                 post_number=@post.post_number
                                 username=reply.username
                               }}
-                              @post={{reply}}
+                              role="region"
                               @highlightTerm={{@highlightTerm}}
+                              @post={{reply}}
                               @streamElement={{@streamElement}}
                             />
                           {{/each}}
@@ -674,9 +674,9 @@ export default class Post extends Component {
                           {{#if this.canLoadMoreRepliesBelow}}
                             <DButton
                               class="post__load-more load-more-replies"
-                              @label="post.load_more_replies"
                               @action={{this.loadMoreReplies}}
                               @disabled={{this.isLoadingMoreReplies}}
+                              @label="post.load_more_replies"
                             />
                           {{/if}}
                         </section>
@@ -697,14 +697,14 @@ export default class Post extends Component {
                 {{#if this.shouldShowTopicMap}}
                   <div class="post__topic-map topic-map --op">
                     <TopicMap
-                      @model={{@post.topic}}
                       @cancelFilter={{@cancelFilter}}
-                      @topicDetails={{@post.topic.details}}
+                      @model={{@post.topic}}
                       @postStream={{@post.topic.postStream}}
-                      @showPMMap={{eq @post.topic.archetype "private_message"}}
-                      @showInvite={{@showInvite}}
                       @removeAllowedGroup={{@removeAllowedGroup}}
                       @removeAllowedUser={{@removeAllowedUser}}
+                      @showInvite={{@showInvite}}
+                      @showPMMap={{eq @post.topic.archetype "private_message"}}
+                      @topicDetails={{@post.topic.details}}
                     />
                   </div>
                 {{/if}}

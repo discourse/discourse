@@ -51,10 +51,6 @@ export default class AdminPenaltyPostAction extends Component {
     return this.user.post_count - this.user.topic_count;
   }
 
-  canSubmitDeleteAll() {
-    return this.postAction === "delete_all" && this.confirmDeleteAll;
-  }
-
   get readyToDeleteAll() {
     return this.canSubmitDeleteAll();
   }
@@ -67,6 +63,10 @@ export default class AdminPenaltyPostAction extends Component {
         REPLIES: this.repliesCount,
       }
     );
+  }
+
+  canSubmitDeleteAll() {
+    return this.postAction === "delete_all" && this.confirmDeleteAll;
   }
 
   @action
@@ -102,23 +102,23 @@ export default class AdminPenaltyPostAction extends Component {
         </div>
       </label>
       <ComboBox
-        @value={{this.postAction}}
         @content={{this.penaltyActions}}
         @onChange={{this.penaltyChanged}}
+        @value={{this.postAction}}
       />
     </div>
 
     {{#if this.editing}}
       <div class="penalty-post-edit">
-        <Textarea @value={{this.postEdit}} class="post-editor" />
+        <Textarea class="post-editor" @value={{this.postEdit}} />
       </div>
     {{/if}}
 
     {{#if this.deletingAll}}
       <label>
         <Input
-          @type="checkbox"
           @checked={{this.confirmDeleteAll}}
+          @type="checkbox"
           {{on "click" this.toggleConfirmDeleteAll}}
         />
         {{trustHTML this.deleteAllMessage}}

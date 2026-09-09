@@ -7,15 +7,15 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.site_settings.title"}}
     @descriptionLabel={{i18n "admin.config.site_settings.header_description"}}
     @hideTabs={{true}}
+    @titleLabel={{i18n "admin.config.site_settings.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/site_settings"
         @label={{i18n "admin.config.site_settings.title"}}
+        @path="/admin/site_settings"
       />
     </:breadcrumbs>
   </DPageHeader>
@@ -23,8 +23,8 @@ export default <template>
   <AdminSiteSettingsFilterControls
     @initialFilter={{@controller.filter}}
     @onChangeFilter={{@controller.filterChanged}}
-    @showMenu={{true}}
     @onToggleMenu={{@controller.toggleMenu}}
+    @showMenu={{true}}
   />
 
   <div class="admin-nav admin-site-settings-category-nav pull-left">

@@ -214,38 +214,38 @@ export default class UpsertHyperlink extends Component {
   <template>
     {{! eslint-disable ember/template-no-pointer-down-event-binding }}
     <DModal
-      {{on "keydown" this.keyDown}}
-      {{on "mousedown" this.mouseDown}}
+      class="upsert-hyperlink-modal"
+      @bodyClass="insert-link"
       @closeModal={{@closeModal}}
       @title={{i18n
         (if
           @model.editing "composer.link_edit_title" "composer.link_dialog_title"
         )
       }}
-      @bodyClass="insert-link"
-      class="upsert-hyperlink-modal"
+      {{on "keydown" this.keyDown}}
+      {{on "mousedown" this.mouseDown}}
     >
       <:body>
         <div class="inputs">
           <Form
             @data={{this.data}}
-            @onSubmit={{this.onFormSubmit}}
             @onRegisterApi={{this.registerApi}}
+            @onSubmit={{this.onFormSubmit}}
             as |form|
           >
             <form.Field
-              @name="linkUrl"
-              @type="input"
-              @title={{i18n "composer.link_url_label"}}
               @format="full"
-              @validation="required"
+              @name="linkUrl"
               @onSet={{this.search}}
+              @title={{i18n "composer.link_url_label"}}
+              @type="input"
+              @validation="required"
               as |field|
             >
               <field.Control
-                placeholder={{i18n "composer.link_url_placeholder"}}
-                class="link-url"
                 autofocus="autofocus"
+                class="link-url"
+                placeholder={{i18n "composer.link_url_placeholder"}}
               />
             </form.Field>
 
@@ -257,12 +257,12 @@ export default class UpsertHyperlink extends Component {
               <div class="internal-link-results">
                 {{#each this.searchResults as |result|}}
                   <a
-                    {{on "click" this.linkClick}}
-                    href={{result.url}}
-                    data-title={{result.fancy_title}}
                     class="search-link"
+                    data-title={{result.fancy_title}}
+                    href={{result.url}}
+                    {{on "click" this.linkClick}}
                   >
-                    <TopicStatus @topic={{result}} @disableActions={{true}} />
+                    <TopicStatus @disableActions={{true}} @topic={{result}} />
                     {{dReplaceEmoji result.title}}
                     <div class="search-category">
                       {{#if result.category.parentCategory}}
@@ -278,15 +278,15 @@ export default class UpsertHyperlink extends Component {
 
             {{#if this.showLinkTextField}}
               <form.Field
-                @name="linkText"
-                @type="input"
-                @title={{i18n "composer.link_text_label"}}
                 @format="full"
+                @name="linkText"
+                @title={{i18n "composer.link_text_label"}}
+                @type="input"
                 as |field|
               >
                 <field.Control
-                  placeholder={{i18n "composer.link_optional_text"}}
                   class="link-text"
+                  placeholder={{i18n "composer.link_optional_text"}}
                 />
               </form.Field>
             {{/if}}
@@ -296,20 +296,20 @@ export default class UpsertHyperlink extends Component {
 
       <:footer>
         <DButton
+          class="btn-primary"
+          type="submit"
           @action={{this.formApi.submit}}
           @label={{if
             @model.editing
             "composer.link_edit_action"
             "composer.link_dialog_action"
           }}
-          type="submit"
-          class="btn-primary"
         />
 
         <DButton
+          class="btn-transparent"
           @action={{@closeModal}}
           @label="composer.cancel"
-          class="btn-transparent"
         />
       </:footer>
     </DModal>

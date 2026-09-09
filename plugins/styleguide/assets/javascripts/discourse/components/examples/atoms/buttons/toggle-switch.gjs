@@ -16,13 +16,13 @@ export default class ToggleSwitchExample extends Component {
     <DToggleSwitch @state={{this.state}} {{on "click" this.toggle}} />
     <DToggleSwitch
       disabled="true"
-      @state={{true}}
       title="Disabled with state=true"
+      @state={{true}}
     />
     <DToggleSwitch
       disabled="true"
-      @state={{false}}
       title="Disabled with state=false"
+      @state={{false}}
     />
   </template>
 }

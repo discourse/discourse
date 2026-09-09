@@ -175,12 +175,12 @@ export default class AdminReports extends Component {
       <:content as |reports|>
         <DFilterControls
           @array={{this.filterReports reports}}
-          @searchableProps={{array "title" "description"}}
-          @dropdownOptions={{this.groupDropdownOptions reports}}
-          @textFilterQueryParam="filter"
           @dropdownFilterQueryParam="group"
+          @dropdownOptions={{this.groupDropdownOptions reports}}
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
+          @searchableProps={{array "title" "description"}}
+          @textFilterQueryParam="filter"
         >
           <:content as |filteredReports|>
             {{#each (this.groupReports filteredReports) as |group|}}
@@ -189,8 +189,8 @@ export default class AdminReports extends Component {
                 <AdminSectionLandingWrapper class="admin-reports-list">
                   {{#each group.reports as |report|}}
                     <AdminSectionLandingItem
-                      @titleLabelTranslated={{report.title}}
                       @descriptionLabelTranslated={{report.description}}
+                      @titleLabelTranslated={{report.title}}
                       @titleRoute="adminReports.show"
                       @titleRouteModel={{report.type}}
                     />

@@ -2,12 +2,12 @@ import NotificationsTracking from "discourse/components/notifications-tracking";
 
 const TagNotificationsTracking = <template>
   <NotificationsTracking
-    @onChange={{@onChange}}
+    class="tag-notifications-tracking"
     @levelId={{@levelId}}
+    @onChange={{@onChange}}
+    @prefix="tagging.notifications"
     @showCaret={{false}}
     @showFullTitle={{false}}
-    @prefix="tagging.notifications"
-    class="tag-notifications-tracking"
   />
 </template>;
 

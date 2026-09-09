@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Enable Solved badges by default upcoming change" do
+RSpec.describe "Solved badge seeds" do
   let(:badge_names) { ["Solved 1", "Solved 2", "Solved 3", "Solved 4"] }
 
   describe "seeding the Solved badges on a new site" do

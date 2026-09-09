@@ -1284,6 +1284,9 @@ uk:
         note_added: "Нотатка модератора"
         note_added_by: "Примітка модератора %{username} · %{relativeDate}"
         no_events: "Немає подій на шкалі часу для відображення"
+      author_penalty:
+        toast:
+          undo: "Скасувати"
       notes:
         add_note_description: "Додайте примітку, щоб надати контекст іншим модераторам."
         add_note_button: "Додати примітку"
@@ -1991,7 +1994,6 @@ uk:
       admin: "%{user} є адміністратором"
       moderator_tooltip: "Цей користувач є модератором"
       admin_tooltip: "Цей користувач є адміністратором"
-      silenced_tooltip: "Цей користувач заблокований"
       suspended_notice: "Цей обліковий запис призупинено до %{date}."
       suspended_permanently: "Цей обліковий запис призупинено."
       suspended_reason: "Причина: "

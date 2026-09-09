@@ -33,28 +33,6 @@ export default class HistoryStore extends Service {
     return !!this.get(HISTORIC_KEY);
   }
 
-  /**
-   * Fetch a value from the current route's key/value store
-   */
-  get(key) {
-    return this.#currentStore.get(key);
-  }
-
-  /**
-   * Set a value in the current route's key/value store. Will persist for the lifetime
-   * of the route, and will be restored if the user navigates 'back' to the route.
-   */
-  set(key, value) {
-    return this.#currentStore.set(key, value);
-  }
-
-  /**
-   * Delete a value from the current route's key/value store
-   */
-  delete(key) {
-    return this.#currentStore.delete(key);
-  }
-
   @cached
   get hasFutureEntries() {
     // Keys will be returned in insertion order. Return true if there is any key **after** the current one
@@ -83,25 +61,26 @@ export default class HistoryStore extends Service {
     return false;
   }
 
-  #pruneOldData() {
-    while (this.#routeData.size > HISTORY_SIZE) {
-      // JS Map guarantees keys will be returned in insertion order
-      const oldestUUID = this.#routeData.keys().next().value;
-      this.#routeData.delete(oldestUUID);
-    }
+  /**
+   * Fetch a value from the current route's key/value store
+   */
+  get(key) {
+    return this.#currentStore.get(key);
   }
 
-  #dataFor(uuid) {
-    let data = this.#routeData.get(uuid);
-    if (data) {
-      return data;
-    }
+  /**
+   * Set a value in the current route's key/value store. Will persist for the lifetime
+   * of the route, and will be restored if the user navigates 'back' to the route.
+   */
+  set(key, value) {
+    return this.#currentStore.set(key, value);
+  }
 
-    data = trackedMap();
-    this.#routeData.set(uuid, data);
-    this.#pruneOldData();
-
-    return data;
+  /**
+   * Delete a value from the current route's key/value store
+   */
+  delete(key) {
+    return this.#currentStore.delete(key);
   }
 
   /**
@@ -151,5 +130,26 @@ export default class HistoryStore extends Service {
           this.#pendingStore = null;
         }
       });
+  }
+
+  #pruneOldData() {
+    while (this.#routeData.size > HISTORY_SIZE) {
+      // JS Map guarantees keys will be returned in insertion order
+      const oldestUUID = this.#routeData.keys().next().value;
+      this.#routeData.delete(oldestUUID);
+    }
+  }
+
+  #dataFor(uuid) {
+    let data = this.#routeData.get(uuid);
+    if (data) {
+      return data;
+    }
+
+    data = trackedMap();
+    this.#routeData.set(uuid, data);
+    this.#pruneOldData();
+
+    return data;
   }
 }

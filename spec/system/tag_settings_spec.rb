@@ -72,6 +72,10 @@ describe "Tag Settings" do
     end
 
     it "allows privileged users to edit tag, admin to delete tag" do
+      SiteSetting.content_localization_enabled = true
+      tag_1.update!(locale: "en")
+      Fabricate(:tag_localization, tag: tag_1, locale: "de", name: "gestaltung")
+
       sign_in(trust_level_4)
       tags_page.visit_tag(tag_1)
       tags_page.edit_tag_btn.click
@@ -98,6 +102,18 @@ describe "Tag Settings" do
       expect(tag_settings_page).to have_no_synonyms
 
       sign_in(admin)
+      tag_1.reload
+      tag_settings_page.visit_tab(tag_1, "localizations")
+      expect(tag_settings_page).to have_localizations
+      tag_settings_page.remove_localization
+      tag_settings_page.click_save
+
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+
+      page.refresh
+
+      expect(tag_settings_page).to have_no_localizations
+
       tags_page.visit_tag(tag_2)
       tags_page.edit_tag_btn.click
       expect(page).to have_css(".d-page-header__actions .btn-danger")

@@ -27,6 +27,10 @@ module PageObjects
         component.has_css?(reaction_list_emoji_selector(reaction))
       end
 
+      def has_reaction_icon?(reaction, icon)
+        component.has_css?("#{reaction_list_emoji_selector(reaction)} .d-icon-#{icon}")
+      end
+
       def click_reaction(reaction)
         component.find(reaction_list_emoji_selector(reaction)).click
       end

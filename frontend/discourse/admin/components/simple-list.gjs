@@ -83,31 +83,31 @@ export default class SimpleList extends Component {
       {{#if this.collection}}
         <div class="values">
           {{#each this.collection as |value index|}}
-            <div data-index={{index}} class="value">
+            <div class="value" data-index={{index}}>
               <DButton
+                class="btn-default remove-value-btn btn-small"
                 @action={{fn this.removeItem index}}
                 @icon="xmark"
-                class="btn-default remove-value-btn btn-small"
               />
 
               <input
-                {{on "focusout" (fn this.changeValue index)}}
-                value={{value}}
+                class="value-input"
                 title={{value}}
                 type="text"
-                class="value-input"
+                value={{value}}
+                {{on "focusout" (fn this.changeValue index)}}
               />
 
               {{#if (gt this.collection.length 1)}}
                 <DButton
+                  class="btn-default shift-up-value-btn btn-small"
                   @action={{fn this.shift index -1}}
                   @icon="arrow-up"
-                  class="btn-default shift-up-value-btn btn-small"
                 />
                 <DButton
+                  class="btn-default shift-down-value-btn btn-small"
                   @action={{fn this.shift index 1}}
                   @icon="arrow-down"
-                  class="btn-default shift-down-value-btn btn-small"
                 />
               {{/if}}
             </div>
@@ -119,32 +119,32 @@ export default class SimpleList extends Component {
         {{#if this.isPredefinedList}}
           {{#if this.validValues}}
             <ComboBox
-              @content={{this.validValues}}
-              @value={{this.newValue}}
-              @onChange={{this.addValue}}
-              @valueProperty={{@setting.computedValueProperty}}
-              @nameProperty={{@setting.computedNameProperty}}
-              @options={{hash castInteger=true allowAny=false}}
               class="add-value-input"
+              @content={{this.validValues}}
+              @nameProperty={{@setting.computedNameProperty}}
+              @onChange={{this.addValue}}
+              @options={{hash castInteger=true allowAny=false}}
+              @value={{this.newValue}}
+              @valueProperty={{@setting.computedValueProperty}}
             />
           {{/if}}
         {{else}}
           <input
-            {{on "input" (withEventValue (fn (mut this.newValue)))}}
-            {{on "keydown" this.keyDown}}
-            value={{this.newValue}}
-            type="text"
-            placeholder={{i18n "admin.site_settings.simple_list.add_item"}}
+            autocapitalize="off"
             autocomplete="off"
             autocorrect="off"
-            autocapitalize="off"
             class="add-value-input"
+            placeholder={{i18n "admin.site_settings.simple_list.add_item"}}
+            type="text"
+            value={{this.newValue}}
+            {{on "input" (withEventValue (fn (mut this.newValue)))}}
+            {{on "keydown" this.keyDown}}
           />
           <DButton
+            class="add-value-btn btn-default btn-small"
             @action={{fn this.addValue this.newValue}}
             @disabled={{not this.newValue}}
             @icon="plus"
-            class="add-value-btn btn-default btn-small"
           />
         {{/if}}
       </div>

@@ -62,11 +62,6 @@ export default class ChatThreadList extends Component {
     return this.chatApi.threads(this.args.channel.id, this.handleLoadedThreads);
   }
 
-  @bind
-  loadThreads() {
-    this.threadsCollection.load({ limit: 10 });
-  }
-
   get threadsManager() {
     return this.args.channel.threadsManager;
   }
@@ -146,6 +141,11 @@ export default class ChatThreadList extends Component {
 
   get shouldRender() {
     return !!this.args.channel;
+  }
+
+  @bind
+  loadThreads() {
+    this.threadsCollection.load({ limit: 10 });
   }
 
   @bind

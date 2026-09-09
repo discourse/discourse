@@ -1083,6 +1083,9 @@ de:
         note_added: "Moderator-Notiz"
         note_added_by: "Moderator-Notiz von %{username} · %{relativeDate}"
         no_events: "Keine Zeitleistenereignisse zum Anzeigen"
+      author_penalty:
+        toast:
+          undo: "Rückgängig machen"
       notes:
         add_note_description: "Füge eine Notiz hinzu, um anderen Moderatoren einen Kontext zu geben."
         add_note_button: "Notiz hinzufügen"
@@ -1743,7 +1746,6 @@ de:
       admin: "%{user} ist ein Administrator"
       moderator_tooltip: "Dieser Benutzer ist ein Moderator"
       admin_tooltip: "Dieser Benutzer ist ein Administrator"
-      silenced_tooltip: "Der Benutzer ist stummgeschaltet"
       suspended_notice: "Dieser Benutzer ist bis zum %{date} gesperrt."
       suspended_permanently: "Der Benutzer ist gesperrt."
       suspended_reason: "Grund: "

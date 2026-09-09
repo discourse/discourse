@@ -7,7 +7,7 @@ export default <template>
     <DHorizontalOverflowNav class="activity-nav">
       {{#each @controller.tabs as |tab|}}
         <li>
-          <LinkTo @route={{tab.route}} @model={{@controller.model.name}}>
+          <LinkTo @model={{@controller.model.name}} @route={{tab.route}}>
             {{i18n tab.title}}
           </LinkTo>
         </li>

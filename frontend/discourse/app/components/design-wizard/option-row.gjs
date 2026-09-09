@@ -3,9 +3,9 @@ import { on } from "@ember/modifier";
 // A selectable row, rendered like the notification tracking menu's options.
 const DesignWizardOptionRow = <template>
   <button
-    type="button"
-    class="design-wizard__option-row {{if @selected '--selected'}}"
     aria-pressed={{if @selected "true" "false"}}
+    class="design-wizard__option-row {{if @selected '--selected'}}"
+    type="button"
     ...attributes
     {{on "click" @onSelect}}
   >

@@ -36,8 +36,13 @@ export function resetCurrentReaction() {
 }
 
 function buildFakeReaction(reactionId) {
+  const emojiUrl = emojiUrlFor(reactionId);
+  if (!emojiUrl) {
+    return null;
+  }
+
   const img = document.createElement("img");
-  img.src = emojiUrlFor(reactionId);
+  img.src = emojiUrl;
   img.classList.add(
     "btn-toggle-reaction-emoji",
     "reaction-button",
@@ -59,6 +64,10 @@ function moveReactionAnimation(
   }
 
   const fakeReaction = buildFakeReaction(reactionId);
+  if (!fakeReaction) {
+    return run(complete);
+  }
+
   const reactionButton = postContainer.querySelector(".reaction-button");
 
   reactionButton.appendChild(fakeReaction);
@@ -192,6 +201,28 @@ export default class DiscourseReactionsActions extends Component {
     return classes.join(" ");
   }
 
+  get elementId() {
+    if (!this.data?.id) {
+      return null;
+    }
+    return `discourse-reactions-actions-${this.data.id}-${
+      this.args.position || "right"
+    }`;
+  }
+
+  get showReactionsPicker() {
+    if (!this.reactionsPickerExpanded) {
+      return false;
+    }
+
+    // Anonymous users can pick a reaction — it gets deferred until they log in.
+    if (!this.currentUser) {
+      return this.canReact;
+    }
+
+    return this.data.user_id !== this.currentUser.id;
+  }
+
   @action
   toggleReactions(event) {
     if (!this.reactionsPickerExpanded) {
@@ -318,7 +349,9 @@ export default class DiscourseReactionsActions extends Component {
       const pickedReaction = this.containerElement?.querySelector(
         `.discourse-reactions-picker .pickable-reaction.${CSS.escape(
           params.reaction
-        )} .emoji`
+        )} .emoji, .discourse-reactions-picker .pickable-reaction.${CSS.escape(
+          params.reaction
+        )} .d-icon`
       );
 
       const scales = [1.0, 1.75];
@@ -601,15 +634,6 @@ export default class DiscourseReactionsActions extends Component {
     this._collapseHandler = later(this, this[handler], 500);
   }
 
-  get elementId() {
-    if (!this.data?.id) {
-      return null;
-    }
-    return `discourse-reactions-actions-${this.data.id}-${
-      this.args.position || "right"
-    }`;
-  }
-
   @action
   clickOutside() {
     if (this.clickOutsideDisabled) {
@@ -681,6 +705,11 @@ export default class DiscourseReactionsActions extends Component {
     });
   }
 
+  @action
+  registerContainerElement(element) {
+    this.containerElement = element;
+  }
+
   _captureState(post) {
     return {
       current_user_reaction: post.current_user_reaction
@@ -716,28 +745,10 @@ export default class DiscourseReactionsActions extends Component {
     }
   }
 
-  get showReactionsPicker() {
-    if (!this.reactionsPickerExpanded) {
-      return false;
-    }
-
-    // Anonymous users can pick a reaction — it gets deferred until they log in.
-    if (!this.currentUser) {
-      return this.canReact;
-    }
-
-    return this.data.user_id !== this.currentUser.id;
-  }
-
-  @action
-  registerContainerElement(element) {
-    this.containerElement = element;
-  }
-
   <template>
     <div
-      id={{this.elementId}}
       class="discourse-reactions-actions {{this.classes}}"
+      id={{this.elementId}}
       {{on "touchstart" this.touchStart}}
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
@@ -766,12 +777,12 @@ export default class DiscourseReactionsActions extends Component {
       }}
         {{#if this.showReactionsPicker}}
           <DiscourseReactionsPicker
-            @post={{this.data}}
-            @scheduleCollapse={{this.scheduleCollapse}}
             @cancelCollapse={{this.cancelCollapse}}
             @disableClickOutside={{this.disableClickOutside}}
             @enableClickOutside={{this.enableClickOutside}}
+            @post={{this.data}}
             @reactionsPickerExpanded={{this.reactionsPickerExpanded}}
+            @scheduleCollapse={{this.scheduleCollapse}}
             @toggle={{this.toggle}}
           />
         {{/if}}

@@ -47,7 +47,7 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Submit @label="cancel" @isLoading={{true}} />
+          <form.Submit @isLoading={{true}} @label="cancel" />
         </Form>
       </template>
     );
@@ -59,7 +59,7 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Submit @label="submit" @disabled={{true}} />
+          <form.Submit @disabled={{true}} @label="submit" />
         </Form>
       </template>
     );

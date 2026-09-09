@@ -16,11 +16,11 @@ export default class SidebarCommonAllTagsSectionLink extends Component {
 
   <template>
     <SectionLink
-      @linkName="all-tags"
       @content={{i18n "sidebar.all_tags"}}
-      @route="tags"
+      @linkName="all-tags"
       @prefixType="icon"
       @prefixValue="list"
+      @route="tags"
       @scrollIntoView={{this.scrollIntoView}}
     />
   </template>

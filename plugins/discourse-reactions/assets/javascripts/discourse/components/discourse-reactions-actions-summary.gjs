@@ -20,7 +20,7 @@ export default class ReactionsActionSummary extends Component {
   <template>
     {{#if @shouldRender}}
       <div class="reactions-actions-summary">
-        <DiscourseReactionsActions @post={{@post}} @position="left" />
+        <DiscourseReactionsActions @position="left" @post={{@post}} />
       </div>
     {{/if}}
   </template>

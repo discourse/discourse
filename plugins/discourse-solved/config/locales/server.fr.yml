@@ -50,7 +50,6 @@ fr:
     prioritize_solved_topics_in_search: "Prioriser les sujets résolus dans les résultats de recherche."
     enable_support_category_type_setup: "Active l'option de type de catégorie « Assistance » lors de la configuration de la création d'une catégorie."
     enable_solved_shared_issues: "Ajoute un bouton « Moi aussi » aux sujets non résolus des catégories d'assistance, afin que les membres puissent indiquer qu'ils rencontrent le même problème et recevoir des notifications concernant sa résolution."
-    enable_solved_badges: "Active les badges de résolution attribués aux membres lorsqu'ils apportent des solutions aux questions d'autres personnes."
     show_who_marked_solved: "Affichez qui a marqué le sujet comme résolu. Cette information apparaît dans la première publication du sujet et dans une infobulle sur la réponse."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

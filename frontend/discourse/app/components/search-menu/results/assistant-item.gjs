@@ -143,12 +143,12 @@ export default class AssistantItem extends Component {
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <li
       class={{dConcatClass @typeClass "search-menu-assistant-item"}}
+      data-usage={{@usage}}
       {{on "keydown" this.onKeydown}}
       {{on "click" this.onClick}}
-      data-usage={{@usage}}
     >
       <a class={{dConcatClass @typeClass "search-link"}} href={{this.href}}>
-        <span class="search-icon-wrapper" aria-label={{i18n "search.title"}}>
+        <span aria-label={{i18n "search.title"}} class="search-icon-wrapper">
           {{dIcon (or @icon "magnifying-glass")}}
         </span>
         <span class="search-item-wrapper">

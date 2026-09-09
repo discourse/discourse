@@ -70,26 +70,6 @@ export default class DAccessControl extends Component {
   }
 
   /**
-   * If a transformPermissionOptions function is provided, it is passed all
-   * default permissions and can change the name, description, or level of
-   * these options, OR add new options, returning the new array.
-   *
-   * The level property is used to sort the options, and is an indicator
-   * of the level of access the permission provides, since e.g. Edit is a
-   * higher level of access than View, and to Edit by definition you need
-   * to be able to View.
-   *
-   * Otherwise, the default permissions are used.
-   */
-  buildPermissionOptions() {
-    const permissions =
-      this.args.transformPermissionOptions?.(defaultPermissions()) ||
-      defaultPermissions();
-
-    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
-  }
-
-  /**
    * Mandatory permissions are defined per-target server-side via a mandatory_acl
    * method, which is attached to the Site JSON. Any mandatory permissions will
    * be added to the ACL and cannot be removed or changed in the UI.
@@ -268,6 +248,26 @@ export default class DAccessControl extends Component {
   }
 
   /**
+   * If a transformPermissionOptions function is provided, it is passed all
+   * default permissions and can change the name, description, or level of
+   * these options, OR add new options, returning the new array.
+   *
+   * The level property is used to sort the options, and is an indicator
+   * of the level of access the permission provides, since e.g. Edit is a
+   * higher level of access than View, and to Edit by definition you need
+   * to be able to View.
+   *
+   * Otherwise, the default permissions are used.
+   */
+  buildPermissionOptions() {
+    const permissions =
+      this.args.transformPermissionOptions?.(defaultPermissions()) ||
+      defaultPermissions();
+
+    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
+  }
+
+  /**
    * Fired when a grantee is chosen from the DAccessControlGranteeChooser
    * search results.
    */
@@ -365,10 +365,9 @@ export default class DAccessControl extends Component {
     <div class="d-access-control">
       <DAccessControlGranteeChooser
         class="d-access-control__chooser"
-        @value={{null}}
-        @onChange={{this.onGranteeChosen}}
-        @labelProperty="name"
         @filterPlaceholder="access_control.manage.add_group"
+        @labelProperty="name"
+        @onChange={{this.onGranteeChosen}}
         @options={{hash
           aclTargetType=@aclTarget.type
           customSearchOptions=(hash
@@ -381,6 +380,7 @@ export default class DAccessControl extends Component {
           maximum=1
           none="access_control.manage.add_group"
         }}
+        @value={{null}}
       />
       {{#if (or this.rows.length (has-block "additionalRows"))}}
         <div class="d-access-control__rows">
@@ -391,8 +391,8 @@ export default class DAccessControl extends Component {
                 (if (eq row.type "user") "--user" "--group")
                 (if row.mandatory "--mandatory")
               }}
-              data-row-type={{row.type}}
               data-row-id={{row.id}}
+              data-row-type={{row.type}}
             >
               <span class="d-access-control__item">
                 <span class="d-access-control__item-icon">

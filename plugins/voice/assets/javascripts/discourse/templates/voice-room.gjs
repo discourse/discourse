@@ -2,9 +2,9 @@ import VoiceRoomPage from "discourse/plugins/voice/discourse/components/voice/ro
 
 export default <template>
   <VoiceRoomPage
-    @room={{@model}}
-    @openChat={{@controller.chat}}
     @autoJoin={{@controller.join}}
     @dockOnJoin={{@controller.dockOnJoin}}
+    @openChat={{@controller.chat}}
+    @room={{@model}}
   />
 </template>

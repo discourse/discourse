@@ -27,7 +27,7 @@ describe DiscourseDataExplorer::QueryRunner do
     described_class.invalidate(query_with_internal_params.id)
   end
 
-  describe ".run" do
+  describe ".run caching behavior" do
     it "runs the query and returns results" do
       result = described_class.run(query, nil, current_user: admin)
 
@@ -110,7 +110,7 @@ describe DiscourseDataExplorer::QueryRunner do
     end
   end
 
-  describe ".run" do
+  describe ".run limit handling" do
     it "does not cache when a non-default limit is used" do
       described_class.run(query, nil, current_user: admin, limit: 1)
 

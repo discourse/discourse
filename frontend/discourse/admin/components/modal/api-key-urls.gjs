@@ -3,8 +3,8 @@ import { i18n } from "discourse-i18n";
 
 const ApiKeyUrls = <template>
   <DModal
-    @title={{i18n "admin.api.scopes.allowed_urls"}}
     @closeModal={{@closeModal}}
+    @title={{i18n "admin.api.scopes.allowed_urls"}}
   >
     <:body>
       <div>
