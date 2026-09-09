@@ -15,11 +15,11 @@ import {
   duplicateRow,
   moveColumn,
   moveRow,
+  runCommand,
   setColumnAlignment,
 } from "./commands";
 import { cellTarget, columnTarget, rowTarget } from "./grid";
 
-/** Identifier of the menu shown from a table grip. */
 export const TABLE_MENU_IDENTIFIER = "composer-table-menu";
 
 const ALIGNMENT_ICONS = {
@@ -64,8 +64,6 @@ async function showMenu(pluginParams, view, trigger, items, options) {
     // The mobile composer sits above the composer dropdown layer, and a sheet
     // is a better touch target than a dropdown anchored to a thin grip.
     modalForMobile: true,
-    // Opening from the keyboard is only useful if the items can be reached the
-    // same way, and Escape has to land the caret back in the table.
     autofocus: true,
     trapTab: true,
     onClose: () => {
@@ -77,8 +75,7 @@ async function showMenu(pluginParams, view, trigger, items, options) {
       items,
       run: (item) => {
         instance?.close();
-        item.action();
-        if (item.announcement) {
+        if (item.action() && item.announcement) {
           context.a11y.announce(item.announcement);
         }
       },
@@ -90,18 +87,6 @@ async function showMenu(pluginParams, view, trigger, items, options) {
   }
 
   return instance;
-}
-
-export function runCommand(view, command) {
-  if (!view.editable) {
-    return false;
-  }
-
-  const handled = command(view.state, view.dispatch);
-  if (handled) {
-    view.focus();
-  }
-  return handled;
 }
 
 const ITEMS = {
@@ -240,8 +225,6 @@ function alignmentItems(view, alignment, target) {
   }));
 }
 
-// A markdown table's first row is its header, so the only row that can go above
-// it is another header — which is a different offer, and says so.
 function insertRowAboveItems(view, table, row, target) {
   return table.grid.rows[row].header
     ? [ITEMS.insertHeaderAbove(view, target)]

@@ -1,6 +1,6 @@
 import { tableChrome } from "../lib/table/chrome";
 import tableEditing from "../lib/table/editing";
-import { buildTableNodeView } from "../lib/table/node-view";
+import { buildTableNodeView, TableCellView } from "../lib/table/node-view";
 
 // Markdown Table Example:
 //
@@ -11,7 +11,11 @@ import { buildTableNodeView } from "../lib/table/node-view";
 
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
-  nodeViews: { table: buildTableNodeView },
+  nodeViews: {
+    table: buildTableNodeView,
+    table_cell: TableCellView,
+    table_header_cell: TableCellView,
+  },
   nodeSpec: {
     table: {
       content: "table_head? table_body",

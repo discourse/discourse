@@ -1,3 +1,4 @@
+import { DOMSerializer } from "prosemirror-model";
 import { iconElement } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
 import {
@@ -7,17 +8,18 @@ import {
   deleteRow,
   emptyTrailingColumns,
   emptyTrailingRows,
+  runCommand,
 } from "./commands";
 import dragAutoscroll from "./drag-autoscroll";
 import { columnTarget, isTable, rowTarget, tableGrid } from "./grid";
-import { runCommand, TABLE_MENU_IDENTIFIER } from "./menu";
+import { TABLE_MENU_IDENTIFIER } from "./menu";
+import trackPointer from "./track-pointer";
 
 const APPEND_DRAG_THRESHOLD = 4;
 const APPEND_DRAG_MAX = { column: 8, row: 12 };
 const APPEND_DRAG_STEP_EM = { column: 5, row: 2 };
 const TOUCH_SCROLL_THRESHOLD = 8;
 
-// The commands that grow or shrink each axis, so one gesture can serve both.
 const AXES = {
   column: {
     target: columnTarget,
@@ -32,6 +34,30 @@ const AXES = {
     emptyTrailing: emptyTrailingRows,
   },
 };
+
+export class TableCellView {
+  #node;
+
+  constructor(node) {
+    this.#node = node;
+    const { dom, contentDOM } = DOMSerializer.renderSpec(
+      document,
+      node.type.spec.toDOM(node)
+    );
+    this.dom = dom;
+    this.contentDOM = contentDOM;
+  }
+
+  ignoreMutation(mutation) {
+    return (
+      mutation.target === this.dom &&
+      mutation.type === "attributes" &&
+      (mutation.attributeName === "class" ||
+        (mutation.attributeName === "style" &&
+          this.dom.style.textAlign === (this.#node.attrs.alignment || "")))
+    );
+  }
+}
 
 export function buildTableNodeView(pluginParams) {
   return class TableNodeView {
@@ -77,23 +103,17 @@ export function buildTableNodeView(pluginParams) {
 
       this.#stopTouchScroll?.();
 
-      const { clientX, clientY, pointerId } = startEvent;
+      const { clientX, clientY } = startEvent;
       const initialScroll = this.dom.scrollLeft;
       let scrolling = false;
 
       const stop = () => {
         this.dom.classList.remove("is-panning");
-        document.removeEventListener("pointermove", move);
-        document.removeEventListener("pointerup", stop);
-        document.removeEventListener("pointercancel", stop);
+        stopTracking();
         this.#stopTouchScroll = null;
       };
 
       const move = (event) => {
-        if (event.pointerId !== pointerId) {
-          return;
-        }
-
         const horizontal = event.clientX - clientX;
         const vertical = event.clientY - clientY;
         if (
@@ -110,9 +130,7 @@ export function buildTableNodeView(pluginParams) {
         this.dom.scrollLeft = initialScroll - horizontal;
       };
 
-      document.addEventListener("pointermove", move);
-      document.addEventListener("pointerup", stop);
-      document.addEventListener("pointercancel", stop);
+      const stopTracking = trackPointer(startEvent, move, stop);
       this.#stopTouchScroll = stop;
     };
 
@@ -152,7 +170,6 @@ export function buildTableNodeView(pluginParams) {
       this.dom.addEventListener("mousemove", this.#trackPointer);
       this.dom.addEventListener("mouseleave", this.#clearPointer);
       this.contentDOM.addEventListener("pointerdown", this.#trackTouchScroll);
-      this.#syncEditable();
     }
 
     destroy() {
@@ -170,8 +187,8 @@ export function buildTableNodeView(pluginParams) {
       if (node.type !== this.node.type) {
         return false;
       }
+      this.#stopAppendDrag?.();
       this.node = node;
-      this.#syncEditable();
       return true;
     }
 
@@ -182,26 +199,9 @@ export function buildTableNodeView(pluginParams) {
     }
 
     ignoreMutation(mutation) {
-      if (!this.contentDOM.contains(mutation.target)) {
-        return true;
-      }
-
-      // The chrome puts presentation on the cells themselves while dragging —
-      // a lift transform, a state class. Those are not document changes, and
-      // letting them count as one makes the editor redraw the table and rebuild
-      // every handle mid-gesture.
-      return (
-        mutation.type === "attributes" &&
-        (mutation.attributeName === "style" ||
-          mutation.attributeName === "class")
-      );
+      return !this.contentDOM.contains(mutation.target);
     }
 
-    /**
-     * Grows the table by `delta` rows or columns, or drops that many trailing
-     * ones when negative. Removal only reaches what the drag has vouched is
-     * empty, so the gesture can never destroy anything the author typed.
-     */
     #resize(kind, delta) {
       if (!this.view.editable || !delta) {
         return;
@@ -213,6 +213,12 @@ export function buildTableNodeView(pluginParams) {
       }
 
       const axis = AXES[kind];
+      if (delta < 0) {
+        delta = -Math.min(-delta, axis.emptyTrailing(table.grid));
+        if (!delta) {
+          return;
+        }
+      }
       const size = kind === "column" ? table.grid.width : table.grid.height;
       const target = axis.target(
         table,
@@ -231,8 +237,8 @@ export function buildTableNodeView(pluginParams) {
 
     #appendButton(kind, labelKey) {
       let dragged = false;
-      const button = this.#button(`append --${kind}`, labelKey, () => {
-        if (dragged) {
+      const button = this.#button(`append --${kind}`, labelKey, (event) => {
+        if (dragged && event.detail !== 0) {
           dragged = false;
           return;
         }
@@ -266,11 +272,6 @@ export function buildTableNodeView(pluginParams) {
       return button;
     }
 
-    /**
-     * Shows what the drag will do: pending rows or columns beyond the edge they
-     * will land on, or the empty ones about to be dropped. Adding grows the
-     * inner element to match so the scroll box keeps the preview in view.
-     */
     #showGhost(kind, delta, step, bounds, rtl = false) {
       const ghost = this.appendGhost;
 
@@ -302,7 +303,7 @@ export function buildTableNodeView(pluginParams) {
         const offset = adding ? bounds.width : bounds.width - span;
         Object.assign(ghost.style, {
           top: "0px",
-          left: `${rtl ? bounds.width - offset - span : offset}px`,
+          left: `${this.contentDOM.offsetLeft + (rtl ? bounds.width - offset - span : offset)}px`,
           width: `${span}px`,
           height: `${bounds.height}px`,
         });
@@ -312,14 +313,13 @@ export function buildTableNodeView(pluginParams) {
         }
         Object.assign(ghost.style, {
           top: `${adding ? bounds.height : bounds.height - span}px`,
-          left: "0px",
+          left: `${this.contentDOM.offsetLeft}px`,
           width: `${bounds.width}px`,
           height: `${span}px`,
         });
       }
     }
 
-    /** Measured size of the last `count` rows or columns, which vary in size. */
     #trailingExtent(kind, count) {
       const rows = [...this.contentDOM.rows];
 
@@ -373,15 +373,6 @@ export function buildTableNodeView(pluginParams) {
       return { node, pos, start: pos + 1, grid: tableGrid(node) };
     }
 
-    #syncEditable() {
-      for (const button of this.inner.querySelectorAll(
-        ".composer-table__append"
-      )) {
-        button.hidden = !this.view.editable;
-        button.disabled = !this.view.editable;
-      }
-    }
-
     #announceChange(kind, delta) {
       const change = delta > 0 ? "added" : "removed";
       pluginParams
@@ -409,7 +400,7 @@ export function buildTableNodeView(pluginParams) {
       }
 
       const column = kind === "column";
-      const { pointerId } = startEvent;
+      const initialDoc = this.view.state.doc;
       const origin = column ? startEvent.clientX : startEvent.clientY;
 
       const bounds = this.contentDOM.getBoundingClientRect();
@@ -478,10 +469,6 @@ export function buildTableNodeView(pluginParams) {
       );
 
       const move = (event) => {
-        if (event.pointerId !== pointerId) {
-          return;
-        }
-
         current = column ? event.clientX : event.clientY;
         if (!updateDelta()) {
           return;
@@ -492,14 +479,13 @@ export function buildTableNodeView(pluginParams) {
       };
 
       const finish = (event) => {
-        if (event.pointerId !== pointerId) {
-          return;
-        }
-
         this.#stopAppendDrag?.();
-        reset();
 
-        if (event.type === "pointercancel") {
+        if (
+          event.type === "pointercancel" ||
+          this.view.state.doc !== initialDoc ||
+          !this.view.editable
+        ) {
           setDragged(false);
           return;
         }
@@ -508,16 +494,13 @@ export function buildTableNodeView(pluginParams) {
       };
 
       this.#stopAppendDrag = () => {
+        reset();
         autoscroll.stop();
-        document.removeEventListener("pointermove", move);
-        document.removeEventListener("pointerup", finish);
-        document.removeEventListener("pointercancel", finish);
+        stopTracking();
         this.#stopAppendDrag = null;
       };
 
-      document.addEventListener("pointermove", move);
-      document.addEventListener("pointerup", finish);
-      document.addEventListener("pointercancel", finish);
+      const stopTracking = trackPointer(startEvent, move, finish);
     }
   };
 }

@@ -1,7 +1,7 @@
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { i18n } from "discourse-i18n";
-import { moveColumn, moveRow } from "./commands";
+import { moveColumn, moveRow, runCommand } from "./commands";
 import dragAutoscroll from "./drag-autoscroll";
 import {
   cellAround,
@@ -12,6 +12,7 @@ import {
   tableGrid,
 } from "./grid";
 import { handleContextMenuKey, openGripMenu } from "./menu";
+import trackPointer from "./track-pointer";
 
 const DRAG_THRESHOLD = 4;
 const TOUCH_DRAG_THRESHOLD = 12;
@@ -59,7 +60,12 @@ export function tableChrome(pluginParams) {
       syncGripAccessibility(view);
 
       return {
-        update: () => syncGripAccessibility(view),
+        update: (_, previousState) => {
+          if (!view.editable || view.state.doc !== previousState.doc) {
+            [...activeGestures].forEach((stop) => stop());
+          }
+          syncGripAccessibility(view);
+        },
         destroy: () => {
           [...activeGestures].forEach((stop) => stop());
         },
@@ -83,7 +89,7 @@ function gripDecorations(state, pluginParams, activeGestures) {
   const decorations = [];
 
   state.doc.descendants((node, pos) => {
-    if (!node.isBlock) {
+    if (node.isTextblock || !node.isBlock) {
       return false;
     }
     if (!isTable(node)) {
@@ -100,8 +106,7 @@ function gripDecorations(state, pluginParams, activeGestures) {
             start + row.cells[0].offset + 1,
             "row",
             pluginParams,
-            activeGestures,
-            { header: row.header }
+            activeGestures
           )
         );
       }
@@ -175,21 +180,21 @@ function targetDecorations(state, target) {
   return decorations;
 }
 
-function gripDecoration(pos, kind, pluginParams, activeGestures, options = {}) {
+function gripDecoration(pos, kind, pluginParams, activeGestures) {
   return Decoration.widget(
     pos,
     (view, getPos) =>
-      buildGrip(kind, view, getPos, pluginParams, activeGestures, options),
+      buildGrip(kind, view, getPos, pluginParams, activeGestures),
     {
       side: -1,
-      key: `table-grip-${kind}${options.header ? "-header" : ""}`,
+      key: `table-grip-${kind}`,
       ignoreSelection: true,
       stopEvent: () => true,
     }
   );
 }
 
-function buildGrip(kind, view, getPos, pluginParams, activeGestures, options) {
+function buildGrip(kind, view, getPos, pluginParams, activeGestures) {
   const grip = document.createElement("button");
   grip.type = "button";
   grip.className = `composer-table__grip --${kind}`;
@@ -197,19 +202,6 @@ function buildGrip(kind, view, getPos, pluginParams, activeGestures, options) {
   grip.draggable = false;
   grip.tabIndex = -1;
   grip.setAttribute("aria-expanded", "false");
-  grip.setAttribute(
-    "aria-label",
-    i18n(
-      kind === "row"
-        ? "composer.table.select_row"
-        : "composer.table.select_column"
-    )
-  );
-
-  if (options.header) {
-    grip.classList.add("--header");
-  }
-
   // Pointer events carry the drag and open the menu on release. A click handler
   // remains for assistive technology that synthesizes activation directly.
   const context = {
@@ -219,8 +211,6 @@ function buildGrip(kind, view, getPos, pluginParams, activeGestures, options) {
     pluginParams,
     activeGestures,
     grip,
-    dragged: false,
-    openedFromPointer: false,
   };
   grip.addEventListener("mousedown", (event) => event.preventDefault());
   grip.addEventListener("pointerdown", (event) =>
@@ -236,8 +226,6 @@ function onGripPointerDown(event, context) {
     return;
   }
   event.preventDefault();
-  context.dragged = false;
-  context.openedFromPointer = false;
 
   const target = locateGrip(context);
   if (!target) {
@@ -254,13 +242,7 @@ function onGripClick(event, context) {
     return;
   }
 
-  if (context.openedFromPointer) {
-    context.openedFromPointer = false;
-    return;
-  }
-
-  if (context.dragged) {
-    context.dragged = false;
+  if (event.detail !== 0) {
     return;
   }
 
@@ -302,7 +284,6 @@ function highlightAt(view, { table, row, col }, kind) {
 
 function trackDrag(startEvent, context, target) {
   const { activeGestures, kind, grip, view } = context;
-  const { pointerId } = startEvent;
   const inner = grip.closest(".composer-table__inner");
   const indicator = inner?.querySelector(".composer-table__drop-indicator");
   const grid = inner?.querySelector("table");
@@ -375,19 +356,13 @@ function trackDrag(startEvent, context, target) {
     }
 
     stopped = true;
-    document.removeEventListener("pointermove", move);
-    document.removeEventListener("pointerup", finish);
-    document.removeEventListener("pointercancel", finish);
+    stopTracking();
     activeGestures.delete(stop);
     autoscroll.stop();
     settle();
   };
 
   const move = (event) => {
-    if (event.pointerId !== pointerId) {
-      return;
-    }
-
     current = kind === "row" ? event.clientY : event.clientX;
     const offset = current - origin;
 
@@ -414,18 +389,17 @@ function trackDrag(startEvent, context, target) {
   };
 
   const finish = (event) => {
-    if (event.pointerId !== pointerId) {
-      return;
-    }
-
     const landed = event.type === "pointercancel" ? null : dropIndex;
     stop();
 
     if (!dragging && event.type !== "pointercancel") {
-      context.openedFromPointer = true;
       requestAnimationFrame(() => {
         const anchorGrip = currentGrip(context, target);
-        if (view.editable && anchorGrip.isConnected) {
+        if (
+          view.editable &&
+          view.state.doc.nodeAt(target.table.pos) === target.table.node &&
+          anchorGrip.isConnected
+        ) {
           openGripMenu({ ...context, grip: anchorGrip }, target);
         }
       });
@@ -433,23 +407,19 @@ function trackDrag(startEvent, context, target) {
     }
 
     if (dragging) {
-      context.dragged = true;
-
       if (landed !== null) {
         const command =
           kind === "row"
             ? moveRow(index, landed, target.table)
             : moveColumn(index, landed, target.table);
-        if (command(view.state, view.dispatch)) {
+        if (runCommand(view, command)) {
           announceMove(context, index, landed);
         }
       }
     }
   };
 
-  document.addEventListener("pointermove", move);
-  document.addEventListener("pointerup", finish);
-  document.addEventListener("pointercancel", finish);
+  const stopTracking = trackPointer(startEvent, move, finish);
   activeGestures.add(stop);
 }
 
@@ -477,6 +447,12 @@ function announceMove({ kind, pluginParams, view }, index, landed) {
 }
 
 function syncGripAccessibility(view) {
+  for (const button of view.dom.querySelectorAll(
+    ".composer-table__grip, .composer-table__append"
+  )) {
+    button.hidden = !view.editable;
+    button.disabled = !view.editable;
+  }
   for (const grip of view.dom.querySelectorAll(".composer-table__grip")) {
     const row = grip.closest("tr");
     const cell = grip.closest("th, td");
@@ -489,8 +465,6 @@ function syncGripAccessibility(view) {
           );
     const number = kind === "row" ? row?.rowIndex + 1 : cell?.cellIndex + 1;
 
-    grip.hidden = !view.editable;
-    grip.disabled = !view.editable;
     grip.setAttribute("aria-hidden", current ? "false" : "true");
     if (number) {
       grip.setAttribute(

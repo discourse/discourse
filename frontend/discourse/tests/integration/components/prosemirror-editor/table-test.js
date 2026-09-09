@@ -123,7 +123,7 @@ async function pressGrip(
     new PointerEvent(activate || withClick ? "pointerup" : "pointercancel", end)
   );
   if (withClick) {
-    grip.dispatchEvent(new MouseEvent("click", end));
+    grip.dispatchEvent(new MouseEvent("click", { ...end, detail: 1 }));
   }
   await settled();
 }
@@ -151,6 +151,7 @@ async function dragGrip(grip, target, beforeDrop) {
       at(to.left + to.width / 2 + 1, to.top + to.height / 2 + 1)
     )
   );
+  await settled();
   await beforeDrop?.();
   document.dispatchEvent(
     new PointerEvent(
@@ -159,7 +160,9 @@ async function dragGrip(grip, target, beforeDrop) {
     )
   );
   // The browser sends this after a short drag; a drag must not also open a menu.
-  grip.dispatchEvent(new MouseEvent("click", at(to.left, to.top)));
+  grip.dispatchEvent(
+    new MouseEvent("click", { ...at(to.left, to.top), detail: 1 })
+  );
   await settled();
 }
 
@@ -186,7 +189,9 @@ async function dragAppend(button, distance) {
   button.dispatchEvent(new PointerEvent("pointerdown", at(start.x, start.y)));
   document.dispatchEvent(new PointerEvent("pointermove", at(end.x, end.y)));
   document.dispatchEvent(new PointerEvent("pointerup", at(end.x, end.y)));
-  button.dispatchEvent(new MouseEvent("click", at(end.x, end.y)));
+  button.dispatchEvent(
+    new MouseEvent("click", { ...at(end.x, end.y), detail: 1 })
+  );
   await settled();
 }
 
@@ -733,17 +738,16 @@ module(
       document.dispatchEvent(
         new PointerEvent("pointercancel", at(bounds.top + 10))
       );
-      grip.dispatchEvent(new MouseEvent("click", at(bounds.top + 10)));
       await settled();
 
       assert
         .dom('.fk-d-menu[data-identifier="composer-table-menu"]')
-        .doesNotExist("the drag's synthesized click is ignored");
+        .doesNotExist("canceling does not open a menu");
 
       const currentGrip = document.querySelectorAll(
         ".composer-table__grip.--row"
       )[1];
-      await pressGrip(currentGrip, { click: true });
+      currentGrip.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await waitFor('.fk-d-menu[data-identifier="composer-table-menu"]');
 
       assert
@@ -1298,10 +1302,15 @@ module(
       );
       await settled();
 
+      view.focus();
+      assert.true(
+        view.state.selection instanceof TextSelection,
+        "the selection retains text semantics"
+      );
       assert.strictEqual(
-        view.state.selection.constructor,
-        TextSelection,
-        "the editor does not replace the browser's selection model"
+        window.getSelection().toString().replace(/\s/g, ""),
+        "a1a2a",
+        "native selection keeps the partial final cell"
       );
       assert
         .dom(".ProseMirror .composer-table .is-structural-target")
@@ -1373,6 +1382,272 @@ module(
         ],
         "each section keeps the correct cell types"
       );
+    });
+
+    for (const backwards of [false, true]) {
+      test(`Shift+Enter across rows preserves cells (${backwards ? "backward" : "forward"})`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, TABLE);
+        const { view } = editor;
+        const from = cellPos(view, 1, 0) + 2;
+        const to = cellPos(view, 2, 0) + 2;
+        view.dispatch(
+          view.state.tr.setSelection(
+            TextSelection.create(
+              view.state.doc,
+              backwards ? to : from,
+              backwards ? from : to
+            )
+          )
+        );
+        await pressKey(view, "Enter", { shiftKey: true });
+        const { grid } = locateTable(view);
+        assert.strictEqual(grid.height, 3, "all rows survive");
+        assert.deepEqual(
+          grid.rows.map((row) => row.cells.length),
+          [3, 3, 3],
+          "all cells survive"
+        );
+        assert.strictEqual(
+          grid.rows[1].cells[0].node.lastChild.type.name,
+          "hard_break",
+          "the break lands in the first selected cell"
+        );
+        assert.strictEqual(
+          grid.rows[2].cells[0].node.textContent,
+          "1",
+          "the unselected suffix survives"
+        );
+        await apply(view, undo);
+        assert.strictEqual(
+          locateTable(view).grid.rows[1].cells[0].node.textContent,
+          "a1",
+          "undo restores the selected content"
+        );
+        view.dispatch(view.state.tr.insertText("X"));
+        assert.strictEqual(
+          locateTable(view).grid.height,
+          3,
+          "the restored selection remains safe to replace"
+        );
+      });
+    }
+
+    test("editing a trailing cell cancels an append-removal drag", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      await selectCell(view, 1, 2);
+      await apply(view, addColumn(1));
+      const button = find(".composer-table__append.--column");
+      const bounds = button.getBoundingClientRect();
+      const start = {
+        bubbles: true,
+        button: 0,
+        pointerId: 8,
+        clientX: bounds.left,
+        clientY: bounds.top,
+      };
+      const end = { ...start, clientX: bounds.left - 200 };
+      button.dispatchEvent(new PointerEvent("pointerdown", start));
+      document.dispatchEvent(new PointerEvent("pointermove", end));
+      view.dispatch(view.state.tr.insertText("keep", cellPos(view, 1, 3) + 1));
+      document.dispatchEvent(new PointerEvent("pointerup", end));
+      assert.strictEqual(
+        locateTable(view).grid.rows[1].cells[3].node.textContent,
+        "keep",
+        "new content is not removed by the old gesture"
+      );
+      assert
+        .dom(".composer-table__ghost.--visible")
+        .doesNotExist("the canceled preview is removed");
+    });
+
+    test("a captured command rejects a changed table position", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      const target = locateTable(view);
+      view.dispatch(
+        view.state.tr.insert(
+          0,
+          view.state.schema.nodes.paragraph.create(
+            null,
+            view.state.schema.text("before")
+          )
+        )
+      );
+      const doc = view.state.doc;
+      assert.false(
+        moveRow(1, 3, target)(view.state, view.dispatch),
+        "the old target is rejected"
+      );
+      assert.strictEqual(view.state.doc, doc, "no content is changed");
+    });
+
+    test("header moves keep subsequent typing in the moved row", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE + "\n\nafter");
+      const { view } = editor;
+      await selectCell(view, 1, 0);
+      await apply(view, moveRow(1, 0));
+      view.dispatch(view.state.tr.insertText("X"));
+      assert.strictEqual(
+        locateTable(view).grid.rows[0].cells[0].node.textContent,
+        "Xa1",
+        "typing stays in the promoted row"
+      );
+    });
+
+    test("pasting a table keeps subsequent typing inside the destination", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE + "\n\nafter");
+      const { view } = editor;
+      await selectCell(view, 1, 0);
+      view.pasteHTML("<table><tbody><tr><td>pasted</td></tr></tbody></table>");
+      view.dispatch(view.state.tr.insertText("X"));
+      assert.strictEqual(
+        locateTable(view).grid.rows[1].cells[0].node.textContent,
+        "Xpasted",
+        "typing stays in the pasted cell"
+      );
+    });
+
+    test("cell mutation handling still reads text edits", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      const cell = find(".composer-table td");
+      [...cell.childNodes].find(
+        (node) => node.nodeType === Node.TEXT_NODE
+      ).textContent = "edited";
+      await settled();
+      assert.strictEqual(
+        locateTable(view).grid.rows[1].cells[0].node.textContent,
+        "edited",
+        "text changes are still read from the cell"
+      );
+    });
+
+    test("an assistive append activation works after a drag ends elsewhere", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const button = find(".composer-table__append.--column");
+      const bounds = button.getBoundingClientRect();
+      const start = {
+        bubbles: true,
+        button: 0,
+        pointerId: 8,
+        clientX: bounds.left,
+        clientY: bounds.top,
+      };
+      button.dispatchEvent(new PointerEvent("pointerdown", start));
+      document.dispatchEvent(
+        new PointerEvent("pointermove", {
+          ...start,
+          clientX: bounds.left + 200,
+        })
+      );
+      document.dispatchEvent(
+        new PointerEvent("pointerup", { ...start, clientX: bounds.left + 200 })
+      );
+      const width = locateTable(editor.view).grid.width;
+      button.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      assert.strictEqual(
+        locateTable(editor.view).grid.width,
+        width + 1,
+        "assistive activation is not swallowed"
+      );
+    });
+
+    for (const direction of ["ltr", "rtl"]) {
+      test(`row grips follow ${direction} table direction on an RTL page`, async function (assert) {
+        const original = document.documentElement.dir;
+        try {
+          document.documentElement.dir = "rtl";
+          const [editor] = await setupRichEditor(assert, TABLE);
+          editor.view.dom.dir = direction;
+          const grip = find(".composer-table__grip.--row");
+          const cell = grip.closest("th");
+          const gripBounds = grip.getBoundingClientRect();
+          const edge =
+            cell.getBoundingClientRect()[
+              direction === "rtl" ? "right" : "left"
+            ];
+          assert.true(
+            Math.abs(gripBounds.left + gripBounds.width / 2 - edge) < 1,
+            "the grip is centered on the table's outside edge"
+          );
+        } finally {
+          document.documentElement.dir = original;
+        }
+      });
+    }
+
+    test("editable changes synchronize all table controls", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      for (const editable of [false, true]) {
+        view.setProps({ editable: () => editable });
+        for (const control of findAll(
+          ".composer-table__grip, .composer-table__append"
+        )) {
+          assert.strictEqual(
+            control.hidden,
+            !editable,
+            "visibility follows editability"
+          );
+          assert.strictEqual(
+            control.disabled,
+            !editable,
+            "activation follows editability"
+          );
+        }
+      }
+    });
+
+    test("dragging keeps the editable cells intact between pointer events", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      const cell = findAll(".composer-table td")[0];
+      await dragGrip(
+        findAll(".composer-table__grip.--row")[1],
+        findAll(".composer-table tr")[2],
+        () => {
+          assert.strictEqual(
+            findAll(".composer-table td")[0],
+            cell,
+            "the observer does not replace the lifted cell"
+          );
+          assert.true(
+            cell.classList.contains("is-moving"),
+            "the cell stays lifted"
+          );
+          assert.notStrictEqual(
+            cell.style.transform,
+            "",
+            "the cell follows the pointer"
+          );
+        }
+      );
+      assert.strictEqual(
+        locateTable(view).grid.rows[2].cells[0].node.textContent,
+        "a1",
+        "the move still commits"
+      );
+    });
+
+    test("a document change cancels a pending reorder", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      await dragGrip(
+        findAll(".composer-table__grip.--row")[1],
+        findAll(".composer-table tr")[2],
+        () => {
+          view.dispatch(view.state.tr.insertText("X", cellPos(view, 1, 0) + 1));
+        }
+      );
+      assert.strictEqual(
+        locateTable(view).grid.rows[1].cells[0].node.textContent,
+        "Xa1",
+        "the edit survives without reordering"
+      );
+      assert
+        .dom(".composer-table__drag-avatar")
+        .doesNotExist("the drag presentation is cleaned up");
     });
 
     test("typing across cells is one safe undoable edit", async function (assert) {

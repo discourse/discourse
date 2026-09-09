@@ -1,3 +1,4 @@
+import { Fragment, Slice } from "prosemirror-model";
 import { Plugin, TextSelection } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { currentCell, goToNextCell } from "./commands";
@@ -10,14 +11,13 @@ export default function tableEditing() {
     props: {
       decorations: selectionDecorations,
       handleKeyDown,
-      handlePaste,
+      handlePaste: handleTablePaste,
       handleTextInput: (view, from, to, text) =>
-        replaceCrossCellSelection(view, { text }),
+        replaceCrossCellSelection(view, text),
       handleDOMEvents: {
         beforeinput: handleDelete((event) =>
           event.inputType?.startsWith("delete")
         ),
-        cut: handleCut,
         keydown: handleDelete(
           (event) => event.key === "Backspace" || event.key === "Delete"
         ),
@@ -25,20 +25,28 @@ export default function tableEditing() {
     },
 
     appendTransaction(transactions, oldState, newState) {
-      if (!transactions.some((tr) => tr.docChanged)) {
-        return null;
-      }
-
-      const changed = repairableRange(oldState.doc, newState.doc);
-      return changed
+      const changed = transactions.some((tr) => tr.docChanged)
+        ? repairableRange(oldState.doc, newState.doc)
+        : null;
+      let tr = changed
         ? fixTables(newState, null, changed.from, changed.to)
         : null;
+      const selection = tr?.selection ?? newState.selection;
+      if (
+        !(selection instanceof TableTextSelection) &&
+        crossCellRange(selection)
+      ) {
+        tr ??= newState.tr;
+        tr.setSelection(
+          new TableTextSelection(selection.$anchor, selection.$head)
+        );
+      }
+      return tr;
     },
   });
 }
 
-function crossCellRange(state) {
-  const { selection } = state;
+function crossCellRange(selection) {
   if (!(selection instanceof TextSelection) || selection.empty) {
     return null;
   }
@@ -54,80 +62,56 @@ function crossCellRange(state) {
   return table && endTable?.pos === table.pos ? table : null;
 }
 
-function replaceCrossCellSelection(view, { text, slice, meta } = {}) {
-  if (!view.editable) {
-    return false;
+// Preserve native text selection and clipboard slices, but replace only the
+// selected content of each cell, including commands that insert nodes directly.
+class TableTextSelection extends TextSelection {
+  map(doc, mapping) {
+    const selection = super.map(doc, mapping);
+    return crossCellRange(selection)
+      ? new TableTextSelection(selection.$anchor, selection.$head)
+      : selection;
   }
 
-  const { state } = view;
-  const { selection } = state;
-  const table = crossCellRange(state);
-  if (!table) {
-    return false;
-  }
-
-  const ranges = [];
-  for (const row of table.grid.rows) {
-    for (const cell of row.cells) {
-      const start = table.start + cell.offset + 1;
-      const end = start + cell.node.content.size;
-      const from = Math.max(selection.from, start);
-      const to = Math.min(selection.to, end);
-      if (from < to) {
-        ranges.push({ from, to });
+  replace(tr, content = Slice.empty) {
+    const table = crossCellRange(this);
+    const mapFrom = tr.steps.length;
+    const ranges = [];
+    for (const row of table.grid.rows) {
+      for (const cell of row.cells) {
+        const start = table.start + cell.offset + 1;
+        const from = Math.max(this.from, start);
+        const to = Math.min(this.to, start + cell.node.content.size);
+        if (from < to) {
+          ranges.push({ from, to });
+        }
       }
     }
-  }
-
-  const tr = state.tr;
-  for (let index = ranges.length - 1; index >= 0; index--) {
-    tr.delete(ranges[index].from, ranges[index].to);
-  }
-
-  tr.setSelection(
-    TextSelection.create(tr.doc, tr.mapping.map(selection.from, -1))
-  );
-
-  if (text !== undefined) {
-    tr.insertText(text);
-  } else if (slice) {
-    tr.replaceSelection(slice);
-  }
-
-  if (meta) {
-    for (const [key, value] of Object.entries(meta)) {
-      tr.setMeta(key, value);
+    for (const { from, to } of ranges.reverse()) {
+      tr.delete(from, to);
     }
+    tr.setSelection(
+      TextSelection.create(tr.doc, tr.mapping.slice(mapFrom).map(this.from, -1))
+    );
+    tr.replaceSelection(content);
   }
 
-  view.dispatch(tr.scrollIntoView());
-  return true;
-}
-
-function handlePaste(view, event, slice) {
-  if (handleTablePaste(view, event, slice)) {
-    return true;
+  replaceWith(tr, node) {
+    this.replace(tr, new Slice(Fragment.from(node), 0, 0));
   }
-
-  return replaceCrossCellSelection(view, {
-    slice,
-    meta: { paste: true, uiEvent: "paste" },
-  });
 }
 
-function handleCut(view, event) {
-  if (!crossCellRange(view.state) || !event.clipboardData) {
+function replaceCrossCellSelection(view, text) {
+  if (!view.editable || !(view.state.selection instanceof TableTextSelection)) {
     return false;
   }
-
-  const { dom, text } = view.serializeForClipboard(
-    view.state.selection.content()
+  const tr = view.state.tr;
+  view.dispatch(
+    (text === undefined
+      ? tr.deleteSelection()
+      : tr.insertText(text)
+    ).scrollIntoView()
   );
-  event.preventDefault();
-  event.clipboardData.clearData();
-  event.clipboardData.setData("text/html", dom.innerHTML);
-  event.clipboardData.setData("text/plain", text);
-  return replaceCrossCellSelection(view);
+  return true;
 }
 
 function handleDelete(deleting) {

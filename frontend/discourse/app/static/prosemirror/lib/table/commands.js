@@ -7,7 +7,27 @@ import {
   copyCell,
   findTable,
   rowRange,
+  tableGrid,
 } from "./grid";
+
+export function runCommand(view, command) {
+  if (!view.editable) {
+    return false;
+  }
+  const handled = command(view.state, view.dispatch);
+  if (handled) {
+    view.focus();
+  }
+  return handled;
+}
+
+export function selectCell(tr, tablePos, row, col) {
+  const grid = tableGrid(tr.doc.nodeAt(tablePos));
+  const cell = grid.rows[row]?.cells[col];
+  return cell
+    ? tr.setSelection(TextSelection.create(tr.doc, tablePos + cell.offset + 2))
+    : tr;
+}
 
 export const ALIGNMENTS = ["left", "center", "right"];
 
@@ -52,7 +72,12 @@ export function currentCell(state) {
 function tableCommand(target, apply, enabled) {
   return (state, dispatch) => {
     const table = target ?? currentCell(state);
-    if (!table || enabled?.(table) === false) {
+    if (
+      !table ||
+      table.pos > state.doc.content.size ||
+      state.doc.nodeAt(table.pos) !== table.node ||
+      enabled?.(table) === false
+    ) {
       return false;
     }
 
@@ -270,9 +295,7 @@ export function moveRow(from, to, tableTarget) {
   return tableCommand(
     tableTarget,
     (tr, table) => {
-      // Markdown pins the header to the first row, not to a particular row's
-      // contents, so a move across that boundary is expressible: whichever row
-      // lands first becomes the header and its cells change type to match.
+      // Header status belongs to the first row, not the moved content.
       if (table.grid.head && (from === 0 || to === 0)) {
         return reorderAcrossHeader(tr, table, from, to);
       }
@@ -289,12 +312,7 @@ export function moveRow(from, to, tableTarget) {
   );
 }
 
-/**
- * Rebuilds the table from `order`, re-typing every cell to match the section it
- * lands in. Simpler and safer to express as one replacement than as surgery
- * across two sections, so everything that changes which row is first goes
- * through it.
- */
+// Replacing both sections together keeps header promotion schema-valid.
 function replaceRows(tr, table, order) {
   const schema = table.node.type.schema;
 
@@ -320,17 +338,13 @@ function replaceRows(tr, table, order) {
 function reorderAcrossHeader(tr, table, from, to) {
   const order = table.grid.rows.map((row) => row.node);
   const [moved] = order.splice(from, 1);
-  order.splice(to > from ? to - 1 : to, 0, moved);
+  const landing = to > from ? to - 1 : to;
+  order.splice(landing, 0, moved);
 
-  return replaceRows(tr, table, order);
+  return selectCell(replaceRows(tr, table, order), table.pos, landing, 0);
 }
 
-/**
- * Inserts an empty header row above the current one, which demotes it to the
- * first body row. Markdown allows a single header, so gaining one necessarily
- * costs the old one its section; that trade is the command, not a side effect
- * of it.
- */
+/** Inserts a header and demotes the old one to the body. */
 export function addHeaderRow(target) {
   return tableCommand(
     target,
@@ -338,8 +352,6 @@ export function addHeaderRow(target) {
       const schema = table.node.type.schema;
       const cells = Array.from({ length: table.grid.width }, (_, col) =>
         cellType(schema, true).createAndFill({
-          // Alignment belongs to the column, and is read off the first row, so
-          // the incoming header has to carry it or the column would lose it.
           alignment: columnAlignment(table, col),
         })
       );

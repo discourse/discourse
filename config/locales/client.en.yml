@@ -3815,8 +3815,6 @@ en:
         show_preview: "Show preview"
 
       table:
-        select_row: "Select row"
-        select_column: "Select column"
         add_row: "Add row"
         add_column: "Add column"
         insert_row_above: "Insert above"

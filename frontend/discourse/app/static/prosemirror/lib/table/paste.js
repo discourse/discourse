@@ -1,10 +1,13 @@
 import { Fragment } from "prosemirror-model";
-import { currentCell } from "./commands";
+import { currentCell, selectCell } from "./commands";
 import { cellType, copyCell, isTable, tableGrid } from "./grid";
 
 // A table pasted into a cell can't nest, so its cells are written into the grid
 // starting at the target cell, growing the table when the paste overflows it.
 export default function handlePaste(view, event, slice) {
+  if (!view.editable) {
+    return false;
+  }
   const table = currentCell(view.state);
   if (!table) {
     return false;
@@ -61,11 +64,18 @@ export default function handlePaste(view, event, slice) {
   );
 
   view.dispatch(
-    state.tr.replaceWith(
+    selectCell(
+      state.tr.replaceWith(
+        table.pos,
+        table.pos + table.node.nodeSize,
+        schema.nodes.table.create(table.node.attrs, Fragment.from(sections))
+      ),
       table.pos,
-      table.pos + table.node.nodeSize,
-      schema.nodes.table.create(table.node.attrs, Fragment.from(sections))
+      top,
+      left
     )
+      .setMeta("paste", true)
+      .setMeta("uiEvent", "paste")
   );
   return true;
 }

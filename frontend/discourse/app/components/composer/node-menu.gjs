@@ -16,9 +16,9 @@ const NodeMenu = <template>
               (if item.active "--active")
               (if item.dangerous "--dangerous")
             }}
-            @icon={{item.icon}}
-            @ariaPressed={{item.active}}
             @action={{fn @data.run item}}
+            @ariaPressed={{item.active}}
+            @icon={{item.icon}}
           >
             {{item.label}}
           </DButton>
