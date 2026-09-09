@@ -31,6 +31,18 @@ RSpec.describe "Signup with captcha" do
       expect(captcha).to have_no_recaptcha_container
     end
 
+    context "with code-based signup" do
+      before { SiteSetting.enable_local_logins_via_code = true }
+
+      it "displays the hCaptcha widget after requesting a signup code" do
+        signup_page.open
+        find(".code-login-form__email-step input[type='email']").fill_in(with: "test@example.com")
+        find(".code-login-form__continue").click
+
+        expect(captcha).to have_hcaptcha_container
+      end
+    end
+
     context "when site requires login" do
       before { SiteSetting.login_required = true }
 
