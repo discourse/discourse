@@ -23,6 +23,10 @@ module DiscourseVips
     )
   end
 
+  def self.svg_dimensions(input_path:, timeout:)
+    Client.call(["svg-dimensions", input_path], operation: :upload_svg_dimensions, timeout:)
+  end
+
   # Uses GIF/WebP frame counts and HEIF/AVIF image collections.
   # APNG and timed HEIF/AVIF sequences are unsupported.
   def self.animated?(input_path:, timeout:)
