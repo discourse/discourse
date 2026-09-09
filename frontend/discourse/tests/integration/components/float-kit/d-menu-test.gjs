@@ -1462,10 +1462,10 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
           <div style="height: 1000px">
             <div style="overflow-x: auto">
               <DMenu
-                @inline={{true}}
                 @closeOnScroll={{true}}
-                @label="label"
                 @content="content"
+                @inline={{true}}
+                @label="label"
               />
             </div>
           </div>
