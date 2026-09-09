@@ -518,6 +518,26 @@ module("Integration | Component | QueryResult | Chart", function (hooks) {
     assert.dom("canvas").exists("renders a chart canvas");
   });
 
+  test("charts NULL cells as gaps", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["name", "count"],
+      rows: [
+        ["a", 1],
+        ["b", null],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert.deepEqual(
+      (await chartData()).datasets[0].data,
+      [1, null],
+      "NULL is a gap rather than NaN"
+    );
+  });
+
   test("renders a multi-series chart", async function (assert) {
     const content = {
       colrender: [],
