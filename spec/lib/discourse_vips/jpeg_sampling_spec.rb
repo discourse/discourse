@@ -3,19 +3,19 @@
 require "vips"
 
 RSpec.describe DiscourseVips do
-  %i[resize downsize convert_to_jpeg auto_orient].each do |operation|
+  %i[resize crop downsize convert_to_jpeg auto_orient].each do |operation|
     describe ".#{operation}" do
       it "retains full chroma detail when the source uses uncommon sampling" do
         Dir.mktmpdir do |directory|
           %w[422 440].each do |sampling|
             input_path = Rails.root.join("spec/fixtures/images/jpeg-sampling-#{sampling}.jpg").to_s
             source_bytes = File.binread(input_path)
-            modes = %i[resize].include?(operation) ? [false, true] : [false]
+            modes = %i[resize crop].include?(operation) ? [false, true] : [false]
             modes.each do |strip_metadata|
               output_path = File.join(directory, "output-#{sampling}-#{strip_metadata}.jpg")
               arguments = { input_path:, output_path:, timeout: 20 }
               case operation
-              when :resize
+              when :resize, :crop
                 arguments.merge!(
                   input_format: "jpeg",
                   output_format: "jpeg",
@@ -66,12 +66,12 @@ RSpec.describe DiscourseVips do
             image.jpegsave(input_path, Q: quality, subsample_mode:)
             source_bytes = File.binread(input_path)
             expect(Vips::Image.jpegload(input_path).get("jpeg-chroma-subsample")).to eq(expected)
-            modes = %i[resize].include?(operation) ? [false, true] : [false]
+            modes = %i[resize crop].include?(operation) ? [false, true] : [false]
             modes.each do |strip_metadata|
               output_path = File.join(directory, "output-#{subsample_mode}-#{strip_metadata}.jpg")
               arguments = { input_path:, output_path:, timeout: 20 }
               case operation
-              when :resize
+              when :resize, :crop
                 arguments.merge!(
                   input_format: "jpeg",
                   output_format: "jpeg",

@@ -332,7 +332,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
-    if GlobalSetting.enable_vips_image_processing && operation != :optimized_image_crop
+    if GlobalSetting.enable_vips_image_processing
       convert_with(instructions, from, to, opts, operation:) do
         input_format = instructions.first.split(":", 2).first.downcase
         output_format = instructions.last.split(":", 2).first.downcase
@@ -362,7 +362,11 @@ class OptimizedImage < ActiveRecord::Base
             strip_metadata: SiteSetting.strip_image_metadata,
             timeout: MAX_CONVERT_SECONDS,
           }
-          DiscourseVips.resize(**arguments)
+          if operation == :optimized_image_crop
+            DiscourseVips.crop(**arguments)
+          else
+            DiscourseVips.resize(**arguments)
+          end
         end
       end
     else

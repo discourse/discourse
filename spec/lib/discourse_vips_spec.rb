@@ -846,4 +846,336 @@ RSpec.describe DiscourseVips do
       end
     end
   end
+
+  describe ".crop" do
+    it "rasterizes SVG input over the existing white background" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.svg")
+        output_path = File.join(directory, "output.png")
+        sources = [
+          File.read(Rails.root.join("spec/fixtures/images/image.svg")),
+          '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><rect width="100" height="50" fill="red" opacity="0.5"/></svg>',
+          '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><rect width="100" height="50" fill="blue"/><rect width="100" height="50" fill="red" opacity="0.5"/></svg>',
+        ]
+
+        sources.each_with_index do |contents, index|
+          File.write(input_path, contents)
+          [false, true].each do |strip_metadata|
+            described_class.crop(
+              input_path:,
+              output_path:,
+              input_format: "svg",
+              output_format: "png",
+              width: 30,
+              height: 20,
+              strip_metadata:,
+              quality: nil,
+              timeout: 20,
+            )
+
+            image = ChunkyPNG::Image.from_file(output_path)
+            expect([image.width, image.height]).to eq([30, 20])
+            expect(File.read(input_path)).to eq(contents)
+            expect(image.pixels.all? { |pixel| ChunkyPNG::Color.a(pixel) == 255 }).to eq(true)
+            pixel = image[image.width / 2, image.height / 2]
+            case index
+            when 0
+              expect(image.pixels).to all(eq(ChunkyPNG::Color::WHITE))
+            when 1
+              expect(ChunkyPNG::Color.r(pixel)).to eq(255)
+              expect(ChunkyPNG::Color.g(pixel)).to be_between(126, 128)
+              expect(ChunkyPNG::Color.b(pixel)).to be_between(126, 128)
+            when 2
+              expect(ChunkyPNG::Color.r(pixel)).to be_between(127, 129)
+              expect(ChunkyPNG::Color.g(pixel)).to eq(0)
+              expect(ChunkyPNG::Color.b(pixel)).to be_between(126, 128)
+            end
+          end
+        end
+      end
+    end
+
+    it "crops from the top and horizontal center" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.png")
+        source = ChunkyPNG::Image.new(6, 4, ChunkyPNG::Color.rgb(0, 0, 255))
+        source.rect(0, 0, 5, 1, ChunkyPNG::Color.rgb(255, 0, 0), ChunkyPNG::Color.rgb(255, 0, 0))
+        source.rect(2, 0, 3, 1, ChunkyPNG::Color.rgb(0, 255, 0), ChunkyPNG::Color.rgb(0, 255, 0))
+        source.save(input_path)
+        output_path = File.join(directory, "cropped.png")
+
+        described_class.crop(
+          input_path:,
+          output_path:,
+          input_format: "png",
+          output_format: "png",
+          width: 2,
+          height: 4,
+          quality: nil,
+          strip_metadata: false,
+          timeout: 20,
+        )
+        image = ChunkyPNG::Image.from_file(output_path)
+
+        expect([image.width, image.height]).to eq([2, 4])
+        expect(image[0, 0]).to eq(ChunkyPNG::Color.rgb(0, 255, 0))
+        expect(image[1, 3]).to eq(ChunkyPNG::Color.rgb(0, 0, 255))
+
+        described_class.crop(
+          input_path:,
+          output_path:,
+          input_format: "png",
+          output_format: "png",
+          width: 6,
+          height: 2,
+          quality: nil,
+          strip_metadata: false,
+          timeout: 20,
+        )
+        north_image = ChunkyPNG::Image.from_file(output_path)
+
+        expect([north_image.width, north_image.height]).to eq([6, 2])
+        expect(north_image[0, 1]).to eq(ChunkyPNG::Color.rgb(255, 0, 0))
+      end
+    end
+
+    it "keeps the extra column on the right when centering an odd crop remainder" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.png")
+        red = ChunkyPNG::Color.rgb(255, 0, 0)
+        source = ChunkyPNG::Image.new(7, 5, ChunkyPNG::Color.rgb(0, 255, 0))
+        source.rect(0, 0, 1, 4, red, red)
+        source.save(input_path)
+        output_path = File.join(directory, "cropped.png")
+
+        [false, true].each do |strip_metadata|
+          [4, 6].each do |width|
+            described_class.crop(
+              input_path:,
+              output_path:,
+              input_format: "png",
+              output_format: "png",
+              width:,
+              height: 5,
+              quality: nil,
+              strip_metadata:,
+              timeout: 20,
+            )
+            image = ChunkyPNG::Image.from_file(output_path)
+
+            expect([image.width, image.height]).to eq([width, 5])
+            expect(image[width == 4 ? 0 : 1, 2]).to eq(red)
+          end
+        end
+      end
+    end
+
+    it "keeps pixel edges centered when enlarging the crop" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.png")
+        source = ChunkyPNG::Image.new(40, 40, ChunkyPNG::Color.rgb(255, 255, 255))
+        black = ChunkyPNG::Color.rgb(0, 0, 0)
+        source.rect(20, 20, 39, 39, black, black)
+        source.save(input_path)
+        output_path = File.join(directory, "cropped.png")
+
+        [false, true].each do |strip_metadata|
+          described_class.crop(
+            input_path:,
+            output_path:,
+            input_format: "png",
+            output_format: "png",
+            width: 50,
+            height: 50,
+            quality: nil,
+            strip_metadata:,
+            timeout: 20,
+          )
+          image = ChunkyPNG::Image.from_file(output_path)
+
+          expect([image.width, image.height]).to eq([50, 50])
+          expect(ChunkyPNG::Color.r(image[24, 24])).to be > 220
+          expect(ChunkyPNG::Color.r(image[25, 25])).to be < 60
+        end
+      end
+    end
+
+    it "preserves translucent pixels while enlarging an image to cover the crop" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.png")
+        color = ChunkyPNG::Color.rgba(255, 0, 0, 128)
+        ChunkyPNG::Image.new(3, 2, color).save(input_path)
+        output_path = File.join(directory, "cropped.png")
+
+        described_class.crop(
+          input_path:,
+          output_path:,
+          input_format: "png",
+          output_format: "png",
+          width: 13,
+          height: 17,
+          quality: nil,
+          strip_metadata: true,
+          timeout: 20,
+        )
+        image = ChunkyPNG::Image.from_file(output_path)
+
+        expect([image.width, image.height]).to eq([13, 17])
+        expect(image.pixels).to all(eq(color))
+      end
+    end
+
+    it "retains the source profile while stripping other metadata when requested" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.png")
+        profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
+        source = Vips::Image.jpegload(file_from_fixtures("exif_orientation.jpg").path)
+        source.pngsave(input_path, profile:)
+        expect(Vips::Image.pngload(input_path).get_typeof("exif-data")).to be_positive
+
+        [false, true].each do |strip_metadata|
+          output_path = File.join(directory, "cropped-#{strip_metadata}.png")
+
+          described_class.crop(
+            input_path:,
+            output_path:,
+            input_format: "png",
+            output_format: "png",
+            width: 3,
+            height: 2,
+            quality: nil,
+            strip_metadata:,
+            timeout: 20,
+          )
+          image = Vips::Image.pngload(output_path)
+
+          expect(image.get("icc-profile-data")).to eq(File.binread(profile))
+          if strip_metadata
+            expect(image.get_typeof("exif-data")).to eq(0)
+          else
+            expect(image.get_typeof("exif-data")).to be_positive
+          end
+        end
+      end
+    end
+
+    it "retains GIF color profiles and thresholds half-transparent pixels after cropping" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.png")
+        profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
+        source =
+          Vips::Image
+            .black(6, 4)
+            .new_from_image([255, 0, 0, 128])
+            .cast(:uchar)
+            .copy(interpretation: :srgb)
+        source.pngsave(input_path, profile:)
+
+        [false, true].each do |strip_metadata|
+          output_path = File.join(directory, "cropped-#{strip_metadata}.gif")
+
+          described_class.crop(
+            input_path:,
+            output_path:,
+            input_format: "png",
+            output_format: "gif",
+            width: 3,
+            height: 2,
+            quality: nil,
+            strip_metadata:,
+            timeout: 20,
+          )
+          image = Vips::Image.gifload(output_path)
+          image = image.addalpha if !image.has_alpha?
+
+          expect(image.getpoint(1, 1)).to eq([255, 0, 0, 255])
+          expect(
+            ImageMagick
+              .identify(
+                "-format",
+                "%[profiles]",
+                output_path,
+                operation: :optimized_image_crop,
+                read: [output_path],
+                timeout: 20,
+              )
+              .strip
+              .split(","),
+          ).to include("icc")
+        end
+      end
+    end
+
+    it "supports cropping a file in place with an explicit format" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.bin")
+        ChunkyPNG::Image.new(6, 4, ChunkyPNG::Color.rgb(255, 0, 0)).save(input_path)
+
+        described_class.crop(
+          input_path:,
+          output_path: input_path,
+          input_format: "png",
+          output_format: "png",
+          width: 3,
+          height: 2,
+          quality: nil,
+          strip_metadata: false,
+          timeout: 20,
+        )
+        image = ChunkyPNG::Image.from_file(input_path)
+
+        expect([image.width, image.height]).to eq([3, 2])
+        expect(Dir.children(directory)).to eq(["source.bin"])
+      end
+    end
+
+    it "preserves an existing destination after invalid crop dimensions" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.png")
+        ChunkyPNG::Image.new(6, 4, ChunkyPNG::Color.rgb(255, 0, 0)).save(input_path)
+        original_content = File.binread(input_path)
+
+        expect {
+          described_class.crop(
+            input_path:,
+            output_path: input_path,
+            input_format: "png",
+            output_format: "png",
+            width: 0,
+            height: 2,
+            quality: nil,
+            strip_metadata: false,
+            timeout: 20,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage, "invalid crop dimensions")
+
+        expect(File.binread(input_path)).to eq(original_content)
+        expect(Dir.children(directory)).to eq(["source.png"])
+      end
+    end
+
+    it "requires an explicit quality for JPEG output" do
+      Dir.mktmpdir do |directory|
+        input_path = file_from_fixtures("logo.png").path
+        output_path = File.join(directory, "cropped.jpg")
+
+        expect {
+          described_class.crop(
+            input_path:,
+            output_path:,
+            input_format: "png",
+            output_format: "jpeg",
+            width: 10,
+            height: 10,
+            quality: nil,
+            strip_metadata: false,
+            timeout: 20,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage, "encoder quality is required")
+
+        expect(File.exist?(output_path)).to eq(false)
+        expect(Dir.children(directory)).to eq([])
+      end
+    end
+  end
 end

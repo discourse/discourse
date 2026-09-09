@@ -93,6 +93,17 @@ class DiscourseVipsWorker
           quality: arguments[6],
           strip_metadata: arguments[7],
         )
+      when "crop"
+        crop(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          input_format: arguments[2],
+          output_format: arguments[3],
+          width: arguments[4],
+          height: arguments[5],
+          quality: arguments[6],
+          strip_metadata: arguments[7],
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -911,6 +922,90 @@ class DiscourseVipsWorker
       output_format == "gif" ? sharpened : sharpened.round(:rint).cast(image.format)
     end
     private_class_method :sharpen_resized_image
+
+    def self.crop(
+      input_path:,
+      output_path:,
+      input_format:,
+      output_format:,
+      width:,
+      height:,
+      quality:,
+      strip_metadata:
+    )
+      require "discourse_vips/ico_image" if input_format == "ico"
+
+      read_paths = [input_path]
+      read_paths.concat(%w[/etc/fonts /var/cache/fontconfig]) if input_format == "svg"
+
+      new(read_paths:, write_paths: [File.dirname(output_path)]) do
+        begin
+          if File.identical?(input_path, output_path)
+            raise ArgumentError, "input and output must be different files"
+          end
+
+          if !%w[true false].include?(strip_metadata)
+            raise ArgumentError, "invalid metadata stripping flag"
+          end
+          strip_metadata = strip_metadata == "true"
+
+          width = Integer(width, exception: false)
+          height = Integer(height, exception: false)
+          raise ArgumentError, "invalid crop dimensions" if !width&.positive? || !height&.positive?
+          quality = Integer(quality, exception: false)
+          if %w[jpg jpeg webp avif].include?(output_format) && !quality&.between?(1, 100)
+            raise ArgumentError, "encoder quality is required"
+          end
+
+          block_loaders(
+            allowed: %w[
+              VipsForeignLoadJpeg
+              VipsForeignLoadPng
+              VipsForeignLoadNsgif
+              VipsForeignLoadWebp
+              VipsForeignLoadHeif
+              VipsForeignLoadSvg
+            ],
+          )
+          image = load_downsize_image(input_path:, input_format:).autorot
+          scale = [width.to_f / image.width, height.to_f / image.height].max
+          resized_width = [(image.width * scale).round, width].max
+          resized_height = [(image.height * scale).round, height].max
+          if strip_metadata
+            image =
+              resize_thumbnail_image(
+                image:,
+                width: resized_width,
+                height: resized_height,
+                output_format:,
+              )
+          else
+            image =
+              resize_downsize_image(
+                image:,
+                width: resized_width,
+                height: resized_height,
+                input_format:,
+                output_format:,
+              )
+          end
+          image = image.crop((image.width - width) / 2, 0, width, height)
+          image = sharpen_resized_image(image:, output_format:)
+          save_downsize_image(
+            image:,
+            input_path:,
+            output_path:,
+            output_format:,
+            quality:,
+            strip_metadata:,
+          )
+        rescue Vips::Error, ArgumentError, Nokogiri::XML::SyntaxError => error
+          raise InvalidImage, error.message
+        end
+        nil
+      end
+    end
+    private_class_method :crop
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
