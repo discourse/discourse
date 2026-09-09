@@ -1,0 +1,6350 @@
+{
+  "operation": "downsize",
+  "iterations": 31,
+  "source": {
+    "base_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+    "snapshot": "working-tree contents; base commit alone does not identify this source",
+    "files": {
+      "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+      "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+      "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+      "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+      "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "script/discourse_vips_worker": "0b204e2c3056bc9ce3a577cb35cc6bddb43e1088b1a9215fe4d23edc83a19d8a",
+      "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+      "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+      "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+    }
+  },
+  "manifest_sha256": "795440d7dc8a0b5937cab35cea41244af1c796ab6ffdac1b5145c5a2ec1e747f",
+  "harness_sha256": "6721efa4f681535ba12b07a7723feb5649b9ddd2832685404faf33cc154fd55d",
+  "ruby": "ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [x86_64-linux]",
+  "kernel": "Linux 6.8.0-124-generic",
+  "landlock": true,
+  "libvips": "8.18.4",
+  "imagemagick": "Version: ImageMagick 7.1.2-27 Q16-HDRI x86_64 e4c2b403b:20260705 https://imagemagick.org",
+  "timing_boundary": "Core transform including wrapper, IPC, sandbox child, priority10 and encoder. Excludes Rails boot, source quality probe, evidence decoding, and FileHelper optimizer.",
+  "quality_policy": "Explicit caller quality first; otherwise AVIF50; JPEG/WebP use source JPEG estimated Q or lossless WebP100, then JPEG92/WebP75. Probe frame0 before timing. Original ImageMagick instructions retain recorded quality options.",
+  "selected_sample": null,
+  "missing_baseline_fields": [
+    {
+      "operation": "downsize",
+      "name": "svg-to-svg",
+      "reason": "baseline failed before instruction generation",
+      "baseline_error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "identify -format %m\t%Q\t%w\t%h\t%n\t%[channels]\t%[colorspace]\t%[interlace]\t%[profiles]\n svg:/var/www/discourse/spec/fixtures/images/image.svg\nidentify: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    }
+  ],
+  "removed_api_cases": [
+    {
+      "operation": "resize",
+      "name": "colors-12",
+      "strip_metadata": false,
+      "colors": 12,
+      "reason": "unused resize colors option removed by user authorization; historical record retained, excluded from migration performance corpus"
+    },
+    {
+      "operation": "resize",
+      "name": "colors-12",
+      "strip_metadata": true,
+      "colors": 12,
+      "reason": "unused resize colors option removed by user authorization; historical record retained, excluded from migration performance corpus"
+    }
+  ],
+  "limitations": [
+    "Crop historical output records include FileHelper optimization; new timed ImageMagick operations replay raw instruction arrays only.",
+    "Additional natural-photo/avatar/orientation/enlargement cases reuse recorded instruction templates and existing inputs, but have no historical output baseline.",
+    "No source ICC colorimetric accuracy conclusion: deployed ImageMagick may lack LCMS.",
+    "Visible pixel differences use ImageMagick-decoded PNGs converted to8-bit sRGB; original encoding/depth/profile metadata is recorded separately. Hidden RGB under transparent pixels is excluded from visible differences.",
+    "Post-optimizer and complete caller evidence must be measured separately."
+  ],
+  "samples": [
+    {
+      "name": "png-grid",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-grid",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-grid",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 35.041539929807186,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 35.28007818385959,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            36.436605267226696,
+            35.82118870690465,
+            38.191186264157295,
+            31.50752279907465,
+            34.32181803509593,
+            40.436949115246534,
+            34.71627878025174,
+            33.39406009763479,
+            30.784651171416044,
+            31.84029506519437,
+            34.80624174699187,
+            37.57981304079294,
+            35.520123317837715,
+            34.53891817480326,
+            34.590248949825764,
+            34.98392505571246,
+            35.15182062983513,
+            35.336422733962536,
+            36.54422704130411,
+            45.06352264434099,
+            46.324651688337326,
+            45.92290287837386,
+            40.927994064986706,
+            40.7992098480463,
+            41.57107509672642,
+            35.42970586568117,
+            34.6281579695642,
+            32.39558916538954,
+            35.05801688879728,
+            40.5961680226028,
+            42.49631194397807
+          ],
+          "median_ms": 35.42970586568117,
+          "p95_ms": 45.92290287837386
+        },
+        "libvips": {
+          "values_ms": [
+            35.37789219990373,
+            35.8273359015584,
+            28.51154701784253,
+            36.23633366078138,
+            36.512997932732105,
+            36.6974463686347,
+            33.41217897832394,
+            36.42719518393278,
+            37.736523896455765,
+            38.498404901474714,
+            33.044536132365465,
+            32.442732248455286,
+            34.456062130630016,
+            33.77261525020003,
+            36.7828793823719,
+            33.87728286907077,
+            39.75654300302267,
+            37.22368972375989,
+            42.04264795407653,
+            43.586072977632284,
+            51.30583606660366,
+            36.554545164108276,
+            41.272603906691074,
+            38.86428661644459,
+            37.61605313047767,
+            37.02137200161815,
+            37.0504567399621,
+            40.82374693825841,
+            38.64011215046048,
+            39.181231055408716,
+            37.97635808587074
+          ],
+          "median_ms": 37.02137200161815,
+          "p95_ms": 43.586072977632284
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-grid-imagemagick.png",
+          "bytes": 1228,
+          "sha256": "2b9df5a7208f7d11a7da829434d54ae1a05043c88e856c117123813d1ab6d75c",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgb  4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-grid-libvips.png",
+          "bytes": 373,
+          "sha256": "6fb97adc1bf576fef32720d1d79d2f32c2d8aaac7af67cc59a214b17f795f917",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.34444444444444444,
+            "maximum_difference": 4.0,
+            "psnr_db": 49.763343952184194
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.34444444444444444,
+            "maximum_difference": 4.0,
+            "psnr_db": 49.763343952184194
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-grid-alpha",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-grid-alpha",
+        "input": "inputs/public/discourse-task/downsize/grid-alpha.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-grid-alpha",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 33.827756997197866,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 49.95186487212777,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            31.82847984135151,
+            35.06547678261995,
+            35.8259123750031,
+            34.418961964547634,
+            30.962061136960983,
+            31.368806958198547,
+            33.553605899214745,
+            38.45150675624609,
+            36.38369916006923,
+            34.84767396003008,
+            34.590164199471474,
+            35.50385730341077,
+            34.046902786940336,
+            34.8902209661901,
+            34.49226496741176,
+            41.86792112886906,
+            37.95260703191161,
+            41.871166322380304,
+            34.17957993224263,
+            39.172415155917406,
+            32.45784109458327,
+            32.74170821532607,
+            31.359920743852854,
+            32.57803013548255,
+            31.494919676333666,
+            35.85541807115078,
+            29.69198999926448,
+            38.15578017383814,
+            39.03161035850644,
+            31.071790028363466,
+            31.944256275892258
+          ],
+          "median_ms": 34.49226496741176,
+          "p95_ms": 41.86792112886906
+        },
+        "libvips": {
+          "values_ms": [
+            47.806326765567064,
+            48.89375902712345,
+            47.7043972350657,
+            49.42349810153246,
+            47.40910092368722,
+            45.50704313442111,
+            52.749025635421276,
+            51.41174700111151,
+            61.24438298866153,
+            51.47764598950744,
+            48.4466478228569,
+            49.55708095803857,
+            52.77911387383938,
+            53.15501010045409,
+            56.91760312765837,
+            54.966784082353115,
+            54.23136195167899,
+            54.436306934803724,
+            48.604100942611694,
+            49.17512508109212,
+            50.53633404895663,
+            50.44915294274688,
+            47.87016985937953,
+            54.89446362480521,
+            45.79051723703742,
+            50.47369794920087,
+            48.954993952065706,
+            51.134005188941956,
+            48.448382411152124,
+            53.04555408656597,
+            43.992104940116405
+          ],
+          "median_ms": 50.44915294274688,
+          "p95_ms": 56.91760312765837
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-grid-alpha-imagemagick.png",
+          "bytes": 1086,
+          "sha256": "1215baccef804249067af82df4f70f006624ecfc06f04808c757badd9b987ede",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgba 5.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-alpha-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-grid-alpha-libvips.png",
+          "bytes": 456,
+          "sha256": "e342117f9b561e96e7adbb28c9a1f6040425919a5f6e0553d320fa03fd5515a5",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-alpha-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-grid-16bit",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-grid-16bit",
+        "input": "inputs/public/discourse-task/downsize/grid-16bit.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-grid-16bit",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "d773a34a6e5fa7cddc33cc03fb09bf231ba6f133859b15c3fe5f31535208eb5e",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 33.38867565616965,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 50.026151817291975,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            34.93752097710967,
+            57.3084163479507,
+            37.69954899325967,
+            33.22659898549318,
+            39.91711977869272,
+            33.075971994549036,
+            34.87076377496123,
+            38.91110327094793,
+            40.818659123033285,
+            39.268402848392725,
+            32.132384832948446,
+            33.95914612337947,
+            34.954097121953964,
+            34.57626514136791,
+            34.20915873721242,
+            32.233602833002806,
+            35.47450574114919,
+            36.74536198377609,
+            40.69456737488508,
+            46.95676593109965,
+            36.28291888162494,
+            34.51537201181054,
+            38.21633383631706,
+            40.330851916223764,
+            40.29942071065307,
+            39.54239282757044,
+            37.255401723086834,
+            37.01001266017556,
+            36.80580202490091,
+            41.85860184952617,
+            42.465115897357464
+          ],
+          "median_ms": 37.01001266017556,
+          "p95_ms": 46.95676593109965
+        },
+        "libvips": {
+          "values_ms": [
+            52.56304703652859,
+            49.84805965796113,
+            49.50896883383393,
+            48.642386216670275,
+            46.53708403930068,
+            49.68143021687865,
+            50.87374709546566,
+            49.07364817336202,
+            46.3281418196857,
+            46.40072491019964,
+            43.34507882595062,
+            53.26070683076978,
+            51.67470080778003,
+            51.475137937814,
+            49.907696433365345,
+            48.899779096245766,
+            54.37604617327452,
+            46.97031108662486,
+            51.59300193190575,
+            54.94946101680398,
+            49.66964200139046,
+            51.164490170776844,
+            47.470476012676954,
+            52.92843235656619,
+            52.864782977849245,
+            51.494639832526445,
+            47.690289095044136,
+            50.42229499667883,
+            47.295716125518084,
+            47.738051041960716,
+            53.30397980287671
+          ],
+          "median_ms": 49.84805965796113,
+          "p95_ms": 54.37604617327452
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-grid-16bit-imagemagick.png",
+          "bytes": 1063,
+          "sha256": "aae8e8baa3f41bc188d6ef6eb990bc95d7d9a2fa7f466ce137cb69d7a36bb8a9",
+          "identify": "PNG\t30\t20\t16\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "ushort",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-16bit-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-grid-16bit-libvips.png",
+          "bytes": 505,
+          "sha256": "a49fdd3a0ce69cb4017dbac3b54790b2666abe53cf49c97c5f8bddef10afb805",
+          "identify": "PNG\t30\t20\t16\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "ushort",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-16bit-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-grid-profile",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-grid-profile",
+        "input": "inputs/public/discourse-task/downsize/grid-profile.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-grid-profile",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "7b2701128fead5aea86ffb70e5a06dc1c68d6e8e2db0463aad401d099ba28e5d",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 36.96881607174873,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 38.26381964609027,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            31.864298973232508,
+            38.9613276347518,
+            35.616650711745024,
+            33.18483289331198,
+            34.72329303622246,
+            34.46644311770797,
+            34.776987973600626,
+            35.200153943151236,
+            36.1901200376451,
+            40.379648096859455,
+            35.33337498083711,
+            32.18776220455766,
+            36.53396479785442,
+            35.37832060828805,
+            35.26336187496781,
+            36.266453098505735,
+            35.649259109050035,
+            43.57805475592613,
+            37.91329776868224,
+            41.70619696378708,
+            51.59060237929225,
+            39.534874726086855,
+            41.742523200809956,
+            41.38001799583435,
+            39.935973938554525,
+            45.05554586648941,
+            35.80845799297094,
+            33.80058705806732,
+            39.16494781151414,
+            40.28367390856147,
+            34.00828875601292
+          ],
+          "median_ms": 36.1901200376451,
+          "p95_ms": 45.05554586648941
+        },
+        "libvips": {
+          "values_ms": [
+            40.358721278607845,
+            39.628023747354746,
+            37.7836343832314,
+            37.42599207907915,
+            34.83201004564762,
+            35.70071700960398,
+            34.00856303051114,
+            35.066822078078985,
+            40.58197280392051,
+            43.232725001871586,
+            51.241680048406124,
+            54.46621775627136,
+            53.1870168633759,
+            51.61573877558112,
+            52.70906910300255,
+            52.09098104387522,
+            50.42176600545645,
+            49.19007699936628,
+            53.5038891248405,
+            55.11027108877897,
+            60.4981929063797,
+            59.59585728123784,
+            53.26205585151911,
+            53.168690763413906,
+            54.710817988961935,
+            59.126812033355236,
+            56.08547618612647,
+            56.11382471397519,
+            50.13103969395161,
+            52.18653008341789,
+            51.20227485895157
+          ],
+          "median_ms": 51.61573877558112,
+          "p95_ms": 59.59585728123784
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-grid-profile-imagemagick.png",
+          "bytes": 22935,
+          "sha256": "aa76dc6d8d40ee60e5a482531f6016369a879329f80c78af6baa22a661cecace",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgb  4.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": {
+            "bytes": 25572,
+            "sha256": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c"
+          },
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-profile-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-grid-profile-libvips.png",
+          "bytes": 9195,
+          "sha256": "0643b86c8d0fc141d99c7afb6420a060d139c770b712c157572ef6d03f66c2b0",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": {
+            "bytes": 25572,
+            "sha256": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c"
+          },
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-grid-profile-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.34444444444444444,
+            "maximum_difference": 4.0,
+            "psnr_db": 49.763343952184194
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.34444444444444444,
+            "maximum_difference": 4.0,
+            "psnr_db": 49.763343952184194
+          }
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid",
+      "parameters": {
+        "operation": "downsize",
+        "name": "jpg-grid",
+        "input": "inputs/public/discourse-task/downsize/grid.jpg",
+        "input_format": "jpg",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "jpg-grid",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "a5b4b122f86ca281258b2101a468f009deb27eb0fa98b35ab26cab0a28edbfc8",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 74,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 74,
+          "elapsed_ms": 34.401715733110905
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 40.43876100331545,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 61.55401607975364,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            40.11107934638858,
+            42.21054632216692,
+            38.19215716794133,
+            36.958348006010056,
+            38.64111937582493,
+            42.22213523462415,
+            34.450416918843985,
+            41.1762879230082,
+            38.96182402968407,
+            36.17745218798518,
+            35.697368904948235,
+            35.566689912229776,
+            37.20591403543949,
+            34.48718786239624,
+            34.4107816927135,
+            42.711553163826466,
+            41.25998821109533,
+            38.628729060292244,
+            38.693159352988005,
+            38.328403141349554,
+            37.7592951990664,
+            39.43900624290109,
+            38.51464483886957,
+            43.249151203781366,
+            39.4181408919394,
+            43.612204026430845,
+            40.159482043236494,
+            47.2235050983727,
+            48.74767269939184,
+            38.190067280083895,
+            34.54025276005268
+          ],
+          "median_ms": 38.64111937582493,
+          "p95_ms": 47.2235050983727
+        },
+        "libvips": {
+          "values_ms": [
+            59.8787241615355,
+            58.11253422871232,
+            70.14675298705697,
+            62.55540205165744,
+            56.62417970597744,
+            58.378199115395546,
+            53.57068916782737,
+            54.68189902603626,
+            56.58740596845746,
+            52.182503044605255,
+            49.49114890769124,
+            51.91735131666064,
+            52.98085976392031,
+            50.11211568489671,
+            51.295171957463026,
+            56.96639511734247,
+            55.61786377802491,
+            54.86563127487898,
+            52.931015845388174,
+            53.788782097399235,
+            58.76661604270339,
+            70.23777486756444,
+            52.23051179200411,
+            52.329206839203835,
+            56.035988964140415,
+            59.321240056306124,
+            57.322931941598654,
+            60.24866085499525,
+            53.550004959106445,
+            52.92430706322193,
+            52.47366474941373
+          ],
+          "median_ms": 54.86563127487898,
+          "p95_ms": 70.14675298705697
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/jpg-grid-imagemagick.jpg",
+          "bytes": 740,
+          "sha256": "5432916b8f8809310836818f91689ea6a200cb9d5ef4b7822684a3fdd53bd71d",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/jpg-grid-libvips.jpg",
+          "bytes": 1102,
+          "sha256": "73f0e82d2ee615118c77b89356a87bf51bbc3ddabe5d7c0992be9d2e9fe4ccee",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 5.488333333333333,
+            "maximum_difference": 50.0,
+            "psnr_db": 29.94535573723436
+          },
+          {
+            "background": 255,
+            "mean_difference": 5.488333333333333,
+            "maximum_difference": 50.0,
+            "psnr_db": 29.94535573723436
+          }
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid-profile",
+      "parameters": {
+        "operation": "downsize",
+        "name": "jpg-grid-profile",
+        "input": "inputs/public/discourse-task/downsize/grid-profile.jpg",
+        "input_format": "jpg",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "jpg-grid-profile",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "3bb688acd9d4cceeb46e475e2d2100452f78157f4b5af244a1de16e8e18cb572",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 74,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 74,
+          "elapsed_ms": 34.75005179643631
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 43.89159427955747,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 56.638265028595924,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            38.6371030472219,
+            41.3431990891695,
+            40.49469064921141,
+            45.036458410322666,
+            35.6591772288084,
+            40.61520518735051,
+            34.977151080965996,
+            39.420693181455135,
+            35.58583930134773,
+            38.254586048424244,
+            39.56475807353854,
+            37.01860690489411,
+            57.64443799853325,
+            40.44990288093686,
+            40.9003677777946,
+            39.07964192330837,
+            36.758186761289835,
+            45.511079020798206,
+            56.40592519193888,
+            33.81827427074313,
+            36.242956295609474,
+            38.16610807552934,
+            40.73653416708112,
+            39.24902901053429,
+            36.87036596238613,
+            37.09515882655978,
+            46.20591225102544,
+            45.45813798904419,
+            37.4665348790586,
+            35.68835370242596,
+            34.65893026441336
+          ],
+          "median_ms": 39.07964192330837,
+          "p95_ms": 56.40592519193888
+        },
+        "libvips": {
+          "values_ms": [
+            56.24329624697566,
+            70.75954787433147,
+            63.993273768574,
+            66.62959093227983,
+            65.28754299506545,
+            68.39550100266933,
+            59.67998085543513,
+            55.12329889461398,
+            60.06325175985694,
+            58.903312776237726,
+            62.31455923989415,
+            61.2871740013361,
+            57.18294205144048,
+            60.497264843434095,
+            77.73509481921792,
+            60.129248071461916,
+            58.296024799346924,
+            62.4182908795774,
+            51.820017863065004,
+            55.46629382297397,
+            60.758944135159254,
+            56.10849428921938,
+            55.44931488111615,
+            56.857665069401264,
+            53.81541000679135,
+            57.44829773902893,
+            58.355440851300955,
+            66.73715496435761,
+            69.89216338843107,
+            63.3648750372231,
+            97.31023292988539
+          ],
+          "median_ms": 60.129248071461916,
+          "p95_ms": 77.73509481921792
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/jpg-grid-profile-imagemagick.jpg",
+          "bytes": 26330,
+          "sha256": "76cad15dcb987b2b8db30f49009aac2c903ffa112954b99b678fcd0453312dec",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": {
+            "bytes": 25572,
+            "sha256": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c"
+          },
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-profile-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/jpg-grid-profile-libvips.jpg",
+          "bytes": 26692,
+          "sha256": "b1b29db5bdab8d8395213810a21d3f849d7d3adc358b4a9ea72a65897991696b",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": {
+            "bytes": 25572,
+            "sha256": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c"
+          },
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-profile-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 5.488333333333333,
+            "maximum_difference": 50.0,
+            "psnr_db": 29.94535573723436
+          },
+          {
+            "background": 255,
+            "mean_difference": 5.488333333333333,
+            "maximum_difference": 50.0,
+            "psnr_db": 29.94535573723436
+          }
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid-cmyk",
+      "parameters": {
+        "operation": "downsize",
+        "name": "jpg-grid-cmyk",
+        "input": "inputs/public/discourse-task/downsize/grid-cmyk.jpg",
+        "input_format": "jpg",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "jpg-grid-cmyk",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "e0003ffa9d5791ebd4c8f5202ca4c6c00ac4659885c3be59fc4cdf295b017d61",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 87,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 87,
+          "elapsed_ms": 86.82229602709413
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 115.97629589959979,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 107.35363978892565,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            91.39901213347912,
+            62.088966835290194,
+            69.34990687295794,
+            63.3972710929811,
+            90.65989311784506,
+            98.13313325867057,
+            85.77159093692899,
+            99.6774542145431,
+            70.47368120402098,
+            76.2611348181963,
+            70.44879905879498,
+            61.16486666724086,
+            68.20879923179746,
+            66.45076302811503,
+            65.0199418887496,
+            73.85007478296757,
+            69.86156105995178,
+            78.57795199379325,
+            67.3532709479332,
+            65.10209525004029,
+            65.77875092625618,
+            62.337984796613455,
+            70.09478192776442,
+            67.60971341282129,
+            59.58831636235118,
+            63.36295465007424,
+            62.43136199191213,
+            65.15643373131752,
+            63.355952966958284,
+            72.71230267360806,
+            59.553715866059065
+          ],
+          "median_ms": 67.60971341282129,
+          "p95_ms": 98.13313325867057
+        },
+        "libvips": {
+          "values_ms": [
+            98.22709625586867,
+            79.22404538840055,
+            98.01699221134186,
+            105.78725207597017,
+            92.30723232030869,
+            98.57433568686247,
+            123.24716383591294,
+            89.12630518898368,
+            123.8495078869164,
+            107.14417276903987,
+            93.54192391037941,
+            101.06512811034918,
+            84.8465720191598,
+            84.76547989994287,
+            93.35215669125319,
+            93.54213112965226,
+            101.16377007216215,
+            102.5665421038866,
+            118.03793115541339,
+            89.07421724870801,
+            92.83430827781558,
+            95.72588698938489,
+            92.27412473410368,
+            87.87974389269948,
+            76.7993088811636,
+            90.73571022599936,
+            88.73281301930547,
+            87.1294247917831,
+            93.29892508685589,
+            77.31981761753559,
+            107.17430710792542
+          ],
+          "median_ms": 93.35215669125319,
+          "p95_ms": 123.24716383591294
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/jpg-grid-cmyk-imagemagick.jpg",
+          "bytes": 962822,
+          "sha256": "2750e808cda29f59e23d8f128373a79f5832ef114184fee56faae4d1cf0faa8e",
+          "identify": "JPG\t30\t20\t8\tCMYK\tcmyk  4.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-cmyk-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/jpg-grid-cmyk-libvips.jpg",
+          "bytes": 962930,
+          "sha256": "6d8c3658c29eb98e916fb8f742d0e7d1067cacadfb7e5fd12dba44ae157b35ae",
+          "identify": "JPG\t30\t20\t8\tCMYK\tcmyk  4.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-cmyk-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 2.095,
+            "maximum_difference": 30.0,
+            "psnr_db": 35.9925282025697
+          },
+          {
+            "background": 255,
+            "mean_difference": 2.095,
+            "maximum_difference": 30.0,
+            "psnr_db": 35.9925282025697
+          }
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid-cmyk-profile",
+      "parameters": {
+        "operation": "downsize",
+        "name": "jpg-grid-cmyk-profile",
+        "input": "inputs/public/discourse-task/downsize/grid-cmyk-profile.jpg",
+        "input_format": "jpg",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "jpg-grid-cmyk-profile",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "e0003ffa9d5791ebd4c8f5202ca4c6c00ac4659885c3be59fc4cdf295b017d61",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 87,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 87,
+          "elapsed_ms": 47.21404379233718
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 63.955463003367186,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 88.5770651511848,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            58.68902476504445,
+            56.274055037647486,
+            61.22816586866975,
+            65.01098908483982,
+            60.140226036310196,
+            57.75909870862961,
+            61.83262122794986,
+            62.544126994907856,
+            54.72512077540159,
+            64.42360300570726,
+            77.26762816309929,
+            78.13548808917403,
+            77.02883100137115,
+            74.5316599495709,
+            78.83576909080148,
+            66.93899212405086,
+            66.02426478639245,
+            63.229069113731384,
+            60.82444777712226,
+            64.848517999053,
+            68.72228207066655,
+            69.37203602865338,
+            60.30178675428033,
+            63.413653057068586,
+            64.23094077035785,
+            79.71419114619493,
+            62.219549901783466,
+            57.962308172136545,
+            59.68110775575042,
+            64.29641926661134,
+            60.807311441749334
+          ],
+          "median_ms": 63.413653057068586,
+          "p95_ms": 78.83576909080148
+        },
+        "libvips": {
+          "values_ms": [
+            81.66678668931127,
+            88.22216279804707,
+            82.09597878158092,
+            82.5889129191637,
+            81.78817387670279,
+            87.18846272677183,
+            82.82334264367819,
+            86.13128494471312,
+            101.96150792762637,
+            85.69129277020693,
+            89.17089691385627,
+            92.01462101191282,
+            106.21972801163793,
+            104.10134121775627,
+            96.67338663712144,
+            94.93627026677132,
+            90.78456833958626,
+            88.94590986892581,
+            86.56539116054773,
+            90.80907795578241,
+            87.52289600670338,
+            81.59369137138128,
+            92.15681720525026,
+            91.32216405123472,
+            94.4591872394085,
+            86.26678306609392,
+            86.77062671631575,
+            85.31831996515393,
+            88.94889615476131,
+            93.3314897119999,
+            82.45692495256662
+          ],
+          "median_ms": 88.22216279804707,
+          "p95_ms": 104.10134121775627
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/jpg-grid-cmyk-profile-imagemagick.jpg",
+          "bytes": 962822,
+          "sha256": "2750e808cda29f59e23d8f128373a79f5832ef114184fee56faae4d1cf0faa8e",
+          "identify": "JPG\t30\t20\t8\tCMYK\tcmyk  4.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-cmyk-profile-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/jpg-grid-cmyk-profile-libvips.jpg",
+          "bytes": 962930,
+          "sha256": "6d8c3658c29eb98e916fb8f742d0e7d1067cacadfb7e5fd12dba44ae157b35ae",
+          "identify": "JPG\t30\t20\t8\tCMYK\tcmyk  4.0\tTopLeft\texif,icc",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/jpg-grid-cmyk-profile-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 2.095,
+            "maximum_difference": 30.0,
+            "psnr_db": 35.9925282025697
+          },
+          {
+            "background": 255,
+            "mean_difference": 2.095,
+            "maximum_difference": 30.0,
+            "psnr_db": 35.9925282025697
+          }
+        ]
+      }
+    },
+    {
+      "name": "webp-grid",
+      "parameters": {
+        "operation": "downsize",
+        "name": "webp-grid",
+        "input": "inputs/public/discourse-task/downsize/grid.webp",
+        "input_format": "webp",
+        "output_format": "webp",
+        "output_suffix": "webp",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "webp-grid",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "03346fc90ce73b3aaaad4b00b107b070612e91936e93e943d276dddb9f91a7f6",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 75,
+        "source": "encoder default",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 92,
+          "elapsed_ms": 30.741228256374598
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 46.57688597217202,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 59.72045008093119,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            41.78730305284262,
+            41.043880861252546,
+            44.32067880406976,
+            49.70298893749714,
+            60.52813678979874,
+            43.46296004951,
+            43.371067848056555,
+            41.70036781579256,
+            41.16608900949359,
+            41.267246939241886,
+            39.2652009613812,
+            50.481288228183985,
+            45.72762735188007,
+            41.90840711817145,
+            35.210981965065,
+            44.04940735548735,
+            41.55464889481664,
+            50.476941745728254,
+            46.58285016193986,
+            50.40752002969384,
+            43.62653708085418,
+            37.471565417945385,
+            46.81767523288727,
+            40.26972595602274,
+            40.15236301347613,
+            44.023803900927305,
+            44.85955322161317,
+            40.0228607468307,
+            41.62757005542517,
+            46.04119714349508,
+            41.48232890293002
+          ],
+          "median_ms": 43.371067848056555,
+          "p95_ms": 50.481288228183985
+        },
+        "libvips": {
+          "values_ms": [
+            63.94315976649523,
+            60.53603393957019,
+            60.974538791924715,
+            59.465641155838966,
+            74.5994308963418,
+            62.619739677757025,
+            58.65444429218769,
+            60.498766135424376,
+            60.055066365748644,
+            62.68922984600067,
+            55.62952533364296,
+            60.86316518485546,
+            60.679099056869745,
+            60.04282413050532,
+            56.25092377886176,
+            69.69681801274419,
+            76.10469404608011,
+            67.30395695194602,
+            73.5165779478848,
+            63.75025724992156,
+            71.95466291159391,
+            57.63650173321366,
+            63.2362337782979,
+            57.81114613637328,
+            60.0033700466156,
+            51.83401610702276,
+            55.18228420987725,
+            61.68901501223445,
+            57.42156319320202,
+            58.090895880013704,
+            68.38884484022856
+          ],
+          "median_ms": 60.679099056869745,
+          "p95_ms": 74.5994308963418
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/webp-grid-imagemagick.webp",
+          "bytes": 512,
+          "sha256": "9a4b59f774f1eda5acfb4efe315468a69da6916876fa840c42ba94026a6d5e17",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/webp-grid-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/webp-grid-libvips.webp",
+          "bytes": 518,
+          "sha256": "ead7264c6413397d0f47ed0c77a822a85ece9eca85b2f124085979a61f9f0286",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/webp-grid-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "webp-grid-lossless",
+      "parameters": {
+        "operation": "downsize",
+        "name": "webp-grid-lossless",
+        "input": "inputs/public/discourse-task/downsize/grid-lossless.webp",
+        "input_format": "webp",
+        "output_format": "webp",
+        "output_suffix": "webp",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "webp-grid-lossless",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "6927cf1a3a3551206d3f46d271474faa61f313ce3652b4e3ca55973b1e24cb20",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 100,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 100,
+          "elapsed_ms": 32.6345800422132
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 40.86524108424783,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 89.23353301361203,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            40.86297424510121,
+            38.164142053574324,
+            43.19292213767767,
+            41.65260819718242,
+            45.14569276943803,
+            46.11648479476571,
+            45.87309202179313,
+            40.3967909514904,
+            41.764646768569946,
+            42.658235877752304,
+            40.99021991714835,
+            44.26107509061694,
+            43.742779176682234,
+            43.187959119677544,
+            48.29012416303158,
+            49.45662710815668,
+            46.390760224312544,
+            43.473499827086926,
+            45.625148341059685,
+            44.245901983231306,
+            44.385544024407864,
+            48.398285172879696,
+            50.016673281788826,
+            42.92426025494933,
+            50.124643836170435,
+            43.983851093798876,
+            42.66361519694328,
+            43.530740309506655,
+            50.566117744892836,
+            42.81678004190326,
+            43.19820087403059
+          ],
+          "median_ms": 43.742779176682234,
+          "p95_ms": 50.124643836170435
+        },
+        "libvips": {
+          "values_ms": [
+            66.1221002228558,
+            58.62777587026358,
+            60.986765660345554,
+            66.97947299107909,
+            73.39086616411805,
+            67.30839516967535,
+            62.07482423633337,
+            60.11797487735748,
+            80.60731878504157,
+            66.08206406235695,
+            60.75658276677132,
+            66.16225512698293,
+            64.33317717164755,
+            61.08037801459432,
+            67.55731115117669,
+            67.21188127994537,
+            64.60161879658699,
+            66.36391719803214,
+            64.97412919998169,
+            71.85694389045238,
+            67.31157097965479,
+            67.81545607373118,
+            71.19574397802353,
+            87.96588890254498,
+            67.17825215309858,
+            63.33000026643276,
+            61.931357719004154,
+            63.52204317227006,
+            71.1670690216124,
+            98.4018063172698,
+            62.58318293839693
+          ],
+          "median_ms": 66.16225512698293,
+          "p95_ms": 87.96588890254498
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/webp-grid-lossless-imagemagick.webp",
+          "bytes": 450,
+          "sha256": "5bd6b24e4fe34b51b50a2fc5653e1c1902f443ab0f36f961f51ce0dd08e578d1",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/webp-grid-lossless-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/webp-grid-lossless-libvips.webp",
+          "bytes": 456,
+          "sha256": "52f34fe2d3f51c629d3476181dcaebb737dc28a5a5377a96dc5a6514cc0fd9d8",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/webp-grid-lossless-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "avif-grid",
+      "parameters": {
+        "operation": "downsize",
+        "name": "avif-grid",
+        "input": "inputs/public/discourse-task/downsize/grid.avif",
+        "input_format": "avif",
+        "output_format": "avif",
+        "output_suffix": "avif",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "avif-grid",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "5aa7d93ca52f456a75d0ad63f0226c646b5aad8ea7c17364ef2244857ae08d51",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 50,
+        "source": "AVIF default"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 125.99723041057587,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 85.60168370604515,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            55.094344075769186,
+            58.36129700765014,
+            56.39099236577749,
+            51.73832178115845,
+            53.705443162471056,
+            54.685162845999,
+            57.84390680491924,
+            47.580534126609564,
+            49.16328890249133,
+            54.28491299971938,
+            57.91637301445007,
+            57.26180970668793,
+            53.688825108110905,
+            62.02618591487408,
+            53.99329587817192,
+            51.28247709944844,
+            56.54671881347895,
+            51.78399896249175,
+            58.46349103376269,
+            57.63168400153518,
+            59.025130700320005,
+            51.382329780608416,
+            66.32656510919333,
+            66.22799718752503,
+            50.09338865056634,
+            53.04934363812208,
+            53.557081148028374,
+            60.38102088496089,
+            55.62364403158426,
+            49.48072507977486,
+            51.27695435658097
+          ],
+          "median_ms": 54.685162845999,
+          "p95_ms": 66.22799718752503
+        },
+        "libvips": {
+          "values_ms": [
+            76.71049889177084,
+            81.51988685131073,
+            76.82101428508759,
+            75.88732289150357,
+            84.07707512378693,
+            83.11615791171789,
+            94.71627091988921,
+            88.68968999013305,
+            92.00725518167019,
+            93.78419118002057,
+            87.87176618352532,
+            94.32224929332733,
+            85.47342987731099,
+            89.35355581343174,
+            91.13924903795123,
+            85.9094220213592,
+            87.67264289781451,
+            78.09021091088653,
+            86.0403603874147,
+            84.12398397922516,
+            84.85010778531432,
+            75.034499168396,
+            67.7599087357521,
+            70.19999204203486,
+            76.56448381021619,
+            75.73324674740434,
+            76.60607108846307,
+            77.85703614354134,
+            81.56329812482,
+            84.79725895449519,
+            84.25254980102181
+          ],
+          "median_ms": 84.12398397922516,
+          "p95_ms": 94.32224929332733
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/avif-grid-imagemagick.avif",
+          "bytes": 842,
+          "sha256": "ac7dec37d1ba62e8da435d4da15923dc5f0112e4ac9a0b7dedfb5e7a7daa4d66",
+          "identify": "AVIF\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avif-grid-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/avif-grid-libvips.avif",
+          "bytes": 842,
+          "sha256": "4e5ccc14ebe18d0bdf3564295b0fe41e4db07ffd010ad327db5f87e7198f8a32",
+          "identify": "AVIF\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avif-grid-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-large-ico-source",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-large-ico-source",
+        "input": "inputs/public/discourse-task/downsize/large-ico-source.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-large-ico-source",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "5185622fde9ed7bc969575a607b3d0e2a6df9535d710191aadbc48870ffed422",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 45.90342426672578,
+          "dimensions": [
+            150,
+            100
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 58.60380223020911,
+          "dimensions": [
+            150,
+            100
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            47.35518340021372,
+            42.993887793272734,
+            46.71031143516302,
+            50.421942956745625,
+            49.57053530961275,
+            49.597206991165876,
+            45.88800668716431,
+            57.3055031709373,
+            58.64370288327336,
+            53.539987187832594,
+            58.920012786984444,
+            56.70125316828489,
+            51.769206300377846,
+            57.966834865510464,
+            56.66318302974105,
+            53.35295898839831,
+            58.439833112061024,
+            56.78884964436293,
+            53.37969213724136,
+            59.69059094786644,
+            62.826120760291815,
+            44.757981318980455,
+            51.28258094191551,
+            57.56429582834244,
+            56.73831980675459,
+            43.29499788582325,
+            52.3132081143558,
+            55.92654412612319,
+            53.5463928245008,
+            40.75278714299202,
+            54.80451788753271
+          ],
+          "median_ms": 53.539987187832594,
+          "p95_ms": 59.69059094786644
+        },
+        "libvips": {
+          "values_ms": [
+            58.88351937755942,
+            60.7497850432992,
+            54.545776918530464,
+            60.27191411703825,
+            63.74017894268036,
+            62.57436377927661,
+            58.66000708192587,
+            59.73315006121993,
+            62.72349087521434,
+            67.30445986613631,
+            68.65772604942322,
+            60.52244594320655,
+            63.710609916597605,
+            63.96200181916356,
+            62.62863194569945,
+            61.38244736939669,
+            59.89702511578798,
+            62.47474020346999,
+            66.94759335368872,
+            62.219040002673864,
+            61.141472309827805,
+            59.862669091671705,
+            55.44477701187134,
+            59.651368763297796,
+            51.08585627749562,
+            43.332581873983145,
+            41.1504190415144,
+            40.82744102925062,
+            46.05923779308796,
+            44.684575870633125,
+            46.7013418674469
+          ],
+          "median_ms": 60.27191411703825,
+          "p95_ms": 67.30445986613631
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-large-ico-source-imagemagick.png",
+          "bytes": 1388,
+          "sha256": "42edd937e17d41a672bb95161d92a6d7e199c972e875793016e49939f8c233a4",
+          "identify": "PNG\t150\t100\t8\tsRGB\tsrgb  4.0\tTopLeft\texif",
+          "dimensions": [
+            150,
+            100
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-large-ico-source-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-large-ico-source-libvips.png",
+          "bytes": 1023,
+          "sha256": "58b7e306a681551eb21238b47e2d3a42f179c3b9959f19ecc83a03b60ebc12b8",
+          "identify": "PNG\t150\t100\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            150,
+            100
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-large-ico-source-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.017377777777777777,
+            "maximum_difference": 2.0,
+            "psnr_db": 65.68665783352812
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.017377777777777777,
+            "maximum_difference": 2.0,
+            "psnr_db": 65.68665783352812
+          }
+        ]
+      }
+    },
+    {
+      "name": "animated-gif",
+      "parameters": {
+        "operation": "downsize",
+        "name": "animated-gif",
+        "input": "inputs/spec/fixtures/images/animated.gif",
+        "input_format": "gif",
+        "output_format": "gif",
+        "output_suffix": "gif",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "animated-gif",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "1a9b34fc78ac562790a10b7042d10ad359c2214ca99e644e6c9dd25b6de5a08d",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 204.7411948442459,
+          "dimensions": [
+            160,
+            160
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 69.46712778881192,
+          "dimensions": [
+            160,
+            160
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            179.24022395163774,
+            196.17421878501773,
+            198.39787296950817,
+            202.92657800018787,
+            186.54397316277027,
+            189.56224713474512,
+            191.44780095666647,
+            219.30980402976274,
+            239.26621489226818,
+            223.08721486479044,
+            198.54898285120726,
+            201.1782629415393,
+            217.41486806422472,
+            211.1510019749403,
+            198.63736303523183,
+            214.45330139249563,
+            186.90488208085299,
+            209.38409119844437,
+            224.36440316960216,
+            237.2239432297647,
+            233.0017490312457,
+            217.43277413770556,
+            216.94417670369148,
+            217.7031529136002,
+            247.45407281443477,
+            233.19106036797166,
+            228.68938324972987,
+            252.18218518421054,
+            218.93686102703214,
+            215.26687126606703,
+            225.08279513567686
+          ],
+          "median_ms": 216.94417670369148,
+          "p95_ms": 247.45407281443477
+        },
+        "libvips": {
+          "values_ms": [
+            63.60563915222883,
+            64.46903478354216,
+            72.93670112267137,
+            74.04885720461607,
+            72.31422001495957,
+            74.08854877576232,
+            57.898655999451876,
+            72.79540132731199,
+            86.50503493845463,
+            84.24111222848296,
+            78.64067098125815,
+            77.26933201774955,
+            73.11451807618141,
+            71.4910114184022,
+            78.40490015223622,
+            78.69517104700208,
+            82.74218859151006,
+            81.96310000494123,
+            80.95238311216235,
+            100.76087526977062,
+            75.15168422833085,
+            76.99326612055302,
+            81.14440087229013,
+            75.29500406235456,
+            90.16520716249943,
+            94.43935286253691,
+            81.67970879003406,
+            79.47839284315705,
+            69.38415905460715,
+            81.29356382414699,
+            79.77920211851597
+          ],
+          "median_ms": 78.40490015223622,
+          "p95_ms": 94.43935286253691
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/animated-gif-imagemagick.gif",
+          "bytes": 1383,
+          "sha256": "1c8f8e2d17f617b2905de3f01eb4cd001e927479d6b8ea6c6c29d5734733e4c0",
+          "identify": "GIF\t160\t160\t8\tsRGB\tsrgba 5.0\tUndefined\t",
+          "dimensions": [
+            160,
+            160
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/animated-gif-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/animated-gif-libvips.gif",
+          "bytes": 2299,
+          "sha256": "76c76ca3bc38ffa197611b42b50f74d9b4e059922cf7b39268f6c3a222955615",
+          "identify": "GIF\t160\t160\t8\tsRGB\tsrgba 5.0\tUndefined\t",
+          "dimensions": [
+            160,
+            160
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/animated-gif-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.059166666666666666,
+            "maximum_difference": 5.0,
+            "psnr_db": 56.452094320589204
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.059166666666666666,
+            "maximum_difference": 5.0,
+            "psnr_db": 56.452094320589204
+          }
+        ]
+      }
+    },
+    {
+      "name": "animated-webp",
+      "parameters": {
+        "operation": "downsize",
+        "name": "animated-webp",
+        "input": "inputs/spec/fixtures/images/animated.webp",
+        "input_format": "webp",
+        "output_format": "webp",
+        "output_suffix": "webp",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "animated-webp",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "4a6b6b239d6da08999d4a2d5f2debb49cda6f1eedec4b241da8ee1d5c65cf1e0",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 75,
+        "source": "encoder default",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 92,
+          "elapsed_ms": 35.832937341183424
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 210.9891870059073,
+          "dimensions": [
+            125,
+            125
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 68.68975795805454,
+          "dimensions": [
+            125,
+            125
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            222.98734076321125,
+            226.9939761608839,
+            217.60036470368505,
+            213.36629195138812,
+            196.76280207931995,
+            228.3892440609634,
+            224.4758582673967,
+            232.84969106316566,
+            225.93701211735606,
+            206.51500718668103,
+            213.88433314859867,
+            206.80294604972005,
+            169.88521302118897,
+            191.40574056655169,
+            222.78684610500932,
+            234.13344891741872,
+            235.77020037919283,
+            194.79100592434406,
+            200.17091603949666,
+            225.3251038491726,
+            204.8748889937997,
+            232.02572111040354,
+            220.65975796431303,
+            199.82814183458686,
+            202.31273211538792,
+            212.66601188108325,
+            213.8602281920612,
+            222.4466991610825,
+            197.90560891851783,
+            191.5497318841517,
+            207.49849174171686
+          ],
+          "median_ms": 213.8602281920612,
+          "p95_ms": 234.13344891741872
+        },
+        "libvips": {
+          "values_ms": [
+            71.1633157916367,
+            73.05340701714158,
+            72.47253181412816,
+            67.2963298857212,
+            69.3509797565639,
+            81.50313096120954,
+            71.10311416909099,
+            74.33403888717294,
+            72.29961082339287,
+            70.03577006980777,
+            71.42451778054237,
+            73.70502827689052,
+            62.91679013520479,
+            71.89857633784413,
+            83.94155371934175,
+            92.11178869009018,
+            81.84783067554235,
+            73.01435293629766,
+            85.25441028177738,
+            71.58476067706943,
+            88.85616483166814,
+            105.75015703216195,
+            74.81484301388264,
+            74.59244038909674,
+            73.35446588695049,
+            77.55987113341689,
+            79.6973523683846,
+            78.81541782990098,
+            75.9043381549418,
+            70.9622330032289,
+            73.02652299404144
+          ],
+          "median_ms": 73.35446588695049,
+          "p95_ms": 92.11178869009018
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/animated-webp-imagemagick.webp",
+          "bytes": 4174,
+          "sha256": "343331ff36d43d6b0bcd8bf457d9dea0ba78889a98f8d6d51287e2ac95d0037f",
+          "identify": "WEBP\t125\t125\t8\tsRGB\tsrgba 4.0\tUndefined\t",
+          "dimensions": [
+            125,
+            125
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/animated-webp-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/animated-webp-libvips.webp",
+          "bytes": 4360,
+          "sha256": "de738f31b58717bec1c340285257bd55b643c755ddda4bb8828e9e47344de80a",
+          "identify": "WEBP\t125\t125\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            125,
+            125
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/animated-webp-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.06589866666666666,
+            "maximum_difference": 12.0,
+            "psnr_db": 55.559844351968025
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.06589866666666666,
+            "maximum_difference": 12.0,
+            "psnr_db": 55.559844351968025
+          }
+        ]
+      }
+    },
+    {
+      "name": "ico-to-ico",
+      "parameters": {
+        "operation": "downsize",
+        "name": "ico-to-ico",
+        "input": "inputs/spec/fixtures/images/ico-last-bmp.ico",
+        "input_format": "ico",
+        "output_format": "ico",
+        "output_suffix": "ico",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "ico-to-ico",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "54cf1d0588f035557a930de1b9766614040a2c1d2922614c76d049d0b35b2de8",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 33.438639249652624,
+          "dimensions": [
+            32,
+            32
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 49.09284086897969,
+          "dimensions": [
+            32,
+            32
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            42.79888980090618,
+            33.261049538850784,
+            38.046506233513355,
+            44.72706327214837,
+            39.4977699033916,
+            39.89147674292326,
+            35.471531096845865,
+            34.566698130220175,
+            38.45993289723992,
+            45.135349966585636,
+            39.69451691955328,
+            49.94687298312783,
+            41.28374205902219,
+            43.74518385156989,
+            43.89171674847603,
+            46.849078964442015,
+            42.37088980153203,
+            45.5768802203238,
+            38.52018713951111,
+            50.108782947063446,
+            42.28583397343755,
+            47.11383022367954,
+            43.12488902360201,
+            38.493456318974495,
+            41.16925364360213,
+            35.69518821313977,
+            43.280481826514006,
+            40.660136844962835,
+            39.02028687298298,
+            43.54355204850435,
+            43.590262066572905
+          ],
+          "median_ms": 42.28583397343755,
+          "p95_ms": 49.94687298312783
+        },
+        "libvips": {
+          "values_ms": [
+            54.677246138453484,
+            55.473816115409136,
+            52.67393169924617,
+            58.045520912855864,
+            57.57031077519059,
+            59.222426265478134,
+            49.110840074718,
+            45.896252151578665,
+            54.608725011348724,
+            52.087000105530024,
+            62.402534764260054,
+            56.9966291077435,
+            59.51228132471442,
+            59.51145198196173,
+            65.32534211874008,
+            64.49791230261326,
+            55.7444361038506,
+            59.02455002069473,
+            56.174937169998884,
+            59.98973920941353,
+            57.164361234754324,
+            54.332510102540255,
+            61.15980911999941,
+            61.25537492334843,
+            55.85556523874402,
+            57.291575241833925,
+            59.951983857899904,
+            55.95079017803073,
+            56.69236183166504,
+            55.553472135216,
+            53.85805992409587
+          ],
+          "median_ms": 56.9966291077435,
+          "p95_ms": 64.49791230261326
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/ico-to-ico-imagemagick.ico",
+          "bytes": 4286,
+          "sha256": "690656812bf1680d0118b824a4f57ec77e2e7e0ec46ca6cfaa96753b93d54052",
+          "identify": "ICO\t32\t32\t8\tsRGB\tsrgba 4.0\tUndefined\t",
+          "dimensions": [
+            32,
+            32
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/ico-to-ico-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/ico-to-ico-libvips.ico",
+          "bytes": 209,
+          "sha256": "76660474ca514561309e1560ef0d400f6786c1a1615a43fa5300690231a221c7",
+          "identify": "PNG\t32\t32\t8\tsRGB\tsrgb  3.0\tUndefined\t",
+          "dimensions": [
+            32,
+            32
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/ico-to-ico-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.028645833333333332,
+            "maximum_difference": 2.0,
+            "psnr_db": 62.834682329286046
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.028645833333333332,
+            "maximum_difference": 2.0,
+            "psnr_db": 62.834682329286046
+          }
+        ]
+      }
+    },
+    {
+      "name": "ico-first-to-png",
+      "parameters": {
+        "operation": "downsize",
+        "name": "ico-first-to-png",
+        "input": "inputs/spec/fixtures/images/ico-last-bmp.ico",
+        "input_format": "ico",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "ico-first-to-png",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "54cf1d0588f035557a930de1b9766614040a2c1d2922614c76d049d0b35b2de8",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 37.90273703634739,
+          "dimensions": [
+            32,
+            32
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 51.882626954466105,
+          "dimensions": [
+            32,
+            32
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            41.015868075191975,
+            35.97357589751482,
+            33.41298410668969,
+            40.0636219419539,
+            36.64856497198343,
+            43.936315923929214,
+            37.8317073918879,
+            37.24439302459359,
+            42.405528016388416,
+            43.85013831779361,
+            36.60298511385918,
+            39.48395000770688,
+            37.71540429443121,
+            43.37702505290508,
+            37.69969427958131,
+            31.03820327669382,
+            31.102788168936968,
+            46.41541978344321,
+            55.27576617896557,
+            35.14318494126201,
+            37.39841002970934,
+            38.81305688992143,
+            37.54719998687506,
+            47.35484393313527,
+            67.45652901008725,
+            42.1957653015852,
+            42.68786357715726,
+            39.4221730530262,
+            39.2193510197103,
+            36.89964069053531,
+            38.175701163709164
+          ],
+          "median_ms": 38.81305688992143,
+          "p95_ms": 55.27576617896557
+        },
+        "libvips": {
+          "values_ms": [
+            47.41652589291334,
+            52.31731431558728,
+            49.746998120099306,
+            53.87924984097481,
+            45.434022322297096,
+            48.2034869492054,
+            51.81342316791415,
+            52.83326096832752,
+            48.53804223239422,
+            53.335313219577074,
+            50.700743682682514,
+            50.450464710593224,
+            46.37764487415552,
+            45.641175005584955,
+            48.42504719272256,
+            51.05978203937411,
+            53.224912378937006,
+            58.55438020080328,
+            50.6959049962461,
+            54.696000181138515,
+            51.83741403743625,
+            55.332113057374954,
+            57.93667770922184,
+            54.718226194381714,
+            57.310065254569054,
+            51.59970698878169,
+            53.63884987309575,
+            50.26179412379861,
+            51.961121149361134,
+            53.94781893119216,
+            53.807562217116356
+          ],
+          "median_ms": 51.83741403743625,
+          "p95_ms": 57.93667770922184
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/ico-first-to-png-imagemagick.png",
+          "bytes": 496,
+          "sha256": "5203bf106d51f3217cf2cb7c727cc8e7b63715de8b07a1f96d2ba2cd4f98ec0d",
+          "identify": "PNG\t32\t32\t8\tsRGB\tsrgb  4.0\tTopLeft\t",
+          "dimensions": [
+            32,
+            32
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/ico-first-to-png-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/ico-first-to-png-libvips.png",
+          "bytes": 379,
+          "sha256": "8e54fd369c1738fd4e3ccaff767814846a09c0e706817c5f5ade0ddf08b2c190",
+          "identify": "PNG\t32\t32\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            32,
+            32
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/ico-first-to-png-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.028645833333333332,
+            "maximum_difference": 2.0,
+            "psnr_db": 62.834682329286046
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.028645833333333332,
+            "maximum_difference": 2.0,
+            "psnr_db": 62.834682329286046
+          }
+        ]
+      }
+    },
+    {
+      "name": "large-ico",
+      "parameters": {
+        "operation": "downsize",
+        "name": "large-ico",
+        "input": "inputs/public/discourse-task/downsize/large-ico-source.png",
+        "input_format": "png",
+        "output_format": "ico",
+        "output_suffix": "ico",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "100%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "large-ico",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "100%"
+      },
+      "input_sha256": "5185622fde9ed7bc969575a607b3d0e2a6df9535d710191aadbc48870ffed422",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 40.55985575541854,
+          "dimensions": [
+            300,
+            200
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 48.79309004172683,
+          "dimensions": [
+            300,
+            200
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            43.24298119172454,
+            42.70015098154545,
+            41.20584577322006,
+            43.19362621754408,
+            39.9334579706192,
+            46.976152807474136,
+            44.50448555871844,
+            38.724660873413086,
+            37.47304296121001,
+            38.813469000160694,
+            39.86495127901435,
+            45.86816392838955,
+            41.51378897950053,
+            43.54336904361844,
+            43.56274101883173,
+            43.959293980151415,
+            41.263819206506014,
+            38.984269835054874,
+            47.240851912647486,
+            44.55175809562206,
+            54.26983395591378,
+            42.31205303221941,
+            45.72238074615598,
+            44.85873132944107,
+            45.581068843603134,
+            46.03705834597349,
+            43.362699914723635,
+            45.10119371116161,
+            42.45045408606529,
+            36.979752127081156,
+            38.800436072051525
+          ],
+          "median_ms": 43.24298119172454,
+          "p95_ms": 47.240851912647486
+        },
+        "libvips": {
+          "values_ms": [
+            52.470698952674866,
+            51.27462977543473,
+            49.149427097290754,
+            47.50725394114852,
+            50.15146126970649,
+            47.7581019513309,
+            46.173354145139456,
+            39.26426870748401,
+            42.36032208427787,
+            44.55172596499324,
+            45.254552736878395,
+            48.3445911668241,
+            52.29164473712444,
+            53.68188302963972,
+            51.51981022208929,
+            54.61375880986452,
+            54.37951302155852,
+            44.903520960360765,
+            47.21816536039114,
+            49.66649878770113,
+            70.39663568139076,
+            54.46161096915603,
+            48.07884292677045,
+            47.64606198295951,
+            56.786437053233385,
+            44.851154088974,
+            47.79897164553404,
+            50.800714176148176,
+            47.48546099290252,
+            40.973871015012264,
+            43.807704001665115
+          ],
+          "median_ms": 48.07884292677045,
+          "p95_ms": 56.786437053233385
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/large-ico-imagemagick.ico",
+          "bytes": 248062,
+          "sha256": "39e2d2a1dc421052a3eb2420f2a5e19b4c846e9a0c112907b764353ee153a637",
+          "identify": "ICO\t300\t200\t8\tsRGB\tsrgba 4.0\tUndefined\t",
+          "dimensions": [
+            300,
+            200
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/large-ico-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/large-ico-libvips.ico",
+          "bytes": 1871,
+          "sha256": "84a6b22e6bf7aad1a474db69f2136f2761be0e95884eb594550b9619f80c5f43",
+          "identify": "PNG\t300\t200\t8\tsRGB\tsrgb  3.0\tUndefined\t",
+          "dimensions": [
+            300,
+            200
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/large-ico-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-to-jpg",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-to-jpg",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-to-jpg",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 92,
+        "source": "encoder default",
+        "probe": null
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 37.49722195789218,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 52.94397613033652,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            36.95405088365078,
+            38.53663196787238,
+            35.87929205968976,
+            37.74762013927102,
+            40.44440807774663,
+            35.72916379198432,
+            42.92166233062744,
+            33.66083698347211,
+            32.88387367501855,
+            34.67032499611378,
+            35.82131816074252,
+            40.15793791040778,
+            40.75670661404729,
+            38.724175188690424,
+            44.298550114035606,
+            38.794666063040495,
+            38.90444431453943,
+            39.821977727115154,
+            35.17644386738539,
+            41.43512388691306,
+            38.67835085839033,
+            41.35315213352442,
+            38.383259903639555,
+            41.08878504484892,
+            41.70997580513358,
+            36.504823714494705,
+            43.285631109029055,
+            46.95445625111461,
+            38.11719128862023,
+            35.40836228057742,
+            35.52295593544841
+          ],
+          "median_ms": 38.67835085839033,
+          "p95_ms": 44.298550114035606
+        },
+        "libvips": {
+          "values_ms": [
+            45.24601623415947,
+            47.70414810627699,
+            48.9233061671257,
+            46.89235705882311,
+            42.672108858823776,
+            46.073546167463064,
+            47.93929494917393,
+            44.37843197956681,
+            42.1986891888082,
+            49.77765819057822,
+            50.5408002063632,
+            44.871163088828325,
+            50.22568628191948,
+            47.03969368711114,
+            47.529669012874365,
+            45.84279004484415,
+            44.410644099116325,
+            46.710343565791845,
+            51.498949993401766,
+            46.46653728559613,
+            47.59030602872372,
+            50.520338118076324,
+            53.57638234272599,
+            51.993394270539284,
+            46.31416313350201,
+            50.67885899916291,
+            46.904781833291054,
+            49.871635623276234,
+            48.56224311515689,
+            47.806726302951574,
+            50.55139120668173
+          ],
+          "median_ms": 47.59030602872372,
+          "p95_ms": 51.993394270539284
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-to-jpg-imagemagick.jpg",
+          "bytes": 939,
+          "sha256": "1c9d86bed6b5513955d85369eae3b326c93b0948d04749137e977fb13e0b8ef6",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-to-jpg-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-to-jpg-libvips.jpg",
+          "bytes": 1364,
+          "sha256": "414009de00da7e425d3e8c1c654f78a952402feed1825d7360012a8115b74f1c",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-to-jpg-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 1.2372222222222222,
+            "maximum_difference": 16.0,
+            "psnr_db": 40.41860458918377
+          },
+          {
+            "background": 255,
+            "mean_difference": 1.2372222222222222,
+            "maximum_difference": 16.0,
+            "psnr_db": 40.41860458918377
+          }
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-jpg",
+      "parameters": {
+        "operation": "downsize",
+        "name": "alpha-png-to-jpg",
+        "input": "inputs/public/discourse-task/downsize/grid-alpha.png",
+        "input_format": "png",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "alpha-png-to-jpg",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 92,
+        "source": "encoder default",
+        "probe": null
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 45.91592913493514,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 52.654075901955366,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            37.11019083857536,
+            91.59079613164067,
+            80.27950534597039,
+            73.72998911887407,
+            56.795583572238684,
+            49.209133721888065,
+            65.20017609000206,
+            111.8637709878385,
+            81.46496629342437,
+            136.24859182164073,
+            73.13478086143732,
+            61.330812983214855,
+            55.20002683624625,
+            56.671063881367445,
+            51.99266877025366,
+            67.42426101118326,
+            45.141581911593676,
+            83.63051572814584,
+            100.75614415109158,
+            55.05013419315219,
+            53.006143774837255,
+            60.7137237675488,
+            65.12802699580789,
+            69.78659285232425,
+            70.00599289312959,
+            92.83262025564909,
+            58.82149003446102,
+            49.29452110081911,
+            86.47875301539898,
+            94.88740283995867,
+            56.7831969819963
+          ],
+          "median_ms": 65.20017609000206,
+          "p95_ms": 111.8637709878385
+        },
+        "libvips": {
+          "values_ms": [
+            103.64155983552337,
+            106.38878121972084,
+            124.45011595264077,
+            113.16886590793729,
+            98.25008409097791,
+            98.34401402622461,
+            117.32106283307076,
+            104.0471252053976,
+            120.55451888591051,
+            157.6010170392692,
+            122.96460708603263,
+            132.04897241666913,
+            93.57579005882144,
+            121.6488890349865,
+            83.04659370332956,
+            115.80251902341843,
+            126.23636703938246,
+            84.39947105944157,
+            83.79775006324053,
+            89.31106701493263,
+            99.04702613130212,
+            139.20247927308083,
+            74.5499967597425,
+            113.01335087046027,
+            107.88639914244413,
+            91.52552718296647,
+            92.70992316305637,
+            77.78153195977211,
+            106.6202693618834,
+            121.43833562731743,
+            91.20043087750673
+          ],
+          "median_ms": 106.38878121972084,
+          "p95_ms": 139.20247927308083
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/alpha-png-to-jpg-imagemagick.jpg",
+          "bytes": 866,
+          "sha256": "27a1590434f1fa145aac2a1980887ea02e49782a71cff5815815eab18e3e5cfc",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/alpha-png-to-jpg-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/alpha-png-to-jpg-libvips.jpg",
+          "bytes": 1255,
+          "sha256": "9bf7f870ec9a14159e2ffe46affafb177996167b143fa99f96de85cf492bfdb2",
+          "identify": "JPG\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/alpha-png-to-jpg-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.9583333333333334,
+            "maximum_difference": 27.0,
+            "psnr_db": 41.00010035012271
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.9583333333333334,
+            "maximum_difference": 27.0,
+            "psnr_db": 41.00010035012271
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-to-webp",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-to-webp",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "webp",
+        "output_suffix": "webp",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-to-webp",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 75,
+        "source": "encoder default",
+        "probe": null
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 80.0367877818644,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 82.91956502944231,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            76.35008031502366,
+            53.365034982562065,
+            56.03568395599723,
+            54.008021019399166,
+            49.132307060062885,
+            51.45682068541646,
+            46.79815424606204,
+            51.49531317874789,
+            54.99841133132577,
+            57.39967618137598,
+            61.109540052711964,
+            63.684015069156885,
+            61.488121282309294,
+            70.43793797492981,
+            97.83590026199818,
+            49.26232574507594,
+            64.46460913866758,
+            76.57936681061983,
+            62.29481287300587,
+            57.47953290119767,
+            58.1090459600091,
+            56.20874371379614,
+            58.40580491349101,
+            62.65762681141496,
+            77.50184368342161,
+            44.70801493152976,
+            46.46620014682412,
+            44.07416842877865,
+            54.03247708454728,
+            39.86442880704999,
+            43.328532949090004
+          ],
+          "median_ms": 56.20874371379614,
+          "p95_ms": 77.50184368342161
+        },
+        "libvips": {
+          "values_ms": [
+            75.2545758150518,
+            79.0317659266293,
+            81.21193014085293,
+            70.7790250889957,
+            62.752615660429,
+            54.612000938504934,
+            77.62375380843878,
+            105.77978892251849,
+            111.32448399439454,
+            65.29665691778064,
+            122.29430815204978,
+            91.893648263067,
+            75.80521982163191,
+            78.98370875045657,
+            81.49424474686384,
+            100.17019277438521,
+            85.18288796767592,
+            58.78500081598759,
+            77.4522228166461,
+            82.60871702805161,
+            62.002803198993206,
+            58.41420404613018,
+            56.80853081867099,
+            95.21231660619378,
+            68.48719390109181,
+            68.8643790781498,
+            64.85869502648711,
+            65.15613803640008,
+            51.71618610620499,
+            52.45158867910504,
+            67.7217822521925
+          ],
+          "median_ms": 75.2545758150518,
+          "p95_ms": 111.32448399439454
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-to-webp-imagemagick.webp",
+          "bytes": 458,
+          "sha256": "a7135c4a403eebf13161ae07e965530a3eecc1f089bc2a8f93a6c331f3775f79",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-to-webp-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-to-webp-libvips.webp",
+          "bytes": 464,
+          "sha256": "e527dd09db1bfb218dafbb6846d0da8d92b03752da399051ad600b26cce95984",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-to-webp-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 1.5583333333333333,
+            "maximum_difference": 12.0,
+            "psnr_db": 40.805525802193436
+          },
+          {
+            "background": 255,
+            "mean_difference": 1.5583333333333333,
+            "maximum_difference": 12.0,
+            "psnr_db": 40.805525802193436
+          }
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-webp",
+      "parameters": {
+        "operation": "downsize",
+        "name": "alpha-png-to-webp",
+        "input": "inputs/public/discourse-task/downsize/grid-alpha.png",
+        "input_format": "png",
+        "output_format": "webp",
+        "output_suffix": "webp",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "alpha-png-to-webp",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 75,
+        "source": "encoder default",
+        "probe": null
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 60.051717795431614,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 75.91053796932101,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            52.55143577232957,
+            50.17111077904701,
+            45.74149614199996,
+            55.53121492266655,
+            54.628290235996246,
+            48.61009679734707,
+            47.606813721358776,
+            41.676295921206474,
+            48.813547007739544,
+            57.15195694938302,
+            64.65587019920349,
+            46.72199673950672,
+            40.908139664679766,
+            41.07829788699746,
+            42.2974219545722,
+            40.92109715566039,
+            38.11700828373432,
+            60.37477497011423,
+            52.17048292979598,
+            57.58726177737117,
+            46.627996023744345,
+            44.919590931385756,
+            41.480065789073706,
+            40.144480764865875,
+            42.67841391265392,
+            34.84514821320772,
+            40.55537981912494,
+            44.62923016399145,
+            56.58869119361043,
+            48.82683791220188,
+            36.41883796080947
+          ],
+          "median_ms": 46.627996023744345,
+          "p95_ms": 60.37477497011423
+        },
+        "libvips": {
+          "values_ms": [
+            84.64725036174059,
+            70.20126888528466,
+            71.48401718586683,
+            75.83178812637925,
+            77.21462193876505,
+            71.60896621644497,
+            66.31100224331021,
+            63.72684706002474,
+            79.45579197257757,
+            84.97943868860602,
+            81.42005372792482,
+            67.82304914668202,
+            57.63145675882697,
+            64.44665510207415,
+            72.08946393802762,
+            58.96451836451888,
+            61.78552517667413,
+            65.77660609036684,
+            72.45299872010946,
+            66.18919316679239,
+            65.6423638574779,
+            68.40464193373919,
+            64.92420192807913,
+            66.12276984378695,
+            65.10619726032019,
+            61.004786752164364,
+            72.19185819849372,
+            77.07222690805793,
+            71.31222914904356,
+            71.50514889508486,
+            60.55860733613372
+          ],
+          "median_ms": 68.40464193373919,
+          "p95_ms": 84.64725036174059
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/alpha-png-to-webp-imagemagick.webp",
+          "bytes": 506,
+          "sha256": "c27c90b7a85a2167c7fdc9846fad469a020703396c8e3207cb09dfe7eef67af4",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/alpha-png-to-webp-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/alpha-png-to-webp-libvips.webp",
+          "bytes": 512,
+          "sha256": "49d1da54a1aa0e23b1b9425ab154a43dbfd9c3cb22f3e823d1428a2c4e40743f",
+          "identify": "WEBP\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/alpha-png-to-webp-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-to-avif",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-to-avif",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "avif",
+        "output_suffix": "avif",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-to-avif",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 50,
+        "source": "AVIF default"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 42.97202406451106,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 63.18409042432904,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            41.24383395537734,
+            42.53986803814769,
+            44.159028213471174,
+            46.83641390874982,
+            62.990392092615366,
+            49.047785345464945,
+            50.35696504637599,
+            43.44971105456352,
+            43.285266030579805,
+            41.43021488562226,
+            43.80715498700738,
+            39.860373828560114,
+            50.61090411618352,
+            50.80566322430968,
+            43.58619172126055,
+            43.76614186912775,
+            47.19090694561601,
+            49.82720734551549,
+            55.660602170974016,
+            46.25591915100813,
+            41.60727094858885,
+            75.28680935502052,
+            58.560422621667385,
+            49.44293759763241,
+            48.749885987490416,
+            56.69318791478872,
+            47.9762339964509,
+            45.16367707401514,
+            43.28636173158884,
+            46.00196657702327,
+            42.82701900228858
+          ],
+          "median_ms": 46.25591915100813,
+          "p95_ms": 62.990392092615366
+        },
+        "libvips": {
+          "values_ms": [
+            59.639343060553074,
+            60.38393313065171,
+            59.211750980466604,
+            63.404079992324114,
+            95.71662871167064,
+            72.59421981871128,
+            69.44201095029712,
+            61.89238606020808,
+            67.39687640219927,
+            66.92622322589159,
+            73.17577814683318,
+            60.941037721931934,
+            69.33029275387526,
+            73.63666919991374,
+            70.94920333474874,
+            76.59235177561641,
+            72.17218773439527,
+            68.87234607711434,
+            71.26257196068764,
+            70.72106981649995,
+            71.79532013833523,
+            77.75317970663309,
+            70.99057221785188,
+            67.79767805710435,
+            72.87430018186569,
+            71.35921623557806,
+            66.87110802158713,
+            70.25891495868564,
+            70.37347508594394,
+            64.64847084134817,
+            66.8699610978365
+          ],
+          "median_ms": 70.25891495868564,
+          "p95_ms": 77.75317970663309
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-to-avif-imagemagick.avif",
+          "bytes": 647,
+          "sha256": "71468c1ec970894e434e57a96bc620ae3bd814ef7b8e3bdcc85ea34fbf55bc48",
+          "identify": "AVIF\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-to-avif-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-to-avif-libvips.avif",
+          "bytes": 647,
+          "sha256": "03abdcee81de49cc96f8e9d48c13a835624062250a5375961a0299da6da9184b",
+          "identify": "AVIF\t30\t20\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/png-to-avif-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 1.65,
+            "maximum_difference": 22.0,
+            "psnr_db": 36.84142866177258
+          },
+          {
+            "background": 255,
+            "mean_difference": 1.65,
+            "maximum_difference": 22.0,
+            "psnr_db": 36.84142866177258
+          }
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-avif",
+      "parameters": {
+        "operation": "downsize",
+        "name": "alpha-png-to-avif",
+        "input": "inputs/public/discourse-task/downsize/grid-alpha.png",
+        "input_format": "png",
+        "output_format": "avif",
+        "output_suffix": "avif",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "alpha-png-to-avif",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 50,
+        "source": "AVIF default"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 44.32275611907244,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 73.7613239325583,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            48.46177343279123,
+            46.54497234150767,
+            50.680568907409906,
+            57.154618203639984,
+            51.236779894679785,
+            44.747449923306704,
+            45.99513811990619,
+            52.1372240036726,
+            52.07429686561227,
+            44.56370463594794,
+            45.52761325612664,
+            46.957386657595634,
+            53.60565101727843,
+            50.72326911613345,
+            42.55183693021536,
+            45.21784419193864,
+            57.37338261678815,
+            40.82669923081994,
+            36.42503684386611,
+            50.26081018149853,
+            47.15480236336589,
+            52.45240032672882,
+            53.803141228854656,
+            43.91217138618231,
+            48.197184689342976,
+            45.79747002571821,
+            40.51419114693999,
+            45.38291227072477,
+            52.91408998891711,
+            52.80282208696008,
+            54.39969478175044
+          ],
+          "median_ms": 48.197184689342976,
+          "p95_ms": 57.154618203639984
+        },
+        "libvips": {
+          "values_ms": [
+            79.29411018267274,
+            70.89577801525593,
+            71.4700068347156,
+            71.30531221628189,
+            68.8151172362268,
+            65.34997327253222,
+            74.94782889261842,
+            74.57972597330809,
+            82.91294006630778,
+            56.28045415505767,
+            69.71861468628049,
+            68.42294381931424,
+            67.03705061227083,
+            68.06654995307326,
+            59.960335958749056,
+            67.744683008641,
+            70.13494987040758,
+            64.94611175730824,
+            63.03678220137954,
+            63.425335101783276,
+            65.0179828517139,
+            66.31096079945564,
+            72.22137972712517,
+            68.38408438488841,
+            77.51845894381404,
+            67.8875669836998,
+            62.73407395929098,
+            60.80831494182348,
+            67.38747796043754,
+            68.96070204675198,
+            71.8712117522955
+          ],
+          "median_ms": 68.38408438488841,
+          "p95_ms": 79.29411018267274
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/alpha-png-to-avif-imagemagick.avif",
+          "bytes": 842,
+          "sha256": "ac7dec37d1ba62e8da435d4da15923dc5f0112e4ac9a0b7dedfb5e7a7daa4d66",
+          "identify": "AVIF\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/alpha-png-to-avif-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/alpha-png-to-avif-libvips.avif",
+          "bytes": 842,
+          "sha256": "4e5ccc14ebe18d0bdf3564295b0fe41e4db07ffd010ad327db5f87e7198f8a32",
+          "identify": "AVIF\t30\t20\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/alpha-png-to-avif-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "png-to-svg",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-to-svg",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "svg",
+        "output_suffix": "svg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-to-svg",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": {
+          "class": "Discourse::Utils::CommandError",
+          "message": "nice -n 10 magick png:/var/www/discourse/public/discourse-task/downsize/grid.png[0] -auto-orient -gravity center -background transparent -interlace none -resize 50% -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/downsize/png-to-svg-resized.svg\nmagick: delegate library support not built-in '/var/www/discourse/public/discourse-task/downsize/grid.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+        },
+        "geometry": "50%"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": false,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "error",
+          "elapsed_ms": 49.758379347622395,
+          "error": {
+            "class": "Discourse::Utils::CommandError",
+            "message": "nice -n 10 magick png:/benchmark/inputs/public/discourse-task/downsize/grid.png[0] -auto-orient -gravity center -background transparent -interlace none -resize 50% -profile /benchmark/vendor/data/RT_sRGB.icm svg:/benchmark/outputs/downsize/png-to-svg-imagemagick.svg\nmagick: delegate library support not built-in '/benchmark/inputs/public/discourse-task/downsize/grid.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: delegate failed `'potrace' --svg --output '%o' '%i'' @ error/delegate.c/InvokeDelegate/1921.\n"
+          }
+        },
+        "libvips": {
+          "status": "error",
+          "elapsed_ms": 52.02906997874379,
+          "error": {
+            "class": "DiscourseVips::InvalidImage",
+            "message": "unsupported output format"
+          }
+        }
+      },
+      "initial_dimensions_match": false,
+      "expected_dimensions_match": true,
+      "outputs": {}
+    },
+    {
+      "name": "alpha-png-to-svg",
+      "parameters": {
+        "operation": "downsize",
+        "name": "alpha-png-to-svg",
+        "input": "inputs/public/discourse-task/downsize/grid-alpha.png",
+        "input_format": "png",
+        "output_format": "svg",
+        "output_suffix": "svg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "alpha-png-to-svg",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": {
+          "class": "Discourse::Utils::CommandError",
+          "message": "nice -n 10 magick png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0] -auto-orient -gravity center -background transparent -interlace none -resize 50% -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/downsize/alpha-png-to-svg-resized.svg\nmagick: delegate library support not built-in '/var/www/discourse/public/discourse-task/downsize/grid-alpha.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+        },
+        "geometry": "50%"
+      },
+      "input_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "eligible_for_paired_timing": false,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "error",
+          "elapsed_ms": 49.702851101756096,
+          "error": {
+            "class": "Discourse::Utils::CommandError",
+            "message": "nice -n 10 magick png:/benchmark/inputs/public/discourse-task/downsize/grid-alpha.png[0] -auto-orient -gravity center -background transparent -interlace none -resize 50% -profile /benchmark/vendor/data/RT_sRGB.icm svg:/benchmark/outputs/downsize/alpha-png-to-svg-imagemagick.svg\nmagick: delegate library support not built-in '/benchmark/inputs/public/discourse-task/downsize/grid-alpha.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: delegate failed `'potrace' --svg --output '%o' '%i'' @ error/delegate.c/InvokeDelegate/1921.\n"
+          }
+        },
+        "libvips": {
+          "status": "error",
+          "elapsed_ms": 56.04022182524204,
+          "error": {
+            "class": "DiscourseVips::InvalidImage",
+            "message": "unsupported output format"
+          }
+        }
+      },
+      "initial_dimensions_match": false,
+      "expected_dimensions_match": true,
+      "outputs": {}
+    },
+    {
+      "name": "png-to-ico",
+      "parameters": {
+        "operation": "downsize",
+        "name": "png-to-ico",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "ico",
+        "output_suffix": "ico",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "png-to-ico",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 38.4580846875906,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 55.68786710500717,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            35.82347184419632,
+            43.244088999927044,
+            41.52347007766366,
+            38.38709183037281,
+            35.236721858382225,
+            44.04283594340086,
+            42.027950286865234,
+            38.9218321070075,
+            44.97391264885664,
+            37.903990130871534,
+            36.637193989008665,
+            40.210218634456396,
+            35.169376991689205,
+            39.21737801283598,
+            37.97217970713973,
+            41.689812671393156,
+            38.111476227641106,
+            44.64967409148812,
+            40.8035391010344,
+            46.92194610834122,
+            51.37377232313156,
+            43.729716911911964,
+            42.16571198776364,
+            45.72322219610214,
+            49.66345289722085,
+            45.43610895052552,
+            45.406402088701725,
+            45.86954461410642,
+            48.85862907394767,
+            52.49739671126008,
+            37.45482815429568
+          ],
+          "median_ms": 42.027950286865234,
+          "p95_ms": 51.37377232313156
+        },
+        "libvips": {
+          "values_ms": [
+            50.607013050466776,
+            53.246617782860994,
+            55.796810891479254,
+            59.25535690039396,
+            58.67916904389858,
+            56.61450605839491,
+            53.11476206406951,
+            56.81651970371604,
+            60.23415084928274,
+            65.02396892756224,
+            57.01710702851415,
+            58.86045377701521,
+            63.12289694324136,
+            58.81800223141909,
+            57.63670103624463,
+            57.30779189616442,
+            63.43060312792659,
+            56.46662227809429,
+            65.95093291252851,
+            64.25841292366385,
+            73.79964273422956,
+            67.41418177261949,
+            63.159836921840906,
+            74.29856806993484,
+            71.63607003167272,
+            63.87911317870021,
+            64.56724600866437,
+            67.76622915640473,
+            63.02050920203328,
+            78.29272374510765,
+            63.91984177753329
+          ],
+          "median_ms": 63.02050920203328,
+          "p95_ms": 74.29856806993484
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/png-to-ico-imagemagick.ico",
+          "bytes": 2542,
+          "sha256": "dbc45e17f08236d0767f132cc5a140701b3266d1156662057e51161d1b1bc3d6",
+          "identify": "ICO\t30\t20\t8\tsRGB\tsrgba 4.0\tUndefined\t",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/png-to-ico-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/png-to-ico-libvips.ico",
+          "bytes": 203,
+          "sha256": "f6e5fddc46af6a636925e2d3d1ce074f7597a66d413900220ffcfbd60284f7ef",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgb  3.0\tUndefined\t",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/png-to-ico-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.34444444444444444,
+            "maximum_difference": 4.0,
+            "psnr_db": 49.763343952184194
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.34444444444444444,
+            "maximum_difference": 4.0,
+            "psnr_db": 49.763343952184194
+          }
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-ico",
+      "parameters": {
+        "operation": "downsize",
+        "name": "alpha-png-to-ico",
+        "input": "inputs/public/discourse-task/downsize/grid-alpha.png",
+        "input_format": "png",
+        "output_format": "ico",
+        "output_suffix": "ico",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": "alpha-png-to-ico",
+        "baseline_source": "references/downsize.json",
+        "baseline_error": null,
+        "geometry": "50%"
+      },
+      "input_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 40.44609284028411,
+          "dimensions": [
+            30,
+            20
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 60.938168317079544,
+          "dimensions": [
+            30,
+            20
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            36.33943200111389,
+            39.643894881010056,
+            40.93294823542237,
+            36.61231184378266,
+            37.69168211147189,
+            42.44909295812249,
+            39.53505400568247,
+            39.00704113766551,
+            37.742211017757654,
+            41.801807936280966,
+            41.21016198769212,
+            38.511408027261496,
+            36.413007881492376,
+            46.10995203256607,
+            44.851222075521946,
+            39.879944641143084,
+            38.33383787423372,
+            37.82296599820256,
+            39.062351919710636,
+            39.45208014920354,
+            38.85658038780093,
+            36.87630780041218,
+            39.50689686462283,
+            35.60462035238743,
+            41.60531098023057,
+            44.21333083882928,
+            37.970570381730795,
+            41.69762274250388,
+            36.39963362365961,
+            37.28291718289256,
+            45.576284639537334
+          ],
+          "median_ms": 39.062351919710636,
+          "p95_ms": 45.576284639537334
+        },
+        "libvips": {
+          "values_ms": [
+            57.7265708707273,
+            56.25335406512022,
+            61.54423812404275,
+            56.153730023652315,
+            61.71250296756625,
+            61.63087720051408,
+            64.11264417693019,
+            60.223610140383244,
+            68.12853505834937,
+            61.372247990220785,
+            59.03089419007301,
+            58.91720112413168,
+            65.86202420294285,
+            62.899196054786444,
+            54.46820892393589,
+            56.3085307367146,
+            64.87127672880888,
+            55.27259595692158,
+            55.51332700997591,
+            58.79901209846139,
+            57.73547105491161,
+            58.17263200879097,
+            60.059765353798866,
+            54.5046990737319,
+            57.68159590661526,
+            64.29514521732926,
+            62.981435097754,
+            58.990508783608675,
+            58.49351827055216,
+            58.93157282844186,
+            57.468144688755274
+          ],
+          "median_ms": 58.93157282844186,
+          "p95_ms": 65.86202420294285
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/alpha-png-to-ico-imagemagick.ico",
+          "bytes": 2542,
+          "sha256": "1d016b76837c73fc6f9f9eb5d9e7f4b97175f33d2b677f733c4e72ec8b9290ca",
+          "identify": "ICO\t30\t20\t8\tsRGB\tsrgba 4.0\tUndefined\t",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/alpha-png-to-ico-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/alpha-png-to-ico-libvips.ico",
+          "bytes": 286,
+          "sha256": "4bb7a3c587917f701fa4e146528dad6d6d972429d86f2847201c63605adf8fc9",
+          "identify": "PNG\t30\t20\t8\tsRGB\tsrgba 4.0\tUndefined\t",
+          "dimensions": [
+            30,
+            20
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/alpha-png-to-ico-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    },
+    {
+      "name": "natural-photo",
+      "parameters": {
+        "operation": "downsize",
+        "name": "natural-photo",
+        "input": "inputs/public/discourse-task/jpeg-evidence/photo.jpg",
+        "input_format": "jpg",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "50%",
+        "historical_baseline": false,
+        "template_record": "jpg-grid"
+      },
+      "input_sha256": "f819dbad7ebd7007bd9104617147acc303b815bb9e3b85dad308d39a728851eb",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 89,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 89,
+          "elapsed_ms": 50.81553012132645
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 281.5405959263444,
+          "dimensions": [
+            423,
+            565
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 189.1068653203547,
+          "dimensions": [
+            423,
+            565
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            223.61011570319533,
+            150.48234909772873,
+            150.06408095359802,
+            172.98732604831457,
+            167.55110584199429,
+            225.7093247026205,
+            163.0582381039858,
+            160.1407420821488,
+            146.4497009292245,
+            148.1486321426928,
+            186.11177802085876,
+            183.58416622504592,
+            181.39310041442513,
+            148.18811556324363,
+            155.97852785140276,
+            193.3436580002308,
+            221.8913841061294,
+            163.0259002558887,
+            166.64592502638698,
+            195.79325709491968,
+            184.76557731628418,
+            164.76720524951816,
+            183.84876009076834,
+            186.20582483708858,
+            234.41543290391564,
+            172.19946067780256,
+            187.31070263311267,
+            201.3533958233893,
+            179.17922604829073,
+            201.81051595136523,
+            192.81299505382776
+          ],
+          "median_ms": 181.39310041442513,
+          "p95_ms": 225.7093247026205
+        },
+        "libvips": {
+          "values_ms": [
+            115.17332913354039,
+            96.66493395343423,
+            95.72070278227329,
+            110.35753600299358,
+            97.07697434350848,
+            107.21754003316164,
+            102.3794012144208,
+            112.53354605287313,
+            102.38077398389578,
+            91.31324803456664,
+            121.51034269481897,
+            107.04181017354131,
+            109.56730134785175,
+            96.12833894789219,
+            103.0015810392797,
+            114.66950178146362,
+            106.72149108722806,
+            103.22951432317495,
+            111.73826409503818,
+            112.10049176588655,
+            105.1666559651494,
+            108.29896572977304,
+            116.05175770819187,
+            101.25853074714541,
+            95.68258794024587,
+            98.0624477379024,
+            101.21993441134691,
+            99.57497706636786,
+            98.90864603221416,
+            94.67049408704042,
+            101.28956194967031
+          ],
+          "median_ms": 103.0015810392797,
+          "p95_ms": 116.05175770819187
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/natural-photo-imagemagick.jpg",
+          "bytes": 70698,
+          "sha256": "3c11a95ca85bc7cf4f026ccff3e947390d5280c3a71c7aceb627b69e7cc6bc18",
+          "identify": "JPG\t423\t565\t8\tsRGB\tsrgb  3.0\tTopLeft\texif,icc,xmp",
+          "dimensions": [
+            423,
+            565
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": {
+            "bytes": 548,
+            "sha256": "e468e89239fc0493d5e8fb9b014e91b210c6caa73c81edf04c3d21a734f377cc"
+          },
+          "decoded_exif_bytes": 2264,
+          "decoded_path": "outputs/downsize/natural-photo-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/natural-photo-libvips.jpg",
+          "bytes": 66302,
+          "sha256": "e90fa9b4da16e033943de32b77674fda9c8796bc675bfabcce9b5cedd0c32d6a",
+          "identify": "JPG\t423\t565\t8\tsRGB\tsrgb  3.0\tTopLeft\texif,icc,xmp",
+          "dimensions": [
+            423,
+            565
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": {
+            "bytes": 548,
+            "sha256": "e468e89239fc0493d5e8fb9b014e91b210c6caa73c81edf04c3d21a734f377cc"
+          },
+          "decoded_exif_bytes": 2264,
+          "decoded_path": "outputs/downsize/natural-photo-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 1.8000376576915835,
+            "maximum_difference": 28.0,
+            "psnr_db": 39.92971359619378
+          },
+          {
+            "background": 255,
+            "mean_difference": 1.8000376576915835,
+            "maximum_difference": 28.0,
+            "psnr_db": 39.92971359619378
+          }
+        ]
+      }
+    },
+    {
+      "name": "orientation-added",
+      "parameters": {
+        "operation": "downsize",
+        "name": "orientation-added",
+        "input": "inputs/public/discourse-task/crop-baseline/oriented.jpg",
+        "input_format": "jpg",
+        "output_format": "jpg",
+        "output_suffix": "jpg",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "50%",
+        "historical_baseline": false,
+        "template_record": "jpg-grid"
+      },
+      "input_sha256": "6f7078f63089168f7c5e082a80228cab956b71d5f36a0f2b39c11fd68b11d6c1",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 74,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 74,
+          "elapsed_ms": 32.35539374873042
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 36.060156766325235,
+          "dimensions": [
+            20,
+            30
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 60.132754035294056,
+          "dimensions": [
+            20,
+            30
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            42.75160003453493,
+            37.52220794558525,
+            44.722768012434244,
+            36.89336171373725,
+            35.82506300881505,
+            35.99672997370362,
+            36.55956033617258,
+            40.38835223764181,
+            36.44469100981951,
+            39.951174054294825,
+            41.13173205405474,
+            33.12187595292926,
+            38.37581584230065,
+            37.0369809679687,
+            38.83502725511789,
+            41.707787197083235,
+            37.95772511512041,
+            43.916899245232344,
+            40.15340097248554,
+            41.94937087595463,
+            37.18988923355937,
+            37.78286371380091,
+            38.94464299082756,
+            47.87191981449723,
+            46.22112726792693,
+            48.7624341621995,
+            38.891091011464596,
+            37.67364798113704,
+            39.93448568508029,
+            41.11130768433213,
+            40.95559101551771
+          ],
+          "median_ms": 38.94464299082756,
+          "p95_ms": 47.87191981449723
+        },
+        "libvips": {
+          "values_ms": [
+            63.435085117816925,
+            58.3153897896409,
+            65.06503792479634,
+            61.34651694446802,
+            63.84976673871279,
+            57.52698890864849,
+            58.36429167538881,
+            57.12711298838258,
+            59.40409516915679,
+            57.36586032435298,
+            59.60936285555363,
+            60.10666396468878,
+            58.41942969709635,
+            54.24156412482262,
+            67.39315297454596,
+            62.59848456829786,
+            72.19903916120529,
+            67.40673305466771,
+            63.69795370846987,
+            60.043534729629755,
+            63.64127481356263,
+            61.930468771606684,
+            65.28669316321611,
+            69.39331721514463,
+            68.91050701960921,
+            64.43832907825708,
+            64.95193718001246,
+            62.19452992081642,
+            54.091136902570724,
+            61.84606393799186,
+            62.37185513600707
+          ],
+          "median_ms": 62.19452992081642,
+          "p95_ms": 69.39331721514463
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/orientation-added-imagemagick.jpg",
+          "bytes": 751,
+          "sha256": "9b298fee568afbb6ea37dc0112f7ccc4db9fe39ee05ad3454caf837141f1dc63",
+          "identify": "JPG\t20\t30\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            20,
+            30
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/orientation-added-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/orientation-added-libvips.jpg",
+          "bytes": 1112,
+          "sha256": "68e8dbe21f78109596f78976e37dadc678ccd66be72500117121403580b4f099",
+          "identify": "JPG\t20\t30\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            20,
+            30
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/orientation-added-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 5.556111111111111,
+            "maximum_difference": 44.0,
+            "psnr_db": 29.819752367070148
+          },
+          {
+            "background": 255,
+            "mean_difference": 5.556111111111111,
+            "maximum_difference": 44.0,
+            "psnr_db": 29.819752367070148
+          }
+        ]
+      }
+    },
+    {
+      "name": "avatar-half",
+      "parameters": {
+        "operation": "downsize",
+        "name": "avatar-half",
+        "input": "inputs/public/discourse-task/resize/letter-avatar-fullsize.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "50%",
+        "historical_baseline": false,
+        "template_record": "png-grid"
+      },
+      "input_sha256": "e4ef0d86f02fa9814314e46b81b951d71e3eab43b56ad8624f3fbebd33eb670a",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 71.36499183252454,
+          "dimensions": [
+            180,
+            180
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 69.2006703466177,
+          "dimensions": [
+            180,
+            180
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            79.96192714199424,
+            65.86707616224885,
+            61.749610118567944,
+            71.66213588789105,
+            67.75145512074232,
+            54.74274605512619,
+            56.67091812938452,
+            67.3434198834002,
+            61.27294013276696,
+            60.4562871158123,
+            59.46898693218827,
+            67.57951388135552,
+            65.77316438779235,
+            53.426813799887896,
+            57.62280570343137,
+            69.66256396844983,
+            65.38336165249348,
+            64.22855285927653,
+            65.79908356070518,
+            54.699973203241825,
+            51.040761172771454,
+            64.02444280683994,
+            66.9070091098547,
+            55.810811929404736,
+            57.22963809967041,
+            56.6930309869349,
+            70.50915714353323,
+            68.64980095997453,
+            85.60826210305095,
+            74.66514920815825,
+            59.346603229641914
+          ],
+          "median_ms": 64.22855285927653,
+          "p95_ms": 79.96192714199424
+        },
+        "libvips": {
+          "values_ms": [
+            69.07168496400118,
+            63.691106624901295,
+            75.37879096344113,
+            69.38054412603378,
+            61.45642185583711,
+            60.89860666543245,
+            62.50654300674796,
+            62.61021923273802,
+            63.846321776509285,
+            61.28655094653368,
+            77.01844582334161,
+            64.82331501320004,
+            64.18124586343765,
+            64.42254362627864,
+            67.34589394181967,
+            64.59563598036766,
+            72.02623598277569,
+            60.147653333842754,
+            62.5567720271647,
+            63.01384326070547,
+            64.70885314047337,
+            61.628015246242285,
+            69.30509209632874,
+            62.2308449819684,
+            66.72596512362361,
+            63.96305374801159,
+            75.55319787934422,
+            70.7594039849937,
+            72.68990995362401,
+            67.08231335505843,
+            66.45370926707983
+          ],
+          "median_ms": 64.59563598036766,
+          "p95_ms": 75.55319787934422
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/avatar-half-imagemagick.png",
+          "bytes": 3495,
+          "sha256": "ea26402bb65690a57314b186092b15e61f363b2e9dedf115b7b01a0aba1918bd",
+          "identify": "PNG\t180\t180\t8\tsRGB\tsrgb  4.0\tTopLeft\texif",
+          "dimensions": [
+            180,
+            180
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avatar-half-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/avatar-half-libvips.png",
+          "bytes": 3766,
+          "sha256": "b750df214d25493615b91f07df23b41b1ff746c90de7f93721ccd38406cc550c",
+          "identify": "PNG\t180\t180\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            180,
+            180
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avatar-half-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.012818930041152263,
+            "maximum_difference": 2.0,
+            "psnr_db": 66.5276130511038
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.012818930041152263,
+            "maximum_difference": 2.0,
+            "psnr_db": 66.5276130511038
+          }
+        ]
+      }
+    },
+    {
+      "name": "avatar-bounding-box",
+      "parameters": {
+        "operation": "downsize",
+        "name": "avatar-bounding-box",
+        "input": "inputs/public/discourse-task/resize/letter-avatar-fullsize.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "96x96>",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "96x96>",
+        "historical_baseline": false,
+        "template_record": "png-grid"
+      },
+      "input_sha256": "e4ef0d86f02fa9814314e46b81b951d71e3eab43b56ad8624f3fbebd33eb670a",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 51.031275652348995,
+          "dimensions": [
+            96,
+            96
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 61.61011615768075,
+          "dimensions": [
+            96,
+            96
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            57.28570697829127,
+            58.31297393888235,
+            67.96885281801224,
+            57.52029037103057,
+            53.04725328460336,
+            59.03770308941603,
+            58.615156915038824,
+            66.33698660880327,
+            53.12842084094882,
+            58.744288980960846,
+            48.67737600579858,
+            60.308550018817186,
+            49.60505198687315,
+            50.168578047305346,
+            55.823985021561384,
+            46.66926013305783,
+            49.54830091446638,
+            50.55346107110381,
+            45.88379105553031,
+            45.285030733793974,
+            45.29329715296626,
+            46.16879019886255,
+            61.71807087957859,
+            61.387135181576014,
+            46.99607519432902,
+            47.43115697056055,
+            45.96126126125455,
+            45.23976007476449,
+            48.91054471954703,
+            54.833528120070696,
+            55.68244121968746
+          ],
+          "median_ms": 53.04725328460336,
+          "p95_ms": 66.33698660880327
+        },
+        "libvips": {
+          "values_ms": [
+            76.35599886998534,
+            67.5981929525733,
+            78.43308802694082,
+            64.19503595679998,
+            62.27320386096835,
+            71.47385878488421,
+            62.288961838930845,
+            71.6486512683332,
+            61.60811800509691,
+            59.24850469455123,
+            60.12251088395715,
+            63.74439178034663,
+            57.774992659687996,
+            60.54166192188859,
+            58.51458432152867,
+            63.75251803547144,
+            56.69507198035717,
+            57.104278821498156,
+            62.09222739562392,
+            57.76813579723239,
+            59.116167947649956,
+            58.57160687446594,
+            64.16457891464233,
+            64.4958233460784,
+            61.65996566414833,
+            64.15474135428667,
+            51.20402667671442,
+            63.10734013095498,
+            55.14492001384497,
+            58.18346980959177,
+            56.362939067184925
+          ],
+          "median_ms": 61.65996566414833,
+          "p95_ms": 76.35599886998534
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/avatar-bounding-box-imagemagick.png",
+          "bytes": 2463,
+          "sha256": "bcbd40ba58094e5578a9a34dcfd74909301d795f60e746ea7ac866d35577510f",
+          "identify": "PNG\t96\t96\t8\tsRGB\tsrgb  4.0\tTopLeft\texif",
+          "dimensions": [
+            96,
+            96
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avatar-bounding-box-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/avatar-bounding-box-libvips.png",
+          "bytes": 2300,
+          "sha256": "b57c3d40917935f95ac7ef3e20f6acdc6476a77baf6cf878296c5326f7c29a34",
+          "identify": "PNG\t96\t96\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            96,
+            96
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avatar-bounding-box-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.047526041666666664,
+            "maximum_difference": 3.0,
+            "psnr_db": 60.29952125174028
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.047526041666666664,
+            "maximum_difference": 3.0,
+            "psnr_db": 60.29952125174028
+          }
+        ]
+      }
+    },
+    {
+      "name": "avatar-area",
+      "parameters": {
+        "operation": "downsize",
+        "name": "avatar-area",
+        "input": "inputs/public/discourse-task/resize/letter-avatar-fullsize.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "4096@",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "4096@",
+        "historical_baseline": false,
+        "template_record": "png-grid"
+      },
+      "input_sha256": "e4ef0d86f02fa9814314e46b81b951d71e3eab43b56ad8624f3fbebd33eb670a",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 62.97564506530762,
+          "dimensions": [
+            64,
+            64
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 68.97343182936311,
+          "dimensions": [
+            64,
+            64
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            49.404225777834654,
+            56.40199966728687,
+            54.580236319452524,
+            49.55639084801078,
+            47.5082159973681,
+            45.14187015593052,
+            52.47775511816144,
+            59.36659732833505,
+            52.92106093838811,
+            46.42555397003889,
+            61.59449461847544,
+            56.53743073344231,
+            59.51571837067604,
+            54.29900996387005,
+            50.49036908894777,
+            49.24593633040786,
+            47.98257118090987,
+            49.805853981524706,
+            50.71689700707793,
+            54.70869177952409,
+            52.0015312358737,
+            49.889391753822565,
+            54.199574049562216,
+            53.98727720603347,
+            54.548865649849176,
+            53.885310888290405,
+            52.97445086762309,
+            50.878673791885376,
+            46.76764504984021,
+            47.819687984883785,
+            58.365145698189735
+          ],
+          "median_ms": 52.47775511816144,
+          "p95_ms": 59.51571837067604
+        },
+        "libvips": {
+          "values_ms": [
+            65.9965667873621,
+            62.394491862505674,
+            67.00811628252268,
+            68.79594409838319,
+            61.63019500672817,
+            56.65225721895695,
+            61.31407804787159,
+            63.78053780645132,
+            62.0062961243093,
+            61.503034085035324,
+            63.94772185012698,
+            64.77292720228434,
+            74.32224787771702,
+            68.28752905130386,
+            63.28542297706008,
+            61.02048000320792,
+            70.65004296600819,
+            63.49839689210057,
+            66.83884793892503,
+            61.68159795925021,
+            63.305535819381475,
+            67.71962204948068,
+            61.345003079622984,
+            63.85656539350748,
+            62.497146893292665,
+            61.46617000922561,
+            61.19148200377822,
+            58.338775765150785,
+            60.03121519461274,
+            62.63012811541557,
+            62.902919948101044
+          ],
+          "median_ms": 62.902919948101044,
+          "p95_ms": 70.65004296600819
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/avatar-area-imagemagick.png",
+          "bytes": 2056,
+          "sha256": "17229a57e2d11c2538860288cddd35dcb14ba64598fef008440829d82190de98",
+          "identify": "PNG\t64\t64\t8\tsRGB\tsrgb  4.0\tTopLeft\texif",
+          "dimensions": [
+            64,
+            64
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avatar-area-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/avatar-area-libvips.png",
+          "bytes": 1748,
+          "sha256": "b9ebd1b9eefdd56f0428c86d71113496ac335be01728b97eff363b72c646068f",
+          "identify": "PNG\t64\t64\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            64,
+            64
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/avatar-area-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.08626302083333333,
+            "maximum_difference": 5.0,
+            "psnr_db": 56.61015082958799
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.08626302083333333,
+            "maximum_difference": 5.0,
+            "psnr_db": 56.61015082958799
+          }
+        ]
+      }
+    },
+    {
+      "name": "grid-enlarge-125",
+      "parameters": {
+        "operation": "downsize",
+        "name": "grid-enlarge-125",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "125%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "125%",
+        "historical_baseline": false,
+        "template_record": "png-grid"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 37.21097111701965,
+          "dimensions": [
+            75,
+            50
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 53.53975621983409,
+          "dimensions": [
+            75,
+            50
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            41.953462176024914,
+            40.58042587712407,
+            38.430167362093925,
+            39.044512901455164,
+            33.70959311723709,
+            38.81991095840931,
+            42.39301895722747,
+            42.904132045805454,
+            36.771946121007204,
+            37.03853813931346,
+            39.41591829061508,
+            40.28888279572129,
+            39.4481117837131,
+            42.02742921188474,
+            41.9428120367229,
+            35.12834897264838,
+            37.9670737311244,
+            43.67215372622013,
+            45.153012964874506,
+            40.06973886862397,
+            44.880772940814495,
+            38.61455200240016,
+            40.16887629404664,
+            37.95083472505212,
+            41.93275794386864,
+            45.55328609421849,
+            50.52455002442002,
+            37.80705062672496,
+            39.62921258062124,
+            44.563871808350086,
+            43.504875153303146
+          ],
+          "median_ms": 40.16887629404664,
+          "p95_ms": 45.55328609421849
+        },
+        "libvips": {
+          "values_ms": [
+            51.25044705346227,
+            53.77880623564124,
+            54.48819790035486,
+            54.77171530947089,
+            48.4031867235899,
+            51.03234201669693,
+            48.54016425088048,
+            50.963257905095816,
+            52.71769408136606,
+            52.58217686787248,
+            52.88431094959378,
+            52.544182166457176,
+            54.11269422620535,
+            54.55082608386874,
+            55.70486839860678,
+            55.88228860870004,
+            54.40944712609053,
+            51.94095615297556,
+            60.67641684785485,
+            65.47374092042446,
+            61.23970774933696,
+            64.2704600468278,
+            51.01980222389102,
+            59.77249797433615,
+            60.17806986346841,
+            56.119229178875685,
+            52.212243899703026,
+            53.36870579048991,
+            52.053327206522226,
+            53.733131382614374,
+            48.66897640749812
+          ],
+          "median_ms": 53.733131382614374,
+          "p95_ms": 64.2704600468278
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/grid-enlarge-125-imagemagick.png",
+          "bytes": 1041,
+          "sha256": "eddb5424cf57d92480098d3ddbd5503aba4147d7bfe49730ce05fa3b19dd7712",
+          "identify": "PNG\t75\t50\t8\tsRGB\tsrgb  4.0\tTopLeft\texif",
+          "dimensions": [
+            75,
+            50
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/grid-enlarge-125-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/grid-enlarge-125-libvips.png",
+          "bytes": 424,
+          "sha256": "6964c397167e52d5b41fe5a55e88bd3166f20f4eb3128855994f33967bea856c",
+          "identify": "PNG\t75\t50\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            75,
+            50
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/grid-enlarge-125-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 1.1333333333333333,
+            "maximum_difference": 24.0,
+            "psnr_db": 35.71016223008887
+          },
+          {
+            "background": 255,
+            "mean_difference": 1.1333333333333333,
+            "maximum_difference": 24.0,
+            "psnr_db": 35.71016223008887
+          }
+        ]
+      }
+    },
+    {
+      "name": "grid-enlarge-200",
+      "parameters": {
+        "operation": "downsize",
+        "name": "grid-enlarge-200",
+        "input": "inputs/public/discourse-task/downsize/grid.png",
+        "input_format": "png",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "200%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "200%",
+        "historical_baseline": false,
+        "template_record": "png-grid"
+      },
+      "input_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 42.09300735965371,
+          "dimensions": [
+            120,
+            80
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 53.044179920107126,
+          "dimensions": [
+            120,
+            80
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            42.488520964980125,
+            47.98623500391841,
+            40.61487969011068,
+            44.88282883539796,
+            40.97229428589344,
+            55.6487450376153,
+            41.1082929931581,
+            91.4641940034926,
+            66.91418588161469,
+            78.54161271825433,
+            53.49321709945798,
+            56.712474673986435,
+            55.473838932812214,
+            67.60427681729198,
+            92.30228886008263,
+            60.82497630268335,
+            62.370628118515015,
+            58.72718896716833,
+            127.24890513345599,
+            82.50709902495146,
+            84.47171002626419,
+            53.786035161465406,
+            65.63596008345485,
+            56.61458894610405,
+            52.85815475508571,
+            102.1872996352613,
+            107.10292169824243,
+            71.58412458375096,
+            67.42375670000911,
+            54.718065075576305,
+            58.29410022124648
+          ],
+          "median_ms": 58.72718896716833,
+          "p95_ms": 107.10292169824243
+        },
+        "libvips": {
+          "values_ms": [
+            54.61532808840275,
+            50.79895071685314,
+            57.29121807962656,
+            53.57444891706109,
+            62.564744148403406,
+            53.048134315758944,
+            73.45926016569138,
+            95.98862892016768,
+            84.27621284499764,
+            82.75702130049467,
+            69.43078897893429,
+            76.09381806105375,
+            69.63580520823598,
+            108.42100670561194,
+            78.07321567088366,
+            115.10105524212122,
+            72.61804677546024,
+            77.915009111166,
+            76.49239199236035,
+            123.89266071841121,
+            79.49656806886196,
+            99.69593584537506,
+            76.71669172123075,
+            78.22428504005075,
+            71.79344724863768,
+            58.20703133940697,
+            81.15535322576761,
+            66.25126115977764,
+            85.16301726922393,
+            63.56843002140522,
+            69.30023524910212
+          ],
+          "median_ms": 76.09381806105375,
+          "p95_ms": 115.10105524212122
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/grid-enlarge-200-imagemagick.png",
+          "bytes": 1139,
+          "sha256": "de462b4448ee8212a9ff9f84a69b0ca4db05be07600bc87fd7dac9236177806c",
+          "identify": "PNG\t120\t80\t8\tsRGB\tsrgb  4.0\tTopLeft\texif",
+          "dimensions": [
+            120,
+            80
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/grid-enlarge-200-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/grid-enlarge-200-libvips.png",
+          "bytes": 548,
+          "sha256": "a0e9f74f3b9ca189f89c218c9a2c305233be3a000b8854d7ace3a380151d3038",
+          "identify": "PNG\t120\t80\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            120,
+            80
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/grid-enlarge-200-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.4766666666666667,
+            "maximum_difference": 17.0,
+            "psnr_db": 41.206251390079004
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.4766666666666667,
+            "maximum_difference": 17.0,
+            "psnr_db": 41.206251390079004
+          }
+        ]
+      }
+    },
+    {
+      "name": "svg-to-png",
+      "parameters": {
+        "operation": "downsize",
+        "name": "svg-to-png",
+        "input": "inputs/spec/fixtures/images/image.svg",
+        "input_format": "svg",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "50%",
+        "historical_baseline": false,
+        "template_record": "png-grid",
+        "expected_dimensions": [
+          50,
+          25
+        ]
+      },
+      "input_sha256": "14ec1484e7e8badb25663a887e7686ded0a28fa40cab858d629ee34d139eeb26",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 1090.9111062064767,
+          "dimensions": [
+            50,
+            25
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 481.5887431614101,
+          "dimensions": [
+            50,
+            25
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            447.35055323690176,
+            364.97568106278777,
+            430.71437207981944,
+            352.5763447396457,
+            379.6474300324917,
+            386.1680869013071,
+            357.67880361527205,
+            380.8953817933798,
+            381.65382109582424,
+            381.8243402056396,
+            375.2478719688952,
+            350.68030189722776,
+            331.5167287364602,
+            359.5778001472354,
+            353.140686172992,
+            446.59146340563893,
+            344.17373314499855,
+            344.7225517593324,
+            362.84820595756173,
+            395.576564129442,
+            351.28383198753,
+            396.40607219189405,
+            406.70223208144307,
+            380.48331113532186,
+            384.6060442738235,
+            348.05475920438766,
+            348.09787571430206,
+            343.54607574641705,
+            353.7246426567435,
+            350.51389830186963,
+            328.5967600531876
+          ],
+          "median_ms": 362.84820595756173,
+          "p95_ms": 446.59146340563893
+        },
+        "libvips": {
+          "values_ms": [
+            446.65668392553926,
+            416.77807783707976,
+            411.516590975225,
+            434.89056592807174,
+            458.51847901940346,
+            359.43324072286487,
+            345.042722299695,
+            391.83221524581313,
+            370.89216290041804,
+            365.93821505084634,
+            367.9320691153407,
+            364.5733566954732,
+            367.93213011696935,
+            350.5680710077286,
+            373.8535400480032,
+            362.80943220481277,
+            358.135849237442,
+            394.02024121955037,
+            365.6106246635318,
+            407.89917297661304,
+            406.9259259849787,
+            418.40627137571573,
+            379.2455089278519,
+            347.10011491551995,
+            379.4376193545759,
+            376.5642000362277,
+            368.6526967212558,
+            348.6913722008467,
+            395.77004313468933,
+            357.3574712499976,
+            383.08671908453107
+          ],
+          "median_ms": 373.8535400480032,
+          "p95_ms": 446.65668392553926
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/svg-to-png-imagemagick.png",
+          "bytes": 334,
+          "sha256": "935192f2b59c0dced6afb624668226a6a2cc5c34fbcc4669a39add03df8afc25",
+          "identify": "PNG\t50\t25\t1\tGray\tgray  2.0\tTopLeft\t",
+          "dimensions": [
+            50,
+            25
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/svg-to-png-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/svg-to-png-libvips.png",
+          "bytes": 528,
+          "sha256": "cba1504efbbbf1e7b655b15ec3ad5dd76185068e088dadf34ebf2565eb2114bc",
+          "identify": "PNG\t50\t25\t8\tsRGB\tsrgba 4.0\tTopLeft\texif",
+          "dimensions": [
+            50,
+            25
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/svg-to-png-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 249.9752,
+        "alpha_maximum_difference": 255.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 249.9752,
+            "maximum_difference": 255.0,
+            "psnr_db": 0.14786892369314947
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    }
+  ],
+  "fresh_worker": {
+    "sample": "natural-photo",
+    "quality": {
+      "value": 89,
+      "source": "source quality",
+      "probe": {
+        "backend": "ImageMagick identify frame0",
+        "estimated_quality": 89,
+        "elapsed_ms": 37.29482786729932
+      }
+    },
+    "measurements": [
+      {
+        "status": "ok",
+        "elapsed_ms": 474.9874579720199,
+        "sha256": "e90fa9b4da16e033943de32b77674fda9c8796bc675bfabcce9b5cedd0c32d6a"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 631.3984622247517,
+        "sha256": "e90fa9b4da16e033943de32b77674fda9c8796bc675bfabcce9b5cedd0c32d6a"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 520.258832257241,
+        "sha256": "e90fa9b4da16e033943de32b77674fda9c8796bc675bfabcce9b5cedd0c32d6a"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 487.79089376330376,
+        "sha256": "e90fa9b4da16e033943de32b77674fda9c8796bc675bfabcce9b5cedd0c32d6a"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 455.75599279254675,
+        "sha256": "e90fa9b4da16e033943de32b77674fda9c8796bc675bfabcce9b5cedd0c32d6a"
+      }
+    ]
+  },
+  "summary": {
+    "selected": 35,
+    "recorded": 35,
+    "paired_timing_eligible": 33,
+    "incompatible_or_failed": [
+      "png-to-svg",
+      "alpha-png-to-svg"
+    ]
+  }
+}

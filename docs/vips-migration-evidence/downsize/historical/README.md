@@ -1,0 +1,1 @@
+These files record the initial 34-case run against source 2a93f064d57, before selective JPEG sampling and SVG input support. They are retained separately from the current 35-case results. Original output hashes remain in the report, but this directory does not include the old paired output files. Do not resolve their output paths against the current outputs directory.

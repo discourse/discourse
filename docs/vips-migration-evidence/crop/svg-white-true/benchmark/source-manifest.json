@@ -1,0 +1,18 @@
+{
+  "base_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+  "snapshot": "working-tree contents; base commit alone does not identify this source",
+  "files": {
+    "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+    "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+    "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+    "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+    "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+    "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+    "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+    "script/discourse_vips_worker": "1c90781d234ecdc99abbfb23adae95b4f2a4c0f6e7c14e4986f8eddfafaf80a3",
+    "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+    "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+    "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+    "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+  }
+}

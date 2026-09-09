@@ -1,0 +1,190 @@
+{
+  "scope": "Presentation map only. Raw reports are unchanged; raster rows retain their measured 2ba snapshot, SVG rows use measured c63 reruns. No single combined-source benchmark is claimed.",
+  "runs": {
+    "results.json": {
+      "base_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+      "source_files": {
+        "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+        "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+        "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+        "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+        "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+        "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+        "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+        "script/discourse_vips_worker": "0b204e2c3056bc9ce3a577cb35cc6bddb43e1088b1a9215fe4d23edc83a19d8a",
+        "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+        "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+        "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+        "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+      },
+      "report_sha256": "47f5de564a7379dacd4bb04eb46057b53a4313d05105e5ba60a5a5d2ee4ac12f"
+    },
+    "svg-white/results.json": {
+      "base_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+      "source_files": {
+        "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+        "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+        "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+        "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+        "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+        "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+        "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+        "script/discourse_vips_worker": "1c90781d234ecdc99abbfb23adae95b4f2a4c0f6e7c14e4986f8eddfafaf80a3",
+        "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+        "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+        "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+        "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+      },
+      "report_sha256": "0b1928c8f008e75a4dd99114c2d8f990e0aa74fdb9e8777c2716d0eb89b20ee5"
+    }
+  },
+  "samples": {
+    "png-grid": {
+      "report": "results.json",
+      "sample": "png-grid"
+    },
+    "png-grid-alpha": {
+      "report": "results.json",
+      "sample": "png-grid-alpha"
+    },
+    "png-grid-16bit": {
+      "report": "results.json",
+      "sample": "png-grid-16bit"
+    },
+    "png-grid-profile": {
+      "report": "results.json",
+      "sample": "png-grid-profile"
+    },
+    "jpg-grid": {
+      "report": "results.json",
+      "sample": "jpg-grid"
+    },
+    "jpg-grid-profile": {
+      "report": "results.json",
+      "sample": "jpg-grid-profile"
+    },
+    "jpg-grid-cmyk": {
+      "report": "results.json",
+      "sample": "jpg-grid-cmyk"
+    },
+    "jpg-grid-cmyk-profile": {
+      "report": "results.json",
+      "sample": "jpg-grid-cmyk-profile"
+    },
+    "webp-grid": {
+      "report": "results.json",
+      "sample": "webp-grid"
+    },
+    "webp-grid-lossless": {
+      "report": "results.json",
+      "sample": "webp-grid-lossless"
+    },
+    "avif-grid": {
+      "report": "results.json",
+      "sample": "avif-grid"
+    },
+    "png-large-ico-source": {
+      "report": "results.json",
+      "sample": "png-large-ico-source"
+    },
+    "animated-gif": {
+      "report": "results.json",
+      "sample": "animated-gif"
+    },
+    "animated-webp": {
+      "report": "results.json",
+      "sample": "animated-webp"
+    },
+    "ico-to-ico": {
+      "report": "results.json",
+      "sample": "ico-to-ico"
+    },
+    "ico-first-to-png": {
+      "report": "results.json",
+      "sample": "ico-first-to-png"
+    },
+    "large-ico": {
+      "report": "results.json",
+      "sample": "large-ico"
+    },
+    "png-to-jpg": {
+      "report": "results.json",
+      "sample": "png-to-jpg"
+    },
+    "alpha-png-to-jpg": {
+      "report": "results.json",
+      "sample": "alpha-png-to-jpg"
+    },
+    "png-to-webp": {
+      "report": "results.json",
+      "sample": "png-to-webp"
+    },
+    "alpha-png-to-webp": {
+      "report": "results.json",
+      "sample": "alpha-png-to-webp"
+    },
+    "png-to-avif": {
+      "report": "results.json",
+      "sample": "png-to-avif"
+    },
+    "alpha-png-to-avif": {
+      "report": "results.json",
+      "sample": "alpha-png-to-avif"
+    },
+    "png-to-svg": {
+      "report": "results.json",
+      "sample": "png-to-svg"
+    },
+    "alpha-png-to-svg": {
+      "report": "results.json",
+      "sample": "alpha-png-to-svg"
+    },
+    "png-to-ico": {
+      "report": "results.json",
+      "sample": "png-to-ico"
+    },
+    "alpha-png-to-ico": {
+      "report": "results.json",
+      "sample": "alpha-png-to-ico"
+    },
+    "natural-photo": {
+      "report": "results.json",
+      "sample": "natural-photo"
+    },
+    "orientation-added": {
+      "report": "results.json",
+      "sample": "orientation-added"
+    },
+    "avatar-half": {
+      "report": "results.json",
+      "sample": "avatar-half"
+    },
+    "avatar-bounding-box": {
+      "report": "results.json",
+      "sample": "avatar-bounding-box"
+    },
+    "avatar-area": {
+      "report": "results.json",
+      "sample": "avatar-area"
+    },
+    "grid-enlarge-125": {
+      "report": "results.json",
+      "sample": "grid-enlarge-125"
+    },
+    "grid-enlarge-200": {
+      "report": "results.json",
+      "sample": "grid-enlarge-200"
+    },
+    "svg-to-png": {
+      "report": "svg-white/results.json",
+      "sample": "svg-to-png"
+    }
+  },
+  "superseded": [
+    {
+      "report": "results.json",
+      "sample": "svg-to-png",
+      "reason": "SVG background did not preserve legacy white flattening; original measurements and outputs retained."
+    }
+  ]
+}

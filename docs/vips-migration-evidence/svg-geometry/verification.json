@@ -1,0 +1,20 @@
+{
+  "source_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+  "production_base": "discourse/base:2.0.20260812-0036",
+  "production_base_digest": "sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "deployment_image_override": "not independently confirmed",
+  "verification_log": "verification.log",
+  "verification_log_sha256": "c2f52533cfe8d3ac5ae71348991ddacafd3baee85bf56f03e2b532ee8f536514",
+  "rspec": {
+    "examples": 99,
+    "failures": 0,
+    "seed": 52546
+  },
+  "production_cases": 50,
+  "backend_errors": 0,
+  "dimension_mismatches": 0,
+  "opaque_alpha_matches": 50,
+  "pixel_identical_cases": 30,
+  "max_case_mean_rgb": 1.4977777777777779,
+  "maximum_rgb_difference": 23
+}

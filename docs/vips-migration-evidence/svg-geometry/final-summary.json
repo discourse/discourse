@@ -1,0 +1,28 @@
+{
+  "source_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+  "cases": 50,
+  "errors": 0,
+  "dimension_mismatches": 0,
+  "opaque_alpha_matches": 50,
+  "pixel_identical_cases": 30,
+  "max_case_mean_rgb": 1.4977777777777779,
+  "maximum_rgb_difference": 23.0,
+  "unweighted_average_case_mean_rgb": 0.2861368888888889,
+  "by_operation": {
+    "resize": {
+      "cases": 20,
+      "max_case_mean_rgb": 1.4977777777777779,
+      "maximum_rgb_difference": 22.0
+    },
+    "crop": {
+      "cases": 20,
+      "max_case_mean_rgb": 1.4977777777777779,
+      "maximum_rgb_difference": 22.0
+    },
+    "downsize": {
+      "cases": 10,
+      "max_case_mean_rgb": 0.7509333333333333,
+      "maximum_rgb_difference": 23.0
+    }
+  }
+}

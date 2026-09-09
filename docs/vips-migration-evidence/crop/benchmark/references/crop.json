@@ -1,0 +1,3158 @@
+{
+  "libvips": "8.18.4",
+  "imagemagick": "Version: ImageMagick 7.1.2-27 Q16-HDRI aarch64 e4c2b403b:20260705 https://imagemagick.org",
+  "optimized_image_sha256": "120fd85ad37b1ba122bc803b2c3c0b12ff3f33f82a13b97c85535a4b08307b88",
+  "profile_sha256": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+  "cases": [
+    {
+      "name": "north",
+      "input": "grid.png",
+      "output": "png",
+      "width": 60,
+      "height": 20,
+      "strip_metadata": false,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "60x20^",
+        "-crop",
+        "60x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/north-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t60\t20\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 581,
+      "output_sha256": "fc439aed276401aba3e5d99315fb664d43843144929572380776cf2847921805",
+      "dimensions": [
+        60,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "horizontal-center",
+      "input": "grid.png",
+      "output": "png",
+      "width": 20,
+      "height": 40,
+      "strip_metadata": false,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "20x40^",
+        "-crop",
+        "20x40+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/horizontal-center-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t40\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 574,
+      "output_sha256": "6ba081469b1dcfbe997a9d9eace7b2bdf8f8b7b24b2a6703989d4ab1dbd4955f",
+      "dimensions": [
+        20,
+        40
+      ],
+      "sample_pixels": [
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "odd-cover",
+      "input": "grid.png",
+      "output": "png",
+      "width": 17,
+      "height": 17,
+      "strip_metadata": false,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "17x17^",
+        "-crop",
+        "17x17+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/odd-cover-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t17\t17\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 846,
+      "output_sha256": "82cf368f410f9438fbc96eb50acee132484c48f265976693db112a83bf89556e",
+      "dimensions": [
+        17,
+        17
+      ],
+      "sample_pixels": [
+        [
+          249.0,
+          6.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0
+        ],
+        [
+          6.0,
+          249.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "upscale",
+      "input": "grid.png",
+      "output": "png",
+      "width": 75,
+      "height": 50,
+      "strip_metadata": false,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "75x50^",
+        "-crop",
+        "75x50+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/upscale-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t75\t50\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 934,
+      "output_sha256": "33f32134c20606f43a1226445bda543d2d41c00d1e3c112b0a0f41e9e744633a",
+      "dimensions": [
+        75,
+        50
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          12.0,
+          243.0,
+          243.0
+        ],
+        [
+          243.0,
+          12.0,
+          243.0
+        ],
+        [
+          243.0,
+          243.0,
+          12.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "alpha",
+      "input": "alpha.png",
+      "output": "png",
+      "width": 17,
+      "height": 17,
+      "strip_metadata": false,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "17x17^",
+        "-crop",
+        "17x17+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t17\t17\t92\tsrgba 5.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 789,
+      "output_sha256": "a488b9f178242ae9ce6c1f4754970f1095027b2298058448810526b0f4a6ed8b",
+      "dimensions": [
+        17,
+        17
+      ],
+      "sample_pixels": [
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0,
+          128.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0,
+          128.0
+        ],
+        [
+          170.0,
+          85.0,
+          170.0,
+          192.0
+        ],
+        [
+          126.0,
+          129.0,
+          126.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "palette",
+      "input": "palette.png",
+      "output": "png",
+      "width": 17,
+      "height": 17,
+      "strip_metadata": false,
+      "source_sha256": "ad04a01154b77bfe5c1ff3745dfb0dfa9a0d21804fc1d8595a3cf580bfd33df0",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/palette.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "17x17^",
+        "-crop",
+        "17x17+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/palette-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t17\t17\t92\tsrgba 5.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 427,
+      "output_sha256": "c5bd0e69a6ac9475fc993dad07fcbce161913dd58256076c8552b39c5a6c0cae",
+      "dimensions": [
+        17,
+        17
+      ],
+      "sample_pixels": [
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0,
+          128.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0,
+          255.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "profile",
+      "input": "profile.png",
+      "output": "png",
+      "width": 30,
+      "height": 20,
+      "strip_metadata": false,
+      "source_sha256": "7b2701128fead5aea86ffb70e5a06dc1c68d6e8e2db0463aad401d099ba28e5d",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/profile.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/profile-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t30\t20\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\ticc",
+      "bytes": 13696,
+      "output_sha256": "937f50056d4d0d595700d0977b7bfdc8b6e540efcec75b28e79ea1a2f5f085f8",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "jpeg-inferred-quality",
+      "input": "grid.jpg",
+      "output": "jpg",
+      "width": 30,
+      "height": 20,
+      "strip_metadata": false,
+      "source_sha256": "a5b4b122f86ca281258b2101a468f009deb27eb0fa98b35ab26cab0a28edbfc8",
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/grid.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/jpeg-inferred-quality-strip-false.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t30\t20\t74\tsrgb  3.0\tsRGB\tNone\tTopLeft\texif",
+      "bytes": 753,
+      "output_sha256": "04f57ab5177627273a24042b05f494852def37ad1495a05c6851481b9382d275",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          251.0,
+          5.0,
+          0.0
+        ],
+        [
+          11.0,
+          249.0,
+          6.0
+        ],
+        [
+          0.0,
+          3.0,
+          254.0
+        ],
+        [
+          100.0,
+          217.0,
+          226.0
+        ],
+        [
+          183.0,
+          57.0,
+          157.0
+        ],
+        [
+          254.0,
+          239.0,
+          112.0
+        ],
+        [
+          1.0,
+          255.0,
+          253.0
+        ],
+        [
+          248.0,
+          4.0,
+          250.0
+        ],
+        [
+          253.0,
+          255.0,
+          3.0
+        ]
+      ]
+    },
+    {
+      "name": "jpeg-explicit-quality",
+      "input": "grid.jpg",
+      "output": "jpg",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "quality": 63
+      },
+      "strip_metadata": false,
+      "source_sha256": "a5b4b122f86ca281258b2101a468f009deb27eb0fa98b35ab26cab0a28edbfc8",
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/grid.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "63",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/jpeg-explicit-quality-strip-false.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t30\t20\t63\tsrgb  3.0\tsRGB\tNone\tTopLeft\texif",
+      "bytes": 721,
+      "output_sha256": "199b0ad6e543c7b3f9cf0f0479610a76ea84359845d949cc3f9039067d736dd3",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          246.0,
+          5.0,
+          0.0
+        ],
+        [
+          17.0,
+          250.0,
+          0.0
+        ],
+        [
+          0.0,
+          13.0,
+          252.0
+        ],
+        [
+          92.0,
+          214.0,
+          235.0
+        ],
+        [
+          174.0,
+          67.0,
+          183.0
+        ],
+        [
+          250.0,
+          237.0,
+          106.0
+        ],
+        [
+          7.0,
+          252.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          251.0
+        ],
+        [
+          255.0,
+          249.0,
+          13.0
+        ]
+      ]
+    },
+    {
+      "name": "orientation",
+      "input": "oriented.jpg",
+      "output": "jpg",
+      "width": 20,
+      "height": 30,
+      "options": {
+        "quality": 87
+      },
+      "strip_metadata": false,
+      "source_sha256": "6f7078f63089168f7c5e082a80228cab956b71d5f36a0f2b39c11fd68b11d6c1",
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/oriented.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "20x30^",
+        "-crop",
+        "20x30+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "87",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/orientation-strip-false.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t20\t30\t87\tsrgb  3.0\tsRGB\tNone\tTopLeft\texif",
+      "bytes": 829,
+      "output_sha256": "3f3ea0f33949c1bcd9f7a8a694f847053f91aadcfaf1450cc75908dadd1fa363",
+      "dimensions": [
+        20,
+        30
+      ],
+      "sample_pixels": [
+        [
+          11.0,
+          251.0,
+          250.0
+        ],
+        [
+          162.0,
+          36.0,
+          40.0
+        ],
+        [
+          253.0,
+          2.0,
+          0.0
+        ],
+        [
+          252.0,
+          0.0,
+          255.0
+        ],
+        [
+          82.0,
+          207.0,
+          87.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          255.0,
+          255.0,
+          5.0
+        ],
+        [
+          18.0,
+          15.0,
+          122.0
+        ],
+        [
+          0.0,
+          1.0,
+          252.0
+        ]
+      ]
+    },
+    {
+      "name": "alpha-to-jpeg",
+      "input": "alpha.png",
+      "output": "jpg",
+      "width": 60,
+      "height": 20,
+      "options": {
+        "format": "jpg",
+        "quality": 87
+      },
+      "strip_metadata": false,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "60x20^",
+        "-crop",
+        "60x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "87",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/alpha-to-jpeg-strip-false.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t60\t20\t87\tsrgb  3.0\tsRGB\tNone\tTopLeft\texif",
+      "bytes": 597,
+      "output_sha256": "6fac3beab9b525c6caa9e50b94145e74aee8271e64f7a593598f4734ad1af9eb",
+      "dimensions": [
+        60,
+        20
+      ],
+      "sample_pixels": [
+        [
+          254.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          254.0
+        ],
+        [
+          254.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          254.0
+        ],
+        [
+          254.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          254.0
+        ]
+      ]
+    },
+    {
+      "name": "png-to-webp",
+      "input": "alpha.png",
+      "output": "webp",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "webp",
+        "quality": 83
+      },
+      "strip_metadata": false,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "83",
+        "webp:/var/www/discourse/public/discourse-task/crop-baseline/png-to-webp-strip-false.webp"
+      ],
+      "result": true,
+      "metadata": "WEBP\t30\t20\t92\tsrgba 4.0\tsRGB\tNone\tTopLeft\texif",
+      "bytes": 510,
+      "output_sha256": "35d227caf631cbba6392c0c6fb9cd761765b4c0711bf25d825bf8b4bc12d2763",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0,
+          128.0
+        ],
+        [
+          0.0,
+          2.0,
+          255.0,
+          255.0
+        ],
+        [
+          0.0,
+          254.0,
+          255.0,
+          246.0
+        ],
+        [
+          185.0,
+          55.0,
+          183.0,
+          250.0
+        ],
+        [
+          233.0,
+          232.0,
+          114.0,
+          255.0
+        ],
+        [
+          1.0,
+          255.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          3.0,
+          254.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "filename-override",
+      "input": "input.bin",
+      "output": "bin",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "filename": "image.png"
+      },
+      "strip_metadata": false,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/input.bin[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/filename-override-strip-false.bin"
+      ],
+      "result": true,
+      "metadata": "PNG\t30\t20\t92\tsrgb  3.0\tsRGB\tNone\tTopLeft\texif",
+      "bytes": 891,
+      "output_sha256": "494a64468441ffed2d862aeec6bbd524812cf4862371a55084c38213e5b3ae7e",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "png-to-avif",
+      "input": "alpha.png",
+      "output": "avif",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "avif",
+        "quality": 63
+      },
+      "strip_metadata": false,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "63",
+        "avif:/var/www/discourse/public/discourse-task/crop-baseline/png-to-avif-strip-false.avif"
+      ],
+      "result": true,
+      "metadata": "AVIF\t30\t20\t92\tsrgba 4.0\tsRGB\tNone\tTopLeft\texif",
+      "bytes": 856,
+      "output_sha256": "38e9fa08ca6e1179310d1a6389832852317f662deb4938bbbd892895424b2114",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          253.0,
+          2.0,
+          127.0
+        ],
+        [
+          0.0,
+          1.0,
+          254.0,
+          255.0
+        ],
+        [
+          1.0,
+          255.0,
+          255.0,
+          248.0
+        ],
+        [
+          250.0,
+          4.0,
+          253.0,
+          248.0
+        ],
+        [
+          249.0,
+          244.0,
+          0.0,
+          255.0
+        ],
+        [
+          1.0,
+          255.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          251.0,
+          255.0
+        ],
+        [
+          253.0,
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "svg-to-png",
+      "input": "/var/www/discourse/spec/fixtures/images/image.svg",
+      "output": "png",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": false,
+      "source_sha256": "14ec1484e7e8badb25663a887e7686ded0a28fa40cab858d629ee34d139eeb26",
+      "instructions": [
+        "svg:/var/www/discourse/spec/fixtures/images/image.svg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/svg-to-png-strip-false.png"
+      ],
+      "error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "nice -n 10 magick svg:/var/www/discourse/spec/fixtures/images/image.svg[0] -auto-orient -gravity north -background transparent -resize 30x20^ -crop 30x20+0+0 -unsharp 2x0.5+0.7+0 -interlace none -profile /var/www/discourse/vendor/data/RT_sRGB.icm png:/var/www/discourse/public/discourse-task/crop-baseline/svg-to-png-strip-false.png\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    },
+    {
+      "name": "ico-first-to-png",
+      "input": "/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico",
+      "output": "png",
+      "width": 20,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": false,
+      "source_sha256": "54cf1d0588f035557a930de1b9766614040a2c1d2922614c76d049d0b35b2de8",
+      "instructions": [
+        "ico:/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "20x20^",
+        "-crop",
+        "20x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/ico-first-to-png-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t20\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 399,
+      "output_sha256": "99fb900488699754dc78ee0c84e8e6ecfe5f8eaa0f2fc0d91b2e33e1bc24deaa",
+      "dimensions": [
+        20,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          12.0,
+          243.0,
+          243.0
+        ],
+        [
+          243.0,
+          12.0,
+          243.0
+        ],
+        [
+          243.0,
+          243.0,
+          12.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "png-to-svg",
+      "input": "grid.png",
+      "output": "svg",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "svg"
+      },
+      "strip_metadata": false,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "svg:/var/www/discourse/public/discourse-task/crop-baseline/png-to-svg-strip-false.svg"
+      ],
+      "error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "nice -n 10 magick png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0] -auto-orient -gravity north -background transparent -resize 30x20^ -crop 30x20+0+0 -unsharp 2x0.5+0.7+0 -interlace none -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/crop-baseline/png-to-svg-strip-false.svg\nmagick: delegate library support not built-in '/var/www/discourse/public/discourse-task/crop-baseline/grid.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    },
+    {
+      "name": "animated-gif-first",
+      "input": "/var/www/discourse/spec/fixtures/images/animated.gif",
+      "output": "png",
+      "width": 20,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": false,
+      "source_sha256": "1a9b34fc78ac562790a10b7042d10ad359c2214ca99e644e6c9dd25b6de5a08d",
+      "instructions": [
+        "gif:/var/www/discourse/spec/fixtures/images/animated.gif[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "20x20^",
+        "-crop",
+        "20x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/animated-gif-first-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t20\t92\tsrgba 5.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 395,
+      "output_sha256": "b72500a4e5009b72aea30489fd8f205f194b4d84296f7852c626c40ade55c43f",
+      "dimensions": [
+        20,
+        20
+      ],
+      "sample_pixels": [
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "animated-webp-first",
+      "input": "/var/www/discourse/spec/fixtures/images/animated.webp",
+      "output": "png",
+      "width": 20,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": false,
+      "source_sha256": "4a6b6b239d6da08999d4a2d5f2debb49cda6f1eedec4b241da8ee1d5c65cf1e0",
+      "instructions": [
+        "webp:/var/www/discourse/spec/fixtures/images/animated.webp[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-resize",
+        "20x20^",
+        "-crop",
+        "20x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/animated-webp-first-strip-false.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t20\t92\tsrgba 5.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 1160,
+      "output_sha256": "9bbf0e724d1b41afe03ab89e65dd95957bb51580fd469c1df66508c228142ec2",
+      "dimensions": [
+        20,
+        20
+      ],
+      "sample_pixels": [
+        [
+          18.0,
+          25.0,
+          35.0,
+          2.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          10.0,
+          167.0,
+          81.0,
+          255.0
+        ],
+        [
+          23.0,
+          166.0,
+          77.0,
+          255.0
+        ],
+        [
+          29.0,
+          36.0,
+          35.0,
+          33.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          48.0,
+          46.0,
+          49.0,
+          95.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "north",
+      "input": "grid.png",
+      "output": "png",
+      "width": 60,
+      "height": 20,
+      "strip_metadata": true,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "60x20^",
+        "-crop",
+        "60x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/north-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t60\t20\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 99,
+      "output_sha256": "401b9576287e36c3d204f0c4008beb1ec77d6be821607e9f5d041c62eeef3d44",
+      "dimensions": [
+        60,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "horizontal-center",
+      "input": "grid.png",
+      "output": "png",
+      "width": 20,
+      "height": 40,
+      "strip_metadata": true,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "20x40^",
+        "-crop",
+        "20x40+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/horizontal-center-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t40\t92\tsrgb  4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 91,
+      "output_sha256": "485ffacf1c739c3930a06f3b3a7f6b833a278eef712eaabdef0f07e8e7fc94f7",
+      "dimensions": [
+        20,
+        40
+      ],
+      "sample_pixels": [
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "odd-cover",
+      "input": "grid.png",
+      "output": "png",
+      "width": 17,
+      "height": 17,
+      "strip_metadata": true,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "17x17^",
+        "-crop",
+        "17x17+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/odd-cover-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t17\t17\t92\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 211,
+      "output_sha256": "7003f6815649939399918a037ca6f2519a446a0ab3b52fc6687c757c510bf64e",
+      "dimensions": [
+        17,
+        17
+      ],
+      "sample_pixels": [
+        [
+          249.0,
+          6.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0
+        ],
+        [
+          6.0,
+          249.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "upscale",
+      "input": "grid.png",
+      "output": "png",
+      "width": 75,
+      "height": 50,
+      "strip_metadata": true,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "75x50^",
+        "-crop",
+        "75x50+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/upscale-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t75\t50\t92\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 246,
+      "output_sha256": "b8fd7aff897e2148d689c3e9d92529932475b08f752a8b612093f8b5070575eb",
+      "dimensions": [
+        75,
+        50
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "alpha",
+      "input": "alpha.png",
+      "output": "png",
+      "width": 17,
+      "height": 17,
+      "strip_metadata": true,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "17x17^",
+        "-crop",
+        "17x17+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t17\t17\t92\tsrgba 4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 360,
+      "output_sha256": "6cf90f3ca103376a481e9e1db118cbf33da0550faf58e9141b19c07b1c3b861e",
+      "dimensions": [
+        17,
+        17
+      ],
+      "sample_pixels": [
+        [
+          0.0,
+          255.0,
+          0.0,
+          3.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0,
+          128.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          6.0,
+          249.0,
+          252.0,
+          129.0
+        ],
+        [
+          170.0,
+          85.0,
+          170.0,
+          192.0
+        ],
+        [
+          124.0,
+          131.0,
+          124.0,
+          255.0
+        ],
+        [
+          6.0,
+          249.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "palette",
+      "input": "palette.png",
+      "output": "png",
+      "width": 17,
+      "height": 17,
+      "strip_metadata": true,
+      "source_sha256": "ad04a01154b77bfe5c1ff3745dfb0dfa9a0d21804fc1d8595a3cf580bfd33df0",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/palette.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "17x17^",
+        "-crop",
+        "17x17+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/palette-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t17\t17\t92\tsrgba 4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 296,
+      "output_sha256": "d5ee955302f42ae8ff62fbae0d29e0c5b2ccbe28cf1afbd5b6aa6430ecc1a341",
+      "dimensions": [
+        17,
+        17
+      ],
+      "sample_pixels": [
+        [
+          0.0,
+          255.0,
+          0.0,
+          6.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          6.0,
+          249.0,
+          249.0,
+          130.0
+        ],
+        [
+          128.0,
+          127.0,
+          127.0,
+          255.0
+        ],
+        [
+          128.0,
+          128.0,
+          128.0,
+          255.0
+        ],
+        [
+          6.0,
+          249.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "profile",
+      "input": "profile.png",
+      "output": "png",
+      "width": 30,
+      "height": 20,
+      "strip_metadata": true,
+      "source_sha256": "7b2701128fead5aea86ffb70e5a06dc1c68d6e8e2db0463aad401d099ba28e5d",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/profile.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/profile-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t30\t20\t92\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 144,
+      "output_sha256": "5ff9f82e1b23a21f5c9386f7781163701c137511d7d0504505f1e8caf1fbcdb0",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "jpeg-inferred-quality",
+      "input": "grid.jpg",
+      "output": "jpg",
+      "width": 30,
+      "height": 20,
+      "strip_metadata": true,
+      "source_sha256": "a5b4b122f86ca281258b2101a468f009deb27eb0fa98b35ab26cab0a28edbfc8",
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/grid.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/jpeg-inferred-quality-strip-true.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t30\t20\t74\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 562,
+      "output_sha256": "c60952b5c1430eea70fc33e7264a36bbacc9a6df7f81343b500d58acdbf42161",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          251.0,
+          5.0,
+          0.0
+        ],
+        [
+          10.0,
+          249.0,
+          6.0
+        ],
+        [
+          0.0,
+          3.0,
+          254.0
+        ],
+        [
+          108.0,
+          219.0,
+          230.0
+        ],
+        [
+          187.0,
+          55.0,
+          157.0
+        ],
+        [
+          254.0,
+          239.0,
+          112.0
+        ],
+        [
+          1.0,
+          255.0,
+          248.0
+        ],
+        [
+          247.0,
+          4.0,
+          252.0
+        ],
+        [
+          253.0,
+          255.0,
+          3.0
+        ]
+      ]
+    },
+    {
+      "name": "jpeg-explicit-quality",
+      "input": "grid.jpg",
+      "output": "jpg",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "quality": 63
+      },
+      "strip_metadata": true,
+      "source_sha256": "a5b4b122f86ca281258b2101a468f009deb27eb0fa98b35ab26cab0a28edbfc8",
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/grid.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "63",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/jpeg-explicit-quality-strip-true.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t30\t20\t63\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 530,
+      "output_sha256": "8df5985ee3b2210a8256251a5f2da218c64b6ebc82300e4a9234f7de8477528f",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          247.0,
+          4.0,
+          0.0
+        ],
+        [
+          6.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          13.0,
+          252.0
+        ],
+        [
+          87.0,
+          216.0,
+          235.0
+        ],
+        [
+          182.0,
+          60.0,
+          181.0
+        ],
+        [
+          250.0,
+          237.0,
+          106.0
+        ],
+        [
+          7.0,
+          252.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          251.0
+        ],
+        [
+          255.0,
+          249.0,
+          13.0
+        ]
+      ]
+    },
+    {
+      "name": "orientation",
+      "input": "oriented.jpg",
+      "output": "jpg",
+      "width": 20,
+      "height": 30,
+      "options": {
+        "quality": 87
+      },
+      "strip_metadata": true,
+      "source_sha256": "6f7078f63089168f7c5e082a80228cab956b71d5f36a0f2b39c11fd68b11d6c1",
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/oriented.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "20x30^",
+        "-crop",
+        "20x30+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "87",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/orientation-strip-true.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t20\t30\t87\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 639,
+      "output_sha256": "9ab745d57ecdfaf8a82b916d0d62c0f2a54ac8327a49587dc6d87182d0a35196",
+      "dimensions": [
+        20,
+        30
+      ],
+      "sample_pixels": [
+        [
+          4.0,
+          255.0,
+          250.0
+        ],
+        [
+          162.0,
+          33.0,
+          38.0
+        ],
+        [
+          253.0,
+          2.0,
+          0.0
+        ],
+        [
+          253.0,
+          1.0,
+          255.0
+        ],
+        [
+          83.0,
+          206.0,
+          89.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0
+        ],
+        [
+          254.0,
+          255.0,
+          3.0
+        ],
+        [
+          18.0,
+          11.0,
+          115.0
+        ],
+        [
+          0.0,
+          1.0,
+          254.0
+        ]
+      ]
+    },
+    {
+      "name": "alpha-to-jpeg",
+      "input": "alpha.png",
+      "output": "jpg",
+      "width": 60,
+      "height": 20,
+      "options": {
+        "format": "jpg",
+        "quality": 87
+      },
+      "strip_metadata": true,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "60x20^",
+        "-crop",
+        "60x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "87",
+        "jpg:/var/www/discourse/public/discourse-task/crop-baseline/alpha-to-jpeg-strip-true.jpg"
+      ],
+      "result": true,
+      "metadata": "JPEG\t60\t20\t87\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 407,
+      "output_sha256": "f54a5c3e31ae85e442279fd0aae01ae9b5d3db22d869c68ae05bcda077295e07",
+      "dimensions": [
+        60,
+        20
+      ],
+      "sample_pixels": [
+        [
+          254.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          254.0
+        ],
+        [
+          254.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          254.0
+        ],
+        [
+          254.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          254.0
+        ]
+      ]
+    },
+    {
+      "name": "png-to-webp",
+      "input": "alpha.png",
+      "output": "webp",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "webp",
+        "quality": 83
+      },
+      "strip_metadata": true,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "83",
+        "webp:/var/www/discourse/public/discourse-task/crop-baseline/png-to-webp-strip-true.webp"
+      ],
+      "result": true,
+      "metadata": "WEBP\t30\t20\t92\tsrgba 4.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 356,
+      "output_sha256": "cf2aad9c4fd532af8a476e8f8ecd45300a2ae09f7ae84acd65f92a5cf69a5696",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          128.0,
+          194.0,
+          124.0,
+          0.0
+        ],
+        [
+          1.0,
+          255.0,
+          4.0,
+          128.0
+        ],
+        [
+          0.0,
+          0.0,
+          252.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          253.0,
+          255.0
+        ],
+        [
+          183.0,
+          53.0,
+          179.0,
+          255.0
+        ],
+        [
+          238.0,
+          243.0,
+          116.0,
+          255.0
+        ],
+        [
+          2.0,
+          254.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          1.0,
+          251.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          2.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "filename-override",
+      "input": "input.bin",
+      "output": "bin",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "filename": "image.png"
+      },
+      "strip_metadata": true,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/input.bin[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/filename-override-strip-true.bin"
+      ],
+      "result": true,
+      "metadata": "PNG\t30\t20\t92\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 144,
+      "output_sha256": "5ff9f82e1b23a21f5c9386f7781163701c137511d7d0504505f1e8caf1fbcdb0",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "png-to-avif",
+      "input": "alpha.png",
+      "output": "avif",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "avif",
+        "quality": 63
+      },
+      "strip_metadata": true,
+      "source_sha256": "5188d84025f6d789056f64ca18043a68d17dfedd6d3b358d7d5ff343e2c3fe08",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "-quality",
+        "63",
+        "avif:/var/www/discourse/public/discourse-task/crop-baseline/png-to-avif-strip-true.avif"
+      ],
+      "result": true,
+      "metadata": "AVIF\t30\t20\t92\tsrgba 4.0\tsRGB\tNone\tTopLeft\t",
+      "bytes": 608,
+      "output_sha256": "0d00c900eb27cff7ea0bd83f4c966f66bcf544dce4b36fe4ecca721e3a5c9788",
+      "dimensions": [
+        30,
+        20
+      ],
+      "sample_pixels": [
+        [
+          2.0,
+          2.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0,
+          128.0
+        ],
+        [
+          0.0,
+          1.0,
+          254.0,
+          255.0
+        ],
+        [
+          2.0,
+          254.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          4.0,
+          252.0,
+          255.0
+        ],
+        [
+          252.0,
+          254.0,
+          0.0,
+          255.0
+        ],
+        [
+          2.0,
+          254.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          1.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          254.0,
+          3.0,
+          255.0
+        ]
+      ]
+    },
+    {
+      "name": "svg-to-png",
+      "input": "/var/www/discourse/spec/fixtures/images/image.svg",
+      "output": "png",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": true,
+      "source_sha256": "14ec1484e7e8badb25663a887e7686ded0a28fa40cab858d629ee34d139eeb26",
+      "instructions": [
+        "svg:/var/www/discourse/spec/fixtures/images/image.svg[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/svg-to-png-strip-true.png"
+      ],
+      "error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "nice -n 10 magick svg:/var/www/discourse/spec/fixtures/images/image.svg[0] -auto-orient -gravity north -background transparent -thumbnail 30x20^ -crop 30x20+0+0 -unsharp 2x0.5+0.7+0 -interlace none -profile /var/www/discourse/vendor/data/RT_sRGB.icm png:/var/www/discourse/public/discourse-task/crop-baseline/svg-to-png-strip-true.png\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    },
+    {
+      "name": "ico-first-to-png",
+      "input": "/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico",
+      "output": "png",
+      "width": 20,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": true,
+      "source_sha256": "54cf1d0588f035557a930de1b9766614040a2c1d2922614c76d049d0b35b2de8",
+      "instructions": [
+        "ico:/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "20x20^",
+        "-crop",
+        "20x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/ico-first-to-png-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t20\t92\tsrgb  3.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 177,
+      "output_sha256": "a78fa4223063de3d5e8ab75b82df15341e31a50826f9524577710017117ab386",
+      "dimensions": [
+        20,
+        20
+      ],
+      "sample_pixels": [
+        [
+          255.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ],
+        [
+          0.0,
+          255.0,
+          255.0
+        ],
+        [
+          255.0,
+          0.0,
+          255.0
+        ],
+        [
+          255.0,
+          255.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "png-to-svg",
+      "input": "grid.png",
+      "output": "svg",
+      "width": 30,
+      "height": 20,
+      "options": {
+        "format": "svg"
+      },
+      "strip_metadata": true,
+      "source_sha256": "9bae07648e454c61d435a4bb63c828df20aab65dca55abf8d52c20fca4a9c4b7",
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "30x20^",
+        "-crop",
+        "30x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "svg:/var/www/discourse/public/discourse-task/crop-baseline/png-to-svg-strip-true.svg"
+      ],
+      "error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "nice -n 10 magick png:/var/www/discourse/public/discourse-task/crop-baseline/grid.png[0] -auto-orient -gravity north -background transparent -thumbnail 30x20^ -crop 30x20+0+0 -unsharp 2x0.5+0.7+0 -interlace none -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/crop-baseline/png-to-svg-strip-true.svg\nmagick: delegate library support not built-in '/var/www/discourse/public/discourse-task/crop-baseline/grid.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    },
+    {
+      "name": "animated-gif-first",
+      "input": "/var/www/discourse/spec/fixtures/images/animated.gif",
+      "output": "png",
+      "width": 20,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": true,
+      "source_sha256": "1a9b34fc78ac562790a10b7042d10ad359c2214ca99e644e6c9dd25b6de5a08d",
+      "instructions": [
+        "gif:/var/www/discourse/spec/fixtures/images/animated.gif[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "20x20^",
+        "-crop",
+        "20x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/animated-gif-first-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t20\t92\tsrgba 5.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 333,
+      "output_sha256": "6915128f26eb8ec90e6871cd44787f7e1bc1c66ab33dc6acd10f84a7ffb036f6",
+      "dimensions": [
+        20,
+        20
+      ],
+      "sample_pixels": [
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ]
+      ]
+    },
+    {
+      "name": "animated-webp-first",
+      "input": "/var/www/discourse/spec/fixtures/images/animated.webp",
+      "output": "png",
+      "width": 20,
+      "height": 20,
+      "options": {
+        "format": "png"
+      },
+      "strip_metadata": true,
+      "source_sha256": "4a6b6b239d6da08999d4a2d5f2debb49cda6f1eedec4b241da8ee1d5c65cf1e0",
+      "instructions": [
+        "webp:/var/www/discourse/spec/fixtures/images/animated.webp[0]",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "20x20^",
+        "-crop",
+        "20x20+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/crop-baseline/animated-webp-first-strip-true.png"
+      ],
+      "result": true,
+      "metadata": "PNG\t20\t20\t92\tsrgba 5.0\tsRGB\tNone\tUndefined\t",
+      "bytes": 1035,
+      "output_sha256": "a9cfb7809c3ce4d72a08a5ce76101a82ec9a17e7476beb0cdf0a68db65a86bb5",
+      "dimensions": [
+        20,
+        20
+      ],
+      "sample_pixels": [
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          10.0,
+          184.0,
+          85.0,
+          241.0
+        ],
+        [
+          15.0,
+          164.0,
+          75.0,
+          255.0
+        ],
+        [
+          19.0,
+          0.0,
+          2.0,
+          9.0
+        ],
+        [
+          71.0,
+          112.0,
+          76.0,
+          0.0
+        ],
+        [
+          47.0,
+          47.0,
+          49.0,
+          105.0
+        ],
+        [
+          46.0,
+          50.0,
+          48.0,
+          1.0
+        ]
+      ]
+    }
+  ]
+}

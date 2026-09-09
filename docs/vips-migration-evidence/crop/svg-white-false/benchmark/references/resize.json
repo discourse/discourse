@@ -1,0 +1,5188 @@
+[
+  {
+    "name": "png-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-strip-false.png"
+    ],
+    "bytes": 1082,
+    "identify": "PNG\t92\t29\t21\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.896551724137931,
+      "max_difference": 15.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "png-grid-alpha",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-alpha-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-alpha-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-alpha-strip-false.png"
+    ],
+    "bytes": 1059,
+    "identify": "PNG\t92\t29\t21\t1\tsrgba 5.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0,
+        128.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        128.0
+      ],
+      [
+        170.0,
+        85.0,
+        170.0,
+        192.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.39285714285714285,
+      "max_difference": 24.0,
+      "alpha_max_difference": 16.0
+    }
+  },
+  {
+    "name": "png-grid-16bit",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-16bit.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-16bit-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-16bit-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid-16bit.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-16bit-strip-false.png"
+    ],
+    "bytes": 1205,
+    "identify": "PNG\t92\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "ushort",
+      "interpretation": "rgb16",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.9961685823754789,
+      "max_difference": 15.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "png-grid-profile",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-profile-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-profile-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid-profile.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-profile-strip-false.png"
+    ],
+    "bytes": 22789,
+    "identify": "PNG\t92\t29\t21\t1\tsrgb  4.0\tsRGB\tNone\texif,icc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.896551724137931,
+      "max_difference": 15.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "jpg-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-strip-false.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-strip-false-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid.jpg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/jpg-grid-strip-false.jpg"
+    ],
+    "bytes": 731,
+    "identify": "JPG\t74\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        243.0,
+        10.0,
+        0.0
+      ],
+      [
+        2.0,
+        255.0,
+        12.0
+      ],
+      [
+        0.0,
+        10.0,
+        252.0
+      ],
+      [
+        105.0,
+        140.0,
+        160.0
+      ],
+      [
+        157.0,
+        109.0,
+        147.0
+      ],
+      [
+        136.0,
+        129.0,
+        85.0
+      ],
+      [
+        3.0,
+        254.0,
+        255.0
+      ],
+      [
+        253.0,
+        3.0,
+        251.0
+      ],
+      [
+        254.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 3.6918445539135196,
+      "max_difference": 34.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "jpg-grid-profile",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-profile-strip-false.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-profile-strip-false-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/jpg-grid-profile-strip-false.jpg"
+    ],
+    "bytes": 26321,
+    "identify": "JPG\t74\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\texif,icc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        243.0,
+        10.0,
+        0.0
+      ],
+      [
+        2.0,
+        255.0,
+        12.0
+      ],
+      [
+        0.0,
+        10.0,
+        252.0
+      ],
+      [
+        105.0,
+        140.0,
+        160.0
+      ],
+      [
+        157.0,
+        109.0,
+        147.0
+      ],
+      [
+        136.0,
+        129.0,
+        85.0
+      ],
+      [
+        3.0,
+        254.0,
+        255.0
+      ],
+      [
+        253.0,
+        3.0,
+        251.0
+      ],
+      [
+        254.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 3.6918445539135196,
+      "max_difference": 34.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "jpg-grid-cmyk-profile",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-cmyk-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-cmyk-profile-strip-false.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-cmyk-profile-strip-false-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-cmyk-profile.jpg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/jpg-grid-cmyk-profile-strip-false.jpg"
+    ],
+    "bytes": 962825,
+    "identify": "JPG\t87\t29\t21\t1\tcmyk  4.0\tCMYK\tNone\texif,icc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        190.0,
+        255.0,
+        1.0
+      ],
+      [
+        17.0,
+        59.0,
+        255.0
+      ],
+      [
+        217.0,
+        128.0,
+        114.0
+      ],
+      [
+        211.0,
+        149.0,
+        126.0
+      ],
+      [
+        130.0,
+        159.0,
+        131.0
+      ],
+      [
+        189.0,
+        255.0,
+        243.0
+      ],
+      [
+        241.0,
+        33.0,
+        251.0
+      ],
+      [
+        251.0,
+        255.0,
+        10.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 30.13464696223317,
+      "max_difference": 122.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "webp-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.webp",
+    "input_format": "webp",
+    "output_format": "webp",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-strip-false.webp",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-strip-false-decoded.png",
+    "instructions": [
+      "webp:/var/www/discourse/public/discourse-task/downsize/grid.webp[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "webp:/var/www/discourse/public/discourse-task/resize/webp-grid-strip-false.webp"
+    ],
+    "bytes": 516,
+    "identify": "WEBP\t92\t29\t21\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        1.0,
+        1.0,
+        1.0,
+        0.0
+      ],
+      [
+        4.0,
+        253.0,
+        0.0,
+        128.0
+      ],
+      [
+        1.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        55.0,
+        232.0,
+        223.0,
+        128.0
+      ],
+      [
+        161.0,
+        100.0,
+        164.0,
+        192.0
+      ],
+      [
+        131.0,
+        132.0,
+        102.0,
+        255.0
+      ],
+      [
+        1.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      [
+        251.0,
+        3.0,
+        253.0,
+        255.0
+      ],
+      [
+        253.0,
+        254.0,
+        0.0,
+        255.0
+      ]
+    ]
+  },
+  {
+    "name": "webp-grid-lossless",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-lossless.webp",
+    "input_format": "webp",
+    "output_format": "webp",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-lossless-strip-false.webp",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-lossless-strip-false-decoded.png",
+    "instructions": [
+      "webp:/var/www/discourse/public/discourse-task/downsize/grid-lossless.webp[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "webp:/var/www/discourse/public/discourse-task/resize/webp-grid-lossless-strip-false.webp"
+    ],
+    "bytes": 406,
+    "identify": "WEBP\t100\t29\t21\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0,
+        128.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        128.0
+      ],
+      [
+        170.0,
+        85.0,
+        170.0,
+        192.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0,
+        255.0
+      ]
+    ]
+  },
+  {
+    "name": "avif-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.avif",
+    "input_format": "avif",
+    "output_format": "avif",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/avif-grid-strip-false.avif",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/avif-grid-strip-false-decoded.png",
+    "instructions": [
+      "avif:/var/www/discourse/public/discourse-task/downsize/grid.avif[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "avif:/var/www/discourse/public/discourse-task/resize/avif-grid-strip-false.avif"
+    ],
+    "bytes": 836,
+    "identify": "AVIF\t92\t29\t21\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0,
+        127.0
+      ],
+      [
+        3.0,
+        2.0,
+        255.0,
+        255.0
+      ],
+      [
+        0.0,
+        253.0,
+        250.0,
+        133.0
+      ],
+      [
+        226.0,
+        52.0,
+        225.0,
+        184.0
+      ],
+      [
+        149.0,
+        134.0,
+        15.0,
+        255.0
+      ],
+      [
+        1.0,
+        254.0,
+        251.0,
+        254.0
+      ],
+      [
+        254.0,
+        0.0,
+        255.0,
+        254.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0,
+        255.0
+      ]
+    ]
+  },
+  {
+    "name": "first-gif",
+    "input_path": "/var/www/discourse/spec/fixtures/images/animated.gif",
+    "input_format": "gif",
+    "output_format": "gif",
+    "width": 120,
+    "height": 90,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/first-gif-strip-false.gif",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/first-gif-strip-false-decoded.png",
+    "instructions": [
+      "gif:/var/www/discourse/spec/fixtures/images/animated.gif[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "120x90^",
+      "-extent",
+      "120x90",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "gif:/var/www/discourse/public/discourse-task/resize/first-gif-strip-false.gif"
+    ],
+    "bytes": 1516,
+    "identify": "GIF\t92\t120\t90\t1\tsrgba 5.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 120,
+      "height": 90,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ]
+    ]
+  },
+  {
+    "name": "first-webp",
+    "input_path": "/var/www/discourse/spec/fixtures/images/animated.webp",
+    "input_format": "webp",
+    "output_format": "webp",
+    "width": 120,
+    "height": 90,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/first-webp-strip-false.webp",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/first-webp-strip-false-decoded.png",
+    "instructions": [
+      "webp:/var/www/discourse/spec/fixtures/images/animated.webp[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "120x90^",
+      "-extent",
+      "120x90",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "webp:/var/www/discourse/public/discourse-task/resize/first-webp-strip-false.webp"
+    ],
+    "bytes": 3694,
+    "identify": "WEBP\t92\t120\t90\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 120,
+      "height": 90,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        30.0,
+        30.0,
+        30.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        30.0,
+        168.0,
+        58.0,
+        255.0
+      ],
+      [
+        48.0,
+        136.0,
+        70.0,
+        255.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        47.0,
+        46.0,
+        49.0,
+        31.0
+      ],
+      [
+        48.0,
+        47.0,
+        50.0,
+        160.0
+      ],
+      [
+        47.0,
+        47.0,
+        47.0,
+        7.0
+      ]
+    ]
+  },
+  {
+    "name": "first-ico",
+    "input_path": "/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico",
+    "input_format": "ico",
+    "output_format": "ico",
+    "width": 30,
+    "height": 20,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/first-ico-strip-false.ico",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/first-ico-strip-false-decoded.png",
+    "instructions": [
+      "ico:/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "30x20^",
+      "-extent",
+      "30x20",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "ico:/var/www/discourse/public/discourse-task/resize/first-ico-strip-false.ico"
+    ],
+    "bytes": 2542,
+    "identify": "ICO\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 30,
+      "height": 20,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        10.0,
+        245.0,
+        245.0
+      ],
+      [
+        245.0,
+        10.0,
+        245.0
+      ],
+      [
+        245.0,
+        245.0,
+        10.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ]
+  },
+  {
+    "name": "svg-blocked",
+    "input_path": "/var/www/discourse/spec/fixtures/images/image.svg",
+    "input_format": "svg",
+    "output_format": "svg",
+    "width": 30,
+    "height": 20,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-false.svg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-false-decoded.png",
+    "instructions": [
+      "svg:/var/www/discourse/spec/fixtures/images/image.svg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "30x20^",
+      "-extent",
+      "30x20",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "svg:/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-false.svg"
+    ],
+    "error": {
+      "class": "Discourse::Utils::CommandError",
+      "message": "nice -n 10 magick svg:/var/www/discourse/spec/fixtures/images/image.svg[0] -auto-orient -gravity center -background transparent -resize 30x20^ -extent 30x20 -interpolate catrom -unsharp 2x0.5+0.7+0 -interlace none -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-false.svg\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+    }
+  },
+  {
+    "name": "colors-12",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 50,
+    "height": 30,
+    "colors": 12,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/colors-12-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/colors-12-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-colors",
+      "12",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "50x30^",
+      "-extent",
+      "50x30",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/colors-12-strip-false.png"
+    ],
+    "bytes": 2786,
+    "identify": "PNG\t92\t50\t30\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 50,
+      "height": 30,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        40.0,
+        30.0,
+        128.0,
+        255.0
+      ],
+      [
+        89.0,
+        29.0,
+        128.0,
+        255.0
+      ],
+      [
+        184.0,
+        28.0,
+        128.0,
+        255.0
+      ],
+      [
+        28.0,
+        90.0,
+        128.0,
+        255.0
+      ],
+      [
+        98.0,
+        93.0,
+        128.0,
+        255.0
+      ],
+      [
+        208.0,
+        140.0,
+        128.0,
+        255.0
+      ],
+      [
+        28.0,
+        227.0,
+        128.0,
+        255.0
+      ],
+      [
+        73.0,
+        182.0,
+        128.0,
+        255.0
+      ],
+      [
+        211.0,
+        211.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.7955,
+      "max_difference": 25.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "quality-40",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "quality": 40,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/quality-40-strip-false.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/quality-40-strip-false-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg[0]",
+      "-quality",
+      "40",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/quality-40-strip-false.jpg"
+    ],
+    "bytes": 26234,
+    "identify": "JPG\t40\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\texif,icc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        254.0,
+        0.0,
+        28.0
+      ],
+      [
+        0.0,
+        255.0,
+        11.0
+      ],
+      [
+        27.0,
+        0.0,
+        179.0
+      ],
+      [
+        126.0,
+        125.0,
+        133.0
+      ],
+      [
+        141.0,
+        128.0,
+        137.0
+      ],
+      [
+        145.0,
+        117.0,
+        129.0
+      ],
+      [
+        14.0,
+        247.0,
+        251.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        248.0,
+        254.0,
+        24.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 2.8308702791461413,
+      "max_difference": 42.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "quality-90",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "quality": 90,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/quality-90-strip-false.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/quality-90-strip-false-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg[0]",
+      "-quality",
+      "90",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/quality-90-strip-false.jpg"
+    ],
+    "bytes": 26419,
+    "identify": "JPG\t90\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\texif,icc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        250.0,
+        2.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        1.0
+      ],
+      [
+        0.0,
+        2.0,
+        251.0
+      ],
+      [
+        109.0,
+        133.0,
+        133.0
+      ],
+      [
+        142.0,
+        116.0,
+        141.0
+      ],
+      [
+        135.0,
+        129.0,
+        97.0
+      ],
+      [
+        3.0,
+        255.0,
+        255.0
+      ],
+      [
+        254.0,
+        0.0,
+        253.0
+      ],
+      [
+        255.0,
+        254.0,
+        3.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 1.9348659003831417,
+      "max_difference": 13.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "geometry-50x50",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 50,
+    "height": 50,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-50x50-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-50x50-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "50x50^",
+      "-extent",
+      "50x50",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-50x50-strip-false.png"
+    ],
+    "bytes": 932,
+    "identify": "PNG\t92\t50\t50\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 50,
+      "height": 50,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        83.0,
+        41.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        41.0,
+        128.0,
+        255.0
+      ],
+      [
+        169.0,
+        41.0,
+        128.0,
+        255.0
+      ],
+      [
+        83.0,
+        130.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        130.0,
+        128.0,
+        255.0
+      ],
+      [
+        169.0,
+        130.0,
+        128.0,
+        255.0
+      ],
+      [
+        83.0,
+        213.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        213.0,
+        128.0,
+        255.0
+      ],
+      [
+        169.0,
+        213.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.015,
+      "max_difference": 1.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-51x25",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 51,
+    "height": 25,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-51x25-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-51x25-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "51x25^",
+      "-extent",
+      "51x25",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-51x25-strip-false.png"
+    ],
+    "bytes": 898,
+    "identify": "PNG\t92\t51\t25\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 51,
+      "height": 25,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        41.0,
+        42.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        42.0,
+        128.0,
+        255.0
+      ],
+      [
+        213.0,
+        42.0,
+        128.0,
+        255.0
+      ],
+      [
+        41.0,
+        122.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        122.0,
+        128.0,
+        255.0
+      ],
+      [
+        213.0,
+        122.0,
+        128.0,
+        255.0
+      ],
+      [
+        41.0,
+        202.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        202.0,
+        128.0,
+        255.0
+      ],
+      [
+        213.0,
+        202.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.04470588235294118,
+      "max_difference": 1.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-31x19",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 31,
+    "height": 19,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-31x19-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-31x19-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "31x19^",
+      "-extent",
+      "31x19",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-31x19-strip-false.png"
+    ],
+    "bytes": 872,
+    "identify": "PNG\t92\t31\t19\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 31,
+      "height": 19,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        56.0,
+        45.0,
+        128.0,
+        255.0
+      ],
+      [
+        123.0,
+        45.0,
+        128.0,
+        255.0
+      ],
+      [
+        191.0,
+        45.0,
+        128.0,
+        255.0
+      ],
+      [
+        56.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        123.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        191.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        56.0,
+        210.0,
+        128.0,
+        255.0
+      ],
+      [
+        123.0,
+        210.0,
+        128.0,
+        255.0
+      ],
+      [
+        191.0,
+        210.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.05560271646859083,
+      "max_difference": 2.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-103x53",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 103,
+    "height": 53,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-103x53-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-103x53-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "103x53^",
+      "-extent",
+      "103x53",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-103x53-strip-false.png"
+    ],
+    "bytes": 1016,
+    "identify": "PNG\t92\t103\t53\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 103,
+      "height": 53,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        44.0,
+        38.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        38.0,
+        128.0,
+        255.0
+      ],
+      [
+        210.0,
+        38.0,
+        128.0,
+        255.0
+      ],
+      [
+        44.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        210.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        44.0,
+        216.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        216.0,
+        128.0,
+        255.0
+      ],
+      [
+        210.0,
+        216.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.014563106796116505,
+      "max_difference": 1.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-1x1",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 1,
+    "height": 1,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-1x1-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-1x1-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "1x1^",
+      "-extent",
+      "1x1",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-1x1-strip-false.png"
+    ],
+    "bytes": 821,
+    "identify": "PNG\t92\t1\t1\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 1,
+      "height": 1,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ],
+      [
+        65.0,
+        127.0,
+        128.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.0,
+      "max_difference": 0.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "enlarge-1x1",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/tiny-1x1.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 16,
+    "height": 12,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/enlarge-1x1-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/enlarge-1x1-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/tiny-1x1.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "16x12^",
+      "-extent",
+      "16x12",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/enlarge-1x1-strip-false.png"
+    ],
+    "bytes": 819,
+    "identify": "PNG\t92\t16\t12\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 16,
+      "height": 12,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.0,
+      "max_difference": 0.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "enlarge-3x7",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/tiny-3x7.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 20,
+    "height": 30,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/enlarge-3x7-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/enlarge-3x7-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/tiny-3x7.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "20x30^",
+      "-extent",
+      "20x30",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/enlarge-3x7-strip-false.png"
+    ],
+    "bytes": 820,
+    "identify": "PNG\t92\t20\t30\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 20,
+      "height": 30,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.0,
+      "max_difference": 0.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "letter-avatar-45",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 45,
+    "height": 45,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-45-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-45-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "45x45^",
+      "-extent",
+      "45x45",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-45-strip-false.png"
+    ],
+    "bytes": 1834,
+    "identify": "PNG\t92\t45\t45\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 45,
+      "height": 45,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        64.0,
+        157.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        63.0,
+        156.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.8826337448559671,
+      "max_difference": 30.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "letter-avatar-120",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 120,
+    "height": 120,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-120-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-120-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "120x120^",
+      "-extent",
+      "120x120",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-120-strip-false.png"
+    ],
+    "bytes": 2900,
+    "identify": "PNG\t92\t120\t120\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 120,
+      "height": 120,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.3552314814814815,
+      "max_difference": 29.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "letter-avatar-359",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 359,
+    "height": 359,
+    "strip_metadata": false,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-359-strip-false.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-359-strip-false-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-resize",
+      "359x359^",
+      "-extent",
+      "359x359",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-359-strip-false.png"
+    ],
+    "bytes": 12804,
+    "identify": "PNG\t92\t359\t359\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+    "decoded": {
+      "width": 359,
+      "height": 359,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 180
+    },
+    "centers": [
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.08428705550081082,
+      "max_difference": 28.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "png-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-strip-true.png"
+    ],
+    "bytes": 1240,
+    "identify": "PNG\t92\t29\t21\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.8943623426382047,
+      "max_difference": 16.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "png-grid-alpha",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-alpha-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-alpha-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-alpha-strip-true.png"
+    ],
+    "bytes": 1404,
+    "identify": "PNG\t92\t29\t21\t1\tsrgba 5.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0,
+        128.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        128.0
+      ],
+      [
+        170.0,
+        85.0,
+        170.0,
+        192.0
+      ],
+      [
+        127.0,
+        128.0,
+        127.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.8378489326765188,
+      "max_difference": 39.0,
+      "alpha_max_difference": 22.0
+    }
+  },
+  {
+    "name": "png-grid-16bit",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-16bit.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-16bit-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-16bit-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid-16bit.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-16bit-strip-true.png"
+    ],
+    "bytes": 1246,
+    "identify": "PNG\t92\t29\t21\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.8943623426382047,
+      "max_difference": 16.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "png-grid-profile",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/png-grid-profile-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/png-grid-profile-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/downsize/grid-profile.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/png-grid-profile-strip-true.png"
+    ],
+    "bytes": 22955,
+    "identify": "PNG\t92\t29\t21\t1\tsrgb  4.0\tsRGB\tNone\ticc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        128.0,
+        128.0,
+        128.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.8943623426382047,
+      "max_difference": 16.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "jpg-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-strip-true.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-strip-true-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid.jpg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/jpg-grid-strip-true.jpg"
+    ],
+    "bytes": 540,
+    "identify": "JPG\t74\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        247.0,
+        7.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        12.0
+      ],
+      [
+        0.0,
+        11.0,
+        252.0
+      ],
+      [
+        112.0,
+        136.0,
+        160.0
+      ],
+      [
+        151.0,
+        111.0,
+        146.0
+      ],
+      [
+        137.0,
+        128.0,
+        85.0
+      ],
+      [
+        3.0,
+        254.0,
+        255.0
+      ],
+      [
+        254.0,
+        4.0,
+        252.0
+      ],
+      [
+        254.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 3.6042692939244665,
+      "max_difference": 28.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "jpg-grid-profile",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-profile-strip-true.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-profile-strip-true-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/jpg-grid-profile-strip-true.jpg"
+    ],
+    "bytes": 26130,
+    "identify": "JPG\t74\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\ticc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        247.0,
+        7.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        12.0
+      ],
+      [
+        0.0,
+        11.0,
+        252.0
+      ],
+      [
+        112.0,
+        136.0,
+        160.0
+      ],
+      [
+        151.0,
+        111.0,
+        146.0
+      ],
+      [
+        137.0,
+        128.0,
+        85.0
+      ],
+      [
+        3.0,
+        254.0,
+        255.0
+      ],
+      [
+        254.0,
+        4.0,
+        252.0
+      ],
+      [
+        254.0,
+        255.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 3.6042692939244665,
+      "max_difference": 28.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "jpg-grid-cmyk-profile",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-cmyk-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-cmyk-profile-strip-true.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/jpg-grid-cmyk-profile-strip-true-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-cmyk-profile.jpg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/jpg-grid-cmyk-profile-strip-true.jpg"
+    ],
+    "bytes": 962635,
+    "identify": "JPG\t87\t29\t21\t1\tcmyk  4.0\tCMYK\tNone\ticc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        190.0,
+        255.0,
+        0.0
+      ],
+      [
+        17.0,
+        59.0,
+        255.0
+      ],
+      [
+        217.0,
+        127.0,
+        116.0
+      ],
+      [
+        211.0,
+        148.0,
+        131.0
+      ],
+      [
+        130.0,
+        159.0,
+        131.0
+      ],
+      [
+        189.0,
+        255.0,
+        243.0
+      ],
+      [
+        241.0,
+        33.0,
+        251.0
+      ],
+      [
+        251.0,
+        255.0,
+        10.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 30.220032840722496,
+      "max_difference": 121.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "webp-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.webp",
+    "input_format": "webp",
+    "output_format": "webp",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-strip-true.webp",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-strip-true-decoded.png",
+    "instructions": [
+      "webp:/var/www/discourse/public/discourse-task/downsize/grid.webp[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "webp:/var/www/discourse/public/discourse-task/resize/webp-grid-strip-true.webp"
+    ],
+    "bytes": 380,
+    "identify": "WEBP\t92\t29\t21\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        115.0,
+        105.0,
+        110.0,
+        0.0
+      ],
+      [
+        3.0,
+        252.0,
+        0.0,
+        128.0
+      ],
+      [
+        2.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        52.0,
+        232.0,
+        233.0,
+        128.0
+      ],
+      [
+        174.0,
+        93.0,
+        168.0,
+        192.0
+      ],
+      [
+        136.0,
+        135.0,
+        99.0,
+        255.0
+      ],
+      [
+        0.0,
+        254.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        254.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0,
+        255.0
+      ]
+    ]
+  },
+  {
+    "name": "webp-grid-lossless",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-lossless.webp",
+    "input_format": "webp",
+    "output_format": "webp",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-lossless-strip-true.webp",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/webp-grid-lossless-strip-true-decoded.png",
+    "instructions": [
+      "webp:/var/www/discourse/public/discourse-task/downsize/grid-lossless.webp[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "webp:/var/www/discourse/public/discourse-task/resize/webp-grid-lossless-strip-true.webp"
+    ],
+    "bytes": 408,
+    "identify": "WEBP\t100\t29\t21\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0,
+        128.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        128.0
+      ],
+      [
+        170.0,
+        85.0,
+        170.0,
+        192.0
+      ],
+      [
+        127.0,
+        128.0,
+        127.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0,
+        255.0
+      ]
+    ]
+  },
+  {
+    "name": "avif-grid",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.avif",
+    "input_format": "avif",
+    "output_format": "avif",
+    "width": 29,
+    "height": 21,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/avif-grid-strip-true.avif",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/avif-grid-strip-true-decoded.png",
+    "instructions": [
+      "avif:/var/www/discourse/public/discourse-task/downsize/grid.avif[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "avif:/var/www/discourse/public/discourse-task/resize/avif-grid-strip-true.avif"
+    ],
+    "bytes": 596,
+    "identify": "AVIF\t92\t29\t21\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        2.0,
+        0.0,
+        3.0,
+        1.0
+      ],
+      [
+        1.0,
+        255.0,
+        0.0,
+        127.0
+      ],
+      [
+        5.0,
+        2.0,
+        255.0,
+        255.0
+      ],
+      [
+        0.0,
+        254.0,
+        255.0,
+        133.0
+      ],
+      [
+        226.0,
+        50.0,
+        220.0,
+        195.0
+      ],
+      [
+        146.0,
+        141.0,
+        24.0,
+        255.0
+      ],
+      [
+        0.0,
+        254.0,
+        255.0,
+        254.0
+      ],
+      [
+        255.0,
+        2.0,
+        249.0,
+        254.0
+      ],
+      [
+        255.0,
+        254.0,
+        2.0,
+        255.0
+      ]
+    ]
+  },
+  {
+    "name": "first-gif",
+    "input_path": "/var/www/discourse/spec/fixtures/images/animated.gif",
+    "input_format": "gif",
+    "output_format": "gif",
+    "width": 120,
+    "height": 90,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/first-gif-strip-true.gif",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/first-gif-strip-true-decoded.png",
+    "instructions": [
+      "gif:/var/www/discourse/spec/fixtures/images/animated.gif[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "120x90^",
+      "-extent",
+      "120x90",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "gif:/var/www/discourse/public/discourse-task/resize/first-gif-strip-true.gif"
+    ],
+    "bytes": 1055,
+    "identify": "GIF\t92\t120\t90\t1\tsrgba 5.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 120,
+      "height": 90,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ],
+      [
+        254.0,
+        254.0,
+        254.0,
+        0.0
+      ]
+    ]
+  },
+  {
+    "name": "first-webp",
+    "input_path": "/var/www/discourse/spec/fixtures/images/animated.webp",
+    "input_format": "webp",
+    "output_format": "webp",
+    "width": 120,
+    "height": 90,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/first-webp-strip-true.webp",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/first-webp-strip-true-decoded.png",
+    "instructions": [
+      "webp:/var/www/discourse/spec/fixtures/images/animated.webp[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "120x90^",
+      "-extent",
+      "120x90",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "webp:/var/www/discourse/public/discourse-task/resize/first-webp-strip-true.webp"
+    ],
+    "bytes": 4308,
+    "identify": "WEBP\t92\t120\t90\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 120,
+      "height": 90,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        20.0,
+        20.0,
+        20.0,
+        0.0
+      ],
+      [
+        2.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        28.0,
+        168.0,
+        62.0,
+        255.0
+      ],
+      [
+        47.0,
+        138.0,
+        85.0,
+        254.0
+      ],
+      [
+        35.0,
+        35.0,
+        35.0,
+        0.0
+      ],
+      [
+        47.0,
+        46.0,
+        49.0,
+        31.0
+      ],
+      [
+        45.0,
+        47.0,
+        47.0,
+        161.0
+      ],
+      [
+        48.0,
+        48.0,
+        48.0,
+        7.0
+      ]
+    ]
+  },
+  {
+    "name": "first-ico",
+    "input_path": "/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico",
+    "input_format": "ico",
+    "output_format": "ico",
+    "width": 30,
+    "height": 20,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/first-ico-strip-true.ico",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/first-ico-strip-true-decoded.png",
+    "instructions": [
+      "ico:/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "30x20^",
+      "-extent",
+      "30x20",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "ico:/var/www/discourse/public/discourse-task/resize/first-ico-strip-true.ico"
+    ],
+    "bytes": 2542,
+    "identify": "ICO\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 30,
+      "height": 20,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        255.0,
+        255.0,
+        0.0
+      ]
+    ]
+  },
+  {
+    "name": "svg-blocked",
+    "input_path": "/var/www/discourse/spec/fixtures/images/image.svg",
+    "input_format": "svg",
+    "output_format": "svg",
+    "width": 30,
+    "height": 20,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-true.svg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-true-decoded.png",
+    "instructions": [
+      "svg:/var/www/discourse/spec/fixtures/images/image.svg[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "30x20^",
+      "-extent",
+      "30x20",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "svg:/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-true.svg"
+    ],
+    "error": {
+      "class": "Discourse::Utils::CommandError",
+      "message": "nice -n 10 magick svg:/var/www/discourse/spec/fixtures/images/image.svg[0] -auto-orient -gravity center -background transparent -thumbnail 30x20^ -extent 30x20 -interpolate catrom -unsharp 2x0.5+0.7+0 -interlace none -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/resize/svg-blocked-strip-true.svg\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+    }
+  },
+  {
+    "name": "colors-12",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 50,
+    "height": 30,
+    "colors": 12,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/colors-12-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/colors-12-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-colors",
+      "12",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "50x30^",
+      "-extent",
+      "50x30",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/colors-12-strip-true.png"
+    ],
+    "bytes": 3238,
+    "identify": "PNG\t92\t50\t30\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 50,
+      "height": 30,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        38.0,
+        30.0,
+        128.0,
+        255.0
+      ],
+      [
+        77.0,
+        31.0,
+        128.0,
+        255.0
+      ],
+      [
+        181.0,
+        25.0,
+        128.0,
+        255.0
+      ],
+      [
+        25.0,
+        85.0,
+        128.0,
+        255.0
+      ],
+      [
+        92.0,
+        84.0,
+        128.0,
+        255.0
+      ],
+      [
+        211.0,
+        152.0,
+        128.0,
+        255.0
+      ],
+      [
+        23.0,
+        232.0,
+        128.0,
+        255.0
+      ],
+      [
+        64.0,
+        182.0,
+        128.0,
+        255.0
+      ],
+      [
+        210.0,
+        210.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 1.1001666666666667,
+      "max_difference": 36.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "quality-40",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "quality": 40,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/quality-40-strip-true.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/quality-40-strip-true-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg[0]",
+      "-quality",
+      "40",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/quality-40-strip-true.jpg"
+    ],
+    "bytes": 26044,
+    "identify": "JPG\t40\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\ticc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        254.0,
+        0.0,
+        28.0
+      ],
+      [
+        0.0,
+        255.0,
+        9.0
+      ],
+      [
+        27.0,
+        0.0,
+        179.0
+      ],
+      [
+        126.0,
+        125.0,
+        133.0
+      ],
+      [
+        141.0,
+        128.0,
+        137.0
+      ],
+      [
+        145.0,
+        117.0,
+        129.0
+      ],
+      [
+        14.0,
+        247.0,
+        251.0
+      ],
+      [
+        255.0,
+        0.0,
+        255.0
+      ],
+      [
+        248.0,
+        254.0,
+        24.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 2.935960591133005,
+      "max_difference": 42.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "quality-90",
+    "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg",
+    "input_format": "jpg",
+    "output_format": "jpg",
+    "width": 29,
+    "height": 21,
+    "quality": 90,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/quality-90-strip-true.jpg",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/quality-90-strip-true-decoded.png",
+    "instructions": [
+      "jpg:/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg[0]",
+      "-quality",
+      "90",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "29x21^",
+      "-extent",
+      "29x21",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "jpg:/var/www/discourse/public/discourse-task/resize/quality-90-strip-true.jpg"
+    ],
+    "bytes": 26226,
+    "identify": "JPG\t90\t29\t21\t1\tsrgb  3.0\tsRGB\tNone\ticc\n",
+    "decoded": {
+      "width": 29,
+      "height": 21,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        250.0,
+        2.0,
+        0.0
+      ],
+      [
+        0.0,
+        255.0,
+        0.0
+      ],
+      [
+        0.0,
+        3.0,
+        251.0
+      ],
+      [
+        109.0,
+        133.0,
+        133.0
+      ],
+      [
+        141.0,
+        115.0,
+        140.0
+      ],
+      [
+        133.0,
+        130.0,
+        97.0
+      ],
+      [
+        3.0,
+        255.0,
+        255.0
+      ],
+      [
+        255.0,
+        1.0,
+        255.0
+      ],
+      [
+        255.0,
+        254.0,
+        3.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 1.7690202517788725,
+      "max_difference": 14.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "geometry-50x50",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 50,
+    "height": 50,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-50x50-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-50x50-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "50x50^",
+      "-extent",
+      "50x50",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-50x50-strip-true.png"
+    ],
+    "bytes": 1051,
+    "identify": "PNG\t92\t50\t50\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 50,
+      "height": 50,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        83.0,
+        41.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        41.0,
+        128.0,
+        255.0
+      ],
+      [
+        169.0,
+        41.0,
+        128.0,
+        255.0
+      ],
+      [
+        83.0,
+        130.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        130.0,
+        128.0,
+        255.0
+      ],
+      [
+        169.0,
+        130.0,
+        128.0,
+        255.0
+      ],
+      [
+        83.0,
+        213.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        213.0,
+        128.0,
+        255.0
+      ],
+      [
+        169.0,
+        213.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.02,
+      "max_difference": 1.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-51x25",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 51,
+    "height": 25,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-51x25-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-51x25-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "51x25^",
+      "-extent",
+      "51x25",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-51x25-strip-true.png"
+    ],
+    "bytes": 1014,
+    "identify": "PNG\t92\t51\t25\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 51,
+      "height": 25,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        41.0,
+        42.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        42.0,
+        128.0,
+        255.0
+      ],
+      [
+        213.0,
+        42.0,
+        128.0,
+        255.0
+      ],
+      [
+        41.0,
+        122.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        122.0,
+        128.0,
+        255.0
+      ],
+      [
+        213.0,
+        122.0,
+        128.0,
+        255.0
+      ],
+      [
+        41.0,
+        202.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        202.0,
+        128.0,
+        255.0
+      ],
+      [
+        213.0,
+        202.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.0496078431372549,
+      "max_difference": 1.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-31x19",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 31,
+    "height": 19,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-31x19-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-31x19-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "31x19^",
+      "-extent",
+      "31x19",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-31x19-strip-true.png"
+    ],
+    "bytes": 988,
+    "identify": "PNG\t92\t31\t19\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 31,
+      "height": 19,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        56.0,
+        45.0,
+        128.0,
+        255.0
+      ],
+      [
+        123.0,
+        45.0,
+        128.0,
+        255.0
+      ],
+      [
+        191.0,
+        45.0,
+        128.0,
+        255.0
+      ],
+      [
+        56.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        123.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        191.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        56.0,
+        210.0,
+        128.0,
+        255.0
+      ],
+      [
+        123.0,
+        210.0,
+        128.0,
+        255.0
+      ],
+      [
+        191.0,
+        210.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.06876061120543293,
+      "max_difference": 2.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-103x53",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 103,
+    "height": 53,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-103x53-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-103x53-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "103x53^",
+      "-extent",
+      "103x53",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-103x53-strip-true.png"
+    ],
+    "bytes": 1147,
+    "identify": "PNG\t92\t103\t53\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 103,
+      "height": 53,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        44.0,
+        39.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        39.0,
+        128.0,
+        255.0
+      ],
+      [
+        210.0,
+        39.0,
+        128.0,
+        255.0
+      ],
+      [
+        44.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        210.0,
+        127.0,
+        128.0,
+        255.0
+      ],
+      [
+        44.0,
+        216.0,
+        128.0,
+        255.0
+      ],
+      [
+        127.0,
+        216.0,
+        128.0,
+        255.0
+      ],
+      [
+        210.0,
+        216.0,
+        128.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.02656164132625023,
+      "max_difference": 1.0,
+      "alpha_max_difference": 0.0
+    }
+  },
+  {
+    "name": "geometry-1x1",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/coordinate-grid.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 1,
+    "height": 1,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/geometry-1x1-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/geometry-1x1-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/coordinate-grid.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "1x1^",
+      "-extent",
+      "1x1",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/geometry-1x1-strip-true.png"
+    ],
+    "bytes": 936,
+    "identify": "PNG\t92\t1\t1\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 1,
+      "height": 1,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ],
+      [
+        64.0,
+        127.0,
+        128.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.0,
+      "max_difference": 0.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "enlarge-1x1",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/tiny-1x1.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 16,
+    "height": 12,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/enlarge-1x1-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/enlarge-1x1-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/tiny-1x1.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "16x12^",
+      "-extent",
+      "16x12",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/enlarge-1x1-strip-true.png"
+    ],
+    "bytes": 924,
+    "identify": "PNG\t92\t16\t12\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 16,
+      "height": 12,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.0,
+      "max_difference": 0.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "enlarge-3x7",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/tiny-3x7.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 20,
+    "height": 30,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/enlarge-3x7-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/enlarge-3x7-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/tiny-3x7.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "20x30^",
+      "-extent",
+      "20x30",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/enlarge-3x7-strip-true.png"
+    ],
+    "bytes": 925,
+    "identify": "PNG\t92\t20\t30\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 20,
+      "height": 30,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ],
+      [
+        255.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.0,
+      "max_difference": 0.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "letter-avatar-45",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 45,
+    "height": 45,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-45-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-45-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "45x45^",
+      "-extent",
+      "45x45",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-45-strip-true.png"
+    ],
+    "bytes": 1921,
+    "identify": "PNG\t92\t45\t45\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 45,
+      "height": 45,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        64.0,
+        156.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.8613991769547326,
+      "max_difference": 29.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "letter-avatar-120",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 120,
+    "height": 120,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-120-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-120-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "120x120^",
+      "-extent",
+      "120x120",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-120-strip-true.png"
+    ],
+    "bytes": 3103,
+    "identify": "PNG\t92\t120\t120\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 120,
+      "height": 120,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": false,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.3473611111111111,
+      "max_difference": 28.0,
+      "alpha_max_difference": null
+    }
+  },
+  {
+    "name": "letter-avatar-359",
+    "input_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png",
+    "input_format": "png",
+    "output_format": "png",
+    "width": 359,
+    "height": 359,
+    "strip_metadata": true,
+    "output_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-359-strip-true.png",
+    "reference_path": "/var/www/discourse/public/discourse-task/resize/letter-avatar-359-strip-true-decoded.png",
+    "instructions": [
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-fullsize.png[0]",
+      "-auto-orient",
+      "-gravity",
+      "center",
+      "-background",
+      "transparent",
+      "-thumbnail",
+      "359x359^",
+      "-extent",
+      "359x359",
+      "-interpolate",
+      "catrom",
+      "-unsharp",
+      "2x0.5+0.7+0",
+      "-interlace",
+      "none",
+      "-profile",
+      "/var/www/discourse/vendor/data/RT_sRGB.icm",
+      "png:/var/www/discourse/public/discourse-task/resize/letter-avatar-359-strip-true.png"
+    ],
+    "bytes": 12836,
+    "identify": "PNG\t92\t359\t359\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+    "decoded": {
+      "width": 359,
+      "height": 359,
+      "format": "uchar",
+      "interpretation": "srgb",
+      "alpha": true,
+      "icc": null,
+      "exif_bytes": 0
+    },
+    "centers": [
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ],
+      [
+        61.0,
+        155.0,
+        243.0,
+        255.0
+      ]
+    ],
+    "sharpening": {
+      "mean_difference": 0.08426183844011143,
+      "max_difference": 27.0,
+      "alpha_max_difference": 0.0
+    }
+  }
+]

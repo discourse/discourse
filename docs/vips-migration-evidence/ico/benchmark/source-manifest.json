@@ -1,0 +1,13 @@
+{
+  "commit": "da0c0d17db42e5b096a5c530700b3a33f607897a",
+  "files": {
+    "lib/discourse_vips.rb": "e8c439d868ba853828bed5e7822c9ff9f325276bb2d4c821c32fdbe8ded91632",
+    "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+    "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+    "lib/discourse_vips/ico_image.rb": "19c42d43f04ea706125057382ad5474c34bfa8140e70e266412be7ac5aede2b3",
+    "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+    "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+    "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+    "script/discourse_vips_worker": "a7d9b21420b0bb7fa16b1145f4b37e455048ecbbe9064cc01f50668f3e08621d"
+  }
+}

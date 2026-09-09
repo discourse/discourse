@@ -1,0 +1,8 @@
+{
+  "reported_test_result": "99 examples, 0 failures, seed52546; see ../verification.log",
+  "files": {
+    "spec/lib/discourse_vips_spec.rb": "b3b732702777c6bd9fd5b928f1eb33bb39099b6dd0cd2c08bf4459b6f33bc721",
+    "spec/lib/discourse_vips/resize_spec.rb": "cbad2e3aec2dfdfc31fe32e05fd194d2e2c5e6d59000e00d51abf1f28722a2c1",
+    "spec/lib/discourse_vips/downsize_spec.rb": "40fce39c44c6c16c660291d4b88fcbd9c9a6af2d479c0a3f689077748055cacd"
+  }
+}

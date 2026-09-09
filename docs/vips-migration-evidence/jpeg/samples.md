@@ -1,0 +1,16 @@
+All pairs below are the final production Q75 outputs. Dimensions and ICC bytes agree per pair; encoded pixels and sizes can differ. CMYK display depends on the viewer’s color management. The stress timeout has no valid paired ImageMagick result.
+
+| Input | ImageMagick | libvips |
+| --- | --- | --- |
+| [alpha16.png](final-selective/inputs/alpha16.png) | ![ImageMagick alpha16.png](final-selective/outputs-final-selective/alpha16.png-imagemagick.jpg) | ![libvips alpha16.png](final-selective/outputs-final-selective/alpha16.png-libvips.jpg) |
+| [cmyk.jpg](final-selective/inputs/cmyk.jpg) | ![ImageMagick cmyk.jpg](final-selective/outputs-final-selective/cmyk.jpg-imagemagick.jpg) | ![libvips cmyk.jpg](final-selective/outputs-final-selective/cmyk.jpg-libvips.jpg) |
+| [gray.jpg](final-selective/inputs/gray.jpg) | ![ImageMagick gray.jpg](final-selective/outputs-final-selective/gray.jpg-imagemagick.jpg) | ![libvips gray.jpg](final-selective/outputs-final-selective/gray.jpg-libvips.jpg) |
+| [jpeg-sampling-422.jpg](final-selective/inputs/jpeg-sampling-422.jpg) | ![ImageMagick jpeg-sampling-422.jpg](final-selective/outputs-final-selective/jpeg-sampling-422.jpg-imagemagick.jpg) | ![libvips jpeg-sampling-422.jpg](final-selective/outputs-final-selective/jpeg-sampling-422.jpg-libvips.jpg) |
+| [jpeg-sampling-440.jpg](final-selective/inputs/jpeg-sampling-440.jpg) | ![ImageMagick jpeg-sampling-440.jpg](final-selective/outputs-final-selective/jpeg-sampling-440.jpg-imagemagick.jpg) | ![libvips jpeg-sampling-440.jpg](final-selective/outputs-final-selective/jpeg-sampling-440.jpg-libvips.jpg) |
+| [photo-profile.jpg](final-selective/inputs/photo-profile.jpg) | ![ImageMagick photo-profile.jpg](final-selective/outputs-final-selective/photo-profile.jpg-imagemagick.jpg) | ![libvips photo-profile.jpg](final-selective/outputs-final-selective/photo-profile.jpg-libvips.jpg) |
+| [photo.jpg](final-selective/inputs/photo.jpg) | ![ImageMagick photo.jpg](final-selective/outputs-final-selective/photo.jpg-imagemagick.jpg) | ![libvips photo.jpg](final-selective/outputs-final-selective/photo.jpg-libvips.jpg) |
+| [rgb.jpg](final-selective/inputs/rgb.jpg) | ![ImageMagick rgb.jpg](final-selective/outputs-final-selective/rgb.jpg-imagemagick.jpg) | ![libvips rgb.jpg](final-selective/outputs-final-selective/rgb.jpg-libvips.jpg) |
+| [source.png](final-selective/inputs/source.png) | ![ImageMagick source.png](final-selective/outputs-final-selective/source.png-imagemagick.jpg) | ![libvips source.png](final-selective/outputs-final-selective/source.png-libvips.jpg) |
+| [static.avif](final-selective/inputs/static.avif) | ![ImageMagick static.avif](final-selective/outputs-final-selective/static.avif-imagemagick.jpg) | ![libvips static.avif](final-selective/outputs-final-selective/static.avif-libvips.jpg) |
+| [static.gif](final-selective/inputs/static.gif) | ![ImageMagick static.gif](final-selective/outputs-final-selective/static.gif-imagemagick.jpg) | ![libvips static.gif](final-selective/outputs-final-selective/static.gif-libvips.jpg) |
+| [static.webp](final-selective/inputs/static.webp) | ![ImageMagick static.webp](final-selective/outputs-final-selective/static.webp-imagemagick.jpg) | ![libvips static.webp](final-selective/outputs-final-selective/static.webp-libvips.jpg) |

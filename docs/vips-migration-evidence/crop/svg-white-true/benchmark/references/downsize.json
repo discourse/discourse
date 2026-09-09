@@ -1,0 +1,2420 @@
+{
+  "generation": [
+    {
+      "filename": "grid.png",
+      "bytes": 336
+    },
+    {
+      "filename": "grid-alpha.png",
+      "bytes": 358
+    },
+    {
+      "filename": "grid-palette.png",
+      "error": "vips2png: unable to write to target /var/www/discourse/public/discourse-task/downsize/grid-palette.png\n"
+    },
+    {
+      "filename": "grid-16bit.png",
+      "bytes": 406
+    },
+    {
+      "filename": "grid-profile.png",
+      "bytes": 9158
+    },
+    {
+      "filename": "grid.jpg",
+      "bytes": 1024
+    },
+    {
+      "filename": "grid-profile.jpg",
+      "bytes": 26973
+    },
+    {
+      "filename": "grid-cmyk.jpg",
+      "bytes": 963056
+    },
+    {
+      "filename": "grid-cmyk-profile.jpg",
+      "bytes": 963056
+    },
+    {
+      "filename": "grid.webp",
+      "bytes": 502
+    },
+    {
+      "filename": "grid-lossless.webp",
+      "bytes": 294
+    },
+    {
+      "filename": "grid.avif",
+      "bytes": 735
+    },
+    {
+      "filename": "large-ico-source.png",
+      "bytes": 2041
+    }
+  ],
+  "cases": [
+    {
+      "name": "png-grid",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+      "input_codec": "png",
+      "output_codec": "png",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-grid-resized.png",
+      "input": {
+        "bytes": 336,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/downsize/png-grid-resized.png"
+      ],
+      "output": {
+        "bytes": 1228,
+        "identify": "PNG\t92\t30\t20\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-grid-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-grid-alpha",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+      "input_codec": "png",
+      "output_codec": "png",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-grid-alpha-resized.png",
+      "input": {
+        "bytes": 358,
+        "identify": "PNG\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/downsize/png-grid-alpha-resized.png"
+      ],
+      "output": {
+        "bytes": 1086,
+        "identify": "PNG\t92\t30\t20\t1\tsrgba 5.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-grid-alpha-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0,
+            128.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0,
+            255.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-grid-16bit",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-16bit.png",
+      "input_codec": "png",
+      "output_codec": "png",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-grid-16bit-resized.png",
+      "input": {
+        "bytes": 406,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "ushort",
+          "interpretation": "rgb16",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-16bit.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/downsize/png-grid-16bit-resized.png"
+      ],
+      "output": {
+        "bytes": 1063,
+        "identify": "PNG\t92\t30\t20\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "ushort",
+          "interpretation": "rgb16",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-grid-16bit-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-grid-profile",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.png",
+      "input_codec": "png",
+      "output_codec": "png",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-grid-profile-resized.png",
+      "input": {
+        "bytes": 9158,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif,icc\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 25572,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-profile.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/downsize/png-grid-profile-resized.png"
+      ],
+      "output": {
+        "bytes": 22935,
+        "identify": "PNG\t92\t30\t20\t1\tsrgb  4.0\tsRGB\tNone\texif,icc\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 25572,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-grid-profile-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.jpg",
+      "input_codec": "jpg",
+      "output_codec": "jpg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-resized.jpg",
+      "input": {
+        "bytes": 1024,
+        "identify": "JPG\t74\t60\t40\t1\tsrgb  3.0\tsRGB\tJPEG\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/downsize/grid.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/downsize/jpg-grid-resized.jpg"
+      ],
+      "output": {
+        "bytes": 740,
+        "identify": "JPG\t74\t30\t20\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            253.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            11.0
+          ],
+          [
+            0.0,
+            2.0,
+            249.0
+          ],
+          [
+            1.0,
+            255.0,
+            255.0
+          ],
+          [
+            243.0,
+            0.0,
+            240.0
+          ],
+          [
+            255.0,
+            252.0,
+            4.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid-profile",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg",
+      "input_codec": "jpg",
+      "output_codec": "jpg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-profile-resized.jpg",
+      "input": {
+        "bytes": 26973,
+        "identify": "JPG\t74\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif,icc\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 25572,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/downsize/grid-profile.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/downsize/jpg-grid-profile-resized.jpg"
+      ],
+      "output": {
+        "bytes": 26330,
+        "identify": "JPG\t74\t30\t20\t1\tsrgb  3.0\tsRGB\tNone\texif,icc\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 25572,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-profile-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            253.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            11.0
+          ],
+          [
+            0.0,
+            2.0,
+            249.0
+          ],
+          [
+            1.0,
+            255.0,
+            255.0
+          ],
+          [
+            243.0,
+            0.0,
+            240.0
+          ],
+          [
+            255.0,
+            252.0,
+            4.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid-cmyk",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-cmyk.jpg",
+      "input_codec": "jpg",
+      "output_codec": "jpg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-cmyk-resized.jpg",
+      "input": {
+        "bytes": 963056,
+        "identify": "JPG\t87\t60\t40\t1\tcmyk  4.0\tCMYK\tNone\texif,icc\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "cmyk",
+          "alpha": false,
+          "icc_bytes": 961644,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/downsize/grid-cmyk.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/downsize/jpg-grid-cmyk-resized.jpg"
+      ],
+      "output": {
+        "bytes": 962822,
+        "identify": "JPG\t87\t30\t20\t1\tcmyk  4.0\tCMYK\tNone\texif,icc\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "cmyk",
+          "alpha": false,
+          "icc_bytes": 961644,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-cmyk-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            195.0,
+            255.0,
+            0.0
+          ],
+          [
+            17.0,
+            59.0,
+            255.0
+          ],
+          [
+            190.0,
+            255.0,
+            245.0
+          ],
+          [
+            245.0,
+            42.0,
+            255.0
+          ],
+          [
+            250.0,
+            255.0,
+            12.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "jpg-grid-cmyk-profile",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-cmyk-profile.jpg",
+      "input_codec": "jpg",
+      "output_codec": "jpg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-cmyk-profile-resized.jpg",
+      "input": {
+        "bytes": 963056,
+        "identify": "JPG\t87\t60\t40\t1\tcmyk  4.0\tCMYK\tNone\texif,icc\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "cmyk",
+          "alpha": false,
+          "icc_bytes": 961644,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "jpg:/var/www/discourse/public/discourse-task/downsize/grid-cmyk-profile.jpg[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/downsize/jpg-grid-cmyk-profile-resized.jpg"
+      ],
+      "output": {
+        "bytes": 962822,
+        "identify": "JPG\t87\t30\t20\t1\tcmyk  4.0\tCMYK\tNone\texif,icc\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "cmyk",
+          "alpha": false,
+          "icc_bytes": 961644,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/jpg-grid-cmyk-profile-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            195.0,
+            255.0,
+            0.0
+          ],
+          [
+            17.0,
+            59.0,
+            255.0
+          ],
+          [
+            190.0,
+            255.0,
+            245.0
+          ],
+          [
+            245.0,
+            42.0,
+            255.0
+          ],
+          [
+            250.0,
+            255.0,
+            12.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "webp-grid",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.webp",
+      "input_codec": "webp",
+      "output_codec": "webp",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/webp-grid-resized.webp",
+      "input": {
+        "bytes": 502,
+        "identify": "WEBP\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "webp:/var/www/discourse/public/discourse-task/downsize/grid.webp[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "webp:/var/www/discourse/public/discourse-task/downsize/webp-grid-resized.webp"
+      ],
+      "output": {
+        "bytes": 512,
+        "identify": "WEBP\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/webp-grid-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            1.0,
+            1.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0,
+            128.0
+          ],
+          [
+            0.0,
+            0.0,
+            251.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            248.0,
+            255.0
+          ],
+          [
+            246.0,
+            4.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            254.0,
+            1.0,
+            255.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "webp-grid-lossless",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-lossless.webp",
+      "input_codec": "webp",
+      "output_codec": "webp",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/webp-grid-lossless-resized.webp",
+      "input": {
+        "bytes": 294,
+        "identify": "WEBP\t100\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "webp:/var/www/discourse/public/discourse-task/downsize/grid-lossless.webp[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "webp:/var/www/discourse/public/discourse-task/downsize/webp-grid-lossless-resized.webp"
+      ],
+      "output": {
+        "bytes": 450,
+        "identify": "WEBP\t100\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/webp-grid-lossless-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0,
+            128.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0,
+            255.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "avif-grid",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.avif",
+      "input_codec": "avif",
+      "output_codec": "avif",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/avif-grid-resized.avif",
+      "input": {
+        "bytes": 735,
+        "identify": "AVIF\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "avif:/var/www/discourse/public/discourse-task/downsize/grid.avif[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "avif:/var/www/discourse/public/discourse-task/downsize/avif-grid-resized.avif"
+      ],
+      "output": {
+        "bytes": 842,
+        "identify": "AVIF\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/avif-grid-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          [
+            3.0,
+            254.0,
+            3.0,
+            128.0
+          ],
+          [
+            3.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            0.0,
+            254.0,
+            255.0,
+            255.0
+          ],
+          [
+            250.0,
+            0.0,
+            255.0,
+            254.0
+          ],
+          [
+            249.0,
+            254.0,
+            2.0,
+            255.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-large-ico-source",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/large-ico-source.png",
+      "input_codec": "png",
+      "output_codec": "png",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-large-ico-source-resized.png",
+      "input": {
+        "bytes": 2041,
+        "identify": "PNG\t92\t300\t200\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 300,
+          "height": 200,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/large-ico-source.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/downsize/png-large-ico-source-resized.png"
+      ],
+      "output": {
+        "bytes": 1388,
+        "identify": "PNG\t92\t150\t100\t1\tsrgb  4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 150,
+          "height": 100,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-large-ico-source-reference.png",
+        "width": 150,
+        "height": 100,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "animated-gif",
+      "input_path": "/var/www/discourse/spec/fixtures/images/animated.gif",
+      "input_codec": "gif",
+      "output_codec": "gif",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/animated-gif-resized.gif",
+      "input": {
+        "bytes": 309071,
+        "identify": "GIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\nGIF\t92\t320\t320\t20\tsrgba 5.0\tsRGB\tNone\t\n",
+        "vips": {
+          "width": 320,
+          "height": 320,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 20
+        }
+      },
+      "instructions": [
+        "gif:/var/www/discourse/spec/fixtures/images/animated.gif[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "gif:/var/www/discourse/public/discourse-task/downsize/animated-gif-resized.gif"
+      ],
+      "output": {
+        "bytes": 1383,
+        "identify": "GIF\t92\t160\t160\t1\tsrgba 5.0\tsRGB\tNone\t\n",
+        "vips": {
+          "width": 160,
+          "height": 160,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/animated-gif-reference.png",
+        "width": 160,
+        "height": 160,
+        "centers": [
+          [
+            254.0,
+            254.0,
+            254.0,
+            0.0
+          ],
+          [
+            254.0,
+            254.0,
+            254.0,
+            0.0
+          ],
+          [
+            254.0,
+            254.0,
+            254.0,
+            0.0
+          ],
+          [
+            254.0,
+            254.0,
+            254.0,
+            0.0
+          ],
+          [
+            254.0,
+            254.0,
+            254.0,
+            0.0
+          ],
+          [
+            254.0,
+            254.0,
+            254.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "animated-webp",
+      "input_path": "/var/www/discourse/spec/fixtures/images/animated.webp",
+      "input_codec": "webp",
+      "output_codec": "webp",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/animated-webp-resized.webp",
+      "input": {
+        "bytes": 531018,
+        "identify": "WEBP\t92\t250\t250\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t177\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t177\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\nWEBP\t92\t181\t178\t67\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips": {
+          "width": 250,
+          "height": 250,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 67
+        }
+      },
+      "instructions": [
+        "webp:/var/www/discourse/spec/fixtures/images/animated.webp[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "webp:/var/www/discourse/public/discourse-task/downsize/animated-webp-resized.webp"
+      ],
+      "output": {
+        "bytes": 4174,
+        "identify": "WEBP\t92\t125\t125\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips": {
+          "width": 125,
+          "height": 125,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/animated-webp-reference.png",
+        "width": 125,
+        "height": 125,
+        "centers": [
+          [
+            23.0,
+            23.0,
+            23.0,
+            0.0
+          ],
+          [
+            2.0,
+            2.0,
+            2.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            47.0,
+            46.0,
+            49.0,
+            38.0
+          ],
+          [
+            38.0,
+            48.0,
+            44.0,
+            162.0
+          ],
+          [
+            47.0,
+            45.0,
+            45.0,
+            13.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "svg-to-svg",
+      "input_path": "/var/www/discourse/spec/fixtures/images/image.svg",
+      "input_codec": "svg",
+      "output_codec": "svg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/svg-to-svg-resized.svg",
+      "error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "identify -format %m\t%Q\t%w\t%h\t%n\t%[channels]\t%[colorspace]\t%[interlace]\t%[profiles]\n svg:/var/www/discourse/spec/fixtures/images/image.svg\nidentify: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    },
+    {
+      "name": "ico-to-ico",
+      "input_path": "/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico",
+      "input_codec": "ico",
+      "output_codec": "ico",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/ico-to-ico-resized.ico",
+      "input": {
+        "bytes": 7736,
+        "identify": "PNG\t92\t64\t64\t2\tsrgb  4.0\tsRGB\tNone\t\nICO\t92\t60\t40\t2\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips_error": "VipsForeignLoad: \"/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico\" is not a known file format\n"
+      },
+      "instructions": [
+        "ico:/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "ico:/var/www/discourse/public/discourse-task/downsize/ico-to-ico-resized.ico"
+      ],
+      "output": {
+        "bytes": 4286,
+        "identify": "ICO\t92\t32\t32\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips_error": "VipsForeignLoad: \"/var/www/discourse/public/discourse-task/downsize/ico-to-ico-resized.ico\" is not a known file format\n"
+      },
+      "ico": {
+        "reserved": 0,
+        "type": 1,
+        "count": 1,
+        "entries": [
+          {
+            "width": 32,
+            "height": 32,
+            "palette": 0,
+            "planes": 1,
+            "depth": 32,
+            "size": 4264,
+            "offset": 22,
+            "png": false
+          }
+        ]
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/ico-to-ico-reference.png",
+        "width": 32,
+        "height": 32,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "ico-first-to-png",
+      "input_path": "/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico",
+      "input_codec": "ico",
+      "output_codec": "png",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/ico-first-to-png-resized.png",
+      "input": {
+        "bytes": 7736,
+        "identify": "PNG\t92\t64\t64\t2\tsrgb  4.0\tsRGB\tNone\t\nICO\t92\t60\t40\t2\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips_error": "VipsForeignLoad: \"/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico\" is not a known file format\n"
+      },
+      "instructions": [
+        "ico:/var/www/discourse/spec/fixtures/images/ico-last-bmp.ico[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "png:/var/www/discourse/public/discourse-task/downsize/ico-first-to-png-resized.png"
+      ],
+      "output": {
+        "bytes": 496,
+        "identify": "PNG\t92\t32\t32\t1\tsrgb  4.0\tsRGB\tNone\t\n",
+        "vips": {
+          "width": 32,
+          "height": 32,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/ico-first-to-png-reference.png",
+        "width": 32,
+        "height": 32,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "large-ico",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/large-ico-source.png",
+      "input_codec": "png",
+      "output_codec": "ico",
+      "geometry": "100%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/large-ico-resized.ico",
+      "input": {
+        "bytes": 2041,
+        "identify": "PNG\t92\t300\t200\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 300,
+          "height": 200,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/large-ico-source.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "100%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "ico:/var/www/discourse/public/discourse-task/downsize/large-ico-resized.ico"
+      ],
+      "output": {
+        "bytes": 248062,
+        "identify": "ICO\t92\t300\t200\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips_error": "VipsForeignLoad: \"/var/www/discourse/public/discourse-task/downsize/large-ico-resized.ico\" is not a known file format\n"
+      },
+      "ico": {
+        "reserved": 0,
+        "type": 1,
+        "count": 1,
+        "entries": [
+          {
+            "width": 44,
+            "height": 200,
+            "palette": 0,
+            "planes": 1,
+            "depth": 32,
+            "size": 248040,
+            "offset": 22,
+            "png": false
+          }
+        ]
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/large-ico-reference.png",
+        "width": 300,
+        "height": 200,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-to-jpg",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+      "input_codec": "png",
+      "output_codec": "jpg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-to-jpg-resized.jpg",
+      "input": {
+        "bytes": 336,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/downsize/png-to-jpg-resized.jpg"
+      ],
+      "output": {
+        "bytes": 939,
+        "identify": "JPG\t92\t30\t20\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-to-jpg-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            254.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            254.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            246.0,
+            4.0,
+            248.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-jpg",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+      "input_codec": "png",
+      "output_codec": "jpg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-jpg-resized.jpg",
+      "input": {
+        "bytes": 358,
+        "identify": "PNG\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "jpg:/var/www/discourse/public/discourse-task/downsize/alpha-png-to-jpg-resized.jpg"
+      ],
+      "output": {
+        "bytes": 866,
+        "identify": "JPG\t92\t30\t20\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-jpg-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            1.0
+          ],
+          [
+            0.0,
+            0.0,
+            254.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-to-webp",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+      "input_codec": "png",
+      "output_codec": "webp",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-to-webp-resized.webp",
+      "input": {
+        "bytes": 336,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "webp:/var/www/discourse/public/discourse-task/downsize/png-to-webp-resized.webp"
+      ],
+      "output": {
+        "bytes": 458,
+        "identify": "WEBP\t92\t30\t20\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-to-webp-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            255.0,
+            2.0,
+            5.0
+          ],
+          [
+            5.0,
+            252.0,
+            0.0
+          ],
+          [
+            3.0,
+            1.0,
+            252.0
+          ],
+          [
+            3.0,
+            253.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            247.0
+          ],
+          [
+            255.0,
+            251.0,
+            2.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-webp",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+      "input_codec": "png",
+      "output_codec": "webp",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-webp-resized.webp",
+      "input": {
+        "bytes": 358,
+        "identify": "PNG\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "webp:/var/www/discourse/public/discourse-task/downsize/alpha-png-to-webp-resized.webp"
+      ],
+      "output": {
+        "bytes": 506,
+        "identify": "WEBP\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-webp-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            3.0,
+            255.0,
+            4.0,
+            128.0
+          ],
+          [
+            2.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            1.0,
+            255.0,
+            255.0,
+            255.0
+          ],
+          [
+            253.0,
+            3.0,
+            251.0,
+            255.0
+          ],
+          [
+            255.0,
+            250.0,
+            10.0,
+            255.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-to-avif",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+      "input_codec": "png",
+      "output_codec": "avif",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-to-avif-resized.avif",
+      "input": {
+        "bytes": 336,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "avif:/var/www/discourse/public/discourse-task/downsize/png-to-avif-resized.avif"
+      ],
+      "output": {
+        "bytes": 647,
+        "identify": "AVIF\t92\t30\t20\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-to-avif-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            254.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            254.0,
+            0.0
+          ],
+          [
+            2.0,
+            1.0,
+            255.0
+          ],
+          [
+            0.0,
+            254.0,
+            254.0
+          ],
+          [
+            246.0,
+            5.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            5.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-avif",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+      "input_codec": "png",
+      "output_codec": "avif",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-avif-resized.avif",
+      "input": {
+        "bytes": 358,
+        "identify": "PNG\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "avif:/var/www/discourse/public/discourse-task/downsize/alpha-png-to-avif-resized.avif"
+      ],
+      "output": {
+        "bytes": 842,
+        "identify": "AVIF\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 30,
+          "height": 20,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-avif-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          [
+            3.0,
+            254.0,
+            3.0,
+            128.0
+          ],
+          [
+            3.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            0.0,
+            254.0,
+            255.0,
+            255.0
+          ],
+          [
+            250.0,
+            0.0,
+            255.0,
+            254.0
+          ],
+          [
+            249.0,
+            254.0,
+            2.0,
+            255.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "png-to-svg",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+      "input_codec": "png",
+      "output_codec": "svg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-to-svg-resized.svg",
+      "input": {
+        "bytes": 336,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "svg:/var/www/discourse/public/discourse-task/downsize/png-to-svg-resized.svg"
+      ],
+      "error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "nice -n 10 magick png:/var/www/discourse/public/discourse-task/downsize/grid.png[0] -auto-orient -gravity center -background transparent -interlace none -resize 50% -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/downsize/png-to-svg-resized.svg\nmagick: delegate library support not built-in '/var/www/discourse/public/discourse-task/downsize/grid.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    },
+    {
+      "name": "alpha-png-to-svg",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+      "input_codec": "png",
+      "output_codec": "svg",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-svg-resized.svg",
+      "input": {
+        "bytes": 358,
+        "identify": "PNG\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "svg:/var/www/discourse/public/discourse-task/downsize/alpha-png-to-svg-resized.svg"
+      ],
+      "error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "nice -n 10 magick png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0] -auto-orient -gravity center -background transparent -interlace none -resize 50% -profile /var/www/discourse/vendor/data/RT_sRGB.icm svg:/var/www/discourse/public/discourse-task/downsize/alpha-png-to-svg-resized.svg\nmagick: delegate library support not built-in '/var/www/discourse/public/discourse-task/downsize/grid-alpha.png' (LCMS) @ warning/profile.c/ProfileImage/1090.\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    },
+    {
+      "name": "png-to-ico",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid.png",
+      "input_codec": "png",
+      "output_codec": "ico",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/png-to-ico-resized.ico",
+      "input": {
+        "bytes": 336,
+        "identify": "PNG\t92\t60\t40\t1\tsrgb  3.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 3,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": false,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "ico:/var/www/discourse/public/discourse-task/downsize/png-to-ico-resized.ico"
+      ],
+      "output": {
+        "bytes": 2542,
+        "identify": "ICO\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips_error": "VipsForeignLoad: \"/var/www/discourse/public/discourse-task/downsize/png-to-ico-resized.ico\" is not a known file format\n"
+      },
+      "ico": {
+        "reserved": 0,
+        "type": 1,
+        "count": 1,
+        "entries": [
+          {
+            "width": 30,
+            "height": 20,
+            "palette": 0,
+            "planes": 1,
+            "depth": 32,
+            "size": 2520,
+            "offset": 22,
+            "png": false
+          }
+        ]
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/png-to-ico-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            255.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "alpha-png-to-ico",
+      "input_path": "/var/www/discourse/public/discourse-task/downsize/grid-alpha.png",
+      "input_codec": "png",
+      "output_codec": "ico",
+      "geometry": "50%",
+      "output_path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-ico-resized.ico",
+      "input": {
+        "bytes": 358,
+        "identify": "PNG\t92\t60\t40\t1\tsrgba 4.0\tsRGB\tNone\texif\n",
+        "vips": {
+          "width": 60,
+          "height": 40,
+          "bands": 4,
+          "format": "uchar",
+          "interpretation": "srgb",
+          "alpha": true,
+          "icc_bytes": 0,
+          "pages": 1
+        }
+      },
+      "instructions": [
+        "png:/var/www/discourse/public/discourse-task/downsize/grid-alpha.png[0]",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "50%",
+        "-profile",
+        "/var/www/discourse/vendor/data/RT_sRGB.icm",
+        "ico:/var/www/discourse/public/discourse-task/downsize/alpha-png-to-ico-resized.ico"
+      ],
+      "output": {
+        "bytes": 2542,
+        "identify": "ICO\t92\t30\t20\t1\tsrgba 4.0\tsRGB\tNone\t\n",
+        "vips_error": "VipsForeignLoad: \"/var/www/discourse/public/discourse-task/downsize/alpha-png-to-ico-resized.ico\" is not a known file format\n"
+      },
+      "ico": {
+        "reserved": 0,
+        "type": 1,
+        "count": 1,
+        "entries": [
+          {
+            "width": 30,
+            "height": 20,
+            "palette": 0,
+            "planes": 1,
+            "depth": 32,
+            "size": 2520,
+            "offset": 22,
+            "png": false
+          }
+        ]
+      },
+      "reference": {
+        "path": "/var/www/discourse/public/discourse-task/downsize/alpha-png-to-ico-reference.png",
+        "width": 30,
+        "height": 20,
+        "centers": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            255.0,
+            0.0,
+            128.0
+          ],
+          [
+            0.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            0.0,
+            255.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            0.0,
+            255.0,
+            255.0
+          ],
+          [
+            255.0,
+            255.0,
+            0.0,
+            255.0
+          ]
+        ]
+      }
+    }
+  ]
+}

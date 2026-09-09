@@ -1,0 +1,1535 @@
+{
+  "cmyk_profile": null,
+  "metadata_parity": "unassessed; postprocessing measures optimizer stage with explicit strip configuration",
+  "results": [
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/source.png",
+        "pixels": 4096,
+        "bytes": 9404,
+        "sha256": "ed7726591c75db14fdb9fca451f6cef4a12f284412d7d11f3079f70a7deae2fb",
+        "details": [
+          "PNG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "92",
+          "exif,icc",
+          "srgb(224,48,32)",
+          "srgb(128,56,128)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/source.png.im.jpg",
+        "pixels": 4096,
+        "bytes": 26164,
+        "sha256": "cf7d031e832aeca62c961c52d08ad8302fbeb7a45fe10a19670e71c1aef2ab33",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "75",
+          "exif,icc",
+          "srgb(219,49,34)",
+          "srgb(127,55,129)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/source.png.vips.jpg",
+        "pixels": 4096,
+        "bytes": 26588,
+        "sha256": "c6c0081ba6fbc53e1e86c8bcf0ad080f49ac40f6a92853cffa7ac578ea97fa87",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "52",
+          "exif,icc",
+          "srgb(223,47,32)",
+          "srgb(127,56,126)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 1.2838541666666667,
+      "rgb_max_error": 6.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/source.png.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26164,
+            "sha256": "cf7d031e832aeca62c961c52d08ad8302fbeb7a45fe10a19670e71c1aef2ab33",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "exif,icc",
+              "srgb(219,49,34)",
+              "srgb(127,55,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/source.png.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26181,
+            "sha256": "56b67c76924e352c5ef511e6199692ceac7ac1fb6ecb31fe4ef68c7e55838afc",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "exif,icc",
+              "srgb(223,47,32)",
+              "srgb(127,56,126)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/source.png.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 384,
+            "sha256": "502c307fe17726349f6002b49cd334dab4dd933b8da9cad811dcebe2939eb13b",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(219,49,34)",
+              "srgb(127,55,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/source.png.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 401,
+            "sha256": "dac1ff8ece4d135754e45c8348b87ab37a7afd728f46e7977c78a2a6ef73b0af",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(223,47,32)",
+              "srgb(127,56,126)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/rgb.jpg",
+        "pixels": 4096,
+        "bytes": 26472,
+        "sha256": "4866aced0ba7c9f468980c2c37ef5bc0c2cfd07b8edaa2aa23d88434089e8d52",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "95",
+          "exif,icc",
+          "srgb(224,49,32)",
+          "srgb(128,56,129)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/rgb.jpg.im.jpg",
+        "pixels": 4096,
+        "bytes": 26239,
+        "sha256": "0c440141efa8fd948233d139c25eaf0b31414aee70fb461a1b0e569ee5f37750",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "75",
+          "exif,icc",
+          "srgb(224,47,31)",
+          "srgb(127,55,129)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/rgb.jpg.vips.jpg",
+        "pixels": 4096,
+        "bytes": 26579,
+        "sha256": "c8ab713125d36a78ab12b2ab582640290c100388a675744ca10b6d5f93c910f0",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "52",
+          "exif,icc",
+          "srgb(223,47,34)",
+          "srgb(127,56,126)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 0.9635416666666666,
+      "rgb_max_error": 4.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/rgb.jpg.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26239,
+            "sha256": "0c440141efa8fd948233d139c25eaf0b31414aee70fb461a1b0e569ee5f37750",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "exif,icc",
+              "srgb(224,47,31)",
+              "srgb(127,55,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/rgb.jpg.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26177,
+            "sha256": "277ded329a02411346c9bd85a7c94800b6c86aea986b55b236c23dc09443e1b1",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "exif,icc",
+              "srgb(223,47,34)",
+              "srgb(127,56,126)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/rgb.jpg.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 459,
+            "sha256": "997b35b4de58a97064412fe3b322a60bbf44298e159b300ef255d2f5c7cb2de7",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(224,47,31)",
+              "srgb(127,55,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/rgb.jpg.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 397,
+            "sha256": "de74e12bc4383677852d5d6f4b29e50c3a44bb191bd323f878aea17ff1585ad2",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(223,47,34)",
+              "srgb(127,56,126)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/gray.jpg",
+        "pixels": 4096,
+        "bytes": 487,
+        "sha256": "90f0e3ba7d930487c8a6885a1a628c5a1d4bc0e7bea5304abcdae23f21b8c210",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "Gray",
+          "8",
+          "95",
+          "exif",
+          "gray(84)",
+          "gray(77)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/gray.jpg.im.jpg",
+        "pixels": 4096,
+        "bytes": 395,
+        "sha256": "d254c06932f92fa08577550ef0ab6ae99e4ca3e45b8d1826900a81fc0a1693ca",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "Gray",
+          "8",
+          "75",
+          "exif",
+          "gray(84)",
+          "gray(76)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/gray.jpg.vips.jpg",
+        "pixels": 4096,
+        "bytes": 590,
+        "sha256": "5bdcf847a25762e4020da365584a65ce38b22f4ebc3629abcae64c47bcf58362",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "Gray",
+          "8",
+          "87",
+          "exif",
+          "gray(84)",
+          "gray(77)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 0.359375,
+      "rgb_max_error": 1.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/gray.jpg.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 395,
+            "sha256": "d254c06932f92fa08577550ef0ab6ae99e4ca3e45b8d1826900a81fc0a1693ca",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "Gray",
+              "8",
+              "75",
+              "exif",
+              "gray(84)",
+              "gray(76)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/gray.jpg.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 397,
+            "sha256": "52cb67b8918520888b3478241fd13a1c74984999b7a658f9e09a63278a0424eb",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "Gray",
+              "8",
+              "87",
+              "exif",
+              "gray(84)",
+              "gray(77)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/gray.jpg.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 205,
+            "sha256": "8f304860d96aecd99f0c0b4f19e83ba7b362cf816fade0c431a686aefad9fecf",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "Gray",
+              "8",
+              "75",
+              "",
+              "gray(84)",
+              "gray(76)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/gray.jpg.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 207,
+            "sha256": "82da77a3861d868f6309ea3643088a62d2016d6275b25e63347e10b3d32019d6",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "Gray",
+              "8",
+              "87",
+              "",
+              "gray(84)",
+              "gray(77)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/cmyk.jpg",
+        "pixels": 4096,
+        "bytes": 1062,
+        "sha256": "39e6a5db8c092e09c54fed06a1a62cb30102b5e38dd9dc007b0cbf2e4747eb9b",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "CMYK",
+          "8",
+          "95",
+          "",
+          "cmyk(0,200,218,31)",
+          "cmyk(0,143,1,127)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/cmyk.jpg.im.jpg",
+        "pixels": 4096,
+        "bytes": 654,
+        "sha256": "d3ff961371f883220ace712793d9729848cababd5572f15d3b7950469c8af5c5",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "CMYK",
+          "8",
+          "75",
+          "",
+          "cmyk(0,200,218,31)",
+          "cmyk(3,142,0,126)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/cmyk.jpg.vips.jpg",
+        "pixels": 4096,
+        "bytes": 1222,
+        "sha256": "2ac3f1b0c7e91b90594e3f53c7aec2e08c2c870822af3e8eb1b10be0f12bcef7",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "CMYK",
+          "8",
+          "75",
+          "exif",
+          "cmyk(0,201,220,31)",
+          "cmyk(0,144,0,126)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 0.6875,
+      "rgb_max_error": 3.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/cmyk.jpg.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 652,
+            "sha256": "308cb065eb9f8dee3282c20bb0e09ac8c0215c6fe1319887723753cd18aeba13",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "CMYK",
+              "8",
+              "75",
+              "",
+              "cmyk(0,200,218,31)",
+              "cmyk(3,142,0,126)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/cmyk.jpg.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 757,
+            "sha256": "34ee50a8eacdd82b34498199dc885a0986bac5efd13155f2ea38e331bee5f94e",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "CMYK",
+              "8",
+              "75",
+              "exif",
+              "cmyk(0,201,220,31)",
+              "cmyk(0,144,0,126)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/cmyk.jpg.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 636,
+            "sha256": "347fe18f70c36cf284fc732ebddd6d84431cfc7a1b72bc401c3cd0c0d73fb8a5",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "CMYK",
+              "8",
+              "75",
+              "",
+              "cmyk(0,200,218,31)",
+              "cmyk(3,142,0,126)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/cmyk.jpg.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 567,
+            "sha256": "214db3d05699143e94b1c2dcbb37228da20d79657cd4edf9c49f73c42b0e61e2",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "CMYK",
+              "8",
+              "75",
+              "",
+              "cmyk(0,201,220,31)",
+              "cmyk(0,144,0,126)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/alpha16.png",
+        "pixels": 4096,
+        "bytes": 472,
+        "sha256": "06c1fc1b4a890f6fc1b2959c5a9e470e0bd38e5837b67dfd2790eac36b62fd1b",
+        "details": [
+          "PNG",
+          "64",
+          "64",
+          "sRGB",
+          "16",
+          "92",
+          "",
+          "srgba(255,0,0,0.501961)",
+          "srgba(255,0,0,0.501961)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/alpha16.png.im.jpg",
+        "pixels": 4096,
+        "bytes": 311,
+        "sha256": "8c59aa9b51f2d03709a76c999383636345150dfa29a57601e96acb0427ad1384",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "75",
+          "",
+          "srgb(255,127,126)",
+          "srgb(255,127,126)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/alpha16.png.vips.jpg",
+        "pixels": 4096,
+        "bytes": 849,
+        "sha256": "26a76bb982d31fb590e491f802b4da1e1b72e758fe1861a49e6bf854d5d3ffe2",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "52",
+          "exif",
+          "srgb(255,128,127)",
+          "srgb(255,128,127)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 0.6666666666666666,
+      "rgb_max_error": 1.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/alpha16.png.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 311,
+            "sha256": "8c59aa9b51f2d03709a76c999383636345150dfa29a57601e96acb0427ad1384",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(255,127,126)",
+              "srgb(255,127,126)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/alpha16.png.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 501,
+            "sha256": "fd789f1dc5e7a9e506835a92f2c534599efd3e6f717eb8c14322b402e3d3214e",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "exif",
+              "srgb(255,128,127)",
+              "srgb(255,128,127)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/alpha16.png.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 311,
+            "sha256": "8c59aa9b51f2d03709a76c999383636345150dfa29a57601e96acb0427ad1384",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(255,127,126)",
+              "srgb(255,127,126)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/alpha16.png.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 311,
+            "sha256": "cebe13b569e82baed4c9f674dc71feba00b633fe2d7044f99009aa6a08360890",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(255,128,127)",
+              "srgb(255,128,127)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.gif",
+        "pixels": 4096,
+        "bytes": 26713,
+        "sha256": "8e870735077ddafd82aa901cc8ab0c6c405bdba289cf9b77260b16578a45f033",
+        "details": [
+          "GIF",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "92",
+          "icc",
+          "srgb(224,48,32)",
+          "srgb(128,56,128)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.gif.im.jpg",
+        "pixels": 4096,
+        "bytes": 25974,
+        "sha256": "69e53bdfaf712563f07b9fcb9cfae6c975c6480431b14c207543aeaa8f66fb74",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "75",
+          "icc",
+          "srgb(219,49,34)",
+          "srgb(127,55,129)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.gif.vips.jpg",
+        "pixels": 4096,
+        "bytes": 998,
+        "sha256": "fd61eb006967d4bad73f997df9575fbdefb0c884631f9f93f0f68342ed380ebe",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "52",
+          "exif",
+          "srgb(223,47,32)",
+          "srgb(127,56,126)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 1.2838541666666667,
+      "rgb_max_error": 6.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.gif.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 25974,
+            "sha256": "69e53bdfaf712563f07b9fcb9cfae6c975c6480431b14c207543aeaa8f66fb74",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "icc",
+              "srgb(219,49,34)",
+              "srgb(127,55,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.gif.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 591,
+            "sha256": "5d7d47bf82ce971cdb9cac70b5393a3b3cfb1372b84deb2027e1be2adfcd0715",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "exif",
+              "srgb(223,47,32)",
+              "srgb(127,56,126)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.gif.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 384,
+            "sha256": "47b8128f061798cc41c6315e79f851d443b2f26c0f6ef2a4d3d6b0eca258e8f7",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(219,49,34)",
+              "srgb(127,55,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.gif.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 401,
+            "sha256": "dac1ff8ece4d135754e45c8348b87ab37a7afd728f46e7977c78a2a6ef73b0af",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(223,47,32)",
+              "srgb(127,56,126)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.webp",
+        "pixels": 4096,
+        "bytes": 25934,
+        "sha256": "5d55c0fc49f718344ca97a9f984e8e2ca924e73a060ed0a1ad4f8d942777c743",
+        "details": [
+          "WEBP",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "92",
+          "exif,icc",
+          "srgb(227,45,31)",
+          "srgb(129,56,129)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.webp.im.jpg",
+        "pixels": 4096,
+        "bytes": 26192,
+        "sha256": "ea7f33e7d710d91020d10fc89931983ff0d41bbd2bfa8042bf73eabaaae23c2c",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "75",
+          "exif,icc",
+          "srgb(228,45,27)",
+          "srgb(128,56,129)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.webp.vips.jpg",
+        "pixels": 4096,
+        "bytes": 26586,
+        "sha256": "b4389025767cac59ce3aba16c6ac7de61d47a82f7004ebfd07d6f4fca71af15c",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "52",
+          "exif,icc",
+          "srgb(227,45,31)",
+          "srgb(129,56,127)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 1.4610188802083333,
+      "rgb_max_error": 8.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.webp.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26192,
+            "sha256": "ea7f33e7d710d91020d10fc89931983ff0d41bbd2bfa8042bf73eabaaae23c2c",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "exif,icc",
+              "srgb(228,45,27)",
+              "srgb(128,56,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.webp.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26202,
+            "sha256": "5084efa8c0845da9259cf5b3eb37d00b17d152b0a325da259741803784aabd52",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "exif,icc",
+              "srgb(227,45,31)",
+              "srgb(129,56,127)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.webp.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 412,
+            "sha256": "05213a9f870fee1c8f6832dc3c055d868a6ae88517dd5aa37fd3bb798d77ddb5",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(228,45,27)",
+              "srgb(128,56,129)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.webp.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 422,
+            "sha256": "38014faebfc8d2ca3da24e9fcc4385dac3bbd799139b220309fc9d37e5b6740c",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(227,45,31)",
+              "srgb(129,56,127)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.avif",
+        "pixels": 4096,
+        "bytes": 26143,
+        "sha256": "90e38df747e2180b646a58ce15b40bd750ea85244abb5063bffb46cea4efcc0e",
+        "details": [
+          "AVIF",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "92",
+          "exif,icc",
+          "srgb(218,50,37)",
+          "srgb(124,56,129)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.avif.im.jpg",
+        "pixels": 4096,
+        "bytes": 26167,
+        "sha256": "df4bda3bfee36247d4a04f83b5579c4a98e5e50f22762de67614df2dcec9beff",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "75",
+          "exif,icc",
+          "srgb(218,51,35)",
+          "srgb(127,57,130)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.avif.vips.jpg",
+        "pixels": 4096,
+        "bytes": 26554,
+        "sha256": "e209592b933882e4ca0c714fb849ef049c2cb1906e270ddc51af81306c7bb52b",
+        "details": [
+          "JPEG",
+          "64",
+          "64",
+          "sRGB",
+          "8",
+          "52",
+          "exif,icc",
+          "srgb(220,50,37)",
+          "srgb(126,56,129)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          64,
+          64
+        ],
+        [
+          64,
+          64
+        ]
+      ],
+      "rgb_mae": 0.7239583333333334,
+      "rgb_max_error": 3.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.avif.im.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26167,
+            "sha256": "df4bda3bfee36247d4a04f83b5579c4a98e5e50f22762de67614df2dcec9beff",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "exif,icc",
+              "srgb(218,51,35)",
+              "srgb(127,57,130)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.avif.vips.jpg.strip-false.jpg",
+            "pixels": 4096,
+            "bytes": 26165,
+            "sha256": "92df3d68b021d00f59b44db350fb13552bda236262bebaf6b5e198345dd267a6",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "exif,icc",
+              "srgb(220,50,37)",
+              "srgb(126,56,129)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.avif.im.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 387,
+            "sha256": "59c5ad3ae623c645eac0e6770a35f8f49776166dc109488be83b5a5a6413eb48",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(218,51,35)",
+              "srgb(127,57,130)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/static.avif.vips.jpg.strip-true.jpg",
+            "pixels": 4096,
+            "bytes": 385,
+            "sha256": "2f9f6542c3c998f0df17a5105f52d5630f2d703d2ce547027287f9ca799d0971",
+            "details": [
+              "JPEG",
+              "64",
+              "64",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(220,50,37)",
+              "srgb(126,56,129)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/stress.jpg",
+        "pixels": 79210000,
+        "bytes": 466479,
+        "sha256": "e3520608a64705eec82d5a3fc44a3a082f2ead0431f23affd06131f528168903",
+        "details": [
+          "JPEG",
+          "8900",
+          "8900",
+          "sRGB",
+          "8",
+          "80",
+          "",
+          "srgb(228,237,252)",
+          "srgb(128,128,128)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/stress.jpg.im.jpg",
+        "pixels": 79210000,
+        "bytes": 466425,
+        "sha256": "c6b8b0371f97d38b271275da072e9fcff30c20ebf6dcd32b313bbc5c24855fb6",
+        "details": [
+          "JPEG",
+          "8900",
+          "8900",
+          "sRGB",
+          "8",
+          "75",
+          "",
+          "srgb(229,236,252)",
+          "srgb(128,128,128)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/stress.jpg.vips.jpg",
+        "pixels": 79210000,
+        "bytes": 1242554,
+        "sha256": "ac357a709f01a124d55686f366fc6299821b1335a60548f6bb69499f8725cceb",
+        "details": [
+          "JPEG",
+          "8900",
+          "8900",
+          "sRGB",
+          "8",
+          "52",
+          "exif",
+          "srgb(228,237,254)",
+          "srgb(128,128,128)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          8900,
+          8900
+        ],
+        [
+          8900,
+          8900
+        ]
+      ],
+      "rgb_mae": 0.00018378992551445523,
+      "rgb_max_error": 25.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/stress.jpg.im.jpg.strip-false.jpg",
+            "pixels": 79210000,
+            "bytes": 466425,
+            "sha256": "c6b8b0371f97d38b271275da072e9fcff30c20ebf6dcd32b313bbc5c24855fb6",
+            "details": [
+              "JPEG",
+              "8900",
+              "8900",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(229,236,252)",
+              "srgb(128,128,128)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/stress.jpg.vips.jpg.strip-false.jpg",
+            "pixels": 79210000,
+            "bytes": 466530,
+            "sha256": "63486155efacf2f47c1b30faf3133cf08df70842ccde1e6d262d3dc82179ea89",
+            "details": [
+              "JPEG",
+              "8900",
+              "8900",
+              "sRGB",
+              "8",
+              "52",
+              "exif",
+              "srgb(228,237,254)",
+              "srgb(128,128,128)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/stress.jpg.im.jpg.strip-true.jpg",
+            "pixels": 79210000,
+            "bytes": 466425,
+            "sha256": "c6b8b0371f97d38b271275da072e9fcff30c20ebf6dcd32b313bbc5c24855fb6",
+            "details": [
+              "JPEG",
+              "8900",
+              "8900",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(229,236,252)",
+              "srgb(128,128,128)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/stress.jpg.vips.jpg.strip-true.jpg",
+            "pixels": 79210000,
+            "bytes": 466340,
+            "sha256": "9cfb4ab7239e8d1e921e40c4a59de61c8adf5c1b18b1a40315f5388404a68d39",
+            "details": [
+              "JPEG",
+              "8900",
+              "8900",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(228,237,254)",
+              "srgb(128,128,128)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo.jpg",
+        "pixels": 955134,
+        "bytes": 296310,
+        "sha256": "f819dbad7ebd7007bd9104617147acc303b815bb9e3b85dad308d39a728851eb",
+        "details": [
+          "JPEG",
+          "846",
+          "1129",
+          "sRGB",
+          "8",
+          "89",
+          "exif,icc,xmp",
+          "srgb(151,54,170)",
+          "srgb(121,89,50)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo.jpg.im.jpg",
+        "pixels": 955134,
+        "bytes": 133366,
+        "sha256": "4d84a49653d4dfdb217f6d6297d10c44a9d6e91abd264ddb124fe58daff36ecd",
+        "details": [
+          "JPEG",
+          "846",
+          "1129",
+          "sRGB",
+          "8",
+          "75",
+          "exif,icc,xmp",
+          "srgb(154,54,166)",
+          "srgb(122,90,51)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo.jpg.vips.jpg",
+        "pixels": 955134,
+        "bytes": 103543,
+        "sha256": "6032eb1773fe02185a613942bfb74d88567281dd607fde1c1e47648ccb3fe970",
+        "details": [
+          "JPEG",
+          "846",
+          "1129",
+          "sRGB",
+          "8",
+          "52",
+          "exif,icc,xmp",
+          "srgb(153,52,170)",
+          "srgb(124,90,52)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          846,
+          1129
+        ],
+        [
+          846,
+          1129
+        ]
+      ],
+      "rgb_mae": 2.2228374936570856,
+      "rgb_max_error": 55.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo.jpg.im.jpg.strip-false.jpg",
+            "pixels": 955134,
+            "bytes": 133366,
+            "sha256": "4d84a49653d4dfdb217f6d6297d10c44a9d6e91abd264ddb124fe58daff36ecd",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "75",
+              "exif,icc,xmp",
+              "srgb(154,54,166)",
+              "srgb(122,90,51)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo.jpg.vips.jpg.strip-false.jpg",
+            "pixels": 955134,
+            "bytes": 95909,
+            "sha256": "0fe686e911844314ec0ac44024adba611da34bb0d4db359296c1dedbc65cdaba",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "52",
+              "exif,icc,xmp",
+              "srgb(153,52,170)",
+              "srgb(124,90,52)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo.jpg.im.jpg.strip-true.jpg",
+            "pixels": 955134,
+            "bytes": 127876,
+            "sha256": "1a547cc60c7ff5146bff44622208f3d947341951e96eab9a2a63ce0430d4470f",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(154,54,166)",
+              "srgb(122,90,51)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo.jpg.vips.jpg.strip-true.jpg",
+            "pixels": 955134,
+            "bytes": 90418,
+            "sha256": "17707cd7dd541b5a0735f06cd8c1505cac7eb4156e36e15aa2033d7a820601af",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(153,52,170)",
+              "srgb(124,90,52)"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo-profile.jpg",
+        "pixels": 955134,
+        "bytes": 321334,
+        "sha256": "2969489fabe67653bef8d2765b8b7700bd2a8849d23b7aa957d9c3d3a06b008f",
+        "details": [
+          "JPEG",
+          "846",
+          "1129",
+          "sRGB",
+          "8",
+          "89",
+          "exif,icc,xmp",
+          "srgb(151,54,170)",
+          "srgb(121,89,50)"
+        ]
+      },
+      "imagemagick": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo-profile.jpg.im.jpg",
+        "pixels": 955134,
+        "bytes": 158390,
+        "sha256": "14503dc5add29f3bda86eaec0766180d5241c913784a925e525014cd74c4ed9a",
+        "details": [
+          "JPEG",
+          "846",
+          "1129",
+          "sRGB",
+          "8",
+          "75",
+          "exif,icc,xmp",
+          "srgb(154,54,166)",
+          "srgb(122,90,51)"
+        ]
+      },
+      "vips": {
+        "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo-profile.jpg.vips.jpg",
+        "pixels": 955134,
+        "bytes": 128567,
+        "sha256": "3f5de6df98063377a15d06231888bc25f467da6e24f263ac163fe06d89d92204",
+        "details": [
+          "JPEG",
+          "846",
+          "1129",
+          "sRGB",
+          "8",
+          "52",
+          "exif,icc,xmp",
+          "srgb(153,52,170)",
+          "srgb(124,90,52)"
+        ]
+      },
+      "preview_dimensions": [
+        [
+          846,
+          1129
+        ],
+        [
+          846,
+          1129
+        ]
+      ],
+      "rgb_mae": 2.2228374936570856,
+      "rgb_max_error": 55.0,
+      "postprocessing": {
+        "false": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo-profile.jpg.im.jpg.strip-false.jpg",
+            "pixels": 955134,
+            "bytes": 158390,
+            "sha256": "14503dc5add29f3bda86eaec0766180d5241c913784a925e525014cd74c4ed9a",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "75",
+              "exif,icc,xmp",
+              "srgb(154,54,166)",
+              "srgb(122,90,51)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo-profile.jpg.vips.jpg.strip-false.jpg",
+            "pixels": 955134,
+            "bytes": 120933,
+            "sha256": "34a20c0e59a60255ea9a3211f07e42b14de9033f4a9ad67d5c6a0b001e4acf68",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "52",
+              "exif,icc,xmp",
+              "srgb(153,52,170)",
+              "srgb(124,90,52)"
+            ]
+          }
+        ],
+        "true": [
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo-profile.jpg.im.jpg.strip-true.jpg",
+            "pixels": 955134,
+            "bytes": 127876,
+            "sha256": "1a547cc60c7ff5146bff44622208f3d947341951e96eab9a2a63ce0430d4470f",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "75",
+              "",
+              "srgb(154,54,166)",
+              "srgb(122,90,51)"
+            ]
+          },
+          {
+            "path": "/var/www/discourse/public/discourse-task/jpeg-evidence/photo-profile.jpg.vips.jpg.strip-true.jpg",
+            "pixels": 955134,
+            "bytes": 90418,
+            "sha256": "17707cd7dd541b5a0735f06cd8c1505cac7eb4156e36e15aa2033d7a820601af",
+            "details": [
+              "JPEG",
+              "846",
+              "1129",
+              "sRGB",
+              "8",
+              "52",
+              "",
+              "srgb(153,52,170)",
+              "srgb(124,90,52)"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "operation": "downsize",
+  "iterations": 31,
+  "source": {
+    "base_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+    "snapshot": "working-tree contents; base commit alone does not identify this source",
+    "files": {
+      "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+      "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+      "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+      "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+      "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "script/discourse_vips_worker": "1c90781d234ecdc99abbfb23adae95b4f2a4c0f6e7c14e4986f8eddfafaf80a3",
+      "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+      "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+      "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+    }
+  },
+  "manifest_sha256": "a1c9d347f56042cdabec9657d48aeca3da61a448dd1509d64e5554aefe78407a",
+  "harness_sha256": "6721efa4f681535ba12b07a7723feb5649b9ddd2832685404faf33cc154fd55d",
+  "ruby": "ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [x86_64-linux]",
+  "kernel": "Linux 6.8.0-124-generic",
+  "landlock": true,
+  "libvips": "8.18.4",
+  "imagemagick": "Version: ImageMagick 7.1.2-27 Q16-HDRI x86_64 e4c2b403b:20260705 https://imagemagick.org",
+  "timing_boundary": "Core transform including wrapper, IPC, sandbox child, priority10 and encoder. Excludes Rails boot, source quality probe, evidence decoding, and FileHelper optimizer.",
+  "quality_policy": "Explicit caller quality first; otherwise AVIF50; JPEG/WebP use source JPEG estimated Q or lossless WebP100, then JPEG92/WebP75. Probe frame0 before timing. Original ImageMagick instructions retain recorded quality options.",
+  "selected_sample": "svg-to-png",
+  "missing_baseline_fields": [
+    {
+      "operation": "downsize",
+      "name": "svg-to-svg",
+      "reason": "baseline failed before instruction generation",
+      "baseline_error": {
+        "class": "Discourse::Utils::CommandError",
+        "message": "identify -format %m\t%Q\t%w\t%h\t%n\t%[channels]\t%[colorspace]\t%[interlace]\t%[profiles]\n svg:/var/www/discourse/spec/fixtures/images/image.svg\nidentify: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      }
+    }
+  ],
+  "removed_api_cases": [
+    {
+      "operation": "resize",
+      "name": "colors-12",
+      "strip_metadata": false,
+      "colors": 12,
+      "reason": "unused resize colors option removed by user authorization; historical record retained, excluded from migration performance corpus"
+    },
+    {
+      "operation": "resize",
+      "name": "colors-12",
+      "strip_metadata": true,
+      "colors": 12,
+      "reason": "unused resize colors option removed by user authorization; historical record retained, excluded from migration performance corpus"
+    }
+  ],
+  "limitations": [
+    "Crop historical output records include FileHelper optimization; new timed ImageMagick operations replay raw instruction arrays only.",
+    "Additional natural-photo/avatar/orientation/enlargement cases reuse recorded instruction templates and existing inputs, but have no historical output baseline.",
+    "No source ICC colorimetric accuracy conclusion: deployed ImageMagick may lack LCMS.",
+    "Visible pixel differences use ImageMagick-decoded PNGs converted to8-bit sRGB; original encoding/depth/profile metadata is recorded separately. Hidden RGB under transparent pixels is excluded from visible differences.",
+    "Post-optimizer and complete caller evidence must be measured separately."
+  ],
+  "samples": [
+    {
+      "name": "svg-to-png",
+      "parameters": {
+        "operation": "downsize",
+        "name": "svg-to-png",
+        "input": "inputs/spec/fixtures/images/image.svg",
+        "input_format": "svg",
+        "output_format": "png",
+        "output_suffix": "png",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "50%",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_source": "references/downsize.json",
+        "geometry": "50%",
+        "historical_baseline": false,
+        "template_record": "png-grid",
+        "expected_dimensions": [
+          50,
+          25
+        ]
+      },
+      "input_sha256": "14ec1484e7e8badb25663a887e7686ded0a28fa40cab858d629ee34d139eeb26",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": null,
+        "source": "encoder quality not used"
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 388.0799291655421,
+          "dimensions": [
+            50,
+            25
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 351.2190068140626,
+          "dimensions": [
+            50,
+            25
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            353.3177957870066,
+            354.04584696516395,
+            352.2223876789212,
+            294.9775322340429,
+            360.50210194662213,
+            339.99240724369884,
+            312.97503085806966,
+            392.22009014338255,
+            391.87374617904425,
+            321.57086906954646,
+            328.5115519538522,
+            330.1695748232305,
+            333.51849345490336,
+            333.9431998319924,
+            333.500845823437,
+            350.54173320531845,
+            307.41152400150895,
+            322.7074141614139,
+            295.7495111040771,
+            315.48813125118613,
+            333.74310191720724,
+            388.020487036556,
+            329.83623817563057,
+            315.31792506575584,
+            327.7866756543517,
+            303.5264778882265,
+            305.115707218647,
+            355.6103431619704,
+            294.2306660115719,
+            291.5556197986007,
+            356.06020875275135
+          ],
+          "median_ms": 330.1695748232305,
+          "p95_ms": 391.87374617904425
+        },
+        "libvips": {
+          "values_ms": [
+            355.17598083242774,
+            379.1702468879521,
+            327.53645116463304,
+            320.64155489206314,
+            344.91453506052494,
+            326.0678728111088,
+            298.5303779132664,
+            389.68814397230744,
+            356.7774980328977,
+            350.0632210634649,
+            326.02556608617306,
+            335.83457628265023,
+            346.8315680511296,
+            327.38932175561786,
+            327.6960230432451,
+            352.9837089590728,
+            318.17571725696325,
+            337.8926767036319,
+            313.5021603666246,
+            334.56534892320633,
+            319.05805971473455,
+            352.05913009122014,
+            307.3784988373518,
+            303.23717882856727,
+            340.77417897060513,
+            301.7025860026479,
+            282.1292383596301,
+            306.528614833951,
+            344.0012061037123,
+            360.6257429346442,
+            355.9469818137586
+          ],
+          "median_ms": 334.56534892320633,
+          "p95_ms": 379.1702468879521
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/svg-to-png-imagemagick.png",
+          "bytes": 334,
+          "sha256": "92fc3adc7702aaff9eec0244a575120f758e46b484281b09202fdd7fa62b8b75",
+          "identify": "PNG\t50\t25\t1\tGray\tgray  2.0\tTopLeft\t",
+          "dimensions": [
+            50,
+            25
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/svg-to-png-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/svg-to-png-libvips.png",
+          "bytes": 323,
+          "sha256": "5a415352a4c7b09f241efe2861117c3eda0b3b6882e8526a2f65c5c0048f844d",
+          "identify": "PNG\t50\t25\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            50,
+            25
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/svg-to-png-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0,
+            "maximum_difference": 0.0,
+            "psnr_db": "identical"
+          }
+        ]
+      }
+    }
+  ],
+  "fresh_worker": {
+    "sample": "svg-to-png",
+    "quality": {
+      "value": null,
+      "source": "encoder quality not used"
+    },
+    "measurements": [
+      {
+        "status": "ok",
+        "elapsed_ms": 641.5882031433284,
+        "sha256": "5a415352a4c7b09f241efe2861117c3eda0b3b6882e8526a2f65c5c0048f844d"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 636.2076397053897,
+        "sha256": "5a415352a4c7b09f241efe2861117c3eda0b3b6882e8526a2f65c5c0048f844d"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 653.5698571242392,
+        "sha256": "5a415352a4c7b09f241efe2861117c3eda0b3b6882e8526a2f65c5c0048f844d"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 606.6130688413978,
+        "sha256": "5a415352a4c7b09f241efe2861117c3eda0b3b6882e8526a2f65c5c0048f844d"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 657.6100252568722,
+        "sha256": "5a415352a4c7b09f241efe2861117c3eda0b3b6882e8526a2f65c5c0048f844d"
+      }
+    ]
+  },
+  "summary": {
+    "selected": 1,
+    "recorded": 1,
+    "paired_timing_eligible": 1,
+    "incompatible_or_failed": []
+  }
+}

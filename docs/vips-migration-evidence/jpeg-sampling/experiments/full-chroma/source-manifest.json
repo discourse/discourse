@@ -1,0 +1,41 @@
+{
+  "head": "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948",
+  "working_tree": "dirty snapshot; source hashes are authoritative",
+  "files": {
+    "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+    "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+    "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+    "lib/discourse_vips.rb": "6fa7d4c613fdce0659ac71a84d0207ded1e332b99e50d6502f096cd1fa21f196",
+    "script/discourse_vips_worker": "91cd52524d2db61d33fc560875833c8ff70ecbd43638cc586630d743f5a92c41",
+    "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+    "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+    "lib/discourse_vips/ico_image.rb": "ad48ad7d6d2cfddd2ef5e797806ba02d34249162244312be6e3d81d160bce837",
+    "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+    "lib/geometry_commands.rb": "00aec59478842d7d0ba060e6e858410c405b30b045836e9d492a4ae26c5736e6",
+    "lib/conversion_command.rb": "bef9374f42c96014594c7ec840fc70d8b45d959918bf5fe6f13b9ab98281fb43",
+    "Gemfile": "f2cc2c492b57826eb7857ffaaad36085772eba989cadb0f2a543fa5f4bc8fc92",
+    "Gemfile.lock": "4bab9d22287a112da89b1b6d147444f16b76a8b139ae4845fa0fb57b44f67346",
+    "run.rb": "4254a53091c7a4c496f1631b7386bf06222f379486b4659534cf0247be8b6051"
+  },
+  "geometry_source": {
+    "file": "app/models/optimized_image.rb",
+    "sha256": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+    "lines": [
+      186,
+      313
+    ]
+  },
+  "conversion_source": {
+    "file": "lib/upload_creator.rb",
+    "sha256": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+    "lines": [
+      476,
+      493
+    ]
+  },
+  "experimental_override": {
+    "purpose": "Force full chroma for every native JPEG output to measure uncommon sampling losses; not proposed production policy",
+    "original_worker_sha256": "1264d8a56cc627adaa1ae5e8646077e9418abdd2392788eb8bcc9048d218512e",
+    "method": "jpeg_subsample_mode always returns :off"
+  }
+}

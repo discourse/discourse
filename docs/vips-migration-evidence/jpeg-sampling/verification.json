@@ -1,0 +1,65 @@
+{
+  "source_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+  "report_sha256": "745942eb8345ed51e319a9eeb3211dd2b84b3d0349787e8d77db047edf3e3b5d",
+  "source_files_match_git_commit": 9,
+  "source_and_bundle_hashes": 14,
+  "cases": 80,
+  "backend_errors": 0,
+  "output_hashes_sizes_sof_dimensions_and_sampling_verified": 160,
+  "source_hash_and_size_records_verified": 80,
+  "dimension_mismatches": 0,
+  "profile_coverage": "All ICC hashes null; no profile-preservation coverage",
+  "uncommon_final_pairs_byte_identical_to_experiment": 32,
+  "summary": [
+    {
+      "label": "png",
+      "cases": 16,
+      "maximum_case_mean_rgb_difference": 2.685,
+      "maximum_channel_difference": 17.0,
+      "native_size_increase_percent_range": [
+        48.9451476793249,
+        102.79223852342642
+      ]
+    },
+    {
+      "label": "444",
+      "cases": 16,
+      "maximum_case_mean_rgb_difference": 2.8866666666666667,
+      "maximum_channel_difference": 16.0,
+      "native_size_increase_percent_range": [
+        49.59254947613505,
+        103.30618112122663
+      ]
+    },
+    {
+      "label": "420",
+      "cases": 16,
+      "maximum_case_mean_rgb_difference": 2.4277777777777776,
+      "maximum_channel_difference": 12.0,
+      "native_size_increase_percent_range": [
+        46.685082872928184,
+        69.3006993006993
+      ]
+    },
+    {
+      "label": "422",
+      "cases": 16,
+      "maximum_case_mean_rgb_difference": 33.151666666666664,
+      "maximum_channel_difference": 126.0,
+      "native_size_increase_percent_range": [
+        71.61803713527853,
+        126.25152625152624
+      ]
+    },
+    {
+      "label": "440",
+      "cases": 16,
+      "maximum_case_mean_rgb_difference": 3.3505555555555557,
+      "maximum_channel_difference": 21.0,
+      "native_size_increase_percent_range": [
+        59.52677459526774,
+        157.18599033816426
+      ]
+    }
+  ]
+}

@@ -1,0 +1,414 @@
+{
+  "branches": [
+    {
+      "path": "/tmp/discourse-vips-review-01-animation-01a0846e",
+      "branch": "tgxworld/vips-review-01-animation",
+      "base": "0708de39bcebe79c8469dfd88cd568c8e71b42c7",
+      "head": "345c05377b205be64d45a1ab13d909d231f725ff",
+      "sources": [
+        "0f9c206759bb7e05c8a553858161f322db24f089"
+      ],
+      "files": [
+        "lib/discourse_vips.rb",
+        "lib/upload_creator.rb",
+        "script/discourse_vips_worker",
+        "spec/fixtures/images/multipage.avif",
+        "spec/fixtures/images/static.avif",
+        "spec/fixtures/images/static.gif",
+        "spec/fixtures/images/static.webp",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/upload_creator_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "dominant-color",
+        "letter-avatar",
+        "version"
+      ],
+      "original_head": "275077e3257dd355c1284db6a6db634f7fd1711c",
+      "original_base": "0708de39bcebe79c8469dfd88cd568c8e71b42c7",
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-02-svg-dimensions-01a0846e",
+      "branch": "tgxworld/vips-review-02-svg-dimensions",
+      "base": "345c05377b205be64d45a1ab13d909d231f725ff",
+      "head": "60ee5446c33c68e5d9711ab717e6e8a29449dd32",
+      "sources": [
+        "b69ab7f109f31f671a497de0160aef3a41aee9ae",
+        "4a5ceb55d436dfcbac64a0072aaf3d85a9900b65"
+      ],
+      "files": [
+        "app/models/upload.rb",
+        "lib/discourse_vips.rb",
+        "lib/discourse_vips/worker_process.rb",
+        "lib/upload_creator.rb",
+        "script/discourse_vips_worker",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/upload_creator_spec.rb",
+        "spec/models/upload_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "dominant-color",
+        "letter-avatar",
+        "svg-dimensions",
+        "version"
+      ],
+      "original_head": "4a9d9de44a95a7a0801430616181323cbf80c3dc",
+      "original_base": "275077e3257dd355c1284db6a6db634f7fd1711c",
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-03-svg-assets-01a0846e",
+      "branch": "tgxworld/vips-review-03-svg-assets",
+      "base": "60ee5446c33c68e5d9711ab717e6e8a29449dd32",
+      "head": "3f82276023c2765e39a1a724dc62e71af0c126ac",
+      "sources": [
+        "074eb1c476555694fc135c99a6e391deeeef908a"
+      ],
+      "files": [
+        "lib/discourse_vips.rb",
+        "lib/topic_og_image_generator.rb",
+        "script/discourse_vips_worker",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/topic_og_image_generator_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "dominant-color",
+        "letter-avatar",
+        "svg-dimensions",
+        "svg-to-png",
+        "version"
+      ],
+      "original_head": "a24b98fcca894948bd3ac0c993b974c6005426fe",
+      "original_base": "4a9d9de44a95a7a0801430616181323cbf80c3dc",
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-04-og-01a0846e",
+      "branch": "tgxworld/vips-review-04-og",
+      "base": "3f82276023c2765e39a1a724dc62e71af0c126ac",
+      "head": "9c2219b3bec399bc736fde3ddbec58f29df4420f",
+      "sources": [
+        "f5deaaf93458a72725c24f3c3120a67a63539d0f",
+        "2260c61e4ad5516e2965bee0a6de0b0811d789c8",
+        "58c29b709d914d66a4ffd729475f19c341c23efc"
+      ],
+      "files": [
+        "lib/discourse_vips.rb",
+        "lib/topic_og_image_generator.rb",
+        "script/discourse_vips_worker",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/topic_og_image_generator_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "dominant-color",
+        "letter-avatar",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "822fc4adfde9cde543d01b11c3bcbe877c5a3ac2",
+      "original_base": "a24b98fcca894948bd3ac0c993b974c6005426fe",
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-05-heif-01a0846e",
+      "branch": "tgxworld/vips-review-05-heif",
+      "base": "9c2219b3bec399bc736fde3ddbec58f29df4420f",
+      "head": "4c106c0a96e78cb6d3b0547967e436e31fc198fa",
+      "sources": [
+        "adf6c97ac0c0d0681d0c1367c48b14422b24d95f",
+        "264eefa6658fec3bbf45bf9b9d13be8adf44793a"
+      ],
+      "files": [
+        "lib/discourse_vips.rb",
+        "lib/upload_creator.rb",
+        "script/discourse_vips_worker",
+        "spec/fixtures/images/heif-color-grid-12bit.heic",
+        "spec/fixtures/images/heif-color-grid-8bit.heic",
+        "spec/fixtures/images/heif-color-grid-alpha-12bit.heic",
+        "spec/fixtures/images/heif-color-grid-alpha-8bit.heic",
+        "spec/fixtures/images/heif-color-grid-mirrored.heic",
+        "spec/fixtures/images/heif-color-grid-rotated.heic",
+        "spec/fixtures/images/heif-truncated-payload.heic",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/upload_creator_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "dominant-color",
+        "heif-to-jpeg",
+        "letter-avatar",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "36b59fd34321fd60fbfa23af9a97b9754a86fe47",
+      "original_base": "822fc4adfde9cde543d01b11c3bcbe877c5a3ac2",
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-06-ico-01a0846e",
+      "branch": "tgxworld/vips-review-06-ico",
+      "base": "4c106c0a96e78cb6d3b0547967e436e31fc198fa",
+      "head": "7bd1abcfdeefa54ddc3cb1280f1e6710672da71b",
+      "sources": [
+        "da0c0d17db42e5b096a5c530700b3a33f607897a",
+        "5bba606a5d2326d30cf31f68224839cd394d73b5"
+      ],
+      "files": [
+        "lib/discourse_vips.rb",
+        "lib/discourse_vips/ico_image.rb",
+        "lib/upload_creator.rb",
+        "script/discourse_vips_worker",
+        "spec/fixtures/images/ico-bmp-16bit.ico",
+        "spec/fixtures/images/ico-bmp-1bit.ico",
+        "spec/fixtures/images/ico-bmp-24bit.ico",
+        "spec/fixtures/images/ico-bmp-32bit.ico",
+        "spec/fixtures/images/ico-bmp-4bit.ico",
+        "spec/fixtures/images/ico-bmp-8bit.ico",
+        "spec/fixtures/images/ico-last-bmp.ico",
+        "spec/fixtures/images/ico-last-png.ico",
+        "spec/fixtures/images/ico-odd-mask-1bit.ico",
+        "spec/fixtures/images/ico-odd-mask-24bit.ico",
+        "spec/fixtures/images/ico-odd-mask-4bit.ico",
+        "spec/fixtures/images/ico-odd-mask-8bit.ico",
+        "spec/fixtures/images/ico-png-alpha.ico",
+        "spec/fixtures/images/ico-truncated-bitmap.ico",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/upload_creator_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "dominant-color",
+        "heif-to-jpeg",
+        "ico-to-png",
+        "letter-avatar",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "08ca44eea36dd03104fb13867455ab8279921e37",
+      "original_base": "36b59fd34321fd60fbfa23af9a97b9754a86fe47",
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-07-jpeg-01a0846e",
+      "branch": "tgxworld/vips-review-07-jpeg",
+      "base": "7bd1abcfdeefa54ddc3cb1280f1e6710672da71b",
+      "head": "83d09d9b023c095e0bd3afba560ab321f873eb91",
+      "sources": [
+        "b3f7fbecca87eaf62f32ffc257fa23df899ec2b7",
+        "33debf50a19d9468128e33b95f2fa0695a76239b",
+        "264eefa6658fec3bbf45bf9b9d13be8adf44793a",
+        "6e9acae609164e48e202b020cdf04b29fd7789f0"
+      ],
+      "files": [
+        "lib/discourse_vips.rb",
+        "lib/upload_creator.rb",
+        "script/discourse_vips_worker",
+        "spec/fixtures/images/jpeg-sampling-422.jpg",
+        "spec/fixtures/images/jpeg-sampling-440.jpg",
+        "spec/lib/discourse_vips/jpeg_sampling_spec.rb",
+        "spec/lib/discourse_vips/rotated_image_spec.rb",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/upload_creator_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "convert-to-jpeg",
+        "dominant-color",
+        "heif-to-jpeg",
+        "ico-to-png",
+        "letter-avatar",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "cb7d11cfc06527afcb7557fe603d3b69fbd083cf",
+      "original_base": "08ca44eea36dd03104fb13867455ab8279921e37",
+      "selective_fix_sources": [
+        "82ea614a8c798f65c6f76b83627ccf1eb1b38402",
+        "2ba8357019543403265a8b4cd24c906815484efe"
+      ],
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-08-orientation-01a0846e",
+      "branch": "tgxworld/vips-review-08-orientation",
+      "base": "83d09d9b023c095e0bd3afba560ab321f873eb91",
+      "head": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
+      "sources": [
+        "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
+      ],
+      "files": [
+        "app/models/upload.rb",
+        "lib/discourse_vips.rb",
+        "lib/image_magick.rb",
+        "lib/upload_creator.rb",
+        "script/discourse_vips_worker",
+        "spec/lib/discourse_vips/jpeg_sampling_spec.rb",
+        "spec/lib/discourse_vips/rotated_image_spec.rb",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/lib/image_magick_spec.rb",
+        "spec/lib/upload_creator_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "auto-orient",
+        "convert-to-jpeg",
+        "dominant-color",
+        "heif-to-jpeg",
+        "ico-to-png",
+        "letter-avatar",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "d30a6a565c0250a8df7b84744459a443eec640c9",
+      "original_base": "cb7d11cfc06527afcb7557fe603d3b69fbd083cf",
+      "selective_fix_sources": [
+        "82ea614a8c798f65c6f76b83627ccf1eb1b38402",
+        "2ba8357019543403265a8b4cd24c906815484efe"
+      ],
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-09-downsize-01a0846e",
+      "branch": "tgxworld/vips-review-09-downsize",
+      "base": "f7ff3f7cf849e9173fff8704ab1600aa31866c62",
+      "head": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
+      "sources": [
+        "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
+      ],
+      "files": [
+        "app/models/optimized_image.rb",
+        "lib/discourse_vips.rb",
+        "lib/discourse_vips/ico_image.rb",
+        "script/discourse_vips_worker",
+        "spec/lib/discourse_vips/downsize_spec.rb",
+        "spec/lib/discourse_vips/jpeg_sampling_spec.rb",
+        "spec/lib/discourse_vips/rotated_image_spec.rb",
+        "spec/models/optimized_image_vips_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "auto-orient",
+        "convert-to-jpeg",
+        "dominant-color",
+        "downsize",
+        "heif-to-jpeg",
+        "ico-to-png",
+        "letter-avatar",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "5f62549a58999e148b36a39b44cfcb5a2ae20fd1",
+      "original_base": "d30a6a565c0250a8df7b84744459a443eec640c9",
+      "selective_fix_sources": [
+        "82ea614a8c798f65c6f76b83627ccf1eb1b38402",
+        "2ba8357019543403265a8b4cd24c906815484efe",
+        "c63ee831d4d2e332c466f1a272793eec94d9c22d"
+      ],
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-10-resize-01a0846e",
+      "branch": "tgxworld/vips-review-10-resize",
+      "base": "d749cc4c4d1e92bc3fc0813de0bd306f51a6a7cb",
+      "head": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
+      "sources": [
+        "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
+      ],
+      "files": [
+        "app/models/optimized_image.rb",
+        "lib/discourse_vips.rb",
+        "script/discourse_vips_worker",
+        "spec/lib/discourse_vips/jpeg_sampling_spec.rb",
+        "spec/lib/discourse_vips/resize_spec.rb",
+        "spec/lib/discourse_vips/rotated_image_spec.rb",
+        "spec/models/optimized_image_spec.rb",
+        "spec/models/optimized_image_vips_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "auto-orient",
+        "convert-to-jpeg",
+        "dominant-color",
+        "downsize",
+        "heif-to-jpeg",
+        "ico-to-png",
+        "letter-avatar",
+        "resize",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "16764ba733a93ed858d030e6c3f613b0f5ba5612",
+      "original_base": "5f62549a58999e148b36a39b44cfcb5a2ae20fd1",
+      "selective_fix_sources": [
+        "82ea614a8c798f65c6f76b83627ccf1eb1b38402",
+        "2ba8357019543403265a8b4cd24c906815484efe",
+        "c63ee831d4d2e332c466f1a272793eec94d9c22d"
+      ],
+      "clean": true
+    },
+    {
+      "path": "/tmp/discourse-vips-review-11-crop-01a0846e",
+      "branch": "tgxworld/vips-review-11-crop",
+      "base": "110509b7f7f5807d467b7c93ba6a9159d2f45e5f",
+      "head": "e65d0762d8eda0bf3452e6f56ac298d0ad48ef3d",
+      "sources": [
+        "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948"
+      ],
+      "files": [
+        "app/models/optimized_image.rb",
+        "lib/discourse_vips.rb",
+        "script/discourse_vips_worker",
+        "spec/lib/discourse_vips/jpeg_sampling_spec.rb",
+        "spec/lib/discourse_vips/rotated_image_spec.rb",
+        "spec/lib/discourse_vips_spec.rb",
+        "spec/models/optimized_image_vips_spec.rb"
+      ],
+      "worker_operations": [
+        "animated",
+        "auto-orient",
+        "convert-to-jpeg",
+        "crop",
+        "dominant-color",
+        "downsize",
+        "heif-to-jpeg",
+        "ico-to-png",
+        "letter-avatar",
+        "resize",
+        "svg-dimensions",
+        "svg-to-png",
+        "topic-og-render",
+        "version"
+      ],
+      "original_head": "36bbbad31f7fa045aeb5041417dd33695172df73",
+      "original_base": "16764ba733a93ed858d030e6c3f613b0f5ba5612",
+      "selective_fix_sources": [
+        "82ea614a8c798f65c6f76b83627ccf1eb1b38402",
+        "2ba8357019543403265a8b4cd24c906815484efe",
+        "c63ee831d4d2e332c466f1a272793eec94d9c22d"
+      ],
+      "clean": true
+    }
+  ],
+  "initial_verified_reference": "056652b0cd0c71ceb2597bb2b2ab6a9e3dff3948",
+  "final_source_reference": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+  "verification_scope": "Branch topology, operation deltas, staged contents, fixture hashes, and clean worktrees checked; runtime results belong to the separately recorded tested snapshots."
+}

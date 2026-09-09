@@ -1,0 +1,35 @@
+{
+  "measured_commit": "2ba8357019543403265a8b4cd24c906815484efe",
+  "later_commit": "c63ee831d4d2e332c466f1a272793eec94d9c22d",
+  "production_image": "discourse/base:2.0.20260812-0036",
+  "production_image_digest": "sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "deployment_override_confirmed": false,
+  "verified": {
+    "manifest_files": 13,
+    "input_hashes_and_sizes": 13,
+    "output_hashes_and_sizes": 24,
+    "timing_arrays_median_p95": 24,
+    "ordinary_dimension_and_icc_agreements": 12,
+    "source_files_match_recorded_git_commit": 9,
+    "actual_output_sof_dimensions": 24,
+    "actual_output_icc_payload_hashes": 24,
+    "documentation_links": "README, all sample pairs and draft resolve"
+  },
+  "source_diff": "diff --git a/script/discourse_vips_worker b/script/discourse_vips_worker\nindex 7709d815fd9..13596c6ce8f 100644\n--- a/script/discourse_vips_worker\n+++ b/script/discourse_vips_worker\n@@ -724,7 +724,7 @@ class DiscourseVipsWorker\n       when \"avif\"\n         load_image_for_orientation(input_path:, loader: :heifload, page: 0, n: 1)\n       when \"svg\"\n-        load_svg(input_path)\n+        load_svg(input_path).flatten(background: [255, 255, 255])\n       when \"ico\"\n         DiscourseVips::IcoImage.load(input_path:, page: 0)\n       else\n",
+  "report_sha256": "284a73c097f8c4f7113d9b4352fb8148d274ac598571514a5ef0cd300e8da582",
+  "limits": [
+    "No pixel metrics in the Q75 timing corpus",
+    "Stress output metadata and hash absent from runtime report",
+    "Final review branch alignment and CI pending"
+  ],
+  "actual_uncommon_output_sampling": {
+    "jpeg-sampling-422.jpg": {
+      "imagemagick": "2x1,1x1,1x1",
+      "libvips": "1x1,1x1,1x1"
+    },
+    "jpeg-sampling-440.jpg": {
+      "imagemagick": "1x2,1x1,1x1",
+      "libvips": "1x1,1x1,1x1"
+    }
+  }
+}
