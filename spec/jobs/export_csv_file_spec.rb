@@ -217,7 +217,7 @@ RSpec.describe Jobs::ExportCsvFile do
     end
   end
 
-  describe ".report_export" do
+  describe "#report_export" do
     let(:user) { Fabricate(:admin) }
 
     let(:exporter) do
@@ -254,6 +254,16 @@ RSpec.describe Jobs::ExportCsvFile do
       expect(report.first).to contain_exactly("Day", "Percent")
       expect(report.second).to contain_exactly("2010-01-01", "100.0")
       expect(report.third).to contain_exactly("2010-01-03", "50.0")
+    end
+
+    it "allows admins to export reports hidden by site settings" do
+      SiteSetting.use_legacy_pageviews = false
+      ApplicationRequest.create!(date: "2010-01-01", req_type: :page_view_anon, count: 3)
+      exporter.extra["name"] = "page_view_anon_reqs"
+
+      report = export_report
+
+      expect(report.second).to contain_exactly("2010-01-01", "3")
     end
 
     it "works with filters" do

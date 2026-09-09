@@ -329,6 +329,8 @@ class Report
           "web_crawlers",
           start_date: start_date,
           end_date: end_date,
+          guardian: guardian,
+          current_user: current_user,
         )&.as_json
       end
     end
@@ -379,10 +381,8 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
-    report.guardian = opts[:guardian] if opts[:guardian]
-    report.current_user = opts[:current_user] if opts[:current_user]
-    report.current_user ||= report.guardian&.user
-    report.guardian ||= report.current_user&.guardian
+    report.guardian = opts[:guardian] || opts[:current_user]&.guardian
+    report.current_user = report.guardian&.user
     report.include_related_items =
       opts[:include_related_items] &&
         (report.guardian&.is_admin? || !admin_only_related_items_report_types.include?(report.type))

@@ -203,7 +203,12 @@ module Jobs
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?
 
-      report = Report.find(@extra[:name], @extra.merge(guardian: @current_user&.guardian))
+      report =
+        Reports::Access.new(guardian: @current_user.guardian, purpose: :export).find(
+          type: @extra[:name],
+          options: @extra,
+        )
+      raise Discourse::NotFound if report.blank?
 
       header = []
       titles = {}
