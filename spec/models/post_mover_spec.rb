@@ -11,7 +11,7 @@ RSpec.describe PostMover do
     fab!(:destination_topic, :topic)
     fab!(:user)
 
-    it "requires permission to move posts from the source topic" do
+    it "rejects the move when the user cannot move posts from the source topic" do
       mover = described_class.new(topic, user, [reply.id])
 
       expect do
@@ -19,7 +19,7 @@ RSpec.describe PostMover do
       end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
     end
 
-    it "requires permission to create posts in the destination topic" do
+    it "rejects the move when the destination category is read-only for the user" do
       mover_user = Fabricate(:trust_level_4)
       category = Fabricate(:category)
       category.set_permissions(everyone: :readonly)
@@ -32,7 +32,7 @@ RSpec.describe PostMover do
       end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
     end
 
-    it "rejects a missing destination" do
+    it "rejects the move when no destination is given" do
       mover = described_class.new(topic, admin, [reply.id])
 
       expect { mover.to_topic(nil) }.to raise_error(Discourse::InvalidAccess)
@@ -45,7 +45,7 @@ RSpec.describe PostMover do
     fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:reply) { Fabricate(:post, topic: topic) }
 
-    it "requires source permissions before creating a topic" do
+    it "rejects the split when the user cannot move posts from the source topic" do
       mover = described_class.new(topic, Fabricate(:user), [reply.id])
 
       expect do
@@ -55,7 +55,7 @@ RSpec.describe PostMover do
       end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
     end
 
-    it "requires permission to create a topic in an explicitly selected category" do
+    it "rejects the split when the user can only reply in the destination category" do
       user = Fabricate(:trust_level_4)
       category = Fabricate(:category)
       category.set_permissions(everyone: :reply)
@@ -69,7 +69,7 @@ RSpec.describe PostMover do
       end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
     end
 
-    it "creates a topic on behalf of a user who can only reply in the category" do
+    it "allows an admin to split posts on behalf of a user with reply-only access" do
       user = Fabricate(:trust_level_4)
       category = Fabricate(:category)
       category.set_permissions(everyone: :reply)

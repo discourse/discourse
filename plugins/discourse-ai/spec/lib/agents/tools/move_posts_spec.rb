@@ -25,7 +25,7 @@ RSpec.describe DiscourseAi::Agents::Tools::MovePosts do
     fab!(:user, :trust_level_4)
     let(:context) { DiscourseAi::Agents::BotContext.new(user: user) }
 
-    it "rejects moving posts to a category where the user cannot create topics" do
+    it "leaves posts unchanged when the user can only reply in the destination category" do
       category = Fabricate(:category)
       category.set_permissions(everyone: :reply)
       category.save!

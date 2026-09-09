@@ -22,7 +22,7 @@ RSpec.describe Topic do
     fab!(:reply) { Fabricate(:post, topic: topic) }
     fab!(:destination_topic, :topic)
 
-    it "rejects an unauthorized move even when attributed to an admin" do
+    it "rejects the move when only the credited user has permission" do
       expect do
         expect do
           topic.move_posts(
@@ -35,7 +35,7 @@ RSpec.describe Topic do
       end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
     end
 
-    it "attributes the move to the specified user when authorized by an admin" do
+    it "credits the specified user for a move authorized by an admin" do
       topic.move_posts(
         user,
         [reply.id],
