@@ -97,7 +97,7 @@ jobs:
         run: |
           processors=$(($(nproc) / 2 + 2))
           if [ "${{ matrix.target }}" = "core" ] && [ "$(nproc)" -eq 16 ]; then
-            processors=12
+            processors=14
           fi
           echo "PARALLEL_TEST_PROCESSORS=$processors" >> $GITHUB_ENV
 
