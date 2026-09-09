@@ -139,12 +139,6 @@ export function rowRange(table, row) {
   };
 }
 
-/**
- * The rectangle covering a row or column band, or a single cell.
- *
- * Commands read `rect` alone, so these are how a caller says which part of the
- * table an operation applies to.
- */
 export function rectFor(grid, kind, index, through = index) {
   return kind === "row"
     ? { top: index, bottom: through, left: 0, right: grid.width - 1 }

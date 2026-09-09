@@ -382,14 +382,8 @@ export function goToNextCell(dir) {
       return false;
     }
 
-    const $cell = cellAround(state.selection.$from);
-    const coords = cellCoords(table.grid, $cell.pos - table.start);
-    if (!coords) {
-      return false;
-    }
-
-    const { grid } = table;
-    const index = coords.row * grid.width + coords.col + dir;
+    const { grid, rect } = table;
+    const index = rect.top * grid.width + rect.left + dir;
 
     if (index < 0) {
       return false;
