@@ -11,9 +11,6 @@ overrides:
   broccoli-babel-transpiler@8.0.0: ^8.0.2
 
 patchedDependencies:
-  '@ember-compat/tracked-built-ins@0.9.1':
-    hash: febdd1f1d24565f6f3be7747fd89cbc86a4476e2836e383610c6bc430436a842
-    path: patches/@ember-compat__tracked-built-ins@0.9.1.patch
   '@warp-drive/legacy@5.9.0-alpha.15':
     hash: de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f
     path: patches/@warp-drive__legacy@5.9.0-alpha.15.patch
@@ -358,9 +355,6 @@ importers:
       ember-source:
         specifier: ~7.2.0
         version: 7.2.0(patch_hash=0ef38ddd130e8270d1f48debbc77216b6bb635e263e3e0a7eea1d11143a3f102)(@glimmer/component@2.1.1)
-      ember-tracked-storage-polyfill:
-        specifier: ^1.0.1
-        version: 1.0.1
       highlight.js:
         specifier: 11.12.0
         version: 11.12.0
@@ -482,9 +476,6 @@ importers:
       '@discourse/itsatrap':
         specifier: ^2.0.10
         version: 2.0.10
-      '@ember-compat/tracked-built-ins':
-        specifier: ^0.9.1
-        version: 0.9.1(patch_hash=febdd1f1d24565f6f3be7747fd89cbc86a4476e2836e383610c6bc430436a842)
       '@ember-decorators/component':
         specifier: ^7.0.0
         version: 7.0.0(@babel/core@7.29.7)
@@ -662,6 +653,9 @@ importers:
       testem:
         specifier: ^3.20.2
         version: 3.20.2(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(underscore@1.13.8)
+      tracked-built-ins:
+        specifier: ^4.1.2
+        version: 4.1.2(@babel/core@7.29.7)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -1905,10 +1899,6 @@ packages:
 
   '@discourse/webp@1.5.0':
     resolution: {integrity: sha512-2dXuEED+ISG26RbWij3NvdQmgHCD8ssnPoHMd0LnLKJc/dtd2lqg1dhrrA/WYDxfFoJaoGepoxFOsqe0d2/wqw==}
-
-  '@ember-compat/tracked-built-ins@0.9.1':
-    resolution: {integrity: sha512-A1uYo6EZY6CaKeZoXogxtyJCjz2V0+TXxOZCMJFQHHVuMA1DxYqZoZ25juRWIQpR8r77gTnITtYW2uxBg8vGRw==}
-    engines: {node: 14.* || 16.* || >= 18}
 
   '@ember-data/rfc395-data@0.0.4':
     resolution: {integrity: sha512-tGRdvgC9/QMQSuSuJV45xoyhI0Pzjm7A9o/MVVA3HakXIImJbbzx/k/6dO9CUEQXIyS2y0fW6C1XaYOG7rY0FQ==}
@@ -4453,10 +4443,6 @@ packages:
     peerDependencies:
       ember-cli-htmlbars: ^6.2.0
       ember-source: ^3.28.11 || ^4.0.0
-
-  ember-tracked-storage-polyfill@1.0.1:
-    resolution: {integrity: sha512-lr66R+1H9qMXIUXxwzpixS/qTwsMEpJXS5s2nOdvQP9U/JYuZT9MexpvLktSUQ1uWEhGQA8DDeeVh4R1CvLDFQ==}
-    engines: {node: 12.* || >= 14}
 
   ember-truth-helpers@5.0.0:
     resolution: {integrity: sha512-PnQd6D6hvlNC3k6gBu0SC2cvfXX6wH6W0nToomIIoxqyrD5cllk0zBh/j/1H0KsczVCWeuF9PWj5xJgL4jQAGg==}
@@ -7796,6 +7782,9 @@ packages:
     resolution: {integrity: sha512-hdF5ZgjTqgAntKkklYw0R03MG2x/bSzTtkxmIRw/sTNV8YXsCJ1tfLAX23lhxhHJlEf3CRCOCGGWw3vI3GaSPw==}
     engines: {node: '>=18'}
 
+  tracked-built-ins@4.1.2:
+    resolution: {integrity: sha512-KiiV/Pzi7VNKTn9Fip6Ic54AjKgFfqows1Jq3L0WLVqZcvfswdhVxQ9yqqhTXsmgLhVzIgtdzNBH4ExqWf34BQ==}
+
   tree-kill@1.2.2:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
@@ -9523,13 +9512,6 @@ snapshots:
   '@discourse/webp@1.5.0':
     dependencies:
       wasm-feature-detect: 1.8.0
-
-  '@ember-compat/tracked-built-ins@0.9.1(patch_hash=febdd1f1d24565f6f3be7747fd89cbc86a4476e2836e383610c6bc430436a842)':
-    dependencies:
-      '@embroider/addon-shim': 1.10.3
-      ember-tracked-storage-polyfill: 1.0.1
-    transitivePeerDependencies:
-      - supports-color
 
   '@ember-data/rfc395-data@0.0.4': {}
 
@@ -12779,12 +12761,6 @@ snapshots:
       lodash: 4.18.1
       winston: 3.14.2
       zod: 3.25.76
-    transitivePeerDependencies:
-      - supports-color
-
-  ember-tracked-storage-polyfill@1.0.1:
-    dependencies:
-      ember-cli-babel: 7.26.11
     transitivePeerDependencies:
       - supports-color
 
@@ -16680,6 +16656,14 @@ snapshots:
   tr46@5.1.1:
     dependencies:
       punycode: 2.3.1
+
+  tracked-built-ins@4.1.2(@babel/core@7.29.7):
+    dependencies:
+      '@embroider/addon-shim': 1.10.3
+      decorator-transforms: 2.4.0(@babel/core@7.29.7)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - supports-color
 
   tree-kill@1.2.2: {}
 
