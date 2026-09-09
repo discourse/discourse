@@ -2,6 +2,7 @@
 
 require "chunky_png"
 require "file_store/s3_store"
+require "vips"
 
 RSpec.describe UploadCreator do
   fab!(:user)
@@ -347,173 +348,271 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe "converting to jpeg" do
-      def image_quality(path)
-        local_path = File.join(Rails.root, "public", path)
-        Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
-      end
+    [false, true].each do |enable_vips|
+      describe "converting to jpeg with libvips #{enable_vips ? "enabled" : "disabled"}" do
+        def image_quality(path)
+          local_path = File.join(Rails.root, "public", path)
+          Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
+        end
 
-      let(:filename) { "should_be_jpeg.png" }
-      let(:file) { file_from_fixtures(filename) }
+        let(:filename) { "should_be_jpeg.png" }
+        let(:file) { file_from_fixtures(filename) }
 
-      let(:small_filename) { "logo.png" }
-      let(:small_file) { file_from_fixtures(small_filename) }
+        let(:small_filename) { "logo.png" }
+        let(:small_file) { file_from_fixtures(small_filename) }
 
-      let(:large_filename) { "large_and_unoptimized.png" }
-      let(:large_file) { file_from_fixtures(large_filename) }
+        let(:large_filename) { "large_and_unoptimized.png" }
+        let(:large_file) { file_from_fixtures(large_filename) }
 
-      let(:animated_filename) { "animated.gif" }
-      let(:animated_file) { file_from_fixtures(animated_filename) }
+        let(:animated_filename) { "animated.gif" }
+        let(:animated_file) { file_from_fixtures(animated_filename) }
 
-      let(:animated_webp_filename) { "animated.webp" }
-      let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
+        let(:animated_webp_filename) { "animated.webp" }
+        let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
 
-      before { SiteSetting.png_to_jpg_quality = 1 }
-
-      it "does not store a JPEG when the absolute byte savings are insufficient" do
-        # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
-        # the absolute savings required of 25_000 bytes, if you save less than that
-        # skip this
-
-        expect do
-          UploadCreator.new(
-            small_file,
-            small_filename,
-            pasted: true,
-            force_optimize: true,
-          ).create_for(user.id)
-        end.to change { Upload.count }.by(1)
-
-        upload = Upload.last
-
-        expect(upload.extension).to eq("png")
-        expect(File.extname(upload.url)).to eq(".png")
-        expect(upload.original_filename).to eq("logo.png")
-      end
-
-      it "stores the upload with the expected extension" do
-        expect do
-          UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(user.id)
-        end.to change { Upload.count }.by(1)
-
-        upload = Upload.last
-
-        expect(upload.extension).to eq("jpeg")
-        expect(File.extname(upload.url)).to eq(".jpeg")
-        expect(upload.original_filename).to eq("should_be_jpeg.jpg")
-        expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:jpeg)
-        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([303, 231])
-      end
-
-      it "does not convert site-setting images to JPEG" do
-        upload =
-          UploadCreator.new(
-            large_file,
-            large_filename,
-            for_site_setting: true,
-            force_optimize: true,
-          ).create_for(admin.id)
-
-        expect(upload.extension).to eq("png")
-        expect(File.extname(upload.url)).to eq(".png")
-        expect(upload.original_filename).to eq("large_and_unoptimized.png")
-      end
-
-      it "does not convert admin asset uploads to JPEG" do
-        upload =
-          UploadCreator.new(
-            large_file,
-            large_filename,
-            type: "branding",
-            force_optimize: true,
-          ).create_for(admin.id)
-
-        expect(upload.extension).to eq("png")
-        expect(File.extname(upload.url)).to eq(".png")
-        expect(upload.original_filename).to eq("large_and_unoptimized.png")
-      end
-
-      context "with jpeg image quality settings" do
         before do
-          SiteSetting.png_to_jpg_quality = 75
-          SiteSetting.recompress_original_jpg_quality = 40
-          SiteSetting.image_preview_jpg_quality = 10
+          global_setting :enable_vips_image_processing, enable_vips
+          SiteSetting.png_to_jpg_quality = 1
         end
 
-        it "alters the image quality" do
-          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+        it "does not store a JPEG when the absolute byte savings are insufficient" do
+          # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
+          # the absolute savings required of 25_000 bytes, if you save less than that
+          # skip this
 
-          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
-
-          upload.create_thumbnail!(100, 100)
-          upload.reload
-
-          expect(image_quality(upload.optimized_images.first.url)).to eq(
-            SiteSetting.image_preview_jpg_quality,
-          )
-        end
-
-        it "does not convert animated images" do
-          expect do
-            UploadCreator.new(animated_file, animated_filename, force_optimize: true).create_for(
-              user.id,
-            )
-          end.to change { Upload.count }.by(1)
-
-          upload = Upload.last
-
-          expect(upload.extension).to eq("gif")
-          expect(File.extname(upload.url)).to eq(".gif")
-          expect(upload.original_filename).to eq("animated.gif")
-        end
-
-        context "with png image quality settings" do
-          before do
-            SiteSetting.png_to_jpg_quality = 100
-            SiteSetting.recompress_original_jpg_quality = 90
-            SiteSetting.image_preview_jpg_quality = 10
-          end
-
-          it "does not convert to JPEG when png_to_jpg_quality is 100" do
-            upload =
-              UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
-                user.id,
-              )
-
-            expect(upload.extension).to eq("png")
-            expect(File.extname(upload.url)).to eq(".png")
-            expect(upload.original_filename).to eq("large_and_unoptimized.png")
-          end
-
-          it "does not convert pasted images when png_to_jpg_quality is 100" do
-            upload =
-              UploadCreator.new(
-                large_file,
-                large_filename,
-                pasted: true,
-                force_optimize: true,
-              ).create_for(user.id)
-
-            expect(upload.extension).to eq("png")
-            expect(File.extname(upload.url)).to eq(".png")
-            expect(upload.original_filename).to eq("large_and_unoptimized.png")
-          end
-        end
-
-        it "does not convert animated WebP images" do
           expect do
             UploadCreator.new(
-              animated_webp_file,
-              animated_webp_filename,
+              small_file,
+              small_filename,
+              pasted: true,
               force_optimize: true,
             ).create_for(user.id)
           end.to change { Upload.count }.by(1)
 
           upload = Upload.last
 
-          expect(upload.extension).to eq("webp")
-          expect(File.extname(upload.url)).to eq(".webp")
-          expect(upload.original_filename).to eq("animated.webp")
+          expect(upload.extension).to eq("png")
+          expect(File.extname(upload.url)).to eq(".png")
+          expect(upload.original_filename).to eq("logo.png")
+        end
+
+        it "stores the upload with the expected extension" do
+          expect do
+            UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(
+              user.id,
+            )
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq("jpeg")
+          expect(File.extname(upload.url)).to eq(".jpeg")
+          expect(upload.original_filename).to eq("should_be_jpeg.jpg")
+          expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:jpeg)
+          expect(FastImage.size(Discourse.store.path_for(upload))).to eq([303, 231])
+        end
+
+        it "preserves a static GIF color profile when metadata stripping is disabled" do
+          SiteSetting.composer_media_optimization_image_enabled = false
+          SiteSetting.strip_image_metadata = false
+          profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
+          Dir.mktmpdir do |directory|
+            input_path = File.join(directory, "profile.gif")
+            source = File.join(directory, "source.png")
+            random = Random.new(17)
+            image = ChunkyPNG::Image.new(400, 400)
+            400.times do |row|
+              400.times do |column|
+                value = random.rand(256)
+                image[column, row] = ChunkyPNG::Color.rgb(value, value * 37 % 256, value * 71 % 256)
+              end
+            end
+            image.save(source)
+            ImageMagick.magick(
+              source,
+              "-strip",
+              input_path,
+              operation: :upload_format_conversion,
+              read: [source],
+              write: [directory],
+            )
+            gif = File.binread(input_path)
+            offset = 13 + ((gif.getbyte(10) & 128).zero? ? 0 : 3 * (2 << (gif.getbyte(10) & 7)))
+            extension = "\x21\xff\x0bICCRGBG1012".b
+            original_profile = File.binread(profile)
+            original_profile
+              .bytes
+              .each_slice(255) { |bytes| extension << bytes.length.chr << bytes.pack("C*") }
+            extension << "\0".b
+            File.binwrite(
+              input_path,
+              gif.byteslice(0, offset) + extension + gif.byteslice(offset..),
+            )
+            expect(
+              ImageMagick.identify(
+                "-format",
+                "%[profiles]",
+                input_path,
+                operation: :upload_format_conversion,
+                read: [input_path],
+              ),
+            ).to include("icc")
+
+            File.open(input_path) do |file|
+              upload =
+                UploadCreator.new(file, "profile.gif", force_optimize: true).create_for(user.id)
+
+              expect(upload).to be_persisted
+              expect(upload.animated).to eq(false)
+              output_path = Discourse.store.path_for(upload)
+              expect(FastImage.type(output_path)).to eq(:jpeg)
+              expect(Vips::Image.jpegload(output_path).get("icc-profile-data")).to eq(
+                original_profile,
+              )
+            end
+          end
+        end
+
+        it "does not convert site-setting images to JPEG" do
+          upload =
+            UploadCreator.new(
+              large_file,
+              large_filename,
+              for_site_setting: true,
+              force_optimize: true,
+            ).create_for(admin.id)
+
+          expect(upload.extension).to eq("png")
+          expect(File.extname(upload.url)).to eq(".png")
+          expect(upload.original_filename).to eq("large_and_unoptimized.png")
+        end
+
+        it "does not convert admin asset uploads to JPEG" do
+          upload =
+            UploadCreator.new(
+              large_file,
+              large_filename,
+              type: "branding",
+              force_optimize: true,
+            ).create_for(admin.id)
+
+          expect(upload.extension).to eq("png")
+          expect(File.extname(upload.url)).to eq(".png")
+          expect(upload.original_filename).to eq("large_and_unoptimized.png")
+        end
+
+        context "with jpeg image quality settings" do
+          before do
+            SiteSetting.png_to_jpg_quality = 75
+            SiteSetting.recompress_original_jpg_quality = 40
+            SiteSetting.image_preview_jpg_quality = 10
+          end
+
+          it "alters the image quality" do
+            upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+
+            output_path = Discourse.store.path_for(upload)
+            expect(FastImage.type(output_path)).to eq(:jpeg)
+            expect(FastImage.size(output_path)).to eq([303, 231])
+
+            if enable_vips
+              SiteSetting.recompress_original_jpg_quality = 70
+              higher_quality_upload =
+                UploadCreator.new(
+                  file_from_fixtures(filename),
+                  filename,
+                  force_optimize: true,
+                ).create_for(user.id)
+
+              expect(higher_quality_upload).to be_persisted
+              expect(FastImage.type(Discourse.store.path_for(higher_quality_upload))).to eq(:jpeg)
+              expect(upload.filesize).to be < higher_quality_upload.filesize
+            else
+              expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+            end
+
+            upload.create_thumbnail!(100, 100)
+            upload.reload
+
+            if enable_vips
+              preview = upload.optimized_images.first
+              lower_quality_filesize = preview.filesize
+              preview.destroy!
+              SiteSetting.image_preview_jpg_quality = 90
+
+              upload.create_thumbnail!(100, 100)
+              upload.reload
+
+              expect(upload.optimized_images.first.filesize).to be > lower_quality_filesize
+            else
+              expect(image_quality(upload.optimized_images.first.url)).to eq(
+                SiteSetting.image_preview_jpg_quality,
+              )
+            end
+          end
+
+          it "does not convert animated images" do
+            expect do
+              UploadCreator.new(animated_file, animated_filename, force_optimize: true).create_for(
+                user.id,
+              )
+            end.to change { Upload.count }.by(1)
+
+            upload = Upload.last
+
+            expect(upload.extension).to eq("gif")
+            expect(File.extname(upload.url)).to eq(".gif")
+            expect(upload.original_filename).to eq("animated.gif")
+          end
+
+          context "with png image quality settings" do
+            before do
+              SiteSetting.png_to_jpg_quality = 100
+              SiteSetting.recompress_original_jpg_quality = 90
+              SiteSetting.image_preview_jpg_quality = 10
+            end
+
+            it "does not convert to JPEG when png_to_jpg_quality is 100" do
+              upload =
+                UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
+                  user.id,
+                )
+
+              expect(upload.extension).to eq("png")
+              expect(File.extname(upload.url)).to eq(".png")
+              expect(upload.original_filename).to eq("large_and_unoptimized.png")
+            end
+
+            it "does not convert pasted images when png_to_jpg_quality is 100" do
+              upload =
+                UploadCreator.new(
+                  large_file,
+                  large_filename,
+                  pasted: true,
+                  force_optimize: true,
+                ).create_for(user.id)
+
+              expect(upload.extension).to eq("png")
+              expect(File.extname(upload.url)).to eq(".png")
+              expect(upload.original_filename).to eq("large_and_unoptimized.png")
+            end
+          end
+
+          it "does not convert animated WebP images" do
+            expect do
+              UploadCreator.new(
+                animated_webp_file,
+                animated_webp_filename,
+                force_optimize: true,
+              ).create_for(user.id)
+            end.to change { Upload.count }.by(1)
+
+            upload = Upload.last
+
+            expect(upload.extension).to eq("webp")
+            expect(File.extname(upload.url)).to eq(".webp")
+            expect(upload.original_filename).to eq("animated.webp")
+          end
         end
       end
     end

@@ -411,11 +411,21 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
 
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.convert_to_jpeg(
+        input_path: @file.path,
+        output_path: jpeg_tempfile.path,
+        input_format: @image_info.type.to_s,
+        quality: target_quality || 92,
+        timeout: MAX_CONVERT_FORMAT_SECONDS,
+      )
+    else
+      begin
+        execute_convert(from, to, opts, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, to, opts.merge(debug: true), read:, write:)
+      end
     end
 
     new_size = File.size(jpeg_tempfile.path)
@@ -427,9 +437,9 @@ class UploadCreator
       @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = jpeg_tempfile
       extract_image_info!
-    else
-      jpeg_tempfile.close!
     end
+  ensure
+    jpeg_tempfile&.close! unless @file.equal?(jpeg_tempfile)
   end
 
   def convert_heif!
