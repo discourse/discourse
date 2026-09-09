@@ -342,7 +342,7 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
-      it "checks the category when combined options select another destination" do
+      it "rejects a forbidden category even when a destination topic or archetype is supplied" do
         [
           { destination_topic_id: dest_topic.id },
           { archetype: Archetype.default },

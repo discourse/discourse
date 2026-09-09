@@ -19,19 +19,6 @@ RSpec.describe PostMover do
       end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
     end
 
-    it "uses the supplied guardian instead of the attribution user's permissions" do
-      expect do
-        expect do
-          topic.move_posts(
-            admin,
-            [reply.id],
-            destination_topic_id: destination_topic.id,
-            guardian: user.guardian,
-          )
-        end.to raise_error(Discourse::InvalidAccess)
-      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
-    end
-
     it "requires permission to create posts in the destination topic" do
       mover_user = Fabricate(:trust_level_4)
       category = Fabricate(:category)
@@ -45,23 +32,11 @@ RSpec.describe PostMover do
       end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
     end
 
-    it "rejects a missing destination before dereferencing it" do
+    it "rejects a missing destination" do
       mover = described_class.new(topic, admin, [reply.id])
 
       expect { mover.to_topic(nil) }.to raise_error(Discourse::InvalidAccess)
       expect(reply.reload.topic_id).to eq(topic.id)
-    end
-
-    it "preserves attribution when a separate guardian authorizes the move" do
-      topic.move_posts(
-        user,
-        [reply.id],
-        destination_topic_id: destination_topic.id,
-        guardian: admin.guardian,
-      )
-
-      expect(reply.reload.topic_id).to eq(destination_topic.id)
-      expect(topic.posts.find_by(action_code: "split_topic").user_id).to eq(user.id)
     end
   end
 
@@ -94,9 +69,12 @@ RSpec.describe PostMover do
       end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
     end
 
-    it "creates a topic in a category allowed by the supplied guardian" do
+    it "creates a topic on behalf of a user who can only reply in the category" do
+      user = Fabricate(:trust_level_4)
       category = Fabricate(:category)
-      mover = described_class.new(topic, admin, [reply.id], guardian: admin.guardian)
+      category.set_permissions(everyone: :reply)
+      category.save!
+      mover = described_class.new(topic, user, [reply.id], guardian: admin.guardian)
 
       destination = mover.to_new_topic("A separate discussion", category.id)
 

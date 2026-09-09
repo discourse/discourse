@@ -16,6 +16,38 @@ RSpec.describe Topic do
 
   it_behaves_like "it has custom fields"
 
+  describe "#move_posts" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+    fab!(:destination_topic, :topic)
+
+    it "rejects an unauthorized move even when attributed to an admin" do
+      expect do
+        expect do
+          topic.move_posts(
+            admin,
+            [reply.id],
+            destination_topic_id: destination_topic.id,
+            guardian: user.guardian,
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "attributes the move to the specified user when authorized by an admin" do
+      topic.move_posts(
+        user,
+        [reply.id],
+        destination_topic_id: destination_topic.id,
+        guardian: admin.guardian,
+      )
+
+      expect(reply.reload.topic_id).to eq(destination_topic.id)
+      expect(topic.posts.find_by(action_code: "split_topic").user_id).to eq(user.id)
+    end
+  end
+
   describe "Validations" do
     let(:topic) { Fabricate.build(:topic) }
 
