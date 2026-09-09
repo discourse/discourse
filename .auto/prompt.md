@@ -10,6 +10,8 @@ tests into additional jobs. A skipped test suite is not a successful optimizatio
 Use this draft PR as the measurement environment. Keep the base revision fixed
 at 0708de39bcebe79c8469dfd88cd568c8e71b42c7 during the experiment. Record external
 plugin/theme revisions and cache behavior when assessing noisy results.
+Temporarily check out this PR head during measurements so updates to main do not
+change the tested sources. Remove the checkout pin before final merge validation.
 
 ## Procedure
 

@@ -112,6 +112,7 @@ jobs:
 
       - uses: actions/checkout@v7
         with:
+          ref: ${{ github.event_name == 'pull_request' && github.repository == 'discourse/discourse' && github.event.pull_request.number == 43441 && github.event.pull_request.head.sha || '' }}
           fetch-depth: 1
 
       - name: Setup Git
