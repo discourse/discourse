@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <clipPath id="avatar-clip">
+      <rect x="80" y="303" width="72" height="72" rx="20"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#182432"/>
+
+  <!-- Top accent bar -->
+  <rect width="1200" height="18" fill="#44bbdd"/>
+
+  <!-- Category pill -->
+  <rect class="topic-og__category-background" x="80" y="60" width="90.0" height="40" rx="6" fill="#0088cc" fill-opacity="0.15"/>
+<text class="topic-og__category-name" x="96" y="90" font-family="sans-serif" font-size="24" font-weight="600" fill="#0088cc">&#x6280;&#x672F;&#x8BA8;&#x8BBA;</text>
+
+
+  <!-- Title -->
+  <text class="topic-og-title" x="80" y="190" font-family="sans-serif" font-size="62" font-weight="700" fill="#eee8de">&#x5982;&#x4F55;&#x5EFA;&#x7ACB;&#x4E00;&#x4E2A;&#x6B22;&#x8FCE;&#x6240;&#x6709;&#x4EBA;&#x7684;&#x5728;&#x7EBF;&#x793E;&#x533A;&#x5E76;&#x901A;&#x8FC7;&#x6DF1;&#x5165;&#x4EA4;&#x6D41;&#x5206;&#x4EAB;&#x77E5;&#x8BC6;&#x7ECF;&#x9A8C;&#x5171;&#x540C;&#x89E3;&#x51B3;&#x95EE;</text>
+    <text class="topic-og-title" x="80" y="258" font-family="sans-serif" font-size="62" font-weight="700" fill="#eee8de">&#x9898;&#x63A2;&#x7D22;&#x65B0;&#x7684;&#x60F3;&#x6CD5;&#x548C;&#x6301;&#x7EED;&#x6539;&#x8FDB;&#x8BA8;&#x8BBA;&#x4F53;&#x9A8C;</text>
+
+  <!-- Author -->
+  <image x="80" y="303" width="72" height="72" href="avatar.png" clip-path="url(#avatar-clip)"/>
+<rect x="80" y="303" width="72" height="72" rx="20" fill="none" stroke="#182432" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="184" y="347" font-family="sans-serif" font-size="34" font-weight="400" fill="#eee8de" opacity="0.6">evidence_author  &#xB7;  Sep 9, 2026</text>
+
+  <!-- Site logo -->
+  <image x="80" y="470" width="240" height="100" href="logo.png"/>
+
+
+  <!-- Stats -->
+  <text x="1120" y="535" font-family="sans-serif" font-size="30" font-weight="400" fill="#eee8de" opacity="0.5" text-anchor="end">8m read  &#xB7;  12 replies  &#xB7;  42 likes</text>
+
+  <!-- Site domain -->
+  <text x="1120" y="88" font-family="sans-serif" font-size="30" font-weight="400" fill="#eee8de" opacity="0.5" text-anchor="end">forum.example</text>
+</svg>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <clipPath id="avatar-clip">
+      <rect x="80" y="303" width="72" height="72" rx="20"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#182432"/>
+
+  <!-- Top accent bar -->
+  <rect width="1200" height="18" fill="#44bbdd"/>
+
+  <!-- Category pill -->
+  <rect class="topic-og__category-background" x="80" y="60" width="220.5" height="40" rx="6" fill="#0088cc" fill-opacity="0.15"/>
+<text class="topic-og__category-name" x="96" y="90" font-family="sans-serif" font-size="24" font-weight="600" fill="#0088cc">D&#xE9;veloppement</text>
+
+
+  <!-- Title -->
+  <text class="topic-og-title" x="80" y="190" font-family="sans-serif" font-size="62" font-weight="700" fill="#eee8de">Caf&#xE9; d&#xE9;j&#xE0; vu : cr&#xE9;ez une</text>
+    <text class="topic-og-title" x="80" y="258" font-family="sans-serif" font-size="62" font-weight="700" fill="#eee8de">communaut&#xE9; accueillante o&#xF9; chacun&#x2026;</text>
+
+  <!-- Author -->
+  <image x="80" y="303" width="72" height="72" href="avatar.png" clip-path="url(#avatar-clip)"/>
+<rect x="80" y="303" width="72" height="72" rx="20" fill="none" stroke="#182432" stroke-opacity="0.1" stroke-width="1"/>
+    <text x="184" y="347" font-family="sans-serif" font-size="34" font-weight="400" fill="#eee8de" opacity="0.6">evidence_author  &#xB7;  Sep 9, 2026</text>
+
+  <!-- Site logo -->
+  <image x="80" y="470" width="240" height="100" href="logo.png"/>
+
+
+  <!-- Stats -->
+  <text x="1120" y="535" font-family="sans-serif" font-size="30" font-weight="400" fill="#eee8de" opacity="0.5" text-anchor="end">8m read  &#xB7;  12 replies  &#xB7;  42 likes</text>
+
+  <!-- Site domain -->
+  <text x="1120" y="88" font-family="sans-serif" font-size="30" font-weight="400" fill="#eee8de" opacity="0.5" text-anchor="end">forum.example</text>
+</svg>

@@ -1,0 +1,229 @@
+{
+  "seed": 20260909,
+  "frozen_time": "2026-09-09T12:00:00Z",
+  "hostname": "forum.example",
+  "site_title": "Example Forum",
+  "ruby": "ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [aarch64-linux]",
+  "libvips": "8.18.4",
+  "imagemagick": "Version: ImageMagick 7.1.2-27 Q16-HDRI aarch64 e4c2b403b:20260705 https://imagemagick.org",
+  "nokogiri": "1.19.4",
+  "rspec_seed": 20260909,
+  "cases": [
+    {
+      "script": "latin",
+      "palette": "light",
+      "colors": {
+        "primary": "183048",
+        "secondary": "f5f0e8",
+        "tertiary": "0088cc"
+      },
+      "title": "Configure your community for thoughtful conversations and discover better ways to share knowledge",
+      "category": "General discussion",
+      "outputs": {
+        "imagemagick": {
+          "filename": "latin-light-imagemagick.png",
+          "sha256": "4a67df6160dd237880242bb5d7897fd94ffabaec9fb35d34547d78a9b7b68adb",
+          "bytes": 36393,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "latin-light-libvips.png",
+          "sha256": "2986f8fedfa9f994358214272695b00753e6a1bbf63c71189dcf3559552a03b7",
+          "bytes": 45604,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    },
+    {
+      "script": "accented",
+      "palette": "light",
+      "colors": {
+        "primary": "183048",
+        "secondary": "f5f0e8",
+        "tertiary": "0088cc"
+      },
+      "title": "Café déjà vu : créez une communauté accueillante où chacun échange des idées et partage ses découvertes",
+      "category": "Développement",
+      "outputs": {
+        "imagemagick": {
+          "filename": "accented-light-imagemagick.png",
+          "sha256": "724ad44db01a4158ea861a14a3dbc7af9c8aadc95164f3c45c87a283a38bbae8",
+          "bytes": 34271,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "accented-light-libvips.png",
+          "sha256": "91482c99b38a7acbbe8b210fa1a9e2390d58e295ad0e2c14ecf7889732e08c68",
+          "bytes": 44176,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    },
+    {
+      "script": "cjk",
+      "palette": "light",
+      "colors": {
+        "primary": "183048",
+        "secondary": "f5f0e8",
+        "tertiary": "0088cc"
+      },
+      "title": "如何建立一个欢迎所有人的在线社区并通过深入交流分享知识经验共同解决问题探索新的想法和持续改进讨论体验",
+      "category": "技术讨论",
+      "outputs": {
+        "imagemagick": {
+          "filename": "cjk-light-imagemagick.png",
+          "sha256": "8a5e36dc4825d9aa45960584a49b6d9f67afba43c8b701c577c4cfc89fd64d62",
+          "bytes": 19816,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "cjk-light-libvips.png",
+          "sha256": "1c128f33c09fb59ea2f1c88f2a0d4462bbea85be522b77e6b6277d0fc6c2562b",
+          "bytes": 51277,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    },
+    {
+      "script": "arabic",
+      "palette": "light",
+      "colors": {
+        "primary": "183048",
+        "secondary": "f5f0e8",
+        "tertiary": "0088cc"
+      },
+      "title": "كيف نبني مجتمعًا يرحب بالجميع ويشجع على تبادل الأفكار والخبرات وتطوير النقاشات المفيدة بين الأعضاء",
+      "category": "مناقشات المجتمع",
+      "outputs": {
+        "imagemagick": {
+          "filename": "arabic-light-imagemagick.png",
+          "sha256": "8c9a6a582a6f26afc55d927543559f4b5ddfc182048506e47f3e714f4bb75208",
+          "bytes": 19961,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "arabic-light-libvips.png",
+          "sha256": "14604851821b36215cb1687769defc1c2cc20225bf1e17ebdf3d26de453c0d81",
+          "bytes": 48440,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    },
+    {
+      "script": "latin",
+      "palette": "dark",
+      "colors": {
+        "primary": "eee8de",
+        "secondary": "182432",
+        "tertiary": "44bbdd"
+      },
+      "title": "Configure your community for thoughtful conversations and discover better ways to share knowledge",
+      "category": "General discussion",
+      "outputs": {
+        "imagemagick": {
+          "filename": "latin-dark-imagemagick.png",
+          "sha256": "18ca8e38f480748dadeb3055d8e20c44e49925bf578195f17e760a2b812db8b2",
+          "bytes": 36325,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "latin-dark-libvips.png",
+          "sha256": "0c3ae37daa84925f7bb6e334b5351ecc876dace2692749d7a861705ba13a62a6",
+          "bytes": 45770,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    },
+    {
+      "script": "accented",
+      "palette": "dark",
+      "colors": {
+        "primary": "eee8de",
+        "secondary": "182432",
+        "tertiary": "44bbdd"
+      },
+      "title": "Café déjà vu : créez une communauté accueillante où chacun échange des idées et partage ses découvertes",
+      "category": "Développement",
+      "outputs": {
+        "imagemagick": {
+          "filename": "accented-dark-imagemagick.png",
+          "sha256": "fe192c00e58dc2a0f71125a474f62bff5109235a00b52e20825cbf9a4780874a",
+          "bytes": 34092,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "accented-dark-libvips.png",
+          "sha256": "229656bb4b1f500353a0c41ea706a409bab190a5b6a1ff19cadfd53b8ca88fa6",
+          "bytes": 44146,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    },
+    {
+      "script": "cjk",
+      "palette": "dark",
+      "colors": {
+        "primary": "eee8de",
+        "secondary": "182432",
+        "tertiary": "44bbdd"
+      },
+      "title": "如何建立一个欢迎所有人的在线社区并通过深入交流分享知识经验共同解决问题探索新的想法和持续改进讨论体验",
+      "category": "技术讨论",
+      "outputs": {
+        "imagemagick": {
+          "filename": "cjk-dark-imagemagick.png",
+          "sha256": "9ea2a547451b705e3263ad880b423a4fcd0b177aef78069f465c4ca6904b80cd",
+          "bytes": 19973,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "cjk-dark-libvips.png",
+          "sha256": "2ec7c0d85f82b655310f6f081c1da51a897303506151e747c7bfaaeabd159c19",
+          "bytes": 51700,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    },
+    {
+      "script": "arabic",
+      "palette": "dark",
+      "colors": {
+        "primary": "eee8de",
+        "secondary": "182432",
+        "tertiary": "44bbdd"
+      },
+      "title": "كيف نبني مجتمعًا يرحب بالجميع ويشجع على تبادل الأفكار والخبرات وتطوير النقاشات المفيدة بين الأعضاء",
+      "category": "مناقشات المجتمع",
+      "outputs": {
+        "imagemagick": {
+          "filename": "arabic-dark-imagemagick.png",
+          "sha256": "01ed9212b87ac981b10250b650540dec8675d8e116ee190f331f0b6062667441",
+          "bytes": 19991,
+          "width": 1200,
+          "height": 630
+        },
+        "libvips": {
+          "filename": "arabic-dark-libvips.png",
+          "sha256": "b231c84852abcdf3d312fdb0a052f1fef56a61f13eb4d8febd3965b7487b0358",
+          "bytes": 48809,
+          "width": 1200,
+          "height": 630
+        }
+      }
+    }
+  ]
+}

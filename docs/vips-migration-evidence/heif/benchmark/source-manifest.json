@@ -1,0 +1,9 @@
+{
+  "lib/discourse_vips.rb": "bf97ceca5d444fe92f8bfdc36aa9e72de852a4083f0fb8d665bf240af45adcc8",
+  "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+  "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+  "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+  "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+  "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+  "script/discourse_vips_worker": "817c1eab89ffbf9fead9905de81f297abe5a8891276d19e1184eb89f9abbd97e"
+}
