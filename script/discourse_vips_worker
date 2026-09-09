@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# WebP quality compatibility adapts ImageMagick 7.1.2-27 IsWEBPImageLossless.
+# Modified for Discourse: Ruby file-offset reads within validated container bounds.
+# See lib/discourse_vips/jpeg_quality.LICENSE and jpeg_quality.NOTICE.
+
 require "rubygems"
 require "landlock"
 require "msgpack"
@@ -48,6 +52,8 @@ class DiscourseVipsWorker
         letter_avatar(*arguments)
       when "dominant-color"
         dominant_color(*arguments)
+      when "image-quality"
+        image_quality(input_path: arguments[0], input_format: arguments[1])
       when "ico-to-png"
         ico_to_png(input_path: arguments[0], output_path: arguments[1])
       when "convert-to-jpeg"
@@ -191,6 +197,135 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :dominant_color
+
+    def self.image_quality(input_path:, input_format:)
+      require "discourse_vips/jpeg_quality" if %w[jpg jpeg].include?(input_format)
+      require "discourse_vips/ico_image" if input_format == "ico"
+
+      new(read_paths: [input_path]) do
+        block_loaders(
+          allowed: %w[
+            VipsForeignLoadJpeg
+            VipsForeignLoadPng
+            VipsForeignLoadNsgif
+            VipsForeignLoadWebp
+            VipsForeignLoadHeif
+            VipsForeignLoadSvg
+          ],
+        )
+
+        begin
+          if input_format == "ico"
+            count = File.open(input_path, "rb") { |file| file.read(6)&.unpack("v3")&.last }
+            raise ArgumentError, "invalid ICO directory" if !count || count.zero?
+
+            count.times { |page| DiscourseVips::IcoImage.load(input_path:, page:) }
+            "92" * count
+          else
+            image = load_quality_image(input_path:, input_format:)
+            if %w[jpg jpeg].include?(input_format)
+              DiscourseVips::JpegQuality.estimate(input_path).to_s
+            elsif input_format == "webp"
+              webp_qualities(input_path).join
+            else
+              pages = image.get_typeof("n-pages") == 0 ? 1 : image.get("n-pages")
+              "92" * pages
+            end
+          end
+        rescue Vips::Error, ArgumentError => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :image_quality
+
+    def self.load_quality_image(input_path:, input_format:)
+      case input_format
+      when "jpg", "jpeg"
+        Vips::Image.jpegload(input_path, access: :sequential)
+      when "png"
+        Vips::Image.pngload(input_path, access: :sequential)
+      when "gif"
+        Vips::Image.gifload(input_path, page: 0, n: 1, access: :sequential)
+      when "webp"
+        Vips::Image.webpload(input_path, page: 0, n: 1, access: :sequential)
+      when "avif"
+        Vips::Image.heifload(input_path, page: 0, n: 1, access: :sequential)
+      when "svg"
+        load_svg(input_path)
+      else
+        raise ArgumentError, "unsupported input format"
+      end
+    end
+    private_class_method :load_quality_image
+
+    def self.webp_qualities(input_path)
+      File.open(input_path, "rb") do |file|
+        header = file.read(12)
+        if header&.bytesize != 12 || header.byteslice(0, 4) != "RIFF" ||
+             header.byteslice(8, 4) != "WEBP"
+          raise ArgumentError, "invalid WebP header"
+        end
+
+        end_offset = header.byteslice(4, 4).unpack1("V") + 8
+        raise ArgumentError, "invalid WebP length" if end_offset < 12 || end_offset > file.size
+
+        qualities = webp_chunk_qualities(file:, end_offset:)
+        raise ArgumentError, "missing WebP image" if qualities.empty?
+
+        qualities
+      end
+    end
+    private_class_method :webp_qualities
+
+    def self.webp_chunk_qualities(file:, end_offset:)
+      qualities = []
+      while file.pos < end_offset
+        raise ArgumentError, "truncated WebP chunk" if end_offset - file.pos < 8
+
+        chunk_type, chunk_bytes = file.read(8).unpack("a4V")
+        chunk_end = file.pos + chunk_bytes
+        padded_end = chunk_end + chunk_bytes % 2
+        raise ArgumentError, "invalid WebP chunk length" if padded_end > end_offset
+
+        case chunk_type
+        when "VP8L"
+          qualities << 100
+        when "VP8 "
+          qualities << 92
+        when "ANMF"
+          raise ArgumentError, "invalid WebP frame" if chunk_bytes < 16
+
+          file.seek(16, IO::SEEK_CUR)
+          qualities << (
+            qualities.first == 100 ? 100 : webp_fragment_quality(file:, end_offset: chunk_end)
+          )
+        end
+        file.seek(padded_end)
+      end
+      qualities
+    end
+    private_class_method :webp_chunk_qualities
+
+    def self.webp_fragment_quality(file:, end_offset:)
+      start_offset = file.pos
+      return 92 if end_offset - start_offset <= 15
+
+      file.seek(start_offset + 15)
+      marker = file.read(1)
+      return 100 if marker == "L"
+      return 92 if marker != "X"
+
+      file.seek(start_offset + 30)
+      while end_offset - file.pos >= 12
+        chunk_type, chunk_bytes = file.read(8).unpack("a4V")
+        return chunk_type == "VP8L" ? 100 : 92 if chunk_type.start_with?("VP8")
+
+        file.seek(chunk_bytes + chunk_bytes % 2, IO::SEEK_CUR)
+      end
+      92
+    end
+    private_class_method :webp_fragment_quality
 
     def self.animated(input_path)
       new(read_paths: [input_path]) do

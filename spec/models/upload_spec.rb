@@ -1171,16 +1171,30 @@ RSpec.describe Upload do
   describe "#target_image_quality" do
     let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
 
-    it "returns nil when the target quality is higher than the source quality" do
-      target_quality = upload.target_image_quality(local_path, 100)
+    [false, true].each do |enabled|
+      context "with libvips #{enabled ? "enabled" : "disabled"}" do
+        before { GlobalSetting.stubs(:enable_vips_image_processing).returns(enabled) }
 
-      expect(target_quality).to eq(nil)
-    end
+        it "only recompresses when the requested quality is below the source estimate" do
+          results = [95, 94, 93].map { |quality| upload.target_image_quality(local_path, quality) }
 
-    it "returns the target quality when it is lower than the source quality" do
-      target_quality = upload.target_image_quality(local_path, 10)
+          expect(results).to eq([nil, nil, 93])
+        end
 
-      expect(target_quality).to eq(10)
+        it "uses the requested quality when the source is unreadable" do
+          result = upload.target_image_quality(file_from_fixtures("fake.jpg").path, 85)
+
+          expect(result).to eq(85)
+        end
+
+        it "retains the original quality estimate during later image rewrites" do
+          upload.target_image_quality(local_path, 95)
+
+          result = upload.target_image_quality(file_from_fixtures("exif_orientation.jpg").path, 94)
+
+          expect(result).to eq(nil)
+        end
+      end
     end
   end
 

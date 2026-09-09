@@ -451,7 +451,16 @@ class Upload < ActiveRecord::Base
   def target_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
-        ImageMagick.image_quality(input_path: local_path, timeout: MAX_IDENTIFY_SECONDS)
+        if GlobalSetting.enable_vips_image_processing
+          input_format = File.open(local_path, "rb") { |file| FastImage.type(file).to_s }
+          DiscourseVips.image_quality(
+            input_path: local_path,
+            input_format:,
+            timeout: MAX_IDENTIFY_SECONDS,
+          )
+        else
+          ImageMagick.image_quality(input_path: local_path, timeout: MAX_IDENTIFY_SECONDS)
+        end
       rescue StandardError
         0
       end

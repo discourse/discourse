@@ -380,7 +380,12 @@ class OptimizedImage < ActiveRecord::Base
     return if %w[jpg jpeg webp].exclude?(output_format)
 
     if %w[jpg jpeg webp].include?(input_format)
-      source_quality = ImageMagick.image_quality(input_path:, timeout: Upload::MAX_IDENTIFY_SECONDS)
+      source_quality =
+        DiscourseVips.image_quality(
+          input_path:,
+          input_format:,
+          timeout: Upload::MAX_IDENTIFY_SECONDS,
+        )
       return source_quality if input_format != "webp" || source_quality == 100
     end
 

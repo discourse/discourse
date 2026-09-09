@@ -594,7 +594,11 @@ class UploadCreator
 
     if GlobalSetting.enable_vips_image_processing
       source_quality =
-        ImageMagick.image_quality(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+        DiscourseVips.image_quality(
+          input_path: @file.path,
+          input_format: "jpeg",
+          timeout: Upload::MAX_IDENTIFY_SECONDS,
+        )
       oriented_file = Tempfile.new(%w[oriented .jpg])
       begin
         DiscourseVips.auto_orient(

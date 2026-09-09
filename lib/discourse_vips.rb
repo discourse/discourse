@@ -28,6 +28,14 @@ module DiscourseVips
     Client.call(["svg-dimensions", input_path], operation: :upload_svg_dimensions, timeout:)
   end
 
+  def self.image_quality(input_path:, input_format:, timeout:)
+    Client.call(
+      ["image-quality", input_path, input_format],
+      operation: :upload_quality_probe,
+      timeout:,
+    ).to_i
+  end
+
   def self.animated?(input_path:, timeout:)
     Client.call(["animated", input_path], operation: :upload_animation_probe, timeout:)
   end
