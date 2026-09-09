@@ -4,55 +4,60 @@
     "operation": "animation",
     "head": "345c05377b205be64d45a1ab13d909d231f725ff",
     "branch": "tgxworld/vips-review-01-animation",
-    "ci_session": 31714,
+    "ci_session": null,
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T09:37:28.414307Z",
+    "ci_observed_at": "2026-09-09T22:19:59.004589Z",
     "ci_head": "345c05377b205be64d45a1ab13d909d231f725ff",
-    "url": "https://github.com/discourse/discourse/pull/43453"
+    "url": "https://github.com/discourse/discourse/pull/43453",
+    "ci_log": "/tmp/vips-ci-43453-final-verdict.log"
   },
   {
     "number": 43454,
     "operation": "svg-dimensions",
     "head": "60ee5446c33c68e5d9711ab717e6e8a29449dd32",
     "branch": "tgxworld/vips-review-02-svg-dimensions",
-    "ci_session": 64240,
+    "ci_session": null,
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T09:38:01.997048Z",
+    "ci_observed_at": "2026-09-09T22:19:59.188944Z",
     "ci_head": "60ee5446c33c68e5d9711ab717e6e8a29449dd32",
-    "url": "https://github.com/discourse/discourse/pull/43454"
+    "url": "https://github.com/discourse/discourse/pull/43454",
+    "ci_log": "/tmp/vips-ci-43454-final-verdict.log"
   },
   {
     "number": 43455,
     "operation": "svg-assets",
     "head": "3f82276023c2765e39a1a724dc62e71af0c126ac",
     "branch": "tgxworld/vips-review-03-svg-assets",
-    "ci_session": 87370,
+    "ci_session": null,
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T09:43:50.979473Z",
+    "ci_observed_at": "2026-09-09T22:19:58.895425Z",
     "ci_head": "3f82276023c2765e39a1a724dc62e71af0c126ac",
-    "url": "https://github.com/discourse/discourse/pull/43455"
+    "url": "https://github.com/discourse/discourse/pull/43455",
+    "ci_log": "/tmp/vips-ci-43455-final-verdict.log"
   },
   {
     "number": 43456,
     "operation": "og",
     "head": "9c2219b3bec399bc736fde3ddbec58f29df4420f",
     "branch": "tgxworld/vips-review-04-og",
-    "ci_session": 94030,
+    "ci_session": null,
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T09:46:14.842553Z",
+    "ci_observed_at": "2026-09-09T22:19:58.883427Z",
     "ci_head": "9c2219b3bec399bc736fde3ddbec58f29df4420f",
-    "url": "https://github.com/discourse/discourse/pull/43456"
+    "url": "https://github.com/discourse/discourse/pull/43456",
+    "ci_log": "/tmp/vips-ci-43456-final-verdict.log"
   },
   {
     "number": 43457,
     "operation": "heif",
     "head": "4c106c0a96e78cb6d3b0547967e436e31fc198fa",
     "branch": "tgxworld/vips-review-05-heif",
-    "ci_session": 71632,
+    "ci_session": null,
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T09:49:45.117303Z",
+    "ci_observed_at": "2026-09-09T22:19:59.172719Z",
     "ci_head": "4c106c0a96e78cb6d3b0547967e436e31fc198fa",
-    "url": "https://github.com/discourse/discourse/pull/43457"
+    "url": "https://github.com/discourse/discourse/pull/43457",
+    "ci_log": "/tmp/vips-ci-43457-final-verdict.log"
   },
   {
     "operation": "ico",
@@ -61,9 +66,9 @@
     "url": "https://github.com/discourse/discourse/pull/43462",
     "number": 43462,
     "ci_session": null,
-    "ci_log": "/tmp/vips-pr-43462-ci-registered.log",
+    "ci_log": "/tmp/vips-ci-43462-final-verdict.log",
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T12:53:36.761978Z",
+    "ci_observed_at": "2026-09-09T22:19:58.987353Z",
     "ci_head": "a29087e9804520698437ca32cbfd7888749d96a4"
   },
   {
@@ -72,10 +77,10 @@
     "head": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df",
     "url": "https://github.com/discourse/discourse/pull/43463",
     "number": 43463,
-    "ci_session": 11211,
-    "ci_log": "/tmp/vips-ci-43463-root-owned-01a0846e.log",
+    "ci_session": null,
+    "ci_log": "/tmp/vips-ci-43463-final-verdict.log",
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T13:27:19.390383Z",
+    "ci_observed_at": "2026-09-09T22:19:59.335287Z",
     "ci_head": "0a96aa3f57a23c177b9cc5bd05de268a7d3a83df"
   },
   {
@@ -84,10 +89,10 @@
     "head": "7548d192b0fc01607b0df1b7abf6abb768a15d51",
     "url": "https://github.com/discourse/discourse/pull/43464",
     "number": 43464,
-    "ci_session": 72279,
-    "ci_log": "/tmp/vips-ci-43464-root-owned-01a0846e.log",
+    "ci_session": null,
+    "ci_log": "/tmp/vips-ci-43464-final-verdict.log",
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T13:28:22.754033Z",
+    "ci_observed_at": "2026-09-09T22:19:59.536357Z",
     "ci_head": "7548d192b0fc01607b0df1b7abf6abb768a15d51"
   },
   {
@@ -96,10 +101,10 @@
     "head": "fab2dead96404c8c415ca8732d04b581e3e5ca8c",
     "url": "https://github.com/discourse/discourse/pull/43465",
     "number": 43465,
-    "ci_session": 23937,
-    "ci_log": "/tmp/vips-ci-43465-resume.log",
+    "ci_session": null,
+    "ci_log": "/tmp/vips-ci-43465-final-verdict.log",
     "ci_verdict": "GREEN",
-    "ci_observed_at": "2026-09-09T21:57:42.825477Z",
+    "ci_observed_at": "2026-09-09T22:19:59.398090Z",
     "ci_head": "fab2dead96404c8c415ca8732d04b581e3e5ca8c"
   },
   {
@@ -108,10 +113,10 @@
     "head": "61227f084ac0ac0b6857ab2a6b7979f605080f3c",
     "url": "https://github.com/discourse/discourse/pull/43466",
     "number": 43466,
-    "ci_session": 20494,
-    "ci_log": "/tmp/vips-ci-43466-voice-retry.log",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-09T22:05:02.888078Z",
+    "ci_session": null,
+    "ci_log": "/tmp/vips-ci-43466-final-verdict.log",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-09T22:19:59.225366Z",
     "ci_head": "61227f084ac0ac0b6857ab2a6b7979f605080f3c"
   },
   {
@@ -120,10 +125,10 @@
     "head": "938adc3edff793fff465e9bce13bdd8219faaccd",
     "url": "https://github.com/discourse/discourse/pull/43467",
     "number": 43467,
-    "ci_session": 53430,
-    "ci_log": "/tmp/vips-ci-43467-crop-depth.log",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-09T22:05:18.768616Z",
+    "ci_session": null,
+    "ci_log": "/tmp/vips-ci-43467-final-verdict.log",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-09T22:19:59.389213Z",
     "ci_head": "938adc3edff793fff465e9bce13bdd8219faaccd"
   },
   {
@@ -132,10 +137,10 @@
     "branch": "tgxworld/vips-review-12-quality",
     "head": "19727de95fd7096f4cc32a7b8a9be1e73202ac2d",
     "url": "https://github.com/discourse/discourse/pull/43478",
-    "ci_session": 34403,
-    "ci_log": "/tmp/vips-ci-43478-crop-depth.log",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-09T22:05:20.135685Z",
+    "ci_session": null,
+    "ci_log": "/tmp/vips-ci-43478-final-verdict.log",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-09T22:19:59.929213Z",
     "ci_head": "19727de95fd7096f4cc32a7b8a9be1e73202ac2d"
   }
 ]
