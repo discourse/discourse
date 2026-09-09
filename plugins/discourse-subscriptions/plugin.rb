@@ -65,8 +65,6 @@ require_relative "app/controllers/concerns/stripe"
 require_relative "app/controllers/concerns/group"
 
 after_initialize do
-  ::Stripe.api_version = "2024-04-10"
-
   ::Stripe.set_app_info(
     "Discourse Subscriptions",
     version: "2.8.2",

@@ -14,18 +14,18 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
 
   context "when not authenticated" do
     it "does not get the subscriptions" do
-      ::Stripe::Customer.expects(:list).never
+      ::Stripe::CustomerService.any_instance.expects(:list).never
       get "/s/user/subscriptions.json"
     end
 
     it "does not destroy a subscription" do
-      ::Stripe::Subscription.expects(:delete).never
+      ::Stripe::SubscriptionService.any_instance.expects(:cancel).never
       patch "/s/user/subscriptions/sub_12345.json"
     end
 
     it "doesn't update payment method for subscription" do
-      ::Stripe::Subscription.expects(:update).never
-      ::Stripe::PaymentMethod.expects(:attach).never
+      ::Stripe::SubscriptionService.any_instance.expects(:update).never
+      ::Stripe::PaymentMethodService.any_instance.expects(:attach).never
       put "/s/user/subscriptions/sub_12345.json", params: { payment_method: "pm_abc123abc" }
     end
   end
@@ -50,9 +50,10 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
         )
 
       it "gets subscriptions" do
-        ::Stripe::Price
+        ::Stripe::PriceService
+          .any_instance
           .stubs(:list)
-          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .with(anything)
           .returns(JSON.parse(plans_json, symbolize_names: true))
 
         subscriptions_json =
@@ -62,9 +63,10 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
             ),
           )
 
-        ::Stripe::Subscription
+        ::Stripe::SubscriptionService
+          .any_instance
           .stubs(:list)
-          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .with(anything)
           .returns(JSON.parse(subscriptions_json, symbolize_names: true))
 
         get "/s/user/subscriptions.json"
@@ -78,12 +80,10 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
 
       it "aggregates prices from multiple pages using pagination logic" do
         subscription_data = { id: "sub_10z", items: { data: [{ price: { id: "price_200" } }] } }
-        ::Stripe::Subscription
+        ::Stripe::SubscriptionService
+          .any_instance
           .stubs(:list)
-          .with(
-            { customer: "cus_23456", status: "all" },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          .with({ customer: "cus_23456", status: "all" })
           .returns({ data: [subscription_data] })
 
         # Build the first page of 100 prices that do NOT include the desired price.
@@ -109,20 +109,16 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
           ),
         ]
 
-        ::Stripe::Price
+        ::Stripe::PriceService
+          .any_instance
           .expects(:list)
-          .with(
-            has_entries(limit: 100, expand: ["data.product"]),
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          .with(has_entries(limit: 100, expand: ["data.product"]))
           .returns({ data: prices_page_1, has_more: true })
 
-        ::Stripe::Price
+        ::Stripe::PriceService
+          .any_instance
           .expects(:list)
-          .with(
-            has_entries(limit: 100, expand: ["data.product"], starting_after: "price_100"),
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          .with(has_entries(limit: 100, expand: ["data.product"], starting_after: "price_100"))
           .returns({ data: prices_page_2, has_more: false })
 
         get "/s/user/subscriptions.json"
@@ -138,14 +134,8 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
 
     describe "update" do
       it "updates the payment method for subscription" do
-        ::Stripe::Subscription
-          .expects(:update)
-          .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
-          .once
-        ::Stripe::PaymentMethod
-          .expects(:attach)
-          .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
-          .once
+        ::Stripe::SubscriptionService.any_instance.expects(:update).with(anything, anything).once
+        ::Stripe::PaymentMethodService.any_instance.expects(:attach).with(anything, anything).once
         put "/s/user/subscriptions/sub_10z.json", params: { payment_method: "pm_abc123abc" }
       end
     end
@@ -161,7 +151,7 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
 
     describe "destroy" do
       it "does not allow user to cancel a subscription that is not theirs" do
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
 
         delete "/s/user/subscriptions/abc.json"
 
@@ -171,8 +161,8 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
 
     describe "update" do
       it "does not allow user to update a subscription that is not theirs" do
-        ::Stripe::PaymentMethod.expects(:attach).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::PaymentMethodService.any_instance.expects(:attach).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
 
         put "/s/user/subscriptions/abc.json", params: { payment_method: "x" }
 

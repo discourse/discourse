@@ -74,12 +74,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       end
 
       it "gets products" do
-        ::Stripe::Product
+        ::Stripe::ProductService
+          .any_instance
           .expects(:list)
-          .with(
-            { ids: product_ids, active: true, limit: 100 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          .with({ ids: product_ids, active: true, limit: 100 })
           .returns(data: [product])
 
         get "/s.json"
@@ -103,12 +101,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       it "is subscribed" do
         Fabricate(:subscription, external_id: "sub_12345", customer_id: customer.id, status: nil)
 
-        ::Stripe::Product
+        ::Stripe::ProductService
+          .any_instance
           .expects(:list)
-          .with(
-            { ids: product_ids, active: true, limit: 100 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          .with({ ids: product_ids, active: true, limit: 100 })
           .returns(data: [product])
 
         get "/s.json"
@@ -118,12 +114,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
       it "is not subscribed" do
         DiscourseSubscriptions::Customer.delete_all
-        ::Stripe::Product
+        ::Stripe::ProductService
+          .any_instance
           .expects(:list)
-          .with(
-            { ids: product_ids, active: true, limit: 100 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          .with({ ids: product_ids, active: true, limit: 100 })
           .returns(data: [product])
 
         get "/s.json"
@@ -184,16 +178,15 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       it "retrieves the product" do
         Fabricate(:product, external_id: "prod_walterwhite")
 
-        ::Stripe::Product
+        ::Stripe::ProductService
+          .any_instance
           .expects(:retrieve)
-          .with("prod_walterwhite", DiscourseSubscriptions::Stripe.request_opts)
+          .with("prod_walterwhite")
           .returns(product)
-        ::Stripe::Price
+        ::Stripe::PriceService
+          .any_instance
           .expects(:list)
-          .with(
-            { active: true, product: "prod_walterwhite" },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          .with({ active: true, product: "prod_walterwhite" })
           .returns(prices)
         get "/s/prod_walterwhite.json"
 
@@ -240,8 +233,8 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
       end
 
       it "returns 404 for a product outside the allowlist" do
-        ::Stripe::Product.expects(:retrieve).never
-        ::Stripe::Price.expects(:list).never
+        ::Stripe::ProductService.any_instance.expects(:retrieve).never
+        ::Stripe::PriceService.any_instance.expects(:list).never
 
         get "/s/prod_hidden.json"
 
@@ -290,9 +283,9 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
   context "when creating subscriptions" do
     context "when unauthenticated" do
       it "does not create a subscription" do
-        ::Stripe::Customer.expects(:create).never
-        ::Stripe::Price.expects(:retrieve).never
-        ::Stripe::Subscription.expects(:create).never
+        ::Stripe::CustomerService.any_instance.expects(:create).never
+        ::Stripe::PriceService.any_instance.expects(:retrieve).never
+        ::Stripe::SubscriptionService.any_instance.expects(:create).never
         post "/s/create.json", params: { plan: "plan_1234", source: "tok_1234" }
       end
     end
@@ -304,17 +297,19 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
       describe "#create" do
         before do
-          ::Stripe::Customer
+          ::Stripe::CustomerService
+            .any_instance
             .stubs(:create)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(id: "cus_1234")
         end
 
         it "creates a subscription without automatic_tax param" do
           SiteSetting.discourse_subscriptions_enable_automatic_tax = false
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(
               type: "recurring",
               product: "product_12345",
@@ -335,11 +330,11 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             promotion_code: nil,
           }
 
-          ::Stripe::Subscription
+          ::Stripe::SubscriptionService
+            .any_instance
             .expects(:create)
-            .with do |params, opts|
-              params == expected_subscription_params && !params.key?(:automatic_tax) &&
-                opts == DiscourseSubscriptions::Stripe.request_opts
+            .with do |params|
+              params == expected_subscription_params && !params.key?(:automatic_tax)
             end
             .returns(status: "active", customer: "cus_1234")
 
@@ -350,9 +345,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         it "creates a subscription with automatic tax" do
           SiteSetting.discourse_subscriptions_enable_automatic_tax = true
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(
               type: "recurring",
               product: "product_12345",
@@ -376,9 +372,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             },
           }
 
-          ::Stripe::Subscription
+          ::Stripe::SubscriptionService
+            .any_instance
             .expects(:create)
-            .with(expected_subscription_params, DiscourseSubscriptions::Stripe.request_opts)
+            .with(expected_subscription_params)
             .returns(status: "active", customer: "cus_1234")
 
           expect {
@@ -387,9 +384,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
         end
 
         it "rejects a plan outside the allowlist" do
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with("price_hidden", DiscourseSubscriptions::Stripe.request_opts)
+            .with("price_hidden")
             .returns(
               type: "recurring",
               product: "prod_hidden",
@@ -398,8 +396,8 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
                 trial_period_days: 0,
               },
             )
-          ::Stripe::Customer.expects(:create).never
-          ::Stripe::Subscription.expects(:create).never
+          ::Stripe::CustomerService.any_instance.expects(:create).never
+          ::Stripe::SubscriptionService.any_instance.expects(:create).never
 
           expect {
             post "/s/create.json", params: { plan: "price_hidden", source: "tok_1234" }
@@ -412,9 +410,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           # It's possible that the invoice item doesn't get attached
           # to the invoice. This means the invoice is paid, but for $0.00 with
           # a pending invoice item.
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(
               type: "one_time",
               product: "product_12345",
@@ -423,19 +422,18 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
               },
             )
 
-          ::Stripe::InvoiceItem.expects(:create).with(
-            anything,
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          ::Stripe::InvoiceItemService.any_instance.expects(:create).with(anything)
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:create)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(status: "open", id: "in_123")
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:finalize_invoice)
-            .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything, anything)
             .returns(id: "in_123", status: "paid", payment_intent: "pi_123")
 
           expect {
@@ -447,9 +445,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         it "creates a one time payment subscription without automatic tax" do
           SiteSetting.discourse_subscriptions_enable_automatic_tax = false
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(
               type: "one_time",
               product: "product_12345",
@@ -458,39 +457,38 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
               },
             )
 
-          ::Stripe::InvoiceItem.expects(:create).with(
-            anything,
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          ::Stripe::InvoiceItemService.any_instance.expects(:create).with(anything)
 
           expected_one_time_params = { customer: "cus_1234" }
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:create)
-            .with do |params, opts|
-              params == expected_one_time_params && !params.key?(:automatic_tax) &&
-                opts == DiscourseSubscriptions::Stripe.request_opts
-            end
+            .with { |params| params == expected_one_time_params && !params.key?(:automatic_tax) }
             .returns(status: "open", id: "in_123")
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:finalize_invoice)
-            .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything, anything)
             .returns(id: "in_123", status: "open", payment_intent: "pi_123")
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(id: "in_123", status: "open", payment_intent: "pi_123")
 
-          ::Stripe::PaymentIntent
+          ::Stripe::PaymentIntentService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(status: "successful")
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:pay)
-            .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything, anything)
             .returns(status: "paid", customer: "cus_1234")
 
           expect {
@@ -500,9 +498,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         it "creates a one time payment subscription" do
           SiteSetting.discourse_subscriptions_enable_automatic_tax = true
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(
               type: "one_time",
               product: "product_12345",
@@ -511,36 +510,38 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
               },
             )
 
-          ::Stripe::InvoiceItem.expects(:create).with(
-            anything,
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          ::Stripe::InvoiceItemService.any_instance.expects(:create).with(anything)
 
           expected_one_time_params = { customer: "cus_1234", automatic_tax: { enabled: true } }
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:create)
-            .with(expected_one_time_params, DiscourseSubscriptions::Stripe.request_opts)
+            .with(expected_one_time_params)
             .returns(status: "open", id: "in_123")
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:finalize_invoice)
-            .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything, anything)
             .returns(id: "in_123", status: "open", payment_intent: "pi_123")
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(id: "in_123", status: "open", payment_intent: "pi_123")
 
-          ::Stripe::PaymentIntent
+          ::Stripe::PaymentIntentService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(status: "successful")
 
-          ::Stripe::Invoice
+          ::Stripe::InvoiceService
+            .any_instance
             .expects(:pay)
-            .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything, anything)
             .returns(status: "paid", customer: "cus_1234")
 
           expect {
@@ -549,24 +550,23 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
         end
 
         it "creates a customer model" do
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(type: "recurring", product: "product_12345", metadata: {})
             .twice
-          ::Stripe::Subscription
+          ::Stripe::SubscriptionService
+            .any_instance
             .expects(:create)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(status: "active", customer: "cus_1234")
 
           expect {
             post "/s/create.json", params: { plan: "plan_1234", source: "tok_1234" }
           }.to change { DiscourseSubscriptions::Customer.count }
 
-          ::Stripe::Customer.expects(:retrieve).with(
-            "cus_1234",
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+          ::Stripe::CustomerService.any_instance.expects(:retrieve).with("cus_1234")
 
           expect {
             post "/s/create.json", params: { plan: "plan_5678", source: "tok_5678" }
@@ -575,13 +575,15 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         context "with customer name & address" do
           it "creates a customer & subscription when a customer address is provided" do
-            ::Stripe::Price
+            ::Stripe::PriceService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(type: "recurring", product: "product_12345", metadata: {})
-            ::Stripe::Subscription
+            ::Stripe::SubscriptionService
+              .any_instance
               .expects(:create)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(status: "active", customer: "cus_1234")
             expect {
               post "/s/create.json",
@@ -604,9 +606,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
         context "with promo code" do
           context "with invalid code" do
             it "prevents use of invalid coupon codes" do
-              ::Stripe::Price
+              ::Stripe::PriceService
+                .any_instance
                 .expects(:retrieve)
-                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything)
                 .returns(
                   type: "recurring",
                   product: "product_12345",
@@ -616,9 +619,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
                   },
                 )
 
-              ::Stripe::PromotionCode
+              ::Stripe::PromotionCodeService
+                .any_instance
                 .expects(:list)
-                .with({ code: "invalid" }, DiscourseSubscriptions::Stripe.request_opts)
+                .with({ code: "invalid" })
                 .returns(data: [])
 
               post "/s/create.json",
@@ -635,16 +639,18 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
           context "with valid code" do
             before do
-              ::Stripe::PromotionCode
+              ::Stripe::PromotionCodeService
+                .any_instance
                 .expects(:list)
-                .with({ code: "123" }, DiscourseSubscriptions::Stripe.request_opts)
+                .with({ code: "123" })
                 .returns(data: [{ id: "promo123", coupon: { id: "c123" } }])
             end
 
             it "applies promo code to recurring subscription" do
-              ::Stripe::Price
+              ::Stripe::PriceService
+                .any_instance
                 .expects(:retrieve)
-                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything)
                 .returns(
                   type: "recurring",
                   product: "product_12345",
@@ -665,9 +671,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
                 promotion_code: "promo123",
               }
 
-              ::Stripe::Subscription
+              ::Stripe::SubscriptionService
+                .any_instance
                 .expects(:create)
-                .with(expected_subscription_params, DiscourseSubscriptions::Stripe.request_opts)
+                .with(expected_subscription_params)
                 .returns(status: "active", customer: "cus_1234")
 
               expect {
@@ -681,9 +688,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             end
 
             it "applies promo code to one time purchase" do
-              ::Stripe::Price
+              ::Stripe::PriceService
+                .any_instance
                 .expects(:retrieve)
-                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything)
                 .returns(
                   type: "one_time",
                   product: "product_12345",
@@ -692,39 +700,46 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
                   },
                 )
 
-              ::Stripe::Invoice
+              ::Stripe::InvoiceService
+                .any_instance
                 .expects(:create)
-                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything)
                 .returns(status: "open", id: "in_123")
 
-              ::Stripe::InvoiceItem.expects(:create).with(
-                {
-                  customer: "cus_1234",
-                  price: "plan_1234",
-                  discounts: [{ coupon: "c123" }],
-                  invoice: "in_123",
-                },
-                DiscourseSubscriptions::Stripe.request_opts,
-              )
+              ::Stripe::InvoiceItemService
+                .any_instance
+                .expects(:create)
+                .with(
+                  {
+                    customer: "cus_1234",
+                    price: "plan_1234",
+                    discounts: [{ coupon: "c123" }],
+                    invoice: "in_123",
+                  },
+                )
 
-              ::Stripe::Invoice
+              ::Stripe::InvoiceService
+                .any_instance
                 .expects(:finalize_invoice)
-                .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything, anything)
                 .returns(id: "in_123", status: "open", payment_intent: "pi_123")
 
-              ::Stripe::Invoice
+              ::Stripe::InvoiceService
+                .any_instance
                 .expects(:retrieve)
-                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything)
                 .returns(id: "in_123", status: "open", payment_intent: "pi_123")
 
-              ::Stripe::PaymentIntent
+              ::Stripe::PaymentIntentService
+                .any_instance
                 .expects(:retrieve)
-                .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything)
                 .returns(status: "successful")
 
-              ::Stripe::Invoice
+              ::Stripe::InvoiceService
+                .any_instance
                 .expects(:pay)
-                .with(anything, anything, DiscourseSubscriptions::Stripe.request_opts)
+                .with(anything, anything)
                 .returns(status: "paid", customer: "cus_1234")
 
               expect {
@@ -747,13 +762,15 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
               transaction_id: "sub_1234",
               plan_id: "plan_1234",
             }
-            ::Stripe::Price
+            ::Stripe::PriceService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(id: "plan_1234", product: "product_12345", metadata: {})
-            ::Stripe::Subscription
+            ::Stripe::SubscriptionService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(id: "sub_123", customer: "cus_1234", status: "active")
 
             expect { post "/s/finalize.json" }.to change { DiscourseSubscriptions::Customer.count }
@@ -766,13 +783,15 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
               transaction_id: "in_1234",
               plan_id: "plan_1234",
             }
-            ::Stripe::Price
+            ::Stripe::PriceService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(id: "plan_1234", product: "product_12345", metadata: {})
-            ::Stripe::Invoice
+            ::Stripe::InvoiceService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(id: "in_123", customer: "cus_1234", status: "paid")
 
             expect { post "/s/finalize.json" }.to change { DiscourseSubscriptions::Customer.count }
@@ -789,13 +808,15 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             transaction_id: "sub_123",
             plan_id: "plan_1234",
           }
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(id: "plan_1234", product: "product_12345", metadata: {})
-          ::Stripe::Subscription
+          ::Stripe::SubscriptionService
+            .any_instance
             .expects(:retrieve)
-            .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+            .with(anything)
             .returns(id: "sub_123", customer: "cus_1234", status: "active")
 
           post "/s/finalize.json"
@@ -810,11 +831,12 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             transaction_id: "sub_123",
             plan_id: "price_hidden",
           }
-          ::Stripe::Price
+          ::Stripe::PriceService
+            .any_instance
             .expects(:retrieve)
-            .with("price_hidden", DiscourseSubscriptions::Stripe.request_opts)
+            .with("price_hidden")
             .returns(id: "price_hidden", product: "prod_hidden", metadata: {})
-          ::Stripe::Subscription.expects(:retrieve).never
+          ::Stripe::SubscriptionService.any_instance.expects(:retrieve).never
 
           expect { post "/s/finalize.json" }.not_to change {
             DiscourseSubscriptions::Customer.count
@@ -830,20 +852,23 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         context "with unauthorized group" do
           before do
-            ::Stripe::Customer
+            ::Stripe::CustomerService
+              .any_instance
               .expects(:create)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(id: "cus_1234")
-            ::Stripe::Subscription
+            ::Stripe::SubscriptionService
+              .any_instance
               .expects(:create)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(status: "active")
           end
 
           it "does not add the user to the admins group" do
-            ::Stripe::Price
+            ::Stripe::PriceService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(
                 type: "recurring",
                 product: "product_12345",
@@ -856,9 +881,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           end
 
           it "does not add the user to other group" do
-            ::Stripe::Price
+            ::Stripe::PriceService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(
                 type: "recurring",
                 product: "product_12345",
@@ -873,13 +899,15 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
         context "when plan has group in metadata" do
           before do
-            ::Stripe::Customer
+            ::Stripe::CustomerService
+              .any_instance
               .expects(:create)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(id: "cus_1234")
-            ::Stripe::Price
+            ::Stripe::PriceService
+              .any_instance
               .expects(:retrieve)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(
                 type: "recurring",
                 product: "product_12345",
@@ -890,9 +918,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           end
 
           it "does not add the user to the group when subscription fails" do
-            ::Stripe::Subscription
+            ::Stripe::SubscriptionService
+              .any_instance
               .expects(:create)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(status: "failed")
 
             expect {
@@ -903,9 +932,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           end
 
           it "adds the user to the group when the subscription is active" do
-            ::Stripe::Subscription
+            ::Stripe::SubscriptionService
+              .any_instance
               .expects(:create)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(status: "active")
 
             expect {
@@ -916,9 +946,10 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           end
 
           it "adds the user to the group when the subscription is trialing" do
-            ::Stripe::Subscription
+            ::Stripe::SubscriptionService
+              .any_instance
               .expects(:create)
-              .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+              .with(anything)
               .returns(status: "trialing")
 
             expect {

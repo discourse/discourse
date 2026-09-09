@@ -5,8 +5,10 @@ require "highline/import"
 
 desc "Import subscriptions from Stripe"
 task "subscriptions:subscriptions_import" => :environment do
-  setup_api
-  products = get_stripe_products
+  api_key =
+    SiteSetting.discourse_subscriptions_secret_key.presence || ask("Input Stripe secret key")
+  stripe_client = DiscourseSubscriptions::Stripe.client(api_key: api_key)
+  products = get_stripe_products(stripe_client: stripe_client)
   strip_products_to_import = []
 
   procourse_import = false
@@ -22,17 +24,19 @@ task "subscriptions:subscriptions_import" => :environment do
   end
 
   import_products(strip_products_to_import)
-  import_subscriptions(procourse_import)
+  import_subscriptions(procourse_import: procourse_import, stripe_client: stripe_client)
 end
 
-def get_stripe_products(starting_after: nil)
+def get_stripe_products(stripe_client:, starting_after: nil)
   puts "Getting products from Stripe API"
 
   all_products = []
 
   loop do
     products =
-      Stripe::Product.list({ type: "service", starting_after: starting_after, active: true })
+      stripe_client.v1.products.list(
+        { type: "service", starting_after: starting_after, active: true },
+      )
     all_products += products[:data]
     break if products[:has_more] == false
     starting_after = products[:data].last["id"]
@@ -41,13 +45,14 @@ def get_stripe_products(starting_after: nil)
   all_products
 end
 
-def get_stripe_subscriptions(starting_after: nil)
+def get_stripe_subscriptions(stripe_client:, starting_after: nil)
   puts "Getting Subscriptions from Stripe API"
 
   all_subscriptions = []
 
   loop do
-    subscriptions = Stripe::Subscription.list({ starting_after: starting_after, status: "active" })
+    subscriptions =
+      stripe_client.v1.subscriptions.list({ starting_after: starting_after, status: "active" })
     all_subscriptions += subscriptions[:data]
     break if subscriptions[:has_more] == false
     starting_after = subscriptions[:data].last["id"]
@@ -56,13 +61,13 @@ def get_stripe_subscriptions(starting_after: nil)
   all_subscriptions
 end
 
-def get_stripe_customers(starting_after: nil)
+def get_stripe_customers(stripe_client:, starting_after: nil)
   puts "Getting Customers from Stripe API"
 
   all_customers = []
 
   loop do
-    customers = Stripe::Customer.list({ starting_after: starting_after })
+    customers = stripe_client.v1.customers.list({ starting_after: starting_after })
     all_customers += customers[:data]
     break if customers[:has_more] == false
     starting_after = customers[:data].last["id"]
@@ -85,14 +90,14 @@ def import_products(products)
   end
 end
 
-def import_subscriptions(procourse_import)
+def import_subscriptions(procourse_import:, stripe_client:)
   puts "Importing subscriptions"
   product_ids = DiscourseSubscriptions::Product.all.pluck(:external_id)
 
-  all_customers = get_stripe_customers
+  all_customers = get_stripe_customers(stripe_client: stripe_client)
   puts "Total available Stripe Customers: #{all_customers.length}, the first of which is customer id: #{all_customers[0][:description]}"
 
-  subscriptions = get_stripe_subscriptions
+  subscriptions = get_stripe_subscriptions(stripe_client: stripe_client)
   puts "Total Active Subscriptions available: #{subscriptions.length}"
 
   subscriptions_for_products =
@@ -158,23 +163,17 @@ def import_subscriptions(procourse_import)
           puts "Discourse User: #{discourse_user.username_lower} found for Strip metadata update ..."
 
           updated_subscription =
-            Stripe::Subscription.update(
+            stripe_client.v1.subscriptions.update(
               subscription_id,
               { metadata: { user_id: user_id, username: discourse_user.username_lower } },
             )
           puts "Stripe Subscription: #{updated_subscription[:id]}, metadata: #{updated_subscription[:metadata]} UPDATED"
 
-          updated_customer = Stripe::Customer.update(customer_id, { email: discourse_user.email })
+          updated_customer =
+            stripe_client.v1.customers.update(customer_id, { email: discourse_user.email })
           puts "Stripe Customer: #{updated_customer[:id]}, email: #{updated_customer[:email]} UPDATED"
         end
       end
     end
   end
-end
-
-private
-
-def setup_api
-  api_key = SiteSetting.discourse_subscriptions_secret_key || ask("Input Stripe secret key")
-  Stripe.api_key = api_key
 end

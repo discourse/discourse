@@ -12,7 +12,7 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
 
   context "when not authenticated" do
     it "does not get the payment intents" do
-      ::Stripe::PaymentIntent.expects(:list).never
+      ::Stripe::PaymentIntentService.any_instance.expects(:list).never
       get "/s/user/payments.json"
       expect(response.status).to eq(403)
     end
@@ -30,9 +30,10 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
 
     it "gets payment intents" do
       created_time = Time.now
-      ::Stripe::Invoice
+      ::Stripe::InvoiceService
+        .any_instance
         .expects(:list)
-        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .with({ customer: "c_345678" })
         .returns(
           data: [
             { id: "inv_900007", lines: { data: [plan: { product: "prod_8675309" }] } },
@@ -41,9 +42,10 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
           ],
         )
 
-      ::Stripe::PaymentIntent
+      ::Stripe::PaymentIntentService
+        .any_instance
         .expects(:list)
-        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .with({ customer: "c_345678" })
         .returns(
           data: [
             { id: "pi_900008", invoice: "inv_900008", created: created_time },
@@ -63,14 +65,16 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
     end
 
     it "gets pricing table one-off purchases" do
-      ::Stripe::Invoice
+      ::Stripe::InvoiceService
+        .any_instance
         .expects(:list)
-        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .with({ customer: "c_345678" })
         .returns(data: [])
 
-      ::Stripe::PaymentIntent
+      ::Stripe::PaymentIntentService
+        .any_instance
         .expects(:list)
-        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .with({ customer: "c_345678" })
         .returns(data: [{ id: "pi_900010", invoice: nil, created: Time.now }])
 
       get "/s/user/payments.json"
@@ -82,22 +86,22 @@ RSpec.describe DiscourseSubscriptions::User::PaymentsController do
 
     it "gets pricing table one-off purchases that show up as related guest payments" do
       SiteSetting.discourse_subscriptions_pricing_table_enabled = true
-      ::Stripe::Invoice
+      ::Stripe::InvoiceService
+        .any_instance
         .expects(:list)
-        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .with({ customer: "c_345678" })
         .returns(data: [])
 
-      ::Stripe::PaymentIntent
+      ::Stripe::PaymentIntentService
+        .any_instance
         .expects(:list)
-        .with({ customer: "c_345678" }, DiscourseSubscriptions::Stripe.request_opts)
+        .with({ customer: "c_345678" })
         .returns(data: [])
 
-      ::Stripe::Charge
+      ::Stripe::ChargeService
+        .any_instance
         .expects(:list)
-        .with(
-          { limit: 100, starting_after: nil, expand: ["data.payment_intent"] },
-          DiscourseSubscriptions::Stripe.request_opts,
-        )
+        .with({ limit: 100, starting_after: nil, expand: ["data.payment_intent"] })
         .returns(
           data: [
             {

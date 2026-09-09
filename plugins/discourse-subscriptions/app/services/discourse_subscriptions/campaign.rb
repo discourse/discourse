@@ -2,9 +2,8 @@
 
 module DiscourseSubscriptions
   class Campaign
-    include DiscourseSubscriptions::Stripe
-
     def refresh_data
+      stripe_client = DiscourseSubscriptions::Stripe.client
       product_ids = Set.new(Product.all.pluck(:external_id))
 
       # if a product id is set for the campaign, we only want to return those results.
@@ -15,11 +14,12 @@ module DiscourseSubscriptions
       end
 
       amount = 0.00
-      subscriptions = get_subscription_data
+      subscriptions = get_subscription_data(stripe_client)
       subscriptions = filter_to_subscriptions_products(subscriptions, product_ids)
 
       # Fetch product purchases
-      one_time_payments = get_one_time_payments(product_ids)
+      one_time_payments =
+        get_one_time_payments(product_ids: product_ids, stripe_client: stripe_client)
       one_time_payments.each { |c| amount += c[:price].to_f / 100.00 }
 
       # get number of subscribers
@@ -37,9 +37,10 @@ module DiscourseSubscriptions
     end
 
     def create_campaign
+      stripe_client = DiscourseSubscriptions::Stripe.client
       group = create_campaign_group
-      product = create_campaign_product
-      create_campaign_prices(product, group)
+      product = create_campaign_product(stripe_client)
+      create_campaign_prices(product: product, group: group, stripe_client: stripe_client)
 
       SiteSetting.discourse_subscriptions_campaign_enabled = true
       SiteSetting.discourse_subscriptions_campaign_product = product[:id]
@@ -95,7 +96,7 @@ module DiscourseSubscriptions
       group[:name]
     end
 
-    def create_campaign_product
+    def create_campaign_product(stripe_client)
       product_params = {
         name: I18n.t("js.discourse_subscriptions.campaign.title"),
         active: true,
@@ -104,24 +105,40 @@ module DiscourseSubscriptions
         },
       }
 
-      product = ::Stripe::Product.create(product_params, stripe_request_opts)
+      product = stripe_client.v1.products.create(product_params)
 
       Product.create(external_id: product[:id])
 
       product
     end
 
-    def create_campaign_prices(product, group)
+    def create_campaign_prices(product:, group:, stripe_client:)
       # hard coded defaults to make setting this up as simple as possible
       monthly_prices = [3, 5, 10, 25]
       yearly_prices = [50, 100]
 
-      monthly_prices.each { |price| create_price(product[:id], group, price, "month") }
+      monthly_prices.each do |price|
+        create_price(
+          product_id: product[:id],
+          group_name: group,
+          amount: price,
+          recurrence: "month",
+          stripe_client: stripe_client,
+        )
+      end
 
-      yearly_prices.each { |price| create_price(product[:id], group, price, "year") }
+      yearly_prices.each do |price|
+        create_price(
+          product_id: product[:id],
+          group_name: group,
+          amount: price,
+          recurrence: "year",
+          stripe_client: stripe_client,
+        )
+      end
     end
 
-    def create_price(product_id, group_name, amount, recurrence)
+    def create_price(product_id:, group_name:, amount:, recurrence:, stripe_client:)
       price_object = {
         nickname: "#{amount}/#{recurrence}",
         unit_amount: amount * 100,
@@ -136,10 +153,10 @@ module DiscourseSubscriptions
         },
       }
 
-      ::Stripe::Price.create(price_object, stripe_request_opts)
+      stripe_client.v1.prices.create(price_object)
     end
 
-    def get_one_time_payments(product_ids)
+    def get_one_time_payments(product_ids:, stripe_client:)
       one_time_payments = []
       current_set = { has_more: true, last_record: nil }
 
@@ -147,9 +164,8 @@ module DiscourseSubscriptions
         # lots of matching because the Stripe API doesn't make it easy to match products => payments except from invoices
         until current_set[:has_more] == false
           all_invoices =
-            ::Stripe::Invoice.list(
+            stripe_client.v1.invoices.list(
               { limit: 100, starting_after: current_set[:last_record] },
-              stripe_request_opts,
             )
 
           if all_invoices[:data].present?
@@ -183,19 +199,18 @@ module DiscourseSubscriptions
       one_time_payments
     end
 
-    def get_subscription_data
+    def get_subscription_data(stripe_client)
       subscriptions = []
       current_set = { has_more: true, last_record: nil }
 
       until current_set[:has_more] == false
         current_set =
-          ::Stripe::Subscription.list(
+          stripe_client.v1.subscriptions.list(
             {
               expand: ["data.plan.product"],
               limit: 100,
               starting_after: current_set[:last_record],
             },
-            stripe_request_opts,
           )
 
         current_set[:last_record] = current_set[:data].last[:id] if current_set[:data].present?

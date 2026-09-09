@@ -52,13 +52,17 @@ describe "Subscription products" do
         ),
       )
 
-    ::Stripe::Product.stubs(:list).returns({ data: [one_product] })
-    ::Stripe::Product.stubs(:delete).returns({ id: "prod_OiK" })
-    ::Stripe::Product.stubs(:retrieve).returns(one_product)
-    ::Stripe::Price.stubs(:list).returns(JSON.parse(plans_json, symbolize_names: true))
-    ::Stripe::Subscription.stubs(:list).returns(
-      JSON.parse(subscriptions_json, symbolize_names: true),
-    )
+    ::Stripe::ProductService.any_instance.stubs(:list).returns({ data: [one_product] })
+    ::Stripe::ProductService.any_instance.stubs(:delete).returns({ id: "prod_OiK" })
+    ::Stripe::ProductService.any_instance.stubs(:retrieve).returns(one_product)
+    ::Stripe::PriceService
+      .any_instance
+      .stubs(:list)
+      .returns(JSON.parse(plans_json, symbolize_names: true))
+    ::Stripe::SubscriptionService
+      .any_instance
+      .stubs(:list)
+      .returns(JSON.parse(subscriptions_json, symbolize_names: true))
   end
 
   it "shows active and canceled subscriptions for admins" do

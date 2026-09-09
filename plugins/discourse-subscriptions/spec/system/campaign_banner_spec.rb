@@ -5,8 +5,8 @@ RSpec.describe "Campaign Banner", allow_network: ["js.stripe.com"] do
   fab!(:contributor) { Fabricate(:user, username: "contributor1") }
 
   before do
-    ::Stripe::Product.stubs(:list).returns({ data: [] })
-    ::Stripe::Price.stubs(:list).returns({ data: [] })
+    ::Stripe::ProductService.any_instance.stubs(:list).returns({ data: [] })
+    ::Stripe::PriceService.any_instance.stubs(:list).returns({ data: [] })
 
     SiteSetting.discourse_subscriptions_campaign_enabled = true
     SiteSetting.discourse_subscriptions_campaign_show_contributors = true

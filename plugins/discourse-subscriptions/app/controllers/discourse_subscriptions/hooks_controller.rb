@@ -51,7 +51,7 @@ module DiscourseSubscriptions
         end
 
         if checkout_session[:customer].nil?
-          customer = ::Stripe::Customer.create({ email: user.email }, stripe_request_opts)
+          customer = stripe_client.v1.customers.create({ email: user.email })
           customer_id = customer[:id]
         else
           customer_id = checkout_session[:customer]
@@ -70,11 +70,7 @@ module DiscourseSubscriptions
         end
 
         line_items =
-          ::Stripe::Checkout::Session.list_line_items(
-            checkout_session[:id],
-            { limit: 1 },
-            stripe_request_opts,
-          )
+          stripe_client.v1.checkout.sessions.line_items.list(checkout_session[:id], { limit: 1 })
         item = line_items[:data].first
 
         group = plan_group(item[:price])
@@ -93,10 +89,9 @@ module DiscourseSubscriptions
         discourse_customer.save!
 
         if !subscription.nil?
-          ::Stripe::Subscription.update(
+          stripe_client.v1.subscriptions.update(
             subscription,
             { metadata: { user_id: user.id, username: user.username } },
-            stripe_request_opts,
           )
         end
       when "customer.subscription.created"

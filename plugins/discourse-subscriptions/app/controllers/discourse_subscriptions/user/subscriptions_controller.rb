@@ -24,7 +24,7 @@ module DiscourseSubscriptions
           prices = []
           price_params = { limit: 100, expand: ["data.product"] }
           loop do
-            response = ::Stripe::Price.list(price_params, stripe_request_opts)
+            response = stripe_client.v1.prices.list(price_params)
             prices.concat(response[:data])
             break unless response[:has_more]
             price_params[:starting_after] = response[:data].last.id
@@ -33,10 +33,7 @@ module DiscourseSubscriptions
 
           stripe_customer_ids.each do |stripe_customer_id|
             customer_subscriptions =
-              ::Stripe::Subscription.list(
-                { customer: stripe_customer_id, status: "all" },
-                stripe_request_opts,
-              )
+              stripe_client.v1.subscriptions.list({ customer: stripe_customer_id, status: "all" })
             all_subscriptions.concat(customer_subscriptions[:data])
           end
 
@@ -58,11 +55,7 @@ module DiscourseSubscriptions
         # full removal is done via webhooks
 
         subscription =
-          ::Stripe::Subscription.update(
-            params[:id],
-            { cancel_at_period_end: true },
-            stripe_request_opts,
-          )
+          stripe_client.v1.subscriptions.update(params[:id], { cancel_at_period_end: true })
 
         if subscription
           render_json_dump subscription
@@ -78,10 +71,9 @@ module DiscourseSubscriptions
 
         begin
           attach_method_to_customer(@subscription.customer_id, params[:payment_method])
-          ::Stripe::Subscription.update(
+          stripe_client.v1.subscriptions.update(
             params[:id],
             { default_payment_method: params[:payment_method] },
-            stripe_request_opts,
           )
           render json: success_json
         rescue ::Stripe::InvalidRequestError
@@ -93,11 +85,7 @@ module DiscourseSubscriptions
 
       def attach_method_to_customer(customer_id, method)
         customer = Customer.find(customer_id)
-        ::Stripe::PaymentMethod.attach(
-          method,
-          { customer: customer.customer_id },
-          stripe_request_opts,
-        )
+        stripe_client.v1.payment_methods.attach(method, { customer: customer.customer_id })
       end
 
       def find_subscription

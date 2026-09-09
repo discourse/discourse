@@ -4,8 +4,10 @@ module DiscourseSubscriptions
   module Stripe
     extend ActiveSupport::Concern
 
-    def self.request_opts
-      { api_key: SiteSetting.discourse_subscriptions_secret_key }
+    def self.client(api_key: SiteSetting.discourse_subscriptions_secret_key)
+      raise ::Stripe::AuthenticationError, "Stripe secret key is not configured" if api_key.blank?
+
+      ::Stripe::StripeClient.new(api_key, stripe_version: "2024-04-10")
     end
 
     def self.configured?
@@ -13,12 +15,14 @@ module DiscourseSubscriptions
         SiteSetting.discourse_subscriptions_secret_key.present?
     end
 
-    def stripe_request_opts
-      DiscourseSubscriptions::Stripe.request_opts
-    end
-
     def is_stripe_configured?
       DiscourseSubscriptions::Stripe.configured?
+    end
+
+    private
+
+    def stripe_client
+      @stripe_client ||= DiscourseSubscriptions::Stripe.client
     end
   end
 end

@@ -45,7 +45,7 @@ module DiscourseSubscriptions
         params.require(:id)
         begin
           refund_subscription(params[:id]) if ActiveModel::Type::Boolean.new.cast(params[:refund])
-          subscription = ::Stripe::Subscription.cancel(params[:id], {}, stripe_request_opts)
+          subscription = stripe_client.v1.subscriptions.cancel(params[:id], {})
 
           customer =
             Customer.find_by(
@@ -68,14 +68,13 @@ module DiscourseSubscriptions
       private
 
       def get_subscriptions(start)
-        ::Stripe::Subscription.list(
+        stripe_client.v1.subscriptions.list(
           {
             expand: ["data.plan.product"],
             limit: PAGE_LIMIT,
             starting_after: start,
             status: "all",
           },
-          stripe_request_opts,
         )
       end
 
@@ -86,15 +85,13 @@ module DiscourseSubscriptions
 
       # this will only refund the most recent subscription payment
       def refund_subscription(subscription_id)
-        subscription = ::Stripe::Subscription.retrieve(subscription_id, stripe_request_opts)
-        invoice =
-          ::Stripe::Invoice.retrieve(
-            subscription[:latest_invoice],
-            stripe_request_opts,
-          ) if subscription[:latest_invoice]
+        subscription = stripe_client.v1.subscriptions.retrieve(subscription_id)
+        invoice = stripe_client.v1.invoices.retrieve(subscription[:latest_invoice]) if subscription[
+          :latest_invoice
+        ]
         payment_intent = invoice[:payment_intent] if invoice[:payment_intent]
 
-        ::Stripe::Refund.create({ payment_intent: payment_intent }, stripe_request_opts)
+        stripe_client.v1.refunds.create({ payment_intent: payment_intent })
       end
     end
   end

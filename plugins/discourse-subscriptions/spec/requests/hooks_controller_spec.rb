@@ -163,21 +163,18 @@ RSpec.describe DiscourseSubscriptions::HooksController do
     describe "checkout.session.completed" do
       before do
         event = { type: "checkout.session.completed", data: checkout_session_completed_data }
-        ::Stripe::Checkout::Session
-          .stubs(:list_line_items)
-          .with(
-            checkout_session_completed_data[:object][:id],
-            { limit: 1 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+        ::Stripe::Checkout::SessionLineItemService
+          .any_instance
+          .stubs(:list)
+          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
           .returns(list_line_items_data)
 
-        ::Stripe::Subscription
+        ::Stripe::SubscriptionService
+          .any_instance
           .stubs(:update)
           .with(
             checkout_session_completed_data[:object][:subscription],
             { metadata: { user_id: user.id, username: user.username } },
-            DiscourseSubscriptions::Stripe.request_opts,
           )
           .returns(
             {
@@ -244,16 +241,13 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:metadata] = { user_id: other_user.id }
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session
-          .stubs(:list_line_items)
-          .with(
-            checkout_session_completed_data[:object][:id],
-            { limit: 1 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+        ::Stripe::Checkout::SessionLineItemService
+          .any_instance
+          .stubs(:list)
+          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
           .returns(list_line_items_data)
 
-        ::Stripe::Subscription.stubs(:update).returns({})
+        ::Stripe::SubscriptionService.any_instance.stubs(:update).returns({})
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -276,8 +270,8 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:customer_email] = other_user.email
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -299,9 +293,9 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:customer_email] = other_user.email
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Customer.expects(:create).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::CustomerService.any_instance.expects(:create).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -321,8 +315,8 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object].delete(:client_reference_id)
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -342,8 +336,8 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:client_reference_id] = "tampered-reference"
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -363,8 +357,8 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:customer_email] = nil
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -384,9 +378,9 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:client_reference_id] = client_reference_id
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Customer.expects(:create).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::CustomerService.any_instance.expects(:create).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -402,19 +396,17 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           type: "checkout.session.completed",
           data: checkout_session_completed_data_one_off,
         }
-        ::Stripe::Checkout::Session
-          .stubs(:list_line_items)
-          .with(
-            checkout_session_completed_data[:object][:id],
-            { limit: 1 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+        ::Stripe::Checkout::SessionLineItemService
+          .any_instance
+          .stubs(:list)
+          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
           .returns(list_line_items_data)
 
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
-        ::Stripe::Customer
+        ::Stripe::CustomerService
+          .any_instance
           .stubs(:create)
-          .with({ email: user.email }, DiscourseSubscriptions::Stripe.request_opts)
+          .with({ email: user.email })
           .returns(id: "cus_1234")
       end
 
@@ -431,9 +423,9 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:client_reference_id] = client_reference_id
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Customer.expects(:create).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::CustomerService.any_instance.expects(:create).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -450,9 +442,9 @@ RSpec.describe DiscourseSubscriptions::HooksController do
         data[:object][:client_reference_id] = client_reference_id
         event = { type: "checkout.session.completed", data: data }
 
-        ::Stripe::Checkout::Session.expects(:list_line_items).never
-        ::Stripe::Customer.expects(:create).never
-        ::Stripe::Subscription.expects(:update).never
+        ::Stripe::Checkout::SessionLineItemService.any_instance.expects(:list).never
+        ::Stripe::CustomerService.any_instance.expects(:create).never
+        ::Stripe::SubscriptionService.any_instance.expects(:update).never
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
       end
 
@@ -543,20 +535,17 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           data: checkout_session_completed_data,
         }
         ::Stripe::Webhook.stubs(:construct_event).returns(event)
-        ::Stripe::Checkout::Session
-          .stubs(:list_line_items)
-          .with(
-            checkout_session_completed_data[:object][:id],
-            { limit: 1 },
-            DiscourseSubscriptions::Stripe.request_opts,
-          )
+        ::Stripe::Checkout::SessionLineItemService
+          .any_instance
+          .stubs(:list)
+          .with(checkout_session_completed_data[:object][:id], { limit: 1 })
           .returns(list_line_items_data)
-        ::Stripe::Subscription
+        ::Stripe::SubscriptionService
+          .any_instance
           .stubs(:update)
           .with(
             checkout_session_completed_data[:object][:subscription],
             { metadata: { user_id: user.id, username: user.username } },
-            DiscourseSubscriptions::Stripe.request_opts,
           )
           .returns(
             {

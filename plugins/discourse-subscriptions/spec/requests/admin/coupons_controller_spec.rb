@@ -9,7 +9,7 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
 
   context "when unauthenticated" do
     it "does nothing" do
-      ::Stripe::PromotionCode.expects(:list).never
+      ::Stripe::PromotionCodeService.any_instance.expects(:list).never
       get "/s/admin/coupons.json"
       expect(response.status).to eq(404)
     end
@@ -36,9 +36,10 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
       end
 
       it "returns a list of promo codes" do
-        ::Stripe::PromotionCode
+        ::Stripe::PromotionCodeService
+          .any_instance
           .expects(:list)
-          .with({ limit: 100 }, DiscourseSubscriptions::Stripe.request_opts)
+          .with({ limit: 100 })
           .returns({ data: [{ id: "promo_123", coupon: { valid: true } }] })
 
         get "/s/admin/coupons.json"
@@ -47,9 +48,10 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
       end
 
       it "only returns valid promo codes" do
-        ::Stripe::PromotionCode
+        ::Stripe::PromotionCodeService
+          .any_instance
           .expects(:list)
-          .with({ limit: 100 }, DiscourseSubscriptions::Stripe.request_opts)
+          .with({ limit: 100 })
           .returns({ data: [{ id: "promo_123", coupon: { valid: false } }] })
 
         get "/s/admin/coupons.json"
@@ -60,13 +62,11 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
 
     describe "#create" do
       it "creates a coupon with an amount off" do
-        ::Stripe::Coupon
+        ::Stripe::CouponService.any_instance.expects(:create).with(anything).returns(id: "coup_123")
+        ::Stripe::PromotionCodeService
+          .any_instance
           .expects(:create)
-          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-          .returns(id: "coup_123")
-        ::Stripe::PromotionCode
-          .expects(:create)
-          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .with(anything)
           .returns({ code: "p123", coupon: { amount_off: 2000 } })
 
         post "/s/admin/coupons.json",
@@ -82,13 +82,11 @@ RSpec.describe DiscourseSubscriptions::Admin::CouponsController do
       end
 
       it "creates a coupon with a percent off" do
-        ::Stripe::Coupon
+        ::Stripe::CouponService.any_instance.expects(:create).with(anything).returns(id: "coup_123")
+        ::Stripe::PromotionCodeService
+          .any_instance
           .expects(:create)
-          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-          .returns(id: "coup_123")
-        ::Stripe::PromotionCode
-          .expects(:create)
-          .with(anything, DiscourseSubscriptions::Stripe.request_opts)
+          .with(anything)
           .returns({ code: "p123", coupon: { percent_off: 20 } })
 
         post "/s/admin/coupons.json",

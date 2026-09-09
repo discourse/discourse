@@ -15,7 +15,7 @@ describe "Configure subscriptions plugin", allow_network: ["js.stripe.com"] do
   it "takes the admin to the products tab, alongside the other tabs, once Stripe keys are set" do
     SiteSetting.discourse_subscriptions_secret_key = "sk_test_51xuu"
     SiteSetting.discourse_subscriptions_public_key = "pk_test_51xuu"
-    ::Stripe::Product.stubs(:list).returns({ data: [] })
+    ::Stripe::ProductService.any_instance.stubs(:list).returns({ data: [] })
 
     config_page.visit
 
