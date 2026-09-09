@@ -33,8 +33,6 @@ export default class PollNodeView extends Component {
     return pollBounds(this.args.node.attrs, this.#optionCount);
   }
 
-  // only what the settings themselves say: a composer knows nothing about
-  // votes, and nothing about who will read the post
   get pollInfo() {
     const { attrs } = this.args.node;
     const closesAt = attrs.close ? moment(attrs.close) : null;
@@ -48,7 +46,7 @@ export default class PollNodeView extends Component {
       max: this.#bounds.max,
       closesAt,
       isAutomaticallyClosed: !!closesAt?.isBefore(moment()),
-      // read for its length, to phrase how many options can be picked
+      // PollInfo uses only the length when describing selection limits.
       options: new Array(this.#optionCount),
     };
   }
@@ -97,15 +95,14 @@ export default class PollNodeView extends Component {
         this.args.dom.setAttribute(name, value);
       }
     }
-    // :empty misses it: the editor keeps a trailing break in an empty block
+    // An empty editor block contains a trailing break, so :empty won't match.
     this.args.dom.classList.toggle(
       "--untitled",
       node.firstChild?.type.name === "poll_title" &&
         node.firstChild.content.size === 0
     );
 
-    // a number poll's options come from its range and the serializer drops
-    // them, so they must not accept edits the document will not keep
+    // Generated options are omitted from Markdown, so edits here would be lost.
     const list = this.args.contentDOM.querySelector(":scope > ul");
     if (list) {
       if (node.attrs.type === "number") {
@@ -144,8 +141,6 @@ export default class PollNodeView extends Component {
     const tr = view.state.tr.setNodeMarkup(pos, null, attrs);
 
     if (attrs.type === "number") {
-      // a number poll's options come from its range, so let the markdown
-      // pipeline generate them instead of repeating the rules here
       const generatedPoll = pluginParams.utils.convertFromMarkdown(
         `[poll ${buildBBCodeAttrs(attrs)}]\n[/poll]`
       ).firstChild;

@@ -200,6 +200,7 @@ export default class PollUiBuilderModal extends Component {
     if (existingPolls) {
       pollAttrs.name = `poll${existingPolls.length + 1}`;
     }
+
     const attrs = buildBBCodeAttrs(pollAttrs);
     const title = this.pollTitle ? `# ${this.pollTitle.trim()}\n` : "";
     const options = this.isNumber
@@ -236,8 +237,7 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get minNumOfOptionsValidation() {
-    // editing counts the options in the document and shows no option fields,
-    // so a failure here would block saving with nothing on screen to explain it
+    // Option counts are edited in the document, not in this settings modal.
     if (!this.isNumber && !this.isEditing) {
       if (this.pollOptionsCount < 1) {
         return {
