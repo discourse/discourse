@@ -39,9 +39,93 @@ RSpec.describe TopicOgImageGenerator do
   end
 
   describe "#generate_bytes" do
+    ["技术讨论", "W" * 50].each do |category_name|
+      it "keeps #{category_name} inside its category background with libvips" do
+        global_setting :enable_vips_image_processing, true
+        category.update_columns(name: category_name)
+
+        png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
+
+        background = png[0, 50]
+        category_color = ChunkyPNG::Color.rgb(0, 136, 204)
+        pill_right = (80...1120).select { |column| png[column, 62] != background }.max
+        glyph_columns =
+          (80...1200).select do |column|
+            (65...100).any? { |row| png[column, row] == category_color }
+          end
+        expect(glyph_columns).not_to be_empty
+        expect(pill_right).not_to be_nil
+        expect(glyph_columns.max).to be <= pill_right - 8
+      end
+    end
+
+    {
+      "CJK" => "如何建立一个欢迎所有人的在线社区并通过深入交流分享知识经验共同解决问题探索新的想法和持续改进讨论体验",
+      "wide Latin" => "W" * 90,
+    }.each do |script, title|
+      it "fits #{script} title lines within the canvas margins when libvips is enabled" do
+        global_setting :enable_vips_image_processing, true
+        topic.update_columns(title:)
+        scheme =
+          Fabricate(
+            :color_scheme,
+            color_scheme_colors: [
+              Fabricate.build(:color_scheme_color, name: "primary", hex: "123456"),
+              Fabricate.build(:color_scheme_color, name: "secondary", hex: "f0e0d0"),
+            ],
+          )
+        SiteSetting.default_theme_id = Fabricate(:theme, color_scheme: scheme).id
+        background = ChunkyPNG::Color.rgb(240, 224, 208)
+        primary = ChunkyPNG::Color.rgb(18, 52, 86)
+
+        png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
+
+        expect(png.crop(80, 120, 1040, 80).pixels).to include(primary)
+        expect(png.crop(80, 200, 1040, 80).pixels).to include(primary)
+        expect(png.crop(1120, 110, 80, 180).pixels.uniq).to eq([background])
+      end
+    end
+
+    it "returns nil when the libvips renderer times out" do
+      global_setting :enable_vips_image_processing, true
+      DiscourseVips.stubs(:topic_og_render).raises(DiscourseVips::OperationTimeout)
+
+      png_bytes = described_class.new(topic).generate_bytes
+
+      expect(png_bytes).to eq(nil)
+    end
+
     [false, true].each do |enable_vips|
       context "with libvips #{enable_vips ? "enabled" : "disabled"}" do
         before { global_setting :enable_vips_image_processing, enable_vips }
+
+        it "renders a wrapped accented title and card details in the selected palette" do
+          topic.update!(title: "Café déjà vu configure your forum for multilingual conversations")
+          scheme =
+            Fabricate(
+              :color_scheme,
+              color_scheme_colors: [
+                Fabricate.build(:color_scheme_color, name: "primary", hex: "123456"),
+                Fabricate.build(:color_scheme_color, name: "secondary", hex: "f0e0d0"),
+                Fabricate.build(:color_scheme_color, name: "tertiary", hex: "654321"),
+              ],
+            )
+          SiteSetting.default_theme_id = Fabricate(:theme, color_scheme: scheme).id
+          background = ChunkyPNG::Color.rgb(240, 224, 208)
+          primary = ChunkyPNG::Color.rgb(18, 52, 86)
+
+          png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
+
+          expect(png[600, 8]).to eq(ChunkyPNG::Color.rgb(101, 67, 33))
+          expect(png[600, 400]).to eq(background)
+          expect(png.crop(80, 120, 1040, 80).pixels).to include(primary)
+          expect(png.crop(80, 200, 1040, 80).pixels).to include(primary)
+          expect(png.crop(90, 65, 120, 30).pixels).to include(ChunkyPNG::Color.rgb(0, 136, 204))
+          expect(png.crop(184, 310, 800, 50).pixels.count { |pixel| pixel != background }).to be >
+            100
+          expect(png.crop(700, 500, 420, 60).pixels.count { |pixel| pixel != background }).to be >
+            100
+        end
 
         it "renders transparent SVG assets against white on a colored canvas" do
           scheme =

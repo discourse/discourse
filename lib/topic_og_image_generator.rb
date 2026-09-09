@@ -132,8 +132,8 @@ class TopicOgImageGenerator
     display_name = name.length > max_name_chars ? "#{name[0...[max_name_chars - 1, 1].max]}…" : name
 
     <<~SVG
-      <rect x="#{x}" y="#{y}" width="#{pill_width}" height="40" rx="6" fill="##{color}" fill-opacity="0.15"/>
-      <text x="#{x + pill_padding}" y="#{y + 30}" font-family="#{FONT_FAMILY}" font-size="24" font-weight="600" fill="##{color}">#{escape_xml(display_name)}</text>
+      <rect class="topic-og__category-background" x="#{x}" y="#{y}" width="#{pill_width}" height="40" rx="6" fill="##{color}" fill-opacity="0.15"/>
+      <text class="topic-og__category-name" x="#{x + pill_padding}" y="#{y + 30}" font-family="#{FONT_FAMILY}" font-size="24" font-weight="600" fill="##{color}">#{escape_xml(display_name)}</text>
     SVG
   end
 
@@ -142,7 +142,7 @@ class TopicOgImageGenerator
       .each_with_index
       .map do |line, i|
         y = start_y + (i * 68)
-        %(<text x="#{x}" y="#{y}" font-family="#{FONT_FAMILY}" font-size="62" font-weight="700" fill="##{primary_color}">#{escape_xml(line)}</text>)
+        %(<text class="topic-og-title" x="#{x}" y="#{y}" font-family="#{FONT_FAMILY}" font-size="62" font-weight="700" fill="##{primary_color}">#{escape_xml(line)}</text>)
       end
       .join("\n    ")
   end
@@ -377,29 +377,33 @@ class TopicOgImageGenerator
 
       File.write(svg_path, build_svg(asset_directory: dir))
 
-      ImageMagick.magick(
-        "-background",
-        "none",
-        "-size",
-        "#{OG_WIDTH}x#{OG_HEIGHT}",
-        "MSVG:#{svg_path}",
-        "-depth",
-        "8",
-        "-define",
-        "png:compression-level=9",
-        png_path,
-        operation: :topic_og_render,
-        read: [dir],
-        write: [dir],
-        nice: 10,
-        timeout: 20,
-      )
+      if GlobalSetting.enable_vips_image_processing
+        DiscourseVips.topic_og_render(input_path: svg_path, output_path: png_path, timeout: 20)
+      else
+        ImageMagick.magick(
+          "-background",
+          "none",
+          "-size",
+          "#{OG_WIDTH}x#{OG_HEIGHT}",
+          "MSVG:#{svg_path}",
+          "-depth",
+          "8",
+          "-define",
+          "png:compression-level=9",
+          png_path,
+          operation: :topic_og_render,
+          read: [dir],
+          write: [dir],
+          nice: 10,
+          timeout: 20,
+        )
+      end
 
       return nil unless File.exist?(png_path)
       FileHelper.optimize_image!(png_path)
       File.binread(png_path)
     end
-  rescue Discourse::Utils::CommandError => e
+  rescue Discourse::Utils::CommandError, DiscourseVips::Error => e
     Discourse.warn("Failed to render topic OG image", topic_id: @topic.id, error: e.message)
     nil
   end
