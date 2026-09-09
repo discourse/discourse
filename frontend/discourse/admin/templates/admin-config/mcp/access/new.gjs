@@ -1,5 +1,5 @@
 import AdminMcp from "discourse/admin/components/admin-mcp";
 
 export default <template>
-  <AdminMcp @section="access-new" @model={{@model}} />
+  <AdminMcp @model={{@model}} @section="access-new" />
 </template>

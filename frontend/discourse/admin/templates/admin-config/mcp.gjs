@@ -5,51 +5,51 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.mcp.title"}}
     @descriptionLabel={{i18n "admin.config.mcp.header_description"}}
+    @titleLabel={{i18n "admin.config.mcp.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/mcp"
         @label={{i18n "admin.config.mcp.title"}}
+        @path="/admin/config/mcp"
       />
     </:breadcrumbs>
     <:tabs>
       <DNavItem
-        @route="adminConfig.mcp.index"
-        @label="admin.config.mcp.tabs.overview"
         class="admin-mcp-tabs__overview"
+        @label="admin.config.mcp.tabs.overview"
+        @route="adminConfig.mcp.index"
       />
       <DNavItem
-        @route="adminConfig.mcp.capabilities"
-        @label="admin.config.mcp.tabs.capabilities"
         class="admin-mcp-tabs__capabilities"
+        @label="admin.config.mcp.tabs.capabilities"
+        @route="adminConfig.mcp.capabilities"
       />
       <DNavItem
-        @route="adminConfig.mcp.access"
-        @label="admin.config.mcp.tabs.access"
         class="admin-mcp-tabs__access"
+        @label="admin.config.mcp.tabs.access"
+        @route="adminConfig.mcp.access"
       />
       <DNavItem
-        @route="adminConfig.mcp.clients"
-        @label="admin.config.mcp.tabs.clients"
         class="admin-mcp-tabs__clients"
+        @label="admin.config.mcp.tabs.clients"
+        @route="adminConfig.mcp.clients"
       />
       <DNavItem
-        @route="adminConfig.mcp.authorizations"
-        @label="admin.config.mcp.tabs.authorizations"
         class="admin-mcp-tabs__authorizations"
+        @label="admin.config.mcp.tabs.authorizations"
+        @route="adminConfig.mcp.authorizations"
       />
       <DNavItem
-        @route="adminConfig.mcp.activity"
-        @label="admin.config.mcp.tabs.activity"
         class="admin-mcp-tabs__activity"
+        @label="admin.config.mcp.tabs.activity"
+        @route="adminConfig.mcp.activity"
       />
       <DNavItem
-        @route="adminConfig.mcp.settings"
-        @label="settings"
         class="admin-mcp-tabs__settings"
+        @label="settings"
+        @route="adminConfig.mcp.settings"
       />
     </:tabs>
   </DPageHeader>

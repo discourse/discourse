@@ -64,15 +64,15 @@ class UserMcpAuthorizationRow extends Component {
           {{#if this.hasPermissions}}
             <div class="user-mcp-authorization__permissions">
               <DButton
+                aria-expanded={{if this.showPermissions "true" "false"}}
+                class="user-mcp-authorization__permissions-toggle"
                 @action={{this.togglePermissions}}
+                @display="link"
                 @icon={{if this.showPermissions "caret-up" "caret-down"}}
                 @translatedLabel={{i18n
                   "user.mcp_authorizations.permissions"
                   count=@authorization.scopes.length
                 }}
-                @display="link"
-                class="user-mcp-authorization__permissions-toggle"
-                aria-expanded={{if this.showPermissions "true" "false"}}
               />
             </div>
 
@@ -97,16 +97,16 @@ class UserMcpAuthorizationRow extends Component {
           >{{authorizationStatus @authorization.status}}</span>
           {{#if this.canRevoke}}
             <DButton
+              class="btn-default btn-small"
               @action={{@onRevoke}}
               @label="user.mcp_authorizations.revoke"
-              class="btn-default btn-small"
             />
           {{/if}}
           {{#if this.isReauthorizationRequired}}
             <DButton
+              class="btn-default btn-small"
               @action={{@onReauthorize}}
               @label="user.mcp_authorizations.reauthorize"
-              class="btn-default btn-small"
             />
           {{/if}}
         </div>
@@ -152,22 +152,6 @@ export default class UserMcpAuthorizations extends Component {
     return this.authorizations.length > 0;
   }
 
-  async #loadAuthorizations() {
-    if (!this.username) {
-      this.loading = false;
-      return;
-    }
-
-    try {
-      const result = await ajax(`${this.endpoint}.json`);
-      this.authorizations = result.authorizations || result;
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.loading = false;
-    }
-  }
-
   @action
   revoke(authorization) {
     this.dialog.confirm({
@@ -201,6 +185,22 @@ export default class UserMcpAuthorizations extends Component {
     this.dialog.alert({
       message: i18n("user.mcp_authorizations.reauthorize_in_client"),
     });
+  }
+
+  async #loadAuthorizations() {
+    if (!this.username) {
+      this.loading = false;
+      return;
+    }
+
+    try {
+      const result = await ajax(`${this.endpoint}.json`);
+      this.authorizations = result.authorizations || result;
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   <template>
@@ -238,8 +238,8 @@ export default class UserMcpAuthorizations extends Component {
                 {{#each this.authorizations as |authorization|}}
                   <UserMcpAuthorizationRow
                     @authorization={{authorization}}
-                    @onRevoke={{fn this.revoke authorization}}
                     @onReauthorize={{this.reauthorize}}
+                    @onRevoke={{fn this.revoke authorization}}
                   />
                 {{/each}}
               </tbody>

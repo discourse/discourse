@@ -332,28 +332,6 @@ export default class AdminMcp extends Component {
     }));
   }
 
-  accessScopeSelections(scopes) {
-    const scopeIds = new Set(scopes || []);
-    if (this.model.initial_scope) {
-      scopeIds.add(this.model.initial_scope);
-    }
-    return this.scopeSelections([...scopeIds]);
-  }
-
-  scopeSelections(scopes) {
-    const options = new Map(
-      this.scopeOptions.map((option) => [option.id, option])
-    );
-    return (scopes || []).map(
-      (scope) =>
-        options.get(scope) || {
-          id: scope,
-          name: scope,
-          primitiveCount: 0,
-        }
-    );
-  }
-
   get groupChooserOptions() {
     return { maximum: 1 };
   }
@@ -414,6 +392,28 @@ export default class AdminMcp extends Component {
 
   get canLoadMoreActivity() {
     return Boolean(this.activityNextCursor);
+  }
+
+  accessScopeSelections(scopes) {
+    const scopeIds = new Set(scopes || []);
+    if (this.model.initial_scope) {
+      scopeIds.add(this.model.initial_scope);
+    }
+    return this.scopeSelections([...scopeIds]);
+  }
+
+  scopeSelections(scopes) {
+    const options = new Map(
+      this.scopeOptions.map((option) => [option.id, option])
+    );
+    return (scopes || []).map(
+      (scope) =>
+        options.get(scope) || {
+          id: scope,
+          name: scope,
+          primitiveCount: 0,
+        }
+    );
   }
 
   primitiveFieldName(primitive) {
@@ -627,36 +627,6 @@ export default class AdminMcp extends Component {
       popupAjaxError(error);
     } finally {
       this.saving = false;
-    }
-  }
-
-  async #setPrimitiveBlocked(primitive, blocked) {
-    this.updatingPrimitiveId = primitive.id;
-    try {
-      await ajax("/admin/mcp/capabilities/emergency-block.json", {
-        type: "PUT",
-        data: { primitive_id: primitive.id, blocked },
-      });
-      this.primitiveRecords = this.primitiveRecords.map((item) =>
-        item.id === primitive.id
-          ? { ...item, emergency_blocked: blocked }
-          : item
-      );
-      this.toasts.success({
-        duration: "short",
-        data: {
-          message: i18n(
-            blocked
-              ? "admin.config.mcp.primitive_blocked"
-              : "admin.config.mcp.primitive_unblocked",
-            { name: primitive.title || primitive.name }
-          ),
-        },
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.updatingPrimitiveId = null;
     }
   }
 
@@ -955,25 +925,55 @@ export default class AdminMcp extends Component {
     return data;
   }
 
+  async #setPrimitiveBlocked(primitive, blocked) {
+    this.updatingPrimitiveId = primitive.id;
+    try {
+      await ajax("/admin/mcp/capabilities/emergency-block.json", {
+        type: "PUT",
+        data: { primitive_id: primitive.id, blocked },
+      });
+      this.primitiveRecords = this.primitiveRecords.map((item) =>
+        item.id === primitive.id
+          ? { ...item, emergency_blocked: blocked }
+          : item
+      );
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n(
+            blocked
+              ? "admin.config.mcp.primitive_blocked"
+              : "admin.config.mcp.primitive_unblocked",
+            { name: primitive.title || primitive.name }
+          ),
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.updatingPrimitiveId = null;
+    }
+  }
+
   <template>
     {{#if (eq @section "overview")}}
       <DPageSubheader
-        @titleLabel={{i18n "admin.config.mcp.overview.title"}}
         @descriptionLabel={{i18n "admin.config.mcp.overview.description"}}
+        @titleLabel={{i18n "admin.config.mcp.overview.title"}}
       />
       <div class="admin-mcp__overview-grid">
         <AdminConfigAreaCard
-          @heading="admin.config.mcp.overview.endpoint_title"
           class="admin-mcp__endpoint-card"
+          @heading="admin.config.mcp.overview.endpoint_title"
         >
           <:content>
             <div class="admin-mcp__endpoint">
               <code>{{@model.endpoint}}</code>
               <DButton
+                class="btn-transparent"
                 @action={{this.copyEndpoint}}
                 @icon="copy"
                 @title="admin.config.mcp.copy_endpoint"
-                class="btn-transparent"
               />
             </div>
             <dl class="admin-mcp__summary-list">
@@ -1007,8 +1007,8 @@ export default class AdminMcp extends Component {
         </AdminConfigAreaCard>
 
         <AdminConfigAreaCard
-          @heading="admin.config.mcp.overview.activity_title"
           class="admin-mcp__usage"
+          @heading="admin.config.mcp.overview.activity_title"
         >
           <:content>
             <dl class="admin-mcp__metric-grid">
@@ -1028,8 +1028,8 @@ export default class AdminMcp extends Component {
 
         {{#if this.showSetupChecklist}}
           <AdminConfigAreaCard
-            @heading="admin.config.mcp.overview.setup_title"
             class="admin-mcp__setup"
+            @heading="admin.config.mcp.overview.setup_title"
           >
             <:content>
               <ol class="admin-mcp__checklist">
@@ -1047,8 +1047,8 @@ export default class AdminMcp extends Component {
 
       {{#if this.warnings.length}}
         <section
-          class="admin-mcp__warnings"
           aria-labelledby="mcp-warnings-title"
+          class="admin-mcp__warnings"
         >
           <h2 id="mcp-warnings-title">{{i18n
               "admin.config.mcp.overview.warnings_title"
@@ -1061,13 +1061,13 @@ export default class AdminMcp extends Component {
     {{else if (eq @section "access")}}
       <section class="admin-mcp__access-section">
         <DPageSubheader
-          @titleLabel={{i18n "admin.config.mcp.access.title"}}
           @descriptionLabel={{i18n "admin.config.mcp.access.description"}}
+          @titleLabel={{i18n "admin.config.mcp.access.title"}}
         >
           <:actions as |actions|>
             <actions.Primary
-              @route="adminConfig.mcp.access.new"
               @label="admin.config.mcp.access.add"
+              @route="adminConfig.mcp.access.new"
             />
           </:actions>
         </DPageSubheader>
@@ -1116,20 +1116,20 @@ export default class AdminMcp extends Component {
                 </td>
                 <td class="d-table__cell --controls">
                   <DButton
-                    @route="adminConfig.mcp.access.edit"
-                    @routeModels={{array rule.group_id}}
+                    class="btn-small admin-mcp__edit-access-rule"
                     @icon="pencil"
                     @label="admin.config.mcp.access.edit"
-                    class="btn-small admin-mcp__edit-access-rule"
+                    @route="adminConfig.mcp.access.edit"
+                    @routeModels={{array rule.group_id}}
                   />
                 </td>
                 <td class="d-table__cell --controls">
                   {{#if rule.deletable}}
                     <DButton
+                      class="btn-danger btn-small admin-mcp__delete-access-rule"
                       @action={{fn this.deleteAccessRule rule}}
                       @icon="trash-can"
                       @title="admin.config.mcp.access.delete"
-                      class="btn-danger btn-small admin-mcp__delete-access-rule"
                     />
                   {{/if}}
                 </td>
@@ -1141,23 +1141,23 @@ export default class AdminMcp extends Component {
 
     {{else if (or (eq @section "access-new") (eq @section "access-edit"))}}
       <BackButton
-        @route="adminConfig.mcp.access"
         @label="admin.config.mcp.access.back"
+        @route="adminConfig.mcp.access"
       />
       <AdminConfigAreaCard
+        class="admin-mcp__form-card"
         @heading={{if
           this.editingAccessRule
           "admin.config.mcp.access.edit_title"
           "admin.config.mcp.access.new_title"
         }}
-        class="admin-mcp__form-card"
       >
         <:content>
           <Form
-            @data={{this.accessFormData}}
-            @onSubmit={{this.saveAccessRule}}
-            @isLoading={{this.saving}}
             class="admin-mcp__access-form"
+            @data={{this.accessFormData}}
+            @isLoading={{this.saving}}
+            @onSubmit={{this.saveAccessRule}}
             as |form|
           >
             {{#if this.editingAccessRule}}
@@ -1171,38 +1171,38 @@ export default class AdminMcp extends Component {
               <form.Field
                 @name="group_ids"
                 @title={{i18n "admin.config.mcp.access.group"}}
-                @validation="required"
                 @type="custom"
+                @validation="required"
                 as |field|
               >
                 <field.Control>
                   <GroupChooser
                     @content={{this.availableAccessGroups}}
-                    @value={{field.value}}
                     @onChange={{field.set}}
                     @options={{this.groupChooserOptions}}
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>
             {{/if}}
             <form.Field
+              @description={{i18n "admin.config.mcp.access.scopes_description"}}
+              @format="full"
               @name="scopes"
               @title={{i18n "admin.config.mcp.access.scopes"}}
-              @description={{i18n "admin.config.mcp.access.scopes_description"}}
-              @validation="required"
-              @format="full"
               @type="custom"
+              @validation="required"
               as |field|
             >
               <field.Control>
                 <DMultiSelect
+                  class="admin-mcp__scope-select"
                   id={{field.id}}
-                  @selection={{field.value}}
+                  @contentClass="admin-mcp__scope-select-content"
+                  @label={{i18n "admin.config.mcp.access.scopes_placeholder"}}
                   @loadFn={{this.loadScopeOptions}}
                   @onChange={{field.set}}
-                  @label={{i18n "admin.config.mcp.access.scopes_placeholder"}}
-                  @contentClass="admin-mcp__scope-select-content"
-                  class="admin-mcp__scope-select"
+                  @selection={{field.value}}
                 >
                   <:selection as |scope|>{{scope.name}}</:selection>
                   <:result as |scope|>
@@ -1226,8 +1226,8 @@ export default class AdminMcp extends Component {
 
     {{else if (eq @section "primitives")}}
       <DPageSubheader
-        @titleLabel={{i18n "admin.config.mcp.capabilities.title"}}
         @descriptionLabel={{i18n "admin.config.mcp.capabilities.description"}}
+        @titleLabel={{i18n "admin.config.mcp.capabilities.title"}}
       />
       <div
         class="admin-mcp__primitives-section"
@@ -1237,19 +1237,19 @@ export default class AdminMcp extends Component {
             "admin.config.mcp.primitives.picker_description"
           }}</p>
         <Form
+          class="admin-mcp__primitive-filters"
           @data={{this.primitiveFilterFormData}}
           @onSet={{this.updateFilter}}
-          class="admin-mcp__primitive-filters"
           as |form|
         >
           <form.Field
-            @name="primitiveFilter"
-            @title={{i18n "admin.config.mcp.primitives.search_placeholder"}}
-            @showTitle={{false}}
-            @showOptional={{false}}
-            @format="full"
-            @type="input"
             class="admin-mcp__filter-search"
+            @format="full"
+            @name="primitiveFilter"
+            @showOptional={{false}}
+            @showTitle={{false}}
+            @title={{i18n "admin.config.mcp.primitives.search_placeholder"}}
+            @type="input"
             as |field|
           >
             <field.Control
@@ -1259,17 +1259,17 @@ export default class AdminMcp extends Component {
             />
           </form.Field>
           <form.Field
-            @name="primitiveGroupBy"
-            @title={{i18n "admin.config.mcp.primitives.group_by"}}
-            @showTitle={{false}}
-            @showOptional={{false}}
             @format="full"
+            @name="primitiveGroupBy"
+            @showOptional={{false}}
+            @showTitle={{false}}
+            @title={{i18n "admin.config.mcp.primitives.group_by"}}
             @type="select"
             as |field|
           >
             <field.Control
-              @includeNone={{false}}
               aria-label={{i18n "admin.config.mcp.primitives.group_by"}}
+              @includeNone={{false}}
               as |select|
             >
               {{#each this.primitiveGroupByOptions as |groupBy|}}
@@ -1282,18 +1282,18 @@ export default class AdminMcp extends Component {
             </field.Control>
           </form.Field>
           <form.Field
-            @name="primitiveRisk"
-            @title={{i18n "admin.config.mcp.primitives.risk"}}
-            @showTitle={{false}}
-            @showOptional={{false}}
-            @format="full"
-            @type="select"
             class="admin-mcp__filter-impact"
+            @format="full"
+            @name="primitiveRisk"
+            @showOptional={{false}}
+            @showTitle={{false}}
+            @title={{i18n "admin.config.mcp.primitives.risk"}}
+            @type="select"
             as |field|
           >
             <field.Control
-              @includeNone={{false}}
               aria-label={{i18n "admin.config.mcp.primitives.risk"}}
+              @includeNone={{false}}
               as |select|
             >
               {{#each this.primitiveRisks as |risk|}}
@@ -1305,17 +1305,17 @@ export default class AdminMcp extends Component {
             </field.Control>
           </form.Field>
           <form.Field
-            @name="primitiveState"
-            @title={{i18n "admin.config.mcp.primitives.state"}}
-            @showTitle={{false}}
-            @showOptional={{false}}
             @format="full"
+            @name="primitiveState"
+            @showOptional={{false}}
+            @showTitle={{false}}
+            @title={{i18n "admin.config.mcp.primitives.state"}}
             @type="select"
             as |field|
           >
             <field.Control
-              @includeNone={{false}}
               aria-label={{i18n "admin.config.mcp.primitives.state"}}
+              @includeNone={{false}}
               as |select|
             >
               {{#each this.primitiveStates as |state|}}
@@ -1328,27 +1328,27 @@ export default class AdminMcp extends Component {
           </form.Field>
         </Form>
         <Form
-          @data={{this.primitiveFormData}}
-          @onRegisterApi={{this.registerPrimitiveForm}}
-          @onSubmit={{this.savePrimitives}}
-          @onDirtyCheck={{this.shouldConfirmPrimitiveChanges}}
-          @isLoading={{this.saving}}
           class={{dConcatClass
             "admin-mcp__primitive-selection-form"
             (if this.hasPrimitiveChanges "has-floating-actions")
           }}
+          @data={{this.primitiveFormData}}
+          @isLoading={{this.saving}}
+          @onDirtyCheck={{this.shouldConfirmPrimitiveChanges}}
+          @onRegisterApi={{this.registerPrimitiveForm}}
+          @onSubmit={{this.savePrimitives}}
           as |form|
         >
           <div class="admin-mcp__primitive-browser">
             <nav
-              class="admin-mcp__primitive-groups"
               aria-label={{i18n "admin.config.mcp.primitives.groups_label"}}
+              class="admin-mcp__primitive-groups"
             >
               <ul class="admin-mcp__primitive-group-list">
                 {{#each this.primitiveGroups as |group|}}
                   <li>
                     <button
-                      type="button"
+                      aria-pressed={{eq group.id this.selectedPrimitiveGroup}}
                       class={{dConcatClass
                         "admin-mcp__primitive-group"
                         (if
@@ -1357,7 +1357,7 @@ export default class AdminMcp extends Component {
                         )
                       }}
                       data-primitive-group-id={{group.id}}
-                      aria-pressed={{eq group.id this.selectedPrimitiveGroup}}
+                      type="button"
                       {{on "click" (fn this.selectPrimitiveGroup group.id)}}
                     >
                       <span>{{group.label}}</span>
@@ -1372,8 +1372,8 @@ export default class AdminMcp extends Component {
               </ul>
             </nav>
             <section
-              class="admin-mcp__primitive-panel"
               aria-labelledby="mcp-primitive-group-title"
+              class="admin-mcp__primitive-panel"
             >
               <header class="admin-mcp__primitive-panel-header">
                 <h3
@@ -1386,14 +1386,14 @@ export default class AdminMcp extends Component {
                   }}</p>
                 <div class="admin-mcp__primitive-group-actions">
                   <DButton
+                    class="btn-default btn-small"
                     @action={{fn this.selectVisiblePrimitives true}}
                     @label="admin.config.mcp.primitives.enable_visible"
-                    class="btn-default btn-small"
                   />
                   <DButton
+                    class="btn-default btn-small"
                     @action={{fn this.selectVisiblePrimitives false}}
                     @label="admin.config.mcp.primitives.disable_visible"
-                    class="btn-default btn-small"
                   />
                 </div>
               </header>
@@ -1405,8 +1405,8 @@ export default class AdminMcp extends Component {
                   >
                     <form.Field
                       @name={{primitive.field_name}}
-                      @title={{primitive.title}}
                       @showTitle={{false}}
+                      @title={{primitive.title}}
                       @type="checkbox"
                       as |field|
                     >
@@ -1453,18 +1453,18 @@ export default class AdminMcp extends Component {
                         }}</p>{{/if}}
                     <div class="admin-mcp__primitive-actions">
                       <DButton
+                        class="btn-transparent btn-small"
                         @action={{fn
                           this.togglePrimitiveEmergencyBlock
                           primitive
                         }}
+                        @icon={{if primitive.emergency_blocked "unlock" "ban"}}
+                        @isLoading={{eq this.updatingPrimitiveId primitive.id}}
                         @title={{if
                           primitive.emergency_blocked
                           "admin.config.mcp.actions.unblock_primitive"
                           "admin.config.mcp.actions.block_primitive"
                         }}
-                        @icon={{if primitive.emergency_blocked "unlock" "ban"}}
-                        @isLoading={{eq this.updatingPrimitiveId primitive.id}}
-                        class="btn-transparent btn-small"
                       />
                     </div>
                   </article>
@@ -1486,29 +1486,29 @@ export default class AdminMcp extends Component {
       </div>
     {{else if (eq @section "clients")}}
       <DPageSubheader
-        @titleLabel={{i18n "admin.config.mcp.clients.title"}}
         @descriptionLabel={{i18n "admin.config.mcp.clients.description"}}
         @learnMoreUrl="https://meta.discourse.org/t/connecting-your-apps-to-discourse-mcp-server/411637#p-2033870-connecting-apps-via-oauth-2"
+        @titleLabel={{i18n "admin.config.mcp.clients.title"}}
       >
         <:actions as |actions|>
           <actions.Primary
-            @route="adminConfig.mcp.clients.new"
             @label="admin.config.mcp.clients.add"
+            @route="adminConfig.mcp.clients.new"
           />
         </:actions>
       </DPageSubheader>
       {{#if this.hasClients}}
         <Form
+          class="admin-mcp__table-filter"
           @data={{this.clientFilterFormData}}
           @onSet={{this.updateFilter}}
-          class="admin-mcp__table-filter"
           as |form|
         >
           <form.Field
             @name="clientFilter"
-            @title={{i18n "admin.config.mcp.clients.search_placeholder"}}
-            @showTitle={{false}}
             @showOptional={{false}}
+            @showTitle={{false}}
+            @title={{i18n "admin.config.mcp.clients.search_placeholder"}}
             @type="input"
             as |field|
           >
@@ -1518,11 +1518,11 @@ export default class AdminMcp extends Component {
           </form.Field>
         </Form>
         <DLoadMore
+          class="admin-mcp__load-more"
           @action={{this.loadMoreClients}}
           @enabled={{this.canLoadMoreClients}}
           @isLoading={{this.clientLoading}}
           @rootMargin="0px 0px 250px 0px"
-          class="admin-mcp__load-more"
         >
           <table class="d-table admin-mcp__table">
             <thead class="d-table__header"><tr class="d-table__row"><th
@@ -1542,9 +1542,9 @@ export default class AdminMcp extends Component {
               {{#each this.filteredClients as |client|}}
                 <tr class="d-table__row">
                   <td class="d-table__cell --overview"><LinkTo
-                      @route="adminConfig.mcp.clients.show"
-                      @model={{client.id}}
                       class="d-table__overview-link"
+                      @model={{client.id}}
+                      @route="adminConfig.mcp.clients.show"
                     ><span
                         class="d-table__overview-name"
                       >{{client.name}}</span><small
@@ -1573,20 +1573,20 @@ export default class AdminMcp extends Component {
                     >{{i18n "admin.config.mcp.clients.actions"}}</div><div
                       class="d-table__cell-actions"
                     >{{#if (eq client.registration_type "cimd")}}<DButton
+                          class="btn-small btn-transparent --primary admin-mcp__refresh-client"
                           @action={{fn this.refreshClient client}}
                           @label="admin.config.mcp.actions.refresh_metadata"
-                          class="btn-small btn-transparent --primary admin-mcp__refresh-client"
                         />{{/if}}<DButton
+                        class={{if
+                          client.blocked
+                          "btn-small btn-default admin-mcp__toggle-client-block"
+                          "btn-small btn-danger admin-mcp__toggle-client-block"
+                        }}
                         @action={{fn this.toggleClientBlock client}}
                         @label={{if
                           client.blocked
                           "admin.config.mcp.clients.unblock"
                           "admin.config.mcp.clients.block"
-                        }}
-                        class={{if
-                          client.blocked
-                          "btn-small btn-default admin-mcp__toggle-client-block"
-                          "btn-small btn-danger admin-mcp__toggle-client-block"
                         }}
                       /></div></td>
                 </tr>
@@ -1602,9 +1602,9 @@ export default class AdminMcp extends Component {
         <DConditionalLoadingSpinner @condition={{this.clientLoading}} />
       {{else}}
         <AdminConfigAreaEmptyList
-          @emptyLabel="admin.config.mcp.clients.empty"
           @ctaLabel="admin.config.mcp.clients.add"
           @ctaRoute="adminConfig.mcp.clients.new"
+          @emptyLabel="admin.config.mcp.clients.empty"
         />
       {{/if}}
     {{else if (eq @section "client-new")}}
@@ -1704,12 +1704,12 @@ export default class AdminMcp extends Component {
       {{/if}}
     {{else if (eq @section "client-detail")}}
       <BackButton
-        @route="adminConfig.mcp.clients"
         @label="admin.config.mcp.clients.back"
+        @route="adminConfig.mcp.clients"
       />
       <DPageSubheader
-        @titleLabel={{this.client.name}}
         @descriptionLabel={{i18n "admin.config.mcp.clients.detail_description"}}
+        @titleLabel={{this.client.name}}
       >
         <:actions as |actions|>
           <actions.Default
@@ -1769,20 +1769,20 @@ export default class AdminMcp extends Component {
       </AdminConfigAreaCard>
     {{else if (eq @section "authorizations")}}
       <DPageSubheader
-        @titleLabel={{i18n "admin.config.mcp.authorizations.title"}}
         @descriptionLabel={{i18n "admin.config.mcp.authorizations.description"}}
+        @titleLabel={{i18n "admin.config.mcp.authorizations.title"}}
       />
       <Form
+        class="admin-mcp__table-filter"
         @data={{this.authorizationFilterFormData}}
         @onSet={{this.updateFilter}}
-        class="admin-mcp__table-filter"
         as |form|
       >
         <form.Field
           @name="authorizationFilter"
-          @title={{i18n "admin.config.mcp.authorizations.search_placeholder"}}
-          @showTitle={{false}}
           @showOptional={{false}}
+          @showTitle={{false}}
+          @title={{i18n "admin.config.mcp.authorizations.search_placeholder"}}
           @type="input"
           as |field|
         >
@@ -1794,11 +1794,11 @@ export default class AdminMcp extends Component {
         </form.Field>
       </Form>
       <DLoadMore
+        class="admin-mcp__load-more"
         @action={{this.loadMoreAuthorizations}}
         @enabled={{this.canLoadMoreAuthorizations}}
         @isLoading={{this.authorizationLoading}}
         @rootMargin="0px 0px 250px 0px"
-        class="admin-mcp__load-more"
       >
         <table class="d-table admin-mcp__table admin-mcp__authorizations-table">
           <colgroup>
@@ -1859,9 +1859,9 @@ export default class AdminMcp extends Component {
                 <td class="d-table__cell --controls">{{#if
                     (notEq authorization.status "revoked")
                   }}<DButton
+                      class="btn-small btn-danger"
                       @action={{fn this.revokeAuthorization authorization}}
                       @label="admin.config.mcp.actions.revoke"
-                      class="btn-small btn-danger"
                     />{{/if}}</td>
               </tr>
             {{else}}
@@ -1876,8 +1876,8 @@ export default class AdminMcp extends Component {
       <DConditionalLoadingSpinner @condition={{this.authorizationLoading}} />
     {{else if (eq @section "activity")}}
       <DPageSubheader
-        @titleLabel={{i18n "admin.config.mcp.activity.title"}}
         @descriptionLabel={{i18n "admin.config.mcp.activity.description"}}
+        @titleLabel={{i18n "admin.config.mcp.activity.title"}}
       />
       <div class="admin-mcp__metric-grid admin-mcp__activity-metrics">
         <div><dt>{{i18n "admin.config.mcp.activity.tool_calls"}}</dt><dd
@@ -1893,19 +1893,19 @@ export default class AdminMcp extends Component {
             }}</dd></div>
       </div>
       <Form
+        class="admin-mcp__activity-filters"
         @data={{this.activityFilterFormData}}
         @onSet={{this.updateFilter}}
-        class="admin-mcp__activity-filters"
         as |form|
       >
         <form.Field
-          @name="activityFilter"
-          @title={{i18n "admin.config.mcp.activity.search_placeholder"}}
-          @showTitle={{false}}
-          @showOptional={{false}}
-          @format="full"
-          @type="input"
           class="admin-mcp__filter-search"
+          @format="full"
+          @name="activityFilter"
+          @showOptional={{false}}
+          @showTitle={{false}}
+          @title={{i18n "admin.config.mcp.activity.search_placeholder"}}
+          @type="input"
           as |field|
         >
           <field.Control
@@ -1914,15 +1914,15 @@ export default class AdminMcp extends Component {
         </form.Field>
         <form.Field
           @name="activityOutcome"
-          @title={{i18n "admin.config.mcp.activity.outcome"}}
-          @showTitle={{false}}
           @showOptional={{false}}
+          @showTitle={{false}}
+          @title={{i18n "admin.config.mcp.activity.outcome"}}
           @type="select"
           as |field|
         >
           <field.Control
-            @includeNone={{false}}
             aria-label={{i18n "admin.config.mcp.activity.outcome"}}
+            @includeNone={{false}}
             as |select|
           >
             {{#each this.activityOutcomes as |outcome|}}
@@ -1934,11 +1934,11 @@ export default class AdminMcp extends Component {
         </form.Field>
       </Form>
       <DLoadMore
+        class="admin-mcp__load-more"
         @action={{this.loadMoreActivity}}
         @enabled={{this.canLoadMoreActivity}}
         @isLoading={{this.activityLoading}}
         @rootMargin="0px 0px 250px 0px"
-        class="admin-mcp__load-more"
       >
         <table class="d-table admin-mcp__table admin-mcp__activity-table">
           <thead class="d-table__header"><tr class="d-table__row"><th
