@@ -1,0 +1,278 @@
+{
+  "operation": "downsize",
+  "iterations": 31,
+  "source": {
+    "base_commit": "a3c50521c64a57b149bb6c317449708ee06c0841",
+    "snapshot": "committed runtime source; reference-source preserves earlier legacy instruction provenance",
+    "files": {
+      "lib/discourse_vips.rb": "a1f9fdd8f06b1e3a2d7f312024a956d50487ffb2edfd593a47003e38df852e5e",
+      "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+      "lib/discourse_vips/ico_image.rb": "adeb274ef3319c875a41b522f419d6adf40e434effa5590ef30caff0de6bbe35",
+      "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+      "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "script/discourse_vips_worker": "5372dd867ddb7f2240b52cf2285174be05824494355d3fb9118677a1bc7b7ca8",
+      "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+      "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+      "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+    }
+  },
+  "manifest_sha256": "0fb5ce8a27101faa97c5e02eb27cb98b0b2492fe98dbd49c02d6f120ddfc7073",
+  "harness_sha256": "6721efa4f681535ba12b07a7723feb5649b9ddd2832685404faf33cc154fd55d",
+  "ruby": "ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [x86_64-linux]",
+  "kernel": "Linux 6.8.0-124-generic",
+  "landlock": true,
+  "libvips": "8.18.4",
+  "imagemagick": "Version: ImageMagick 7.1.2-27 Q16-HDRI x86_64 e4c2b403b:20260705 https://imagemagick.org",
+  "timing_boundary": "Core transform including wrapper, IPC, sandbox child, priority10 and encoder. Excludes Rails boot, source quality probe, evidence decoding, and FileHelper optimizer.",
+  "quality_policy": "Legacy frame0 estimate selects encoder quality100. The corrected shared caller makes the same selection; full Rails caller proof is separate. Probe cost is excluded from transformation timing.",
+  "selected_sample": null,
+  "missing_baseline_fields": [],
+  "removed_api_cases": [],
+  "limitations": [
+    "This supplement measures the three renderer operations with first-frame encoder quality. It does not time a complete Rails OptimizedImage call or post-optimizer work.",
+    "Visible pixel differences use ImageMagick-decoded PNGs converted to8-bit sRGB; original encoding/depth/profile metadata is recorded separately. Hidden RGB under transparent pixels is excluded from visible differences.",
+    "Post-optimizer and complete caller evidence must be measured separately."
+  ],
+  "samples": [
+    {
+      "name": "first-frame-lossless-output",
+      "parameters": {
+        "operation": "downsize",
+        "name": "first-frame-lossless-output",
+        "input": "inputs/webp-quality-first-frame.webp",
+        "input_format": "webp",
+        "output_format": "webp",
+        "output_suffix": "webp",
+        "strip_metadata": false,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-interlace",
+          "none",
+          "-resize",
+          "384x1>",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": null,
+        "baseline_source": null,
+        "baseline_error": null,
+        "geometry": "384x1>",
+        "expected_dimensions": [
+          384,
+          1
+        ]
+      },
+      "input_sha256": "6e72200b9f8ce6c0a6b478445fd4a78eb808038518ee25948afb20896d89815e",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 100,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 100,
+          "elapsed_ms": 32.14812092483044
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 42.0406349003315,
+          "dimensions": [
+            384,
+            1
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 45.541456900537014,
+          "dimensions": [
+            384,
+            1
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            45.143269933760166,
+            35.60308599844575,
+            41.11655615270138,
+            44.100454077124596,
+            38.637090008705854,
+            46.294218860566616,
+            36.756549030542374,
+            44.5697451941669,
+            42.91751608252525,
+            43.093154206871986,
+            46.68886819854379,
+            35.97823064774275,
+            36.22187115252018,
+            37.09176881238818,
+            38.26983831822872,
+            39.46940414607525,
+            39.2765998840332,
+            40.65985698252916,
+            32.35780680552125,
+            36.24713094905019,
+            36.274777725338936,
+            37.24687406793237,
+            39.84333807602525,
+            39.25898717716336,
+            37.504668813198805,
+            49.2075402289629,
+            40.10241385549307,
+            44.18512620031834,
+            53.62739413976669,
+            39.933263789862394,
+            47.484912909567356
+          ],
+          "median_ms": 39.84333807602525,
+          "p95_ms": 49.2075402289629
+        },
+        "libvips": {
+          "values_ms": [
+            42.25798882544041,
+            39.808419067412615,
+            38.79760019481182,
+            38.35215279832482,
+            42.7274270914495,
+            37.93438710272312,
+            41.425950825214386,
+            42.82885883003473,
+            46.969486866146326,
+            45.85053399205208,
+            42.334998957812786,
+            38.8375292532146,
+            41.263874154537916,
+            41.90117307007313,
+            41.51999484747648,
+            40.58575630187988,
+            39.9536220356822,
+            41.24386515468359,
+            35.52527679130435,
+            37.814666982740164,
+            40.47978902235627,
+            37.50341385602951,
+            44.38355891034007,
+            41.17725184187293,
+            41.46959772333503,
+            42.21773101016879,
+            43.79630507901311,
+            38.52967545390129,
+            50.06624013185501,
+            46.68867914006114,
+            46.423022635281086
+          ],
+          "median_ms": 41.425950825214386,
+          "p95_ms": 46.969486866146326
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/downsize/first-frame-lossless-output-imagemagick.webp",
+          "bytes": 68,
+          "sha256": "e22f87afa498be2a2d26eaf96c3120d2520dfd3d0d5eb4a1407e6f2b7bce9662",
+          "identify": "WEBP\t384\t1\t8\tsRGB\tsrgb  3.0\tUndefined\t",
+          "dimensions": [
+            384,
+            1
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/downsize/first-frame-lossless-output-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/downsize/first-frame-lossless-output-libvips.webp",
+          "bytes": 284,
+          "sha256": "26400c24c4da7bb7bb4ca432a3136dfa53c7cd11dd7836dee1059d2ef2bd7fc7",
+          "identify": "WEBP\t384\t1\t8\tsRGB\tsrgb  3.0\tTopLeft\texif",
+          "dimensions": [
+            384,
+            1
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 180,
+          "decoded_path": "outputs/downsize/first-frame-lossless-output-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.0026041666666666665,
+            "maximum_difference": 1.0,
+            "psnr_db": 73.97411585235442
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.0026041666666666665,
+            "maximum_difference": 1.0,
+            "psnr_db": 73.97411585235442
+          }
+        ]
+      }
+    }
+  ],
+  "fresh_worker": {
+    "sample": "first-frame-lossless-output",
+    "quality": {
+      "value": 100,
+      "source": "source quality",
+      "probe": {
+        "backend": "ImageMagick identify frame0",
+        "estimated_quality": 100,
+        "elapsed_ms": 31.714856158941984
+      }
+    },
+    "measurements": [
+      {
+        "status": "ok",
+        "elapsed_ms": 407.08194114267826,
+        "sha256": "26400c24c4da7bb7bb4ca432a3136dfa53c7cd11dd7836dee1059d2ef2bd7fc7"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 426.6332392580807,
+        "sha256": "26400c24c4da7bb7bb4ca432a3136dfa53c7cd11dd7836dee1059d2ef2bd7fc7"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 369.8648442514241,
+        "sha256": "26400c24c4da7bb7bb4ca432a3136dfa53c7cd11dd7836dee1059d2ef2bd7fc7"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 394.1546231508255,
+        "sha256": "26400c24c4da7bb7bb4ca432a3136dfa53c7cd11dd7836dee1059d2ef2bd7fc7"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 403.5467207431793,
+        "sha256": "26400c24c4da7bb7bb4ca432a3136dfa53c7cd11dd7836dee1059d2ef2bd7fc7"
+      }
+    ]
+  },
+  "summary": {
+    "selected": 1,
+    "recorded": 1,
+    "paired_timing_eligible": 1,
+    "incompatible_or_failed": []
+  }
+}

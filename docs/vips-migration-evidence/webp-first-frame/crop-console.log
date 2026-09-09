@@ -1,0 +1,2 @@
+{"name":"first-frame-lossless-output","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":40.70956399664283,"dimensions":[384,1]},"libvips":{"status":"ok","elapsed_ms":60.63149916008115,"dimensions":[384,1]}},"error":null}
+/bench/crop-results.json

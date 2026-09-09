@@ -1,0 +1,2 @@
+{"name":"first-frame-lossless-output","eligible_for_paired_timing":true,"validation":{"imagemagick":{"status":"ok","elapsed_ms":42.0406349003315,"dimensions":[384,1]},"libvips":{"status":"ok","elapsed_ms":45.541456900537014,"dimensions":[384,1]}},"error":null}
+/bench/downsize-results.json

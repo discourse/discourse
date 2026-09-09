@@ -1,0 +1,146 @@
+{
+  "source": {
+    "base_commit": "a3c50521c64a57b149bb6c317449708ee06c0841",
+    "snapshot": "committed runtime source; reference-source preserves earlier legacy instruction provenance",
+    "files": {
+      "lib/discourse_vips.rb": "a1f9fdd8f06b1e3a2d7f312024a956d50487ffb2edfd593a47003e38df852e5e",
+      "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+      "lib/discourse_vips/ico_image.rb": "adeb274ef3319c875a41b522f419d6adf40e434effa5590ef30caff0de6bbe35",
+      "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+      "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "script/discourse_vips_worker": "5372dd867ddb7f2240b52cf2285174be05824494355d3fb9118677a1bc7b7ca8",
+      "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+      "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+      "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+    }
+  },
+  "inputs": {
+    "inputs/webp-quality-first-frame.webp": {
+      "origin": "spec/fixtures/images/webp-quality-first-frame.webp",
+      "sha256": "6e72200b9f8ce6c0a6b478445fd4a78eb808038518ee25948afb20896d89815e",
+      "bytes": 640
+    }
+  },
+  "cases": [
+    {
+      "operation": "downsize",
+      "name": "first-frame-lossless-output",
+      "input": "inputs/webp-quality-first-frame.webp",
+      "input_format": "webp",
+      "output_format": "webp",
+      "output_suffix": "webp",
+      "strip_metadata": false,
+      "quality": null,
+      "instructions": [
+        "@INPUT@",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-interlace",
+        "none",
+        "-resize",
+        "384x1>",
+        "-profile",
+        "@PROFILE@",
+        "@OUTPUT@"
+      ],
+      "baseline_record": null,
+      "baseline_source": null,
+      "baseline_error": null,
+      "geometry": "384x1>",
+      "expected_dimensions": [
+        384,
+        1
+      ]
+    },
+    {
+      "operation": "resize",
+      "name": "first-frame-lossless-output",
+      "input": "inputs/webp-quality-first-frame.webp",
+      "input_format": "webp",
+      "output_format": "webp",
+      "output_suffix": "webp",
+      "strip_metadata": true,
+      "quality": null,
+      "instructions": [
+        "@INPUT@",
+        "-auto-orient",
+        "-gravity",
+        "center",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "384x1^",
+        "-extent",
+        "384x1",
+        "-interpolate",
+        "catrom",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "@PROFILE@",
+        "@OUTPUT@"
+      ],
+      "baseline_record": null,
+      "baseline_source": null,
+      "baseline_error": null,
+      "width": 384,
+      "height": 1,
+      "expected_dimensions": [
+        384,
+        1
+      ]
+    },
+    {
+      "operation": "crop",
+      "name": "first-frame-lossless-output",
+      "input": "inputs/webp-quality-first-frame.webp",
+      "input_format": "webp",
+      "output_format": "webp",
+      "output_suffix": "webp",
+      "strip_metadata": true,
+      "quality": null,
+      "instructions": [
+        "@INPUT@",
+        "-auto-orient",
+        "-gravity",
+        "north",
+        "-background",
+        "transparent",
+        "-thumbnail",
+        "384x1^",
+        "-crop",
+        "384x1+0+0",
+        "-unsharp",
+        "2x0.5+0.7+0",
+        "-interlace",
+        "none",
+        "-profile",
+        "@PROFILE@",
+        "@OUTPUT@"
+      ],
+      "baseline_record": null,
+      "baseline_source": null,
+      "baseline_error": null,
+      "width": 384,
+      "height": 1,
+      "expected_dimensions": [
+        384,
+        1
+      ]
+    }
+  ],
+  "missing_baseline_fields": [],
+  "removed_api_cases": [],
+  "quality_policy": "Legacy frame0 estimate selects encoder quality100. The corrected shared caller makes the same selection; full Rails caller proof is separate. Probe cost is excluded from transformation timing.",
+  "historical_reference_limitations": [
+    "This supplement measures the three renderer operations with first-frame encoder quality. It does not time a complete Rails OptimizedImage call or post-optimizer work."
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "operation": "resize",
+  "iterations": 31,
+  "source": {
+    "base_commit": "a3c50521c64a57b149bb6c317449708ee06c0841",
+    "snapshot": "committed runtime source; reference-source preserves earlier legacy instruction provenance",
+    "files": {
+      "lib/discourse_vips.rb": "a1f9fdd8f06b1e3a2d7f312024a956d50487ffb2edfd593a47003e38df852e5e",
+      "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "lib/discourse_vips/worker_process.rb": "79b9e843a4904e336cbbb3c3ad8c879cf70b2dad4a8da499190469994d04fa2d",
+      "lib/discourse_vips/ico_image.rb": "adeb274ef3319c875a41b522f419d6adf40e434effa5590ef30caff0de6bbe35",
+      "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "lib/image_magick.rb": "f1dbb2154c91c1625923b1c1849976c6cc373cbf187514eab9558586ba530279",
+      "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "script/discourse_vips_worker": "5372dd867ddb7f2240b52cf2285174be05824494355d3fb9118677a1bc7b7ca8",
+      "vendor/data/RT_sRGB.icm": "b2b31b86a589215f25ac6d6567427ad3444e6b09a990b04d6f4c104bf790910c",
+      "reference-source/app/models/optimized_image.rb": "7d7339fe6010ab1c128cb57343efbb9c0c0ccb75ca3896c3d2c24d31d46bfe34",
+      "reference-source/lib/upload_creator.rb": "ba361650538742b82cc3968fde73fe0eb36c14d76a622d66dc7343d7f41b137c",
+      "reference-source/lib/file_helper.rb": "597c0b5779bf676b64236704988ecd9618fca57f034ce4689ba8a1b0bacd0041"
+    }
+  },
+  "manifest_sha256": "0fb5ce8a27101faa97c5e02eb27cb98b0b2492fe98dbd49c02d6f120ddfc7073",
+  "harness_sha256": "6721efa4f681535ba12b07a7723feb5649b9ddd2832685404faf33cc154fd55d",
+  "ruby": "ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [x86_64-linux]",
+  "kernel": "Linux 6.8.0-124-generic",
+  "landlock": true,
+  "libvips": "8.18.4",
+  "imagemagick": "Version: ImageMagick 7.1.2-27 Q16-HDRI x86_64 e4c2b403b:20260705 https://imagemagick.org",
+  "timing_boundary": "Core transform including wrapper, IPC, sandbox child, priority10 and encoder. Excludes Rails boot, source quality probe, evidence decoding, and FileHelper optimizer.",
+  "quality_policy": "Legacy frame0 estimate selects encoder quality100. The corrected shared caller makes the same selection; full Rails caller proof is separate. Probe cost is excluded from transformation timing.",
+  "selected_sample": null,
+  "missing_baseline_fields": [],
+  "removed_api_cases": [],
+  "limitations": [
+    "This supplement measures the three renderer operations with first-frame encoder quality. It does not time a complete Rails OptimizedImage call or post-optimizer work.",
+    "Visible pixel differences use ImageMagick-decoded PNGs converted to8-bit sRGB; original encoding/depth/profile metadata is recorded separately. Hidden RGB under transparent pixels is excluded from visible differences.",
+    "Post-optimizer and complete caller evidence must be measured separately."
+  ],
+  "samples": [
+    {
+      "name": "first-frame-lossless-output",
+      "parameters": {
+        "operation": "resize",
+        "name": "first-frame-lossless-output",
+        "input": "inputs/webp-quality-first-frame.webp",
+        "input_format": "webp",
+        "output_format": "webp",
+        "output_suffix": "webp",
+        "strip_metadata": true,
+        "quality": null,
+        "instructions": [
+          "@INPUT@",
+          "-auto-orient",
+          "-gravity",
+          "center",
+          "-background",
+          "transparent",
+          "-thumbnail",
+          "384x1^",
+          "-extent",
+          "384x1",
+          "-interpolate",
+          "catrom",
+          "-unsharp",
+          "2x0.5+0.7+0",
+          "-interlace",
+          "none",
+          "-profile",
+          "@PROFILE@",
+          "@OUTPUT@"
+        ],
+        "baseline_record": null,
+        "baseline_source": null,
+        "baseline_error": null,
+        "width": 384,
+        "height": 1,
+        "expected_dimensions": [
+          384,
+          1
+        ]
+      },
+      "input_sha256": "6e72200b9f8ce6c0a6b478445fd4a78eb808038518ee25948afb20896d89815e",
+      "eligible_for_paired_timing": true,
+      "quality": {
+        "value": 100,
+        "source": "source quality",
+        "probe": {
+          "backend": "ImageMagick identify frame0",
+          "estimated_quality": 100,
+          "elapsed_ms": 24.281263817101717
+        }
+      },
+      "initial_validation": {
+        "imagemagick": {
+          "status": "ok",
+          "elapsed_ms": 36.27061704173684,
+          "dimensions": [
+            384,
+            1
+          ]
+        },
+        "libvips": {
+          "status": "ok",
+          "elapsed_ms": 55.5343977175653,
+          "dimensions": [
+            384,
+            1
+          ]
+        }
+      },
+      "initial_dimensions_match": true,
+      "expected_dimensions_match": true,
+      "warm": {
+        "imagemagick": {
+          "values_ms": [
+            35.012914799153805,
+            40.09520821273327,
+            43.8106469810009,
+            40.74567789211869,
+            39.54347688704729,
+            45.82254309207201,
+            41.02874593809247,
+            43.063283897936344,
+            38.14222710207105,
+            44.1142488270998,
+            42.470959946513176,
+            46.718526631593704,
+            39.79956731200218,
+            38.885006215423346,
+            40.56428000330925,
+            38.173147942870855,
+            38.56652928516269,
+            47.55448596552014,
+            43.038157280534506,
+            39.72331807017326,
+            38.973506074398756,
+            37.98673581331968,
+            36.732146982103586,
+            40.06112227216363,
+            41.288494132459164,
+            43.357317335903645,
+            45.96307687461376,
+            45.49070727080107,
+            40.90491961687803,
+            50.641348119825125,
+            44.36341905966401
+          ],
+          "median_ms": 40.90491961687803,
+          "p95_ms": 47.55448596552014
+        },
+        "libvips": {
+          "values_ms": [
+            62.73629097267985,
+            61.84834102168679,
+            56.25345977023244,
+            59.82375284656882,
+            71.0261040367186,
+            62.84516490995884,
+            56.461494881659746,
+            55.9425950050354,
+            57.57939117029309,
+            71.69233402237296,
+            70.0461701489985,
+            94.88903265446424,
+            56.12630303949118,
+            59.321308974176645,
+            63.57434717938304,
+            73.83316522464156,
+            62.50440003350377,
+            65.05364598706365,
+            57.273549027740955,
+            65.07831811904907,
+            54.4858118519187,
+            64.38828492537141,
+            64.57697693258524,
+            56.7411370575428,
+            55.806785356253386,
+            69.79460222646594,
+            61.70940492302179,
+            56.390953715890646,
+            69.66337515041232,
+            74.4486446492374,
+            66.57044403254986
+          ],
+          "median_ms": 62.73629097267985,
+          "p95_ms": 74.4486446492374
+        }
+      },
+      "outputs": {
+        "imagemagick": {
+          "path": "outputs/resize/first-frame-lossless-output-imagemagick.webp",
+          "bytes": 72,
+          "sha256": "441458e16263ef4e4b100ab0b86ed246bc1d15d2d03ef3e767de2b668728647a",
+          "identify": "WEBP\t384\t1\t8\tsRGB\tsrgb  3.0\tUndefined\t",
+          "dimensions": [
+            384,
+            1
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/resize/first-frame-lossless-output-imagemagick-decoded.png"
+        },
+        "libvips": {
+          "path": "outputs/resize/first-frame-lossless-output-libvips.webp",
+          "bytes": 72,
+          "sha256": "2adae1295bc369a08580f87aed0a2ba299a6618237f2315b1d6e100a142064d8",
+          "identify": "WEBP\t384\t1\t8\tsRGB\tsrgb  3.0\tUndefined\t",
+          "dimensions": [
+            384,
+            1
+          ],
+          "decoded_format": "uchar",
+          "decoded_icc": null,
+          "decoded_exif_bytes": 0,
+          "decoded_path": "outputs/resize/first-frame-lossless-output-libvips-decoded.png"
+        }
+      },
+      "pixels": {
+        "dimensions_match": true,
+        "alpha_mean_difference": 0.0,
+        "alpha_maximum_difference": 0.0,
+        "visible_composites": [
+          {
+            "background": 0,
+            "mean_difference": 0.003472222222222222,
+            "maximum_difference": 1.0,
+            "psnr_db": 72.72472848627142
+          },
+          {
+            "background": 255,
+            "mean_difference": 0.003472222222222222,
+            "maximum_difference": 1.0,
+            "psnr_db": 72.72472848627142
+          }
+        ]
+      }
+    }
+  ],
+  "fresh_worker": {
+    "sample": "first-frame-lossless-output",
+    "quality": {
+      "value": 100,
+      "source": "source quality",
+      "probe": {
+        "backend": "ImageMagick identify frame0",
+        "estimated_quality": 100,
+        "elapsed_ms": 31.42442600801587
+      }
+    },
+    "measurements": [
+      {
+        "status": "ok",
+        "elapsed_ms": 387.66328105702996,
+        "sha256": "2adae1295bc369a08580f87aed0a2ba299a6618237f2315b1d6e100a142064d8"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 373.4711860306561,
+        "sha256": "2adae1295bc369a08580f87aed0a2ba299a6618237f2315b1d6e100a142064d8"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 412.65288600698113,
+        "sha256": "2adae1295bc369a08580f87aed0a2ba299a6618237f2315b1d6e100a142064d8"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 417.0486768707633,
+        "sha256": "2adae1295bc369a08580f87aed0a2ba299a6618237f2315b1d6e100a142064d8"
+      },
+      {
+        "status": "ok",
+        "elapsed_ms": 400.7997498847544,
+        "sha256": "2adae1295bc369a08580f87aed0a2ba299a6618237f2315b1d6e100a142064d8"
+      }
+    ]
+  },
+  "summary": {
+    "selected": 1,
+    "recorded": 1,
+    "paired_timing_eligible": 1,
+    "incompatible_or_failed": []
+  }
+}
