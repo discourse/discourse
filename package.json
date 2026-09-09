@@ -28,6 +28,7 @@
     "typescript-7": "npm:typescript@7.1.0-dev.20260901.1"
   },
   "scripts": {
+    "prepare": "pnpm types:generate",
     "dev": "bin/dev",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
