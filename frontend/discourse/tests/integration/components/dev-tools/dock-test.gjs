@@ -12,6 +12,8 @@ import {
 import DevToolsDockHost from "discourse/static/dev-tools/dock-host";
 import devToolsState from "discourse/static/dev-tools/state";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { IframeWindowHost } from "discourse/tests/helpers/panel-dock-window-host";
+import { WINDOW_HOST_REGISTRATION } from "discourse/ui-kit/panel-dock/-internals/window-host";
 
 const ProbePanel = <template>
   <div data-test-dock-panel="probe">probe panel</div>
@@ -28,6 +30,20 @@ const OtherPanel = <template>
  */
 module("Integration | Component | dev-tools | dock", function (hooks) {
   setupRenderingTest(hooks);
+
+  // The dock host is `@windowable`, so without a stand-in these tests install
+  // the real host and a stored window placement would have them reach for an
+  // actual browser window.
+  hooks.beforeEach(function () {
+    this.host = new IframeWindowHost();
+    this.owner.register(WINDOW_HOST_REGISTRATION, this.host, {
+      instantiate: false,
+    });
+  });
+
+  hooks.afterEach(function () {
+    this.host.teardown();
+  });
 
   hooks.afterEach(function () {
     closeDock();

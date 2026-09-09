@@ -28,6 +28,15 @@ interface DockPickerSignature {
      * Omitting it leaves the choice out, for a panel that cannot.
      */
     onSelectWindow?: () => void;
+
+    /**
+     * Whether a window has been asked for and has not arrived.
+     *
+     * The choice stays enabled throughout: disabling a control the reader has
+     * just pressed takes focus off it, and pressing it again raises the window
+     * on its way rather than asking for another.
+     */
+    isConnecting?: () => boolean;
   };
 }
 
@@ -100,7 +109,12 @@ const DockPicker: TemplateOnlyComponent<DockPickerSignature> = <template>
     {{#if @onSelectWindow}}
       <button
         type="button"
-        class={{dConcatClass "d-panel-dock__dock-button" "--window"}}
+        class={{dConcatClass
+          "d-panel-dock__dock-button"
+          "--window"
+          (if (@isConnecting) "--connecting")
+        }}
+        aria-busy={{booleanString (@isConnecting)}}
         aria-pressed={{booleanString (@isWindowed) omitFalse=false}}
         aria-label={{i18n "panel_dock.dock_window"}}
         title={{i18n "panel_dock.dock_window"}}

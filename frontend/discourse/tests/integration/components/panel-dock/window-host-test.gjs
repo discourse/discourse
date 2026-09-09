@@ -1069,6 +1069,49 @@ module("Integration | Component | panel dock window host", function (hooks) {
     retry.cancel();
   });
 
+  test("window host follows the page's runtime styles once it holds a window", async function (assert) {
+    const host = hostFor(this);
+    const key = "mirrored-lease";
+    const style = document.createElement("style");
+    style.id = "d-styles";
+    style.textContent = ":root { --oracle: 1; }";
+    document.head.appendChild(style);
+
+    try {
+      const handle = opened(host, key, assert);
+      await settled();
+
+      // The module that follows the page is easy to build, test on its own and
+      // then never call. Only a window actually held by the host proves it was
+      // wired to one.
+      const mirrored = handle.mount.ownerDocument.querySelector("#d-styles");
+      assert.strictEqual(
+        mirrored?.textContent,
+        ":root { --oracle: 1; }",
+        "a window the host holds follows the styles this page generates"
+      );
+
+      style.textContent = ":root { --oracle: 2; }";
+      await settled();
+      assert.strictEqual(
+        handle.mount.ownerDocument.querySelector("#d-styles").textContent,
+        ":root { --oracle: 2; }",
+        "and keeps following them"
+      );
+
+      handle.dispose();
+      style.textContent = ":root { --oracle: 3; }";
+      await settled();
+      assert.strictEqual(
+        handle.mount.ownerDocument.querySelector("#d-styles").textContent,
+        ":root { --oracle: 2; }",
+        "and stops when the lease ends"
+      );
+    } finally {
+      style.remove();
+    }
+  });
+
   test("window host connecting holds its key from the moment it is asked for", function (assert) {
     const host = hostFor(this);
     const contender = hostFor(this);

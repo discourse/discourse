@@ -120,6 +120,7 @@ import { resetHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
+import { releaseAllPanelWindows } from "discourse/ui-kit/panel-dock/-internals/window-host";
 import I18n from "discourse-i18n";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -267,6 +268,7 @@ export function testCleanup(container, app) {
   clearExtraGlimmerHeaderButtons();
   clearDockPanels();
   closeDock();
+  releaseAllPanelWindows();
   resetOnKeyUpCallbacks();
   resetLogSearchLinkClickedCallbacks();
   resetItemSelectCallbacks();

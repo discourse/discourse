@@ -126,6 +126,23 @@
 
       // Backgrounds are dropped in forced colors, so the pressed state needs an
       // outline to survive as the only thing distinguishing it.
+      // A window that has been asked for and has not arrived. Not a disabled state:
+      // the control stays operable, and pressing it again raises the window.
+      &.--connecting {
+        opacity: 0.7;
+
+        @media (prefers-reduced-motion: no-preference) {
+          animation: d-panel-dock-connecting 1.2s ease-in-out infinite;
+        }
+
+        // Opacity is dropped entirely here, so the state needs a shape of its own.
+        @media (forced-colors: active) {
+          opacity: 1;
+          outline: 1px dashed currentcolor;
+          outline-offset: -3px;
+        }
+      }
+
       @media (forced-colors: active) {
         outline: 2px solid Highlight;
         outline-offset: -2px;
@@ -234,4 +251,10 @@
   min-height: 0;
   border: 0;
   box-shadow: none;
+}
+
+@keyframes d-panel-dock-connecting {
+  50% {
+    opacity: 0.4;
+  }
 }

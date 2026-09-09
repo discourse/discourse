@@ -23,6 +23,10 @@
 import type Owner from "@ember/owner";
 import getURL from "discourse/lib/get-url";
 import {
+  mirrorOpener,
+  type OpenerMirror,
+} from "discourse/ui-kit/panel-dock/-internals/opener-mirror";
+import {
   adoptShell,
   type PanelWindowShell,
   shellKey,
@@ -238,6 +242,21 @@ const leases = new Map<string, Lease>();
 let lastGeneration = 0;
 
 /**
+ * Releases every lease this page holds.
+ *
+ * The registry is module-wide and outlives an application, so a test that left
+ * a window leased would strand that key for every test after it. Production has
+ * no reason to call this: a page that is going away takes its leases with it.
+ */
+export function releaseAllPanelWindows(): void {
+  for (const held of [...leases.values()]) {
+    held.dispose();
+  }
+
+  leases.clear();
+}
+
+/**
  * What a key can be held by.
  *
  * A window still loading holds its key exactly as firmly as one that arrived,
@@ -293,6 +312,7 @@ class PanelWindow implements PanelWindowHandle {
   #committed = false;
   #holder: LeaseHolder;
   #key: string;
+  #mirror: OpenerMirror;
   #pagehideCallbacks: (() => void)[] = [];
   #paused = false;
   #released = false;
@@ -344,6 +364,7 @@ class PanelWindow implements PanelWindowHandle {
     generation?: number;
     holder: LeaseHolder;
     key: string;
+    mirror: OpenerMirror;
     shell: PanelWindowShell;
     strings: PanelWindowStrings;
     window: Window;
@@ -354,6 +375,7 @@ class PanelWindow implements PanelWindowHandle {
     this.generation = options.generation ?? ++lastGeneration;
     this.#holder = options.holder;
     this.#key = options.key;
+    this.#mirror = options.mirror;
     this.#shell = options.shell;
     this.#strings = options.strings;
     this.#window = options.window;
@@ -411,6 +433,7 @@ class PanelWindow implements PanelWindowHandle {
     try {
       this.#ignore();
       this.#shell.dispose();
+      this.#mirror.dispose();
     } catch {
       // Nothing reachable to clean up.
     }
@@ -886,7 +909,22 @@ export abstract class PanelWindowHostBase
    * every environment; a host serving a stand-in overrides it.
    */
   shellUrlFor(key: string): string {
-    return getURL(`/panel-window/${encodeURIComponent(key)}`);
+    const url = `/panel-window/${encodeURIComponent(key)}`;
+    const carried = new URLSearchParams();
+
+    // A window inherits the page's cookies but not its query string, and both
+    // of these are chosen there — so without this the window renders the
+    // committed theme while the page it belongs to is previewing another.
+    const here = new URLSearchParams(window.location.search);
+    for (const name of ["preview_theme_id", "safe_mode"]) {
+      const value = here.get(name);
+      if (value) {
+        carried.set(name, value);
+      }
+    }
+
+    const query = carried.toString();
+    return getURL(query ? `${url}?${query}` : url);
   }
 
   /**
@@ -999,7 +1037,12 @@ export abstract class PanelWindowHostBase
       options.shell.mount.ownerDocument.title = options.strings.title;
     });
 
-    const handle = new PanelWindow({ holder: this, ...options });
+    // The served page carries everything a server can know. What it cannot is
+    // what this page derives at runtime — the CSS it generates, the icons it
+    // has picked up since boot, and which colour scheme is live — so that much
+    // is followed for as long as the window is held.
+    const mirror = mirrorOpener(options.shell.mount.ownerDocument);
+    const handle = new PanelWindow({ holder: this, mirror, ...options });
 
     leases.set(options.key, handle);
     this.#handles.add(handle);

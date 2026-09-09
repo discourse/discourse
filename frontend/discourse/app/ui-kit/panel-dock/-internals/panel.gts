@@ -200,6 +200,17 @@ interface PanelDockChassisSignature {
  */
 export default class PanelDockChassis extends Component<PanelDockChassisSignature> {
   /**
+   * How the panel says what happened.
+   *
+   * `aria-busy` on the button marks it as updating; it does not announce, so
+   * every transition a reader cannot see is spoken here instead.
+   */
+  @service
+  declare a11y: {
+    announce: (message: string, level?: string, delay?: number) => void;
+  };
+
+  /**
    * The injected value is the dynamic, per-request settings object built by the
    * `site-settings` service factory, not an instance of that module's class shim.
    */
@@ -248,10 +259,22 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    * update tears down synchronously before reinstalling, which would read as
    * the panel having left the window.
    */
-  windowLifetime = modifier(() => {
+  windowLifetime = modifier((element: HTMLElement) => {
     const generation = this.#generation;
     const mount = ++this.#branchMounts;
     this.#commitWindow(generation);
+
+    if (this.#focusOnArrival) {
+      this.#focusOnArrival = false;
+
+      // After the render barrier, so the tree the reader is being sent to is
+      // there when they arrive in it.
+      schedule("afterRender", () => {
+        if (this.#generation === generation && !this.#isReleasing) {
+          element.focus();
+        }
+      });
+    }
 
     return () => {
       if (this.#generation !== generation) {
@@ -323,6 +346,9 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
    * closed cannot render into a window, so it holds the attempt until it opens.
    */
   #adoptionPending = false;
+
+  /** Whether the next window this panel enters was asked for just now. */
+  #focusOnArrival = false;
 
   /**
    * Whether the panel itself is going away, as opposed to merely closing.
@@ -525,6 +551,7 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
         isSide: this.isSide,
         onSelect: this.setSide,
         isWindowed: this.isWindowedNow,
+        isConnecting: this.isConnectingNow,
         // Reading the argument here is what rebuilds the picker when a panel
         // becomes windowable; the two above stay stable so the pressed state
         // re-renders without the picker being replaced.
@@ -577,6 +604,15 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
   @action
   isSide(side: DockSide) {
     return this._mode === "docked" && this._side === side;
+  }
+
+  /**
+   * Read through an action so the curried argument set stays stable: rebuilding
+   * the picker on every change would replace the button the reader is on.
+   */
+  @action
+  isConnectingNow() {
+    return this._connecting !== null;
   }
 
   @action
@@ -638,6 +674,8 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
       return;
     }
 
+    this.a11y.announce(i18n("panel_dock.window_connecting"), "polite");
+    this.#focusOnArrival = true;
     this.#beginWindow(outcome.connection);
   }
 
@@ -673,6 +711,8 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
       this.#persist();
       this.#report("docked");
     }
+
+    this.#focusOnArrival = false;
   }
 
   /** What the window shows: its title, and the note left when this page goes. */
@@ -752,6 +792,7 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
         return;
       }
 
+      this.a11y.announce(i18n("panel_dock.window_opened"), "polite");
       this.#takeWindow(handle);
     });
 
@@ -766,6 +807,9 @@ export default class PanelDockChassis extends Component<PanelDockChassisSignatur
         return;
       }
 
+      // Assertive, because the reader asked for something and it did not
+      // happen; a polite queue would tell them long after they moved on.
+      this.a11y.announce(i18n("panel_dock.window_refused"), "assertive");
       warn("The panel's window never arrived, so it stays docked.", false, {
         id: "discourse.panel-dock.window-unavailable",
       });
