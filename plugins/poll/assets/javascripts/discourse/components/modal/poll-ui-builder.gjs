@@ -29,28 +29,29 @@ import { i18n } from "discourse-i18n";
 import generateCurrentDateMarkup from "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup" with {
   discourseImport: "optional",
 };
+import {
+  ALWAYS_POLL_RESULT,
+  BAR_CHART_TYPE,
+  MULTIPLE_POLL_TYPE,
+  NUMBER_POLL_TYPE,
+  PIE_CHART_TYPE,
+  pollAttrsFromSettings,
+  RANKED_CHOICE_POLL_TYPE,
+  REGULAR_POLL_TYPE,
+} from "discourse/plugins/poll/lib/poll-settings";
 
-export const BAR_CHART_TYPE = "bar";
-export const PIE_CHART_TYPE = "pie";
+export {
+  BAR_CHART_TYPE,
+  PIE_CHART_TYPE,
+  REGULAR_POLL_TYPE,
+  NUMBER_POLL_TYPE,
+  MULTIPLE_POLL_TYPE,
+  RANKED_CHOICE_POLL_TYPE,
+} from "discourse/plugins/poll/lib/poll-settings";
 
-export const REGULAR_POLL_TYPE = "regular";
-export const NUMBER_POLL_TYPE = "number";
-export const MULTIPLE_POLL_TYPE = "multiple";
-export const RANKED_CHOICE_POLL_TYPE = "ranked_choice";
-
-const ALWAYS_POLL_RESULT = "always";
 const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
-
-// the fixed values the poll model already defaults to when the attribute is
-// absent; a range has no fixed default, so it is worked out per poll
-const IMPLIED_ATTRS = {
-  type: REGULAR_POLL_TYPE,
-  results: ALWAYS_POLL_RESULT,
-  public: "false",
-  chartType: BAR_CHART_TYPE,
-};
 
 export default class PollUiBuilderModal extends Component {
   @service currentUser;
@@ -192,7 +193,14 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get #pollOutput() {
-    const attrs = buildBBCodeAttrs(this.#pollAttrs);
+    const pollAttrs = this.#pollAttrs;
+    const existingPolls = this.args.model.toolbarEvent
+      .getText()
+      .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
+    if (existingPolls) {
+      pollAttrs.name = `poll${existingPolls.length + 1}`;
+    }
+    const attrs = buildBBCodeAttrs(pollAttrs);
     const title = this.pollTitle ? `# ${this.pollTitle.trim()}\n` : "";
     const options = this.isNumber
       ? ""
@@ -206,66 +214,25 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get #pollAttrs() {
-    const poll = this.args.model.poll;
-    const existingPolls = poll
-      ? null
-      : this.args.model.toolbarEvent
-          .getText()
-          .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
-    const originalClose = poll?.close;
-    let close = null;
-
-    if (this.pollAutoClose) {
-      close =
-        originalClose && moment(originalClose).isSame(this.pollAutoClose)
-          ? originalClose
-          : this.pollAutoClose.toISOString();
-    }
-
-    const attrs = {
-      name:
-        poll?.name ??
-        (existingPolls ? `poll${existingPolls.length + 1}` : null),
-      type: this.pollType || null,
-      results: this.pollResult || null,
-      min: this.#rangeAttr(this.pollMin),
-      max: this.#rangeAttr(this.pollMax),
-      step: this.isNumber
-        ? String(Math.max(Number(this.pollStep) || 1, 1))
-        : null,
-      public: String(this.publicPoll),
-      chartType: !this.isNumber && this.chartType ? this.chartType : null,
-      dynamic: this.dynamic ? "true" : null,
-      groups: this.pollGroups?.length ? this.pollGroups.join(",") : null,
-      close,
-      status: poll?.status ?? null,
-      order: poll?.order ?? null,
-    };
-
-    // a default is only worth writing if the poll already carried it, so
-    // editing settings neither adds defaults nor drops what the author wrote
-    for (const [name, value] of Object.entries(this.#impliedAttrs)) {
-      if (poll && attrs[name] === value && !poll[name]) {
-        attrs[name] = null;
+    return pollAttrsFromSettings(
+      {
+        pollType: this.pollType,
+        chartType: this.chartType,
+        dynamic: this.dynamic,
+        pollAutoClose: this.pollAutoClose,
+        pollGroups: this.pollGroups,
+        pollMin: this.pollMin,
+        pollMax: this.pollMax,
+        pollStep: this.pollStep,
+        pollResult: this.pollResult,
+        publicPoll: this.publicPoll,
+      },
+      {
+        originalAttrs: this.args.model.poll,
+        optionCount: this.pollOptionsCount,
+        maximumOptions: this.siteSettings.poll_maximum_options,
       }
-    }
-
-    return attrs;
-  }
-
-  // an absent range is read off the poll itself, so pinning it here would stop
-  // the bounds following the options the author goes on to add or remove
-  get #impliedAttrs() {
-    return {
-      ...IMPLIED_ATTRS,
-      min: "1",
-      max: String(
-        this.isNumber
-          ? this.siteSettings.poll_maximum_options
-          : this.pollOptionsCount
-      ),
-      step: "1",
-    };
+    );
   }
 
   get minNumOfOptionsValidation() {
@@ -496,15 +463,6 @@ export default class PollUiBuilderModal extends Component {
         this.pollMax = this.pollOptionsCount;
       }
     }
-  }
-
-  // an emptied field is not a zero, and a zero is a bound like any other
-  #rangeAttr(value) {
-    if (!this.hasRange || isBlank(value) || !Number.isFinite(Number(value))) {
-      return null;
-    }
-
-    return String(Number(value));
   }
 
   _comboboxOptions(startIndex, endIndex) {
