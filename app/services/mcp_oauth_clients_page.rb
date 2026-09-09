@@ -26,7 +26,13 @@ class McpOauthClientsPage
   attr_reader :limit, :cursor, :filter
 
   def relation
-    records = McpOauthClient.includes(:authorizations).order(id: :desc)
+    records = McpOauthClient.select("mcp_oauth_clients.*", <<~SQL.squish).order(id: :desc)
+            (
+              SELECT COUNT(*)
+              FROM mcp_oauth_authorizations
+              WHERE mcp_oauth_authorizations.mcp_oauth_client_id = mcp_oauth_clients.id
+            ) AS authorization_count
+          SQL
     records = records.where("mcp_oauth_clients.id < ?", cursor) if cursor
 
     if filter.present?

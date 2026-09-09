@@ -264,6 +264,7 @@ module DiscourseMcp
           end
 
           authorization = code_record.authorization
+          raise Discourse::InvalidAccess if authorization.blank?
           raise Discourse::InvalidAccess if authorization.client.client_id != client_id
           raise Discourse::InvalidAccess if code_record.redirect_uri != redirect_uri
           if code_record.resource != resource || resource != DiscourseMcp.resource_url

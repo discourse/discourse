@@ -11,6 +11,7 @@ class McpOauthAuthorization < ActiveRecord::Base
            inverse_of: :authorization
   has_many :access_tokens, class_name: "McpOauthAccessToken", dependent: :destroy
   has_many :refresh_tokens, class_name: "McpOauthRefreshToken", dependent: :destroy
+  has_many :authorization_codes, class_name: "McpOauthAuthorizationCode", dependent: :destroy
 
   validates :resource, presence: true
   validates :status, inclusion: { in: STATUSES }

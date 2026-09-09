@@ -80,8 +80,14 @@ class Admin::McpClientsController < Admin::AdminController
       metadata_uri: value.metadata_uri,
       first_seen_at: value.created_at,
       last_seen_at: value.last_seen_at,
-      authorization_count: value.authorizations.size,
+      authorization_count: authorization_count(value),
     }
+  end
+
+  def authorization_count(client)
+    return client[:authorization_count] if client.has_attribute?(:authorization_count)
+
+    client.authorizations.count
   end
 
   def uri_host(value)
