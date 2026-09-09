@@ -166,6 +166,17 @@ module("Component | PollUiBuilder", function (hooks) {
       .isDisabled("and an empty minimum is not read as zero");
   });
 
+  test("editing a poll with more options than the site allows", async function (assert) {
+    const results = await setupBuilder({ type: "regular", optionCount: 25 });
+
+    assert
+      .dom(".insert-poll")
+      .isEnabled("the option count belongs to the document, not the builder");
+    await click(".insert-poll");
+
+    assert.strictEqual(results.length, 1, "so the settings still save");
+  });
+
   test("editing a ranked choice poll leaves range attributes out", async function (assert) {
     const results = await setupBuilder({
       type: "ranked_choice",

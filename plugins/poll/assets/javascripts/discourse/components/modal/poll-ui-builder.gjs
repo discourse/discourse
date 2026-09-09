@@ -236,7 +236,9 @@ export default class PollUiBuilderModal extends Component {
   }
 
   get minNumOfOptionsValidation() {
-    if (!this.isNumber) {
+    // editing counts the options in the document and shows no option fields,
+    // so a failure here would block saving with nothing on screen to explain it
+    if (!this.isNumber && !this.isEditing) {
       if (this.pollOptionsCount < 1) {
         return {
           failed: true,

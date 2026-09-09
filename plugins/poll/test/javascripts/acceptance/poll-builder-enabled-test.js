@@ -224,6 +224,13 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
         "contenteditable",
         "whose title is editable like any other content"
       );
+    assert
+      .dom(".composer-poll-node__content > ul")
+      .hasAttribute(
+        "contenteditable",
+        "false",
+        "while its generated options are not"
+      );
 
     await click(".composer-poll-node__edit");
 
@@ -267,6 +274,13 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     assert
       .dom(".ProseMirror .composer-poll-node__content li")
       .exists({ count: 3 }, "replaces the authored options with the range");
+    assert
+      .dom(".composer-poll-node__content > ul")
+      .hasAttribute(
+        "contenteditable",
+        "false",
+        "and stops them being typed in"
+      );
 
     await click(".composer-poll-node__edit");
     await click(".poll-type-value-regular");
@@ -275,6 +289,9 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     assert
       .dom(".ProseMirror .poll")
       .hasAttribute("data-poll-type", "regular", "switches back");
+    assert
+      .dom(".composer-poll-node__content > ul")
+      .doesNotHaveAttribute("contenteditable", "leaving them editable again");
     await click(".composer-toggle-switch");
     assert
       .dom(".d-editor-input")

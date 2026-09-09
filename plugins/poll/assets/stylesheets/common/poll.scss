@@ -661,7 +661,7 @@ body.crawler {
     }
   }
 
-  &.poll &__content > ul > li {
+  &.poll:not([data-poll-type="number"]) &__content > ul > li {
     cursor: text;
   }
 

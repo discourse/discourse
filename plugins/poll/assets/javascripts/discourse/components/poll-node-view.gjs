@@ -103,6 +103,17 @@ export default class PollNodeView extends Component {
       node.firstChild?.type.name === "poll_title" &&
         node.firstChild.content.size === 0
     );
+
+    // a number poll's options come from its range and the serializer drops
+    // them, so they must not accept edits the document will not keep
+    const list = this.args.contentDOM.querySelector(":scope > ul");
+    if (list) {
+      if (node.attrs.type === "number") {
+        list.contentEditable = "false";
+      } else {
+        list.removeAttribute("contenteditable");
+      }
+    }
   }
 
   #optionList(node) {
