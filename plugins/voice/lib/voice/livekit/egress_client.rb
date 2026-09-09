@@ -3,9 +3,8 @@
 module Voice
   module Livekit
     # Twirp-JSON client for LiveKit's Egress service, which records rooms
-    # server-side. Where the recording lands (S3, GCS, local disk) is the
-    # egress deployment's own configuration — Discourse only passes a
-    # filepath, so no storage credentials live here.
+    # server-side. Dedicated S3 settings override the egress deployment's
+    # storage configuration and are required for recording on LiveKit Cloud.
     #
     # Unlike RoomServiceClient's fire-and-forget sync calls, these return a
     # structured result: the caller (RecordingManager) must know whether a
@@ -17,11 +16,33 @@ module Voice
 
       class << self
         def start_room_composite(room, filepath:)
+          output = { filepath: filepath }
+          if SiteSetting.voice_livekit_recording_s3_bucket.present?
+            validator = VoiceLivekitRecordingS3BucketValidator.new
+            unless validator.valid_value?(SiteSetting.voice_livekit_recording_s3_bucket)
+              Rails.logger.warn(
+                "[voice-livekit] StartRoomCompositeEgress refused: #{validator.error_message}",
+              )
+              return { ok: false, error: validator.error_message }
+            end
+
+            output[:s3] = {
+              bucket: SiteSetting.voice_livekit_recording_s3_bucket,
+              region: SiteSetting.voice_livekit_recording_s3_region,
+              accessKey: SiteSetting.voice_livekit_recording_s3_access_key_id,
+              secret: SiteSetting.voice_livekit_recording_s3_secret_access_key,
+            }
+            if SiteSetting.voice_livekit_recording_s3_endpoint.present?
+              output[:s3][:endpoint] = SiteSetting.voice_livekit_recording_s3_endpoint
+              output[:s3][:forcePathStyle] = true
+            end
+          end
+
           request(
             "StartRoomCompositeEgress",
             roomName: Livekit.room_name(room),
             audioOnly: !room.video_allowed?,
-            fileOutputs: [{ filepath: filepath }],
+            fileOutputs: [output],
           )
         end
 
@@ -56,7 +77,7 @@ module Voice
             # surfaced to the UI only carries the status code.
             Rails.logger.warn(
               "[voice-livekit] #{method} failed: " \
-                "HTTP #{response.status} #{response.body.to_s.truncate(200)}",
+                "HTTP #{response.status} #{redact_credentials(response.body).truncate(200)}",
             )
             { ok: false, error: "HTTP #{response.status}" }
           end
@@ -66,8 +87,20 @@ module Voice
             error: "The LiveKit URL resolves to an address this server is not allowed to reach",
           }
         rescue StandardError => e
-          Rails.logger.warn("[voice-livekit] #{method} failed: #{e.class} #{e.message}")
-          { ok: false, error: "#{e.class}: #{e.message}" }
+          message = redact_credentials(e.message)
+          Rails.logger.warn("[voice-livekit] #{method} failed: #{e.class} #{message}")
+          { ok: false, error: "#{e.class}: #{message}" }
+        end
+
+        def redact_credentials(message)
+          message = message.to_s
+          [
+            SiteSetting.voice_livekit_recording_s3_access_key_id,
+            SiteSetting.voice_livekit_recording_s3_secret_access_key,
+          ].each do |credential|
+            message = message.gsub(credential, "[FILTERED]") if credential.present?
+          end
+          message
         end
       end
     end
