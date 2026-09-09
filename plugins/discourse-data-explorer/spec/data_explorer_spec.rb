@@ -410,6 +410,20 @@ describe DiscourseDataExplorer::DataExplorer do
         expect(relations[:topic].as_json.size).to eq(2)
       end
 
+      it "does not rewrite fancy_title when serializing topic relations" do
+        Topic.where(id: topic.id).update_all(fancy_title: "sentinel")
+        query = Fabricate(:query, sql: "SELECT #{topic.id} AS topic_id")
+
+        relations, _ =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: nil,
+          )
+        relations[:topic].as_json
+
+        expect(Topic.where(id: topic.id).pick(:fancy_title)).to eq("sentinel")
+      end
+
       it "classifies id columns" do
         query = Fabricate(:query, sql: <<~SQL)
           SELECT
