@@ -32,10 +32,9 @@ module(
       this.onSubmit = sinon.spy();
       this.onSet = sinon.spy((value, { set, name }) => set(name, value));
       this.schema = {
-        type: "array",
+        type: "object",
         required: true,
-        no_data_expression: true,
-        ui: { control: "access_control" },
+        ui: { control: "access_control", expression: false },
         control_options: {
           acl_target_type: "Example::Target",
           acl_target_key: "example",
@@ -48,18 +47,10 @@ module(
       );
     });
 
-    test("uses the target key for ACL metadata and the class for evaluation", async function (assert) {
+    test("uses the target key for ACL metadata with group input available", async function (assert) {
       this.configuration.permissions = [
         { type: "group", id: 42, permission: "view" },
       ];
-      pretender.post("/access-control/evaluate.json", (request) => {
-        assert.strictEqual(
-          JSON.parse(request.requestBody).target_type,
-          "Example::Target",
-          "evaluates the Ruby class"
-        );
-        return response({});
-      });
 
       await render(
         <template>
@@ -85,6 +76,9 @@ module(
       assert
         .dom('.d-access-control__row[data-row-id="41"]')
         .hasClass("--mandatory", "loads mandatory rows by key");
+      assert
+        .dom(".d-access-control__rows .workflows-access-control__input-row")
+        .exists("always includes group input alongside fixed ACL rows");
       await click(
         '.d-access-control__row[data-row-id="42"] .d-access-control__permission'
       );
@@ -131,7 +125,7 @@ module(
 
       assert.true(this.onSet.calledOnce, "uses the field's onSet hook");
       assert.strictEqual(
-        this.onSubmit.firstCall.args[0].permissions[0].id,
+        this.onSubmit.firstCall.args[0].permissions.entries[0].id,
         42,
         "submits the chosen grantee"
       );
@@ -169,9 +163,6 @@ module(
 
     module("groups from input", function (inputHooks) {
       inputHooks.beforeEach(function () {
-        this.schema.type = "object";
-        this.schema.no_data_expression = false;
-        this.schema.control_options.groups_from_input = true;
         this.site.access_control = { mandatory_acl: {}, banned_acl: {} };
         this.configuration.permissions = [
           { type: "group", id: 41, permission: "view" },
@@ -317,6 +308,28 @@ module(
           this.onSubmit.firstCall.args[0].permissions,
           { entries, group_ids: "", permission: "edit" },
           "clears only the input groups"
+        );
+      });
+
+      test("edits literal group IDs while retaining fixed entries and permission", async function (assert) {
+        const entries = this.configuration.permissions;
+        this.configuration.permissions = {
+          entries,
+          group_ids: [41],
+          permission: "edit",
+        };
+        await renderControl(this);
+        assert
+          .dom(".workflows-access-control__groups input")
+          .hasValue("[41]", "renders the saved array as editable text");
+
+        await fillIn(".workflows-access-control__groups input", "[41, 42]");
+        await formKit().submit();
+
+        assert.deepEqual(
+          this.onSubmit.firstCall.args[0].permissions,
+          { entries, group_ids: [41, 42], permission: "edit" },
+          "updates the IDs without losing the other ACL settings"
         );
       });
 

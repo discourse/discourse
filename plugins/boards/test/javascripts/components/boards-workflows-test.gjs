@@ -32,7 +32,6 @@ module("Integration | Component | BoardsWorkflows", function (hooks) {
         acl_target_type: "Boards::Board",
         acl_target_key: "Boards::Board",
         required_permissions: ["manage"],
-        groups_from_input: true,
         permissions: ["view", "edit", "manage"],
       },
     };

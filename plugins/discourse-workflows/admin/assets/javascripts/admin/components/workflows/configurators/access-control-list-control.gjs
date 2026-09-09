@@ -1,21 +1,35 @@
 import Component from "@glimmer/component";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DAccessControlField from "discourse/ui-kit/d-access-control-field";
+import FKLabel from "discourse/form-kit/components/fk/label";
+import FKOptional from "discourse/form-kit/components/fk/optional";
+import DAccessControl, {
+  defaultPermissions,
+} from "discourse/ui-kit/d-access-control";
+import DAccessControlPermissionMenu from "discourse/ui-kit/d-access-control-permission-menu";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 import {
   fieldShowDescription,
   isExpression,
   propertyDescription,
 } from "../../../lib/workflows/property-engine";
-import AccessControlListInput, {
-  accessControlValue,
-} from "./access-control-list-input";
+import ExpressionWrapper from "./expression-wrapper";
 
-// TODO (martin) See if anything can be improved/simplified here.
-// This is what is used by the workflow editor to render an ACL field. It is a
-// wrapper around DAccessControlField that is added via fieldComponent, for
-// kanban boards this might e.g. be BoardsAccessControlField.
+const GROUP_SCHEMA = { type: "array" };
+
+function accessControlValue(value) {
+  return Array.isArray(value) || !value
+    ? { entries: value || [], group_ids: "", permission: "view" }
+    : { entries: [], group_ids: "", permission: "view", ...value };
+}
+
+function plainGroupIds(value) {
+  return Array.isArray(value) ? JSON.stringify(value) : value;
+}
+
 export default class AccessControlListControl extends Component {
   @service site;
 
@@ -36,8 +50,11 @@ export default class AccessControlListControl extends Component {
     }
   }
 
-  get fieldComponent() {
-    return this.args.fieldComponent ?? DAccessControlField;
+  get permissionOptions() {
+    const options =
+      this.args.transformPermissionOptions?.(defaultPermissions()) ||
+      defaultPermissions();
+    return options.filter((option) => this.permissions.includes(option.id));
   }
 
   get permissions() {
@@ -48,15 +65,47 @@ export default class AccessControlListControl extends Component {
     return this.args.schema.control_options?.required_permissions;
   }
 
-  get supportsGroupInput() {
-    return this.args.schema.control_options?.groups_from_input;
-  }
-
   get validation() {
     return this.args.schema.required ? "required" : undefined;
   }
 
-  // TODO (martin) Investigate this deeper, seems kinda complex.
+  @action
+  setEntries(field, entries) {
+    field.set({ ...accessControlValue(field.value), entries });
+  }
+
+  @action
+  setGroupIds(field, group_ids) {
+    field.set({ ...accessControlValue(field.value), group_ids });
+  }
+
+  @action
+  setPlainGroupIds(field, event) {
+    const value = event.target.value;
+    let parsed = value;
+    try {
+      parsed = JSON.parse(value);
+    } catch {
+      // Keep incomplete input editable until validation.
+    }
+    this.setGroupIds(field, parsed);
+  }
+
+  @action
+  setPermission(field, permission) {
+    field.set({ ...accessControlValue(field.value), permission });
+  }
+
+  // Checks whether the ACL settings are valid before the form can be saved:
+  //
+  // - Group IDs: If you enter a literal value, it must be an array of
+  // non-negative whole numbers, such as [12, 34]. Expressions are checked
+  // later, when the workflow runs.
+  // - If group input is supplied, its selected permission must be
+  // allowed by the node (e.g. for Boards, only Viewer/Editor/Manager)
+  // - Checks the fixed entries, mandatory entries, and
+  // input-group permission for any required permission. For e.g. Boards, there must
+  // be a Manager.
   @action
   validateConfiguration(name, value, { addError }) {
     const config = accessControlValue(value);
@@ -101,41 +150,82 @@ export default class AccessControlListControl extends Component {
   }
 
   <template>
-    {{#if this.supportsGroupInput}}
-      <@form.Field
-        @description={{this.description}}
-        @format="max"
-        @name={{@fieldName}}
-        @onSet={{@onSet}}
-        @showOptional={{@showOptional}}
-        @title={{@label}}
-        @type="custom"
-        @validate={{this.validateConfiguration}}
-        @validation={{this.validation}}
-        as |field|
-      >
-        <field.Control>
-          <AccessControlListInput
-            @aclTarget={{this.aclTarget}}
-            @field={{field}}
-            @permissions={{this.permissions}}
-            @session={{@session}}
-            @transformPermissionOptions={{@transformPermissionOptions}}
-          />
-        </field.Control>
-      </@form.Field>
-    {{else}}
-      <this.fieldComponent
-        @aclTarget={{this.aclTarget}}
-        @description={{this.description}}
-        @form={{@form}}
-        @mustHavePermissions={{this.requiredPermissions}}
-        @name={{@fieldName}}
-        @onSet={{@onSet}}
-        @showOptional={{@showOptional}}
-        @title={{@label}}
-        @validation={{this.validation}}
-      />
-    {{/if}}
+    <@form.Field
+      @description={{this.description}}
+      @format="max"
+      @name={{@fieldName}}
+      @onSet={{@onSet}}
+      @showOptional={{@showOptional}}
+      @title={{@label}}
+      @type="custom"
+      @validate={{this.validateConfiguration}}
+      @validation={{this.validation}}
+      as |field|
+    >
+      <field.Control>
+        {{#let (accessControlValue field.value) as |config|}}
+          <div class="workflows-access-control">
+            <DAccessControl
+              @acl={{config.entries}}
+              @aclTarget={{this.aclTarget}}
+              @groups={{this.site.groups}}
+              @onChange={{fn this.setEntries field}}
+              @transformPermissionOptions={{@transformPermissionOptions}}
+            >
+              <:additionalRows>
+                <div
+                  class="d-access-control__row workflows-access-control__input-row"
+                >
+                  <div class="workflows-access-control__groups">
+                    <FKLabel
+                      class="form-kit__container-title"
+                      @fieldId="{{field.id}}-groups"
+                    >
+                      <span>{{i18n
+                          "discourse_workflows.access_control.groups_from_input"
+                        }}</span>
+                      <FKOptional />
+                    </FKLabel>
+                    <ExpressionWrapper
+                      @field={{hash
+                        value=config.group_ids
+                        set=(fn this.setGroupIds field)
+                      }}
+                      @inputId="{{field.id}}-groups"
+                      @inputLabel={{i18n
+                        "discourse_workflows.access_control.groups_from_input"
+                      }}
+                      @placeholder={{i18n
+                        "discourse_workflows.access_control.input_placeholder"
+                      }}
+                      @schema={{GROUP_SCHEMA}}
+                      @session={{@session}}
+                      @supportsExpression={{true}}
+                    >
+                      <DTextField
+                        id="{{field.id}}-groups"
+                        @placeholder={{i18n
+                          "discourse_workflows.access_control.input_placeholder"
+                        }}
+                        @value={{plainGroupIds config.group_ids}}
+                        {{on "input" (fn this.setPlainGroupIds field)}}
+                      />
+                    </ExpressionWrapper>
+                  </div>
+                  <div class="workflows-access-control__permission">
+                    <DAccessControlPermissionMenu
+                      id="{{field.id}}-permission"
+                      @onChange={{fn this.setPermission field}}
+                      @options={{this.permissionOptions}}
+                      @value={{config.permission}}
+                    />
+                  </div>
+                </div>
+              </:additionalRows>
+            </DAccessControl>
+          </div>
+        {{/let}}
+      </field.Control>
+    </@form.Field>
   </template>
 }

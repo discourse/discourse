@@ -61,7 +61,6 @@ RSpec.describe DiscourseWorkflows::Executor::ParameterResolver do
             expression: false,
           },
           control_options: {
-            groups_from_input: true,
             permissions: %w[view edit manage],
           },
         },
@@ -95,6 +94,24 @@ RSpec.describe DiscourseWorkflows::Executor::ParameterResolver do
     it "continues accepting saved fixed-only arrays" do
       parameters["acl"] = entries
       expect(resolver.resolve("acl")).to eq(entries)
+    end
+
+    it "resolves input groups with default control options" do
+      schema[:acl].delete(:control_options)
+      parameters["acl"]["entries"] = []
+
+      expect(resolver.resolve("acl")).to eq(
+        [{ "type" => "group", "id" => group.id, "permission" => "edit" }],
+      )
+    end
+
+    it "resolves input groups when whole-field expressions are disabled" do
+      schema[:acl][:no_data_expression] = true
+      parameters["acl"]["entries"] = []
+
+      expect(resolver.resolve("acl")).to eq(
+        [{ "type" => "group", "id" => group.id, "permission" => "edit" }],
+      )
     end
 
     it "rejects results that are not arrays of integer IDs" do

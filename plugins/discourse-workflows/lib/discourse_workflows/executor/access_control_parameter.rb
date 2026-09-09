@@ -6,7 +6,7 @@ module DiscourseWorkflows
     # feels very "bespoke"
     class AccessControlParameter
       def initialize(schema:, resolver:)
-        @options = schema.with_indifferent_access.fetch(:control_options)
+        @options = schema.with_indifferent_access.fetch(:control_options, {})
         @resolver = resolver
       end
 

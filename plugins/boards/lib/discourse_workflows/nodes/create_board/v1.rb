@@ -52,9 +52,6 @@ if defined?(DiscourseWorkflows)
                   acl_target_key: Boards::Board.acl_target_key,
                   acl_target_name: "boards.manage.board",
                   required_permissions: ["manage"],
-                  # TODO (martin) Not sure if this needs to be an option,
-                  # could probably always allow groups from input.
-                  groups_from_input: true,
                   permissions: %w[view edit manage],
                 },
               },

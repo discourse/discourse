@@ -1,6 +1,5 @@
 import curryComponent from "ember-curry-component";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import BoardsAccessControlField from "discourse/plugins/boards/discourse/components/boards-access-control-field";
 import {
   boardPermissionOptions,
   buildDefaultBoardAcl,
@@ -18,7 +17,6 @@ export default {
     }
 
     const fieldArgs = {
-      fieldComponent: BoardsAccessControlField,
       transformPermissionOptions: boardPermissionOptions,
     };
 

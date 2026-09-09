@@ -114,7 +114,6 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
             acl_target_key: "example_target",
             acl_target_name: "example.target",
             required_permissions: ["manage"],
-            groups_from_input: true,
             permissions: %w[view edit manage],
           },
         },
