@@ -3693,6 +3693,84 @@ RSpec.describe SessionController do
   end
 
   describe "#forgot_password" do
+    context "when email codes are enabled" do
+      before { SiteSetting.enable_local_logins_via_code = true }
+
+      it "sends a password reset code to the primary email for usernames and secondary emails" do
+        secondary_email = Fabricate(:secondary_email, user: user)
+
+        [user.username, secondary_email.email].each do |login|
+          expect_enqueued_with(
+            job: :send_email_login_code,
+            args: {
+              to_address: user.email,
+              password_reset: true,
+            },
+          ) { post "/session/forgot_password.json", params: { login: } }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include("email_code" => true, "user_found" => true)
+          expect(EmailLoginCode.for_email(user.email).count).to eq(1)
+          expect(user.email_tokens.where(scope: EmailToken.scopes[:password_reset])).to be_empty
+        end
+      end
+
+      it "sends a code when a logged-in user resets their own password" do
+        sign_in(user)
+
+        expect_enqueued_with(
+          job: :send_email_login_code,
+          args: {
+            to_address: user.email,
+            password_reset: true,
+          },
+        ) { post "/session/forgot_password.json", params: { login: user.email } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email_code"]).to eq(true)
+      end
+
+      it "sends a link when staff reset another user's password" do
+        sign_in(admin)
+
+        expect_enqueued_with(
+          job: :critical_user_email,
+          args: {
+            type: "forgot_password",
+            user_id: user.id,
+          },
+        ) { post "/session/forgot_password.json", params: { login: user.email } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("email_code")
+        expect(EmailLoginCode.password_reset.for_email(user.email)).to be_empty
+      end
+
+      it "returns the same response for unknown emails when account existence is hidden" do
+        SiteSetting.hide_email_address_taken = true
+        post "/session/forgot_password.json", params: { login: user.email }
+        known_response = response.parsed_body
+
+        expect_not_enqueued_with(job: :send_email_login_code) do
+          post "/session/forgot_password.json", params: { login: "unknown@example.com" }
+        end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(known_response)
+        expect(response.parsed_body).to include("email_code" => true)
+        expect(response.parsed_body).not_to have_key("user_found")
+      end
+
+      it "preserves password reset request rate limits" do
+        RateLimiter.enable
+
+        3.times { post "/session/forgot_password.json", params: { login: user.email } }
+        post "/session/forgot_password.json", params: { login: user.email }
+
+        expect(response.status).to eq(422)
+      end
+    end
+
     context "when hide_email_address_taken is set" do
       before { SiteSetting.hide_email_address_taken = true }
 
@@ -3897,6 +3975,187 @@ RSpec.describe SessionController do
         expect(response.status).to eq(503)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
+    end
+  end
+
+  describe "#redeem_password_reset_code" do
+    before { SiteSetting.enable_local_logins_via_code = true }
+
+    def request_password_reset_code
+      post "/session/forgot_password.json", params: { login: user.email }
+      Jobs::SendEmailLoginCode.jobs.last["args"].first["code"]
+    end
+
+    it "exchanges the code for a reset page and changes the password there" do
+      code = request_password_reset_code
+
+      post "/session/password-reset-code/verify.json", params: { code: }
+
+      expect(response.status).to eq(200)
+      reset_url = response.parsed_body["redirect_url"]
+      expect(reset_url).to start_with("/u/password-reset/")
+      expect(user.user_auth_tokens).to be_empty
+
+      get reset_url
+      put reset_url, params: { password: "aNewSecurePassword123!" }
+
+      expect(response.status).to eq(200)
+      expect(user.reload.confirm_password?("aNewSecurePassword123!")).to eq(true)
+    end
+
+    it "keeps login and reset codes usable only for their own flow" do
+      SecureRandom
+        .stubs(:random_number)
+        .with(10**EmailLoginCode::CODE_LENGTH)
+        .returns(123_456, 654_321)
+      reset_code = request_password_reset_code
+      get "/session/hp.json"
+      honeypot = response.parsed_body
+      post "/session/login-code.json",
+           params: {
+             email: user.email,
+             password_confirmation: honeypot["value"],
+             challenge: honeypot["challenge"].reverse,
+           }
+      login_code = Jobs::SendEmailLoginCode.jobs.last["args"].first["code"]
+
+      post "/session/password-reset-code/verify.json", params: { code: login_code }
+      expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+
+      post "/session/login-code/verify.json", params: { email: user.email, code: reset_code }
+      expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+      expect(user.user_auth_tokens).to be_empty
+
+      post "/session/password-reset-code/verify.json", params: { code: reset_code }
+      expect(response.parsed_body["redirect_url"]).to start_with("/u/password-reset/")
+
+      post "/session/login-code/verify.json", params: { email: user.email, code: login_code }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("user", "username")).to eq(user.username)
+      expect(user.user_auth_tokens.count).to eq(1)
+    end
+
+    it "requires the existing second factor before changing the password" do
+      second_factor = Fabricate(:user_second_factor_totp, user:)
+      code = request_password_reset_code
+      post "/session/password-reset-code/verify.json", params: { code: }
+      reset_url = response.parsed_body["redirect_url"]
+
+      get reset_url
+      put reset_url, params: { password: "aNewSecurePassword123!" }
+
+      expect(user.reload.confirm_password?("aNewSecurePassword123!")).to eq(false)
+      expect(user.user_auth_tokens).to be_empty
+
+      put reset_url,
+          params: {
+            password: "aNewSecurePassword123!",
+            second_factor_token: ROTP::TOTP.new(second_factor.data).now,
+            second_factor_method: UserSecondFactor.methods[:totp],
+          }
+
+      expect(response.status).to eq(200)
+      expect(user.reload.confirm_password?("aNewSecurePassword123!")).to eq(true)
+    end
+
+    it "rejects a code from another browser even when its identifiers are supplied" do
+      code = request_password_reset_code
+      login_code = EmailLoginCode.for_email(user.email).sole
+      reset!
+
+      expect do
+        post "/session/password-reset-code/verify.json",
+             params: {
+               code:,
+               login_code_id: login_code.id,
+               user_id: user.id,
+             }
+      end.not_to change(EmailToken, :count)
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+    end
+
+    it "invalidates the previous code when another is requested" do
+      SecureRandom
+        .stubs(:random_number)
+        .with(10**EmailLoginCode::CODE_LENGTH)
+        .returns(123_456, 654_321)
+      previous_code = request_password_reset_code
+      code = request_password_reset_code
+
+      post "/session/password-reset-code/verify.json", params: { code: previous_code }
+      expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+
+      post "/session/password-reset-code/verify.json", params: { code: }
+      expect(response.parsed_body["redirect_url"]).to be_present
+    end
+
+    it "keeps the latest code usable when a resend is rate limited" do
+      RateLimiter.enable
+      request_password_reset_code
+      request_password_reset_code
+      code = request_password_reset_code
+
+      post "/session/forgot_password.json", params: { login: user.email }
+      expect(response.status).to eq(422)
+
+      post "/session/password-reset-code/verify.json", params: { code: }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to be_present
+    end
+
+    it "allows the code to be redeemed only once" do
+      code = request_password_reset_code
+      post "/session/password-reset-code/verify.json", params: { code: }
+
+      expect do
+        post "/session/password-reset-code/verify.json", params: { code: }
+      end.not_to change(EmailToken, :count)
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+    end
+
+    it "clears an earlier reset request when the next account is unknown" do
+      code = request_password_reset_code
+      post "/session/forgot_password.json", params: { login: "unknown@example.com" }
+      post "/session/password-reset-code/verify.json", params: { code: }
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+      expect(user.email_tokens.where(scope: EmailToken.scopes[:password_reset])).to be_empty
+    end
+
+    it "returns 404 when email codes are disabled" do
+      SiteSetting.enable_local_logins_via_code = false
+      post "/session/password-reset-code/verify.json", params: { code: "123456" }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "blocks verification when local logins are disabled" do
+      code = request_password_reset_code
+      SiteSetting.enable_local_logins = false
+      post "/session/password-reset-code/verify.json", params: { code: }
+
+      expect(response.status).to eq(403)
+      expect(user.email_tokens.where(scope: EmailToken.scopes[:password_reset])).to be_empty
+    end
+
+    it "blocks nonstaff when staff writes only mode is enabled after requesting a code" do
+      code = request_password_reset_code
+      Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+      post "/session/password-reset-code/verify.json", params: { code: }
+
+      expect(response.status).to eq(503)
+      expect(user.email_tokens.where(scope: EmailToken.scopes[:password_reset])).to be_empty
+    end
+
+    it "rate limits verification attempts" do
+      RateLimiter.enable
+
+      6.times { post "/session/password-reset-code/verify.json", params: { code: "123456" } }
+      post "/session/password-reset-code/verify.json", params: { code: "123456" }
+
+      expect(response.status).to eq(429)
     end
   end
 

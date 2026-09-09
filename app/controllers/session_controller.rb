@@ -2,11 +2,18 @@
 
 class SessionController < ApplicationController
   before_action :check_local_login_allowed,
-                only: %i[create forgot_password passkey_challenge passkey_login]
+                only: %i[
+                  create
+                  forgot_password
+                  redeem_password_reset_code
+                  passkey_challenge
+                  passkey_login
+                ]
   before_action :ensure_login_code_allowed, only: %i[create_login_code verify_login_code]
   before_action :rate_limit_login, only: %i[create email_login]
   before_action :rate_limit_login_code_request, only: %i[create_login_code]
-  before_action :rate_limit_login_code_verify, only: %i[verify_login_code]
+  before_action :rate_limit_login_code_verify,
+                only: %i[verify_login_code redeem_password_reset_code]
   skip_before_action :redirect_to_login_if_required
   skip_before_action :redirect_to_profile_if_required
   skip_before_action :preload_json,
@@ -16,7 +23,11 @@ class SessionController < ApplicationController
   skip_before_action :check_xhr, only: %i[second_factor_auth_show]
 
   allow_in_readonly_mode :email_login
-  allow_in_staff_writes_only_mode :create, :forgot_password, :create_login_code, :verify_login_code
+  allow_in_staff_writes_only_mode :create,
+                                  :forgot_password,
+                                  :redeem_password_reset_code,
+                                  :create_login_code,
+                                  :verify_login_code
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
@@ -710,13 +721,38 @@ class SessionController < ApplicationController
         5,
         1.hour,
       ).performed!
+      server_session.delete(:password_reset_code)
     end
 
     json = success_json
+    json[:email_code] = true if password_reset_via_code?(user)
     json[:user_found] = user.present? if !SiteSetting.hide_email_address_taken
     render json: json
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
+  end
+
+  def redeem_password_reset_code
+    expires_now
+    if !UpcomingChanges.enabled_for_user?(:enable_local_logins_via_code, current_user)
+      raise Discourse::NotFound
+    end
+
+    reset_code = server_session[:password_reset_code] || {}
+    User::CreatePasswordResetToken.call(
+      service_params.deep_merge(
+        login_code_id: reset_code[:login_code_id],
+        user_id: reset_code[:user_id],
+      ),
+    ) do
+      on_success do |email_token:|
+        server_session.delete(:password_reset_code)
+        render json:
+                 success_json.merge(redirect_url: path("/u/password-reset/#{email_token.token}"))
+      end
+      on_failed_policy(:can_write) { raise Discourse::ReadOnly }
+      on_failure { render json: invalid_login_code }
+    end
   end
 
   def current
@@ -1268,6 +1304,12 @@ class SessionController < ApplicationController
     allowed_domains.split("|").include?(hostname)
   end
 
+  def password_reset_via_code?(user)
+    # Another account's recipient needs a link they can open in their own session.
+    UpcomingChanges.enabled_for_user?(:enable_local_logins_via_code, current_user) &&
+      (!current_user || current_user == user)
+  end
+
   def enqueue_password_reset_for_user(user)
     RateLimiter.new(
       nil,
@@ -1275,6 +1317,18 @@ class SessionController < ApplicationController
       FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY,
       1.day,
     ).performed!
+
+    if password_reset_via_code?(user)
+      login_code = EmailLoginCode.generate!(email: user.email, purpose: :password_reset)
+      server_session[:password_reset_code] = { login_code_id: login_code.id, user_id: user.id }
+      Jobs.enqueue(
+        :send_email_login_code,
+        to_address: user.email,
+        code: login_code.code,
+        password_reset: true,
+      )
+      return
+    end
 
     email_token =
       user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])

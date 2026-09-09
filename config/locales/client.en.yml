@@ -3096,6 +3096,7 @@ en:
         login: "Log In"
 
     forgot_password:
+      code_instructions: "If a matching account exists, we sent a verification code to its email address. Enter the code to reset your password."
       title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
