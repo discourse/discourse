@@ -366,6 +366,75 @@ jobs:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
+      - name: Report peak container memory
+        if: always()
+        continue-on-error: true
+        run: |
+          memory_mount_path() {
+            awk -v membership="$1" -v mountpoint="$2" -v filesystem="$3" '
+              {
+                split($0, sections, " - ")
+                split(sections[2], mount, " ")
+                if ($5 != mountpoint || mount[1] != filesystem) next
+                if (filesystem == "cgroup" && mount[3] !~ /(^|,)memory(,|$)/) next
+                if (membership == $4) {
+                  print $5
+                } else if ($4 == "/" && membership ~ /^\//) {
+                  print $5 membership
+                } else if (index(membership, $4 "/") == 1) {
+                  print $5 substr(membership, length($4) + 1)
+                }
+              }
+            ' /proc/self/mountinfo
+          }
+
+          cgroup_version=unavailable
+          peak_mib=null
+          limit_mib=null
+          oom=null
+          oom_kill=null
+          runner_mib=$(awk '/^MemTotal:/ { printf "%.2f", $2 / 1024 }' /proc/meminfo)
+          runner_mib=${runner_mib:-null}
+          cgroup_path=$(awk -F: '$1 == "0" { print $3 }' /proc/self/cgroup)
+          memory_dir=$(memory_mount_path "$cgroup_path" /sys/fs/cgroup cgroup2)
+          peak_file="$memory_dir/memory.peak"
+          limit_file="$memory_dir/memory.max"
+
+          if [ -n "$memory_dir" ] && [ -r "$peak_file" ]; then
+            cgroup_version=2
+            oom=$(awk '$1 == "oom" && $2 ~ /^[0-9]+$/ { print $2 }' "$memory_dir/memory.events" 2>/dev/null || true)
+            oom_kill=$(awk '$1 == "oom_kill" && $2 ~ /^[0-9]+$/ { print $2 }' "$memory_dir/memory.events" 2>/dev/null || true)
+            oom=${oom:-null}
+            oom_kill=${oom_kill:-null}
+          else
+            cgroup_path=$(awk -F: '$2 ~ /(^|,)memory(,|$)/ { print $3 }' /proc/self/cgroup)
+            memory_dir=$(memory_mount_path "$cgroup_path" /sys/fs/cgroup/memory cgroup)
+            peak_file="$memory_dir/memory.max_usage_in_bytes"
+            limit_file="$memory_dir/memory.limit_in_bytes"
+            if [ -n "$memory_dir" ] && [ -r "$peak_file" ]; then
+              cgroup_version=1
+            fi
+          fi
+
+          if [ "$cgroup_version" != unavailable ]; then
+            peak_mib=$(awk '/^[0-9]+$/ { printf "%.2f", $1 / 1048576 }' "$peak_file")
+            limit_mib=$(awk '/^[0-9]+$/ && $1 < 9223372036850000000 { printf "%.2f", $1 / 1048576 }' "$limit_file" 2>/dev/null || true)
+            peak_mib=${peak_mib:-null}
+            limit_mib=${limit_mib:-null}
+          fi
+
+          printf 'CI_MEMORY {"cgroup_version":"%s","peak_mib":%s,"limit_mib":%s,"runner_memtotal_mib":%s,"oom":%s,"oom_kill":%s}\n' \
+            "$cgroup_version" "$peak_mib" "$limit_mib" "$runner_mib" "$oom" "$oom_kill"
+          {
+            printf '### Container memory\n\n'
+            printf '| Measurement | MiB |\n| --- | ---: |\n'
+            printf '| Peak job-container memory | %s |\n' "${peak_mib/null/unavailable}"
+            printf '| Cgroup memory limit | %s |\n' "${limit_mib/null/unlimited or unavailable}"
+            printf '| Runner MemTotal | %s |\n\n' "${runner_mib/null/unavailable}"
+            printf 'Cgroup OOM events: %s; OOM kills: %s.\n\n' "${oom/null/unavailable}" "${oom_kill/null/unavailable}"
+            printf 'Peak covers the container cgroup and descendants since creation, including page cache. Runner MemTotal is host capacity, not the container limit.\n'
+          } >> "$GITHUB_STEP_SUMMARY"
+
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
