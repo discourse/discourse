@@ -1531,6 +1531,37 @@ module(
       );
     });
 
+    test("a caret in table chrome returns to editable cell content", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const { view } = editor;
+      await selectCell(view, 2, 0);
+      view.focus();
+      window.getSelection().collapse(find(".composer-table__inner"), 0);
+      document.dispatchEvent(new Event("selectionchange"));
+      await settled();
+
+      const selection = window.getSelection();
+      const element =
+        selection.anchorNode.nodeType === Node.ELEMENT_NODE
+          ? selection.anchorNode
+          : selection.anchorNode.parentElement;
+      assert.true(
+        !!element.closest("th, td"),
+        "the browser caret is restored inside a cell"
+      );
+      document.execCommand("insertText", false, "sss");
+      await settled();
+      assert.true(
+        view.state.doc.textContent.includes("sss"),
+        "typed text belongs to the document"
+      );
+      assert.strictEqual(
+        find(".composer-table__inner").firstChild.tagName,
+        "TABLE",
+        "no text appears in the table chrome"
+      );
+    });
+
     test("cell mutation handling still reads text edits", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;

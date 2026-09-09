@@ -199,7 +199,10 @@ export function buildTableNodeView(pluginParams) {
     }
 
     ignoreMutation(mutation) {
-      return !this.contentDOM.contains(mutation.target);
+      return (
+        mutation.type !== "selection" &&
+        !this.contentDOM.contains(mutation.target)
+      );
     }
 
     #resize(kind, delta) {
