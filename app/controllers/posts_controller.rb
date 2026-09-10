@@ -273,6 +273,7 @@ class PostsController < ApplicationController
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
 
       if changes[:category_id] && changes[:category_id].to_i != post.topic.category_id.to_i
+        guardian.ensure_can_edit_topic!(post.topic)
         category = Category.find_by(id: changes[:category_id])
         if category || (changes[:category_id].to_i == 0)
           guardian.ensure_can_move_topic_to_category!(category)
