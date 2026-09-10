@@ -45,7 +45,11 @@ plugins:
       user_options:
         - chat_announce_new_messages
         - chat_channel_list_filter
+        - chat_channel_list_filter_dms
+        - chat_channel_list_filter_starred
         - chat_channel_list_sort
+        - chat_channel_list_sort_dms
+        - chat_channel_list_sort_starred
         - chat_email_frequency
         - chat_enabled
         - chat_header_indicator_preference
@@ -90,6 +94,7 @@ plugins:
       - ai_tool_secret_bindings
       - ai_tools
       - ai_topics_embeddings
+      - ask_ai_logs
       - chat_message_custom_prompts
       - classification_results
       - completion_prompts
@@ -246,12 +251,12 @@ plugins:
       - voice_sessions
     columns: {}
 plugin_checksums:
-  automation: e69972690991bc04d92b2d161aac8921
-  boards: 3f7be99d5aaac4cf66318ef036e231a2
-  chat: ab866e1148b3ab93d658a44dc4417951
+  automation: d168107063ed75d7e568f1c1250866f8
+  boards: 3cf883c6ddde0b28b45ebafcc0058d6d
+  chat: 9c46fca8e1650c913c2b249268020d77
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: 1dbe6a6155758187d0a34e7fb0b24181
+  discourse-ai: 8153214bb8d90e69b19638d7c908b5bc
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-captcha: fd538c1338062354276ccfda4cbafd55
@@ -272,10 +277,10 @@ plugin_checksums:
   discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
   discourse-rewind: 1e0f2acf6e8409f2d2f011e14405fa06
   discourse-rss-polling: 526db84c3d2ade0fa03497031fea2333
-  discourse-solved: 795e49ad397ee639af63bfb993cb07c3
+  discourse-solved: 3ebebf25c6eebc06b980f3bb02b4fa89
   discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
-  discourse-topic-voting: 5464e186402b9589d71f338c704a7d21
+  discourse-topic-voting: 9d0535677407702fa312965e20ac8fcb
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
   discourse-workflows: 61c0d4b94a17ad401490893981b23dd4
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
