@@ -666,6 +666,8 @@ en:
           recent_activity: "Recent activity"
           priority: "Priority"
           priority_description: "Mentions, then unreads, then recent activity"
+          unread_first: "Unread first"
+          unread_first_description: "Unread channels alphabetically, then the rest alphabetically"
         empty:
           filtered: "No channels match this filter."
           show_all: "Show all channels"
