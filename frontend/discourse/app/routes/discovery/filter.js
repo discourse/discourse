@@ -20,7 +20,8 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    const query = this.paramsFor(this.routeName).q;
+    const { q, title } = this.paramsFor(this.routeName);
+    const query = title?.trim() || q;
     return i18n("filters.filter.title", { filter: escapeExpression(query) });
   }
 }

@@ -497,7 +497,7 @@ module("Integration | Component | AiSearchDiscoveries", function (hooks) {
       .dom(".ai-discovery-sources__all-results")
       .hasAttribute(
         "href",
-        "/filter?q=topic%3A101%2C102%2C103%2C104",
+        "/filter?q=topic%3A101%2C102%2C103%2C104&title=miyazaki",
         "the full topic list contains every retrieval candidate"
       );
     assert.strictEqual(

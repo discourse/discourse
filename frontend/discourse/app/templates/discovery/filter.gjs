@@ -10,6 +10,7 @@ export default <template>
         @canBulkSelect={{@controller.canBulkSelect}}
         @queryString={{@controller.q}}
         @tips={{@controller.model.topic_list.filter_option_info}}
+        @title={{@controller.title}}
         @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
       />
     </:navigation>
