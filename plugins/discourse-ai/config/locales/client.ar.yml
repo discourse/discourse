@@ -19,6 +19,14 @@ ar:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "اسأل الذكاء الاصطناعي"
+        ask_ai:
+          title: "اسأل الذكاء الاصطناعي"
+          date: "التاريخ"
+          outcomes:
+            failed: "فشل"
         emotion:
           title: "العاطفة"
           description: "يعرض الجدول عدد المنشورات المصنَّفة وفقًا لمشاعر محدَّدة. وبناءً على طريقة تصنيف المشاعر المختارة، تُصنَّف المنشورات إما باستخدام نموذج تصنيف المشاعر المُهيَّأ ('SamLowe/roberta-base-go_emotions') أو باستخدام وكيل تصنيف المشاعر المُهيَّأ."

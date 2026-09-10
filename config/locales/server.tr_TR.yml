@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  mcp:
+    oauth:
+      resource: "MCP sunucusu"
+      deny: "Reddet"
+      approve: "Yetkilendir"
   llms_txt:
     sections:
       optional: "İsteğe bağlı"
@@ -4809,6 +4814,10 @@ tr_TR:
   performance_report:
     initial_post_raw: Bu konu, siteniz için günlük performans raporlarını içerir.
     initial_topic_title: Web sitesi performans raporları
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "CSV dosyasında çok fazla girdi var. Lütfen en fazla %{count} girdi içeren bir CSV dosyası sağlayın."
+      other: "CSV dosyasında çok fazla girdi var. Lütfen en fazla %{count} girdi içeren bir CSV dosyası sağlayın."
   tags:
     title: "Etiketler"
     restricted_tag_disallowed: '"%{tag}" etiketini uygulayamazsınız.'

@@ -1234,6 +1234,13 @@ sl:
       tracked_topics_link: "Prikaži"
       automatically_unpin_topics: "Samodejno odpni temo, ko preberem zadnji prispevek"
       apps: "Aplikacije"
+      mcp_authorizations:
+        details: "Podrobnosti"
+        never: "Nikoli"
+        status: "Status"
+        statuses:
+          active: "Aktivni"
+          revoked: "Preklican"
       revoke_access: "Prekliči dostop"
       undo_revoke_access: "Razveljavi preklic dostopa"
       api_approved: "Odobreno"
@@ -3823,6 +3830,59 @@ sl:
       config:
         developer:
           title: "Razvijalci"
+        mcp:
+          tabs:
+            access: "Dostopnost"
+            activity: "Aktivnost"
+          overview:
+            status: "Status"
+          access:
+            title: "Dostopnost"
+            group: "Skupina"
+            groups: "Skupine"
+            actions: "Akcije"
+            edit: "Uredi"
+            delete: "Izbriši"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Blokiraj"
+            presets:
+              custom: "Po meri"
+          authorizations:
+            user: "Uporabnik"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Čas"
+            user: "Uporabnik"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Onemogočeno"
+            client_trust:
+              approved: "Potrjeno"
+            authorization_status:
+              active: "Aktivni"
+              revoked: "Preklican"
+            activity_outcome:
+              success: "Uspeh"
+              error: "napaka"
+            primitive_state:
+              enabled: "Vključeno"
+              disabled: "Onemogočeno"
+            primitive_kind:
+              all: "Vse vrste"
+            primitive_risk:
+              moderation: "Moderiranje"
+            filter:
+              all: "Vsi"
+          never: "Nikoli"
+          actions:
+            revoke: "Odstrani"
         emojis:
           title: "Emoji"
         flags:

@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 lt:
+  mcp:
+    oauth:
+      deny: "Atsisakyti"
+      approve: "Leisti"
   llms_txt:
     sections:
       optional: "Pasirinktinai"

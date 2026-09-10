@@ -346,8 +346,17 @@ uk:
       search: "Пошук…"
       group_availability: "%{group} доступність"
     discourse_workflows:
+      node_unavailable:
+        requires_post_event: "Потрібно ввімкнути події"
+      nodes:
+        "trigger:event_ended": "Подія закінчилася"
+        "trigger:event_participation_changed": "Участь у події змінилася"
+      node_descriptions:
+        "trigger:event_ended": "Спрацьовує, коли подія досягає свого часу завершення"
+        "trigger:event_participation_changed": "Спрацьовує, коли користувач додає, змінює або скасовує свою RSVP"
       post_event:
         topic_id: "ID теми"
+        topic_id_description: "Тригерувати лише для подій у цій темі. Залиште поле порожнім, щоб відповідати всім подіям."
     discourse_post_event:
       new_event: "Нова подія"
       notifications:
@@ -381,11 +390,19 @@ uk:
       edit_event: "Редагувати подію"
       export_event: "Експорт події"
       created_by: "Створено"
+      created_and_hosted_by: "Створено та розміщено"
+      hosted_by: "Розміщено на"
+      co_hosted_by: "Співхостинг"
       other_hosts:
         one: "та %{count} інший"
         few: "та %{count} інші"
         many: "та %{count} інші"
         other: "та %{count} інші"
+      all_hosts:
+        one: "%{count} хост"
+        few: "%{count} хости"
+        many: "%{count} хостів"
+        other: "%{count} хостів"
       bulk_invite: "Масове запрошення"
       close_event: "Закрити подію"
       open_event: "Відкрити подію"
@@ -621,6 +638,7 @@ uk:
           label: "Запрошені групи"
         hosts:
           label: "Хости"
+          description: "Ведучі показуються на заході разом з його творцем."
         event_type:
           label: "Тип відвідуваності"
           public:

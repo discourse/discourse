@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 sr:
+  mcp:
+    oauth:
+      deny: "Odbij"
   llms_txt:
     sections:
       optional: "Opciono"
