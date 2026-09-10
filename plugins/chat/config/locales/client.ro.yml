@@ -188,8 +188,11 @@ ro:
         sort:
           relevance: "Relevanță"
           latest: "Ultimele"
-      direct_messages:
-        close: "Închide această conversație personală"
+      channel_list:
+        options:
+          filter: "Filtru"
+        filter:
+          mentions: "Mențiuni"
       incoming_webhooks:
         back: "Înapoi"
         channel: "Canal"
@@ -268,10 +271,6 @@ ro:
         keyboard_shortcuts:
           switch__unread_channel_arrows: "%{shortcut} Comută canal necitit"
           open_insert_link_modal: "%{shortcut} Inserează legătură (doar pentru compozitor)"
-    sidebar:
-      start_new_dm:
-        text: Începe un mesaj direct nou
-        title: Creează o discuție personală
     discourse_workflows:
       chat_message_created:
         channel_id: "Canal"

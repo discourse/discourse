@@ -13,6 +13,10 @@ zh_CN:
       "Boards::Board_user_will_lose_permission": "如果您进行此更改，您将失去管理此看板的权限。是否继续？"
       "Boards::Board_user_will_lose_permission_on_create": "如果您使用这些权限创建此看板，您将无法管理它。是否继续？"
   boards:
+    board:
+      errors:
+        acl_update_failed: "更新看板权限失败。"
+        acl_create_failed: "创建看板权限失败。"
     errors:
       board_not_found: "看板未找到"
       board_read_forbidden: "您没有权限查看此看板"

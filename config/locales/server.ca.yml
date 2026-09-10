@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ca:
+  mcp:
+    oauth:
+      deny: "Denega"
+      approve: "Autoritza"
   llms_txt:
     sections:
       optional: "Opcional"

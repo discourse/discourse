@@ -1095,6 +1095,13 @@ ca:
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Desafixa automàticament els temes quan jo arribi al final"
       apps: "Aplicacions"
+      mcp_authorizations:
+        details: "Detalls"
+        never: "Mai"
+        status: "Estat"
+        statuses:
+          active: "Actiu"
+          revoked: "Revocat"
       revoke_access: "Revoca l'accés"
       undo_revoke_access: "Desfés revocar l'accés"
       api_approved: "Aprovat:"
@@ -3182,6 +3189,61 @@ ca:
       config:
         developer:
           title: "Desenvolupador"
+        mcp:
+          tabs:
+            access: "Accés"
+            activity: "Activitat"
+          overview:
+            status: "Estat"
+          access:
+            title: "Accés"
+            group: "Grup"
+            groups: "Grups"
+            actions: "Accions"
+            edit: "Edita"
+            delete: "Suprimeix"
+          primitives:
+            group_by_options:
+              provider: "Proveïdor"
+              kind: "Tipus"
+            provider: "Proveïdor"
+            kind: "Tipus"
+          clients:
+            actions: "Accions"
+            block: "Bloca"
+            presets:
+              custom: "Personalitzat"
+          authorizations:
+            user: "Usuari"
+            status: "Estat"
+            actions: "Accions"
+          activity:
+            time: "Hora"
+            user: "Usuari"
+            duration: "Duració"
+          values:
+            server_status:
+              disabled: "Desactivat"
+            client_trust:
+              approved: "Aprovat"
+            authorization_status:
+              active: "Actiu"
+              revoked: "Revocat"
+            activity_outcome:
+              success: "Èxit"
+              error: "Error"
+            primitive_state:
+              enabled: "Activat"
+              disabled: "Desactivat"
+            primitive_kind:
+              all: "Tots els tipus"
+            primitive_risk:
+              moderation: "Moderació"
+            filter:
+              all: "Tots"
+          never: "Mai"
+          actions:
+            revoke: "Revoca"
         emojis:
           title: "Emoji"
         flags:

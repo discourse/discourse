@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 et:
+  mcp:
+    oauth:
+      approve: "Autoriseeri"
   llms_txt:
     sections:
       optional: "Valikuline"

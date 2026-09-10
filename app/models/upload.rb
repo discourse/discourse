@@ -306,19 +306,15 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            if GlobalSetting.enable_vips_image_processing
-              DiscourseVips.svg_dimensions(input_path: path, timeout: MAX_IDENTIFY_SECONDS)
-            else
-              ImageMagick.identify(
-                "-ping",
-                "-format",
-                "%w %h",
-                "MSVG:#{path}",
-                operation: :upload_svg_dimensions,
-                read: [path],
-                timeout: MAX_IDENTIFY_SECONDS,
-              ).split(" ")
-            end
+            ImageMagick.identify(
+              "-ping",
+              "-format",
+              "%w %h",
+              "MSVG:#{path}",
+              operation: :upload_svg_dimensions,
+              read: [path],
+              timeout: MAX_IDENTIFY_SECONDS,
+            ).split(" ")
           rescue StandardError
             [0, 0]
           end

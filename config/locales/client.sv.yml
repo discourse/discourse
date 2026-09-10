@@ -1306,6 +1306,15 @@ sv:
       tracked_topics_link: "Visa"
       automatically_unpin_topics: "Ta automatiskt ner ämnen när jag når botten"
       apps: "Appar"
+      mcp_authorizations:
+        endpoint: "Resurs"
+        scopes: "Omfattningar"
+        details: "Detaljer"
+        never: "Aldrig"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
+          revoked: "Återkallad"
       revoke_access: "Återkalla åtkomst"
       undo_revoke_access: "Ångra återkallelse av åtkomst"
       api_approved: "Godkänd:"
@@ -4463,6 +4472,66 @@ sv:
           title: "Om din webbplats"
         developer:
           title: "Utvecklare"
+        mcp:
+          tabs:
+            access: "Tillgång"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Tillgång"
+            group: "Grupp"
+            groups: "Grupper"
+            actions: "Åtgärder"
+            edit: "Redigera"
+            delete: "Radera"
+          primitives:
+            group_by_options:
+              scope: "Omfattning"
+              provider: "Leverantör"
+              kind: "Typ"
+            provider: "Leverantör"
+            kind: "Typ"
+            scope: "Omfattning"
+            scopes: "Omfattningar"
+          clients:
+            actions: "Åtgärder"
+            block: "Blockera"
+            presets:
+              custom: "Anpassad"
+          authorizations:
+            user: "Användare"
+            status: "Status"
+            actions: "Åtgärder"
+          activity:
+            time: "Tid"
+            user: "Användare"
+            duration: "Varaktighet"
+          values:
+            server_status:
+              disabled: "Inaktiverad"
+            client_trust:
+              approved: "Godkända"
+            authorization_status:
+              active: "Aktiv"
+              revoked: "Återkallad"
+            activity_outcome:
+              success: "Lyckades"
+              error: "Fel"
+            primitive_state:
+              enabled: "Aktiverad"
+              disabled: "Inaktiverad"
+            primitive_kind:
+              all: "Alla typer"
+              resource: "Resurs"
+            primitive_risk:
+              read: "Skrivskyddad"
+              moderation: "Moderering"
+            filter:
+              all: "Alla"
+          never: "Aldrig"
+          actions:
+            revoke: "Återkalla"
         emojis:
           title: "Emoji"
         flags:

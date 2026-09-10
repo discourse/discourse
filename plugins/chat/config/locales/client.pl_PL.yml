@@ -146,7 +146,7 @@ pl_PL:
         process_started: "Rozpoczął się proces usuwania kanału. Ten modal zostanie wkrótce zamknięty, nigdzie nie zobaczysz już usuniętego kanału."
       channels_list_popup:
         browse: "Przeglądaj kanały"
-        create: "Nowy kanał"
+        create: "Nowy kanał..."
       close: "Zamknij"
       remove: "Usuń"
       collapse: "Zwiń szufladę czatu"
@@ -163,8 +163,8 @@ pl_PL:
       muted: "wyciszono"
       joined: "dołączono"
       empty_state:
-        direct_message_cta: "Rozpocznij prywatny czat"
-        direct_message: "Możesz także rozpocząć prywatny czat z jednym lub kilkoma użytkownikami."
+        direct_message_cta: "Rozpocznij bezpośrednią wiadomość lub czat grupowy"
+        direct_message: "Możesz również rozpocząć bezpośrednią wymianę wiadomości lub rozmowę grupową z jednym lub większą liczbą użytkowników."
         title: "Nie znaleziono żadnych kanałów"
         my_threads: "Nie masz jeszcze żadnych wątków. Wątki, w których bierzesz udział, będą wyświetlane tutaj."
       email_frequency:
@@ -669,14 +669,37 @@ pl_PL:
       direct_messages:
         title: "PW"
         aria_label: "Przełącz na wiadomości bezpośrednie"
-        new: "Utwórz prywatny czat"
+        new: "Nowa wiadomość bezpośrednia lub czat grupowy..."
         create: "Utwórz"
-        leave: "Opuść ten prywatny czat"
-        close: "Zamknij ten prywatny czat"
+        leave: "Opuść kanał"
+        close: "Zamknij kanał"
         cannot_create: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       channel_list:
+        apply_filters: "Zastosuj filtry do kanałów"
         title: "Kanały"
         aria_label: "Przełącz na listę kanałów"
+        options:
+          title: "Opcje listy kanałów"
+          filter: "Filtr"
+          sort: "Sortuj"
+          current_filter: "Filtruj: %{filter}"
+          current_sort: "Sortuj: %{sort}"
+        filter:
+          title: "Filtruj kanały według:"
+          all: "Wszystkie kanały"
+          active: "Tylko aktywny"
+          active_description: "Nowa aktywność w ciągu ostatnich %{days} dni"
+          unread: "Nieprzeczytane"
+          mentions: "Wzmianki"
+        sort:
+          title: "Sortuj kanały według:"
+          alphabetical: "Alfabetycznie"
+          recent_activity: "Ostatnia aktywność"
+          priority: "Priorytet"
+          priority_description: "Wzmianki, następnie nieprzeczytane, a następnie ostatnia aktywność"
+        empty:
+          filtered: "Żaden kanał nie pasuje do tego filtra."
+          show_all: "Pokaż wszystkie kanały"
       incoming_webhooks:
         back: "Wstecz"
         channel_placeholder: "Wybierz kanał"
@@ -850,10 +873,10 @@ pl_PL:
           other_plain: 'oznaczył %{identifier} w "%{channel}"'
           other_html: '<span>%{username}</span> <span>oznaczył %{identifier} w "%{channel}"</span>'
         direct_message_chat_mention:
-          direct: "wspomniał o Tobie na prywatnym czacie"
-          direct_html: "<span>%{username}</span> <span>wspomniał o Tobie na prywatnym czacie</span>"
-          other_plain: "oznaczył %{identifier} na prywatnym czacie"
-          other_html: "<span>%{username}</span> <span>oznaczył %{identifier} na prywatnym czacie</span>"
+          direct: "wspomniał o tobie w wiadomości bezpośredniej"
+          direct_html: "<span>%{username}</span> <span>wspomniał o Tobie w wiadomości bezpośredniej</span>"
+          other_plain: "wspomniał o %{identifier} w wiadomości bezpośredniej"
+          other_html: "<span>%{username}</span> <span>wspomniał(a) o %{identifier} w wiadomości bezpośredniej</span>"
         chat_message: "Nowa wiadomość na czacie"
         chat_quoted: "%{username} zacytował Twoją wiadomość na czacie"
       titles:
@@ -926,8 +949,8 @@ pl_PL:
           title: Czat
     sidebar:
       start_new_dm:
-        text: Rozpocznij nowy DM
-        title: Utwórz osobisty czat
+        text: Rozpocznij DM lub czat grupowy
+        title: Nowa wiadomość bezpośrednia lub czat grupowy
       panels:
         chat:
           label: "Czat"

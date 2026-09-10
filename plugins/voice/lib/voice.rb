@@ -18,6 +18,11 @@ module ::Voice
     SiteSetting.voice_enabled
   end
 
+  # Callers must omit raw errors and payloads, which can contain credentials or content.
+  def self.warn(message)
+    Rails.logger.warn(message) if SiteSetting.voice_verbose_logging
+  end
+
   def self.room_channel(room_id)
     "#{ROOM_CHANNEL_PREFIX}/#{room_id}"
   end

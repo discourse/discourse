@@ -1,5 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { registerDestructor } from "@ember/destroyable";
+import {
+  associateDestroyableChild,
+  registerDestructor,
+} from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -54,6 +57,7 @@ export default class DAutocompleteModifier extends Modifier {
       named: {},
       positional: [],
     });
+    associateDestroyableChild(owner, modifier);
 
     const modifierOptions = {
       ...options,

@@ -522,7 +522,7 @@ export default class ChatChannelsManager extends Service {
   }
 
   #filterSidebarChannels(channels, section) {
-    const filter = this.chatChannelListPreferences.filterFor(section);
+    const filter = this.chatChannelListPreferences.effectiveFilterFor(section);
     const activeCutoff =
       filter === CHAT_CHANNEL_LIST_FILTERS.ACTIVE
         ? Date.now() - CHAT_CHANNEL_LIST_ACTIVE_DAYS * 24 * 60 * 60 * 1000

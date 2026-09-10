@@ -136,7 +136,7 @@ pt_BR:
         process_started: "O processo para excluir o canal foi iniciado. Este modal será fechado em breve, você não verá mais o canal excluído em lugar algum."
       channels_list_popup:
         browse: "Navegar por canais"
-        create: "Novo canal"
+        create: "Novo canal..."
       close: "Fechar"
       remove: "Remover"
       collapse: "Recolher gaveta de chat"
@@ -151,8 +151,6 @@ pt_BR:
       muted: "silenciado(a)"
       joined: "entrou"
       empty_state:
-        direct_message_cta: "Inicie um chat pessoal"
-        direct_message: "Você também pode iniciar um chat pessoal com um(as) ou mais usuários(as)."
         title: "Nenhum canal encontrado"
         my_threads: "Você ainda não tem nenhum tópico. Os tópicos de que você participa serão exibidos aqui."
       email_frequency:
@@ -573,14 +571,20 @@ pt_BR:
       direct_messages:
         title: "MDs"
         aria_label: "Mudar para mensagens diretas"
-        new: "Criar um chat pessoal"
         create: "Ir"
-        leave: "Sair deste chat pessoal"
-        close: "Fechar este chat pessoal"
+        leave: "Sair do canal"
+        close: "Fechar canal"
         cannot_create: "Desculpe, você não pode enviar mensagens diretas."
       channel_list:
         title: "Canais"
         aria_label: "Mudar para lista de canais"
+        options:
+          filter: "Filtro"
+        filter:
+          all: "Todos os canais"
+          mentions: "Menções"
+        sort:
+          priority: "Prioridade"
       incoming_webhooks:
         back: "Voltar"
         channel_placeholder: "Selecione um canal"
@@ -735,11 +739,6 @@ pt_BR:
           direct_html: '<span>%{username}</span> <span>convidou você em "%{channel}"</span>'
           other_plain: 'mencionou %{identifier} em "%{channel}"'
           other_html: '<span>%{username}</span> <span>mencionou %{identifier} em "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "mencionei você no chat pessoal"
-          direct_html: "<span>%{username}</span> <span>mencionou você no chat pessoal</span>"
-          other_plain: "mencionou %{identifier} no chat pessoal"
-          other_html: "<span>%{username}</span> <span>mencionou %{identifier} no chat pessoal</span>"
         chat_message: "Nova mensagem de chat"
         chat_quoted: "%{username} citou sua mensagem do chat"
       titles:
@@ -809,9 +808,6 @@ pt_BR:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        text: Iniciar nova DM
-        title: Criar um chat pessoal
       panels:
         chat:
           label: "Chat"

@@ -13,7 +13,6 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import BookmarkModal from "discourse/components/modal/bookmark";
@@ -31,6 +30,7 @@ import {
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
+import BufferedProxy from "discourse/lib/buffered-proxy";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { bind } from "discourse/lib/decorators";
 import EmbedMode from "discourse/lib/embed-mode";

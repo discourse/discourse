@@ -24,9 +24,6 @@ export default class UnknownRoute extends DiscourseRoute {
     });
 
     if (permalinkResults.found) {
-      // Avoid polluting the history stack for external links
-      transition.abort();
-
       let url = permalinkResults.target_url;
 
       if (transition._discourse_anchor) {
@@ -37,6 +34,13 @@ export default class UnknownRoute extends DiscourseRoute {
         url += `#${transition._discourse_anchor}`;
       }
 
+      if (permalinkResults.internal) {
+        // Redirect within the routing system so the transition is tracked
+        return this.router.replaceWith(url);
+      }
+
+      // Avoid polluting the history stack for external links
+      transition.abort();
       DiscourseURL.routeTo(url);
       return "";
     } else {
