@@ -36,6 +36,10 @@ module DiscourseAi
             (@start_date.to_date..@end_date.to_date).map do |date|
               { x: date.iso8601, y: daily_counts.fetch(date, 0) }
             end,
+          data_explorer_query_ids:
+            if defined?(DiscourseDataExplorer) && SiteSetting.data_explorer_enabled
+              { activity: -45, outcomes: -46 }
+            end,
           questions:,
           askers:,
           average_first_answer_ms: average_ms,

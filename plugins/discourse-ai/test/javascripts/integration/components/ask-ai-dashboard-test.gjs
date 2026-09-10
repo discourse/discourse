@@ -1,4 +1,4 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -30,6 +30,9 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
     await render(<template><AskAiDashboard @data={{data}} /></template>);
 
     assert.dom(".ask-ai-dashboard__metric").exists({ count: 3 });
+    assert
+      .dom(".ask-ai-dashboard__activity h3 a")
+      .doesNotExist("keeps headings unlinked without Data Explorer");
     assert
       .dom(".ask-ai-dashboard .db-section__subheader")
       .exists("uses the shared summary header");
@@ -63,6 +66,11 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
         { count: 3 },
         "provides accessible daily values including zero days"
       );
+    assert.strictEqual(
+      find(".ask-ai-dashboard__chart .sr-only").offsetHeight,
+      1,
+      "clips the accessible data table without extending the page"
+    );
     await triggerEvent(
       '[data-metric="latency"] .fk-d-tooltip__trigger',
       "pointermove"
@@ -83,6 +91,36 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
     assert
       .dom('[data-metric="latency"] dd')
       .hasText("1.5 s", "converts milliseconds to seconds");
+  });
+
+  test("links both headings to date-filtered Data Explorer queries", async function (assert) {
+    const data = {
+      start_date: "2026-09-01",
+      end_date: "2026-09-09",
+      questions: 1,
+      askers: 1,
+      outcomes: [],
+      daily_asks: [],
+      data_explorer_query_ids: { activity: -45, outcomes: -46 },
+    };
+    await render(<template><AskAiDashboard @data={{data}} /></template>);
+    const params = encodeURIComponent(
+      JSON.stringify({ start_date: data.start_date, end_date: data.end_date })
+    );
+    assert
+      .dom(".ask-ai-dashboard__chart h3 a")
+      .hasAttribute(
+        "href",
+        `/admin/plugins/discourse-data-explorer/queries/-45?params=${params}`,
+        "passes the dates to the activity query"
+      );
+    assert
+      .dom(".ask-ai-dashboard__outcomes h3 a")
+      .hasAttribute(
+        "href",
+        `/admin/plugins/discourse-data-explorer/queries/-46?params=${params}`,
+        "passes the dates to the outcomes query"
+      );
   });
 
   test("distinguishes missing latency from zero latency", async function (assert) {
