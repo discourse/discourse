@@ -922,6 +922,9 @@ sk:
         note_added: "Poznámka moderátora"
         note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
         no_events: "Žiadne udalosti na časovej osi na zobrazenie"
+      author_penalty:
+        toast:
+          undo: "Späť"
       notes:
         add_note_button: "Pridať poznámku"
         placeholder: "Tu napíšte svoju poznámku..."
@@ -1569,7 +1572,6 @@ sk:
       admin: "%{user} je administrátor"
       moderator_tooltip: "Tento používateľ je moderátor"
       admin_tooltip: "Tento používateľ je administrátor"
-      silenced_tooltip: "Tento používateľ je umlčaný"
       suspended_notice: "Tento používateľ je suspendovaný do %{date}"
       suspended_permanently: "Tento používateľ je suspendovaný"
       suspended_reason: "Dôvod:"
@@ -1630,6 +1632,16 @@ sk:
       tracked_topics_link: "Zobraziť"
       automatically_unpin_topics: "Automaticky zrušiť pripnutie témy ak sa dočítam na koniec"
       apps: "Appky"
+      mcp_authorizations:
+        endpoint: "Zdroje"
+        scopes: "Rozsahy"
+        details: "Detaily"
+        last_used: "Naposledy použité"
+        never: "Nikdy"
+        status: "Stav"
+        statuses:
+          active: "Aktívny"
+          revoked: "Odvolané"
       revoke_access: "Odvolať prístup"
       undo_revoke_access: "Zrušiť odvolanie prístupu"
       api_approved: "Schválený:"
@@ -5670,6 +5682,73 @@ sk:
           header_description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému. Zobrazuje sa na <a href='%{basePath}/about'>stránke O</a> vašej lokalite."
         developer:
           title: "Vývojár"
+        mcp:
+          tabs:
+            access: "Prístup"
+            activity: "Aktivity"
+          overview:
+            status: "Stav"
+            tools: "Nástroje"
+          access:
+            title: "Prístup"
+            group: "Skupina"
+            groups: "Skupiny"
+            actions: "Akcie"
+            edit: "Upraviť"
+            delete: "Odstrániť"
+          primitives:
+            group_by: "Zoskupiť podľa"
+            group_by_options:
+              scope: "Rozsah"
+              provider: "Poskytovateľ"
+              kind: "Typ"
+            provider: "Poskytovateľ"
+            kind: "Typ"
+            scope: "Rozsah"
+            scopes: "Rozsahy"
+          clients:
+            actions: "Akcie"
+            block: "Blokovať"
+            use_preset: "Nastavenie"
+            presets:
+              custom: "Vlastné"
+          authorizations:
+            user: "Používateľ"
+            last_used: "Naposledy použité"
+            status: "Stav"
+            actions: "Akcie"
+          activity:
+            rate_limits: "Limity sadzieb"
+            outcome: "Výsledok"
+            time: "Čas"
+            user: "Používateľ"
+            duration: "Trvanie"
+          values:
+            server_status:
+              disabled: "Vypnuté"
+            client_trust:
+              approved: "Schválený"
+            authorization_status:
+              active: "Aktívny"
+              revoked: "Odvolané"
+            activity_outcome:
+              success: "Úspech"
+              error: "Chyba"
+            primitive_state:
+              enabled: "Povolené"
+              disabled: "Vypnuté"
+            primitive_kind:
+              all: "Všetky typy"
+              tool: "Nástroj"
+              resource: "Zdroje"
+            primitive_risk:
+              read: "Len na čítanie"
+              moderation: "Moderovanie"
+            filter:
+              all: "Všetky"
+          never: "Nikdy"
+          actions:
+            revoke: "Zrušiť"
         experimental:
           title: "Experimentálne"
           header_description: "Zapínanie alebo vypínanie experimentálnych funkcií na vašom webe, väčšinu z nich možno ovládať skupinovo."

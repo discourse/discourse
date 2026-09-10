@@ -26,4 +26,22 @@ RSpec.describe UserPostBookmarkSerializer do
       expect(serializer.highest_post_number).to eq(4)
     end
   end
+
+  describe "#excerpt" do
+    let(:viewer) { Fabricate(:user, locale: "ja") }
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      post.update!(raw: "Original post body", locale: "en")
+      Fabricate(:post_localization, post: post, locale: "ja", cooked: "<p>翻訳された本文</p>")
+    end
+
+    it "returns the translated excerpt" do
+      I18n.with_locale(:ja) do
+        serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(viewer))
+
+        expect(serializer.excerpt).to eq("翻訳された本文")
+      end
+    end
+  end
 end

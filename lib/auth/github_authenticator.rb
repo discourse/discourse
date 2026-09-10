@@ -63,6 +63,7 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
                           strategy = env["omniauth.strategy"]
                           strategy.options[:client_id] = SiteSetting.github_client_id
                           strategy.options[:client_secret] = SiteSetting.github_client_secret
+                          strategy.options[:client_options][:auth_scheme] = :request_body
                         },
                       scope: "user:email"
   end

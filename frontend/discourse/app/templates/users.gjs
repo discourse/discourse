@@ -33,17 +33,17 @@ export default <template>
         <div class="users-directory directory">
           <span>
             <PluginOutlet
-              @name="users-top"
               @connectorTagName="div"
+              @name="users-top"
               @outletArgs={{lazyHash model=@controller.model}}
             />
           </span>
           <div class="directory-controls">
             <div class="period-controls">
               <PeriodChooser
-                @period={{@controller.period}}
-                @onChange={{fn (mut @controller.period)}}
                 @fullDay={{false}}
+                @onChange={{fn (mut @controller.period)}}
+                @period={{@controller.period}}
               />
               {{#if @controller.lastUpdatedAt}}
                 <div class="directory-last-updated">
@@ -62,9 +62,9 @@ export default <template>
                 {{/if}}
               </label>
               <Input
-                @value={{readonly @controller.nameInput}}
-                placeholder={{i18n "directory.filter_name"}}
                 class="filter-name no-blur"
+                placeholder={{i18n "directory.filter_name"}}
+                @value={{readonly @controller.nameInput}}
                 {{on
                   "input"
                   (withEventValue @controller.onUsernameFilterChanged)
@@ -72,18 +72,18 @@ export default <template>
               />
               {{#if @controller.showGroupFilter}}
                 <ComboBox
-                  @value={{@controller.group}}
+                  class="directory-group-selector"
                   @content={{@controller.groupOptions}}
                   @onChange={{@controller.groupChanged}}
                   @options={{hash none="directory.group.all"}}
-                  class="directory-group-selector"
+                  @value={{@controller.group}}
                 />
               {{/if}}
               {{#if @controller.currentUser.staff}}
                 <DButton
-                  @icon="wrench"
-                  @action={{@controller.showEditColumnsModal}}
                   class="btn-default open-edit-columns-btn"
+                  @action={{@controller.showEditColumnsModal}}
+                  @icon="wrench"
                 />
               {{/if}}
               <PluginOutlet
@@ -96,11 +96,11 @@ export default <template>
           <DConditionalLoadingSpinner @condition={{@controller.isLoading}}>
             {{#if @controller.model.content}}
               <DirectoryTable
-                @items={{@controller.model.content}}
-                @columns={{@controller.columns}}
-                @showTimeRead={{@controller.showTimeRead}}
-                @order={{@controller.order}}
                 @asc={{@controller.asc}}
+                @columns={{@controller.columns}}
+                @items={{@controller.model.content}}
+                @order={{@controller.order}}
+                @showTimeRead={{@controller.showTimeRead}}
                 @updateOrderAndAsc={{@controller.updateOrderAndAsc}}
               />
               <DConditionalLoadingSpinner

@@ -15,7 +15,10 @@ module DiscourseWorkflows
     def register_node(node_class, plugin)
       return if node_registered?(node_class)
 
-      DiscoursePluginRegistry.register_discourse_workflows_node(node_class, plugin)
+      DiscoursePluginRegistry.register_discourse_workflows_node(
+        node_class.name || node_class,
+        plugin,
+      )
       subscribe_node_event(node_class, plugin)
     end
 
@@ -45,7 +48,7 @@ module DiscourseWorkflows
 
     def node_registered?(node_class)
       DiscoursePluginRegistry._raw_discourse_workflows_nodes.any? do |entry|
-        entry[:value] == node_class
+        entry[:value] == (node_class.name || node_class)
       end
     end
 
@@ -55,7 +58,12 @@ module DiscourseWorkflows
       event_name = node_class.event_name if node_class.respond_to?(:event_name)
       return if event_name.blank?
 
-      plugin.on(event_name) { |*args| EventListener.handle(node_class, *args) }
+      # Event handlers outlive Zeitwerk reloads, so resolve named classes at dispatch.
+      node_reference = node_class.name || node_class
+      plugin.on(event_name) do |*args|
+        current_class = node_reference.is_a?(String) ? node_reference.constantize : node_reference
+        EventListener.handle(current_class, *args)
+      end
     end
   end
 end

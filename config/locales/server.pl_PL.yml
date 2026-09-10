@@ -5,6 +5,35 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  mcp:
+    oauth:
+      authorize_title: "Autoryzuj klienta MCP"
+      client_request: "%{client_name} żąda dostępu do %{site_name}."
+      client_id: "Identyfikator klienta"
+      redirect_uri: "Przekieruj URI"
+      resource: "Serwer MCP"
+      requested_permission_count:
+        one: "%{client_name} poprosił o %{count} pozwolenie."
+        few: "%{client_name} poprosił o %{count} pozwolenia."
+        many: "%{client_name} poprosił o %{count} pozwoleń."
+        other: "%{client_name} poprosił o %{count} pozwoleń."
+      eligible_permission_count:
+        one: "Twoje konto kwalifikuje się do %{count}."
+        few: "Twoje konto kwalifikuje się do %{count}."
+        many: "Twoje konto kwalifikuje się do %{count}."
+        other: "Twoje konto kwalifikuje się do %{count}."
+      granted_permissions:
+        one: "Następujące pozwolenie zostanie udzielone"
+        few: "Następujące pozwolenia zostały udzielone"
+        many: "Następujące pozwolenia zostały udzielone"
+        other: "Następujące pozwolenia zostały udzielone"
+      guardian_notice: "Klient działa jako Twoje konto i podlega Twoim zwykłym uprawnieniom Discourse."
+      deny: "Odrzuć"
+      approve: "Autoryzuj"
+    admin:
+      site_enabled: "Włącz ustawienie witryny serwera MCP"
+      primitives_enabled: "Włącz co najmniej jeden prymitywny w obszarze Możliwości"
+      client_registered: "Zarejestruj lub zatwierdź klienta OAuth"
   llms_txt:
     human_community_policy: "To społeczność przeznaczona do dyskusji międzyludzkich. Nie podszywaj się pod innych ani nie zakładaj kont autonomicznie. Publikuj, edytuj lub podejmuj inne działania związane z pisaniem tylko wtedy, gdy ktoś wyraźnie Cię o to poprosi."
     crawler_policy: "Pobieraj tylko strony potrzebne do konkretnego żądania użytkownika. Nie indeksuj systematycznie ani nie pobieraj masowo tej społeczności. Przestrzegaj pliku `robots.txt`, regulaminu witryny i ustawień jej robota indeksującego. Jeśli serwer odpowie kodem HTTP 429, zatrzymaj się i odczekaj interwał `Retry-After` przed ponowieniem próby."
@@ -2042,6 +2071,7 @@ pl_PL:
     min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości"
     max_emojis_in_title: "Maksymalna dozwolona liczba emoji w tytule tematu. Jeśli ustawiona wartość wynosi zero, uniemożliwia to użycie jakichkolwiek emoji w tytułach tematów."
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
+    allow_anonymous_search: "Zezwól anonimowym użytkownikom na korzystanie z /search. Po wyłączeniu, anonimowi użytkownicy nie będą mogli uzyskać dostępu do /search, a kontrolki interfejsu korzystające z /search będą ukryte."
     search_tokenize_chinese: "Wymuś na wyszukiwarce tokenizację języka chińskiego nawet na stronach, które nie są chińskie"
     search_tokenize_japanese: "Wymuś na wyszukiwarce tokenizację języka japońskiego nawet na stronach, które nie są japońskie"
     search_prefer_recent_posts: "Jeśli wyszukiwanie na twoim dużym forum jest wolne, ta opcja pozwala zindeskować najpierw ostanie wpisy."
@@ -2298,7 +2328,7 @@ pl_PL:
     discourse_connect_allowed_redirect_domains: "Ogranicz do tych domen dla return_paths dostarczanych przez DiscourseConnect (domyślna ścieżka zwrotna musi być na bieżącej stronie). Użyj * aby zezwolić na dowolną domenę dla ścieżki zwrotnej. Własne poddomeny (`*.foobar.com`) są niedozwolone."
     enable_local_logins: "Włącz konta oparte na loginach lokalnych i hasłach. OSTRZEŻENIE: jeśli opcja jest wyłączona, zalogowanie się może nie być możliwe, jeśli wcześniej nie skonfigurowano co najmniej jednej alternatywnej metody logowania."
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
-    enable_local_logins_via_code: "Umożliwia członkom szybszą rejestrację i logowanie za pomocą jednorazowych kodów e-mail (OTP)."
+    enable_local_logins_via_code: "Pozwól członkom rejestrować się, akceptować zaproszenia i logować się za pomocą jednorazowych kodów e-mail (OTP) bez konieczności podawania hasła."
     enable_random_usernames: 'Generuje losowe nazwy użytkowników dla kont utworzonych za pomocą jednorazowego kodu e-mail w formacie „przymiotnik + rzeczownik + dwie losowe liczby” (przykład: QuietFalcon34). Nowi użytkownicy mogą zmienić swoją nazwę użytkownika podczas rejestracji.'
     random_username_adjectives: 'Słowa używane jako pierwsza połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone.'
     random_username_nouns: 'Słowa używane jako druga połowa losowo wygenerowanej nazwy użytkownika. Pierwsza litera jest wielka, gdy słowa są łączone.'
@@ -2809,6 +2839,18 @@ pl_PL:
     default_sidebar_link_to_filtered_list: "Spraw, aby linki menu nawigacyjnego domyślnie prowadziły do przefiltrowanej listy."
     default_sidebar_show_count_of_new_items: "Spraw, aby łącza menu nawigacyjnego domyślnie pokazywały liczbę nowych elementów zamiast odznak."
     default_sidebar_switch_panel_position: "Pozycja przycisku na pasku bocznym do przełączania na czat"
+    mcp_server_enabled: "Włącz serwer Model Context Protocol witryny. Klienci MCP działają jako autoryzowani użytkownicy Discourse i podlegają standardowym uprawnieniom."
+    mcp_server_instructions: "Opcjonalne instrukcje wysyłane do klientów MCP w celu wyjaśnienia sposobu korzystania z serwera."
+    mcp_cache_ttl_ms: "Jak długo klienci MCP mogą uważać buforowaną odpowiedź za świeżą (w milisekundach). Ustaw na 0, aby odpowiedzi były natychmiast nieaktualne."
+    mcp_oauth_client_id_metadata_policy: "Wybierz, czy klienci OAuth mogą rejestrować się za pomocą dokumentów metadanych identyfikatora klienta (CIMD). Klienci zarejestrowani jako administratorzy są zawsze dozwoleni. Użytkownicy nadal muszą zatwierdzić żądany dostęp."
+    mcp_oauth_client_id_metadata_domains: "Hosty mogą udostępniać dokumenty metadanych identyfikatora klienta, gdy {{setting:mcp_oauth_client_id_metadata_policy}} jest ustawione na zatwierdzone domeny. Subdomeny nie są uwzględniane, chyba że są wymienione osobno."
+    mcp_access_token_lifetime_minutes: "Jak długo token dostępu MCP pozostaje ważny (w minutach)."
+    mcp_refresh_token_lifetime_days: "Okres ważności rodziny tokenów odświeżania MCP (w dniach)."
+    mcp_authorization_code_lifetime_seconds: "Jak długo jednorazowy kod autoryzacji MCP OAuth pozostaje ważny (w sekundach)."
+    mcp_global_rate_limit_per_minute: "Maksymalna liczba żądań MCP akceptowanych na użytkownika, klienta i adres IP na minutę. Droższe narzędzia mogą stosować bardziej rygorystyczne limity."
+    mcp_audit_log_retention_days: "Liczba dni przechowywania ograniczonych zapisów audytu bezpieczeństwa MCP."
+    mcp_max_request_bytes: "Maksymalny akceptowany rozmiar treści żądania MCP w bajtach."
+    mcp_max_response_bytes: "Maksymalny rozmiar odpowiedzi MCP w bajtach."
     retain_web_hook_events_period_days: "Liczba dni przechowywania rekordów zdarzeń webhooków."
     retain_web_hook_events_aggregate_days: "Liczba dni przechowywania zbiorczych rekordów zdarzeń webhooka."
     retry_web_hook_events: "Automatycznie ponów 4 razy nieudane zdarzenia webhooków. Luki czasowe między ponownymi próbami wynoszą 1, 5, 25 i 125 minut."
@@ -5736,6 +5778,12 @@ pl_PL:
   performance_report:
     initial_post_raw: Ten temat zawiera codzienne raporty wydajności dla twojej strony.
     initial_topic_title: Raporty wydajności strony
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Za dużo wpisów w pliku CSV. Podaj plik CSV zawierający nie więcej niż %{count} wpis."
+      few: "Za dużo wpisów w pliku CSV. Podaj plik CSV zawierający nie więcej niż %{count} wpisy."
+      many: "Za dużo wpisów w pliku CSV. Podaj plik CSV zawierający nie więcej niż %{count} wpisów."
+      other: "Za dużo wpisów w pliku CSV. Podaj plik CSV zawierający nie więcej niż %{count} wpisów."
   tags:
     title: "Etykiety"
     groups:
@@ -5754,6 +5802,11 @@ pl_PL:
       many: "Do tematu można zastosować %{count} znaczników."
       other: "Do tematu można zastosować %{count} znaczników."
     upload_row_too_long: "Plik CSV powinien zawierać jeden tag w każdym wierszu. Opcjonalnie po tagu można umieścić przecinek, a następnie nazwę grupy tagów."
+    upload_too_many_rows:
+      one: "Zbyt wiele wierszy w pliku CSV. Prześlij nie więcej niż %{count} wiersz na raz."
+      few: "Zbyt wiele wierszy w pliku CSV. Prześlij nie więcej niż %{count} wiersze na raz."
+      many: "Zbyt wiele wierszy w pliku CSV. Prześlij nie więcej niż %{count} wierszy na raz."
+      other: "Zbyt wiele wierszy w pliku CSV. Prześlij nie więcej niż %{count} wierszy na raz."
     bulk_create:
       invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
       invalid_name: "Nieprawidłowa nazwa tagu."
@@ -6064,8 +6117,8 @@ pl_PL:
         complete: "Post ukryty, użytkownik został powiadomiony."
       agree_and_edit:
         title: "Edytuj wpis"
-        description: "Zgódź się z flagą i otwórz okno kompozytora, aby edytować post."
-        complete: "Flaga potwierdzona, możesz teraz edytować post."
+        description: "Zgadzam się z flagą po zapisaniu edycji."
+        complete: "Wpis edytowany, zgłoszenie wysłane."
       delete:
         title: "Usuń"
         complete: "Wpis usunięty."
@@ -6115,6 +6168,10 @@ pl_PL:
         title: "Wyłącz wyciszenie użytkownika i zignoruj"
         description: "Wyłącz wyciszenie użytkownika i usuń flagę z kolejki bez przywracania usuniętego wpisu."
         complete: "Użytkownik został wyłączony, a flaga zignorowana."
+      unsilence_user:
+        title: "Autor bez wyciszenia"
+        description: "Zakończ wyciszenie autora. Ta flaga pozostaje w kolejce."
+        complete: "Autor już nie jest wyciszony."
       approve:
         title: "Tak"
         complete: "Post zatwierdzony."
@@ -6183,30 +6240,6 @@ pl_PL:
       approve_and_unhide:
         title: "Tak"
         complete: "Post zatwierdzony i nieukryty"
-      post_actions:
-        bundle_title: "Co chcesz zrobić z tym wpisem?"
-      delete_post:
-        title: "Usuń wpis"
-        description: "Usuń ten wpis"
-        complete: "Wpis usunięty"
-      hide_post:
-        title: "Ukryj wpis"
-        description: "Ukryj ten wpis przed widokiem publicznym"
-        complete: "Wpis ukryty"
-      unhide_post:
-        title: "Odkryj wpis"
-        description: "Udostępnij ten wpis wszystkim użytkownikom"
-        complete: "Wpis nieukryty"
-      restore_post:
-        title: "Przywróć wpis"
-        description: "Przywróć ten usunięty wpis"
-        complete: "Wpis przywrócony"
-      edit_post:
-        title: "Edytuj wpis"
-        description: "Edytuj treść tego wpisu"
-        complete: "Wpis edytowany"
-      user_actions:
-        bundle_title: "Co chcesz zrobić z użytkownikiem?"
       silence_user:
         title: "Wycisz użytkownika"
         description: "Zablokuj użytkownikowi możliwość publikowania lub wysyłania wiadomości"

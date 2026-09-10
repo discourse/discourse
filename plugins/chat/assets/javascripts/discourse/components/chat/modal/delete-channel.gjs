@@ -73,38 +73,38 @@ export default class ChatModalDeleteChannel extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-delete-channel"
-      @inline={{@inline}}
-      @title={{i18n "chat.channel_delete.title"}}
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType={{this.flashType}}
+      @inline={{@inline}}
+      @title={{i18n "chat.channel_delete.title"}}
     >
       <:body>
         <p class="chat-modal-delete-channel__instructions">
           {{this.instructionsText}}
         </p>
         <input
+          autocapitalize="off"
+          autocorrect="off"
+          id="channel-delete-confirm-name"
+          placeholder={{i18n "chat.channel_delete.confirm_channel_name"}}
+          type="text"
           {{on
             "input"
             (withEventValue (fn (mut this.channelNameConfirmation)))
           }}
-          id="channel-delete-confirm-name"
-          placeholder={{i18n "chat.channel_delete.confirm_channel_name"}}
-          autocorrect="off"
-          autocapitalize="off"
-          type="text"
         />
       </:body>
       <:footer>
         <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.deleteChannel}}
-          @label="chat.channel_delete.confirm"
-          id="chat-confirm-delete-channel"
           class="btn-danger"
+          id="chat-confirm-delete-channel"
+          @action={{this.deleteChannel}}
+          @disabled={{this.buttonDisabled}}
+          @label="chat.channel_delete.confirm"
         />
-        <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
+        <DButton class="btn-flat" @action={{@closeModal}} @label="cancel" />
       </:footer>
     </DModal>
   </template>

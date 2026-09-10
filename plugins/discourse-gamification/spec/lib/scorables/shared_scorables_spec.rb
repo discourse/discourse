@@ -33,6 +33,7 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
   describe "updates gamification score" do
     let!(:create_score) { class_action_fabricator }
     let!(:trigger_after_create_hook) { after_create_hook }
+
     before { DiscourseGamification::LeaderboardCachedView.create_all }
 
     it "#{described_class} updates scores for action in the category configured" do

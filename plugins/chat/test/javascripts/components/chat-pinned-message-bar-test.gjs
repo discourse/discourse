@@ -194,8 +194,8 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       <template>
         <ChatPinnedMessageBar
           @channel={{this.channel}}
-          @onJumpToMessage={{this.noop}}
           @hiddenMessageIds={{this.hiddenMessageIds}}
+          @onJumpToMessage={{this.noop}}
         />
       </template>
     );
@@ -219,8 +219,8 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       <template>
         <ChatPinnedMessageBar
           @channel={{this.channel}}
-          @onJumpToMessage={{this.noop}}
           @hiddenMessageIds={{this.hiddenMessageIds}}
+          @onJumpToMessage={{this.noop}}
         />
       </template>
     );

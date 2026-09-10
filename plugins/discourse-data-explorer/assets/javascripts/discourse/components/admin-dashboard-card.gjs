@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { i18n } from "discourse-i18n";
-import { chartability, looksLikeDate } from "../lib/chart-helpers";
+import { chartability, chartDatasets, hasDates } from "../lib/chart-helpers";
 import DataExplorerChart from "./data-explorer-chart";
 
 export default class DataExplorerAdminDashboardCard extends Component {
@@ -16,6 +17,7 @@ export default class DataExplorerAdminDashboardCard extends Component {
     return this.columns.map((col) => col.replaceAll("_", " "));
   }
 
+  @cached
   get chartability() {
     return chartability(this.args.payload);
   }
@@ -24,8 +26,9 @@ export default class DataExplorerAdminDashboardCard extends Component {
     return this.columns.length === 2 && this.chartability.chartable;
   }
 
+  @cached
   get hasDates() {
-    return this.rows.length > 0 && looksLikeDate(String(this.rows[0][0]));
+    return hasDates(this.rows);
   }
 
   get chartType() {
@@ -44,10 +47,11 @@ export default class DataExplorerAdminDashboardCard extends Component {
   }
 
   get chartDatasets() {
-    return this.chartability.numericIndices.map((colIdx) => ({
-      label: this.columnLabels[colIdx],
-      values: this.rows.map((row) => Number(row[colIdx])),
-    }));
+    return chartDatasets(
+      this.rows,
+      this.chartability.numericIndices,
+      this.columnLabels
+    );
   }
 
   <template>
@@ -55,9 +59,9 @@ export default class DataExplorerAdminDashboardCard extends Component {
       {{#if this.rows.length}}
         {{#if this.isChartable}}
           <DataExplorerChart
-            @labels={{this.chartLabels}}
-            @datasets={{this.chartDatasets}}
             @chartType={{this.chartType}}
+            @datasets={{this.chartDatasets}}
+            @labels={{this.chartLabels}}
             @stacked={{this.isStacked}}
           />
         {{else}}

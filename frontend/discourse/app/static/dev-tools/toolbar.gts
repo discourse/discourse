@@ -67,9 +67,9 @@ export default class Toolbar extends Component {
       {{dOnResize this.onResize}}
     >
       <button
-        type="button"
-        title={{i18n "dev_tools.drag_to_move"}}
         class="gripper"
+        title={{i18n "dev_tools.drag_to_move"}}
+        type="button"
         {{! An interrupted drag leaves the toolbar where it was dragged to,
             rather than snapping back to where the grab started. }}
         {{dPointerDrag
@@ -86,9 +86,9 @@ export default class Toolbar extends Component {
         <tool.component />
       {{/each}}
       <button
-        type="button"
-        title={{i18n "dev_tools.disable_dev_tools"}}
         class="disable-dev-tools"
+        title={{i18n "dev_tools.disable_dev_tools"}}
+        type="button"
         {{on "click" this.disableDevTools}}
       >
         {{dIcon "xmark"}}

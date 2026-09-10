@@ -57,7 +57,7 @@ export default class SearchResultEntry extends Component {
       @outletArgs={{lazyHash post=this.post}}
     >
       <div class="author">
-        <a href={{this.post.userPath}} data-user-card={{this.post.username}}>
+        <a data-user-card={{this.post.username}} href={{this.post.userPath}}>
           {{dAvatar this.post imageSize="large"}}
         </a>
       </div>
@@ -69,23 +69,23 @@ export default class SearchResultEntry extends Component {
 
         {{#if this.bulkSelectEnabled}}
           <TrackSelected
-            @selectedList={{this.selected}}
-            @selectedId={{this.post}}
             class="bulk-select"
+            @selectedId={{this.post}}
+            @selectedList={{this.selected}}
           />
         {{/if}}
 
         <a
-          href={{this.post.url}}
-          {{on "click" (fn this.logClick this.post.topic_id)}}
-          class="search-link{{if this.post.topic.visited ' visited'}}"
-          role="heading"
           aria-level="2"
+          class="search-link{{if this.post.topic.visited ' visited'}}"
+          href={{this.post.url}}
+          role="heading"
+          {{on "click" (fn this.logClick this.post.topic_id)}}
         >
           <TopicStatus
-            @topic={{this.post.topic}}
             @disableActions={{true}}
             @showPrivateMessageIcon={{this.shouldShowPrivateMessageIcon}}
+            @topic={{this.post.topic}}
           />
 
           <span class="topic-title">
@@ -113,8 +113,8 @@ export default class SearchResultEntry extends Component {
           {{/if}}
           <span>
             <PluginOutlet
-              @name="full-page-search-category"
               @connectorTagName="div"
+              @name="full-page-search-category"
               @outletArgs={{lazyHash post=this.post}}
             />
           </span>

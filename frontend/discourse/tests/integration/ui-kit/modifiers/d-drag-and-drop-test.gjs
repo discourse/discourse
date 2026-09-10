@@ -1862,7 +1862,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           <template>
             <div id="row" {{dDragAndDropSource type="row"}}>
               row
-              <a id="link" href="/somewhere">link</a>
+              <a href="/somewhere" id="link">link</a>
             </div>
           </template>
         );
@@ -1898,8 +1898,8 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
           >
             <button
               id="grip"
-              type="button"
               style="width: 30px"
+              type="button"
               {{didInsert state.captureHandle}}
             >grip</button>
           </div>
@@ -2984,9 +2984,9 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         await render(
           <template>
             <div
-              id="tgt"
               class="positioned --drag-above"
               data-drop-target
+              id="tgt"
             >tgt</div>
           </template>
         );
@@ -3001,7 +3001,7 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
       test("a drop target that positions nothing still gets the containing block the line needs", async function (assert) {
         await render(
           <template>
-            <div id="tgt" class="--drag-above" data-drop-target>tgt</div>
+            <div class="--drag-above" data-drop-target id="tgt">tgt</div>
           </template>
         );
 
@@ -3364,5 +3364,96 @@ module("Integration | ui-kit | Modifier | dragAndDrop", function (hooks) {
         "and is still told the drag arrived, so it can draw it"
       );
     });
+  });
+
+  // Authored as the independent oracle for the clear-before-measure ordering in
+  // the kernel's `onDrop`. The assertion compares the position the target was
+  // PAINTING at the moment of release against the one the consumer is handed,
+  // so it needs no prediction of which way the mismatch falls.
+  module("drop position layout oracle", function (oracleHooks) {
+    let consumerSheet;
+
+    oracleHooks.afterEach(function () {
+      consumerSheet?.remove();
+      consumerSheet = null;
+    });
+
+    /**
+     * Gives the indicator classes a layout effect, which core's own stylesheet
+     * deliberately avoids. A consumer is free to do this, and it is what makes
+     * the ordering observable: clearing the class resizes the element that the
+     * drop position is then measured against.
+     */
+    function styleIndicatorWithLayout() {
+      consumerSheet = document.createElement("style");
+      consumerSheet.textContent = `
+        .oracle-target { height: 60px; }
+        .oracle-target.--drag-above { padding-block-start: 120px; }
+        .oracle-target.--drag-below { padding-block-end: 120px; }
+      `;
+      document.head.appendChild(consumerSheet);
+    }
+
+    /** The position the target is painting right now, read from its classes. */
+    function paintedPosition() {
+      const target = find("#tgt");
+      if (target.classList.contains("--drag-above")) {
+        return "before";
+      }
+      return target.classList.contains("--drag-below") ? "after" : null;
+    }
+
+    for (const [label, grip] of [
+      ["above its midpoint", 0.25],
+      ["below its midpoint", 0.75],
+    ]) {
+      test(`drop position layout oracle: a release ${label} reports the position it painted`, async function (assert) {
+        styleIndicatorWithLayout();
+
+        const drops = [];
+        const onDrop = ({ position }) => drops.push(position);
+
+        await render(
+          <template>
+            <div id="src" {{dDragAndDropSource type="row"}}>src</div>
+            <div
+              class="oracle-target"
+              id="tgt"
+              {{dDragAndDropTarget accepts="row" onDrop=onDrop}}
+            >tgt</div>
+          </template>
+        );
+
+        const dataTransfer = new DataTransfer();
+        // Taken before anything is painted, and reused for the release, so the
+        // pointer is provably stationary across the hover and the drop.
+        const rect = find("#tgt").getBoundingClientRect();
+        const coordinates = {
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height * grip,
+        };
+
+        await startDrag("#src", {
+          dataTransfer,
+          coordinates: centerOf("#src"),
+        });
+        await dragOver("#tgt", { dataTransfer, coordinates });
+
+        const painted = paintedPosition();
+        assert.notStrictEqual(
+          painted,
+          null,
+          "the target is painting a position before release"
+        );
+
+        await dragEvent("#tgt", "drop", { dataTransfer, ...coordinates });
+
+        assert.deepEqual(
+          drops,
+          [painted],
+          "onDrop receives the position painted immediately before release"
+        );
+      });
+    }
   });
 });

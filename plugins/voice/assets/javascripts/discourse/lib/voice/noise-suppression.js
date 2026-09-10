@@ -194,6 +194,40 @@ export default class NoiseSuppressionManager {
     return destination.stream;
   }
 
+  teardown() {
+    this.#epoch++;
+    this.#abortReady?.();
+
+    if (this.#source) {
+      try {
+        this.#source.disconnect();
+      } catch {
+        // ignore
+      }
+      this.#source = null;
+    }
+
+    if (this.#node) {
+      this.#node.port.onmessage = null;
+      try {
+        this.#node.disconnect();
+      } catch {
+        // ignore
+      }
+      this.#node = null;
+    }
+
+    if (this.#context) {
+      this.#context.onstatechange = null;
+      try {
+        this.#context.close();
+      } catch {
+        // ignore
+      }
+      this.#context = null;
+    }
+  }
+
   #awaitReady(workletNode, assets, superseded) {
     return new Promise((resolve, reject) => {
       let timer = null;
@@ -233,39 +267,5 @@ export default class NoiseSuppressionManager {
         Object.values(payload)
       );
     });
-  }
-
-  teardown() {
-    this.#epoch++;
-    this.#abortReady?.();
-
-    if (this.#source) {
-      try {
-        this.#source.disconnect();
-      } catch {
-        // ignore
-      }
-      this.#source = null;
-    }
-
-    if (this.#node) {
-      this.#node.port.onmessage = null;
-      try {
-        this.#node.disconnect();
-      } catch {
-        // ignore
-      }
-      this.#node = null;
-    }
-
-    if (this.#context) {
-      this.#context.onstatechange = null;
-      try {
-        this.#context.close();
-      } catch {
-        // ignore
-      }
-      this.#context = null;
-    }
   }
 }

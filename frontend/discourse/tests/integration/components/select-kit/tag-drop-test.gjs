@@ -37,8 +37,8 @@ module("Integration | Component | SelectKit | TagDrop", function (hooks) {
       <template>
         <TagDrop
           @currentCategory={{category}}
-          @tag={{hash id=1 name="jeff"}}
           @options={{hash}}
+          @tag={{hash id=1 name="jeff"}}
         />
       </template>
     );

@@ -30,13 +30,13 @@ export default <template>
             "user.email_messages_level"
           }}</label>
         <ComboBox
-          @valueProperty="value"
           @content={{@controller.emailLevelOptions}}
-          @value={{@controller.model.user_option.email_messages_level}}
           @id="user-email-messages-level"
           @onChange={{fn
             (mut @controller.model.user_option.email_messages_level)
           }}
+          @value={{@controller.model.user_option.email_messages_level}}
+          @valueProperty="value"
         />
         {{#if @controller.emailMessagesLevelAway}}
           <div
@@ -51,11 +51,11 @@ export default <template>
       >
         <label for="user-email-level">{{i18n "user.email_level.title"}}</label>
         <ComboBox
-          @valueProperty="value"
           @content={{@controller.emailLevelOptions}}
-          @value={{@controller.model.user_option.email_level}}
           @id="user-email-level"
           @onChange={{fn (mut @controller.model.user_option.email_level)}}
+          @value={{@controller.model.user_option.email_level}}
+          @valueProperty="value"
         />
         {{#if @controller.emailLevelAway}}
           <div
@@ -70,24 +70,24 @@ export default <template>
       >
         <label>{{i18n "user.email_previous_replies.title"}}</label>
         <ComboBox
-          @valueProperty="value"
           @content={{@controller.previousRepliesOptions}}
-          @value={{@controller.model.user_option.email_previous_replies}}
           @onChange={{fn
             (mut @controller.model.user_option.email_previous_replies)
           }}
+          @value={{@controller.model.user_option.email_previous_replies}}
+          @valueProperty="value"
         />
       </div>
       <PreferenceCheckbox
         data-setting-name="user-email-in-reply-to"
-        @labelKey="user.email_in_reply_to"
         @checked={{@controller.model.user_option.email_in_reply_to}}
+        @labelKey="user.email_in_reply_to"
       />
 
       <span>
         <PluginOutlet
-          @name="user-preferences-emails-pref-email-settings"
           @connectorTagName="div"
+          @name="user-preferences-emails-pref-email-settings"
           @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
         />
       </span>
@@ -100,9 +100,9 @@ export default <template>
           }}</label>
         <PreferenceCheckbox
           data-setting-name="user-email-digests"
-          @labelKey="user.email_digests.title"
-          @disabled={{@controller.model.user_option.mailing_list_mode}}
           @checked={{@controller.model.user_option.email_digests}}
+          @disabled={{@controller.model.user_option.mailing_list_mode}}
+          @labelKey="user.email_digests.title"
         />
         {{#if @controller.model.user_option.email_digests}}
           <div
@@ -110,20 +110,20 @@ export default <template>
             data-setting-name="user-email-digests-frequency"
           >
             <ComboBox
-              @valueProperty="value"
               @content={{@controller.digestFrequencies}}
-              @value={{@controller.model.user_option.digest_after_minutes}}
               @onChange={{fn
                 (mut @controller.model.user_option.digest_after_minutes)
               }}
               @options={{hash filterable=true}}
+              @value={{@controller.model.user_option.digest_after_minutes}}
+              @valueProperty="value"
             />
           </div>
           <PreferenceCheckbox
             data-setting-name="user-include-tl0-in-digests"
-            @labelKey="user.include_tl0_in_digests"
-            @disabled={{@controller.model.user_option.mailing_list_mode}}
             @checked={{@controller.model.user_option.include_tl0_in_digests}}
+            @disabled={{@controller.model.user_option.mailing_list_mode}}
+            @labelKey="user.include_tl0_in_digests"
           />
         {{/if}}
       </div>
@@ -136,8 +136,8 @@ export default <template>
           }}</label>
         <PreferenceCheckbox
           data-setting-name="user-mailing-list-mode-enabled"
-          @labelKey="user.mailing_list_mode.enabled"
           @checked={{@controller.model.user_option.mailing_list_mode}}
+          @labelKey="user.mailing_list_mode.enabled"
         />
         <div class="instructions">
           {{trustHTML (i18n "user.mailing_list_mode.instructions")}}
@@ -148,12 +148,12 @@ export default <template>
             data-setting-name="user-mailing-list-mode-options"
           >
             <ComboBox
-              @valueProperty="value"
               @content={{@controller.mailingListModeOptions}}
-              @value={{@controller.model.user_option.mailing_list_mode_frequency}}
               @onChange={{fn
                 (mut @controller.model.user_option.mailing_list_mode_frequency)
               }}
+              @value={{@controller.model.user_option.mailing_list_mode_frequency}}
+              @valueProperty="value"
             />
           </div>
         {{/if}}
@@ -162,8 +162,8 @@ export default <template>
 
     <span>
       <PluginOutlet
-        @name="user-preferences-emails"
         @connectorTagName="div"
+        @name="user-preferences-emails"
         @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
       />
     </span>
@@ -172,15 +172,15 @@ export default <template>
 
     <span>
       <PluginOutlet
-        @name="user-custom-controls"
         @connectorTagName="div"
+        @name="user-custom-controls"
         @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
 
     <DSaveControls
-      @model={{@controller.model}}
       @action={{@controller.save}}
+      @model={{@controller.model}}
       @saved={{@controller.saved}}
     />
   </PluginOutlet>

@@ -112,10 +112,10 @@ module("Integration | ui-kit | DVirtualList | follow", function (hooks) {
           }
         </style>
         <DVirtualList
+          @anchor="bottom"
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @anchor="bottom"
           @overscan={{0}}
           as |item|
         >
@@ -146,10 +146,10 @@ module("Integration | ui-kit | DVirtualList | follow", function (hooks) {
           }
         </style>
         <DVirtualList
+          @anchor="bottom"
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @anchor="bottom"
           @overscan={{0}}
           as |item|
         >
@@ -194,10 +194,10 @@ module("Integration | ui-kit | DVirtualList | follow", function (hooks) {
           }
         </style>
         <DVirtualList
+          @anchor="bottom"
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @anchor="bottom"
           @overscan={{0}}
           as |item|
         >
@@ -234,12 +234,12 @@ module("Integration | ui-kit | DVirtualList | follow", function (hooks) {
           }
         </style>
         <DVirtualList
+          @anchor="bottom"
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @anchor="bottom"
-          @scrollEndThreshold={{50}}
           @overscan={{0}}
+          @scrollEndThreshold={{50}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -275,10 +275,10 @@ module("Integration | ui-kit | DVirtualList | follow", function (hooks) {
           }
         </style>
         <DVirtualList
+          @anchor="bottom"
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
-          @anchor="bottom"
           @overscan={{0}}
           as |item|
         >
@@ -314,9 +314,9 @@ module("Integration | ui-kit | DVirtualList | follow", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @overscan={{0}}
           as |item|
         >

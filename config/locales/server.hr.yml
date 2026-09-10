@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hr:
+  mcp:
+    oauth:
+      deny: "Odbiti"
+      approve: "Odobriti"
   llms_txt:
     sections:
       optional: "Neobvezno"
@@ -2760,6 +2764,11 @@ hr:
       long_description: |
         Ova značka se dodjeljuje za posjet 100 uzastopnih dana. To je više od tri mjeseca!
     badge_title_metadata: "%{display_name} značka na %{site_title}"
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosom."
+      few: "Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosa."
+      other: "Previše unosa u CSV datoteci. Molimo vas da dostavite CSV datoteku s najviše %{count} unosa."
   tags:
     title: "Oznake"
   finish_installation:
@@ -2881,9 +2890,6 @@ hr:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        title: "Izbrišite objavu"
-        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "korisnik"

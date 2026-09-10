@@ -46,6 +46,43 @@ RSpec.describe InvitesController do
       end
     end
 
+    it "does not treat a legacy email token as verification when invite codes are enabled" do
+      SiteSetting.enable_local_logins_via_code = true
+      user_field = Fabricate(:user_field)
+      staged_user = Fabricate(:user, staged: true, email: invite.email)
+      staged_user.set_user_field(user_field.id, "private value")
+      staged_user.save_custom_fields
+
+      get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
+        invite_info = JSON.parse(json["invite_info"])
+        expect(invite_info["email"]).to eq("i*****g@a***********e.ooo")
+        expect(invite_info["email_verified_by_link"]).to eq(false)
+        expect(invite_info["username"]).not_to eq(staged_user.username)
+        expect(invite_info["user_fields"]).to be_nil
+      end
+    end
+
+    %i[enable_local_logins enable_local_logins_via_email].each do |setting|
+      it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.public_send("#{setting}=", false)
+        SiteSetting.enable_google_oauth2_logins = true
+
+        get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          invite_info = JSON.parse(JSON.parse(element.current_scope.text)["invite_info"])
+          expect(invite_info["email"]).to eq(invite.email)
+          expect(invite_info["email_verified_by_link"]).to eq(true)
+        end
+      end
+    end
+
     context "when email data is present in authentication data" do
       before { server_session[:authentication] = { email: invite.email } }
 
@@ -412,7 +449,7 @@ RSpec.describe InvitesController do
     context "with invite to topic" do
       fab!(:topic)
 
-      it "works" do
+      it "enqueues an email invitation to the topic" do
         sign_in(user)
 
         post "/invites.json",
@@ -571,7 +608,7 @@ RSpec.describe InvitesController do
       context "when validations fail" do
         let(:email) { "test@mailinator.com" }
 
-        it "fails" do
+        it "returns validation errors for a blocked email domain" do
           create_invite
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
@@ -581,7 +618,7 @@ RSpec.describe InvitesController do
       context "when email address is too long" do
         let(:email) { "a" * 495 + "@example.com" }
 
-        it "fails" do
+        it "returns a validation error for an excessively long email address" do
           create_invite
           expect(response).to have_http_status :unprocessable_entity
           expect(response.parsed_body["errors"]).to be_present
@@ -618,7 +655,7 @@ RSpec.describe InvitesController do
     end
 
     context "with domain invite" do
-      it "works" do
+      it "creates a domain invitation" do
         sign_in(admin)
 
         post "/invites.json", params: { domain: "example.com" }
@@ -912,7 +949,7 @@ RSpec.describe InvitesController do
     end
 
     context "with link invite" do
-      it "works" do
+      it "creates a single-use link invitation without an email" do
         sign_in(admin)
 
         post "/invites.json"
@@ -1006,7 +1043,7 @@ RSpec.describe InvitesController do
     context "with invite to topic" do
       fab!(:topic)
 
-      it "works" do
+      it "enqueues topic invitation emails through the multiple-invite endpoint" do
         sign_in(admin)
 
         post "/invites/create-multiple.json",
@@ -1314,6 +1351,38 @@ RSpec.describe InvitesController do
   end
 
   describe "#perform_accept_invitation" do
+    context "when anonymous invite acceptance uses email codes" do
+      fab!(:invite)
+
+      before { SiteSetting.enable_local_logins_via_code = true }
+
+      it "accepts the legacy form when email login is disabled after enabling codes" do
+        SiteSetting.enable_local_logins_via_email = false
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email_token: invite.email_token,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload).to be_redeemed
+        expect(session[:current_user_id]).to eq(User.find_by_email(invite.email).id)
+      end
+
+      it "does not allow the legacy password acceptance endpoint" do
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email_token: invite.email_token,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(404)
+        expect(invite.reload).not_to be_redeemed
+        expect(User.find_by_email(invite.email)).to be_nil
+      end
+    end
+
     context "with an invalid invite" do
       it "redirects to the root" do
         put "/invites/show/doesntexist.json"
@@ -1477,7 +1546,7 @@ RSpec.describe InvitesController do
           OmniAuth.config.test_mode = false
         end
 
-        it "should associate the invited user with authenticator records" do
+        it "associates the invited user with authenticator records" do
           SiteSetting.auth_overrides_name = true
           invite.update!(email: authenticated_email)
 
@@ -1491,7 +1560,8 @@ RSpec.describe InvitesController do
           expect(user.user_associated_accounts.first.provider_name).to eq("google_oauth2")
         end
 
-        it "returns the right response even if local logins has been disabled" do
+        it "accepts external authentication when local logins are disabled after enabling codes" do
+          SiteSetting.enable_local_logins_via_code = true
           SiteSetting.enable_local_logins = false
           invite.update!(email: authenticated_email)
 

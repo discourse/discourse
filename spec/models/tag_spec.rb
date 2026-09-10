@@ -4,6 +4,7 @@ RSpec.describe Tag do
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
+
   fab!(:user)
 
   before do
@@ -12,7 +13,7 @@ RSpec.describe Tag do
   end
 
   describe "Associations" do
-    it "should delete associated sidebar_section_links when tag is destroyed" do
+    it "deletes associated sidebar_section_links when the tag is destroyed" do
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
       tag_sidebar_section_link_2 =
         Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
@@ -263,9 +264,20 @@ RSpec.describe Tag do
       it "returns original name when tag is in user locale" do
         SiteSetting.content_localization_enabled = true
         I18n.locale = "en"
+        Fabricate(:tag_localization, tag: localized_tag, locale: "en", name: "felines")
 
         expect(Tag.top_tags).to include(
           { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+        )
+      end
+
+      it "returns original name when the tag source locale is missing" do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "ja"
+        localized_tag.update!(locale: nil)
+
+        expect(Tag.top_tags).to contain_exactly(
+          { id: localized_tag.id, name: localized_tag.name, slug: localized_tag.slug },
         )
       end
 
@@ -361,7 +373,7 @@ RSpec.describe Tag do
   end
 
   describe ".ensure_consistency!" do
-    it "should exclude private message topics" do
+    it "excludes private-message topics" do
       topic
       Fabricate(:private_message_topic, tags: [tag])
       Tag.ensure_consistency!
@@ -370,7 +382,7 @@ RSpec.describe Tag do
       expect(tag.public_topic_count).to eq(1)
     end
 
-    it "should update Tag#topic_count and Tag#public_topic_count correctly" do
+    it "updates Tag#topic_count and Tag#public_topic_count correctly" do
       tag = Fabricate(:tag, name: "tag1")
       tag2 = Fabricate(:tag, name: "tag2")
       tag3 = Fabricate(:tag, name: "tag3")

@@ -16,6 +16,14 @@ fi:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Kysy tekoälyltä"
+        ask_ai:
+          title: "Kysy tekoälyltä"
+          date: "Päivämäärä"
+          outcomes:
+            failed: "Epäonnistui"
         emotion:
           title: "Tunne"
         reports:

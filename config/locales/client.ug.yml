@@ -1028,6 +1028,9 @@ ug:
         note_added: "رىياسەتچى ئىزاھاتى"
         note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
         no_events: "كۆرسىتىدىغان ۋاقىت سىزىقى پائالىيىتى يوق"
+      author_penalty:
+        toast:
+          undo: "يېنىۋال"
       notes:
         add_note_description: "باشقا رىياسەتچىگە مەزمۇن تەمىنلەش ئۈچۈن خاتىرە قوشىدۇ."
         add_note_button: "ئىزاھات قوش"
@@ -1670,7 +1673,6 @@ ug:
       admin: "%{user} باشقۇرغۇچى"
       moderator_tooltip: "بۇ ئىشلەتكۈچى رىياسەتچى"
       admin_tooltip: "بۇ ئىشلەتكۈچى باشقۇرغۇچى"
-      silenced_tooltip: "بۇ ئىشلەتكۈچىنىڭ ئۈنى ئۆچۈرۈلگەن"
       suspended_notice: "بۇ ئىشلەتكۈچى %{date} غىچە ۋاقىتلىق چەكلەنگەن."
       suspended_permanently: "بۇ ئىشلەتكۈچى ۋاقىتلىق چەكلەنگەن."
       suspended_reason: "سەۋەبى: "
@@ -1729,6 +1731,16 @@ ug:
       tracked_topics_link: "كۆرسەت"
       automatically_unpin_topics: "ئاستىغا يەتكەندە تېمىنى ئۆزلۈكىدىن چوققىلاشتىن قالدۇرىدۇ"
       apps: "ئەپلەر"
+      mcp_authorizations:
+        endpoint: "مەنبە"
+        scopes: "دائىرىسى"
+        details: "تەپسىلاتى"
+        last_used: "ئاخىرقى ئىشلەتكەن ۋاقتى"
+        never: "ھەرگىز"
+        status: "ھالەت"
+        statuses:
+          active: "ئاكتىپ"
+          revoked: "بىكار قىلىندى"
       revoke_access: "زىيارەتنى بىكار قىل"
       undo_revoke_access: "زىيارەت بىكار قىلىشتىن يېنىۋال"
       api_approved: "تەستىقلاندى:"
@@ -5643,6 +5655,67 @@ ug:
           header_description: "بۇ يەردە مەزكۇر تور بېكەت ۋە قوشۇنىڭىز ھەققىدىكى ئۇچۇرلار تەمىنلىنىدۇ، شۇنداق بولغاندا كىشىلەر جامائىتىڭىز ۋە ئۇلارنىڭ ئارقىسىدىكىلەر ھەققىدىكى ئۇچۇرلارنى ھەمدە مەسىلە چىقسا سىز بىلەن قانداق ئالاقىلىشالايدىغانلىقىنى بىلەلەيدۇ. تور بېكىتىڭىزنىڭ <a href='%{basePath}/about'>ھەققىدە بېتى</a>دە كۆرۈنىدۇ."
         developer:
           title: "ئىجادكار"
+        mcp:
+          tabs:
+            access: "زىيارەت"
+            activity: "پائالىيەت"
+          overview:
+            status: "ھالەت"
+          access:
+            title: "زىيارەت"
+            group: "گۇرۇپپا"
+            groups: "گۇرۇپپا"
+            actions: "مەشغۇلات"
+            edit: "تەھرىر"
+            delete: "ئۆچۈر"
+          primitives:
+            group_by_options:
+              scope: "دائىرىسى"
+              kind: "تىپى"
+            kind: "تىپى"
+            scope: "دائىرىسى"
+            scopes: "دائىرىسى"
+          clients:
+            actions: "مەشغۇلات"
+            block: "توس"
+            presets:
+              custom: "ئىختىيارى"
+          authorizations:
+            user: "ئىشلەتكۈچى"
+            last_used: "ئاخىرقى ئىشلەتكەن ۋاقتى"
+            status: "ھالەت"
+            actions: "مەشغۇلات"
+          activity:
+            rate_limits: "باھا چېكى"
+            outcome: "نەتىجە"
+            time: "ۋاقىت"
+            user: "ئىشلەتكۈچى"
+            duration: "داۋاملىشىش ۋاقتى"
+          values:
+            server_status:
+              disabled: "چەكلەندى"
+            client_trust:
+              approved: "تەستىقلاندى"
+            authorization_status:
+              active: "ئاكتىپ"
+              revoked: "بىكار قىلىندى"
+            activity_outcome:
+              success: "مۇۋەپپەقىيەتلىك"
+              error: "خاتالىق"
+            primitive_state:
+              enabled: "قوزغىتىلدى"
+              disabled: "چەكلەندى"
+            primitive_kind:
+              all: "ھەممە تىپ"
+              resource: "مەنبە"
+            primitive_risk:
+              read: "پەقەت ئوقۇلىدۇ"
+              moderation: "رىياسەتچىلىك"
+            filter:
+              all: "ھەممىسى"
+          never: "ھەرگىز"
+          actions:
+            revoke: "بىكار قىل"
         experimental:
           title: "تەجرىبە"
           header_description: "تور بېكىتىڭىزنىڭ تەجرىبە خاراكتېرلىك ئىقتىدارىنى ئېچىپ ياكى تاقايدۇ، بۇلارنىڭ كۆپىچىسىنى گۇرۇپپا ئاساسىدا تىزگىنلىگىلى بولىدۇ."

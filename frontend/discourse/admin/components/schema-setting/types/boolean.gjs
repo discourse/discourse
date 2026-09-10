@@ -11,7 +11,7 @@ export default class SchemaSettingTypeBoolean extends Component {
   }
 
   <template>
-    <Input @checked={{@value}} {{on "input" this.onInput}} @type="checkbox" />
+    <Input @checked={{@value}} @type="checkbox" {{on "input" this.onInput}} />
     <FieldInputDescription @description={{@description}} />
   </template>
 }

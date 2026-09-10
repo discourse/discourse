@@ -90,17 +90,17 @@ export default class PushNotificationSelect extends Component {
   <template>
     {{#if this.desktopNotifications.isNotSupported}}
       <DButton
+        class="btn-default"
+        @disabled="true"
         @icon="bell-slash"
         @label="user.desktop_notifications.not_supported"
-        @disabled="true"
-        class="btn-default"
       />
     {{else if this.desktopNotifications.isDeniedPermission}}
       <DButton
+        class="btn-default"
+        @disabled="true"
         @icon="bell-slash"
         @label="user.desktop_notifications.perm_denied_btn"
-        @disabled="true"
-        class="btn-default"
       />
       <span>
         {{i18n "user.desktop_notifications.perm_denied_expl"}}
@@ -110,11 +110,11 @@ export default class PushNotificationSelect extends Component {
           "user.desktop_notifications.push_level.title"
         }}</label>
       <ComboBox
-        @valueProperty="value"
-        @content={{this.content}}
-        @value={{this.value}}
-        @onChange={{this.onChange}}
         class="push-notification-select"
+        @content={{this.content}}
+        @onChange={{this.onChange}}
+        @value={{this.value}}
+        @valueProperty="value"
       />
     {{/if}}
   </template>

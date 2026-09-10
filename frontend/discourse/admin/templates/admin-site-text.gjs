@@ -4,15 +4,15 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.site_texts.title"}}
     @descriptionLabel={{i18n "admin.config.site_texts.header_description"}}
     @hideTabs={{true}}
+    @titleLabel={{i18n "admin.config.site_texts.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/customize/site_texts"
         @label={{i18n "admin.config.site_texts.title"}}
+        @path="/admin/customize/site_texts"
       />
     </:breadcrumbs>
   </DPageHeader>

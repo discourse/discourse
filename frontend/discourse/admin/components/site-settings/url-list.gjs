@@ -8,9 +8,9 @@ export default class UrlList extends Component {
   <template>
     <div ...attributes>
       <ValueList
+        @addKey="admin.site_settings.add_url"
         @disabled={{@disabled}}
         @values={{this.value}}
-        @addKey="admin.site_settings.add_url"
       />
     </div>
   </template>

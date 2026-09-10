@@ -105,24 +105,24 @@ export default class ManageableRowListItem extends Component {
       {{#if this.site.mobileView}}
         <div class="manageable-row-list__order-mobile">
           <DButton
-            @icon="arrow-up"
+            class="manageable-row-list__arrow btn-transparent"
             @action={{fn @onMoveUp @row}}
             @disabled={{eq @index 0}}
+            @icon="arrow-up"
             @translatedAriaLabel={{i18n
               (concat @ariaLabelPrefix ".move_up")
               title=@row.title
             }}
-            class="manageable-row-list__arrow btn-transparent"
           />
           <DButton
-            @icon="arrow-down"
+            class="manageable-row-list__arrow btn-transparent"
             @action={{fn @onMoveDown @row}}
             @disabled={{eq @index @lastEnabledIndex}}
+            @icon="arrow-down"
             @translatedAriaLabel={{i18n
               (concat @ariaLabelPrefix ".move_down")
               title=@row.title
             }}
-            class="manageable-row-list__arrow btn-transparent"
           />
         </div>
       {{/if}}
@@ -142,8 +142,6 @@ export default class ManageableRowListItem extends Component {
       </div>
 
       <DToggleSwitch
-        @state={{@row.enabled}}
-        disabled={{@toggleDisabled}}
         aria-label={{i18n
           (if
             @row.enabled
@@ -152,6 +150,8 @@ export default class ManageableRowListItem extends Component {
           )
           title=@row.title
         }}
+        disabled={{@toggleDisabled}}
+        @state={{@row.enabled}}
         {{on "click" (fn @onToggle @row)}}
       />
     </li>

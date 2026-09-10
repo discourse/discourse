@@ -73,9 +73,9 @@ module(
             }
           </style>
           <DVirtualList
+            @estimateSize={{state.estimate}}
             @items={{items}}
             @key="id"
-            @estimateSize={{state.estimate}}
             as |item|
           >
             <div class="row">{{item.text}}</div>

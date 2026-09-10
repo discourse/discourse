@@ -6,15 +6,15 @@ import topicFooterButtonsAnonymousSource from "../../examples/organisms/topic-fo
 
 export default <template>
   <StyleguideExample
-    @title="<TopicFooterButtons> - logged in"
     @code={{topicFooterButtonsSource}}
+    @title="<TopicFooterButtons> - logged in"
   >
     <TopicFooterButtonsExample @topic={{@dummy.topic}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<TopicFooterButtons> - anonymous"
     @code={{topicFooterButtonsAnonymousSource}}
+    @title="<TopicFooterButtons> - anonymous"
   >
     <div class="styleguide-anon">
       <TopicFooterButtonsAnonymousExample />

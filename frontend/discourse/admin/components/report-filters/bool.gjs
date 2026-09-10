@@ -21,8 +21,8 @@ export default class Bool extends FilterComponent {
   <template>
     <label class="chart__filter-label checkbox-label">
       <Input
-        @type="checkbox"
         @checked={{this.checked}}
+        @type="checkbox"
         {{on "click" this.onChange}}
       />
       {{i18n

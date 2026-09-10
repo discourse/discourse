@@ -738,6 +738,9 @@ be:
         reviewable_ai_post:
           noun: "пост"
       user_label: "Карыстальнік"
+      author_penalty:
+        toast:
+          undo: "Адрабіць"
       notes:
         delete: "выдаляць"
       topic_label: "Тэма"
@@ -992,6 +995,12 @@ be:
       users: "Карыстальнікі"
       muted_users: "Адключаныя"
       apps: "Праграмы"
+      mcp_authorizations:
+        details: "Падрабязнасці"
+        never: "Ніколі"
+        status: "Статус"
+        statuses:
+          active: "Актыўныя"
       api_approved: "Ухвалена:"
       api_expires_never: "ніколі"
       theme: "Тэма"
@@ -2120,6 +2129,51 @@ be:
       config:
         developer:
           title: "Распрацоўшчык"
+        mcp:
+          tabs:
+            access: "Доступ"
+            activity: "актыўнасць"
+          overview:
+            status: "Статус"
+          access:
+            title: "Доступ"
+            group: "Група"
+            groups: "Груп"
+            actions: "Дзеянні"
+            edit: "Рэдагаваць"
+            delete: "Выдаліць"
+          primitives:
+            group_by_options:
+              kind: "Тып"
+            kind: "Тып"
+          clients:
+            actions: "Дзеянні"
+            block: "Заблакіраваць"
+          authorizations:
+            user: "Карыстальнік"
+            status: "Статус"
+            actions: "Дзеянні"
+          activity:
+            user: "Карыстальнік"
+          values:
+            server_status:
+              disabled: "Адключаныя"
+            client_trust:
+              approved: "Ухвалены"
+            authorization_status:
+              active: "Актыўныя"
+            activity_outcome:
+              success: "Поспех"
+              error: "памылка"
+            primitive_state:
+              disabled: "Адключаныя"
+            primitive_risk:
+              moderation: "Мадэрацыя"
+            filter:
+              all: "Усе"
+          never: "Ніколі"
+          actions:
+            revoke: "Адклікаць"
         emojis:
           title: "Эмодзі"
         flags:

@@ -15,7 +15,9 @@ export default class TagSettingsLocalizations extends Component {
         (obj) => obj.value
       );
     const committed = (this.args.localizations || []).map((obj) => obj.locale);
-    const allLocales = uniqueItemsFromArray([...supported, ...committed]);
+    const allLocales = uniqueItemsFromArray(
+      [...supported, ...committed, this.args.locale].filter(Boolean)
+    );
 
     return allLocales.map((value) => ({
       name: this.languageNameLookup.getLanguageName(value),
@@ -24,91 +26,107 @@ export default class TagSettingsLocalizations extends Component {
   }
 
   <template>
-    {{#if (eq @localizations.length 0)}}
-      <@form.Alert @icon="circle-info">
-        {{i18n "tagging.localization.hint"}}
-      </@form.Alert>
-    {{/if}}
+    <@form.Field
+      @description={{i18n "tagging.localization.language_description"}}
+      @name="locale"
+      @title={{i18n "tagging.localization.language"}}
+      @type="select"
+      as |field|
+    >
+      <field.Control as |select|>
+        {{#each this.selectableLocales as |locale|}}
+          <select.Option @value={{locale.value}}>{{locale.name}}</select.Option>
+        {{/each}}
+      </field.Control>
+    </@form.Field>
 
-    {{#if @localizations.length}}
-      <@form.Collection @name="localizations" as |collection index|>
-        <collection.Field
-          @name="tag_id"
-          @type="input-hidden"
-          @title="tag_id"
-          @showTitle={{false}}
-          @disabled={{true}}
-          as |field|
-        >
-          <field.Control @value={{@tagId}} />
-        </collection.Field>
+    <@form.Section @title={{i18n "tagging.settings.localizations"}}>
+      {{#if (eq @localizations.length 0)}}
+        <@form.Alert @icon="circle-info">
+          {{i18n "tagging.localization.hint"}}
+        </@form.Alert>
+      {{/if}}
 
-        <@form.Row as |row|>
-          <row.Col @size={{2}}>
-            <collection.Field
-              @name="locale"
-              @type="select"
-              @title={{i18n "tagging.localization.locale"}}
-              @validation="required"
-              as |field|
-            >
-              <field.Control as |select|>
-                {{#each this.selectableLocales as |locale|}}
-                  <select.Option
-                    @value={{locale.value}}
-                  >{{locale.name}}</select.Option>
-                {{/each}}
-              </field.Control>
-            </collection.Field>
-          </row.Col>
+      {{#if @localizations.length}}
+        <@form.Collection @name="localizations" as |collection index|>
+          <collection.Field
+            @disabled={{true}}
+            @name="tag_id"
+            @showTitle={{false}}
+            @title="tag_id"
+            @type="input-hidden"
+            as |field|
+          >
+            <field.Control @value={{@tagId}} />
+          </collection.Field>
 
-          <row.Col @size={{3}}>
-            <collection.Field
-              @name="name"
-              @type="input"
-              @title={{i18n "tagging.localization.name"}}
-              @validation="required|length:1,50"
-              as |field|
-            >
-              <field.Control
-                placeholder={{i18n "tagging.settings.name_placeholder"}}
-                @maxlength="50"
+          <@form.Row as |row|>
+            <row.Col @size={{2}}>
+              <collection.Field
+                @name="locale"
+                @title={{i18n "tagging.localization.locale"}}
+                @type="select"
+                @validation="required"
+                as |field|
+              >
+                <field.Control as |select|>
+                  {{#each this.selectableLocales as |locale|}}
+                    <select.Option
+                      @value={{locale.value}}
+                    >{{locale.name}}</select.Option>
+                  {{/each}}
+                </field.Control>
+              </collection.Field>
+            </row.Col>
+
+            <row.Col @size={{3}}>
+              <collection.Field
+                @name="name"
+                @title={{i18n "tagging.localization.name"}}
+                @type="input"
+                @validation="required|length:1,50"
+                as |field|
+              >
+                <field.Control
+                  placeholder={{i18n "tagging.settings.name_placeholder"}}
+                  @maxlength="50"
+                />
+              </collection.Field>
+            </row.Col>
+
+            <row.Col @size={{6}}>
+              <collection.Field
+                @name="description"
+                @title={{i18n "tagging.localization.description"}}
+                @type="composer"
+                @validation="length:0,1000"
+                as |field|
+              >
+                <field.Control @height={{120}} />
+              </collection.Field>
+            </row.Col>
+
+            <row.Col @size={{1}}>
+              <@form.Button
+                class="btn-danger"
+                @action={{fn collection.remove index}}
+                @icon="trash-can"
+                @title="tagging.localization.remove"
               />
-            </collection.Field>
-          </row.Col>
-
-          <row.Col @size={{6}}>
-            <collection.Field
-              @name="description"
-              @type="composer"
-              @title={{i18n "tagging.localization.description"}}
-              @validation="length:0,1000"
-              as |field|
-            >
-              <field.Control @height={{120}} />
-            </collection.Field>
-          </row.Col>
-
-          <row.Col @size={{1}}>
-            <@form.Button
-              class="btn-danger"
-              @icon="trash-can"
-              @title="tagging.localization.remove"
-              @action={{fn collection.remove index}}
-            />
-          </row.Col>
-        </@form.Row>
-      </@form.Collection>
-    {{/if}}
-    <@form.Button
-      class="btn-default"
-      @icon="plus"
-      @label="tagging.localization.add"
-      @action={{fn
-        @form.addItemToCollection
-        "localizations"
-        (hash tag_id=@tagId locale="" name="" description="")
-      }}
-    />
+            </row.Col>
+          </@form.Row>
+        </@form.Collection>
+      {{/if}}
+      <@form.Button
+        class="btn-default"
+        @action={{fn
+          @form.addItemToCollection
+          "localizations"
+          (hash tag_id=@tagId locale="" name="" description="")
+        }}
+        @icon="plus"
+        @label="tagging.localization.add"
+      />
+    </@form.Section>
   </template>
 }

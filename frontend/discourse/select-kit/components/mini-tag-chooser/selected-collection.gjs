@@ -49,11 +49,11 @@ export default class SelectedCollection extends Component {
       <div class="mini-tag-chooser-selected-collection selected-tags">
         {{#each this.tags as |tag|}}
           <DButton
-            @translatedTitle={{tag.value}}
-            @icon="xmark"
-            @action={{fn this.selectKit.deselect tag.value}}
-            tabindex="0"
             class={{tag.classNames}}
+            tabindex="0"
+            @action={{fn this.selectKit.deselect tag.value}}
+            @icon="xmark"
+            @translatedTitle={{tag.value}}
           >
             {{dDiscourseTag tag.value noHref=true}}
           </DButton>

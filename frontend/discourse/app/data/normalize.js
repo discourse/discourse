@@ -10,8 +10,11 @@ import { TopicDetailsSchema } from "discourse/data/schemas/topic-details";
 import { UserBadgeSchema } from "discourse/data/schemas/user-badge";
 import { badgeGroupingDisplayName } from "discourse/models/badge-grouping";
 
-function badgeResource(raw, includedIds) {
+function badgeResource(raw, includedIds, { grantsKnown = false } = {}) {
   const resource = resourceFrom("badge", BadgeSchema, raw);
+  if (grantsKnown) {
+    resource.attributes.has_badge = raw.has_badge ?? false;
+  }
   const relationships = {};
   maybeRelate(
     relationships,
@@ -47,15 +50,16 @@ function userBadgeResource(raw, lookup, includedIds) {
   const resource = resourceFrom("user-badge", UserBadgeSchema, raw);
   const { attributes } = resource;
   // Inline sideloads as plain objects so templates can read arbitrary fields
-  // without hitting LegacyMode's strict schema check on cached records.
-  if (raw.user_id != null) {
-    attributes.user = lookup.user(raw.user_id);
-  }
-  if (raw.granted_by_id != null) {
-    attributes.granted_by = lookup.user(raw.granted_by_id);
-  }
-  if (raw.topic_id != null) {
-    attributes.topic = lookup.topic(raw.topic_id);
+  // without hitting LegacyMode's strict schema check on cached records. Assign
+  // only what this payload sideloads, or a thinner endpoint clears the rest.
+  for (const [name, entry] of [
+    ["user", lookup.user(raw.user_id)],
+    ["granted_by", lookup.user(raw.granted_by_id)],
+    ["topic", lookup.topic(raw.topic_id)],
+  ]) {
+    if (entry) {
+      attributes[name] = entry;
+    }
   }
 
   const relationships = {};
@@ -88,11 +92,14 @@ export function normalizeBadgesPayload(payload) {
   collectBadgeMetaIncluded(payload, included);
   const includedIds = indexIncluded(included);
 
+  const opts = { grantsKnown: true };
   if (payload.badge) {
-    return { data: badgeResource(payload.badge, includedIds), included };
+    return { data: badgeResource(payload.badge, includedIds, opts), included };
   }
   return {
-    data: (payload.badges ?? []).map((raw) => badgeResource(raw, includedIds)),
+    data: (payload.badges ?? []).map((raw) =>
+      badgeResource(raw, includedIds, opts)
+    ),
     included,
   };
 }

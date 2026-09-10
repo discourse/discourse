@@ -3,9 +3,9 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import BufferedProxy from "discourse/lib/buffered-proxy";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteTextEdit extends Controller {
@@ -34,6 +34,14 @@ export default class AdminSiteTextEdit extends Controller {
   @computed("siteText.status")
   get isOutdated() {
     return this.siteText?.status === "outdated";
+  }
+
+  @computed("buffered.value", "siteText.interpolation_keys")
+  get interpolationKeysWithStatus() {
+    return computeInterpolationKeysWithStatus(
+      this.get("buffered.value"),
+      this.siteText.interpolation_keys
+    );
   }
 
   @action
@@ -123,13 +131,5 @@ export default class AdminSiteTextEdit extends Controller {
         this.siteText.set("status", "up_to_date");
       })
       .catch(popupAjaxError);
-  }
-
-  @computed("buffered.value", "siteText.interpolation_keys")
-  get interpolationKeysWithStatus() {
-    return computeInterpolationKeysWithStatus(
-      this.get("buffered.value"),
-      this.siteText.interpolation_keys
-    );
   }
 }

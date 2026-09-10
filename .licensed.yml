@@ -33,7 +33,6 @@ ignored:
     - pp # Ruby (default gem)
     - prettyprint # Ruby (default gem)
     - racc # Ruby (default gem)
-    - rchardet # LGPL
     - rdoc # Ruby (default gem)
     - reline # Ruby (default gem)
     - ruby2_keywords # Ruby (default gem)
@@ -46,6 +45,8 @@ ignored:
 reviewed:
   bundler:
     - activerecord # MIT
+    - anonymous_loader # MIT
+    - auth-sanitizer # MIT
     - benchmark # Ruby
     - coderay # MIT
     - concurrent-ruby # MIT
@@ -71,6 +72,9 @@ reviewed:
     - net-pop # Ruby (bundled gem)
     - net-smtp # Ruby (bundled gem)
     - nio4r # MIT + BSD
+    - oauth # MIT
+    - oauth2 # MIT
+    - oauth-tty # MIT
     - omniauth # MIT
     - pg # Ruby
     - pitchfork # Ruby or GPLv2/GPLv3

@@ -42,10 +42,10 @@ module("Integration | Component | BoardsColumn", function (hooks) {
       await render(
         <template>
           <BoardsColumn
-            @column={{this.column}}
             @board={{this.board}}
-            @canWrite={{false}}
             @canManage={{false}}
+            @canWrite={{false}}
+            @column={{this.column}}
             @linkedCardId={{this.linkedCardId}}
             @linkHighlightCardId={{this.linkHighlightCardId}}
           />

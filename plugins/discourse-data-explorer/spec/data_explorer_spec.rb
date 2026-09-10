@@ -76,7 +76,7 @@ describe DiscourseDataExplorer::DataExplorer do
   describe ".run_query" do
     fab!(:topic)
 
-    it "should run a query that includes PG template patterns" do
+    it "runs a query that includes PostgreSQL template patterns" do
       sql = <<~SQL
       WITH query AS (
         SELECT TO_CHAR(created_at, 'yyyy:mm:dd') AS date FROM topics
@@ -91,7 +91,7 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(result[:pg_result][0]["date"]).to eq(topic.created_at.strftime("%Y:%m:%d"))
     end
 
-    it "should run a query containing a question mark in the comment" do
+    it "runs a query containing a question mark in a comment" do
       sql = <<~SQL
       WITH query AS (
         SELECT id FROM topics -- some SQL ? comment ?
@@ -343,7 +343,8 @@ describe DiscourseDataExplorer::DataExplorer do
         SQL
         query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
         result = described_class.run_query(query)
-        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
         expect(colrender).to eq({ 1 => "json" })
       end
 
@@ -361,7 +362,8 @@ describe DiscourseDataExplorer::DataExplorer do
         SQL
         query = DiscourseDataExplorer::Query.create!(name: "some query", sql: sql)
         result = described_class.run_query(query)
-        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
         expect(colrender).to eq({ 1 => "json" })
       end
 
@@ -373,7 +375,8 @@ describe DiscourseDataExplorer::DataExplorer do
           )
         result = described_class.run_query(query)
 
-        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
 
         expect(colrender).to eq({ 0 => "json" })
       end
@@ -386,7 +389,8 @@ describe DiscourseDataExplorer::DataExplorer do
             SQL
         result = described_class.run_query(query)
 
-        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+        _, colrender =
+          DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result], guardian: nil)
 
         expect(colrender).to eq({ 0 => "json", 1 => "json" })
       end
@@ -401,9 +405,131 @@ describe DiscourseDataExplorer::DataExplorer do
             SQL
 
         pg_result = described_class.run_query(query)[:pg_result]
-        relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+        relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
 
         expect(relations[:topic].as_json.size).to eq(2)
+      end
+
+      it "does not rewrite fancy_title when serializing topic relations" do
+        Topic.where(id: topic.id).update_all(fancy_title: "sentinel")
+        query = Fabricate(:query, sql: "SELECT #{topic.id} AS topic_id")
+
+        relations, _ =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: nil,
+          )
+        relations[:topic].as_json
+
+        expect(Topic.where(id: topic.id).pick(:fancy_title)).to eq("sentinel")
+      end
+
+      it "classifies id columns" do
+        query = Fabricate(:query, sql: <<~SQL)
+          SELECT
+            1 AS "html$post_id",
+            1 AS user_badge_id,
+            1 AS group_user_id,
+            1 AS topic_user_id,
+            1 AS category_user_id,
+            1 AS topic_allowed_user_id,
+            1 AS topic_allowed_group_id,
+            1 AS associated_group_id,
+            1 AS watched_word_group_id,
+            1 AS badge_id,
+            1 AS card_image_badge_id,
+            1 AS acting_user_id,
+            1 AS topic_id,
+            1 AS tag_group_id,
+            1 AS quoted_post_id,
+            1 AS deleted_by_id,
+            1 AS last_editor_id,
+            1 AS group_id,
+            1 AS category_id,
+            1 AS "author$user_id"
+        SQL
+
+        relations, colrender =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: nil,
+          )
+
+        expect(colrender).to eq(
+          {
+            0 => :html,
+            9 => :badge,
+            10 => :badge,
+            11 => :user,
+            12 => :topic,
+            13 => :tag_group,
+            14 => :post,
+            15 => :user,
+            16 => :user,
+            17 => :group,
+            18 => :category,
+            19 => :user,
+          },
+        )
+        expect(relations.keys).not_to include(:group, :category)
+      end
+
+      it "reports relations hidden by the guardian" do
+        SiteSetting.detailed_404 = true
+        pm_post = Fabricate(:private_message_post)
+        pm = pm_post.topic
+        query =
+          Fabricate(
+            :query,
+            sql:
+              "SELECT #{pm.id} AS topic_id, #{pm_post.id} AS post_id, #{topic.id} AS other_topic_id",
+          )
+
+        relations, _, hidden =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: Fabricate(:user).guardian,
+          )
+
+        expect(hidden).to eq({ topic: [pm.id], post: [pm_post.id] })
+        expect(relations[:topic].as_json.map { |t| t[:id] }).to eq([topic.id])
+      end
+
+      it "does not report hidden relations when detailed 404s are disabled" do
+        SiteSetting.detailed_404 = false
+        pm_post = Fabricate(:private_message_post)
+        query =
+          Fabricate(:query, sql: "SELECT #{pm_post.topic_id} AS topic_id, #{pm_post.id} AS post_id")
+
+        relations, _, hidden =
+          described_class.add_extra_data(
+            described_class.run_query(query)[:pg_result],
+            guardian: Fabricate(:user).guardian,
+          )
+
+        expect(hidden).to eq({})
+        expect(relations[:post].as_json).to be_empty
+      end
+
+      it "resolves post visibility without a query per post" do
+        query_counts =
+          [2, 8].map do |post_count|
+            posts = Fabricate.times(post_count, :private_message_post)
+            query = Fabricate(:query, sql: "SELECT unnest(ARRAY#{posts.map(&:id)}) AS post_id")
+            pg_result = described_class.run_query(query)[:pg_result]
+            guardian = Fabricate(:user).guardian
+            relations = nil
+
+            queries =
+              track_sql_queries do
+                relations, _ = described_class.add_extra_data(pg_result, guardian:)
+              end
+
+            expect(relations[:post].as_json).to be_empty
+            queries.size
+          end
+
+        expect(query_counts.first).to eq(query_counts.last)
       end
 
       describe "serializing models to serializer" do
@@ -412,7 +538,8 @@ describe DiscourseDataExplorer::DataExplorer do
           query = Fabricate(:query, sql: "SELECT id AS topic_id FROM topics WHERE id = #{topic.id}")
 
           pg_result = described_class.run_query(query)[:pg_result]
-          relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+          relations, _ =
+            DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
 
           expect {
             records = relations[:topic].object
@@ -421,6 +548,22 @@ describe DiscourseDataExplorer::DataExplorer do
 
           json = relations[:topic].as_json
           expect(json).to include(BasicTopicSerializer.new(topic, root: false).as_json)
+        end
+
+        it "serializes badge relations with their type and image" do
+          badge = Fabricate(:badge, image_upload: Fabricate(:upload))
+          query = Fabricate(:query, sql: "SELECT #{badge.id} AS badge_id")
+
+          pg_result = described_class.run_query(query)[:pg_result]
+          relations, _ =
+            DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
+
+          expect(MultiJson.load(relations[:badge].to_json)).to include(
+            include(
+              "image_url" => badge.image_url,
+              "badge_type" => include("id" => badge.badge_type_id, "name" => badge.badge_type.name),
+            ),
+          )
         end
 
         it "chooses the correct serializer for tag_group" do
@@ -432,7 +575,8 @@ describe DiscourseDataExplorer::DataExplorer do
           query = Fabricate(:query, sql: "SELECT tag_id, tag_group_id FROM tag_group_memberships")
 
           pg_result = described_class.run_query(query)[:pg_result]
-          relations, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+          relations, colrender =
+            DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result, guardian: nil)
 
           expect(colrender).to eq({ 1 => :tag_group })
           expect(relations[:tag_group].as_json).to include(
@@ -440,6 +584,19 @@ describe DiscourseDataExplorer::DataExplorer do
           )
         end
       end
+    end
+  end
+
+  describe "schema hints" do
+    it "only names existing columns" do
+      schema_columns = DB.query_single(<<~SQL)
+        SELECT table_name || '.' || column_name
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE table_schema = 'public'
+      SQL
+
+      expect(described_class.foreign_keys.keys - schema_columns).to be_empty
+      expect(described_class.sensitive_column_names - schema_columns).to be_empty
     end
   end
 end

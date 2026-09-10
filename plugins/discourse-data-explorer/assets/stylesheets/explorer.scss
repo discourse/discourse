@@ -1058,6 +1058,10 @@ table.group-reports {
   display: flex;
 }
 
+.query-result-hidden {
+  color: var(--primary-medium);
+}
+
 .result-json-value {
   flex: 1;
   margin-right: 0.5em;

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fr:
+  mcp:
+    oauth:
+      resource: "Serveur MCP"
+      deny: "Refuser"
+      approve: "Autoriser"
   llms_txt:
     sections:
       optional: "Facultatif"
@@ -2072,7 +2077,6 @@ fr:
     discourse_connect_allowed_redirect_domains: "Limitez à ces domaines les chemins de retour fournis par DiscourseConnect (par défaut, le chemin de retour doit se trouver sur le site actuel). Utilisez * pour autoriser n'importe quel domaine comme chemin de retour. Les caractères génériques de sous-domaine (*.foobar.com) ne sont pas autorisés."
     enable_local_logins: "Activer l'authentification locale avec nom d'utilisateur et mot de passe. ATTENTION : si ce paramètre est désactivé, il vous sera peut-être impossible de vous connecter si vous n'avez pas configuré au moins une méthode d'authentification alternative."
     enable_local_logins_via_email: "Permettre aux utilisateurs de demander qu'un lien de connexion en un clic leur soit envoyé par e-mail."
-    enable_local_logins_via_code: "Autoriser les membres à s'inscrire et à se connecter plus rapidement au moyen de codes à usage unique envoyés par e-mail (OTP)."
     allow_passkeys_for_2fa: "Autoriser les utilisateurs à utiliser une clé d'accès pour satisfaire à l'authentification à deux facteurs lors de la confirmation d'une action sensible."
     allow_new_registrations: "Autoriser l'inscription des nouveaux utilisateurs. Décocher pour empêcher la création de nouveau compte."
     enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."
@@ -5243,6 +5247,10 @@ fr:
   performance_report:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Trop de lignes dans le fichier CSV. Veuillez fournir un fichier CSV contenant un maximum de %{count} entrée."
+      other: "Trop de lignes dans le fichier CSV. Veuillez fournir un fichier CSV contenant un maximum de %{count} entrées."
   tags:
     title: "Étiquettes"
     groups:
@@ -5536,8 +5544,6 @@ fr:
         complete: "Publication masquée. L'utilisateur a été averti."
       agree_and_edit:
         title: "Modifier la publication"
-        description: "Acceptez le signalement et ouvrez une fenêtre de composition pour modifier le message."
-        complete: "Signalement confirmé, vous pouvez maintenant modifier la publication."
       delete:
         title: "Supprimer"
         complete: "Publication supprimée."
@@ -5645,30 +5651,6 @@ fr:
       approve_and_unhide:
         title: "Oui"
         complete: "Publication approuvée et visible"
-      post_actions:
-        bundle_title: "Que souhaitez-vous faire de la publication ?"
-      delete_post:
-        title: "Supprimer la publication"
-        description: "Supprimer cette publication"
-        complete: "Publication supprimée"
-      hide_post:
-        title: "Masquer la publication"
-        description: "Masquer cette publication au public"
-        complete: "Publication masquée"
-      unhide_post:
-        title: "Afficher la publication"
-        description: "Rendre cette publication visible pour tous les utilisateurs"
-        complete: "Publication de nouveau visible"
-      restore_post:
-        title: "Rétablir la publication"
-        description: "Restaurer cette publication supprimée"
-        complete: "Publication restaurée"
-      edit_post:
-        title: "Modifier la publication"
-        description: "Modifier le contenu de cette publication"
-        complete: "Publication modifiée"
-      user_actions:
-        bundle_title: "Que souhaitez-vous faire concernant cet utilisateur ?"
       silence_user:
         title: "Désactiver l'utilisateur"
         complete: "Utilisateur désactivé"

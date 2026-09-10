@@ -3,6 +3,19 @@
 RSpec.describe Voice::DirectoryBroadcaster do
   before { SiteSetting.voice_enabled = true }
 
+  it "omits user-specific permissions and membership from shared room updates" do
+    room = Fabricate(:voice_room, public: true)
+
+    messages =
+      MessageBus.track_publish(Voice.room_index_channel) do
+        described_class.broadcast(action: :updated, room: room)
+      end
+
+    payload = messages.first.data[:room]
+    expect(payload[:name]).to eq(room.name)
+    expect(payload.keys).not_to include(:can_manage, :can_invite, :membership)
+  end
+
   it "reaches anonymous subscribers through the anonymous_users pseudogroup when they are admitted" do
     SiteSetting.voice_allowed_groups =
       "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"

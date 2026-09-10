@@ -51,10 +51,10 @@ export default class StyleguideGroup extends Component {
   <template>
     {{#if this.isActive}}
       <div
+        aria-labelledby={{this.headingId}}
         class="styleguide-group"
         data-test-styleguide-group={{@id}}
         role="region"
-        aria-labelledby={{this.headingId}}
         tabindex="-1"
       >
         <h2 class="styleguide-group__title" id={{this.headingId}}>

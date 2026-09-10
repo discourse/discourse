@@ -216,37 +216,6 @@ export default class AdminReport extends Component {
     );
   }
 
-  @action
-  changeGrouping(grouping) {
-    const options = { chartGrouping: grouping };
-
-    if (!this.userHasCustomDates) {
-      const endDate = moment().endOf("day");
-      let startDate;
-
-      switch (grouping) {
-        case "daily":
-          startDate = moment().subtract(1, "month").startOf("day");
-          break;
-        case "weekly":
-          startDate = moment().subtract(3, "months").startOf("day");
-          break;
-        case "monthly":
-          startDate = moment().subtract(12, "months").startOf("day");
-          break;
-      }
-
-      if (startDate) {
-        this.dateRangeFrom = startDate;
-        this.dateRangeTo = endDate;
-        options.startDate = startDate;
-        options.endDate = endDate;
-      }
-    }
-
-    this.refreshReport(options);
-  }
-
   get displayedModes() {
     const modes = this.args.forcedModes
       ? this.args.forcedModes.split(",")
@@ -262,23 +231,6 @@ export default class AdminReport extends Component {
         icon: mode === REPORT_MODES.table ? "table" : "signal",
       };
     });
-  }
-
-  reportFilterComponent(filter) {
-    switch (filter.type) {
-      case "bool":
-        return ReportFilterBoolComponent;
-      case "category":
-        return ReportFilterCategoryComponent;
-      case "category_list":
-        return ReportFilterCategoryListComponent;
-      case "group":
-        return ReportFilterGroupComponent;
-      case "groups":
-        return ReportFilterGroupsComponent;
-      case "list":
-        return ReportFilterListComponent;
-    }
   }
 
   get modeComponent() {
@@ -375,6 +327,54 @@ export default class AdminReport extends Component {
   }
 
   @action
+  changeGrouping(grouping) {
+    const options = { chartGrouping: grouping };
+
+    if (!this.userHasCustomDates) {
+      const endDate = moment().endOf("day");
+      let startDate;
+
+      switch (grouping) {
+        case "daily":
+          startDate = moment().subtract(1, "month").startOf("day");
+          break;
+        case "weekly":
+          startDate = moment().subtract(3, "months").startOf("day");
+          break;
+        case "monthly":
+          startDate = moment().subtract(12, "months").startOf("day");
+          break;
+      }
+
+      if (startDate) {
+        this.dateRangeFrom = startDate;
+        this.dateRangeTo = endDate;
+        options.startDate = startDate;
+        options.endDate = endDate;
+      }
+    }
+
+    this.refreshReport(options);
+  }
+
+  reportFilterComponent(filter) {
+    switch (filter.type) {
+      case "bool":
+        return ReportFilterBoolComponent;
+      case "category":
+        return ReportFilterCategoryComponent;
+      case "category_list":
+        return ReportFilterCategoryListComponent;
+      case "group":
+        return ReportFilterGroupComponent;
+      case "groups":
+        return ReportFilterGroupsComponent;
+      case "list":
+        return ReportFilterListComponent;
+    }
+  }
+
+  @action
   onChangeDateRange(range) {
     this.userHasCustomDates = true;
     this.dateRangeFrom = range.from;
@@ -441,7 +441,7 @@ export default class AdminReport extends Component {
   fetchOrRender() {
     if (this.args.preloadedData) {
       next(() => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
         this._renderReport(this._loadReport(this.args.preloadedData));
@@ -514,7 +514,7 @@ export default class AdminReport extends Component {
       let payload = this._buildPayload(["prev_period"]);
 
       const callback = (response) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -649,7 +649,7 @@ export default class AdminReport extends Component {
         {{/if}}
       </div>
     {{else}}
-      <AdminReportBody @report={{this}} @filters={{@filters}} />
+      <AdminReportBody @filters={{@filters}} @report={{this}} />
     {{/if}}
   </template>
 }

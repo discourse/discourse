@@ -62,8 +62,10 @@ export default class Assignment extends Component {
   }
 
   @action
-  handleTextAreaKeydown(event) {
+  handleKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
       this.args.onSubmit();
     }
   }
@@ -100,9 +102,7 @@ export default class Assignment extends Component {
       <AssignmentChooser
         autocomplete="off"
         @id="assignee-chooser"
-        @value={{this.assignee}}
         @onChange={{this.setAssignee}}
-        @showUserStatus={{true}}
         @options={{hash
           mobilePlacementStrategy="absolute"
           includeGroups=true
@@ -117,6 +117,9 @@ export default class Assignment extends Component {
           caretUpIcon="magnifying-glass"
           caretDownIcon="magnifying-glass"
         }}
+        @showUserStatus={{true}}
+        @value={{this.assignee}}
+        {{on "keydown" this.handleKeydown capture=true}}
       />
 
       {{#if this.showAssigneeIeEmptyError}}
@@ -131,10 +134,11 @@ export default class Assignment extends Component {
       <div class="control-group assign-status">
         <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
         <ComboBox
-          @id="assign-status"
           @content={{this.assignStatusOptions}}
-          @value={{this.status}}
+          @id="assign-status"
           @onChange={{this.setStatus}}
+          @value={{this.status}}
+          {{on "keydown" this.handleKeydown capture=true}}
         />
       </div>
     {{/if}}
@@ -149,7 +153,7 @@ export default class Assignment extends Component {
       <DTextarea
         id="assign-modal-note"
         @value={{@assignment.note}}
-        {{on "keydown" this.handleTextAreaKeydown}}
+        {{on "keydown" this.handleKeydown}}
         {{on "input" this.markAsEdited}}
       />
     </div>

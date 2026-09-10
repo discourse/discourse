@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe DiscourseAi::Agents::ToolRunner do
   fab!(:llm_model) { Fabricate(:llm_model, name: "claude-2") }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:bot_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   fab!(:topic)

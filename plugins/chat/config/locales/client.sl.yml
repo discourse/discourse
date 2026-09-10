@@ -178,8 +178,11 @@ sl:
         sort:
           relevance: "Pomembnosti"
           latest: "Najnovejše"
-      direct_messages:
-        close: "Zapri ta osebni klepet"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Omembe"
       incoming_webhooks:
         back: "Nazaj"
         description: "Opis"

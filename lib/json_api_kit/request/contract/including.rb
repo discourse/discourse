@@ -10,7 +10,7 @@ module JsonApiKit
           def cast_value(value)
             case value
             when String
-              value.split(",")
+              value.split(LIST)
             else
               value
             end
@@ -26,7 +26,13 @@ module JsonApiKit
         private
 
         def check_include_paths
-          refuse_unknown(:include, Paths.new(include).reject { resource.paths_include?(it) })
+          refuse_unknown(
+            :include,
+            Paths
+              .new(include)
+              .reject { resource.paths_include?(it) }
+              .map { Name::Member.new(value: it.to_s) },
+          )
         end
       end
     end

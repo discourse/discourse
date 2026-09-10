@@ -78,11 +78,11 @@ export default class IgnoreDurationModal extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @title={{i18n "user.user_notifications.ignore_duration_title"}}
-      @flash={{this.flash}}
-      @autoFocus="false"
       class="ignore-duration-with-username-modal"
+      @autoFocus="false"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @title={{i18n "user.user_notifications.ignore_duration_title"}}
     >
       <:body>
         {{#if this.enableSelection}}
@@ -92,29 +92,29 @@ export default class IgnoreDurationModal extends Component {
                 "user.user_notifications.ignore_duration_username"
               }}</label>
             <EmailGroupUserChooser
-              @value={{this.ignoredUsername}}
               @onChange={{this.updateIgnoredUsername}}
               @options={{hash excludeCurrentUser=true maximum=1}}
+              @value={{this.ignoredUsername}}
             />
           </div>
         {{/if}}
         <DFutureDateInput
-          @label="user.user_notifications.ignore_duration_when"
-          @input={{readonly this.ignoredUntil}}
           @customShortcuts={{this.timeShortcuts}}
           @includeDateTime={{false}}
+          @input={{readonly this.ignoredUntil}}
+          @label="user.user_notifications.ignore_duration_when"
           @onChangeInput={{fn (mut this.ignoredUntil)}}
         />
         <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
+          @action={{this.ignore}}
           @disabled={{this.saveDisabled}}
           @label="user.user_notifications.ignore_duration_save"
-          @action={{this.ignore}}
-          class="btn-primary"
         />
-        <DConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
       </:footer>
     </DModal>
   </template>

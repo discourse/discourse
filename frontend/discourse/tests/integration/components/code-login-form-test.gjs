@@ -86,6 +86,81 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .exists("the form advances after the request succeeds");
   });
 
+  test("email invitations request a code without exposing the address", async function (assert) {
+    let requestParams;
+    pretender.get("/session/hp.json", () =>
+      response({ value: "hp-value", challenge: "abc", expires_in: 300 })
+    );
+    pretender.post("/session/login-code", (request) => {
+      requestParams = new URLSearchParams(request.requestBody);
+      return response({ success: "OK" });
+    });
+
+    await render(
+      <template>
+        <CodeLoginForm
+          @context="invite"
+          @emailLocked={{true}}
+          @initialEmail="u***@example.com"
+          @inviteKey="invite-key"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".code-login-form__email-step input")
+      .doesNotExist("the masked address is not rendered in an editable field");
+
+    await click(".code-login-form__continue");
+
+    assert.strictEqual(
+      requestParams.get("invite_key"),
+      "invite-key",
+      "the code request identifies the invitation"
+    );
+    assert
+      .dom(".code-login-form__code-step")
+      .exists("the code entry step is shown");
+    assert
+      .dom(".code-login-form__change-email")
+      .doesNotExist("the scoped invitation address cannot be changed");
+  });
+
+  test("runs create-account behavior transformers before verifying a signup code", async function (assert) {
+    stubCodeRequest();
+
+    let transformed = false;
+    let verificationRequests = 0;
+    withPluginApi((api) =>
+      api.registerBehaviorTransformer("create-account", async ({ next }) => {
+        transformed = true;
+        return next();
+      })
+    );
+    pretender.post("/session/login-code/verify", () => {
+      verificationRequests++;
+      return response({ error: i18n("email_login_code.invalid_code") });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "000000");
+
+    assert.true(
+      transformed,
+      "the signup verification passes through the transformer"
+    );
+    assert.strictEqual(
+      verificationRequests,
+      1,
+      "the transformer continues to code verification"
+    );
+  });
+
   test("shows a request error without advancing to the code step", async function (assert) {
     const error =
       "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member.";
@@ -297,17 +372,24 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       })
     );
     pretender.get("/u/random-username.json", () =>
-      response({ username: "QuietFalcon" })
+      response({
+        username: "QuietFalcon",
+        avatar_template: "/letter/q.png",
+      })
     );
 
     await goToCodeStep();
     await fillIn(".d-otp-input", "123456");
 
     assert.dom("#code-login-username").hasValue("jane");
+    assert.dom(".code-login-form__avatar img").hasAttribute("src", /letter\/j/);
 
     await click(".code-login-form__username-regen");
 
     assert.dom("#code-login-username").hasValue("QuietFalcon");
+    assert
+      .dom(".code-login-form__avatar img")
+      .hasAttribute("src", /letter\/q/, "the avatar follows the new username");
     assert.dom(".code-login-form__continue-to-site").isEnabled();
   });
 
@@ -324,7 +406,7 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     // The default pretender handler reports the username "taken" as
     // unavailable with the suggestion "nottaken".
     pretender.get("/u/random-username.json", () =>
-      response({ username: "taken" })
+      response({ username: "taken", avatar_template: "/letter/t.png" })
     );
 
     await goToCodeStep();

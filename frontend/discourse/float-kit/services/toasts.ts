@@ -28,7 +28,8 @@ export default class Toasts extends Service {
    *
    * @param options - options passed to the toast component as its `@toast` argument;
    *   each field is documented on {@link ToastOptions}. When no `component` is given,
-   *   `DDefaultToast` is used.
+   *   `DDefaultToast` is used. Passing a `key` closes any toast already showing with
+   *   that key, so a repeated notification replaces itself instead of stacking.
    *
    * @returns the created toast instance.
    */
@@ -39,11 +40,27 @@ export default class Toasts extends Service {
       ...options,
     });
 
-    if (instance.isValidForView) {
-      this.activeToasts.push(instance);
+    if (!instance.isValidForView) {
+      return instance;
     }
 
+    if (instance.options.key) {
+      this.closeByKey(instance.options.key);
+    }
+
+    this.activeToasts.push(instance);
+
     return instance;
+  }
+
+  /**
+   * Close every showing toast that was created with `key`.
+   */
+  @action
+  closeByKey(key: string) {
+    this.activeToasts = trackedArray(
+      this.activeToasts.filter((activeToast) => activeToast.options.key !== key)
+    );
   }
 
   /**

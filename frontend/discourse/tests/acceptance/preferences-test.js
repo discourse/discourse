@@ -112,6 +112,26 @@ acceptance("User Preferences", function (needs) {
   });
 });
 
+acceptance("MCP authorizations in user preferences", function (needs) {
+  needs.user({
+    show_mcp_authorizations: true,
+  });
+  needs.pretender((server, helper) => {
+    preferencesPretender(server, helper);
+    server.get("/u/eviltrout/preferences/mcp-authorizations.json", () =>
+      helper.response({ authorizations: [] })
+    );
+  });
+
+  test("places MCP authorizations in Security", async function (assert) {
+    await visit("/u/eviltrout/preferences/security");
+
+    assert
+      .dom(".user-mcp-authorizations")
+      .exists("MCP authorizations are shown in Security when relevant");
+  });
+});
+
 acceptance("Custom User Fields", function (needs) {
   needs.user();
   needs.site({

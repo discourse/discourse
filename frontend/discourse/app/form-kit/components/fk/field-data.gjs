@@ -43,6 +43,14 @@ export default class FKFieldData extends Component {
     }
   }
 
+  get type() {
+    return this.args.type ?? this._legacyControlType;
+  }
+
+  set type(value) {
+    this._legacyControlType = value;
+  }
+
   /**
    * Retrieves the current value of the field.
    * @type {any}
@@ -62,29 +70,6 @@ export default class FKFieldData extends Component {
   }
 
   /**
-   * Updates the value of the field and triggers revalidation.
-   * @param {any} value - The new value for the field.
-   * @returns {Promise<void>}
-   */
-  @action
-  async set(value) {
-    if (this.args.onSet) {
-      await this.args.onSet(value, {
-        set: this.args.set,
-        name: this.name,
-        parentName: this.args.parentName,
-        index: this.args.collectionIndex,
-      });
-    } else {
-      await this.args.set(this.name, value, {
-        index: this.args.collectionIndex,
-      });
-    }
-
-    this.args.triggerRevalidationFor(this.name);
-  }
-
-  /**
    * Title of the field.
    * @type {string}
    */
@@ -94,14 +79,6 @@ export default class FKFieldData extends Component {
 
   get hasExplicitType() {
     return this.args.type !== undefined;
-  }
-
-  get type() {
-    return this.args.type ?? this._legacyControlType;
-  }
-
-  set type(value) {
-    this._legacyControlType = value;
   }
 
   /**
@@ -314,6 +291,29 @@ export default class FKFieldData extends Component {
    */
   get minLength() {
     return this.rules?.length?.min ?? null;
+  }
+
+  /**
+   * Updates the value of the field and triggers revalidation.
+   * @param {any} value - The new value for the field.
+   * @returns {Promise<void>}
+   */
+  @action
+  async set(value) {
+    if (this.args.onSet) {
+      await this.args.onSet(value, {
+        set: this.args.set,
+        name: this.name,
+        parentName: this.args.parentName,
+        index: this.args.collectionIndex,
+      });
+    } else {
+      await this.args.set(this.name, value, {
+        index: this.args.collectionIndex,
+      });
+    }
+
+    this.args.triggerRevalidationFor(this.name);
   }
 
   /**

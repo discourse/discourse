@@ -27,6 +27,7 @@ class Auth::FacebookAuthenticator < Auth::ManagedAuthenticator
                           strategy = env["omniauth.strategy"]
                           strategy.options[:client_id] = SiteSetting.facebook_app_id
                           strategy.options[:client_secret] = SiteSetting.facebook_app_secret
+                          strategy.options[:client_options][:auth_scheme] = :request_body
                           strategy.options[:info_fields] = "name,first_name,last_name,email"
                           strategy.options[:image_size] = {
                             width: AVATAR_SIZE,

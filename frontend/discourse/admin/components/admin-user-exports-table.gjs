@@ -41,6 +41,12 @@ export default class extends Component {
     return !isEmpty(this.userExport);
   }
 
+  get userExportExpiry() {
+    return i18n("admin.user.exports.download.expires_in", {
+      count: this.userExport.retain_hours,
+    });
+  }
+
   @bind
   onExportProgress(data) {
     if (data.user_export_id === this.model.id) {
@@ -81,12 +87,6 @@ export default class extends Component {
     });
   }
 
-  get userExportExpiry() {
-    return i18n("admin.user.exports.download.expires_in", {
-      count: this.userExport.retain_hours,
-    });
-  }
-
   <template>
     <section class="details">
       <h1>{{i18n "admin.user.exports.title"}}</h1>
@@ -111,10 +111,10 @@ export default class extends Component {
           <DConditionalLoadingSpinner @condition={{this.userExportReloading}}>
 
             <DButton
+              class="btn-default"
               @action={{this.triggerUserExport}}
               @icon="download"
               @label="admin.user.exports.download.button"
-              class="btn-default"
             />
           </DConditionalLoadingSpinner>
         </div>

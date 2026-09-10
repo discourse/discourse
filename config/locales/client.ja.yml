@@ -888,6 +888,9 @@ ja:
         note_added: "モデレーターのメモ"
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
         no_events: "表示するタイムラインイベントはありません"
+      author_penalty:
+        toast:
+          undo: "元に戻す"
       notes:
         add_note_description: "他のモデレーターに文脈を伝えるメモを追加してください。"
         add_note_button: "メモを追加"
@@ -1515,7 +1518,6 @@ ja:
       admin: "%{user} は管理者です"
       moderator_tooltip: "このユーザーはモデレーターです"
       admin_tooltip: "このユーザーは管理者です"
-      silenced_tooltip: "このユーザーは投稿を禁止されています"
       suspended_notice: "このユーザーは %{date} まで凍結されています。"
       suspended_permanently: "このユーザーは凍結されています。"
       suspended_reason: "理由: "
@@ -1574,6 +1576,16 @@ ja:
       tracked_topics_link: "表示"
       automatically_unpin_topics: "最後に到達したら、自動的にトピックの固定表示を解除する"
       apps: "アプリ連携"
+      mcp_authorizations:
+        endpoint: "リソース"
+        scopes: "スコープ"
+        details: "詳細"
+        last_used: "最後の使用"
+        never: "送信しない"
+        status: "ステータス"
+        statuses:
+          active: "アクティブ"
+          revoked: "取り消し済み"
       revoke_access: "アクセスを取り消す"
       undo_revoke_access: "アクセスの取り消しを元に戻す"
       api_approved: "承認:"
@@ -5295,6 +5307,74 @@ ja:
           header_description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
         developer:
           title: "開発者"
+        mcp:
+          tabs:
+            access: "アクセス"
+            activity: "アクティビティ"
+          overview:
+            status: "ステータス"
+            tools: "ツール"
+          access:
+            title: "アクセス"
+            group: "グループ"
+            groups: "グループ"
+            actions: "アクション"
+            edit: "編集"
+            delete: "削除"
+          primitives:
+            group_by: "グループ化"
+            group_by_options:
+              scope: "範囲"
+              provider: "プロバイダー"
+              kind: "タイプ"
+            provider: "プロバイダー"
+            kind: "タイプ"
+            scope: "範囲"
+            state: "都道府県"
+            scopes: "スコープ"
+          clients:
+            actions: "アクション"
+            block: "ブロック"
+            use_preset: "セットアップ"
+            presets:
+              custom: "カスタム"
+          authorizations:
+            user: "ユーザー"
+            last_used: "最後の使用"
+            status: "ステータス"
+            actions: "アクション"
+          activity:
+            rate_limits: "レート制限"
+            outcome: "結果"
+            time: "時刻"
+            user: "ユーザー"
+            duration: "期間"
+          values:
+            server_status:
+              disabled: "無効"
+            client_trust:
+              approved: "承認済み"
+            authorization_status:
+              active: "アクティブ"
+              revoked: "取り消し済み"
+            activity_outcome:
+              success: "成功"
+              error: "エラー"
+            primitive_state:
+              enabled: "有効"
+              disabled: "無効"
+            primitive_kind:
+              all: "全タイプ"
+              tool: "ツール"
+              resource: "リソース"
+            primitive_risk:
+              read: "読み取り専用"
+              moderation: "モデレーション"
+            filter:
+              all: "すべて"
+          never: "送信しない"
+          actions:
+            revoke: "同意を取り消す"
         experimental:
           title: "実験的"
           header_description: "サイトの実験的機能をオンまたはオフに切り替えます。これらのほとんどは、グループ単位で制御できます。"

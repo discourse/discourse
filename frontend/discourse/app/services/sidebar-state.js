@@ -18,6 +18,7 @@ import {
 @disableImplicitInjections
 export default class SidebarState extends Service {
   @service keyValueStore;
+  @service router;
 
   @tracked currentPanelKey = currentPanelKey;
   @tracked mode = COMBINED_MODE;
@@ -31,9 +32,57 @@ export default class SidebarState extends Service {
   collapsedSections = trackedSet();
   previousState = {};
   #hiders = trackedSet();
+  #revealedLinks = new WeakMap();
 
   get sidebarHidden() {
     return this.#hiders.size > 0;
+  }
+
+  get currentPanel() {
+    return this.panels.find((panel) => panel.key === this.currentPanelKey);
+  }
+
+  get combinedMode() {
+    return this.mode === COMBINED_MODE;
+  }
+
+  get showMainPanel() {
+    return this.currentPanelKey === MAIN_PANEL;
+  }
+
+  get sanitizedFilter() {
+    return escapeRegExp(this.filter.toLowerCase().trim());
+  }
+
+  resetLinkReveal(container) {
+    this.#revealedLinks.delete(container);
+  }
+
+  shouldRevealLink(container, destination, { force = false, linkRoute } = {}) {
+    let state = this.#revealedLinks.get(container);
+    const route = this.router.currentRoute;
+    const panel = this.currentPanelKey;
+
+    if (
+      !state ||
+      state.route !== route ||
+      state.panel !== panel ||
+      state.mode !== this.mode ||
+      state.filter !== this.filter
+    ) {
+      state = {
+        route,
+        panel,
+        mode: this.mode,
+        filter: this.filter,
+        destinations: new Map(),
+      };
+      this.#revealedLinks.set(container, state);
+    }
+
+    const revealed = state.destinations.get(linkRoute) === destination;
+    state.destinations.set(linkRoute, destination);
+    return force || !revealed;
   }
 
   registerHider(ref) {
@@ -50,10 +99,6 @@ export default class SidebarState extends Service {
     }
     this.currentPanelKey = name;
     this.restorePreviousState();
-  }
-
-  get currentPanel() {
-    return this.panels.find((panel) => panel.key === this.currentPanelKey);
   }
 
   setSeparatedMode() {
@@ -121,18 +166,6 @@ export default class SidebarState extends Service {
     } else {
       this.hideSwitchPanelButtons();
     }
-  }
-
-  get combinedMode() {
-    return this.mode === COMBINED_MODE;
-  }
-
-  get showMainPanel() {
-    return this.currentPanelKey === MAIN_PANEL;
-  }
-
-  get sanitizedFilter() {
-    return escapeRegExp(this.filter.toLowerCase().trim());
   }
 
   clearFilter() {

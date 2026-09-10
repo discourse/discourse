@@ -72,6 +72,16 @@ The sync tool will automatically upload the images to Discourse, and replace the
 
 Avoid hotlinking images from other sources. If you do, Discourse may download them and update the topic content. This will cause the docs sync tool to detect a diff, and update the topic unnecessarily.
 
+## Links between docs
+
+Link to other docs using a relative path to their markdown file, so the link works when browsing the repository. For example:
+
+```
+See the [DModal API](12-dmodal-api.md) or [theme settings](../05-themes-components/09-theme-settings.md).
+```
+
+The sync tool rewrites these to the corresponding Discourse topic. Heading fragments (`#some-heading`) are dropped, becasue Discourse anchors are generated differently. Relative links to files which aren't docs will fail validation.
+
 ## Contributing
 
 When working on substantial changes, you may like to set up a staging environment to preview your changes.

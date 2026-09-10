@@ -14,23 +14,23 @@ export default <template>
     <div class="group-manage-logs-controls">
       <GroupManageLogsFilter
         @clearFilter={{@controller.clearFilter}}
-        @value={{@controller.filters.action}}
         @type="action"
+        @value={{@controller.filters.action}}
       />
       <GroupManageLogsFilter
         @clearFilter={{@controller.clearFilter}}
-        @value={{@controller.filters.acting_user}}
         @type="acting_user"
+        @value={{@controller.filters.acting_user}}
       />
       <GroupManageLogsFilter
         @clearFilter={{@controller.clearFilter}}
-        @value={{@controller.filters.target_user}}
         @type="target_user"
+        @value={{@controller.filters.target_user}}
       />
       <GroupManageLogsFilter
         @clearFilter={{@controller.clearFilter}}
-        @value={{@controller.filters.subject}}
         @type="subject"
+        @value={{@controller.filters.subject}}
       />
     </div>
 
@@ -48,8 +48,8 @@ export default <template>
         <tbody>
           {{#each @controller.model.logs as |logItem|}}
             <GroupManageLogsRow
-              @log={{logItem}}
               @filters={{@controller.filters}}
+              @log={{logItem}}
             />
           {{/each}}
         </tbody>

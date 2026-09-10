@@ -20,10 +20,12 @@ describe DiscourseAi::Translation::CategoryLocalizer do
 
   def short_text_translator_stub(opts)
     mock = instance_double(DiscourseAi::Translation::ShortTextTranslator)
+    expected_args = { text: opts[:text], target_locale: opts[:target_locale], llm_model: be_nil }
+    expected_args[:content_description] = opts[:content_description] if opts.key?(
+      :content_description,
+    )
     allow(DiscourseAi::Translation::ShortTextTranslator).to receive(:new).with(
-      text: opts[:text],
-      target_locale: opts[:target_locale],
-      llm_model: be_nil,
+      **expected_args,
     ).and_return(mock)
     allow(mock).to receive(:translate).and_return(opts[:translated])
   end
@@ -39,7 +41,12 @@ describe DiscourseAi::Translation::CategoryLocalizer do
       translated_cat_desc = "C'est une catégorie de test"
       translated_cat_name = "Catégorie de Test"
       short_text_translator_stub(
-        { text: category.name, target_locale: target_locale, translated: translated_cat_name },
+        {
+          text: category.name,
+          content_description: category.description_excerpt,
+          target_locale: target_locale,
+          translated: translated_cat_name,
+        },
       )
       post_raw_translator_stub(
         {
@@ -55,11 +62,34 @@ describe DiscourseAi::Translation::CategoryLocalizer do
       expect(res.description).to eq(translated_cat_desc)
     end
 
+    it "translates a category without a description" do
+      category_without_description = Fabricate(:category, name: "Support")
+      translated_cat_name = "Assistance"
+      short_text_translator_stub(
+        {
+          text: category_without_description.name,
+          content_description: nil,
+          target_locale: target_locale,
+          translated: translated_cat_name,
+        },
+      )
+
+      res = localizer.localize(category_without_description, target_locale)
+
+      expect(res.name).to eq(translated_cat_name)
+      expect(res.description).to eq("")
+    end
+
     it "handles locale format standardization" do
       translated_cat_desc = "C'est une catégorie de test"
       translated_cat_name = "Catégorie de Test"
       short_text_translator_stub(
-        { text: category.name, target_locale:, translated: translated_cat_name },
+        {
+          text: category.name,
+          content_description: category.description_excerpt,
+          target_locale:,
+          translated: translated_cat_name,
+        },
       )
       post_raw_translator_stub(
         { text: category.description_excerpt, target_locale:, translated: translated_cat_desc },
@@ -84,7 +114,12 @@ describe DiscourseAi::Translation::CategoryLocalizer do
       translated_cat_desc = "C'est une catégorie de test"
       translated_cat_name = "Esta es una categoría de prueba"
       short_text_translator_stub(
-        { text: category.name, target_locale: "es", translated: translated_cat_name },
+        {
+          text: category.name,
+          content_description: category.description_excerpt,
+          target_locale: "es",
+          translated: translated_cat_name,
+        },
       )
       post_raw_translator_stub(
         {

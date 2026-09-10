@@ -1,18 +1,7 @@
-import Component from "@glimmer/component";
-import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 
-export default class Category extends Component {
-  get categoryBadgeReplacement() {
-    return categoryLinkHTML(this.args.ctx.category, {
-      allowUncategorized: true,
-    });
-  }
+const Category = <template>
+  {{dCategoryLink @ctx.category allowUncategorized=true}}
+</template>;
 
-  <template>
-    {{#if @ctx.category}}
-      {{this.categoryBadgeReplacement}}
-    {{else}}
-      <a href="{{@ctx.baseuri}}/t/{{@ctx.id}}">{{@ctx.id}}</a>
-    {{/if}}
-  </template>
-}
+export default Category;

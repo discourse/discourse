@@ -388,6 +388,9 @@ sw:
         reviewable_ai_post:
           noun: "ujumbe"
       user_label: "Mtumiaji"
+      author_penalty:
+        toast:
+          undo: "Tendua"
       notes:
         delete: "Futa"
       topic_label: "Mada"
@@ -724,7 +727,6 @@ sw:
       admin: "%{mtumiaji} ni kiongozi"
       moderator_tooltip: "Mtumiaji huyu ni msimamizi"
       admin_tooltip: "Mtumiaji huyu ni kiongozi"
-      silenced_tooltip: "Mtumiaji amenyamazishwa"
       suspended_notice: "Akaunti imesitishwa mpaka %{tarehe}."
       suspended_permanently: "Mtumiaji amesitishwa."
       suspended_reason: "Sababu:"
@@ -772,6 +774,11 @@ sw:
       tracked_topics_link: "Onesha"
       automatically_unpin_topics: "Otomatikali ondoa mada zilizobandikwa nikifika mwisho wa ukurasa"
       apps: "Programu-tumizi"
+      mcp_authorizations:
+        details: "Taarifa"
+        never: "Kamwe"
+        statuses:
+          active: "Amilifu"
       revoke_access: "Tengua ufikivu"
       undo_revoke_access: "Ondoa Utenguaji Fikivu"
       api_approved: "Imeidhinishwa"
@@ -2502,6 +2509,52 @@ sw:
       config:
         developer:
           title: "Mtengenezaji"
+        mcp:
+          tabs:
+            access: "Kufikia"
+            activity: "Kitendo"
+          access:
+            title: "Kufikia"
+            group: "Kikundi"
+            groups: "Makundi"
+            actions: "Vitendo"
+            edit: "Hariri"
+            delete: "Futa"
+          primitives:
+            group_by_options:
+              provider: "Mkimu"
+              kind: "Aina"
+            provider: "Mkimu"
+            kind: "Aina"
+          clients:
+            actions: "Vitendo"
+            block: "Zuia"
+            presets:
+              custom: "Binafsi"
+          authorizations:
+            user: "Mtumiaji"
+            actions: "Vitendo"
+          activity:
+            time: "Muda"
+            user: "Mtumiaji"
+          values:
+            server_status:
+              disabled: "Imezuiwa"
+            client_trust:
+              approved: "Wamekubaliwa"
+            authorization_status:
+              active: "Amilifu"
+            activity_outcome:
+              success: "Mafanikio"
+              error: "Hitilafu"
+            primitive_state:
+              enabled: "Imeruhusiwa"
+              disabled: "Imezuiwa"
+            filter:
+              all: "Yote"
+          never: "Kamwe"
+          actions:
+            revoke: "Futa"
         emojis:
           title: "Emoji"
         files:

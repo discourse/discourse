@@ -92,7 +92,7 @@ describe OAuth2BasicAuthenticator do
 
       let(:fail_response) { { status: 403 } }
 
-      it "works" do
+      it "supports GET and POST requests" do
         stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(success_response)
         result = authenticator.after_authenticate(auth)
         expect(result.email).to eq("newemail@example.com")

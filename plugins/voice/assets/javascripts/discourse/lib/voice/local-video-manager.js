@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import BackgroundBlurManager from "./background-blur";
 import {
   cameraConstraints,
@@ -140,81 +141,8 @@ export default class LocalVideoManager {
     await this.start("screen");
   }
 
-  #enqueueOp(operation) {
-    const run = this.#queue.then(operation, operation);
-    this.#queue = run.catch(() => {});
-    return run;
-  }
-
   toggleBlur() {
     return this.#enqueueOp(() => this.#toggleBlurOp());
-  }
-
-  async #toggleBlurOp() {
-    const enabled = !this.blurEnabled;
-    this.blurEnabled = enabled;
-    BackgroundBlurManager.setPreference(enabled);
-    await this.#reconcileBlurOp();
-  }
-
-  // Brings the pipeline in line with the current preference: wraps or
-  // unwraps the published camera stream. A no-op when the camera is off
-  // (the preference simply applies at the next camera start) or when the
-  // pipeline already matches.
-  async #reconcileBlurOp() {
-    if (this.kind !== "camera") {
-      return;
-    }
-
-    const wantBlur =
-      this.blurEnabled && this.#isBlurAllowed() && this.blurSupported;
-
-    if (wantBlur === !!this.#backgroundBlur) {
-      return;
-    }
-
-    if (wantBlur) {
-      const raw = this.stream;
-      const epoch = this.#epoch;
-      const result = await this.#createBackgroundBlur(raw);
-
-      // The camera may have been stopped or replaced, or blur toggled back
-      // off, while the model loaded.
-      if (epoch !== this.#epoch || this.stream !== raw) {
-        result?.manager.teardown();
-        return;
-      }
-
-      if (!result) {
-        this.#revertBlurPreference();
-        return;
-      }
-
-      if (!this.blurEnabled) {
-        result.manager.teardown();
-        return;
-      }
-
-      this.#backgroundBlur = result.manager;
-      this.#rawStream = raw;
-      this.stream = result.processed;
-    } else {
-      this.stream = this.#rawStream;
-      this.#teardownEffects();
-    }
-
-    const roomId = this.#getFirstActiveRoomId();
-    if (roomId) {
-      await this.syncSenders(roomId);
-    }
-  }
-
-  #revertBlurPreference({ silent = false } = {}) {
-    this.blurEnabled = false;
-    BackgroundBlurManager.setPreference(false);
-    if (!silent) {
-      this.#showError("voice.video_settings.blur_failed");
-    }
   }
 
   setBlurAmount(value) {
@@ -226,200 +154,6 @@ export default class LocalVideoManager {
 
   setInputDevice(deviceId) {
     return this.#enqueueOp(() => this.#setInputDeviceOp(deviceId));
-  }
-
-  async #setInputDeviceOp(deviceId) {
-    const previousDeviceId = this.inputDeviceId;
-    this.inputDeviceId = deviceId;
-
-    if (this.kind !== "camera") {
-      setPreferredVideoInputDeviceId(deviceId);
-      return true;
-    }
-
-    const epoch = this.#epoch;
-    const constraints = {
-      video: cameraConstraints(deviceId, this.#getCameraQuality(), {
-        exact: true,
-      }),
-    };
-
-    let newStream;
-    try {
-      newStream = await navigator.mediaDevices.getUserMedia(constraints);
-    } catch (error) {
-      if (!this.#cameraBusyError(error)) {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to switch camera", error);
-        this.inputDeviceId = previousDeviceId;
-        this.#showSwitchError(error);
-        return false;
-      }
-
-      if (epoch !== this.#epoch || this.kind !== "camera") {
-        setPreferredVideoInputDeviceId(deviceId);
-        return true;
-      }
-
-      // Phones expose a single camera pipeline: the next device can't open
-      // while the current one is still capturing, so release ours and retry.
-      this.#stopCurrentCapture();
-
-      try {
-        newStream = await navigator.mediaDevices.getUserMedia(constraints);
-      } catch (retryError) {
-        return this.#rollbackSwitch(previousDeviceId, epoch, retryError);
-      }
-    }
-
-    setPreferredVideoInputDeviceId(deviceId);
-    return this.#swapCameraStream(newStream, epoch);
-  }
-
-  // Failure modes for busy hardware, as opposed to a denied permission or a
-  // missing device.
-  #cameraBusyError(error) {
-    return error?.name === "NotReadableError" || error?.name === "AbortError";
-  }
-
-  #stopCurrentCapture() {
-    const capture = this.#rawStream ?? this.stream;
-    capture?.getVideoTracks().forEach((track) => track.stop());
-  }
-
-  #showSwitchError(error) {
-    this.#showError(
-      error?.name === "NotAllowedError"
-        ? "voice.video.camera_switch_denied"
-        : "voice.video.camera_switch_failed"
-    );
-  }
-
-  // The old capture was already released for the retry, so a failed switch
-  // can't silently keep the previous stream: reacquire it, and if even that
-  // fails treat the camera as gone.
-  async #rollbackSwitch(previousDeviceId, epoch, error) {
-    // eslint-disable-next-line no-console
-    console.warn("[voice] failed to switch camera", error);
-    this.inputDeviceId = previousDeviceId;
-
-    if (epoch === this.#epoch && this.kind === "camera") {
-      let previousStream;
-      try {
-        previousStream = await navigator.mediaDevices.getUserMedia({
-          video: cameraConstraints(previousDeviceId, this.#getCameraQuality()),
-        });
-      } catch {
-        await this.stop();
-      }
-
-      if (previousStream) {
-        await this.#swapCameraStream(previousStream, epoch);
-      }
-    }
-
-    this.#showSwitchError(error);
-    return false;
-  }
-
-  async #swapCameraStream(newStream, epoch) {
-    const track = newStream.getVideoTracks()[0];
-
-    // The camera may have been stopped while the new capture started; the
-    // preference is kept but nothing is swapped.
-    if (epoch !== this.#epoch || this.kind !== "camera") {
-      newStream.getTracks().forEach((streamTrack) => streamTrack.stop());
-      return true;
-    }
-
-    if (!track) {
-      newStream.getTracks().forEach((streamTrack) => streamTrack.stop());
-      return false;
-    }
-
-    track.contentHint = "motion";
-
-    const oldStream = this.stream;
-    const oldRaw = this.#rawStream;
-
-    let outgoingStream = newStream;
-    let blurResult = null;
-
-    if (this.#backgroundBlur) {
-      blurResult = await this.#createBackgroundBlur(newStream);
-
-      if (
-        epoch !== this.#epoch ||
-        this.kind !== "camera" ||
-        this.stream !== oldStream
-      ) {
-        blurResult?.manager.teardown();
-        newStream.getTracks().forEach((streamTrack) => streamTrack.stop());
-        return true;
-      }
-
-      if (blurResult) {
-        outgoingStream = blurResult.processed;
-      } else {
-        this.#revertBlurPreference();
-      }
-    }
-
-    this.#backgroundBlur?.teardown();
-    this.#backgroundBlur = blurResult?.manager ?? null;
-    this.#rawStream = blurResult ? newStream : null;
-    this.stream = outgoingStream;
-
-    const swappedEpoch = ++this.#epoch;
-    track.addEventListener(
-      "ended",
-      () => this.#handleTrackEnded(swappedEpoch, "camera"),
-      { once: true }
-    );
-
-    oldStream?.getTracks().forEach((streamTrack) => streamTrack.stop());
-    if (oldRaw && oldRaw !== oldStream) {
-      oldRaw.getTracks().forEach((streamTrack) => streamTrack.stop());
-    }
-
-    const roomId = this.#getFirstActiveRoomId();
-    if (roomId) {
-      await this.syncSenders(roomId);
-    }
-
-    return true;
-  }
-
-  // Builds the blur pipeline without touching manager state, so callers can
-  // validate that the world hasn't changed across the await before wiring
-  // the result in. Returns null when the effect can't start (asset fetch
-  // failed, GPU unavailable, …).
-  async #createBackgroundBlur(rawStream) {
-    const manager = new BackgroundBlurManager();
-    try {
-      const processed = await manager.setup(rawStream, this.blurAmount);
-      processed.getVideoTracks().forEach((track) => {
-        track.contentHint = "motion";
-      });
-      return { manager, processed };
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to start background blur", error);
-      manager.teardown();
-      return null;
-    }
-  }
-
-  #teardownEffects() {
-    this.#backgroundBlur?.teardown();
-    this.#backgroundBlur = null;
-
-    if (this.#rawStream) {
-      if (this.#rawStream !== this.stream) {
-        this.#rawStream.getTracks().forEach((track) => track.stop());
-      }
-      this.#rawStream = null;
-    }
   }
 
   async start(kind, { shouldContinue, silent = false } = {}) {
@@ -469,8 +203,7 @@ export default class LocalVideoManager {
         });
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(`[voice] failed to obtain ${kind} stream`, error);
+      voiceLog.warn(`[voice] failed to obtain ${kind} stream`);
       if (
         !silent &&
         error?.name !== "NotAllowedError" &&
@@ -604,41 +337,6 @@ export default class LocalVideoManager {
     }
   }
 
-  #ownsPipeline(epoch, stream, kind) {
-    return (
-      epoch === this.#epoch && this.stream === stream && this.kind === kind
-    );
-  }
-
-  #handleTrackEnded(epoch, endedKind) {
-    if (epoch !== this.#epoch || endedKind !== this.kind) {
-      return;
-    }
-    this.stop()
-      .then(() => {
-        if (endedKind === "screen") {
-          this.#onScreenShareEnded?.();
-        }
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn("[voice] failed to stop local video", error);
-      });
-  }
-
-  #applyContentHint() {
-    if (this.kind !== "screen") {
-      return;
-    }
-    const track = this.stream?.getVideoTracks?.()?.[0];
-    if (track && "contentHint" in track) {
-      track.contentHint =
-        this.#getScreenContent() === SCREEN_CONTENT_MOTION
-          ? "motion"
-          : "detail";
-    }
-  }
-
   // Live re-apply after a preference change: encoder ceilings are cheap
   // (setParameters, no renegotiation) and camera capture follows via
   // applyConstraints. Screen capture framerate and LiveKit publish options
@@ -666,9 +364,8 @@ export default class LocalVideoManager {
               this.#getCameraQuality(roomId)
             )
           );
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn("[voice] failed to re-apply camera constraints", error);
+        } catch {
+          voiceLog.warn("[voice] failed to re-apply camera constraints");
         }
       }
     }
@@ -704,12 +401,8 @@ export default class LocalVideoManager {
       if (transceiver && transceiver.sender.track !== desired) {
         try {
           await transceiver.sender.replaceTrack(desired);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[voice] failed to sync video sender for user ${remoteUserId}`,
-            error
-          );
+        } catch {
+          voiceLog.warn("[voice] failed to sync video sender for peer");
         }
       }
 
@@ -723,17 +416,311 @@ export default class LocalVideoManager {
           if (desiredAudio) {
             await applyScreenAudioQuality(audioTransceiver.sender);
           }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[voice] failed to sync screen audio sender for user ${remoteUserId}`,
-            error
-          );
+        } catch {
+          voiceLog.warn("[voice] failed to sync screen audio sender for peer");
         }
       }
     }
 
     await this.#applyQuality(roomId);
+  }
+
+  #enqueueOp(operation) {
+    const run = this.#queue.then(operation, operation);
+    this.#queue = run.catch(() => {});
+    return run;
+  }
+
+  async #toggleBlurOp() {
+    const enabled = !this.blurEnabled;
+    this.blurEnabled = enabled;
+    BackgroundBlurManager.setPreference(enabled);
+    await this.#reconcileBlurOp();
+  }
+
+  // Brings the pipeline in line with the current preference: wraps or
+  // unwraps the published camera stream. A no-op when the camera is off
+  // (the preference simply applies at the next camera start) or when the
+  // pipeline already matches.
+  async #reconcileBlurOp() {
+    if (this.kind !== "camera") {
+      return;
+    }
+
+    const wantBlur =
+      this.blurEnabled && this.#isBlurAllowed() && this.blurSupported;
+
+    if (wantBlur === !!this.#backgroundBlur) {
+      return;
+    }
+
+    if (wantBlur) {
+      const raw = this.stream;
+      const epoch = this.#epoch;
+      const result = await this.#createBackgroundBlur(raw);
+
+      // The camera may have been stopped or replaced, or blur toggled back
+      // off, while the model loaded.
+      if (epoch !== this.#epoch || this.stream !== raw) {
+        result?.manager.teardown();
+        return;
+      }
+
+      if (!result) {
+        this.#revertBlurPreference();
+        return;
+      }
+
+      if (!this.blurEnabled) {
+        result.manager.teardown();
+        return;
+      }
+
+      this.#backgroundBlur = result.manager;
+      this.#rawStream = raw;
+      this.stream = result.processed;
+    } else {
+      this.stream = this.#rawStream;
+      this.#teardownEffects();
+    }
+
+    const roomId = this.#getFirstActiveRoomId();
+    if (roomId) {
+      await this.syncSenders(roomId);
+    }
+  }
+
+  #revertBlurPreference({ silent = false } = {}) {
+    this.blurEnabled = false;
+    BackgroundBlurManager.setPreference(false);
+    if (!silent) {
+      this.#showError("voice.video_settings.blur_failed");
+    }
+  }
+
+  async #setInputDeviceOp(deviceId) {
+    const previousDeviceId = this.inputDeviceId;
+    this.inputDeviceId = deviceId;
+
+    if (this.kind !== "camera") {
+      setPreferredVideoInputDeviceId(deviceId);
+      return true;
+    }
+
+    const epoch = this.#epoch;
+    const constraints = {
+      video: cameraConstraints(deviceId, this.#getCameraQuality(), {
+        exact: true,
+      }),
+    };
+
+    let newStream;
+    try {
+      newStream = await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (error) {
+      if (!this.#cameraBusyError(error)) {
+        voiceLog.warn("[voice] failed to switch camera");
+        this.inputDeviceId = previousDeviceId;
+        this.#showSwitchError(error);
+        return false;
+      }
+
+      if (epoch !== this.#epoch || this.kind !== "camera") {
+        setPreferredVideoInputDeviceId(deviceId);
+        return true;
+      }
+
+      // Phones expose a single camera pipeline: the next device can't open
+      // while the current one is still capturing, so release ours and retry.
+      this.#stopCurrentCapture();
+
+      try {
+        newStream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (retryError) {
+        return this.#rollbackSwitch(previousDeviceId, epoch, retryError);
+      }
+    }
+
+    setPreferredVideoInputDeviceId(deviceId);
+    return this.#swapCameraStream(newStream, epoch);
+  }
+
+  // Failure modes for busy hardware, as opposed to a denied permission or a
+  // missing device.
+  #cameraBusyError(error) {
+    return error?.name === "NotReadableError" || error?.name === "AbortError";
+  }
+
+  #stopCurrentCapture() {
+    const capture = this.#rawStream ?? this.stream;
+    capture?.getVideoTracks().forEach((track) => track.stop());
+  }
+
+  #showSwitchError(error) {
+    this.#showError(
+      error?.name === "NotAllowedError"
+        ? "voice.video.camera_switch_denied"
+        : "voice.video.camera_switch_failed"
+    );
+  }
+
+  // The old capture was already released for the retry, so a failed switch
+  // can't silently keep the previous stream: reacquire it, and if even that
+  // fails treat the camera as gone.
+  async #rollbackSwitch(previousDeviceId, epoch, error) {
+    voiceLog.warn("[voice] failed to switch camera");
+    this.inputDeviceId = previousDeviceId;
+
+    if (epoch === this.#epoch && this.kind === "camera") {
+      let previousStream;
+      try {
+        previousStream = await navigator.mediaDevices.getUserMedia({
+          video: cameraConstraints(previousDeviceId, this.#getCameraQuality()),
+        });
+      } catch {
+        await this.stop();
+      }
+
+      if (previousStream) {
+        await this.#swapCameraStream(previousStream, epoch);
+      }
+    }
+
+    this.#showSwitchError(error);
+    return false;
+  }
+
+  async #swapCameraStream(newStream, epoch) {
+    const track = newStream.getVideoTracks()[0];
+
+    // The camera may have been stopped while the new capture started; the
+    // preference is kept but nothing is swapped.
+    if (epoch !== this.#epoch || this.kind !== "camera") {
+      newStream.getTracks().forEach((streamTrack) => streamTrack.stop());
+      return true;
+    }
+
+    if (!track) {
+      newStream.getTracks().forEach((streamTrack) => streamTrack.stop());
+      return false;
+    }
+
+    track.contentHint = "motion";
+
+    const oldStream = this.stream;
+    const oldRaw = this.#rawStream;
+
+    let outgoingStream = newStream;
+    let blurResult = null;
+
+    if (this.#backgroundBlur) {
+      blurResult = await this.#createBackgroundBlur(newStream);
+
+      if (
+        epoch !== this.#epoch ||
+        this.kind !== "camera" ||
+        this.stream !== oldStream
+      ) {
+        blurResult?.manager.teardown();
+        newStream.getTracks().forEach((streamTrack) => streamTrack.stop());
+        return true;
+      }
+
+      if (blurResult) {
+        outgoingStream = blurResult.processed;
+      } else {
+        this.#revertBlurPreference();
+      }
+    }
+
+    this.#backgroundBlur?.teardown();
+    this.#backgroundBlur = blurResult?.manager ?? null;
+    this.#rawStream = blurResult ? newStream : null;
+    this.stream = outgoingStream;
+
+    const swappedEpoch = ++this.#epoch;
+    track.addEventListener(
+      "ended",
+      () => this.#handleTrackEnded(swappedEpoch, "camera"),
+      { once: true }
+    );
+
+    oldStream?.getTracks().forEach((streamTrack) => streamTrack.stop());
+    if (oldRaw && oldRaw !== oldStream) {
+      oldRaw.getTracks().forEach((streamTrack) => streamTrack.stop());
+    }
+
+    const roomId = this.#getFirstActiveRoomId();
+    if (roomId) {
+      await this.syncSenders(roomId);
+    }
+
+    return true;
+  }
+
+  // Builds the blur pipeline without touching manager state, so callers can
+  // validate that the world hasn't changed across the await before wiring
+  // the result in. Returns null when the effect can't start (asset fetch
+  // failed, GPU unavailable, …).
+  async #createBackgroundBlur(rawStream) {
+    const manager = new BackgroundBlurManager();
+    try {
+      const processed = await manager.setup(rawStream, this.blurAmount);
+      processed.getVideoTracks().forEach((track) => {
+        track.contentHint = "motion";
+      });
+      return { manager, processed };
+    } catch {
+      voiceLog.warn("[voice] failed to start background blur");
+      manager.teardown();
+      return null;
+    }
+  }
+
+  #teardownEffects() {
+    this.#backgroundBlur?.teardown();
+    this.#backgroundBlur = null;
+
+    if (this.#rawStream) {
+      if (this.#rawStream !== this.stream) {
+        this.#rawStream.getTracks().forEach((track) => track.stop());
+      }
+      this.#rawStream = null;
+    }
+  }
+
+  #ownsPipeline(epoch, stream, kind) {
+    return (
+      epoch === this.#epoch && this.stream === stream && this.kind === kind
+    );
+  }
+
+  #handleTrackEnded(epoch, endedKind) {
+    if (epoch !== this.#epoch || endedKind !== this.kind) {
+      return;
+    }
+    this.stop()
+      .then(() => {
+        if (endedKind === "screen") {
+          this.#onScreenShareEnded?.();
+        }
+      })
+      .catch(() => {
+        voiceLog.warn("[voice] failed to stop local video");
+      });
+  }
+
+  #applyContentHint() {
+    if (this.kind !== "screen") {
+      return;
+    }
+    const track = this.stream?.getVideoTracks?.()?.[0];
+    if (track && "contentHint" in track) {
+      track.contentHint =
+        this.#getScreenContent() === SCREEN_CONTENT_MOTION
+          ? "motion"
+          : "detail";
+    }
   }
 
   async #applyQuality(roomId) {

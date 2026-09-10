@@ -215,8 +215,8 @@ export default class ThemeSettingsEditor extends Component {
       <div>
         <AceEditor
           @content={{this.editedContent}}
-          @onChange={{fn (mut this.editedContent)}}
           @mode="html"
+          @onChange={{fn (mut this.editedContent)}}
         />
 
         {{#each this.errors as |error|}}
@@ -230,9 +230,9 @@ export default class ThemeSettingsEditor extends Component {
 
       <div class="buttons">
         <DButton
-          @action={{this.save}}
-          id="save"
           class="btn-primary save"
+          id="save"
+          @action={{this.save}}
           @disabled={{this.saveButtonDisabled}}
           @translatedLabel={{i18n "admin.customize.theme.save"}}
         />

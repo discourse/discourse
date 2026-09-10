@@ -631,6 +631,9 @@ bg:
       user_label: "Потребител"
       timeline:
         target_deleted: "Публикацията е изтрита"
+      author_penalty:
+        toast:
+          undo: "Отмени"
       notes:
         delete: "Изтрий"
       topic_label: "Тема"
@@ -1174,7 +1177,6 @@ bg:
       admin: "%{user} е админ"
       moderator_tooltip: "Този потребител е модератор"
       admin_tooltip: "Този потребител е админ"
-      silenced_tooltip: "Този потребител е заглушен"
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_permanently: "Този потребител е спрян."
       suspended_reason: "Причина:"
@@ -1232,6 +1234,12 @@ bg:
       tracked_topics_link: "Покажи "
       automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума"
       apps: "Приложения"
+      mcp_authorizations:
+        details: "Детайли"
+        never: "Никога"
+        status: "Статус"
+        statuses:
+          active: "Активни"
       revoke_access: "Прекратяване на достъпа"
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
@@ -3540,6 +3548,55 @@ bg:
       config:
         developer:
           title: "Разработчик"
+        mcp:
+          tabs:
+            access: "Достъп"
+            activity: "Активност"
+          overview:
+            status: "Статус"
+          access:
+            title: "Достъп"
+            group: "Група"
+            groups: "Групи"
+            actions: "Действия"
+            edit: "Редактирай"
+            delete: "Изтрий"
+          primitives:
+            group_by_options:
+              kind: "Тип"
+            kind: "Тип"
+          clients:
+            actions: "Действия"
+            block: "Блокирай "
+            presets:
+              custom: "По избор"
+          authorizations:
+            user: "Потребител"
+            status: "Статус"
+            actions: "Действия"
+          activity:
+            time: "Време "
+            user: "Потребител"
+            duration: "Продължителност"
+          values:
+            server_status:
+              disabled: "Деактивирани"
+            client_trust:
+              approved: "Одобрена"
+            authorization_status:
+              active: "Активни"
+            activity_outcome:
+              error: "Грешка"
+            primitive_state:
+              enabled: "Да е включен"
+              disabled: "Деактивирани"
+            primitive_kind:
+              all: "Всички видове"
+            filter:
+              all: "Всички"
+          never: "Никога"
+          actions:
+            revoke: "Анулирай"
         emojis:
           title: "Емотикони"
         files:

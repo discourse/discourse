@@ -35,12 +35,12 @@ export default class SolvedAccordionItemMetadata extends Component {
   }
 
   <template>
-    <DUserLink @username={{this.post.username}} class="user-link">
+    <DUserLink class="user-link" @username={{this.post.username}}>
       {{dBoundAvatarTemplate this.post.avatar_template "tiny"}}
       <span>{{this.userDisplayName}}</span>
     </DUserLink>
     <span class="dot-separator"></span>
-    <a href={{this.post.url}} class="date-link" title={{i18n "post.sr_date"}}>
+    <a class="date-link" href={{this.post.url}} title={{i18n "post.sr_date"}}>
       <DRelativeDate @date={{this.post.created_at}} />
     </a>
 
@@ -55,8 +55,8 @@ export default class SolvedAccordionItemMetadata extends Component {
           <Placeholder @name="user">
 
             <DUserLink
-              @username={{this.post.accepter_username}}
               class="accepter-link"
+              @username={{this.post.accepter_username}}
             >
               {{this.accepterDisplayName}}
             </DUserLink>

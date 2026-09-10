@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ca:
+  mcp:
+    oauth:
+      deny: "Denega"
+      approve: "Autoritza"
   llms_txt:
     sections:
       optional: "Opcional"
@@ -2894,8 +2898,6 @@ ca:
         title: "Sí"
       approve_and_unhide:
         title: "Sí"
-      delete_post:
-        complete: "Publicació suprimida"
       delete_user:
         complete: "Usuari suprimit"
         reason: "Suprimit mitjançant cua de revisió"

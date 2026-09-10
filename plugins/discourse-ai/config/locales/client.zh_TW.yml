@@ -19,6 +19,15 @@ zh_TW:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "詢問 AI"
+        ask_ai:
+          title: "詢問 AI"
+          seconds: "%{seconds} 秒"
+          date: "日期"
+          outcomes:
+            failed: "失敗"
         emotion:
           title: "情緒"
           description: "該表格列出了按特定情緒分類的貼文數量。根據所選情緒分類方法，貼文將使用配置的情緒分類模型（“SamLowe/roberta-base-go_emotions”）或配置的情緒分類智能體進行分類。"

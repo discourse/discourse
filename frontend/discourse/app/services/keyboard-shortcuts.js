@@ -213,6 +213,11 @@ export default class KeyboardShortcutLib extends Service {
     this.keyTrapper = null;
   }
 
+  get isPostTextSelected() {
+    const topicController = getOwner(this).lookup("controller:topic");
+    return !!topicController.quoteState.postId;
+  }
+
   bindEvents() {
     Object.keys(DEFAULT_BINDINGS).forEach((key) => {
       this.bindKey(key);
@@ -388,14 +393,6 @@ export default class KeyboardShortcutLib extends Service {
     this._bookmarkCurrentTopic(event);
   }
 
-  _bookmarkCurrentTopic(event) {
-    const topic = this.currentTopic();
-    if (topic && document.querySelectorAll(".posts-wrapper").length) {
-      preventKeyboardEvent(event);
-      getOwner(this).lookup("controller:topic").send("toggleBookmark");
-    }
-  }
-
   logout() {
     getOwner(this).lookup("route:application").send("logout");
   }
@@ -475,12 +472,6 @@ export default class KeyboardShortcutLib extends Service {
     this._jumpTo("jumpUnread");
   }
 
-  _jumpTo(direction) {
-    if (document.querySelector(".container.posts")) {
-      getOwner(this).lookup("controller:topic").send(direction);
-    }
-  }
-
   replyToTopic() {
     this._replyToPost();
 
@@ -501,113 +492,6 @@ export default class KeyboardShortcutLib extends Service {
       return;
     }
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
-  }
-
-  _moveAmongNestedPosts(direction) {
-    // Mirrors _moveSelection; nested post wrappers extend through their whole
-    // subtrees, so use each wrapper's own content element for height/offset.
-    const now = +new Date();
-    const fast =
-      this._lastMoveTime && now - this._lastMoveTime < 1.5 * animationDuration;
-    this._lastMoveTime = now;
-
-    const posts = Array.from(document.querySelectorAll(NESTED_POST_SELECTOR));
-    if (!posts.length) {
-      return;
-    }
-    const contentOf = (post) =>
-      post.querySelector(NESTED_POST_CONTENT_SELECTOR) || post;
-
-    let selected = posts.find((p) => p.hasAttribute("data-keyboard-selected"));
-
-    if (selected && !fast) {
-      const rect = contentOf(selected).getBoundingClientRect();
-      if (rect.bottom < headerOffset() || rect.top > window.innerHeight) {
-        selected = null;
-      }
-    }
-
-    if (!selected) {
-      const offset = headerOffset();
-      selected =
-        posts.find((p) => {
-          const rect = contentOf(p).getBoundingClientRect();
-          return direction > 0 ? rect.top >= offset : rect.bottom >= offset;
-        }) || posts[posts.length - 1];
-      direction = 0;
-    }
-
-    if (!fast && direction !== 0) {
-      const selectedContent = contentOf(selected);
-      const beginContent = domUtils.offset(selectedContent).top;
-      const endContent = beginContent + selectedContent.offsetHeight;
-      const beginScreen = window.scrollY;
-      const endScreen = beginScreen + window.innerHeight;
-
-      if (direction < 0 && beginScreen > beginContent) {
-        return this._scrollTo(
-          Math.max(
-            beginScreen - window.innerHeight + 3 * headerOffset(),
-            beginContent - headerOffset()
-          )
-        );
-      } else if (direction > 0 && endScreen < endContent - headerOffset()) {
-        return this._scrollTo(
-          Math.min(
-            endScreen - 3 * headerOffset(),
-            endContent - window.innerHeight
-          )
-        );
-      }
-    }
-
-    let next;
-    let newIndex = posts.indexOf(selected);
-    while (true) {
-      newIndex += direction;
-      next = posts[newIndex];
-      if (!next) {
-        return;
-      }
-      if (contentOf(next).getBoundingClientRect().height > 0) {
-        break;
-      }
-      if (direction === 0) {
-        break;
-      }
-    }
-
-    // Data attribute, not a class — Ember rebuilds .nested-post's class on cloaking/highlight changes and would wipe it.
-    for (const p of posts) {
-      p.removeAttribute("data-keyboard-selected");
-      p.removeAttribute("tabindex");
-    }
-    next.setAttribute("data-keyboard-selected", "true");
-    next.setAttribute("tabindex", "0");
-    next.focus({ preventScroll: true });
-
-    // Subscribed by Nested to trigger boundary load-more on last-post selection.
-    this.appEvents.trigger("keyboard:move-selection", {
-      articles: posts,
-      selectedArticle: next,
-    });
-
-    const nextContent = contentOf(next);
-    const contentTop = domUtils.offset(nextContent).top;
-    const contentTopPosition = contentTop - headerOffset();
-
-    // k onto a tall post lands at its bottom page so successive k's scroll up through it.
-    if (
-      !fast &&
-      direction < 0 &&
-      nextContent.offsetHeight > window.innerHeight
-    ) {
-      return this._scrollTo(
-        contentTop + nextContent.offsetHeight - window.innerHeight
-      );
-    }
-
-    this._scrollTo(contentTopPosition);
   }
 
   bulkSelectItem() {
@@ -749,16 +633,6 @@ export default class KeyboardShortcutLib extends Service {
     throttle(this, "_setTracking", 3, INPUT_DELAY, true);
   }
 
-  _setTracking(levelId) {
-    const topic = this.currentTopic();
-
-    if (!topic) {
-      return;
-    }
-
-    topic.details.updateNotifications(levelId);
-  }
-
   sendToTopicListItemView(action, elem) {
     elem = elem || document.querySelector("tr.selected.topic-list-item");
     if (elem) {
@@ -778,11 +652,6 @@ export default class KeyboardShortcutLib extends Service {
         return topic;
       }
     }
-  }
-
-  get isPostTextSelected() {
-    const topicController = getOwner(this).lookup("controller:topic");
-    return !!topicController.quoteState.postId;
   }
 
   sendToSelectedPost(action, elem) {
@@ -819,6 +688,189 @@ export default class KeyboardShortcutLib extends Service {
     }
 
     return false;
+  }
+
+  categoriesTopicsList() {
+    switch (this.siteSettings.desktop_category_page_style) {
+      case "categories_with_featured_topics":
+        return document.querySelectorAll(".latest .featured-topic");
+      case "categories_and_latest_topics":
+      case "categories_and_latest_topics_created_date":
+        return document.querySelectorAll(
+          ".latest-topic-list .latest-topic-list-item"
+        );
+      case "categories_and_top_topics":
+        return document.querySelectorAll(
+          ".top-topic-list .latest-topic-list-item"
+        );
+      default:
+        return [];
+    }
+  }
+
+  deferTopic() {
+    getOwner(this).lookup("controller:topic").send("deferTopic");
+  }
+
+  toggleAdminActions() {
+    document.querySelector(".toggle-admin-menu")?.click();
+  }
+
+  toggleBulkSelect() {
+    const bulkSelect = document.querySelector("button.bulk-select");
+
+    if (bulkSelect) {
+      bulkSelect.click();
+    } else {
+      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
+    }
+  }
+
+  toggleArchivePM() {
+    getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
+  }
+
+  webviewKeyboardBack() {
+    if (capabilities.isAppWebview) {
+      window.history.back();
+    }
+  }
+
+  webviewKeyboardForward() {
+    if (capabilities.isAppWebview) {
+      window.history.forward();
+    }
+  }
+
+  _bookmarkCurrentTopic(event) {
+    const topic = this.currentTopic();
+    if (topic && document.querySelectorAll(".posts-wrapper").length) {
+      preventKeyboardEvent(event);
+      getOwner(this).lookup("controller:topic").send("toggleBookmark");
+    }
+  }
+
+  _jumpTo(direction) {
+    if (document.querySelector(".container.posts")) {
+      getOwner(this).lookup("controller:topic").send(direction);
+    }
+  }
+
+  _moveAmongNestedPosts(direction) {
+    // Mirrors _moveSelection; nested post wrappers extend through their whole
+    // subtrees, so use each wrapper's own content element for height/offset.
+    const now = +new Date();
+    const fast =
+      this._lastMoveTime && now - this._lastMoveTime < 1.5 * animationDuration;
+    this._lastMoveTime = now;
+
+    const posts = Array.from(document.querySelectorAll(NESTED_POST_SELECTOR));
+    if (!posts.length) {
+      return;
+    }
+    const contentOf = (post) =>
+      post.querySelector(NESTED_POST_CONTENT_SELECTOR) || post;
+
+    let selected = posts.find((p) => p.hasAttribute("data-keyboard-selected"));
+
+    if (selected && !fast) {
+      const rect = contentOf(selected).getBoundingClientRect();
+      if (rect.bottom < headerOffset() || rect.top > window.innerHeight) {
+        selected = null;
+      }
+    }
+
+    if (!selected) {
+      const offset = headerOffset();
+      selected =
+        posts.find((p) => {
+          const rect = contentOf(p).getBoundingClientRect();
+          return direction > 0 ? rect.top >= offset : rect.bottom >= offset;
+        }) || posts[posts.length - 1];
+      direction = 0;
+    }
+
+    if (!fast && direction !== 0) {
+      const selectedContent = contentOf(selected);
+      const beginContent = domUtils.offset(selectedContent).top;
+      const endContent = beginContent + selectedContent.offsetHeight;
+      const beginScreen = window.scrollY;
+      const endScreen = beginScreen + window.innerHeight;
+
+      if (direction < 0 && beginScreen > beginContent) {
+        return this._scrollTo(
+          Math.max(
+            beginScreen - window.innerHeight + 3 * headerOffset(),
+            beginContent - headerOffset()
+          )
+        );
+      } else if (direction > 0 && endScreen < endContent - headerOffset()) {
+        return this._scrollTo(
+          Math.min(
+            endScreen - 3 * headerOffset(),
+            endContent - window.innerHeight
+          )
+        );
+      }
+    }
+
+    let next;
+    let newIndex = posts.indexOf(selected);
+    while (true) {
+      newIndex += direction;
+      next = posts[newIndex];
+      if (!next) {
+        return;
+      }
+      if (contentOf(next).getBoundingClientRect().height > 0) {
+        break;
+      }
+      if (direction === 0) {
+        break;
+      }
+    }
+
+    // Data attribute, not a class — Ember rebuilds .nested-post's class on cloaking/highlight changes and would wipe it.
+    for (const p of posts) {
+      p.removeAttribute("data-keyboard-selected");
+      p.removeAttribute("tabindex");
+    }
+    next.setAttribute("data-keyboard-selected", "true");
+    next.setAttribute("tabindex", "0");
+    next.focus({ preventScroll: true });
+
+    // Subscribed by Nested to trigger boundary load-more on last-post selection.
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles: posts,
+      selectedArticle: next,
+    });
+
+    const nextContent = contentOf(next);
+    const contentTop = domUtils.offset(nextContent).top;
+    const contentTopPosition = contentTop - headerOffset();
+
+    // k onto a tall post lands at its bottom page so successive k's scroll up through it.
+    if (
+      !fast &&
+      direction < 0 &&
+      nextContent.offsetHeight > window.innerHeight
+    ) {
+      return this._scrollTo(
+        contentTop + nextContent.offsetHeight - window.innerHeight
+      );
+    }
+
+    this._scrollTo(contentTopPosition);
+  }
+
+  _setTracking(levelId) {
+    const topic = this.currentTopic();
+
+    if (!topic) {
+      return;
+    }
+
+    topic.details.updateNotifications(levelId);
   }
 
   _bindToSelectedPost(action, binding) {
@@ -1027,24 +1079,6 @@ export default class KeyboardShortcutLib extends Service {
     });
   }
 
-  categoriesTopicsList() {
-    switch (this.siteSettings.desktop_category_page_style) {
-      case "categories_with_featured_topics":
-        return document.querySelectorAll(".latest .featured-topic");
-      case "categories_and_latest_topics":
-      case "categories_and_latest_topics_created_date":
-        return document.querySelectorAll(
-          ".latest-topic-list .latest-topic-list-item"
-        );
-      case "categories_and_top_topics":
-        return document.querySelectorAll(
-          ".top-topic-list .latest-topic-list-item"
-        );
-      default:
-        return [];
-    }
-  }
-
   _findArticles() {
     let categoriesTopicsList;
     if (document.querySelector(".posts-wrapper")) {
@@ -1106,39 +1140,5 @@ export default class KeyboardShortcutLib extends Service {
 
   _getSelectedTopicListItem() {
     return document.querySelector("tr.selected.topic-list-item");
-  }
-
-  deferTopic() {
-    getOwner(this).lookup("controller:topic").send("deferTopic");
-  }
-
-  toggleAdminActions() {
-    document.querySelector(".toggle-admin-menu")?.click();
-  }
-
-  toggleBulkSelect() {
-    const bulkSelect = document.querySelector("button.bulk-select");
-
-    if (bulkSelect) {
-      bulkSelect.click();
-    } else {
-      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
-    }
-  }
-
-  toggleArchivePM() {
-    getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
-  }
-
-  webviewKeyboardBack() {
-    if (capabilities.isAppWebview) {
-      window.history.back();
-    }
-  }
-
-  webviewKeyboardForward() {
-    if (capabilities.isAppWebview) {
-      window.history.forward();
-    }
   }
 }

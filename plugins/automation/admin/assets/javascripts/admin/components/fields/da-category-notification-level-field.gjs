@@ -7,7 +7,7 @@ export default class CategoryNotificationLevelField extends BaseField {
   <template>
     <section class="field category-notification-level-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <CategoryNotificationsTracking
