@@ -516,8 +516,8 @@ eviltrout</p>
 
     assert.cooked(
       "robin@email.host",
-      "<p>robin@email.host</p>",
-      "won't add mention class to an email address"
+      '<p><a href="mailto:robin@email.host">robin@email.host</a></p>',
+      "allows any TLD for emails"
     );
 
     assert.cooked(
