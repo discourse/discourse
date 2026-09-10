@@ -1,34 +1,31 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class AdminEditableField extends Component {
-  buffer = "";
-  editing = false;
+  @tracked buffer = "";
 
   @action
   edit(event) {
     event?.preventDefault();
-    this.set("buffer", this.value);
-    this.toggleProperty("editing");
+    this.buffer = this.args.value;
+    this.args.toggleEditing();
   }
 
   @action
   save() {
-    // Action has to toggle 'editing' property.
-    this.action(this.buffer);
+    // Saving is what leaves edit mode, so the caller toggles `editing` too.
+    this.args.action(this.buffer);
   }
 
   <template>
-    <div class="field">{{i18n this.name}}</div>
+    <div class="field">{{i18n @name}}</div>
     <div class="value">
-      {{#if this.editing}}
+      {{#if @editing}}
         <DTextField
           @autocomplete="off"
           @autofocus="autofocus"
@@ -36,12 +33,12 @@ export default class AdminEditableField extends Component {
         />
       {{else}}
         <a class="inline-editable-field" href {{on "click" this.edit}}>
-          <span>{{this.value}}</span>
+          <span>{{@value}}</span>
         </a>
       {{/if}}
     </div>
     <div class="controls">
-      {{#if this.editing}}
+      {{#if @editing}}
         <DButton
           class="btn-default"
           @action={{this.save}}
