@@ -2022,6 +2022,63 @@ RSpec.describe TopicsFilter do
           ).to eq([])
         end
       end
+
+      describe "when query string is `-created-by:@username`" do
+        it "excludes topics created by the named user" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:@#{user.username}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user2.id)
+        end
+
+        it "keeps topics whose creator has been deleted" do
+          topic_by_deleted_user = Fabricate(:topic).tap { |t| t.update_columns(user_id: nil) }
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:@#{user.username}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user2.id, topic_by_deleted_user.id)
+        end
+      end
+
+      describe "when query string is `-created-by:@username,@username2`" do
+        it "excludes topics created by any of the named users" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:@#{user.username},@#{user2.username}")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `created-by:@username -created-by:@username2`" do
+        it "includes topics by the first user and excludes topics by the second" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string(
+                "created-by:@#{user.username} -created-by:@#{user2.username}",
+              )
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
+        end
+      end
+
+      describe "when query string is `-created-by:@invalid`" do
+        it "excludes nothing when the user does not exist" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:@invalid")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user.id, topic2_by_user.id, topic_by_user2.id)
+        end
+      end
     end
 
     describe "when filtering by topic creator's group" do
@@ -2162,6 +2219,67 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(
             topic_by_super_private_group_owner.id,
             topic_by_super_private_group_user.id,
+          )
+        end
+      end
+
+      describe "when query string is `-created-by:group1`" do
+        it "excludes topics created by members of the specified group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:group1")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group2_user.id)
+        end
+
+        it "keeps topics whose creator has been deleted" do
+          topic_by_deleted_user = Fabricate(:topic).tap { |t| t.update_columns(user_id: nil) }
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:group1")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group2_user.id, topic_by_deleted_user.id)
+        end
+      end
+
+      describe "when query string is `-created-by:group1,group2`" do
+        it "excludes topics created by members of any specified group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:group1,group2")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `-created-by:@username,group1`" do
+        it "excludes topics created by the named user and by members of the group" do
+          other_topic = Fabricate(:topic)
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:@#{user_in_group2.username},group1")
+              .pluck(:id),
+          ).to contain_exactly(other_topic.id)
+        end
+      end
+
+      describe "when query string is `-created-by:invalid`" do
+        it "excludes nothing when the group does not exist" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-created-by:invalid")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_by_group1_user.id,
+            topic_by_group2_user.id,
+            topic_by_both_groups_user.id,
           )
         end
       end

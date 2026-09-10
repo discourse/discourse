@@ -1939,6 +1939,18 @@ RSpec.describe ListController do
           response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
         ).to contain_exactly(topic.id, topic2.id)
       end
+
+      it "returns only topics not created by the user when `q` query param is `-created-by:username`" do
+        sign_in(user)
+
+        get "/filter.json", params: { q: "-created-by:username" }
+
+        expect(response.status).to eq(200)
+
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+        ).to contain_exactly(topic2.id)
+      end
     end
 
     describe "when filtering with the `category:<category_slug>` filter" do

@@ -69,7 +69,7 @@ class TopicsFilter
       when "created-before"
         filter_by_created(before: filter_values)
       when "created-by"
-        filter_created_by(names: filter_values.flat_map { |value| value.split(",") })
+        filter_created_by(values: key_prefixes.zip(filter_values))
       when "in"
         filter_in(values: filter_values)
       when "latest-post-after"
@@ -232,6 +232,7 @@ class TopicsFilter
         name: "created-by:",
         description: I18n.t("filter.description.created_by"),
         type: "username_group_list",
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_created_by") }],
         delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
       {
@@ -446,8 +447,6 @@ class TopicsFilter
       value if value =~ /\A\d+\z/
     when "order"
       values.flat_map { |value| value.split(",") }
-    when "created-by"
-      values.flat_map { |value| value.split(",").map { |username| username.delete_prefix("@") } }
     else
       values
     end
@@ -759,35 +758,81 @@ class TopicsFilter
       SQL
   end
 
-  def filter_created_by(names:)
-    if names.include?("me") && @guardian.authenticated?
-      names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
+  # created-by:user,group => topics whose creator matches any of the given users/groups
+  # -created-by:user,group => topics whose creator matches none of them
+  def filter_created_by(values:)
+    include_names = []
+    exclude_names = []
+
+    values.each do |key_prefix, value|
+      names =
+        value
+          .split(",")
+          .map { |name| name.delete_prefix("@") }
+          .reject(&:blank?)
+          .map do |name|
+            name == "me" && @guardian.authenticated? ? @guardian.user.username_lower : name
+          end
+
+      if key_prefix == "-"
+        exclude_names.concat(names)
+      else
+        include_names.concat(names)
+      end
     end
 
-    if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
-         user_ids.any?
+    include_names.uniq!
+    exclude_names.uniq!
+
+    include_created_by(include_names) if include_names.present?
+    exclude_created_by(exclude_names) if exclude_names.present?
+
+    @scope
+  end
+
+  # Resolves names as usernames first -- mirrors the long-standing behaviour where a
+  # whole list is treated as usernames if any name matches one, otherwise as groups.
+  def include_created_by(names)
+    if (user_ids = created_by_user_ids(names)).present?
       @scope = @scope.joins(:user).where(user_id: user_ids)
-      return
-    end
-
-    if (
-         group_ids =
-           Group
-             .visible_groups(@guardian.user)
-             .members_visible_groups(@guardian.user)
-             .where("lower(name) IN (?)", names.map(&:downcase))
-             .pluck(:id)
-       ) && group_ids.any?
+    elsif (group_ids = created_by_group_ids(names)).present?
       @scope =
         @scope
           .joins(:user)
           .joins("INNER JOIN group_users ON group_users.user_id = users.id")
           .where("group_users.group_id IN (?)", group_ids)
           .distinct(:id)
-      return
+    else
+      @scope = @scope.none
+    end
+  end
+
+  # Users and groups are both resolved so a named group is never silently dropped, and
+  # unknown names exclude nothing. NULL user_ids (deleted creators) would fail NOT IN.
+  def exclude_created_by(names)
+    if (user_ids = created_by_user_ids(names)).present?
+      @scope = @scope.where("topics.user_id IS NULL OR topics.user_id NOT IN (?)", user_ids)
     end
 
-    @scope = @scope.none
+    if (group_ids = created_by_group_ids(names)).present?
+      @scope =
+        @scope.where(
+          "topics.user_id IS NULL OR topics.user_id NOT IN (?)",
+          GroupUser.where(group_id: group_ids).select(:user_id),
+        )
+    end
+  end
+
+  def created_by_user_ids(names)
+    User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)
+  end
+
+  def created_by_group_ids(names)
+    Group
+      .visible_groups(@guardian.user)
+      .members_visible_groups(@guardian.user)
+      .where("lower(name) IN (?)", names.map(&:downcase))
+      .pluck(:id)
   end
 
   def apply_custom_filter!(scope:, filter_name:, values:)
