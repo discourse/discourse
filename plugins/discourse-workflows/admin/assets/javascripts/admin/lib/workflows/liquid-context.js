@@ -70,6 +70,7 @@ export const LIQUID_TAGS = [
   ["continue", ""],
   ["cycle", "a, b"],
   ["decrement", "name"],
+  ["echo", "value"],
   ["else", ""],
   ["elsif", "condition"],
   ["endcapture", ""],
@@ -83,6 +84,7 @@ export const LIQUID_TAGS = [
   ["for", "item in collection"],
   ["if", "condition"],
   ["increment", "name"],
+  ["liquid", ""],
   ["raw", ""],
   ["tablerow", "item in collection"],
   ["unless", "condition"],
@@ -276,12 +278,11 @@ export function analyzeLiquidAt(text, pos) {
   }
 
   const { delimiter, open } = context;
-  const partial = WORD_RE.exec(text.slice(open + 2, pos))[0];
+  // Whitespace control (`{%-`) is part of the delimiter, not of the tag name.
+  const inner = text.slice(open + 2, pos).replace(/^-/, "");
+  const partial = WORD_RE.exec(inner)[0];
   const from = pos - partial.length;
-  const preceding = text
-    .slice(open + 2, from)
-    .replace(/-$/, "")
-    .trimEnd();
+  const preceding = inner.slice(0, inner.length - partial.length).trimEnd();
 
   if (delimiter === "tag" && preceding === "") {
     return { kind: "tagName", delimiter, partial, from };

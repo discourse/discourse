@@ -123,6 +123,21 @@ module("Unit | lib | discourse-workflows | liquid-context", function () {
       });
     });
 
+    test("completes a tag name after whitespace control", function (assert) {
+      assert.deepEqual(analyzeLiquidAt("{%- fo", 6), {
+        kind: "tagName",
+        delimiter: "tag",
+        partial: "fo",
+        from: 4,
+      });
+      assert.deepEqual(analyzeLiquidAt("{%-fo", 5), {
+        kind: "tagName",
+        delimiter: "tag",
+        partial: "fo",
+        from: 3,
+      });
+    });
+
     test("completes a filter after a pipe", function (assert) {
       assert.deepEqual(analyzeLiquidAt("{{ name | upc", 13), {
         kind: "filter",
