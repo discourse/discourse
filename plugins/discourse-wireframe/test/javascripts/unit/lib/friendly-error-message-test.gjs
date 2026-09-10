@@ -3,8 +3,12 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
+import Card from "discourse/blocks/builtin/card";
 import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
-import { validateLayout } from "discourse/lib/blocks/-internals/validation/layout";
+import {
+  collectEntryFailures,
+  validateLayout,
+} from "discourse/lib/blocks/-internals/validation/layout";
 import {
   friendlyEntryMessages,
   friendlyErrorMessage,
@@ -38,6 +42,78 @@ async function validatePermissively(owner, entry) {
 
 module("Unit | Lib | friendly-error-message", function (hooks) {
   setupTest(hooks);
+
+  test("custom field diagnostics keep different messages for the same field independently keyed", function (assert) {
+    const entry = { block: Card, args: { actionLabel: "Visit", href: 123 } };
+    const details = collectEntryFailures(entry, Card);
+    const result = friendlyEntryMessages({ __failureDetails: details });
+
+    assert.strictEqual(
+      result.length,
+      2,
+      "both schema and completeness errors survive"
+    );
+    assert.strictEqual(
+      new Set(result.map(({ text }) => text)).size,
+      2,
+      "the same field has two different instructions"
+    );
+    assert.strictEqual(
+      new Set(result.map(({ id }) => id)).size,
+      2,
+      "different instructions for the same field have unique keys"
+    );
+    assert.deepEqual(
+      friendlyEntryMessages({ __failureDetails: details.toReversed() }).map(
+        ({ id }) => id
+      ),
+      result.map(({ id }) => id).toReversed(),
+      "keys follow each instruction when validation order changes"
+    );
+  });
+
+  test("custom field diagnostics keep distinct block messages independently keyed", function (assert) {
+    const messages = ["Choose a destination.", "Choose a treatment."];
+    const entry = {
+      __failureDetails: messages.map((message) => ({
+        code: ERROR_CODES.CONSTRAINT_VIOLATION,
+        expected: { custom: true },
+        message,
+      })),
+    };
+    const result = friendlyEntryMessages(entry);
+
+    assert.deepEqual(
+      result.map(({ text }) => text),
+      messages,
+      "each custom message remains visible"
+    );
+    assert.strictEqual(
+      new Set(result.map(({ id }) => id)).size,
+      2,
+      "different block-level issues cannot collide in a keyed list"
+    );
+    assert.deepEqual(
+      friendlyEntryMessages({
+        __failureDetails: entry.__failureDetails.toReversed(),
+      }).map(({ id }) => id),
+      result.map(({ id }) => id).toReversed(),
+      "keys follow the diagnostic rather than its position"
+    );
+  });
+
+  test("custom field diagnostics preserve the validator's translated message", function (assert) {
+    assert.strictEqual(
+      friendlyErrorMessage({
+        code: ERROR_CODES.CONSTRAINT_VIOLATION,
+        field: "imageAlt",
+        expected: { custom: true },
+        message: "Describe this informative image.",
+      }),
+      "Describe this informative image.",
+      "custom completeness instructions are not replaced by a generic constraint message"
+    );
+  });
 
   test("an unknown entry key is stamped with a structured code", async function (assert) {
     const entry = { block: LeafBlock, bogusKey: {} };

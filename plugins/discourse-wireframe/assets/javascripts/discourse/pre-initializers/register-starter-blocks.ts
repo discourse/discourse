@@ -1,7 +1,6 @@
 import type { BlockClass } from "discourse/lib/blocks/-internals/types";
 import { type PluginApi, withPluginApi } from "discourse/lib/plugin-api";
 import WFCtaActions from "../blocks/wf-cta-actions";
-import WFCtaCard from "../blocks/wf-cta-card";
 
 // TODO(devxp-typescript-pending): use `PluginApi` directly once core declares
 // the `registerBlock` parameter on its JavaScript-backed public type.
@@ -25,7 +24,6 @@ export default {
   initialize(): void {
     withPluginApi((api: BlockRegistrationPluginApi): void => {
       api.registerBlock(WFCtaActions);
-      api.registerBlock(WFCtaCard);
     });
   },
 };

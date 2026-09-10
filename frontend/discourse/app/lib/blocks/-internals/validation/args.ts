@@ -27,6 +27,8 @@ export interface ValidationErrorDetails {
   code: string;
   /** The arg name that failed (omitted for block-level / cross-arg failures). */
   field?: string;
+  /** Author-facing message supplied by a custom validator. */
+  message?: string;
   /** The actual value that failed validation. */
   value?: unknown;
   /** Constraint metadata (pattern, enum, min/max, ...). Shape varies by code. */

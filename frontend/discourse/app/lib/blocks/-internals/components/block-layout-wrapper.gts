@@ -9,6 +9,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
+import type { TrustedHTML } from "@ember/template";
 import type { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
 import type { BlockDataDeclaration } from "discourse/blocks/types";
@@ -56,12 +57,8 @@ interface WrappedBlockLayoutArgs {
   classNames?: string;
   // Extra CSS classes from the @block decorator.
   decoratorClassNames?: string | null;
-  // Optional inline style applied to the wrapper's outer element. Parent
-  // containers pass this at the invocation site when they need to position
-  // their children (e.g. CSS Grid placement, per-child flexbox overrides). The
-  // wrapper itself is layout-agnostic and just applies whatever the parent
-  // computes.
-  style?: string;
+  /** Optional inline allocation styles supplied by the parent container. */
+  style?: string | TrustedHTML | null;
   // The block's declared data dependency, present when the block declares a
   // data option, otherwise null. When present the wrapper resolves it and
   // hands the block a bound data-region boundary as the Data argument.
@@ -184,6 +181,7 @@ class WrappedBlockLayout extends Component<WrappedBlockLayoutSignature> {
         @classNames
       }}
       data-block-id={{@id}}
+      data-block-layout-item={{@name}}
       data-block-name={{@name}}
       data-block-namespace={{@namespace}}
       style={{@style}}

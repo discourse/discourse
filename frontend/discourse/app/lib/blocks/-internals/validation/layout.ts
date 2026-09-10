@@ -369,10 +369,31 @@ function validateBlockConstraints(
       argsWithDefaults
     );
     if (customErrors && customErrors.length > 0) {
+      for (const issue of customErrors) {
+        if (typeof issue === "string") {
+          continue;
+        }
+        const field =
+          issue.field && Object.hasOwn(metadata.args ?? {}, issue.field)
+            ? issue.field
+            : undefined;
+        report(field ? `args.${field}` : "validate", issue.message, {
+          code: ERROR_CODES.CONSTRAINT_VIOLATION,
+          field,
+          message: issue.message,
+          expected: { custom: true },
+        });
+      }
+      const messages = customErrors.filter(
+        (error): error is string => typeof error === "string"
+      );
+      if (!messages.length) {
+        return;
+      }
       const errorMessage =
-        customErrors.length === 1
-          ? customErrors[0]
-          : customErrors.map((e) => `  - ${e}`).join("\n");
+        messages.length === 1
+          ? messages[0]
+          : messages.map((e) => `  - ${e}`).join("\n");
       report("validate", errorMessage, {
         code: ERROR_CODES.CONSTRAINT_VIOLATION,
         expected: { custom: true },

@@ -36,8 +36,8 @@ export function isImageArgValue(value: unknown): value is ImageArgValue {
  * service reads, no DOM — so it can be unit-tested with plain JS
  * fixtures.
  *
- * Supports multi-image blocks (e.g. `wf:media-card` with both an
- * avatar and a cover image) and the inline editing affordances on the
+ * Supports multi-image blocks (e.g. a card with both an
+ * avatar and a feature image) and the inline editing affordances on the
  * first-class `image` arg type.
  */
 

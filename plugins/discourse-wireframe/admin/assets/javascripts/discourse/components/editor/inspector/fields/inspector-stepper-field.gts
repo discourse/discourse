@@ -35,6 +35,8 @@ interface InspectorStepperFieldSignature {
       max?: number;
       /** Numeric-control presentation hints. */
       ui?: {
+        /** Hint displayed while the numeric override is unset. */
+        placeholder?: string;
         /** Amount added or removed by each action. */
         step?: number;
       };
@@ -167,7 +169,7 @@ export default class InspectorStepperField extends Component<InspectorStepperFie
     value: number | null
   ): void {
     if (this.args.custom) {
-      this.args.custom.set(value);
+      this.args.custom.set(value ?? undefined);
     } else {
       this.args.onChange?.(value);
     }
@@ -187,6 +189,7 @@ export default class InspectorStepperField extends Component<InspectorStepperFie
         class="wireframe-stepper-field__number"
         max={{this.max}}
         min={{this.min}}
+        placeholder={{@schema.ui.placeholder}}
         step={{this.step}}
         type="number"
         value={{this.numberValue}}

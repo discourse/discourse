@@ -1,10 +1,139 @@
 import { module, test } from "qunit";
+import { cardArgs } from "discourse/blocks/-internals/card-args";
 import {
   buildValidationRule,
   groupFields,
   isFieldVisible,
   schemaToFields,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields";
+
+module("Unit | Discourse Wireframe | Card inspector metadata", function () {
+  function visibleNames(overrides = {}) {
+    const values = Object.fromEntries(
+      Object.entries(cardArgs).map(([name, schema]) => [name, schema.default])
+    );
+    Object.assign(values, overrides);
+    return schemaToFields(cardArgs)
+      .filter((field) => isFieldVisible(field, values))
+      .map((field) => field.name);
+  }
+
+  test("optional groups are disclosures and disabled features do not crowd the form", function (assert) {
+    const groups = groupFields(schemaToFields(cardArgs));
+    assert.deepEqual(
+      groups.filter((group) => group.disclosure).map((group) => group.group),
+      ["label", "identity", "actions", "appearance", "advanced"],
+      "optional groups share stable disclosure identities"
+    );
+    assert.true(
+      groups
+        .filter((group) => group.disclosure)
+        .every((group) => group.collapsed),
+      "optional groups start closed"
+    );
+    const names = visibleNames();
+    for (const name of [
+      "title",
+      "body",
+      "presentation",
+      "image",
+      "identityEnabled",
+      "secondaryEnabled",
+    ]) {
+      assert.true(names.includes(name), `${name} remains discoverable`);
+    }
+    for (const name of [
+      "imageWidth",
+      "imageSide",
+      "identityName",
+      "avatar",
+      "identityTreatment",
+      "secondaryLabel",
+      "linkLabel",
+      "imageAlt",
+    ]) {
+      assert.false(names.includes(name), `${name} is hidden while inactive`);
+    }
+  });
+
+  test("composition and identity controls follow independent saved preferences", function (assert) {
+    const values = {
+      presentation: "above",
+      image: { url: "/feature.png" },
+      identityEnabled: true,
+      avatarDisplay: "initials",
+      identityPlacement: "media",
+    };
+    const names = visibleNames(values);
+    for (const name of [
+      "identityName",
+      "identityRole",
+      "avatarDisplay",
+      "identityFormat",
+      "identityPlacement",
+      "identityTreatment",
+      "identityShape",
+    ]) {
+      assert.true(
+        names.includes(name),
+        `${name} is available for media identity`
+      );
+    }
+    assert.false(
+      names.includes("avatar"),
+      "initials do not require an image control"
+    );
+    assert.true(
+      visibleNames({ ...values, avatarDisplay: "image" }).includes("avatar"),
+      "portrait image has its own control"
+    );
+    const beside = visibleNames({ ...values, presentation: "beside" });
+    assert.true(beside.includes("imageWidth"), "Beside offers its split");
+    assert.true(beside.includes("imageSide"), "Beside offers logical side");
+    assert.false(
+      beside.includes("identityPlacement"),
+      "unsupported placement stays saved but is not offered"
+    );
+    assert.false(
+      beside.includes("identityTreatment"),
+      "content identity has no media treatment"
+    );
+    assert.false(
+      visibleNames({ ...values, presentation: "none" }).includes("image"),
+      "hidden media retains data without showing the control"
+    );
+  });
+
+  test("whole-card naming and image accessibility expose only applicable controls", function (assert) {
+    assert.true(
+      visibleNames({ wholeCard: true }).includes("linkLabel"),
+      "a whole-card link can have an explicit name"
+    );
+    assert.false(
+      visibleNames({ wholeCard: true, actionLabel: "Read more" }).includes(
+        "linkLabel"
+      ),
+      "visible action supplies the name"
+    );
+    assert.true(
+      visibleNames({ secondaryEnabled: true }).includes("secondaryHref"),
+      "secondary-only actions remain editable"
+    );
+    const values = { image: { url: "/feature.png" }, imageDecorative: false };
+    assert.true(
+      visibleNames(values).includes("imageAlt"),
+      "informative media offers alt text"
+    );
+    assert.false(
+      visibleNames({ ...values, imageDecorative: true }).includes("imageAlt"),
+      "decorative media does not ask for alt text"
+    );
+    assert.false(
+      visibleNames({ ...values, presentation: "none" }).includes("imageAlt"),
+      "inactive media does not ask for alt text"
+    );
+  });
+});
 
 module("Unit | Discourse Wireframe | schemaToFields", function () {
   test("returns an empty list for null/undefined/non-object schemas", function (assert) {
@@ -190,6 +319,26 @@ module("Unit | Discourse Wireframe | schemaToFields", function () {
 });
 
 module("Unit | Discourse Wireframe | groupFields", function () {
+  test("inspector metadata: disclosures combine independent descriptors by stable name", function (assert) {
+    const group = { name: "identity", label: "Speaker", collapsed: true };
+    const groups = groupFields(
+      schemaToFields({
+        title: { type: "string", ui: { group: "Content" } },
+        name: { type: "string", ui: { group } },
+        role: { type: "string", ui: { group: { ...group } } },
+      })
+    );
+    assert.strictEqual(groups.length, 2);
+    assert.strictEqual(groups[1].group, "identity");
+    assert.strictEqual(groups[1].label, "Speaker");
+    assert.true(groups[1].disclosure);
+    assert.true(groups[1].collapsed);
+    assert.false(groups[0].disclosure);
+    assert.deepEqual(
+      groups[1].fields.map((field) => field.name),
+      ["name", "role"]
+    );
+  });
   test("groups by `group`, preserving first-seen order", function (assert) {
     const fields = schemaToFields({
       title: { type: "string", ui: { group: "Content" } },
@@ -214,6 +363,26 @@ module("Unit | Discourse Wireframe | groupFields", function () {
 });
 
 module("Unit | Discourse Wireframe | isFieldVisible", function () {
+  test("inspector metadata: compound visibility requires every leaf and compares oneOf strictly", function (assert) {
+    const field = {
+      conditional: {
+        all: [
+          { arg: "enabled", equals: true },
+          { arg: "presentation", oneOf: ["above", "below"] },
+          { arg: "name", notEmpty: true },
+        ],
+      },
+    };
+    const values = { enabled: true, presentation: "below", name: "Sam" };
+    assert.true(isFieldVisible(field, values));
+    assert.false(isFieldVisible(field, { ...values, enabled: false }));
+    assert.false(isFieldVisible(field, { ...values, presentation: "beside" }));
+    assert.false(isFieldVisible(field, { ...values, name: "" }));
+    assert.false(isFieldVisible(field, {}));
+    const oneOf = { conditional: { arg: "count", oneOf: [0, 2] } };
+    assert.true(isFieldVisible(oneOf, { count: 0 }));
+    assert.false(isFieldVisible(oneOf, { count: "0" }));
+  });
   test("returns true when the field has no conditional", function (assert) {
     const [field] = schemaToFields({ a: { type: "string" } });
     assert.true(isFieldVisible(field, {}));

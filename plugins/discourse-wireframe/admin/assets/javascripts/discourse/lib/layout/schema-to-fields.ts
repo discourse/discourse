@@ -34,6 +34,8 @@ import type {
   ArgSchema,
   ArgType,
   ArgUiConditional,
+  ArgUiConditionalLeaf,
+  ArgUiGroup,
 } from "discourse/blocks/types";
 
 /** A field rendered by the block-argument inspector. */
@@ -44,6 +46,8 @@ export interface InspectorField {
   default: unknown;
   /** The section label used to group the field. */
   group: string;
+  /** Optional disclosure configuration for the group. */
+  groupOptions: ArgUiGroup | null;
   /** Supporting help text. */
   helpText: string | null;
   /** The argument name. */
@@ -72,6 +76,12 @@ export interface InspectorFieldGroup {
   fields: InspectorField[];
   /** The section label. */
   group: string;
+  /** Display label, separate from the group's stable identity. */
+  label: string;
+  /** Whether this group opts into a disclosure. */
+  disclosure: boolean;
+  /** Initial disclosure state. */
+  collapsed: boolean;
 }
 
 /**
@@ -170,13 +180,17 @@ export function schemaToFields(
     }
 
     const ui = argDef.ui || {};
+    const groupOptions = typeof ui.group === "object" ? ui.group : null;
     fields.push({
       name,
       control: pickControl(argDef),
       title: ui.label || defaultTitle(name),
       placeholder: ui.placeholder ?? null,
       helpText: ui.helpText ?? null,
-      group: ui.group || DEFAULT_GROUP,
+      group:
+        groupOptions?.name ||
+        (typeof ui.group === "string" ? ui.group : DEFAULT_GROUP),
+      groupOptions,
       required: argDef.required === true,
       default: argDef.default,
       // Selection controls in the inspector operate on string-valued enums.
@@ -265,10 +279,16 @@ export function groupFields(fields: InspectorField[]): InspectorFieldGroup[] {
       groups.set(field.group, [field]);
     }
   }
-  return [...groups.entries()].map(([group, list]) => ({
-    group,
-    fields: list,
-  }));
+  return [...groups.entries()].map(([group, list]) => {
+    const descriptor = list.find((field) => field.groupOptions)?.groupOptions;
+    return {
+      group,
+      label: descriptor?.label ?? group,
+      disclosure: !!descriptor || group === "Advanced",
+      collapsed: descriptor?.collapsed ?? group === "Advanced",
+      fields: list,
+    };
+  });
 }
 
 /**
@@ -332,9 +352,27 @@ export function isFieldVisible(
   if (!predicate) {
     return true;
   }
+  if ("all" in predicate) {
+    return predicate.all.every((leaf) => matchesPredicate(leaf, values, true));
+  }
+  return matchesPredicate(predicate, values);
+}
+
+function matchesPredicate(
+  predicate: ArgUiConditionalLeaf,
+  values: Record<string, unknown> | null | undefined,
+  compound = false
+): boolean {
   const target = values?.[predicate.arg];
-  if (predicate.notEmpty === true) {
-    return target != null && target !== "" && target !== false;
+  if (predicate.oneOf) {
+    return predicate.oneOf.some((value) => value === target);
+  }
+  if (
+    predicate.notEmpty === true ||
+    (compound && predicate.notEmpty === false)
+  ) {
+    const notEmpty = target != null && target !== "" && target !== false;
+    return notEmpty === predicate.notEmpty;
   }
   if (Object.prototype.hasOwnProperty.call(predicate, "equals")) {
     return target === predicate.equals;

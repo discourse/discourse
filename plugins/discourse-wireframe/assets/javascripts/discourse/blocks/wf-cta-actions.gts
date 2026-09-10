@@ -18,10 +18,6 @@ interface WFCtaActionsSignature {
  *
  * The primary button's `variant` is locked: it stays the emphasized button and
  * can't be changed in place — only by detaching the composition.
- *
- * Used together with `wf:cta-card` (which nests this as its `actions` part) to
- * exercise nested, full-depth in-place editing — e.g. the path
- * `actions.primary.label` reaches a button two levels down.
  */
 @block("wf:cta-actions", {
   displayName: "CTA actions",

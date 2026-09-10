@@ -2343,16 +2343,18 @@ body.wireframe-active {
   }
 
   &__advanced {
-    margin-top: 0.5rem;
-    border-top: 1px solid var(--primary-low);
-    padding-top: 0.5rem;
+    align-self: stretch;
+    margin-block-start: var(--space-2);
+    border-block-start: 1px solid var(--primary-low);
+    padding-block-start: var(--space-2);
 
     > summary {
       list-style: none;
       cursor: pointer;
-      padding: 0.25rem 0;
+      padding-block: var(--space-2);
+      font-size: var(--font-0-rem);
       font-weight: 600;
-      color: var(--primary-medium);
+      color: var(--primary);
       user-select: none;
 
       &::-webkit-details-marker {
@@ -2366,10 +2368,6 @@ body.wireframe-active {
         margin-right: 0.25rem;
         font-size: 0.85em;
         transition: transform 120ms ease;
-      }
-
-      &:hover {
-        color: var(--primary);
       }
     }
 
@@ -5184,17 +5182,6 @@ body.wireframe-active
   display: revert;
 }
 
-/* The media-card badge wraps its renderer one extra level deep (via
-   `__badge-label`), so the generic `:has(> .wf-rich-text.--empty)`
-   reveal above can't reach it — reveal the collapsed badge explicitly on
-   selection. Same for the card's empty avatar slot, so its "add image"
-   target has a box to measure while the card is selected. */
-
-.wireframe-block-chrome.--selected .d-block-media-card__badge--empty,
-.wireframe-block-chrome.--selected .d-block-media-card__avatar--empty {
-  display: revert;
-}
-
 /* Structural empty image marker (the image block paints nothing when
    empty). Revealed on the canvas regardless of selection — unlike the
    decorative slots above — so the block keeps a minimum height for its
@@ -5282,6 +5269,8 @@ body.wireframe-active
     }
 
     .wf-rich-text-editor {
+      display: block;
+      min-block-size: 1.5em;
       outline: none;
       min-width: 0;
       color: var(--primary);
@@ -5444,6 +5433,7 @@ body.wireframe-active--dim-non-editable
 
   &__heading-content {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: var(--space-2);
@@ -5625,7 +5615,7 @@ body.wireframe-active--dim-non-editable
     }
 
     &__fit > .d-fit-swap {
-      width: 7.5rem;
+      width: min(100%, 7.5rem);
       margin-inline-start: 0;
     }
 
@@ -5645,6 +5635,24 @@ body.wireframe-active--dim-non-editable
       grid-column: 1 / -1;
       width: 100%;
       margin-inline-start: 0;
+    }
+  }
+}
+
+@container wireframe-inspector (width < 10rem) {
+  .wireframe-image-composition {
+    --wireframe-image-number-width: min(
+      5rem,
+      calc(100cqi - var(--wireframe-image-axis-gutter))
+    );
+
+    &__fit,
+    &__zoom {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    &__actions > .btn {
+      padding-inline: var(--space-1);
     }
   }
 }
@@ -5840,6 +5848,16 @@ body.wireframe-active--dim-non-editable
       > img,
       .wireframe-image-field__placeholder {
         width: 2.5rem;
+      }
+    }
+
+    @container wireframe-inspector (width < 10rem) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+
+      .wireframe-image-field__source-label {
+        grid-column: 1 / -1;
+        grid-row: 2;
       }
     }
   }

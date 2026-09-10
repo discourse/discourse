@@ -44,6 +44,13 @@
   justify-content: var(--d-block-layout-justify-content, start);
 }
 
+.d-block-layout--row > .d-block-layout__flex > [data-block-layout-item="card"] {
+  flex-basis: var(--card-row-basis, 16rem);
+  flex-grow: 1;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
 .d-block-layout--grid {
   display: grid;
   grid-template-columns: var(--d-block-layout-cols, repeat(6, 1fr));

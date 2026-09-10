@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import {
   click,
   fillIn,
+  find,
   render,
   settled,
   triggerKeyEvent,
@@ -14,6 +15,7 @@ import Heading from "discourse/blocks/builtin/heading";
 import Layout from "discourse/blocks/builtin/layout";
 import Section from "discourse/blocks/builtin/section";
 import DMenus from "discourse/float-kit/components/d-menus";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import OutlinePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-panel";
@@ -161,8 +163,6 @@ module(
     });
 
     test("shows each block's declared type icon on containers and leaves", async function (assert) {
-      // A `section` container (icon `image`) holding three `heading` leaves
-      // (icon `heading`); with only three children it renders expanded.
       await setupOutline(this.owner, 3);
 
       await render(
@@ -180,12 +180,15 @@ module(
           "every row carries a type icon — the container and its three leaves"
         );
       // The section container is the first row in document order.
-      const container = document.querySelector(".outline-block");
+      const container = find(".outline-block");
       assert
-        .dom(container.querySelector(".outline-block__type .d-icon-image"))
+        .dom(
+          `.outline-block__type .d-icon-${getBlockMetadata(Section).icon}`,
+          container
+        )
         .exists("the container row shows the section block's own icon");
       assert
-        .dom(".outline-block__type .d-icon-heading")
+        .dom(`.outline-block__type .d-icon-${getBlockMetadata(Heading).icon}`)
         .exists(
           { count: 3 },
           "each heading leaf shows the heading block's own icon"

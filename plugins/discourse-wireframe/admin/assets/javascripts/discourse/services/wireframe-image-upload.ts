@@ -89,7 +89,7 @@ export default class WireframeImageUploadService extends Service {
   /**
    * The most recently interacted-with image arg name for the selected block,
    * recorded via `markImageArgTouched`. Used to route a paste to the right arg
-   * on multi-image blocks (e.g. media-card avatar vs cover image); when it
+   * on multi-image blocks (e.g. portrait vs feature image); when it
    * doesn't match the selected block's image args, the paste falls back to the
    * first image arg. Read imperatively by the paste handler, so it's a plain
    * private field (not tracked).

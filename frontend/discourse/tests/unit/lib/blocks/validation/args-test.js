@@ -1057,6 +1057,108 @@ module("Unit | Lib | blocks/validation/args", function () {
       assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
     });
 
+    test("ui hints: disclosure descriptors share a stable group identity", function (assert) {
+      const group = { name: "identity", label: "Speaker", collapsed: true };
+      const schema = {
+        name: { type: "string", ui: { group } },
+        role: { type: "string", ui: { group: { ...group } } },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+      schema.role.ui.group.label = "Another label";
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /conflicting.*group.*identity/i
+      );
+      schema.role.ui.group = { ...group, collapsed: false };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /conflicting.*group.*identity/i
+      );
+    });
+
+    test("ui hints: disclosure descriptors reject malformed configuration", function (assert) {
+      for (const group of [
+        null,
+        [],
+        {},
+        { name: "", label: "Speaker", collapsed: true },
+        { name: "identity", label: "", collapsed: true },
+        { name: "identity", label: "Speaker", collapsed: "yes" },
+        { name: "identity", label: "Speaker", collapsed: true, typo: true },
+      ]) {
+        assert.throws(
+          () =>
+            validateArgsSchema(
+              { name: { type: "string", ui: { group } } },
+              "test-block"
+            ),
+          /ui\.group/
+        );
+      }
+    });
+
+    test("ui hints: compound visibility accepts leaves and checks sibling references", function (assert) {
+      const schema = {
+        enabled: { type: "boolean" },
+        presentation: { type: "string" },
+        imageSide: {
+          type: "string",
+          ui: {
+            conditional: {
+              all: [
+                { arg: "enabled", equals: true },
+                { arg: "presentation", oneOf: ["beside", "behind"] },
+              ],
+            },
+          },
+        },
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+      schema.imageSide.ui.conditional = {
+        arg: "presentation",
+        oneOf: ["above", "below"],
+      };
+      assert.strictEqual(validateArgsSchema(schema, "test-block"), undefined);
+      schema.imageSide.ui.conditional = {
+        all: [{ arg: "missing", equals: true }],
+      };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /unknown sibling.*missing/i
+      );
+      schema.imageSide.ui.conditional = { arg: "missing", oneOf: ["above"] };
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /unknown sibling.*missing/i
+      );
+    });
+
+    test("ui hints: compound visibility rejects recursion and ambiguous comparators", function (assert) {
+      for (const conditional of [
+        { all: [] },
+        { all: "enabled" },
+        { all: [{ all: [{ arg: "enabled", equals: true }] }] },
+        { all: [{ arg: "enabled", equals: true, notEmpty: true }] },
+        { all: [{ arg: "enabled" }] },
+        { all: [{ arg: "enabled", equals: true }], arg: "enabled" },
+        { arg: "enabled", oneOf: [] },
+        { arg: "enabled", oneOf: true },
+        { arg: "enabled", oneOf: [true], equals: true },
+      ]) {
+        assert.throws(
+          () =>
+            validateArgsSchema(
+              {
+                enabled: { type: "boolean" },
+                detail: { type: "string", ui: { conditional } },
+              },
+              "test-block"
+            ),
+          /ui\.conditional/
+        );
+      }
+    });
+
     test("ui hints: accepts a complete ui hint object", function (assert) {
       const schema = {
         title: {
@@ -3369,6 +3471,50 @@ module("Unit | Lib | blocks/validation/args", function () {
   });
 
   module("runCustomValidation", function () {
+    test("custom field diagnostics retain explicitly undefined targets", function (assert) {
+      const issue = { field: undefined, message: "Choose a configuration." };
+      assert.deepEqual(
+        runCustomValidation(() => issue, {}),
+        [issue],
+        "an optional undefined target preserves a single block-level diagnostic"
+      );
+      assert.deepEqual(
+        runCustomValidation(
+          () => [issue, { field: null, message: "Invalid target." }],
+          {}
+        ),
+        [issue],
+        "arrays preserve undefined targets without accepting null targets"
+      );
+    });
+
+    test("custom field diagnostics accept a single issue and reject malformed objects", function (assert) {
+      const issue = { field: "title", message: "Choose a title." };
+      assert.deepEqual(
+        runCustomValidation(() => issue, {}),
+        [issue],
+        "a single field issue is normalized"
+      );
+      assert.deepEqual(
+        runCustomValidation(
+          () => [
+            issue,
+            { message: "A block-level issue." },
+            { field: 123, message: "Wrong field type." },
+            { field: "", message: "No field name." },
+            { field: "title", message: " " },
+            { field: "title", message: false },
+            { field: "title" },
+            null,
+            [],
+          ],
+          {}
+        ),
+        [issue, { message: "A block-level issue." }],
+        "invalid issue shapes do not become focus targets or empty errors"
+      );
+    });
+
     test("returns null when validate returns undefined", function (assert) {
       const validateFn = () => undefined;
 

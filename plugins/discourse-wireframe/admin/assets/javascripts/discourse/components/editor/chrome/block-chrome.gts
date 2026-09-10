@@ -133,7 +133,12 @@ interface BlockChromeSignature {
     style?: TrustedHTML | string;
 
     /** The block component the chrome wraps and renders. */
-    WrappedComponent: ComponentLike<object>;
+    WrappedComponent: ComponentLike<{
+      Args: {
+        /** Placement supplied by the parent layout when chrome is inactive. */
+        style?: TrustedHTML | string;
+      };
+    }>;
   };
 }
 
@@ -1007,7 +1012,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   /**
    * The first resizable image arg on this block (or `null`). Drives
    * which arg the corner handle writes back to; multi-image blocks
-   * (e.g. media-card avatar + cover) typically declare only one of
+   * (e.g. portrait + feature image) typically declare only one of
    * the two as `allowResize: true`.
    */
   get resizableImageArg() {
@@ -2100,6 +2105,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           (if (eq this.parentLayoutAxis "horizontal") "--axis-horizontal")
           (if this.isForceExpanded "--force-expanded")
         }}
+        data-block-layout-item={{@blockName}}
         style={{@style}}
       >
         <div
@@ -2346,7 +2352,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
         </div>
       </div>
     {{else}}
-      <@WrappedComponent />
+      <@WrappedComponent @style={{@style}} />
     {{/if}}
   </template>
 }

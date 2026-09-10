@@ -28,8 +28,7 @@
 export const GRID_LAYOUT_SELECTOR = ".d-block-layout--grid";
 
 /**
- * Attribute core's editable blocks (button-link, heading, callout, image,
- * media-card, cta-banner, …) stamp on each inline-editable / image arg
+ * Attribute editable blocks stamp on each inline-editable / image arg
  * element. The editor reads it to wire the URL popover and the image-arg
  * overlays. A rename breaks those affordances silently.
  */

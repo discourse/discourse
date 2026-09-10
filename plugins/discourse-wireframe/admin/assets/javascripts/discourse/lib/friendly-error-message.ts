@@ -43,13 +43,10 @@ type FriendlyValidationExpected = Record<string, unknown> & {
   keys?: string[];
 };
 
-// TODO(devxp-typescript-pending): use `ValidationErrorDetails` directly once
-// core declares the fallback `message` and typed `expected` fields it emits.
+/** TODO(typescript-pending): use core directly once expected values are typed. */
 type FriendlyValidationDetail = ValidationErrorDetails & {
   /** Structured values used to interpolate a friendly message. */
   expected?: FriendlyValidationExpected;
-  /** Developer message used when no friendly translation exists. */
-  message?: string;
 };
 
 // TODO(devxp-typescript-pending): import core's type directly once it exports
@@ -175,7 +172,9 @@ export function friendlyErrorMessage(
     case ERROR_CODES.UNKNOWN_ARG:
       return i18n("wireframe.inspector.errors.unknown_arg");
     case ERROR_CODES.CONSTRAINT_VIOLATION:
-      return constraintMessage(details);
+      return details.expected?.custom && details.message
+        ? details.message
+        : constraintMessage(details);
     case ERROR_CODES.INVALID_CHILDREN:
       return i18n("wireframe.inspector.errors.invalid_children");
     case ERROR_CODES.UNREGISTERED_BLOCK:
@@ -226,8 +225,8 @@ export function friendlyErrorMessage(
  *
  * Each message carries a stable, content-derived `id` (unique within the
  * entry, so a consumer can key a list on it without falling back to array
- * index): the raw field keys for a field-scoped line, or the error code plus
- * constraint sub-type for a block-level one.
+ * index): raw field keys and message for field-scoped lines, or error code,
+ * constraint sub-type and rendered message for block-level lines.
  *
  * @param entry - A layout entry carrying validator stamps.
  * @param argsSchema - The block's args schema (each arg's
@@ -249,14 +248,22 @@ export function friendlyEntryMessages(
   }
 
   const lines: PendingMessageLine[] = [];
+  const blockMessageIds = new Set<string>();
   const groupIndexByMessage = new Map<string, number>();
   for (const detail of details) {
     const message = friendlyErrorMessage(detail);
     if (!detail.field) {
-      // Block-level: `code` plus the constraint sub-type is unique per entry
-      // (a block declares at most one constraint of each type).
+      const id = JSON.stringify([
+        detail.code,
+        detail.expected?.constraint,
+        message,
+      ]);
+      if (blockMessageIds.has(id)) {
+        continue;
+      }
+      blockMessageIds.add(id);
       lines.push({
-        id: `code:${detail.code}:${detail.expected?.constraint ?? ""}`,
+        id,
         message,
         fields: [],
         rawFields: [],
@@ -277,9 +284,7 @@ export function friendlyEntryMessages(
   return lines.map(({ id, message, fields, rawFields }) =>
     fields.length
       ? {
-          // Fields partition into groups, so the joined raw keys are unique
-          // across a block's field-scoped lines.
-          id: `field:${rawFields.join(",")}`,
+          id: `field:${JSON.stringify([rawFields, message])}`,
           text: i18n("wireframe.inspector.errors.field_scoped", {
             field: fields.join(", "),
             message,

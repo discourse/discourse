@@ -312,7 +312,7 @@ export function block(
   }
 
   // Validate childArgs schema structure and types.
-  validateChildArgsSchema(childArgsSchema, name);
+  validateChildArgsSchema(childArgsSchema, name, argsSchema);
 
   // Validate constraints schema.
   validateConstraintsSchema(constraints, argsSchema, name);

@@ -24,6 +24,54 @@ module PageObjects
         self
       end
 
+      def save_draft
+        find(".wireframe-btn-save").click
+        find(".wireframe-review__save-draft").click
+      end
+
+      def publish
+        find(".wireframe-btn-save").click
+        find(".wireframe-review__publish").click
+      end
+
+      def create_customization_component
+        find(".wireframe-btn-save").click
+        find(".wireframe-review__create-component").click
+      end
+
+      def has_publishable_target?
+        has_css?(".wireframe-target-status:not(.--blocked)") &&
+          has_no_css?(".wireframe-review__create-component")
+      end
+
+      def has_reader?
+        has_css?(".wireframe-pill") && has_no_css?(".wireframe-btn-save")
+      end
+
+      def resize_inspector(width)
+        separator = find(".wireframe-rail-resizer--right")
+        current_width = separator["aria-valuenow"].to_f
+        bounds = separator.evaluate_script("this.getBoundingClientRect().toJSON()")
+        direction = separator.evaluate_script("getComputedStyle(this).direction === 'rtl' ? -1 : 1")
+        page.driver.with_playwright_page do |pw_page|
+          start_x = bounds["x"] + bounds["width"] / 2
+          start_y = bounds["y"] + bounds["height"] / 2
+          pw_page.mouse.move(start_x, start_y)
+          pw_page.mouse.down
+          pw_page.mouse.move(start_x + (current_width - width) * direction, start_y, steps: 10)
+          pw_page.mouse.up
+        end
+      end
+
+      def has_inspector_width?(width)
+        has_css?(".wireframe-rail-resizer--right[aria-valuenow='#{width}']")
+      end
+
+      def has_saved_draft?
+        has_css?(".wireframe-btn-save[data-wf-save-state='unpublished']") &&
+          has_no_css?(".wireframe-review__error")
+      end
+
       def has_grid?
         page.has_css?(GRID_SELECTOR, wait: 5)
       end

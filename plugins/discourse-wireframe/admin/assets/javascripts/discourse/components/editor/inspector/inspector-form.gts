@@ -6,7 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import type { ArgSchema } from "discourse/blocks/types";
 import Form from "discourse/components/form";
-import { eq } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import InspectorField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-field";
 import { friendlyErrorMessage } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
@@ -154,7 +154,7 @@ export default class InspectorForm extends Component {
     return groupFields(schemaToFields(this.schema)).map((group) => ({
       ...group,
       title: group.fields.some((field) => field.schema.ui?.group)
-        ? group.group
+        ? group.label
         : undefined,
     }));
   }
@@ -204,18 +204,20 @@ export default class InspectorForm extends Component {
     return this.wireframeSelection.selectedBlockData?.argsSnapshot ?? {};
   }
 
-  /**
-   * Decorated with `@action` so Glimmer template subexpressions like
-   * `(this.visibleFields group.fields)` keep the correct `this` binding.
-   * Without it Glimmer extracts the bare function reference and calls it
-   * without context, which throws when the body reads `this.values`.
-   */
+  @cached
+  get initialValues(): Record<string, unknown> {
+    return this.resolvedValues(this.values);
+  }
+
   @action
   visibleFields(
-    fields: InspectorFieldDescriptor[]
+    fields: InspectorFieldDescriptor[],
+    values: Record<string, unknown>
   ): InspectorFieldDescriptor[] {
-    const visible = fields.filter((field) =>
-      isFieldVisible(field, this.values)
+    const visible = fields.filter(
+      (field) =>
+        this.fieldErrors[field.name]?.length > 0 ||
+        isFieldVisible(field, values)
     );
     const locked = this.lockedArgs;
     if (!locked) {
@@ -232,6 +234,27 @@ export default class InspectorForm extends Component {
           }
         : field
     );
+  }
+
+  @action
+  resolvedValues(draft: Record<string, unknown>): Record<string, unknown> {
+    const values = { ...draft };
+    for (const [name, schema] of Object.entries(this.schema)) {
+      if (values[name] === undefined) {
+        values[name] = schema.default;
+      }
+    }
+    return values;
+  }
+
+  @action
+  visibleGroups(values: Record<string, unknown>) {
+    return this.fieldGroups
+      .map((group) => ({
+        ...group,
+        fields: this.visibleFields(group.fields, values),
+      }))
+      .filter((group) => group.fields.length > 0);
   }
 
   /**
@@ -368,22 +391,36 @@ export default class InspectorForm extends Component {
       >
         <Form
           class="wireframe-inspector-form"
-          @data={{this.values}}
+          @data={{this.initialValues}}
           @onRegisterApi={{this.registerFormApi}}
-          as |form|
+          as |form draft|
         >
-          {{#each this.fieldGroups as |group|}}
-            {{#if (eq group.group "Advanced")}}
-              {{! Native disclosure element for the magic Advanced group:
-                collapsed by default, no JS state, accessible. Block
-                authors opt in by setting the ui.group hint to Advanced on
-                rarely-touched args. Matches the disclosure pattern in
-                inspector-layout-form (Advanced Templates). }}
-
-              <details class="wireframe-inspector-form__advanced">
-                <summary>{{group.group}}</summary>
-                <div class="wireframe-inspector-form__advanced-body">
-                  {{#each (this.visibleFields group.fields) as |field|}}
+          {{#let (this.resolvedValues draft) as |values|}}
+            {{#each (this.visibleGroups values) key="group" as |group|}}
+              {{#if group.disclosure}}
+                <details
+                  class="wireframe-inspector-form__advanced"
+                  data-inspector-group={{group.group}}
+                  open={{not group.collapsed}}
+                >
+                  <summary>{{group.label}}</summary>
+                  <div class="wireframe-inspector-form__advanced-body">
+                    {{#each group.fields as |field|}}
+                      <InspectorField
+                        @blockKey={{this.wireframeSelection.selectedBlockKey}}
+                        @disabled={{this.isFieldDisabled field}}
+                        @field={{field}}
+                        @form={{form}}
+                        @onFieldSet={{this.onFieldSet}}
+                        @validationRuleFor={{this.validationRuleFor}}
+                        @values={{values}}
+                      />
+                    {{/each}}
+                  </div>
+                </details>
+              {{else}}
+                <form.Section @title={{group.title}}>
+                  {{#each group.fields as |field|}}
                     <InspectorField
                       @blockKey={{this.wireframeSelection.selectedBlockKey}}
                       @disabled={{this.isFieldDisabled field}}
@@ -391,27 +428,13 @@ export default class InspectorForm extends Component {
                       @form={{form}}
                       @onFieldSet={{this.onFieldSet}}
                       @validationRuleFor={{this.validationRuleFor}}
-                      @values={{this.values}}
+                      @values={{values}}
                     />
                   {{/each}}
-                </div>
-              </details>
-            {{else}}
-              <form.Section @title={{group.title}}>
-                {{#each (this.visibleFields group.fields) as |field|}}
-                  <InspectorField
-                    @blockKey={{this.wireframeSelection.selectedBlockKey}}
-                    @disabled={{this.isFieldDisabled field}}
-                    @field={{field}}
-                    @form={{form}}
-                    @onFieldSet={{this.onFieldSet}}
-                    @validationRuleFor={{this.validationRuleFor}}
-                    @values={{this.values}}
-                  />
-                {{/each}}
-              </form.Section>
-            {{/if}}
-          {{/each}}
+                </form.Section>
+              {{/if}}
+            {{/each}}
+          {{/let}}
         </Form>
       </div>
     {{/if}}

@@ -614,7 +614,7 @@ export default class InplaceTextController extends Component {
    *     the cursor. The current entry keeps the "before" doc; a new
    *     sibling holds the "after" doc.
    *   - paragraph schema + other block (callout body, banner content,
-   *     media-card title, …) → insert a `hard_break`. Splitting a
+   *     card title, …) → insert a `hard_break`. Splitting a
    *     callout / banner / card into two of itself has no semantic
    *     meaning, so the per-block soft-wrap stays.
    *   - heading / plain → commit and exit.

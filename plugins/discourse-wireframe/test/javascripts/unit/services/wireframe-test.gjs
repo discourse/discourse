@@ -8,6 +8,7 @@ import {
   _renderBlocks,
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
+import Card from "discourse/blocks/builtin/card";
 import Layout from "discourse/blocks/builtin/layout";
 import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
 import {
@@ -22,7 +23,10 @@ import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 import { GRID_DROP_GESTURES } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
-import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
+import {
+  entryKey,
+  serializeEntryForSave,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 
@@ -132,6 +136,159 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
   hooks.afterEach(function () {
     _resetOutletLayoutsForTesting();
     this.editor.exit();
+  });
+
+  test("leaf Card lifecycle preserves rich content and four sources through copy, duplicate and history", async function (assert) {
+    const source = (uploadId) => ({
+      source: "upload",
+      upload_id: uploadId,
+      url: `/uploads/${uploadId}.png`,
+      width: 640,
+      height: 480,
+    });
+    const args = {
+      title: {
+        type: "doc",
+        content: [
+          {
+            type: "text",
+            text: "Community story",
+            marks: [{ type: "strong" }],
+          },
+        ],
+      },
+      body: "Body retained independently from the identity",
+      presentation: "beside",
+      imageWidth: "even",
+      imageSide: "end",
+      image: {
+        ...source(11),
+        dark: source(12),
+        fit: "cover",
+        position: { x: 20, y: 80 },
+        zoom: 140,
+      },
+      avatar: {
+        ...source(21),
+        dark: source(22),
+        fit: "contain",
+        position: { x: 70, y: 30 },
+        zoom: 125,
+      },
+      identityEnabled: true,
+      identityName: "Sam Saffron",
+      identityRole: "Co-founder, Discourse",
+      identityFormat: "feature",
+      identityTreatment: "photo",
+      identityPlacement: "media",
+      actionLabel: "Read the story",
+      href: "/latest",
+      wholeCard: true,
+      external: false,
+      secondaryEnabled: true,
+      secondaryLabel: "About the community",
+      secondaryHref: "/about",
+      secondaryExternal: true,
+    };
+    const metadata = {
+      id: "community-story",
+      classNames: "featured-story",
+      conditions: [{ type: "user", loggedIn: true }],
+      containerArgs: { stack: { alignSelf: "stretch", flexGrow: 0 } },
+    };
+    await _renderBlocks(
+      "homepage-blocks",
+      [
+        {
+          block: Layout,
+          args: { mode: "stack" },
+          children: [{ block: Card, args, ...metadata }],
+        },
+      ],
+      getOwner(this)
+    );
+    this.editor.siteSettings.wireframe_enabled = true;
+    logIn(getOwner(this));
+    this.editor.enter();
+
+    const original = outletChildren(this.editor)[0];
+    const originalKey = entryKey(original);
+    const saved = { block: "card", args, ...metadata };
+    assert.deepEqual(
+      JSON.parse(JSON.stringify(serializeEntryForSave(original))),
+      saved,
+      "the save/export shape keeps every authored field without compatibility conversion"
+    );
+    this.editor.wireframeSelection.selectBlock({ key: originalKey });
+    const clipboard = getOwner(this).lookup("service:wireframe-clipboard");
+    assert.true(clipboard.copySelected(), "the leaf can be copied");
+    assert.true(clipboard.pasteFromClipboard(), "the leaf can be pasted");
+    await settled();
+    const pasted = outletChildren(this.editor)[1];
+    assert.notStrictEqual(
+      entryKey(pasted),
+      originalKey,
+      "the pasted leaf has independent editor identity"
+    );
+    assert.deepEqual(
+      JSON.parse(JSON.stringify(serializeEntryForSave(pasted))),
+      saved,
+      "paste keeps both destinations, rich text and independent crops"
+    );
+
+    this.editor.wireframeSelection.selectBlock({ key: entryKey(pasted) });
+    await editArg(this.editor, "image", { ...args.image, zoom: 180 });
+    assert.strictEqual(
+      outletChildren(this.editor)[0].args.image.zoom,
+      140,
+      "editing pasted media leaves the original unchanged"
+    );
+    await engineOf(this.editor).undo();
+    assert.deepEqual(
+      outletChildren(this.editor)[1].args.image,
+      args.image,
+      "undo restores the complete feature source and crop"
+    );
+
+    mutationsOf(this.editor).removeBlock(
+      entryKey(outletChildren(this.editor)[1])
+    );
+    await settled();
+    assert.strictEqual(
+      outletChildren(this.editor).length,
+      1,
+      "delete removes only the pasted leaf"
+    );
+    await engineOf(this.editor).undo();
+    assert.deepEqual(
+      JSON.parse(
+        JSON.stringify(serializeEntryForSave(outletChildren(this.editor)[1]))
+      ),
+      saved,
+      "undo deletion restores all Card data"
+    );
+    await engineOf(this.editor).redo();
+    assert.strictEqual(
+      outletChildren(this.editor).length,
+      1,
+      "redo deletes the restored leaf again"
+    );
+
+    mutationsOf(this.editor).duplicateBlock(originalKey);
+    await settled();
+    assert.deepEqual(
+      JSON.parse(
+        JSON.stringify(serializeEntryForSave(outletChildren(this.editor)[1]))
+      ),
+      saved,
+      "duplicate preserves the same complete Card contract"
+    );
+    await engineOf(this.editor).undo();
+    assert.strictEqual(
+      outletChildren(this.editor).length,
+      1,
+      "one undo removes the duplicate"
+    );
   });
 
   module("selectBlock / isBlockSelected", function () {
@@ -600,10 +757,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
           // The field name is folded into the message so a standalone list
           // can tell apart several failures on the same block. This block
           // declares no `ui.label`, so the raw arg key is used. Each message
-          // carries a stable id derived from its field(s).
+          // carries a stable id derived from its fields and message.
           messages: [
             {
-              id: "field:title",
+              id: `field:${JSON.stringify([["title"], i18n("wireframe.inspector.errors.required")])}`,
               text: i18n("wireframe.inspector.errors.field_scoped", {
                 field: "title",
                 message: i18n("wireframe.inspector.errors.required"),
@@ -636,14 +793,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
       assert.deepEqual(validation.validationIssues[0].messages, [
         {
-          id: "field:title,subtitle",
+          id: `field:${JSON.stringify([["title", "subtitle"], i18n("wireframe.inspector.errors.required")])}`,
           text: i18n("wireframe.inspector.errors.field_scoped", {
             field: "title, subtitle",
             message: i18n("wireframe.inspector.errors.required"),
           }),
         },
         {
-          id: "field:count",
+          id: `field:${JSON.stringify([["count"], i18n("wireframe.inspector.errors.type")])}`,
           text: i18n("wireframe.inspector.errors.field_scoped", {
             field: "count",
             message: i18n("wireframe.inspector.errors.type"),

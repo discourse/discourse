@@ -46,8 +46,6 @@ export const CATEGORY_LEADS: Readonly<
   media: ["image", "video", "embed", "icon"],
   actions: [
     "card",
-    "media-card",
-    "wf:cta-card",
     "cta-banner",
     "wf:cta-actions",
     "button-link",

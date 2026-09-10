@@ -260,7 +260,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
   /**
    * `true` for a small in-place empty affordance — an arg whose marker
    * is neither a whole-block fill nor a full-bleed background (e.g. the
-   * media-card avatar slot). These are too small for the icon + label,
+   * portrait slot). These are too small for the icon + label,
    * so the affordance collapses to just the icon.
    *
    */
@@ -330,7 +330,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
   /**
    * The block's rendered marker for this arg. Matches any element
    * carrying `data-block-arg="<argName>"` — `<img>`, `<picture>`, the
-   * media-card backdrop `<div>`, or an empty slot — but EXCLUDES the
+   * image backdrop `<div>`, or an empty slot — but EXCLUDES the
    * image-arg overlays themselves, which carry the same attribute for
    * the chrome's click dispatch. With one overlay per arg at a time
    * (block-chrome keys the each on emptiness), exactly one block
@@ -495,7 +495,7 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
   measure(): void {
     const marker = this.markerEl;
     const chrome = this.chromeEl;
-    if (!marker || !chrome) {
+    if (!marker || !(chrome instanceof HTMLElement)) {
       this.markerRect = null;
       return;
     }
@@ -513,11 +513,13 @@ export default class ImageArgOverlay extends Component<ImageArgOverlaySignature>
       return;
     }
     const chromeRect = chrome.getBoundingClientRect();
+    const scaleX = chromeRect.width / chrome.offsetWidth || 1;
+    const scaleY = chromeRect.height / chrome.offsetHeight || 1;
     const next = {
-      top: targetRect.top - chromeRect.top,
-      left: targetRect.left - chromeRect.left,
-      width: targetRect.width,
-      height: targetRect.height,
+      top: (targetRect.top - chromeRect.top) / scaleY - chrome.clientTop,
+      left: (targetRect.left - chromeRect.left) / scaleX - chrome.clientLeft,
+      width: targetRect.width / scaleX,
+      height: targetRect.height / scaleY,
     };
     const prev = this.markerRect;
     if (

@@ -47,7 +47,6 @@ export { default as FeaturedBadges } from "./featured-badges";
 export { default as RecentTopics } from "./recent-topics";
 export { default as FeaturedTopics } from "./featured-topics";
 export { default as TopicCard } from "./topic-card";
-export { default as MediaCard } from "./media-card";
 export { default as Section } from "./section";
 export { default as Card } from "./card";
 export { default as LinkList } from "./link-list";

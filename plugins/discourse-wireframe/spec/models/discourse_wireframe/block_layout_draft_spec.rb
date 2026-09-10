@@ -70,6 +70,46 @@ RSpec.describe DiscourseWireframe::BlockLayoutDraft do
       expect(draft.reload.upload_references).to be_empty
     end
 
+    it "retains independent light and dark card media while hidden and releases only removed sources" do
+      feature_dark = Fabricate(:upload)
+      portrait_dark = Fabricate(:upload)
+      card = {
+        "block" => "card",
+        "args" => {
+          "presentation" => "none",
+          "identityEnabled" => false,
+          "image" => image_arg(upload_a, "dark" => image_arg(feature_dark)),
+          "avatar" => image_arg(upload_b, "dark" => image_arg(portrait_dark)),
+        },
+      }
+      layout = [
+        { "block" => "section", "children" => [{ "block" => "layout", "children" => [card] }] },
+      ]
+      draft = save_draft(layout)
+
+      expect(draft.upload_references.pluck(:upload_id)).to contain_exactly(
+        upload_a.id,
+        feature_dark.id,
+        upload_b.id,
+        portrait_dark.id,
+      )
+
+      card["args"]["image"].delete("dark")
+      save_draft(layout)
+      expect(draft.reload.upload_references.pluck(:upload_id)).to contain_exactly(
+        upload_a.id,
+        upload_b.id,
+        portrait_dark.id,
+      )
+
+      card["args"].delete("image")
+      save_draft(layout)
+      expect(draft.reload.upload_references.pluck(:upload_id)).to contain_exactly(
+        upload_b.id,
+        portrait_dark.id,
+      )
+    end
+
     it "swings the reference when the image is replaced" do
       save_draft([{ "args" => { "image" => image_arg(upload_a) } }])
       draft = save_draft([{ "args" => { "image" => image_arg(upload_b) } }])

@@ -339,7 +339,10 @@ function validateSingleCondition(
   if (validateFn) {
     const customErrors = runCustomValidation(validateFn, args);
     if (customErrors && customErrors.length > 0) {
-      throw new BlockError(`Condition "${type}": ${customErrors.join("; ")}`, {
+      const messages = customErrors.map((issue) =>
+        typeof issue === "string" ? issue : issue.message
+      );
+      throw new BlockError(`Condition "${type}": ${messages.join("; ")}`, {
         path,
       });
     }

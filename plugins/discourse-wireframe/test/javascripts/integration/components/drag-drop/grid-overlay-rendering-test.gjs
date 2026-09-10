@@ -1,11 +1,20 @@
 import Component from "@glimmer/component";
-import { find, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  find,
+  findAll,
+  render,
+  settled,
+  triggerEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import BlockOutlet, {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
+import Card from "discourse/blocks/builtin/card";
 import Layout from "discourse/blocks/builtin/layout";
+import Section from "discourse/blocks/builtin/section";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -20,6 +29,268 @@ import { queryOf } from "../../../helpers/wireframe-peers";
 // here instead of shipping.
 
 const OUTLET = "main-outlet-blocks";
+
+module(
+  "Integration | discourse-wireframe | Card layout editing",
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupBlockLayoutDraftsStub(hooks);
+    hooks.afterEach(() => _resetOutletLayoutsForTesting());
+
+    test("review regression: authored Card allocation survives editor mode changes", async function (assert) {
+      withPluginApi((api) =>
+        api.renderBlocks(OUTLET, [
+          {
+            block: Layout,
+            args: { mode: "row", autoCollapse: "never" },
+            children: [
+              {
+                block: Card,
+                id: "fixed-card",
+                args: { title: "Fixed" },
+                containerArgs: { row: { flexGrow: 0, alignSelf: "start" } },
+              },
+              {
+                block: Card,
+                id: "growing-card",
+                args: { title: "Growing", body: "More text. ".repeat(20) },
+                containerArgs: { row: { flexGrow: 2, alignSelf: "stretch" } },
+              },
+            ],
+          },
+        ])
+      );
+      const wireframe = this.owner.lookup("service:wireframe-workspace");
+      wireframe.siteSettings.wireframe_enabled = true;
+      logIn(this.owner);
+      await render(
+        <template>
+          <div style="width: 1080px"><BlockOutlet @name={{OUTLET}} /></div>
+        </template>
+      );
+      for (const mode of ["reader", "editor", "reader again"]) {
+        if (mode === "editor") {
+          wireframe.enter();
+        }
+        if (mode === "reader again") {
+          wireframe.exit();
+        }
+        await settled();
+        const allocations = findAll(
+          ".d-block-layout__flex > [data-block-layout-item='card']"
+        );
+        assert.strictEqual(
+          allocations.length,
+          2,
+          `${mode}: both Cards keep a logical allocation`
+        );
+        assert.strictEqual(
+          getComputedStyle(allocations[0]).flexGrow,
+          "0",
+          `${mode}: explicit zero growth is retained`
+        );
+        assert.strictEqual(
+          getComputedStyle(allocations[0]).alignSelf,
+          "start",
+          `${mode}: the first Card remains non-stretched`
+        );
+        assert.strictEqual(
+          getComputedStyle(allocations[1]).flexGrow,
+          "2",
+          `${mode}: explicit positive growth is retained`
+        );
+        assert.strictEqual(
+          getComputedStyle(allocations[1]).alignSelf,
+          "stretch",
+          `${mode}: the second Card remains stretched`
+        );
+        const fixed = allocations[0].getBoundingClientRect();
+        const growing = allocations[1].getBoundingClientRect();
+        assert.true(
+          growing.width > fixed.width * 1.5,
+          `${mode}: spare row width goes to the growing Card`
+        );
+        assert.true(
+          fixed.height < growing.height,
+          `${mode}: the non-stretched Card keeps its natural height`
+        );
+      }
+    });
+
+    test("empty Card image prompts stay inside their media instead of covering identity and copy", async function (assert) {
+      withPluginApi((api) =>
+        api.renderBlocks(OUTLET, [
+          {
+            block: Layout,
+            args: { mode: "stack" },
+            children: [
+              ...["above", "below"].map((presentation) => ({
+                block: Card,
+                id: `empty-${presentation}`,
+                args: {
+                  presentation,
+                  title: "A card with its feature image removed",
+                  body: "This copy must remain reachable in the editor.",
+                  identityEnabled: true,
+                  identityName: "Speaker",
+                  avatar: { url: "/images/avatar.png" },
+                },
+              })),
+            ],
+          },
+        ])
+      );
+      const wireframe = this.owner.lookup("service:wireframe-workspace");
+      wireframe.siteSettings.wireframe_enabled = true;
+      logIn(this.owner);
+      await render(
+        <template>
+          <div style="width: 480px"><BlockOutlet @name={{OUTLET}} /></div>
+        </template>
+      );
+      wireframe.enter();
+      await settled();
+
+      // QUnit does not load plugin admin CSS. Supply its positioning parent;
+      // the full-editor system test checks geometry with the real stylesheet.
+      for (const chrome of findAll(".wireframe-block-chrome")) {
+        chrome.style.position = "relative";
+      }
+      window.dispatchEvent(new Event("resize"));
+      await settled();
+
+      for (const presentation of ["above", "below"]) {
+        const card = find(
+          `[data-block-id='empty-${presentation}'] .d-block-card`
+        );
+        const chrome = card.closest(".wireframe-block-chrome");
+        const marker = card.querySelector(".d-block-card__image");
+        const overlay = chrome.querySelector(
+          ".wireframe-image-arg-overlay[data-block-arg='image']"
+        );
+        assert
+          .dom(overlay)
+          .exists("the missing feature keeps a reachable upload prompt");
+        for (const edge of ["top", "right", "bottom", "left"]) {
+          assert.closeTo(
+            overlay.getBoundingClientRect()[edge],
+            marker.getBoundingClientRect()[edge],
+            1,
+            `${presentation} ${edge} stays on the feature frame`
+          );
+        }
+      }
+    });
+
+    test("real editor wrappers retain Card seams, selection and independent image targets", async function (assert) {
+      withPluginApi((api) =>
+        api.renderBlocks(OUTLET, [
+          {
+            block: Section,
+            children: [
+              {
+                block: Layout,
+                args: {
+                  mode: "grid",
+                  columns: 3,
+                  rows: 1,
+                  autoCollapse: "never",
+                },
+                children: [
+                  {
+                    block: Card,
+                    id: "short-card",
+                    args: {
+                      title: "Short story",
+                      scale: "compact",
+                      image: { url: "/images/avatar.png" },
+                      identityEnabled: true,
+                      identityName: "Speaker",
+                      href: "/short",
+                      actionLabel: "Read short story",
+                      wholeCard: true,
+                    },
+                    containerArgs: { grid: { column: "1", row: "1" } },
+                  },
+                  {
+                    block: Card,
+                    id: "long-card",
+                    args: {
+                      title: "A longer story",
+                      body: "Long copy. ".repeat(15),
+                      scale: "featured",
+                      image: { url: "/images/avatar.png" },
+                      href: "/long",
+                      actionLabel: "Read long story",
+                    },
+                    containerArgs: { grid: { column: "2 / 4", row: "1" } },
+                  },
+                ],
+              },
+            ],
+          },
+        ])
+      );
+      const wireframe = this.owner.lookup("service:wireframe-workspace");
+      wireframe.siteSettings.wireframe_enabled = true;
+      logIn(this.owner);
+      await render(
+        <template>
+          <div style="width: 1080px"><BlockOutlet @name={{OUTLET}} /></div>
+        </template>
+      );
+      wireframe.enter();
+      await settled();
+      await waitUntil(
+        () =>
+          findAll(".wireframe-block-chrome-wrapper [data-card-aligned]")
+            .length === 2
+      );
+      const cards = findAll(".d-block-card");
+      const media = cards.map((card) =>
+        card.querySelector(".d-block-card__media")
+      );
+      const actions = cards.map((card) =>
+        card.querySelector(".d-block-card__actions")
+      );
+      assert.closeTo(
+        media[0].getBoundingClientRect().bottom,
+        media[1].getBoundingClientRect().bottom,
+        1,
+        "editor media seams match through chrome"
+      );
+      assert.closeTo(
+        actions[0].getBoundingClientRect().bottom,
+        actions[1].getBoundingClientRect().bottom,
+        1,
+        "editor action edges match through chrome"
+      );
+      assert
+        .dom(cards[0])
+        .hasAttribute(
+          "data-card-aligned",
+          "",
+          "the actual Card is coordinated"
+        );
+      assert
+        .dom(".d-block-card [data-block-arg='image']")
+        .exists({ count: 2 }, "both feature images are editable");
+      assert
+        .dom(".d-block-card [data-block-arg='avatar']")
+        .exists(
+          { count: 1 },
+          "enabled empty portrait has an independent target"
+        );
+      await triggerEvent(cards[0], "click", { detail: 1 });
+      assert
+        .dom(cards[0].closest(".wireframe-block-chrome"))
+        .hasClass("--selected", "Card remains one selectable leaf");
+      assert
+        .dom(".wireframe-grid-cell")
+        .doesNotExist("alignment creates no extra authored grid cells");
+    });
+  }
+);
 
 @block("grid-overlay-rendering-leaf")
 class Leaf extends Component {

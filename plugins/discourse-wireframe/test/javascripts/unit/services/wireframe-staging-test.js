@@ -9,11 +9,9 @@ import { module, test } from "qunit";
 // only through the orchestrator). The draft-layer materialize/hydrate paths are covered
 // end-to-end by the navigation + service integration tests.
 
-// Minimal stubs for the nine peers the staging service injects. Each test
-// overrides only the methods it asserts on; everything else is an inert default
-// so a single lookup can back several scenarios.
 const DEFAULTS = {
   "service:modal": () => ({ show: async () => ({}) }),
+  "service:wireframe-image-composition": () => ({ target: null }),
   "service:wireframe-inspector-args": () => ({ hasPending: false }),
   "service:wireframe-inplace-text": () => ({ blockKey: null }),
   "service:wireframe-edit-mode": () => ({ active: true }),

@@ -2,14 +2,89 @@ import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { fillIn, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import Layout from "discourse/blocks/builtin/layout";
 import { imageComposition } from "discourse/blocks/image-value";
 import Form from "discourse/components/form";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import { i18n } from "discourse-i18n";
 import ImageCompositionControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-composition-controls";
 import ImagePositionPicker from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-position-picker";
 import InspectorDimensionField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-dimension-field";
 import InspectorStepperField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-stepper-field";
+import InspectorContainerArgsForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-container-args-form";
+
+module(
+  "Integration | discourse-wireframe | automatic placement grow",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const mode of ["row", "stack"]) {
+      test(`${mode} distinguishes automatic sizing from explicit zero and restores it when cleared`, async function (assert) {
+        const calls = [];
+        class Selection extends Service {
+          selectedBlockData = {
+            isRegistered: true,
+            parentChildArgsSchema: getBlockMetadata(Layout).childArgs,
+            parentArgsSnapshot: { mode },
+            containerArgsSnapshot: {},
+          };
+        }
+        class EntryConfig extends Service {
+          updateSelectedContainerArg(namespace, name, value) {
+            calls.push({ namespace, name, value });
+          }
+        }
+        this.owner.unregister("service:wireframe-selection");
+        this.owner.register("service:wireframe-selection", Selection);
+        this.owner.unregister("service:wireframe-entry-config");
+        this.owner.register("service:wireframe-entry-config", EntryConfig);
+        await render(<template><InspectorContainerArgsForm /></template>);
+        const input = ".wireframe-stepper-field__number";
+        assert
+          .dom(input)
+          .hasValue("", "omitted grow does not claim an explicit zero");
+        assert
+          .dom(input)
+          .hasAttribute(
+            "placeholder",
+            i18n("blocks.builtin.layout.placement.automatic"),
+            "the empty value explains automatic allocation"
+          );
+        assert.strictEqual(
+          calls.length,
+          0,
+          "opening placement does not write defaults"
+        );
+
+        await fillIn(input, "0");
+        await triggerEvent(input, "change");
+        assert.deepEqual(
+          calls.at(-1),
+          { namespace: mode, name: "flexGrow", value: 0 },
+          "zero is an intentional no-grow override"
+        );
+        assert.dom(input).hasValue("0", "explicit zero stays visible");
+
+        await fillIn(input, "");
+        await triggerEvent(input, "change");
+        assert.deepEqual(
+          calls.at(-1),
+          { namespace: mode, name: "flexGrow", value: undefined },
+          "clearing restores an omitted value, not invalid null or zero"
+        );
+        assert.dom(input).hasValue("", "automatic sizing is shown again");
+        await triggerEvent(".wireframe-stepper-field__btn:last-child", "click");
+        assert.deepEqual(
+          calls.at(-1),
+          { namespace: mode, name: "flexGrow", value: 1 },
+          "increment opts into a numeric grow factor"
+        );
+      });
+    }
+  }
+);
 
 module(
   "Integration | discourse-wireframe | shared image zoom",

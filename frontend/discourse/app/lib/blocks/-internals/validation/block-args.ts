@@ -11,6 +11,7 @@
  */
 import type {
   ArgSchema,
+  ArgUiGroup,
   ChildArgSchema,
   LayoutEntry,
 } from "discourse/blocks/types";
@@ -102,6 +103,7 @@ const VALID_UI_CONDITIONAL_PROPERTIES = Object.freeze([
   "arg",
   "equals",
   "notEmpty",
+  "oneOf",
 ]);
 
 /**
@@ -134,8 +136,17 @@ export const VALID_CHILD_ARG_SCHEMA_PROPERTIES: readonly string[] =
  * @param argName - The arg name, for error messages.
  * @param blockName - The block name, for error messages.
  * @param argLabel - "arg" or "childArgs arg", for error messages.
+ * @param siblingSchema - Arguments available to visibility predicates.
+ * @param groups - Descriptors shared by fields in this schema.
  */
-function validateUIHints(uiDef, argName, blockName, argLabel) {
+function validateUIHints(
+  uiDef,
+  argName,
+  blockName,
+  argLabel,
+  siblingSchema: Record<string, ArgSchema>,
+  groups: Map<string, ArgUiGroup>
+) {
   if (uiDef === undefined) {
     return;
   }
@@ -175,7 +186,6 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
     "placeholder",
     "helpText",
     "emptyPrompt",
-    "group",
     "unit",
     "schema",
   ]) {
@@ -185,6 +195,8 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
       );
     }
   }
+
+  validateUIGroup(uiDef.group, argName, blockName, groups);
 
   for (const prop of ["hidden", "slider"]) {
     if (uiDef[prop] !== undefined && typeof uiDef[prop] !== "boolean") {
@@ -212,7 +224,13 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
   }
 
   if (uiDef.conditional !== undefined) {
-    validateUIConditional(uiDef.conditional, argName, blockName, argLabel);
+    validateUIConditional(
+      uiDef.conditional,
+      argName,
+      blockName,
+      argLabel,
+      siblingSchema
+    );
   }
 
   if (uiDef.optionIcons !== undefined) {
@@ -222,6 +240,53 @@ function validateUIHints(uiDef, argName, blockName, argLabel) {
   if (uiDef.optionLabels !== undefined) {
     validateUIOptionLabels(uiDef.optionLabels, argName, blockName, argLabel);
   }
+}
+
+function validateUIGroup(
+  group: unknown,
+  argName: string,
+  blockName: string,
+  groups: Map<string, ArgUiGroup>
+): void {
+  if (group === undefined || typeof group === "string") {
+    return;
+  }
+  if (
+    !group ||
+    typeof group !== "object" ||
+    Array.isArray(group) ||
+    !("name" in group) ||
+    typeof group.name !== "string" ||
+    !group.name.trim() ||
+    !("label" in group) ||
+    typeof group.label !== "string" ||
+    !group.label.trim() ||
+    !("collapsed" in group) ||
+    typeof group.collapsed !== "boolean" ||
+    Object.keys(group).some(
+      (key) => !["name", "label", "collapsed"].includes(key)
+    )
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": arg "${argName}" has invalid "ui.group". Must be a string or { name, label, collapsed } descriptor.`
+    );
+  }
+  const descriptor = {
+    name: group.name,
+    label: group.label,
+    collapsed: group.collapsed,
+  };
+  const previous = groups.get(descriptor.name);
+  if (
+    previous &&
+    (previous.label !== descriptor.label ||
+      previous.collapsed !== descriptor.collapsed)
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": conflicting "ui.group" descriptors for "${descriptor.name}".`
+    );
+  }
+  groups.set(descriptor.name, descriptor);
 }
 
 function validateUIOptionLabels(optionLabels, argName, blockName, argLabel) {
@@ -276,11 +341,18 @@ function validateUIOptionIcons(optionIcons, argName, blockName, argLabel) {
 }
 
 /**
- * Validates a `ui.conditional` predicate. The predicate hides the field
- * unless another arg satisfies a condition. At least one of `equals` or
- * `notEmpty` must be set, otherwise the predicate has no semantics.
+ * Validates field visibility predicates. Compound predicates cannot nest and
+ * each leaf must reference a declared argument with exactly one comparator.
+ * Standalone equals/notEmpty predicates retain their existing semantics.
  */
-function validateUIConditional(conditional, argName, blockName, argLabel) {
+function validateUIConditional(
+  conditional: unknown,
+  argName: string,
+  blockName: string,
+  argLabel: string,
+  siblingSchema: Record<string, ArgSchema>,
+  compoundLeaf = false
+): void {
   if (
     conditional === null ||
     typeof conditional !== "object" ||
@@ -289,6 +361,30 @@ function validateUIConditional(conditional, argName, blockName, argLabel) {
     raiseBlockError(
       `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional" value. Must be an object.`
     );
+  }
+
+  if ("all" in conditional) {
+    if (
+      compoundLeaf ||
+      Object.keys(conditional).length !== 1 ||
+      !Array.isArray(conditional.all) ||
+      !conditional.all.length
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional.all". Must contain a non-empty list of non-nested leaf predicates.`
+      );
+    }
+    for (const leaf of conditional.all) {
+      validateUIConditional(
+        leaf,
+        argName,
+        blockName,
+        argLabel,
+        siblingSchema,
+        true
+      );
+    }
+    return;
   }
 
   const unknownProps = Object.keys(conditional).filter(
@@ -301,13 +397,18 @@ function validateUIConditional(conditional, argName, blockName, argLabel) {
     );
   }
 
-  if (typeof conditional.arg !== "string" || conditional.arg === "") {
+  if (
+    !("arg" in conditional) ||
+    typeof conditional.arg !== "string" ||
+    conditional.arg === ""
+  ) {
     raiseBlockError(
       `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional.arg" value. Must be a non-empty string.`
     );
   }
 
   if (
+    "notEmpty" in conditional &&
     conditional.notEmpty !== undefined &&
     typeof conditional.notEmpty !== "boolean"
   ) {
@@ -316,9 +417,37 @@ function validateUIConditional(conditional, argName, blockName, argLabel) {
     );
   }
 
+  if ("oneOf" in conditional || compoundLeaf) {
+    const comparators = ["equals", "notEmpty", "oneOf"].filter((key) =>
+      Object.hasOwn(conditional, key)
+    );
+    if (comparators.length !== 1) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional". A leaf must specify exactly one comparator.`
+      );
+    }
+    if (
+      "oneOf" in conditional &&
+      (!Array.isArray(conditional.oneOf) || !conditional.oneOf.length)
+    ) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional.oneOf". Must be a non-empty array.`
+      );
+    }
+    if (!Object.hasOwn(siblingSchema, conditional.arg)) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has an unknown sibling "${conditional.arg}" in "ui.conditional".`
+      );
+    }
+    return;
+  }
+
   // The predicate needs at least one comparator. Without `equals` or
   // `notEmpty` we have no rule to evaluate against the referenced arg.
-  if (conditional.equals === undefined && conditional.notEmpty === undefined) {
+  if (
+    !("equals" in conditional && conditional.equals !== undefined) &&
+    !("notEmpty" in conditional && conditional.notEmpty !== undefined)
+  ) {
     raiseBlockError(
       `Block "${blockName}": ${argLabel} "${argName}" has invalid "ui.conditional" value. ` +
         `Must specify at least one of "equals" or "notEmpty".`
@@ -380,6 +509,7 @@ export function validateArgsSchema(
     return;
   }
 
+  const groups = new Map<string, ArgUiGroup>();
   for (const [argName, argDef] of Object.entries(argsSchema)) {
     if (
       !validateArgName(argName, { entityName: blockName, entityType: "Block" })
@@ -398,7 +528,7 @@ export function validateArgsSchema(
     }
 
     validateBlockDefaultValue(argDef, argName, blockName);
-    validateUIHints(argDef.ui, argName, blockName, "arg");
+    validateUIHints(argDef.ui, argName, blockName, "arg", argsSchema, groups);
   }
 }
 
@@ -450,12 +580,14 @@ export function validateBlockArgs(
  */
 export function validateChildArgsSchema(
   childArgsSchema: Record<string, ChildArgSchema> | null | undefined,
-  blockName: string
+  blockName: string,
+  parentArgsSchema: Record<string, ArgSchema> = {}
 ): void {
   if (!childArgsSchema || typeof childArgsSchema !== "object") {
     return;
   }
 
+  const groups = new Map<string, ArgUiGroup>();
   for (const [argName, argDef] of Object.entries(childArgsSchema)) {
     if (
       !validateArgName(argName, {
@@ -494,6 +626,13 @@ export function validateChildArgsSchema(
     }
 
     validateBlockDefaultValue(argDef, argName, blockName, "childArgs arg");
-    validateUIHints(argDef.ui, argName, blockName, "childArgs arg");
+    validateUIHints(
+      argDef.ui,
+      argName,
+      blockName,
+      "childArgs arg",
+      parentArgsSchema,
+      groups
+    );
   }
 }

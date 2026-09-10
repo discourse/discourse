@@ -15,6 +15,7 @@ import type {
   ArgSchema,
   BlockConstraints,
   BlockValidateFn,
+  BlockValidationIssue,
 } from "discourse/blocks/types";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
@@ -555,12 +556,12 @@ function validateRequires(
  *
  * @param validateFn - The custom validate function.
  * @param args - The resolved args (with defaults applied).
- * @returns Array of error messages if validation fails, null otherwise.
+ * @returns Messages and field issues if validation fails, null otherwise.
  */
 export function runCustomValidation(
   validateFn: BlockValidateFn | null | undefined,
   args: Record<string, unknown>
-): string[] | null {
+): Array<string | BlockValidationIssue> | null {
   if (typeof validateFn !== "function") {
     return null;
   }
@@ -576,17 +577,24 @@ export function runCustomValidation(
     return [result];
   }
 
-  if (Array.isArray(result)) {
-    // `Array.isArray()` narrows to the (necessarily untyped) built-in `any[]`;
-    // re-declare it as `unknown[]` so nothing downstream carries an `any`.
-    const resultArray = result as unknown[];
-    // Filter out non-string values and empty strings
-    const errors = resultArray.filter(
-      (e): e is string => typeof e === "string" && e.length > 0
-    );
-    return errors.length > 0 ? errors : null;
-  }
-
-  // Invalid return type - ignore
-  return null;
+  const values: unknown[] = Array.isArray(result) ? result : [result];
+  const errors = values.filter(
+    (value): value is string | BlockValidationIssue => {
+      if (typeof value === "string") {
+        return value.length > 0;
+      }
+      return (
+        value !== null &&
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        "message" in value &&
+        typeof value.message === "string" &&
+        value.message.trim().length > 0 &&
+        (!("field" in value) ||
+          value.field === undefined ||
+          (typeof value.field === "string" && value.field.trim().length > 0))
+      );
+    }
+  );
+  return errors.length > 0 ? errors : null;
 }

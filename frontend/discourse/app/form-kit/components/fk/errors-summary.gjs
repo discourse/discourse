@@ -11,14 +11,28 @@ export default class FKErrorsSummary extends Component {
     }
 
     const container = document.getElementById(href.slice(1));
-    const focusable = container?.querySelector(
-      "input, select, textarea, button, [tabindex]:not([tabindex='-1'])"
-    );
+    const focusable =
+      container?.querySelector(
+        '[contenteditable="true"], [contenteditable="plaintext-only"]'
+      ) ??
+      container?.querySelector(
+        "input, select, textarea, button, [tabindex]:not([tabindex='-1'])"
+      );
 
     if (focusable) {
       event.preventDefault();
+      let disclosure = focusable.closest("details");
+      while (disclosure) {
+        disclosure.open = true;
+        disclosure = disclosure.parentElement?.closest("details");
+      }
       focusable.focus({ preventScroll: true, focusVisible: true });
-      focusable.scrollIntoView({ block: "center", behavior: "smooth" });
+      focusable.scrollIntoView({
+        block: "center",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
     }
   };
 

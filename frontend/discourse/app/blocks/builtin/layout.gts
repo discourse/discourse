@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type TrustedHTML, trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
@@ -14,6 +15,7 @@ import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
 import type Blocks from "discourse/services/blocks";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import alignCardRows from "../-internals/align-card-rows";
 
 const VALID_MODES = ["stack", "row", "grid"];
 const VALID_ALIGNS = ["start", "center", "end", "stretch"];
@@ -55,6 +57,8 @@ interface LayoutSignature {
     rowTemplate?: string;
     rowHeight?: string;
     autoCollapse?: string;
+    /** Coordinate media seams and trailing actions of matching Card peers. */
+    cardAlignment?: "auto" | "off";
   };
 }
 
@@ -104,6 +108,19 @@ interface LayoutSignature {
     },
   ],
   args: {
+    cardAlignment: {
+      type: "string",
+      default: "auto",
+      enum: ["auto", "off"],
+      ui: {
+        control: "segmented",
+        label: i18n("blocks.builtin.layout.card_alignment"),
+        optionLabels: {
+          auto: i18n("blocks.builtin.layout.card_alignment_auto"),
+          off: i18n("blocks.builtin.layout.card_alignment_off"),
+        },
+      },
+    },
     mode: {
       type: "string",
       default: "stack",
@@ -345,7 +362,7 @@ interface LayoutSignature {
     },
     stack: {
       type: "object",
-      default: { alignSelf: "auto", flexGrow: 0 },
+      default: { alignSelf: "auto" },
       properties: {
         alignSelf: {
           type: "string",
@@ -366,11 +383,11 @@ interface LayoutSignature {
         },
         flexGrow: {
           type: "number",
-          default: 0,
           min: 0,
           ui: {
             control: "stepper",
             label: i18n("blocks.builtin.layout.placement.flex_grow"),
+            placeholder: i18n("blocks.builtin.layout.placement.automatic"),
           },
         },
       },
@@ -381,7 +398,7 @@ interface LayoutSignature {
     },
     row: {
       type: "object",
-      default: { alignSelf: "auto", flexGrow: 0 },
+      default: { alignSelf: "auto" },
       properties: {
         alignSelf: {
           type: "string",
@@ -402,11 +419,11 @@ interface LayoutSignature {
         },
         flexGrow: {
           type: "number",
-          default: 0,
           min: 0,
           ui: {
             control: "stepper",
             label: i18n("blocks.builtin.layout.placement.flex_grow"),
+            placeholder: i18n("blocks.builtin.layout.placement.automatic"),
           },
         },
       },
@@ -681,8 +698,40 @@ export default class Layout extends Component<LayoutSignature> {
     });
   }
 
+  /** Preserve authored allocation without overriding a block's natural defaults. */
+  @action
+  flexItemStyle(containerArgs?: Record<string, unknown>): TrustedHTML | null {
+    const placement = containerArgs?.[this.resolvedMode];
+    if (!placement || typeof placement !== "object") {
+      return null;
+    }
+
+    const declarations: string[] = [];
+    if (
+      "flexGrow" in placement &&
+      typeof placement.flexGrow === "number" &&
+      Number.isFinite(placement.flexGrow) &&
+      placement.flexGrow >= 0
+    ) {
+      declarations.push(`flex-grow: ${placement.flexGrow}`);
+    }
+    if (
+      "alignSelf" in placement &&
+      typeof placement.alignSelf === "string" &&
+      VALID_ALIGN_SELF.includes(placement.alignSelf)
+    ) {
+      declarations.push(`align-self: ${placement.alignSelf}`);
+    }
+    return declarations.length ? trustHTML(declarations.join("; ")) : null;
+  }
+
   <template>
-    <div class={{this.className}} style={{this.containerStyle}}>
+    <div
+      class={{this.className}}
+      data-block-layout={{this.resolvedMode}}
+      style={{this.containerStyle}}
+      {{alignCardRows mode=this.resolvedMode alignment=@cardAlignment}}
+    >
       {{! Iterate sorted children, NOT the raw children arg. See the
         sortedChildren getter's JSDoc for why: keeps DOM order in
         sync with visual reading order so accessibility tooling and
@@ -704,7 +753,9 @@ export default class Layout extends Component<LayoutSignature> {
           can't be. }}
         <div class="d-block-layout__flex">
           {{#each this.sortedChildren key="key" as |child|}}
-            <child.Component />
+            <child.Component
+              @style={{this.flexItemStyle child.containerArgs}}
+            />
           {{/each}}
         </div>
       {{/if}}

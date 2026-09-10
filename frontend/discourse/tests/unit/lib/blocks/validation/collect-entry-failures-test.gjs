@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
+import Card from "discourse/blocks/builtin/card";
 import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
 import {
   collectEntryFailures,
@@ -58,6 +59,87 @@ class CompositeBlock extends Component {
 
 module("Unit | Lib | blocks/validation/collectEntryFailures", function (hooks) {
   setupTest(hooks);
+
+  test("custom field diagnostics survive edit-time and full layout validation", async function (assert) {
+    @block("custom-field-diagnostics", {
+      args: { title: { type: "string" }, href: { type: "string" } },
+      validate: () => [
+        { field: "title", message: "Give this link a name." },
+        { field: "href", message: "Choose a destination." },
+        { field: "unknown", message: "Unknown fields remain block errors." },
+        { field: undefined, message: "An untargeted object diagnostic." },
+        "A block-level diagnostic.",
+      ],
+    })
+    class CustomFields extends Component {
+      <template>x</template>
+    }
+    const entry = { block: CustomFields, args: {} };
+    const details = collectEntryFailures(entry, CustomFields);
+    assert.strictEqual(
+      details.length,
+      5,
+      "custom diagnostics are not dropped or collapsed together"
+    );
+    assert.deepEqual(
+      details.map(({ field }) => field),
+      ["title", "href", undefined, undefined, undefined],
+      "only declared fields become focus targets"
+    );
+    assert.strictEqual(
+      details[0].message,
+      "Give this link a name.",
+      "author-facing wording survives"
+    );
+    const context = {
+      seenIds: new Map(),
+      permissive: true,
+      collect: true,
+      warnings: [],
+    };
+    await validateLayout(
+      [entry],
+      "homepage-blocks",
+      this.owner.lookup("service:blocks"),
+      "",
+      null,
+      null,
+      null,
+      null,
+      0,
+      context
+    );
+    assert.deepEqual(
+      entry.__failureDetails,
+      details,
+      "publish and edit-time validation agree"
+    );
+  });
+
+  test("custom field diagnostics identify incomplete Card controls", function (assert) {
+    const details = collectEntryFailures(
+      {
+        args: {
+          actionLabel: "Visit",
+          secondaryEnabled: true,
+          identityEnabled: true,
+          identityRole: "Curator",
+          image: { url: "/feature.png" },
+          imageDecorative: false,
+        },
+      },
+      Card
+    );
+    assert.deepEqual(
+      details.map(({ field }) => field),
+      ["href", "secondaryLabel", "secondaryHref", "identityName", "imageAlt"],
+      "every incomplete feature points to an editable field"
+    );
+    assert.true(
+      details.every(({ expected }) => expected.custom),
+      "completeness uses custom validation"
+    );
+  });
 
   test("returns [] when args and constraints are satisfied", function (assert) {
     const details = collectEntryFailures(

@@ -50,7 +50,18 @@ export type BlockClassNames =
   | string[]
   | ((args: Record<string, unknown>) => string);
 
-/** Custom cross-arg validation invoked with the block's resolved args. */
+/** An author-facing custom validation message, optionally targeting an argument. */
+export interface BlockValidationIssue {
+  /** Translated instructions for correcting the invalid value. */
+  message: string;
+  /** Declared argument to focus; omitted for a block-level issue. */
+  field?: string;
+}
+
+/**
+ * Custom cross-arg validation invoked with resolved args. Returns a message,
+ * a BlockValidationIssue, an array of either, or nothing for valid args.
+ */
 export type BlockValidateFn = (args: Record<string, unknown>) => unknown;
 
 /**
@@ -91,7 +102,7 @@ export type ArgUiControl =
  * A predicate gating an argument's edit-form visibility on another argument's
  * value.
  */
-export interface ArgUiConditional {
+export interface ArgUiConditionalLeaf {
   /** The sibling argument whose value is inspected. */
   arg: string;
 
@@ -100,6 +111,27 @@ export interface ArgUiConditional {
 
   /** Passes when the sibling argument is non-empty. */
   notEmpty?: boolean;
+
+  /** Passes when the sibling equals one of these values. */
+  oneOf?: readonly unknown[];
+}
+
+/** A leaf predicate or a conjunction of non-nested leaf predicates. */
+export type ArgUiConditional =
+  | ArgUiConditionalLeaf
+  | {
+      /** Every predicate must pass for the field to appear. */
+      all: readonly ArgUiConditionalLeaf[];
+    };
+
+/** Disclosure metadata for grouping related argument fields. */
+export interface ArgUiGroup {
+  /** Stable group identity, independent of its translated label. */
+  name: string;
+  /** Translated disclosure label. */
+  label: string;
+  /** Whether the disclosure starts closed. */
+  collapsed: boolean;
 }
 
 /**
@@ -122,8 +154,8 @@ export interface ArgUiHint {
   /** Prompt shown when the value is empty. */
   emptyPrompt?: string;
 
-  /** Grouping label for organizing fields. */
-  group?: string;
+  /** Section label, or a descriptor opting into a disclosure. */
+  group?: string | ArgUiGroup;
 
   /** Whether the field is hidden from the edit form. */
   hidden?: boolean;

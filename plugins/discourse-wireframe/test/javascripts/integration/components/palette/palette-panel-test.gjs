@@ -23,6 +23,34 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    test("static Card catalogue offers one leaf without competing legacy registrations", async function (assert) {
+      await render(<template><PalettePanel /></template>);
+      await fillIn(".wireframe-palette__search", "card");
+
+      assert
+        .dom(".wireframe-block-row[data-block-name='card']")
+        .exists(
+          { count: 1 },
+          "Card has one insertion choice, not presentation variants"
+        );
+      assert
+        .dom(".wireframe-block-row[data-block-name='media-card']")
+        .doesNotExist("media and identity use Card");
+      assert
+        .dom(".wireframe-block-row[data-block-name='wf:cta-card']")
+        .doesNotExist("static calls to action use Card");
+
+      const blocks = this.owner.lookup("service:blocks");
+      assert.false(
+        Boolean(blocks.getBlock("media-card")),
+        "media-card is not registered"
+      );
+      assert.false(
+        Boolean(blocks.getBlock("wf:cta-card")),
+        "CTA card is not registered"
+      );
+    });
+
     test("renders at least one entry per registered starter block", async function (assert) {
       await render(<template><PalettePanel /></template>);
 

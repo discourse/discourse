@@ -436,7 +436,7 @@ const PLAIN_EXTENSIONS = [
 
 /**
  * Extension list for the "heading" schema — marks allowed, no line breaks.
- * Used for single-line rich content (heading text, media-card title).
+ * Used for single-line rich content (heading text).
  */
 const HEADING_EXTENSIONS = [
   {

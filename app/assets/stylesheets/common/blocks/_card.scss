@@ -1,72 +1,370 @@
-/* Content card block. Vertical (image on top) or horizontal (image beside the
-   text) variant. The whole card becomes a link via the stretched-link
-   affordance, so the card establishes a positioning context. */
-
 .d-block-card {
+  --card-padding: var(--space-4);
+  --card-gap: var(--space-3);
+  --card-media-cap: 18rem;
+  --card-title-size: var(--font-up-2);
+  --card-surface: var(--secondary);
+  --card-foreground: var(--primary);
+  --card-accent: var(--tertiary);
+  container: block-card / inline-size;
   position: relative;
-  display: flex;
-  flex-direction: column;
+  isolation: isolate;
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-inline-size: 0;
+  min-block-size: 100%;
   overflow: hidden;
-
-  /* Fill the wrapper when a grid cell stretches it (Align vertical: stretch);
-     resolves to a no-op against an auto-height parent in stacked/row layouts. */
-  min-height: 100%;
-  background-color: var(--d-block-card-bg-color, var(--secondary));
   border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius, 0.5rem);
-}
+  border-radius: var(--d-border-radius);
+  background: var(--card-surface);
+  color: var(--card-foreground);
+  overflow-wrap: anywhere;
 
-.d-block-card--horizontal {
-  flex-direction: row;
-}
+  &.--surface-subtle {
+    --card-surface: var(--primary-very-low);
+  }
 
-.d-block-card__image {
-  display: block;
-  width: 100%;
-  object-fit: cover;
-  aspect-ratio: 16 / 9;
-}
+  &.--surface-integrated {
+    --card-surface: transparent;
+    --card-foreground: inherit;
+    --card-accent: currentcolor;
+    border-color: transparent;
+  }
 
-.d-block-card--horizontal .d-block-card__image {
-  width: 40%;
-  aspect-ratio: auto;
-}
+  &.--surface-accent {
+    --card-surface: var(--tertiary-very-low);
+  }
 
-/* Empty image slot — collapses on the reader page; the editor reveals it. */
-.d-block-card__image--empty {
-  display: none;
-}
+  &.--surface-contrast {
+    --card-surface: var(--primary);
+    --card-foreground: var(--secondary);
+    --card-accent: var(--secondary);
+  }
 
-.d-block-card__body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 1rem;
-}
+  &.--scale-compact {
+    --card-padding: var(--space-3);
+    --card-gap: var(--space-2);
+    --card-title-size: var(--font-up-1);
+  }
 
-.d-block-card__icon {
-  font-size: var(--font-up-2);
-  color: var(--tertiary);
-}
+  &.--scale-featured {
+    --card-padding: var(--space-5);
+    --card-title-size: var(--font-up-3);
+  }
 
-.d-block-card__title {
-  margin: 0;
-}
+  &.--above {
+    grid-template-rows: 1fr auto;
+  }
 
-.d-block-card__meta {
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-}
+  &.--below {
+    grid-template-rows: auto 1fr;
+  }
 
-.d-block-card__text {
-  margin: 0.25rem 0 0;
-}
+  &.--beside {
+    grid-template-columns: 36% minmax(0, 1fr);
+  }
 
-/* Empty copy fields collapse on the reader page; the editor reveals them for
-   inline editing. */
+  &.--beside.--media-end {
+    grid-template-columns: minmax(0, 1fr) 36%;
+  }
 
-.d-block-card__title--empty,
-.d-block-card__meta--empty,
-.d-block-card__text--empty {
-  display: none;
+  &.--beside.--even {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &__media {
+    position: relative;
+    display: grid;
+    grid-column: 1 / -1;
+    min-inline-size: 0;
+    min-block-size: var(
+      --card-aligned-media,
+      min(56.25cqi, var(--card-media-cap))
+    );
+
+    /* Natural preference remains measurable independently of row alignment. */
+    &::before {
+      content: "";
+      grid-area: 1 / 1;
+      block-size: min(56.25cqi, var(--card-media-cap));
+      pointer-events: none;
+    }
+
+    &.--identity {
+      color: var(--primary);
+      background: var(--tertiary-very-low);
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: color-mix(
+          in srgb,
+          var(--tertiary-very-low) 90%,
+          transparent
+        );
+        pointer-events: none;
+      }
+    }
+
+    &.--photo {
+      color: var(--token-color-text-inverse);
+
+      &::after {
+        background: rgb(var(--always-black-rgb), 0.78);
+      }
+    }
+
+    > .d-block-card__identity,
+    > .d-block-card__label {
+      grid-area: 1 / 1;
+      position: relative;
+      z-index: 1;
+      align-self: end;
+      margin: var(--card-padding);
+    }
+
+    > .d-block-card__label {
+      justify-self: start;
+    }
+  }
+
+  &__image {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  &__content {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: var(--card-aligned-content, auto);
+    padding: var(--card-padding);
+    padding-block-end: var(--card-action-inset, var(--card-padding));
+  }
+
+  &__copy {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--card-gap);
+    min-inline-size: 0;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--card-accent);
+    font-size: var(--font-down-1);
+    font-weight: bold;
+
+    &.--badge {
+      align-self: start;
+      padding: var(--space-1) var(--space-2);
+      border: 1px solid currentcolor;
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  &__icon {
+    flex: none;
+    color: var(--card-accent);
+
+    &.--tile {
+      display: inline-flex;
+      padding: var(--space-3);
+      background: var(--tertiary-very-low);
+      color: var(--tertiary);
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  &__identity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-inline-size: 0;
+
+    &.--feature {
+      --card-avatar-size: 5rem;
+    }
+
+    &.--stacked {
+      --card-avatar-size: 5rem;
+      flex-direction: column;
+      align-items: start;
+    }
+  }
+
+  &__avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    inline-size: var(--card-avatar-size, 2.5rem);
+    block-size: var(--card-avatar-size, 2.5rem);
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--primary-low);
+    color: var(--primary);
+
+    .d-block-card__identity.--rounded & {
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  &__identity-copy {
+    min-inline-size: 0;
+  }
+
+  &__identity-name {
+    font-weight: bold;
+  }
+
+  &__identity-role,
+  &__meta {
+    font-size: var(--font-down-1);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--card-title-size);
+    line-height: var(--line-height-medium);
+    color: inherit;
+  }
+
+  &__heading {
+    display: flex;
+    align-items: start;
+    gap: var(--card-gap);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  &__text {
+    margin: 0;
+  }
+
+  &__meta.--empty,
+  &__text.--empty {
+    display: none;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block-start: auto;
+
+    > .btn {
+      max-inline-size: 100%;
+      white-space: normal;
+    }
+  }
+
+  &__primary:not(.btn),
+  &__secondary:not(.btn) {
+    color: var(--card-accent);
+    font-weight: bold;
+  }
+
+  &__copy a,
+  &__media a,
+  &__secondary {
+    position: relative;
+    z-index: 2;
+  }
+
+  &.--dividers &__actions {
+    border-block-start: 1px solid var(--primary-low);
+    padding-block-start: var(--card-gap);
+  }
+
+  &.--behind {
+    --card-foreground: var(--token-color-text-inverse);
+    --card-accent: var(--token-color-text-inverse);
+    grid-template-rows: 1fr auto;
+  }
+
+  &.--behind &__media {
+    grid-area: 1 / 1 / 3 / -1;
+    grid-template-rows: subgrid;
+
+    &::before {
+      grid-row: 1 / -1;
+    }
+
+    > .d-block-card__label {
+      align-self: start;
+    }
+  }
+
+  &.--behind &__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      rgb(var(--always-black-rgb), 0.4),
+      rgb(var(--always-black-rgb), 0.8)
+    );
+    pointer-events: none;
+  }
+
+  &.--behind &__content {
+    grid-area: 2 / 1 / 3 / -1;
+    align-self: end;
+    z-index: 1;
+  }
+
+  > .d-block-stretched-link:focus-visible::after {
+    border-radius: var(--d-border-radius);
+    outline: 2px solid var(--card-accent);
+    outline-offset: -2px;
+  }
+
+  &.is-editing .d-block-stretched-link::after {
+    pointer-events: none;
+  }
+
+  @container block-card (min-width: 30rem) {
+    &.--beside &__media {
+      grid-area: 1 / 1 / 2 / 2;
+    }
+
+    &.--beside &__content {
+      grid-area: 1 / 2 / 2 / 3;
+    }
+
+    &.--beside.--media-end &__media {
+      grid-column: 2;
+    }
+
+    &.--beside.--media-end &__content {
+      grid-column: 1;
+    }
+
+    &.--none.--inline-actions &__content {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    &.--none.--inline-actions &__copy {
+      flex: 1 1 20rem;
+    }
+
+    &.--none.--inline-actions &__actions {
+      max-inline-size: 100%;
+      margin-block-start: 0;
+      margin-inline-start: auto;
+    }
+  }
 }

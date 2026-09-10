@@ -42,6 +42,7 @@ export type {
   BlockPaletteVariant,
   BlockPaletteVariantDefinition,
   BlockValidateFn,
+  BlockValidationIssue,
   ChildArgSchema,
   LayoutEntry,
 } from "discourse/blocks/types";

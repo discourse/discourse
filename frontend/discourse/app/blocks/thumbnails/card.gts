@@ -1,11 +1,9 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 
 interface CardThumbnailSignature {
-  // Root element type (enables ...attributes type checking)
   Element: SVGSVGElement;
 }
 
-/** Palette thumbnail for the `card` block: a framed card with media and text. */
 const CardThumbnail: TemplateOnlyComponent<CardThumbnailSignature> = <template>
   <svg aria-hidden="true" fill="none" viewBox="0 0 120 80" ...attributes>
     <rect
@@ -26,22 +24,16 @@ const CardThumbnail: TemplateOnlyComponent<CardThumbnailSignature> = <template>
       x="30"
       y="22"
     />
+    <rect fill="var(--primary)" height="5" rx="2" width="44" x="30" y="46" />
     <rect
       fill="var(--primary-low-mid)"
-      height="5"
-      rx="2"
-      width="44"
-      x="30"
-      y="48"
-    />
-    <rect
-      fill="var(--primary-low-mid)"
-      height="5"
+      height="3"
       rx="2"
       width="32"
       x="30"
-      y="57"
+      y="54"
     />
+    <rect fill="var(--tertiary)" height="3" rx="1.5" width="18" x="30" y="60" />
   </svg>
 </template>;
 

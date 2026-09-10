@@ -1,3 +1,4 @@
+import type { TrustedHTML } from "@ember/template";
 import type { ComponentLike } from "@glint/template";
 
 /**
@@ -65,7 +66,13 @@ export interface BlockEntry {
  * for list rendering.
  */
 export interface ChildBlockResult {
-  Component: BlockComponent;
+  /** The render wrapper accepts allocation styles from its parent Layout. */
+  Component: ComponentLike<{
+    Args: {
+      /** Inline allocation styles applied to the outer wrapper. */
+      style?: string | TrustedHTML | null;
+    };
+  }>;
   containerArgs?: Record<string, unknown>;
   key: string;
 

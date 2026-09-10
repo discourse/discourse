@@ -20,7 +20,7 @@ import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/la
 import { setupBlockLayoutDraftsStub } from "../../../helpers/stub-block-layout-drafts";
 import { queryOf } from "../../../helpers/wireframe-peers";
 
-// A two-field block stands in for a multi-field rich block (e.g. a media-card):
+// A two-field block stands in for a multi-field rich block (e.g. a card):
 // Tab walks title -> subtitle -> exit. A single-field block covers the heading
 // case (Tab commits + exits immediately).
 @block("wf:cee-card", {

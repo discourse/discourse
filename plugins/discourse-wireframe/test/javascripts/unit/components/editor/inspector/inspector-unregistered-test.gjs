@@ -1,5 +1,5 @@
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-form";
@@ -91,6 +91,109 @@ class StubWireframeService extends Service {
     this.removeBlockCalls.push(...keys);
   }
 }
+
+module("Integration | Wireframe | inspector metadata", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("disclosures follow transient defaults and omit empty groups", async function (assert) {
+    const group = { name: "identity", label: "Speaker", collapsed: true };
+    const blockData = {
+      name: "test-card",
+      isRegistered: true,
+      argsSnapshot: {},
+      metadata: {
+        args: {
+          enabled: { type: "boolean", default: true },
+          presentation: {
+            type: "string",
+            default: "above",
+            ui: { hidden: true },
+          },
+          name: {
+            type: "string",
+            ui: {
+              group,
+              conditional: {
+                all: [
+                  { arg: "enabled", equals: true },
+                  { arg: "presentation", oneOf: ["above", "below"] },
+                ],
+              },
+            },
+          },
+        },
+      },
+    };
+    stubWireframe(this.owner, blockData);
+    const stub = this.owner.lookup("service:wireframe-selection");
+    this.owner.unregister("service:wireframe-inspector-args");
+    this.owner.register("service:wireframe-inspector-args", stub, {
+      instantiate: false,
+    });
+    await render(<template><InspectorForm /></template>);
+    assert.dom('[data-inspector-group="identity"] summary').hasText("Speaker");
+    assert
+      .dom('#control-enabled [role="switch"]')
+      .hasAttribute(
+        "aria-checked",
+        "true",
+        "the control and its visibility predicate share the schema default"
+      );
+    assert
+      .dom('[data-inspector-group="identity"]')
+      .doesNotHaveAttribute("open");
+    assert.dom('input[name="name"]').exists("closed fields remain mounted");
+    await click('[data-inspector-group="identity"] summary');
+    await fillIn('input[name="name"]', "Sam");
+    await click('#control-enabled [role="switch"]');
+    assert
+      .dom('[data-inspector-group="identity"]')
+      .doesNotExist("an empty group leaves no heading");
+    assert.deepEqual(
+      blockData.argsSnapshot,
+      {},
+      "visibility did not depend on replacing the selection snapshot"
+    );
+    await click('#control-enabled [role="switch"]');
+    assert
+      .dom('input[name="name"]')
+      .hasValue("Sam", "toggling does not clear optional content");
+    assert.deepEqual(
+      stub.updateSelectedArgCalls.map((call) => call.name),
+      ["name", "enabled", "enabled"],
+      "disclosure state is never written into block args"
+    );
+  });
+
+  test("errors make gated fields reachable inside closed disclosures", async function (assert) {
+    stubWireframe(this.owner, {
+      name: "test-card",
+      isRegistered: true,
+      argsSnapshot: { enabled: false },
+      metadata: {
+        args: {
+          enabled: { type: "boolean" },
+          name: {
+            type: "string",
+            ui: {
+              label: "Name",
+              group: { name: "identity", label: "Speaker", collapsed: true },
+              conditional: { arg: "enabled", equals: true },
+            },
+          },
+        },
+      },
+      fieldErrors: { name: [{ code: "required", message: "Required" }] },
+    });
+    await render(<template><InspectorForm /></template>);
+    assert
+      .dom('input[name="name"]')
+      .exists("an error overrides normal visibility");
+    await click('.form-kit__errors-summary-list a[href="#control-name"]');
+    assert.dom('[data-inspector-group="identity"]').hasAttribute("open");
+    assert.strictEqual(document.activeElement, find('input[name="name"]'));
+  });
+});
 
 function stubWireframe(owner, blockData) {
   owner.unregister("service:wireframe-workspace");

@@ -232,6 +232,76 @@ RSpec.describe Admin::BlockLayoutsController do
         )
       end
 
+      it "round-trips a leaf Card with rich content, placement and four independent uploads" do
+        uploads = Fabricate.times(4, :upload)
+        sources =
+          uploads.map do |upload|
+            { source: "upload", upload_id: upload.id, url: upload.url, width: 640, height: 480 }
+          end
+        card = {
+          block: "card",
+          id: "community-story",
+          classNames: "featured-story",
+          conditions: [{ type: "user", loggedIn: true }],
+          containerArgs: {
+            stack: {
+              alignSelf: "stretch",
+              flexGrow: 0,
+            },
+          },
+          args: {
+            title: {
+              type: "doc",
+              content: [{ type: "text", text: "Community story", marks: [{ type: "strong" }] }],
+            },
+            body: "Retain the complete story",
+            meta: "42 min",
+            presentation: "beside",
+            imageWidth: "even",
+            imageSide: "end",
+            image: sources[0].merge(dark: sources[1], position: { x: 20, y: 80 }, zoom: 140),
+            avatar: sources[2].merge(dark: sources[3], position: { x: 70, y: 30 }, zoom: 125),
+            identityEnabled: true,
+            identityName: "Sam Saffron",
+            identityRole: "Co-founder, Discourse",
+            identityFormat: "feature",
+            identityTreatment: "photo",
+            actionLabel: "Read the story",
+            href: "/latest",
+            external: false,
+            wholeCard: true,
+            secondaryEnabled: true,
+            secondaryLabel: "About the community",
+            secondaryHref: "/about",
+            secondaryExternal: true,
+          },
+        }
+        document = {
+          schema_version: 1,
+          layout: [{ block: "layout", args: { mode: "stack" }, children: [card] }],
+        }
+
+        post "/admin/customize/block-layouts/export.json",
+             params: {
+               theme_id: theme.id,
+               outlet_name: "homepage-blocks",
+               layout_json: document.to_json,
+             }
+
+        expect(response.status).to eq(200)
+        exported = response.parsed_body
+        expect(JSON.parse(exported["content"])).to eq(document.deep_stringify_keys)
+        importer = Fabricate(:theme)
+        importer.set_field(
+          value: exported["content"],
+          **ThemeField.opts_from_file_path(exported["filename"]),
+        )
+        importer.save!
+        imported_field = live_field(importer)
+        expect(JSON.parse(imported_field.value_baked)).to eq(document.deep_stringify_keys)
+        expect(imported_field.upload_references.pluck(:upload_id)).to match_array(uploads.map(&:id))
+      end
+
       it "returns 404 when there is no field and no override" do
         post "/admin/customize/block-layouts/export.json",
              params: {
