@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { registerDestructor } from "@ember/destroyable";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -56,23 +55,8 @@ import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
 
-export function addToolbarCallback(func, { owner } = {}) {
-  const callbacks = _createCallbacks;
-  const callback = owner
-    ? function (...args) {
-        return func.apply(this, args);
-      }
-    : func;
-  callbacks.push(callback);
-
-  if (owner) {
-    registerDestructor(owner, () => {
-      const index = callbacks.indexOf(callback);
-      if (index !== -1) {
-        callbacks.splice(index, 1);
-      }
-    });
-  }
+export function addToolbarCallback(func) {
+  _createCallbacks.push(func);
 }
 export function clearToolbarCallbacks() {
   _createCallbacks = [];

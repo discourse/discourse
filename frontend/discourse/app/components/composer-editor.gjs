@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { registerDestructor } from "@ember/destroyable";
 import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -50,21 +49,11 @@ import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
-export function addComposerUploadHandler(extensions, method, { owner } = {}) {
-  const handler = {
+export function addComposerUploadHandler(extensions, method) {
+  uploadHandlers.push({
     extensions,
     method,
-  };
-  uploadHandlers.push(handler);
-
-  if (owner) {
-    registerDestructor(owner, () => {
-      const index = uploadHandlers.indexOf(handler);
-      if (index !== -1) {
-        uploadHandlers.splice(index, 1);
-      }
-    });
-  }
+  });
 }
 export function cleanUpComposerUploadHandler() {
   // we cannot set this to uploadHandlers = [] because that messes with
@@ -78,55 +67,25 @@ export function cleanUpComposerUploadHandler() {
 }
 
 let uploadPreProcessors = [];
-export function addComposerUploadPreProcessor(
-  pluginClass,
-  optionsResolverFn,
-  { owner } = {}
-) {
+export function addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
   if (!(pluginClass.prototype instanceof BasePlugin)) {
     throw new Error(
       "Composer upload preprocessors must inherit from the Uppy BasePlugin class."
     );
   }
 
-  const preProcessors = uploadPreProcessors;
-  const preProcessor = {
+  uploadPreProcessors.push({
     pluginClass,
     optionsResolverFn,
-  };
-  preProcessors.push(preProcessor);
-
-  if (owner) {
-    registerDestructor(owner, () => {
-      const index = preProcessors.indexOf(preProcessor);
-      if (index !== -1) {
-        preProcessors.splice(index, 1);
-      }
-    });
-  }
+  });
 }
 export function cleanUpComposerUploadPreProcessor() {
   uploadPreProcessors = [];
 }
 
 let uploadMarkdownResolvers = [];
-export function addComposerUploadMarkdownResolver(resolver, { owner } = {}) {
-  const resolvers = uploadMarkdownResolvers;
-  const registeredResolver = owner
-    ? function (...args) {
-        return resolver.apply(this, args);
-      }
-    : resolver;
-  resolvers.push(registeredResolver);
-
-  if (owner) {
-    registerDestructor(owner, () => {
-      const index = resolvers.indexOf(registeredResolver);
-      if (index !== -1) {
-        resolvers.splice(index, 1);
-      }
-    });
-  }
+export function addComposerUploadMarkdownResolver(resolver) {
+  uploadMarkdownResolvers.push(resolver);
 }
 export function cleanUpComposerUploadMarkdownResolver() {
   uploadMarkdownResolvers = [];

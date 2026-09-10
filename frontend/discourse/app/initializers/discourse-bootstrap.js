@@ -10,8 +10,6 @@ import { setURLContainer } from "discourse/lib/url";
 import Session from "discourse/models/session";
 import I18n from "discourse-i18n";
 
-const defaultRaiseOnDeprecation = window.EmberENV?.RAISE_ON_DEPRECATION;
-
 export default {
   // The very first initializer to run
   initialize(app) {
@@ -38,8 +36,9 @@ export default {
     // the `if DEBUG` forces the code inside the conditional block to be tree-shaken in
     // production builds
     if (DEBUG && isRailsTesting()) {
-      window.EmberENV.RAISE_ON_DEPRECATION =
-        setupData.raiseOnDeprecation ?? defaultRaiseOnDeprecation;
+      if (typeof setupData.raiseOnDeprecation !== "undefined") {
+        window.EmberENV.RAISE_ON_DEPRECATION = setupData.raiseOnDeprecation;
+      }
 
       // the module deprecation-counter is only available in test environments
       // we need to use importSync to inform Embroider that this module is required

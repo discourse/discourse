@@ -55,26 +55,12 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    path =
-      File.join(
-        GlobalSetting.relative_url_root || "",
-        "/session/#{user.encoded_username}/become.json?redirect=false",
-      )
-    success_message = "Signed in to #{user.encoded_username} successfully"
-    if ENV["SYSTEM_TEST_REUSE_APPLICATION"] == "1" && page.driver.application_restart_pending?
-      response = page.evaluate_script(<<~JAVASCRIPT, path)
-        (async (path) => {
-          const target = new URL(path, location.href);
-          if (target.origin !== location.origin) throw new Error('Fixture authentication requires the same origin');
-          const response = await fetch(target, { credentials: 'same-origin', redirect: 'error' });
-          return { status: response.status, body: await response.text() };
-        })(arguments[0])
-      JAVASCRIPT
-      expect(response).to eq("status" => 200, "body" => success_message)
-    else
-      visit(path)
-      expect(page).to have_content(success_message)
-    end
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
+
+    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
   def setup_system_test

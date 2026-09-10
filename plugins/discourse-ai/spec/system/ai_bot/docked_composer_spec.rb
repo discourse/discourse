@@ -76,15 +76,13 @@ RSpec.describe "AI Bot docked composer" do
     topic_page.visit_topic(pm)
     expect(page).to have_css(".ai-bot-docked-composer")
 
-    response = "Bot reply to docked message"
-    DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+    DiscourseAi::Completions::Llm.with_prepared_responses(["Bot reply to docked message"]) do
       find(".ai-bot-docked-composer .d-editor-input").fill_in(
         with: "Message from the docked composer",
       )
       find(".ai-bot-docked-composer .d-editor-input").send_keys(:enter)
 
       expect(page).to have_content("Message from the docked composer")
-      expect(page).to have_css(".cooked", text: response)
     end
   end
 
@@ -121,13 +119,11 @@ RSpec.describe "AI Bot docked composer" do
   it "clears the reply field after a successful submit" do
     topic_page.visit_topic(pm)
 
-    response = "Bot reply"
-    DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+    DiscourseAi::Completions::Llm.with_prepared_responses(["Bot reply"]) do
       find(".ai-bot-docked-composer .d-editor-input").fill_in(with: "First message to the bot")
       find(".ai-bot-docked-composer .d-editor-input").send_keys(:enter)
 
       expect(page).to have_content("First message to the bot")
-      expect(page).to have_css(".cooked", text: response)
     end
 
     expect(find(".ai-bot-docked-composer .d-editor-input").value).to eq("")

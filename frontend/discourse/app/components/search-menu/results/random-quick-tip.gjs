@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { registerDestructor } from "@ember/destroyable";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -39,45 +38,18 @@ const DEFAULT_QUICK_TIPS = [
 ];
 
 let QUICK_TIPS = [];
-const tipRegistrations = new Map();
 
-export function addQuickSearchRandomTip(tip, { owner } = {}) {
+export function addQuickSearchRandomTip(tip) {
   if (!QUICK_TIPS.includes(tip)) {
     QUICK_TIPS.push(tip);
-    tipRegistrations.set(tip, { owners: new Set(), ownerless: false });
-  }
-
-  const registration = tipRegistrations.get(tip);
-  if (!registration) {
-    return;
-  }
-
-  if (owner) {
-    const token = {};
-    registration.owners.add(token);
-    registerDestructor(owner, () => {
-      if (tipRegistrations.get(tip) !== registration) {
-        return;
-      }
-
-      registration.owners.delete(token);
-      if (!registration.ownerless && registration.owners.size === 0) {
-        tipRegistrations.delete(tip);
-        QUICK_TIPS.splice(QUICK_TIPS.indexOf(tip), 1);
-      }
-    });
-  } else {
-    registration.ownerless = true;
   }
 }
 
 export function resetQuickSearchRandomTips() {
-  tipRegistrations.clear();
   QUICK_TIPS = [].concat(DEFAULT_QUICK_TIPS);
 }
 
 export function removeDefaultQuickSearchRandomTips() {
-  DEFAULT_QUICK_TIPS.forEach((tip) => tipRegistrations.delete(tip));
   QUICK_TIPS = QUICK_TIPS.filter((tip) => !DEFAULT_QUICK_TIPS.includes(tip));
 }
 

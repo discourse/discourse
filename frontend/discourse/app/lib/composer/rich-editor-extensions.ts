@@ -1,4 +1,3 @@
-import { registerDestructor } from "@ember/destroyable";
 import { waitForPromise } from "@ember/test-waiters";
 import type { InputRule } from "prosemirror-inputrules";
 import type { MarkdownSerializerState, ParseSpec } from "prosemirror-markdown";
@@ -313,7 +312,6 @@ export interface RichEditorExtension {
 }
 
 const registeredExtensions: RichEditorExtension[] = [];
-const registeredExtensionTokens: object[] = [];
 let defaultExtensionsRegistered = false;
 
 export function markDefaultExtensionsRegistered() {
@@ -329,23 +327,8 @@ export function areDefaultExtensionsRegistered() {
  *
  * EXPERIMENTAL: This API will change without warning
  */
-export function registerRichEditorExtension(
-  extension: RichEditorExtension,
-  { owner }: { owner?: object } = {}
-) {
-  const token = {};
+export function registerRichEditorExtension(extension: RichEditorExtension) {
   registeredExtensions.push(extension);
-  registeredExtensionTokens.push(token);
-
-  if (owner) {
-    registerDestructor(owner, () => {
-      const index = registeredExtensionTokens.indexOf(token);
-      if (index !== -1) {
-        registeredExtensionTokens.splice(index, 1);
-        registeredExtensions.splice(index, 1);
-      }
-    });
-  }
 }
 
 export async function clearRichEditorExtensions() {
@@ -356,14 +339,13 @@ export async function clearRichEditorExtensions() {
     )
   );
   registeredExtensions.length = 0;
-  registeredExtensionTokens.length = 0;
   defaultExtensionsRegistered = false;
   return module;
 }
 
 export async function resetRichEditorExtensions() {
   const { default: extensions } = await clearRichEditorExtensions();
-  extensions.forEach((extension) => registerRichEditorExtension(extension));
+  extensions.forEach(registerRichEditorExtension);
   markDefaultExtensionsRegistered();
 }
 

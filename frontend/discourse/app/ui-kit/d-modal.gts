@@ -368,7 +368,7 @@ export default class DModal extends Component<DModalSignature> {
 
     if (this.args.beforeClose) {
       const canClose = await this.args.beforeClose({ initiatedBy });
-      if (canClose === false || this.isDestroying) {
+      if (canClose === false) {
         return;
       }
     }
@@ -390,10 +390,8 @@ export default class DModal extends Component<DModalSignature> {
         await waitForAnimationEnd(this.#modalContainer);
       }
     } finally {
-      if (!this.isDestroying) {
-        this.animating = false;
-        this.args.closeModal({ initiatedBy });
-      }
+      this.animating = false;
+      this.args.closeModal({ initiatedBy });
     }
   }
 

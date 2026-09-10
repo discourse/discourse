@@ -60,7 +60,9 @@ export default class Chat extends Service {
       this.chatSubscriptionsManager.stopChannelsSubscriptions();
     }
 
-    removeOnPresenceChange(this.onPresenceChangeCallback);
+    if (this.userCanChat && !EmbedMode.enabled) {
+      removeOnPresenceChange(this.onPresenceChangeCallback);
+    }
   }
 
   get activeChannel() {

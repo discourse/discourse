@@ -38,8 +38,7 @@ export default {
             },
             runParallel: !isMobileDevice,
           };
-        },
-        { owner }
+        }
       );
     }
   },

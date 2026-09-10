@@ -1,4 +1,4 @@
-import { apiInitializer } from "discourse/lib/api";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import DiscoursePostEventOneboxNodeView, {
   topicIdFromUrl,
@@ -142,7 +142,11 @@ const buildExtension = (siteSettings) => ({
   }),
 });
 
-export default apiInitializer((api) => {
-  const siteSettings = api.container.lookup("service:site-settings");
-  api.registerRichEditorExtension(buildExtension(siteSettings));
-});
+export default {
+  initialize() {
+    withPluginApi((api) => {
+      const siteSettings = api.container.lookup("service:site-settings");
+      api.registerRichEditorExtension(buildExtension(siteSettings));
+    });
+  },
+};

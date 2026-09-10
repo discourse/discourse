@@ -95,11 +95,7 @@ jobs:
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          processors=$(($(nproc) / 2 + 2))
-          if [ "$(nproc)" = 16 ] && { [ "${{ matrix.target }}" = core ] || [ "${{ matrix.target }}" = core-plugins ]; }; then
-            processors=14
-          fi
-          echo "PARALLEL_TEST_PROCESSORS=$processors" >> $GITHUB_ENV
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
@@ -311,8 +307,6 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
-          SYSTEM_TEST_REUSE_APPLICATION: "1"
-          CAPYBARA_PLAYWRIGHT_SOFT_RESET: "0"
           CHECKOUT_TIMEOUT: 10
         run: |
           report_system_test_cpu() {
@@ -332,8 +326,6 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
-          SYSTEM_TEST_REUSE_APPLICATION: "1"
-          CAPYBARA_PLAYWRIGHT_SOFT_RESET: "0"
           CHECKOUT_TIMEOUT: 10
         run: |
           report_system_test_cpu() {

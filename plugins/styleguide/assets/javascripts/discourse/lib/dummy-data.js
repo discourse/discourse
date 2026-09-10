@@ -3,11 +3,11 @@ import NavItem from "discourse/models/nav-item";
 let topicId = 2000000;
 let userId = 1000000;
 
-const dataByStore = new WeakMap();
+let _data;
 
 export function createData(store) {
-  if (dataByStore.has(store)) {
-    return dataByStore.get(store);
+  if (_data) {
+    return _data;
   }
 
   let categories = [
@@ -597,7 +597,7 @@ export function createData(store) {
     },
   ];
 
-  const data = {
+  _data = {
     categories,
 
     navItems: ["latest", "categories", "top"].map((name) => {
@@ -629,6 +629,5 @@ export function createData(store) {
     oneboxPosts,
   };
 
-  dataByStore.set(store, data);
-  return data;
+  return _data;
 }

@@ -1,7 +1,4 @@
-import { destroy } from "@ember/destroyable";
 import EmberObject from "@ember/object";
-import { setOwner } from "@ember/owner";
-import { run } from "@ember/runloop";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -13,7 +10,6 @@ import {
   applyMutableValueTransformer,
   applyValueTransformer,
   disableThrowingApplyExceptionOnTests,
-  resetTransformers,
   transformerTypes,
   transformerWasAdded,
 } from "discourse/lib/transformer";
@@ -1476,69 +1472,5 @@ module("Unit | Utility | transformers", function (hooks) {
         `the transformers used _unstable_self to access the component instance that called applyBehaviorTransformer`
       );
     });
-  });
-});
-
-module("Unit | Utility | transformers | owner lifetime", function (hooks) {
-  setupTest(hooks);
-
-  hooks.beforeEach(function () {
-    this.firstOwner = {};
-    this.secondOwner = {};
-    this.firstContext = {};
-    this.secondContext = {};
-    setOwner(this.firstContext, this.firstOwner);
-    setOwner(this.secondContext, this.secondOwner);
-  });
-
-  hooks.afterEach(function () {
-    run(() => {
-      destroy(this.firstOwner);
-      destroy(this.secondOwner);
-    });
-  });
-
-  test("destroying one owner preserves another registration of the same callback", function (assert) {
-    const callback = ({ value }) => `${value}/extra`;
-    for (const context of [this.firstContext, this.secondContext]) {
-      withPluginApi.call(context, (api) => {
-        assert.true(
-          api.registerValueTransformer("home-logo-href", callback),
-          "registration returns its success boolean"
-        );
-      });
-    }
-
-    assert.strictEqual(
-      applyValueTransformer("home-logo-href", "/home"),
-      "/home/extra/extra",
-      "both registrations contribute"
-    );
-    run(() => destroy(this.firstOwner));
-    assert.strictEqual(
-      applyValueTransformer("home-logo-href", "/home"),
-      "/home/extra",
-      "only the surviving owner's registration contributes"
-    );
-  });
-
-  test("destroying an old owner after reset preserves new registrations", function (assert) {
-    const callback = ({ value }) => `${value}/extra`;
-    withPluginApi.call(this.firstContext, (api) => {
-      api.registerValueTransformer("home-logo-href", callback);
-    });
-    resetTransformers();
-    acceptTransformerRegistrations();
-    withPluginApi.call(this.secondContext, (api) => {
-      api.registerValueTransformer("home-logo-href", callback);
-    });
-
-    run(() => destroy(this.firstOwner));
-
-    assert.strictEqual(
-      applyValueTransformer("home-logo-href", "/home"),
-      "/home/extra",
-      "the new registry keeps its registration"
-    );
   });
 });

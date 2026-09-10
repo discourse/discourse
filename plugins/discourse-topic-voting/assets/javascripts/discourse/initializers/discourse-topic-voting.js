@@ -9,37 +9,6 @@ export default {
     withPluginApi((api) => {
       api.replaceIcon("topic_voting.voting_closed", "lock");
 
-      api.addTagsHtmlCallback(
-        (topic) => {
-          const router = api.container.lookup("service:router");
-
-          if (
-            !topic.can_vote ||
-            router.currentRouteName?.startsWith("topic.")
-          ) {
-            return;
-          }
-
-          let buffer = [];
-
-          let title = "";
-          if (topic.user_voted) {
-            title = ` title='${i18n("topic_voting.voted")}'`;
-          }
-
-          let userVotedClass = topic.user_voted ? " voted" : "";
-          buffer.push(
-            `<a href='${topic.url}' class='list-vote-count vote-count-${topic.vote_count} discourse-tag simple${userVotedClass}'${title}>`
-          );
-
-          buffer.push(i18n("topic_voting.votes", { count: topic.vote_count }));
-          buffer.push("</a>");
-
-          return buffer.join("");
-        },
-        { priority: -100 }
-      );
-
       api.registerNotificationTypeRenderer(
         "votes_released",
         (NotificationTypeBase) => {

@@ -1,4 +1,3 @@
-import { getOwner } from "@ember/owner";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import AiBotDockedComposer from "../components/ai-bot-docked-composer";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
@@ -20,12 +19,12 @@ function focusDockedComposer() {
   });
 }
 
-function lookupStreamingState(controller) {
+function lookupStreamingState(api) {
   // Guarded because the container may be destroyed by the time the
   // topic controller's unsubscribe hook runs (particularly during
   // test tear-down of acceptance suites).
   try {
-    return getOwner(controller).lookup("service:ai-bot-streaming-state");
+    return api.container.lookup("service:ai-bot-streaming-state");
   } catch {
     return null;
   }
@@ -92,25 +91,21 @@ function initializeAIBotReplies(api) {
     pluginId: "discourse-ai",
 
     onAIBotStreamedReply: function (data) {
-      if (this.isDestroying || this.isDestroyed || !this.model?.postStream) {
+      if (!this.model?.postStream) {
         return;
       }
 
-      const streamingState = lookupStreamingState(this);
+      const streamingState = lookupStreamingState(api);
       const topicId = this.model.id;
 
       if (data?.noop) {
         return;
       }
 
-      const owner = getOwner(this);
-      const currentSiteSettings = owner.lookup("service:site-settings");
-      const currentAppEvents = owner.lookup("service:app-events");
-
       if (data?.done) {
         streamingState?.markFinishedAfterRender(topicId, data?.post_id);
-        if (currentSiteSettings.ai_bot_enable_docked_composer) {
-          currentAppEvents.trigger("discourse-ai:bot-reply-finished", {
+        if (siteSettings.ai_bot_enable_docked_composer) {
+          appEvents.trigger("discourse-ai:bot-reply-finished", {
             topicId,
             postId: data?.post_id,
           });
@@ -118,8 +113,8 @@ function initializeAIBotReplies(api) {
       } else {
         const isNewStream = !streamingState?.isStreamingForTopic(topicId);
         streamingState?.markStarted(topicId, data?.post_id);
-        if (isNewStream && currentSiteSettings.ai_bot_enable_docked_composer) {
-          currentAppEvents.trigger("discourse-ai:bot-reply-started", {
+        if (isNewStream && siteSettings.ai_bot_enable_docked_composer) {
+          appEvents.trigger("discourse-ai:bot-reply-started", {
             topicId,
             postId: data?.post_id,
           });
@@ -160,7 +155,7 @@ function initializeAIBotReplies(api) {
         // Guarded lookup: the container can be destroyed before
         // `unsubscribe` runs (teardown during test owner destruction),
         // in which case there's nothing to mark finished anyway.
-        const streamingState = lookupStreamingState(this);
+        const streamingState = lookupStreamingState(api);
         streamingState?.markFinished(this.model.id);
       }
 

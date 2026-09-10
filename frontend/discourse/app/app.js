@@ -172,10 +172,6 @@ export async function loadAdmin() {
   );
 }
 
-if (DEBUG && isRailsTesting()) {
-  window.moduleBroker.loadAdmin = loadAdmin;
-}
-
 class Discourse extends Application {
   modulePrefix = "discourse";
   rootElement = "#main";

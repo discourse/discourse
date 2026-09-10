@@ -1,5 +1,5 @@
 // Subscribes to user events on the message bus
-import { getOwner, setOwner } from "@ember/owner";
+import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import {
@@ -77,7 +77,7 @@ class SubscribeUserNotificationsInit {
     if (!isTesting()) {
       this.messageBus.subscribe(alertChannel(this.currentUser), this.onAlert);
 
-      initDesktopNotifications(this.messageBus, { owner });
+      initDesktopNotifications(this.messageBus);
 
       if (isPushNotificationsEnabled(this.currentUser)) {
         disableDesktopNotifications();
@@ -288,8 +288,7 @@ class SubscribeUserNotificationsInit {
         data,
         this.siteSettings,
         this.currentUser,
-        this.appEvents,
-        { owner: getOwner(this) }
+        this.appEvents
       );
     }
   }

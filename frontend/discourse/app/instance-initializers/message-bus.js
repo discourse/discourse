@@ -1,14 +1,10 @@
 /* eslint-disable ember/no-jquery */
-import { registerDestructor } from "@ember/destroyable";
 import $ from "jquery";
 import { handleLogoff } from "discourse/lib/ajax";
 import { isProduction, isTesting } from "discourse/lib/environment";
 // Initialize the message bus to receive messages.
 import getURL from "discourse/lib/get-url";
-import userPresent, {
-  onPresenceChange,
-  removeOnPresenceChange,
-} from "discourse/lib/user-presence";
+import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
@@ -91,26 +87,13 @@ export default {
     // This will notify MessageBus to force a long poll after user becomes
     // present
     // When 20 minutes pass we stop long polling due to "shouldLongPollCallback".
-    const presenceChanged = (present) => {
-      if (present && messageBus.onVisibilityChange) {
-        messageBus.onVisibilityChange();
-      }
-    };
     onPresenceChange({
       userUnseenTime: LONG_POLL_AFTER_UNSEEN_TIME,
-      callback: presenceChanged,
-    });
-
-    let interval;
-    registerDestructor(owner, () => {
-      clearInterval(interval);
-      removeOnPresenceChange(presenceChanged);
-      messageBus.stop();
-      _sendDeferredPageview = false;
-      _deferredURL = null;
-      _deferredSessionId = null;
-      _deferredReferrer = null;
-      _deferredViewTopicId = null;
+      callback: (present) => {
+        if (present && messageBus.onVisibilityChange) {
+          messageBus.onVisibilityChange();
+        }
+      },
     });
 
     if (siteSettings.login_required && !user) {
@@ -123,7 +106,7 @@ export default {
     // but would only stop a handful of interval, message bus being delayed by
     // 500ms on load is fine. stuff that needs to catch up correctly should
     // pass in a position
-    interval = setInterval(() => {
+    const interval = setInterval(() => {
       if (document.readyState === "complete") {
         if (
           router.currentRouteName === "topic.fromParams" ||
