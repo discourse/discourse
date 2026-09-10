@@ -316,6 +316,39 @@ function buildVarsScope(workflowVars) {
   return scope;
 }
 
+function typedSettingValue(field) {
+  const raw = field.value;
+
+  switch (field.field_type) {
+    case "integer":
+    case "category":
+    case "group":
+      return raw ? parseInt(raw, 10) : TYPE_EXEMPLARS.integer;
+    case "boolean":
+      return raw ? raw === "true" : TYPE_EXEMPLARS.boolean;
+    case "category_list":
+    case "group_list":
+      return raw
+        ? raw.split("|").filter(Boolean).map(Number)
+        : TYPE_EXEMPLARS.array;
+    case "tag_list":
+    case "simple_list":
+      return raw ? raw.split("|").filter(Boolean) : TYPE_EXEMPLARS.array;
+    default:
+      return raw ?? TYPE_EXEMPLARS.string;
+  }
+}
+
+function buildWorkflowSettingsScope(settingFields) {
+  const scope = Object.create(null);
+  if (settingFields?.length) {
+    for (const field of settingFields) {
+      scope[field.key] = typedSettingValue(field);
+    }
+  }
+  return scope;
+}
+
 function buildExecutionScope(nodes) {
   const scope = cleanObject({
     id: 0,
@@ -373,6 +406,7 @@ export function buildScope({
   ancestorNodes = [],
   siteSettings,
   workflowVars,
+  workflowSettingFields,
   nodes,
 }) {
   const $json = buildScopeFromFields(inputFields);
@@ -397,6 +431,7 @@ export function buildScope({
     $site_settings: buildSiteSettingsScope(siteSettings),
     $current_user: cleanObject({ id: 0, username: "" }),
     $vars: buildVarsScope(workflowVars),
+    $settings: buildWorkflowSettingsScope(workflowSettingFields),
     $execution: buildExecutionScope(nodes),
     $helpers: buildHelpersScope(),
     $: (name) => nodeOutputs[name] || EMPTY_NODE_OUTPUT,

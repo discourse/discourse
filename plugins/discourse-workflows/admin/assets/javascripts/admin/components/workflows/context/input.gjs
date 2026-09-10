@@ -56,7 +56,26 @@ function fieldVisible(fieldDef, nodes) {
   );
 }
 
-function schemaFieldToEntry(key, def, nodes) {
+const SETTING_FIELD_TYPE_SCHEMAS = {
+  integer: "integer",
+  category: "integer",
+  group: "integer",
+  boolean: "boolean",
+  category_list: "array",
+  group_list: "array",
+  tag_list: "array",
+  simple_list: "array",
+};
+
+function settingFieldEntries(settingFields) {
+  return (settingFields || []).map((field) => ({
+    key: field.key,
+    type: SETTING_FIELD_TYPE_SCHEMAS[field.field_type] || "string",
+    id: field.key,
+  }));
+}
+
+function schemaFieldToEntry(key, def, nodes, settingFields) {
   const displayKey = key.replace(/^\$/, "");
   const entry = {
     key: displayKey,
@@ -64,7 +83,9 @@ function schemaFieldToEntry(key, def, nodes) {
     id: key,
   };
 
-  if (def.fields) {
+  if (key === "$settings") {
+    entry.children = settingFieldEntries(settingFields);
+  } else if (def.fields) {
     entry.children = Object.entries(def.fields)
       .filter(([, childDef]) => fieldVisible(childDef, nodes))
       .map(([childKey, childDef]) => ({
@@ -86,7 +107,12 @@ function triggerProvidesCurrentUser(nodes, nodeTypesService) {
   return nodeType?.capabilities?.provides_current_user ?? false;
 }
 
-function environmentFields(expressionContext, nodes, nodeTypesService) {
+function environmentFields(
+  expressionContext,
+  nodes,
+  nodeTypesService,
+  settingFields
+) {
   const env = expressionContext.environment;
   if (!env) {
     return [];
@@ -101,7 +127,9 @@ function environmentFields(expressionContext, nodes, nodeTypesService) {
       }
       return true;
     })
-    .map(([symbol, def]) => schemaFieldToEntry(symbol, def, nodes));
+    .map(([symbol, def]) =>
+      schemaFieldToEntry(symbol, def, nodes, settingFields)
+    );
 }
 
 export default class InputContext extends Component {
@@ -191,7 +219,8 @@ export default class InputContext extends Component {
     return environmentFields(
       this.workflowsNodeTypes.expressionContext,
       this.args.nodes || [],
-      this.workflowsNodeTypes
+      this.workflowsNodeTypes,
+      this.args.session?.settingFields
     );
   }
 

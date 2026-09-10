@@ -12,6 +12,9 @@ module DiscourseWorkflows
       "$vars" => {
         type: :object,
       },
+      "$settings" => {
+        type: :object,
+      },
       "$current_user" => {
         type: :object,
         provided_by_trigger: true,
