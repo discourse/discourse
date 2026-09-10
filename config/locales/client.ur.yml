@@ -1860,6 +1860,16 @@ ur:
       tracked_topics_link: "دیکھیں"
       automatically_unpin_topics: "جب میں نیچے پہنچ جاوں تو خودکار طور پر موضوعات کو اَن پِن کردیں"
       apps: "اپلیکیشنز"
+      mcp_authorizations:
+        endpoint: "وسائل"
+        scopes: "اسکوپس"
+        details: "تفصیلات"
+        last_used: "آخری بار استعمال ہوا۔"
+        never: "کبھی نہیں"
+        status: "حیثیت"
+        statuses:
+          active: "فعال"
+          revoked: "منسوخ"
       revoke_access: "رسائی مٹائیں"
       undo_revoke_access: "رسائی مٹانے کو منسوخ کریں"
       api_approved: "منظورشدہ"
@@ -6174,6 +6184,73 @@ ur:
           header_description: "اس سائٹ اور اپنی ٹیم کے بارے میں یہاں معلومات فراہم کریں تاکہ لوگ جان سکیں کہ آپ کی کمیونٹی کیا ہے، اس کے پیچھے کون ہے، اور کوئی مسئلہ ہونے کی صورت میں آپ تک کیسے پہنچنا ہے۔ آپ کی سائٹ کے <a href='%{basePath}/about'>کے بارے میں صفحہ</a>پر دکھایا گیا ہے۔"
         developer:
           title: "ڈیولپر"
+        mcp:
+          tabs:
+            access: "رسائی"
+            activity: "سرگرمی"
+          overview:
+            status: "حیثیت"
+          access:
+            title: "رسائی"
+            group: "گروپ"
+            groups: "گروپس"
+            actions: "عمل"
+            edit: "ترمیم کریں"
+            delete: "مٹائیں"
+          primitives:
+            group_by: "گروہ بذریعہ"
+            group_by_options:
+              scope: "دائرہ کار"
+              provider: "پرووَائیڈر"
+              kind: "قِسم"
+            provider: "پرووَائیڈر"
+            kind: "قِسم"
+            scope: "دائرہ کار"
+            scopes: "اسکوپس"
+          clients:
+            actions: "عمل"
+            block: "بلاک کریں"
+            presets:
+              custom: "اپنی مرضی کا"
+          authorizations:
+            user: "رکن"
+            last_used: "آخری بار استعمال ہوا۔"
+            status: "حیثیت"
+            actions: "عمل"
+          activity:
+            errors: "خرابیاں"
+            rate_limits: "حدِ شرح"
+            outcome: "نتیجہ"
+            time: "وقت"
+            user: "رکن"
+            duration: "دورانیہ"
+          values:
+            server_status:
+              available: "دستیاب"
+              disabled: "غیر فعال"
+            client_trust:
+              approved: "منظورشدہ"
+            authorization_status:
+              active: "فعال"
+              revoked: "منسوخ"
+            activity_outcome:
+              success: "کامیابی"
+              error: "خرابی"
+            primitive_state:
+              enabled: "فعال شدہ"
+              disabled: "غیر فعال"
+              unavailable: "دستیاب نہیں"
+            primitive_kind:
+              all: "تمام اقسام"
+              resource: "وسائل"
+            primitive_risk:
+              read: "صرف پڑھنے کیلے"
+              moderation: "ماڈریٹر کا کام"
+            filter:
+              all: "تمام"
+          never: "کبھی نہیں"
+          actions:
+            revoke: "منسوخ کریں"
         experimental:
           title: "تجرباتی"
           header_description: "اپنی سائٹ کے لیے تجرباتی خصوصیات کو آن یا آف کریں، ان میں سے زیادہ تر کو گروپ کی بنیاد پر کنٹرول کیا جا سکتا ہے"

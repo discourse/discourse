@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 vi:
+  mcp:
+    oauth:
+      deny: "Từ chối"
   llms_txt:
     sections:
       optional: "Không bắt buộc"
@@ -1213,7 +1216,6 @@ vi:
     discourse_connect_overrides_website: "Ghi đè trang web của người dùng bằng giá trị tải từ DiscourseConnect và ngăn các thay đổi cục bộ."
     discourse_connect_overrides_profile_background: "Ghi đè nền hồ sơ người dùng bằng giá trị tải từ DiscourseConnect."
     discourse_connect_overrides_card_background: "Ghi đè nền thẻ người dùng bằng giá trị tải từ DiscourseConnect."
-    enable_local_logins_via_code: "Cho phép thành viên đăng ký và đăng nhập nhanh hơn bằng mã xác thực một lần (OTP) gửi qua thư điện tử (Email)."
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     enable_google_oauth2_logins: "Bật xác thực Google Oauth2. Đây là phương thức xác thực mà Google hiện đang hỗ trợ. Yêu cầu khóa và bí mật. Xem <a href='https://meta.discourse.org/t/15858' target='_blank'>Định cấu hình đăng nhập Google cho Discourse</a>."

@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  mcp:
+    oauth:
+      deny: "Negar"
+      approve: "Autorizar"
   llms_txt:
     sections:
       optional: "Opcional"
@@ -4670,6 +4674,10 @@ pt_BR:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de desempenho diários do seu site.
     initial_topic_title: Relatórios de desempenho do site
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Muitas entradas para o arquivo CSV. Forneça um arquivo CSV com no máximo %{count} entrada."
+      other: "Muitas entradas para o arquivo CSV. Forneça um arquivo CSV com no máximo %{count} entradas."
   tags:
     title: "Etiquetas"
     restricted_tag_disallowed: 'Você não pode aplicar a etiqueta "%{tag}".'

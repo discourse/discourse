@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 it:
+  mcp:
+    oauth:
+      deny: "Nega"
+      approve: "Autorizza"
   llms_txt:
     sections:
       optional: "Facoltativo"
@@ -4359,6 +4363,10 @@ it:
   performance_report:
     initial_post_raw: Questo argomento include rapporti di rendimento giornalieri per il tuo sito.
     initial_topic_title: Rapporti sul rendimento del sito web
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Troppi elementi nel file CSV. Usa un file CSV con non più di %{count} elemento."
+      other: "Troppi elementi nel file CSV. Usa un file CSV con non più di %{count} elementi."
   tags:
     title: "Etichette"
     restricted_tag_disallowed: 'Non puoi applicare l''etichetta "%{tag}".'

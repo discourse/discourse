@@ -958,6 +958,12 @@ et:
       tracked_topics_link: "Näita"
       automatically_unpin_topics: "Eemalda lõppu jõudmisel teemadelt automaatselt esiletõstmise märgistus"
       apps: "Äpid"
+      mcp_authorizations:
+        details: "Üksikasjad"
+        never: "Mitte kunagi"
+        status: "Staatus"
+        statuses:
+          active: "Aktiivne"
       revoke_access: "Tühista ligipääs"
       undo_revoke_access: "Tühista ligipääsu tühistamine"
       api_approved: "Heakskiidetud:"
@@ -2831,6 +2837,57 @@ et:
       config:
         developer:
           title: "Arendaja"
+        mcp:
+          tabs:
+            access: "Juurdepääs"
+            activity: "Aktiivsus"
+          overview:
+            status: "Staatus"
+          access:
+            title: "Juurdepääs"
+            group: "Rühm"
+            groups: "Rühmad"
+            actions: "Tegevused"
+            edit: "Muuda"
+            delete: "Kustuta"
+          primitives:
+            group_by_options:
+              provider: "Teenusepakkuja"
+              kind: "Tüüp"
+            provider: "Teenusepakkuja"
+            kind: "Tüüp"
+          clients:
+            actions: "Tegevused"
+            block: "Blokeeri"
+            presets:
+              custom: "Individuaalne"
+          authorizations:
+            user: "Kasutaja"
+            status: "Staatus"
+            actions: "Tegevused"
+          activity:
+            time: "Aeg"
+            user: "Kasutaja"
+          values:
+            server_status:
+              disabled: "Välja lülitatud"
+            client_trust:
+              approved: "Heakskiidetud"
+            authorization_status:
+              active: "Aktiivne"
+            activity_outcome:
+              success: "Korras"
+              error: "Viga"
+            primitive_state:
+              enabled: "Sisse lülitatud"
+              disabled: "Välja lülitatud"
+            primitive_risk:
+              moderation: "Modereerimine"
+            filter:
+              all: "Kõik"
+          never: "Mitte kunagi"
+          actions:
+            revoke: "Tühista "
         emojis:
           title: "Emotikon"
         flags:

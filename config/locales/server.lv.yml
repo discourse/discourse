@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 lv:
+  mcp:
+    oauth:
+      deny: "Atteikt"
   llms_txt:
     sections:
       optional: "Pēc izvēles"

@@ -16,6 +16,14 @@ lt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Paklauskite AI"
+        ask_ai:
+          title: "Paklauskite AI"
+          date: "Data"
+          outcomes:
+            failed: "Nepavyko"
         emotion:
           title: "Emocija"
         reports:

@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 be:
+  mcp:
+    oauth:
+      approve: "Аўтарызаваць"
   llms_txt:
     links:
       search:

@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  mcp:
+    oauth:
+      deny: "Avslå"
+      approve: "Autoriser"
   llms_txt:
     sections:
       optional: "Valgfritt"

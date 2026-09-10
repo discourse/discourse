@@ -19,6 +19,35 @@ pl_PL:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Zapytaj AI"
+        ask_ai:
+          title: "Zapytaj AI"
+          questions: "Zadane pytania"
+          askers: "Użytkownicy pytają"
+          latency: "Opóźnienie odpowiedzi"
+          latency_tooltip: "Średni czas od momentu przyjęcia zapytania przez serwer do wysłania pierwszej aktualizacji odpowiedzi, wliczając czas oczekiwania w kolejce. Nie obejmuje to czasu dostarczenia zapytania przez sieć do użytkownika."
+          seconds: "%{seconds} s"
+          not_available: "—"
+          activity: "Pyta z czasem"
+          date: "Data"
+          percentage: "%{value}%"
+          outcomes_title: "Zapytaj o wyniki"
+          outcomes:
+            answered: "Odpowiedź udzielona"
+            no_answer: "Brak odpowiedzi"
+            failed: "Niepowodzenie"
+            cancelled: "Anulowano"
+            pending: "Nie ukończono"
+          outcome_note: "Udzielona odpowiedź nie mówi nam, czy była pomocna. Sukces użytkownika nie jest jeszcze mierzony."
+          summary:
+            one: "%{count} pytanie zadane w tym okresie"
+            few: "%{count} pytania zadane w tym okresie"
+            many: "%{count} pytań zadanych w tym okresie"
+            other: "%{count} pytań zadanych w tym okresie"
+          empty: "W tym okresie nie zarejestrowano żadnych zapytań."
+          fetch_error: "Nie udało się załadować metryk Zapytaj AI."
         emotion:
           title: "Emocje"
           description: "Tabela zawiera liczbę wpisów sklasyfikowanych według określonej emocji. W zależności od wybranej metody klasyfikacji emocji wpisy są klasyfikowane albo za pomocą skonfigurowanego modelu klasyfikacji emocji („SamLowe/roberta-base-go_emotions”), albo skonfigurowanego agenta klasyfikacji emocji."
