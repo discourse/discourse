@@ -654,21 +654,20 @@ class Group < ActiveRecord::Base
   end
 
   def self.reset_groups_user_count!(only_group_ids: [])
-    where_sql =
-      if only_group_ids.present?
-        "WHERE group_id IN (#{only_group_ids.map(&:to_i).join(",")}) AND user_id > 0"
-      else
-        "WHERE user_id > 0"
-      end
+    params = { auto_group_ids: AUTO_GROUP_IDS.keys }
+    params[:only_group_ids] = only_group_ids.map(&:to_i) if only_group_ids.present?
 
-    DB.exec <<-SQL
+    DB.exec(<<~SQL, params)
       WITH tally AS (
         SELECT
-          group_id,
-          COUNT(user_id) users
-        FROM group_users
-        #{where_sql}
-        GROUP BY group_id
+          g.id AS group_id,
+          COUNT(gu.user_id) AS users
+        FROM groups g
+        LEFT JOIN group_users gu
+          ON gu.group_id = g.id
+         AND (gu.user_id > 0 OR (g.automatic AND g.id NOT IN (:auto_group_ids)))
+        #{"WHERE g.id IN (:only_group_ids)" if params[:only_group_ids]}
+        GROUP BY g.id
       )
       UPDATE groups
          SET user_count = tally.users
@@ -951,16 +950,18 @@ class Group < ActiveRecord::Base
     GroupManager.new(self).remove(user_ids)
   end
 
+  # Bots in built-in and hand-managed groups are incidental (e.g. the system user
+  # as owner), but automatic groups maintained elsewhere may exist to hold bots.
+  def hides_bot_members?
+    !automatic || AUTO_GROUP_IDS.key?(id)
+  end
+
+  def listed_users
+    hides_bot_members? ? human_users : users
+  end
+
   def recalculate_user_count
-    DB.exec <<~SQL
-      UPDATE groups g
-      SET user_count =
-        (SELECT COUNT(gu.user_id)
-         FROM group_users gu
-         WHERE gu.group_id = g.id
-         AND gu.user_id > 0)
-      WHERE g.id = #{id};
-    SQL
+    Group.reset_user_count(self)
   end
 
   def add_automatically(user, subject: nil)
