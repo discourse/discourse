@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RemoveDuplicatedLegacyBrowserPageviewEvents < ActiveRecord::Migration[8.0]
+class ArchiveDuplicatedLegacyBrowserPageviewEvents < ActiveRecord::Migration[8.0]
   disable_ddl_transaction!
 
   BATCH_SIZE = 10_000
@@ -33,11 +33,21 @@ class RemoveDuplicatedLegacyBrowserPageviewEvents < ActiveRecord::Migration[8.0]
           DELETE FROM browser_pageview_event_scores scores
           USING duplicated_legacy_events
           WHERE scores.event_id = duplicated_legacy_events.id
+          RETURNING scores.*
+        ),
+        archived_scores AS (
+          INSERT INTO browser_pageview_event_scores_backup
+          SELECT * FROM deleted_scores
         ),
         deleted_events AS (
           DELETE FROM browser_pageview_events events
           USING duplicated_legacy_events
           WHERE events.id = duplicated_legacy_events.id
+          RETURNING events.*
+        ),
+        archived_events AS (
+          INSERT INTO browser_pageview_events_backup
+          SELECT * FROM deleted_events
         )
         SELECT MAX(id)
         FROM legacy_events_batch
