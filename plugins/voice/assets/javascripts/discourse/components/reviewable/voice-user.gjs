@@ -16,8 +16,8 @@ export default <template>
 
     <div class="review-item__meta-flagged-user">
       <ReviewableCreatedBy
-        @user={{@reviewable.target_created_by}}
         @penalties={{@reviewable.author_penalties}}
+        @user={{@reviewable.target_created_by}}
       />
     </div>
   </div>

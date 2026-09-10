@@ -35,17 +35,17 @@ export default class AiConversationInvite extends Component {
   <template>
     <div class="ai-conversation__participants">
       <DButton
+        class="btn-default ai-conversations__invite-button"
+        @action={{this.showInvite}}
         @icon="user-plus"
         @label="discourse_ai.ai_bot.invite_ai_conversation.button"
-        @action={{this.showInvite}}
-        class="btn-default ai-conversations__invite-button"
       />
       {{#each this.participants as |participant|}}
         <Participant
-          @user={{participant}}
-          @type={{if participant.username "user" "group"}}
-          @username={{or participant.username participant.name}}
           @avatarSize="medium"
+          @type={{if participant.username "user" "group"}}
+          @user={{participant}}
+          @username={{or participant.username participant.name}}
         />
       {{/each}}
     </div>

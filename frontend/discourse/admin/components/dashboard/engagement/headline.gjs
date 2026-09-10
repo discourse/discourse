@@ -78,9 +78,9 @@ class MetricItem extends Component {
       <div class="db-section__metric-number">{{this.displayValue}}</div>
       <div class="db-section__metric-label">
         <LinkTo
-          @route="adminReports.show"
           @model={{@metric.report_type}}
           @query={{@metric.report_query}}
+          @route="adminReports.show"
         >
           {{i18n
             (concat
@@ -91,8 +91,8 @@ class MetricItem extends Component {
         </LinkTo>
         <DTooltip
           class="db-section__info"
-          @identifier={{concat "engagement-headline-" @metric.type "-tooltip"}}
           @icon="far-circle-question"
+          @identifier={{concat "engagement-headline-" @metric.type "-tooltip"}}
         >
           <:content>
             {{i18n

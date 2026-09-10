@@ -59,21 +59,21 @@ export default class FieldPathControl extends Component {
       <MultiSelect
         class="workflows-field-path"
         @content={{this.content}}
-        @value={{this.selectedPaths}}
         @nameProperty="name"
-        @valueProperty="id"
         @onChange={{this.handleChange}}
         @options={{hash allowAny=true filterable=true none=this.noneLabel}}
+        @value={{this.selectedPaths}}
+        @valueProperty="id"
       />
     {{else}}
       <ComboBox
         class="workflows-field-path"
         @content={{this.content}}
-        @value={{this.selected}}
         @nameProperty="name"
-        @valueProperty="id"
         @onChange={{this.handleChange}}
         @options={{hash allowAny=true filterable=true clearable=true}}
+        @value={{this.selected}}
+        @valueProperty="id"
       />
     {{/if}}
   </template>

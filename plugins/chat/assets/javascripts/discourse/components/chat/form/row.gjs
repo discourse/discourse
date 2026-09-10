@@ -5,9 +5,9 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 const ChatFormRow = <template>
   {{#if @route}}
     <LinkTo
-      @route={{@route}}
-      @models={{@routeModels}}
       class={{dConcatClass "chat-form__row -link" (if @separator "-separator")}}
+      @models={{@routeModels}}
+      @route={{@route}}
     >
       <div class="chat-form__row-content">
         {{@label}}

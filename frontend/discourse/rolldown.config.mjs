@@ -7,6 +7,7 @@ import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options.mjs";
 import maybeBabel from "./lib/maybe-babel.mjs";
 import optimizedEmber from "./lib/optimized-ember.mjs";
+import productionEmberDeprecations from "./lib/production-ember-deprecations.mjs";
 import { exitIfDevServerRunning } from "./lib/rolldown-devserver-lock.mjs";
 import wrapTestModulesPlugin from "./lib/wrap-test-modules-plugin.mjs";
 
@@ -43,29 +44,8 @@ const aliases = [
   },
 
   {
-    find: "@ember-decorators/object",
-    replacement: "@ember-decorators/object/addon",
-  },
-  {
-    find: "@ember-decorators/utils/decorator",
-    replacement: "@ember-decorators/utils/addon/decorator",
-  },
-  {
-    find: "@ember-decorators/utils/collapse-proto",
-    replacement: "@ember-decorators/utils/addon/collapse-proto",
-  },
-  {
-    find: "@ember-decorators/component",
-    replacement: "@ember-decorators/component/addon",
-  },
-
-  {
     find: "ember-exam/test-support/load",
     replacement: "ember-exam/addon-test-support/load",
-  },
-  {
-    find: "@ember/render-modifiers",
-    replacement: "@ember/render-modifiers/addon",
   },
 ];
 
@@ -119,6 +99,7 @@ export function buildConfig({ devMode } = {}) {
       viteAliasPlugin({ entries: aliases }),
       dynamicChunkUrlPlugin(),
       discourseSourceImports(),
+      ...(isProduction ? [productionEmberDeprecations()] : []),
       optimizedEmber(),
       viteImportGlobPlugin(),
       maybeBabel({

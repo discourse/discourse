@@ -81,10 +81,10 @@ export default class GroupAddMembers extends Component {
 
   <template>
     <DModal
-      @title={{this.title}}
-      @closeModal={{@closeModal}}
       class="group-add-members-modal"
+      @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{this.title}}
     >
       <:body>
         <form class="form-vertical group-add-members">
@@ -98,20 +98,20 @@ export default class GroupAddMembers extends Component {
           <div class="input-group">
             {{#if this.currentUser.can_invite_to_forum}}
               <EmailGroupUserChooser
-                @value={{this.usernamesAndEmails}}
                 @onChange={{this.setUsernamesAndEmails}}
                 @options={{hash
                   allowEmails=true
                   filterPlaceholder="groups.add_members.usernames_or_emails_placeholder"
                 }}
+                @value={{this.usernamesAndEmails}}
               />
             {{else}}
               <UserChooser
-                @value={{this.usernamesAndEmails}}
                 @onChange={{this.setUsernamesAndEmails}}
                 @options={{hash
                   filterPlaceholder="groups.add_members.usernames_placeholder"
                 }}
+                @value={{this.usernamesAndEmails}}
               />
             {{/if}}
           </div>
@@ -120,10 +120,10 @@ export default class GroupAddMembers extends Component {
             <div class="input-group">
               <label>
                 <Input
-                  id="set-owner"
-                  @type="checkbox"
-                  @checked={{this.setOwner}}
                   disabled={{this.emails}}
+                  id="set-owner"
+                  @checked={{this.setOwner}}
+                  @type="checkbox"
                 />
                 {{i18n "groups.add_members.set_owner"}}
               </label>
@@ -132,7 +132,7 @@ export default class GroupAddMembers extends Component {
 
           <div class="input-group">
             <label>
-              <Input @type="checkbox" @checked={{this.notifyUsers}} />
+              <Input @checked={{this.notifyUsers}} @type="checkbox" />
               {{i18n "groups.add_members.notify_users"}}
             </label>
           </div>
@@ -140,10 +140,10 @@ export default class GroupAddMembers extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.addMembers}}
           class="add btn-primary"
-          @icon="plus"
+          @action={{this.addMembers}}
           @disabled={{or this.loading (not this.usernamesAndEmails)}}
+          @icon="plus"
           @label="groups.add"
         />
       </:footer>

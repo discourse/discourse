@@ -885,6 +885,9 @@ vi:
         note_added: "Ghi chú của người kiểm duyệt"
         note_added_by: "Ghi chú kiểm duyệt của %{username} · %{relativeDate}"
         no_events: "Không có sự kiện nào trên dòng thời gian để hiển thị"
+      author_penalty:
+        toast:
+          undo: "Hoàn tác"
       notes:
         add_note_description: "Thêm ghi chú để cung cấp ngữ cảnh cho các kiểm duyệt viên khác."
         add_note_button: "Thêm ghi chú"
@@ -1510,7 +1513,6 @@ vi:
       admin: "%{user} là người điều hành"
       moderator_tooltip: "Thành viên này là Mod"
       admin_tooltip: "Thành viên này là Admin"
-      silenced_tooltip: "Thành viên này đã bị hạn chế"
       suspended_notice: "Thành viên này bị đình chỉ đến %{date}."
       suspended_permanently: "Thành viên này đã bị đình chỉ."
       suspended_reason: "Lý do: "
@@ -1569,6 +1571,16 @@ vi:
       tracked_topics_link: "Xem"
       automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang"
       apps: "Ứng dụng"
+      mcp_authorizations:
+        endpoint: "Nguồn"
+        scopes: "Phạm vi"
+        details: "Chi tiết"
+        last_used: "Lần cuối sử dụng"
+        never: "Không bao giờ"
+        status: "Trạng thái"
+        statuses:
+          active: "Hoạt động"
+          revoked: "Đã thu hồi"
       revoke_access: "Lấy lại quyền"
       undo_revoke_access: "Cấp lại quyền"
       api_approved: "Chấp thuận:"
@@ -5342,6 +5354,69 @@ vi:
           header_description: "Hãy cung cấp thông tin ở đây về trang web này và nhóm của bạn để mọi người có thể hiểu cộng đồng của bạn là gì, ai đứng sau nó và cách liên hệ với bạn trong trường hợp có vấn đề. Thông tin này sẽ được hiển thị trên trang <a href='%{basePath}/about'>Giới thiệu</a>của trang web của bạn."
         developer:
           title: "Nhà phát triển"
+        mcp:
+          tabs:
+            access: "Truy cập"
+            activity: "Hoạt động"
+          overview:
+            status: "Trạng thái"
+          access:
+            title: "Truy cập"
+            group: "Nhóm"
+            groups: "Nhóm"
+            actions: "Hành động"
+            edit: "Sửa"
+            delete: "Xóa"
+          primitives:
+            group_by: "Nhóm theo"
+            group_by_options:
+              scope: "Phạm vi"
+              kind: "Loại"
+            kind: "Loại"
+            scope: "Phạm vi"
+            scopes: "Phạm vi"
+          clients:
+            actions: "Hành động"
+            block: "Khóa"
+            presets:
+              custom: "Tùy biến"
+          authorizations:
+            user: "Người dùng"
+            last_used: "Lần cuối sử dụng"
+            status: "Trạng thái"
+            actions: "Hành động"
+          activity:
+            errors: "Lỗi"
+            rate_limits: "Giới hạn tỷ lệ"
+            outcome: "Kết quả"
+            time: "Thời gian"
+            user: "Người dùng"
+            duration: "Thời hạn"
+          values:
+            server_status:
+              disabled: "Vô hiệu hóa"
+            client_trust:
+              approved: "Đã phê duyệt"
+            authorization_status:
+              active: "Hoạt động"
+              revoked: "Đã thu hồi"
+            activity_outcome:
+              success: "Thành công"
+              error: "Lỗi"
+            primitive_state:
+              enabled: "Đã bật"
+              disabled: "Vô hiệu hóa"
+            primitive_kind:
+              all: "Tất cả các loại"
+              resource: "Nguồn"
+            primitive_risk:
+              read: "Chỉ đọc"
+              moderation: "Người kiểm duyệt"
+            filter:
+              all: "Tất cả"
+          never: "Không bao giờ"
+          actions:
+            revoke: "Hủy chấp thuận"
         experimental:
           title: "Thí nghiệm"
           header_description: "Bật hoặc tắt các tính năng thử nghiệm cho trang web của bạn, hầu hết các tính năng này có thể được kiểm soát theo nhóm."

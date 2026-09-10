@@ -94,42 +94,42 @@ export default class BoardsCardDetail extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
-      @submitOnEnter={{false}}
-      @hideHeader={{true}}
       class="discourse-boards-card-detail-modal"
+      @closeModal={{@closeModal}}
+      @hideHeader={{true}}
+      @submitOnEnter={{false}}
       {{didInsert this.viewCard}}
     >
       <:body>
         <Form @data={{this.formData}} @onSubmit={{this.save}} as |form data|>
           <BoardsEditableTitle
+            @disabled={{not this.canWrite}}
             @form={{form}}
             @name="title"
-            @title={{i18n "boards.board.title"}}
             @placeholder={{i18n "boards.board.title_placeholder"}}
-            @disabled={{not this.canWrite}}
             @showClose={{false}}
+            @title={{i18n "boards.board.title"}}
           />
           <form.Section>
             <form.Field
+              @disabled={{not this.canWrite}}
+              @format="max"
               @name="notes"
               @title={{i18n "boards.board.notes"}}
-              @format="max"
               @type="composer"
-              @disabled={{not this.canWrite}}
               as |field|
             >
               <field.Control
-                @height={{300}}
                 @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
+                @height={{300}}
               />
             </form.Field>
             <form.Field
+              @disabled={{not this.canWrite}}
+              @format="max"
               @name="tags"
               @title={{i18n "boards.board.tags"}}
-              @format="max"
               @type="tag-chooser"
-              @disabled={{not this.canWrite}}
               as |field|
             >
               <field.Control
@@ -140,19 +140,19 @@ export default class BoardsCardDetail extends Component {
 
             {{#if this.siteSettings.assign_enabled}}
               <form.Field
+                @disabled={{not this.canWrite}}
+                @format="max"
                 @name="assigned_to"
                 @title={{i18n "boards.board.assigned_to"}}
-                @format="max"
                 @type="custom"
-                @disabled={{not this.canWrite}}
                 as |field|
               >
                 <field.Control>
                   <EmailGroupUserChooser
-                    @value={{data.assigned_to}}
+                    @disabled={{not this.canWrite}}
                     @onChange={{fn this.onAssignedChanged field}}
                     @options={{hash maximum=1 excludeCurrentUser=false}}
-                    @disabled={{not this.canWrite}}
+                    @value={{data.assigned_to}}
                   />
                 </field.Control>
               </form.Field>
@@ -172,11 +172,11 @@ export default class BoardsCardDetail extends Component {
         </Form>
 
         <DButton
-          @action={{@closeModal}}
-          @icon="xmark"
-          @ariaLabel="modal.close"
-          @title="modal.close"
           class="btn-flat discourse-boards-card-detail-modal__close"
+          @action={{@closeModal}}
+          @ariaLabel="modal.close"
+          @icon="xmark"
+          @title="modal.close"
         />
       </:body>
     </DModal>

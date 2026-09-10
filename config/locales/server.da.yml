@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 da:
+  mcp:
+    oauth:
+      deny: "Nægt"
+      approve: "Autoriser"
   llms_txt:
     sections:
       optional: "Valgfri"
@@ -3281,9 +3285,6 @@ da:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      delete_post:
-        title: "Slet indlæg"
-        complete: "Indlæg slettet"
       delete_user:
         title: "Slet bruger"
         complete: "Bruger slettet"

@@ -61,11 +61,11 @@ const DDefaultToast: TemplateOnlyComponent<DDefaultToastSignature> = <template>
           {{#each @data.actions as |toastAction|}}
             {{#if toastAction.action}}
               <DButton
-                @icon={{toastAction.icon}}
-                @translatedLabel={{toastAction.label}}
-                @action={{fn toastAction.action (hash data=@data close=@close)}}
                 class={{toastAction.class}}
                 tabindex="0"
+                @action={{fn toastAction.action (hash data=@data close=@close)}}
+                @icon={{toastAction.icon}}
+                @translatedLabel={{toastAction.label}}
               />
             {{/if}}
           {{/each}}
@@ -73,7 +73,7 @@ const DDefaultToast: TemplateOnlyComponent<DDefaultToastSignature> = <template>
       {{/if}}
     </div>
     <div class="fk-d-default-toast__close-container">
-      <DButton class="btn-transparent" @icon="xmark" @action={{@close}} />
+      <DButton class="btn-transparent" @action={{@close}} @icon="xmark" />
     </div>
   </div>
 </template>;

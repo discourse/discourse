@@ -140,7 +140,7 @@ ur:
         process_started: "چینل کو حذف کرنے کا عمل شروع ہو چکا ہے۔ یہ ماڈل جلد ہی بند ہو جائے گا، اب آپ کو حذف شدہ چینل کہیں نظر نہیں آئے گا۔"
       channels_list_popup:
         browse: "چینلز کو براؤز کریں"
-        create: "نیا چینل"
+        create: "نیا چینل..."
       close: "بند کریں"
       remove: "خارج کریں"
       collapse: "گفتگو کے دراز کو ختم کریں"
@@ -155,8 +155,6 @@ ur:
       muted: "خاموش کِیا ہوا"
       joined: "شمولیت اختیار کی"
       empty_state:
-        direct_message_cta: "ذاتی گفتگو شروع کریں"
-        direct_message: "آپ ایک یا زیادہ اراکین کے ساتھ ذاتی گفتگو بھی شروع کر سکتے ہیں۔"
         title: "کوئی چینل نہیں ملا"
         my_threads: "آپ کے پاس ابھی تک کوئی دھاگہ نہیں ہے۔ جن دھاگوں میں آپ حصہ لیتے ہیں وہ یہاں دکھائے جائیں گے۔"
       email_frequency:
@@ -447,9 +445,16 @@ ur:
         aria_label: "میری دھاگوں کی فہرست پر جائیں"
       direct_messages:
         title: "ذاتی پیغامات"
-        new: "نجی گفتگو شروع کریں"
-        leave: "اس نجی گفتگو کو چھوڑیں"
-        close: "اس نجی گفتگو کو بند کریں"
+        leave: "چینل چھوڑیں"
+        close: "چینل بند"
+      channel_list:
+        options:
+          filter: "فِلٹر"
+        filter:
+          all: "تمام چینلوں"
+          mentions: "تذکرے"
+        sort:
+          priority: "ترجیح"
       incoming_webhooks:
         back: "واپس"
         description: "تفصیل"
@@ -458,7 +463,7 @@ ur:
         name: "نام"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
-        system: "سِسٹَم"
+        system: "نظام"
         url: "URL"
         username: "اسمِ صارف"
       selection:
@@ -520,11 +525,6 @@ ur:
           direct_html: '<span>%{username}</span> <span>نے "%{channel}" میں آپ کا تذکرہ کیا</span>'
           other_plain: '"%{channel} " میں %{identifier} کا ذکر کیا گیا'
           other_html: '<span>%{username}</span> <span> نے "%{channel}" میں %{identifier} کا ذکر کیا</span>'
-        direct_message_chat_mention:
-          direct: "نجی چیٹ میں آپ کا تذکرہ کیا"
-          direct_html: "<span>%{username}</span> <span>نے نجی چیٹ میں آپ کا تذکرہ کیا</span>"
-          other_plain: "نجی گفتگو میں %{identifier} کا ذکر ہوا"
-          other_html: "<span>%{username}</span> <span> نے نجی گفتگو میں %{identifier} کا ذکر کیا</span>"
     discourse_automation:
       scriptables:
         send_chat_message:
@@ -537,10 +537,6 @@ ur:
       allowed_pm_users_instructions: "صرف ان صارفین سے ذاتی پیغامات یا گفتگو کے براہ راست پیغامات کی اجازت دیں۔"
       allow_private_messages_from_specific_users: "صرف مخصوص صارفین کو مجھے ذاتی پیغامات یا گفتگو کےبراہ راست پیغامات بھیجنےکی اجازت دیں"
       ignored_users_instructions: "ان صارفین کے تمام دھاگے، پیغامات، اطلاعات، ذاتی پیغامات اور گفتگو کے براہِ راست پیغامات کو دبا دیں۔"
-    sidebar:
-      start_new_dm:
-        text: نیا ذاتی پیغام بنائیں
-        title: نجی گفتگو شروع کریں
     discourse_workflows:
       chat_message_created:
         channel_id: "چَینل"

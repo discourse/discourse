@@ -85,19 +85,12 @@ RSpec.describe "i18n integrity checks" do
         locale = extract_locale(path)
         yaml = load_yaml(path)
 
-        it "has no duplicate keys" do
+        it "has valid translation YAML", :aggregate_failures do
           duplicates = DuplicateKeyFinder.new.find_duplicates(path)
           expect(duplicates).to be_empty
-        end
-
-        it "does not overwrite another locale" do
           expect(yaml.keys).to eq([locale])
-        end
 
-        unless path["transliterate"]
-          it "is compatible with english" do
-            expect(is_yaml_compatible?(english_yaml, yaml)).to eq(true)
-          end
+          expect(is_yaml_compatible?(english_yaml, yaml)).to eq(true) unless path["transliterate"]
         end
       end
     end

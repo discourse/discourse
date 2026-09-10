@@ -1037,6 +1037,9 @@ pt_BR:
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
         no_events: "Não há eventos da linha do tempo para exibir"
+      author_penalty:
+        toast:
+          undo: "Desfazer"
       notes:
         add_note_description: "Adicione uma observação para fornecer contexto a outros moderadores."
         add_note_button: "Adicionar observação"
@@ -1689,7 +1692,6 @@ pt_BR:
       admin: "%{user} é administrador(a)"
       moderator_tooltip: "Este(a) usuário(a) é moderador(a)"
       admin_tooltip: "Este(a) usuário(a) é administrador(a)"
-      silenced_tooltip: "Este(a) usuário(a) está silenciado(a)"
       suspended_notice: "Este(a) usuário(a) está suspenso(a) até %{date}."
       suspended_permanently: "Este(a) usuário(a) está suspenso(a)."
       suspended_reason: "Motivo: "
@@ -1748,6 +1750,16 @@ pt_BR:
       tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos ao terminar de ler"
       apps: "Aplicativos"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Escopos"
+        details: "Detalhes"
+        last_used: "Último uso"
+        never: "Nunca"
+        status: "Status"
+        statuses:
+          active: "Ativo(a)"
+          revoked: "Regovado(a)"
       revoke_access: "Revogar acesso"
       undo_revoke_access: "Desfazer revogação de acesso"
       api_approved: "Aprovada:"
@@ -5781,6 +5793,74 @@ pt_BR:
           header_description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
         developer:
           title: "Desenvolvedor(a)"
+        mcp:
+          tabs:
+            access: "Acesso"
+            activity: "Atividade"
+          overview:
+            status: "Status"
+            tools: "Ferramentas"
+          access:
+            title: "Acesso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Ações"
+            edit: "Editar"
+            delete: "Excluir"
+          primitives:
+            group_by: "Agrupar por"
+            group_by_options:
+              scope: "Escopo"
+              provider: "Provedor"
+              kind: "Tipo"
+            provider: "Provedor"
+            kind: "Tipo"
+            scope: "Escopo"
+            state: "Estado"
+            scopes: "Escopos"
+          clients:
+            actions: "Ações"
+            block: "Bloqueado(a)"
+            use_preset: "Configurar"
+            presets:
+              custom: "Personalizadas"
+          authorizations:
+            user: "Usuário(a)"
+            last_used: "Último uso"
+            status: "Status"
+            actions: "Ações"
+          activity:
+            rate_limits: "Limites de frequência"
+            outcome: "Resultado"
+            time: "Hora"
+            user: "Usuário(a)"
+            duration: "Duração"
+          values:
+            server_status:
+              disabled: "Desativados"
+            client_trust:
+              approved: "Aprovado (approved)"
+            authorization_status:
+              active: "Ativo(a)"
+              revoked: "Regovado(a)"
+            activity_outcome:
+              success: "Sucesso"
+              error: "Erro"
+            primitive_state:
+              enabled: "Ativados"
+              disabled: "Desativados"
+            primitive_kind:
+              all: "Todos os tipos"
+              tool: "Ferramenta"
+              resource: "Recurso"
+            primitive_risk:
+              read: "Somente leitura"
+              moderation: "Moderação"
+            filter:
+              all: "Todas"
+          never: "Nunca"
+          actions:
+            revoke: "Revogar"
         experimental:
           title: "Experimental"
           header_description: "Ative ou desative os recursos experimentais para seu site, a maioria deles pode ser controlado em grupo"

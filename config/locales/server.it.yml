@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 it:
+  mcp:
+    oauth:
+      deny: "Nega"
+      approve: "Autorizza"
   llms_txt:
     sections:
       optional: "Facoltativo"
@@ -4359,6 +4363,10 @@ it:
   performance_report:
     initial_post_raw: Questo argomento include rapporti di rendimento giornalieri per il tuo sito.
     initial_topic_title: Rapporti sul rendimento del sito web
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Troppi elementi nel file CSV. Usa un file CSV con non più di %{count} elemento."
+      other: "Troppi elementi nel file CSV. Usa un file CSV con non più di %{count} elementi."
   tags:
     title: "Etichette"
     restricted_tag_disallowed: 'Non puoi applicare l''etichetta "%{tag}".'
@@ -4583,9 +4591,6 @@ it:
         title: "Nascondi messaggio"
         description: "Accetta la segnalazione, nascondi il messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
         complete: "Messaggio nascosto, l'utente è stato avvisato."
-      agree_and_edit:
-        description: "Accetta segnalazione e apri la finestra di modifica per emendare il messaggio."
-        complete: "Segnalazione riconosciuta, ora puoi modificare il messaggio."
       delete:
         title: "Elimina"
         complete: "Messaggio eliminato."
@@ -4676,14 +4681,6 @@ it:
       approve_and_unhide:
         title: "Sì"
         complete: "Messaggio approvato e reso visibile"
-      delete_post:
-        title: "Elimina messaggio"
-        complete: "Messaggio eliminato"
-      hide_post:
-        title: "Nascondi messaggio"
-      restore_post:
-        title: "Ripristina messaggio"
-        complete: "Messaggio ripristinato"
       silence_user:
         title: "Silenzia utente"
         complete: "Utente silenziato"

@@ -13,6 +13,21 @@ export default class UserController extends Controller {
   @service router;
   @optionalService adminTools;
 
+  @computed("currentUser.ignored_ids", "model.ignored", "model.muted")
+  get userNotificationLevel() {
+    if (this.get("model.ignored")) {
+      return "changeToIgnored";
+    } else if (this.get("model.muted")) {
+      return "changeToMuted";
+    } else {
+      return "changeToNormal";
+    }
+  }
+
+  set userNotificationLevel(value) {
+    /* noop */
+  }
+
   @computed("siteSettings.moderators_view_emails")
   get canModeratorsViewEmails() {
     return this.siteSettings.moderators_view_emails;
@@ -264,21 +279,6 @@ export default class UserController extends Controller {
     }
   }
 
-  @computed("currentUser.ignored_ids", "model.ignored", "model.muted")
-  get userNotificationLevel() {
-    if (this.get("model.ignored")) {
-      return "changeToIgnored";
-    } else if (this.get("model.muted")) {
-      return "changeToMuted";
-    } else {
-      return "changeToNormal";
-    }
-  }
-
-  set userNotificationLevel(value) {
-    /* noop */
-  }
-
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
@@ -314,13 +314,13 @@ export default class UserController extends Controller {
     };
   }
 
+  get adminDeleteOptions() {
+    return this.adminTools?.deleteUserOptions ?? [];
+  }
+
   @action
   toggleProfile() {
     this.toggleProperty("forceExpand");
-  }
-
-  get adminDeleteOptions() {
-    return this.adminTools?.deleteUserOptions ?? [];
   }
 
   @action

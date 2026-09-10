@@ -98,26 +98,26 @@ export default class ChatUpload extends Component {
     {{#if (eq this.type this.IMAGE_TYPE)}}
       <img
         class="chat-img-upload lightbox"
-        data-orig-src={{@upload.short_url}}
-        data-large-src={{this.largeImageUrl}}
+        data-dominant-color={{@upload.dominant_color}}
         data-download-href={{@upload.short_path}}
+        data-large-src={{this.largeImageUrl}}
+        data-orig-src={{@upload.short_url}}
+        data-target-height={{this.size.height}}
+        data-target-width={{this.size.width}}
         height={{this.size.thumb_height}}
-        width={{this.size.thumb_width}}
+        loading="lazy"
         src={{this.imageUrl}}
         style={{this.imageStyle}}
-        loading="lazy"
         tabindex="0"
-        data-target-width={{this.size.width}}
-        data-target-height={{this.size.height}}
-        data-dominant-color={{@upload.dominant_color}}
+        width={{this.size.thumb_width}}
         {{on "load" this.imageLoaded}}
       />
     {{else if (eq this.type this.VIDEO_TYPE)}}
-      <video class="chat-video-upload" preload="metadata" height="150" controls>
+      <video class="chat-video-upload" controls height="150" preload="metadata">
         <source src={{this.videoSourceUrl}} />
       </video>
     {{else if (eq this.type this.AUDIO_TYPE)}}
-      <audio class="chat-audio-upload" preload="metadata" controls>
+      <audio class="chat-audio-upload" controls preload="metadata">
         <source src={{this.audioSourceUrl}} />
       </audio>
     {{else}}

@@ -81,6 +81,7 @@ RSpec.describe UserSerializer do
     fab!(:user)
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
+
     fab!(:upload)
     fab!(:upload2, :upload)
 
@@ -321,6 +322,7 @@ RSpec.describe UserSerializer do
 
     describe "second_factor_enabled" do
       let(:scope) { Guardian.new(user) }
+
       it "is false by default" do
         expect(json[:second_factor_enabled]).to eq(false)
       end
@@ -653,6 +655,42 @@ RSpec.describe UserSerializer do
       expect(serializer.as_json[:sidebar_category_ids]).to eq(nil)
       expect(serializer.as_json[:sidebar_tags]).to eq(nil)
       expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
+    end
+  end
+
+  context "with MCP authorization visibility" do
+    it "includes MCP authorizations for the current user while authorization history exists" do
+      SiteSetting.mcp_server_enabled = false
+      client =
+        McpOauthClient.create!(
+          client_id: "user-serializer-mcp-client",
+          name: "User serializer MCP client",
+          registration_type: "pre_registered",
+          trust_state: "approved",
+          redirect_uris: ["http://127.0.0.1/callback"],
+        )
+      authorization =
+        McpOauthAuthorization.create!(
+          user: user,
+          client: client,
+          resource: DiscourseMcp.resource_url,
+          status: "consent_required",
+          client_metadata_hash: client.metadata_hash,
+          consented_at: Time.zone.now,
+        )
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+      expect(json[:show_mcp_authorizations]).to eq(true)
+
+      authorization.revoke!(by_user: user)
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+      expect(json[:show_mcp_authorizations]).to eq(true)
+    end
+
+    it "does not expose MCP authorization visibility to another profile viewer" do
+      json = UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+
+      expect(json).not_to have_key(:show_mcp_authorizations)
     end
   end
 

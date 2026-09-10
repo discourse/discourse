@@ -34,8 +34,8 @@ export default class SelectKitCollection extends Component {
   <template>
     {{#if this.collection.content.length}}
       <ul
-        class="select-kit-collection"
         aria-live="polite"
+        class="select-kit-collection"
         role="menu"
         {{this.bodyScrollLock}}
       >
@@ -48,10 +48,10 @@ export default class SelectKitCollection extends Component {
             as |RowComponent|
           }}
             <RowComponent
-              @item={{item}}
               @index={{index}}
-              @value={{this.value}}
+              @item={{item}}
               @selectKit={{this.selectKit}}
+              @value={{this.value}}
             />
           {{/let}}
         {{/each}}

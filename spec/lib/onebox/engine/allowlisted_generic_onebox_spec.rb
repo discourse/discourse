@@ -103,6 +103,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       let(:canonical_url) do
         "https://www.etsy.com/in-en/listing/87673424/personalized-word-pillow-case-letter"
       end
+
       before do
         stub_request(:get, mobile_url).to_return(status: 200, body: onebox_response("etsy_mobile"))
         stub_request(:get, canonical_url).to_return(status: 200, body: onebox_response("etsy"))
@@ -132,6 +133,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
       let(:discourse_topic_reply_url) do
         "https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483/2"
       end
+
       before do
         stub_request(:get, discourse_topic_url).to_return(
           status: 200,
@@ -192,6 +194,7 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
 
   describe "missing description" do
     let(:url) { "https://en-americas-support.nintendo.com/app/answers/detail/a_id/67660" }
+
     before do
       stub_request(:get, url).to_return(status: 200, body: onebox_response("title_no_description"))
       stub_request(

@@ -23,8 +23,8 @@ module Voice
           authorization: request.headers["Authorization"],
           body: body,
         )
-      rescue Livekit::WebhookVerifier::VerificationError => e
-        Rails.logger.warn("[voice-livekit] rejected webhook: #{e.message}")
+      rescue Livekit::WebhookVerifier::VerificationError
+        Voice.warn("[voice-livekit] rejected webhook: verification failed")
         return head :forbidden
       end
 

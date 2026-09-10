@@ -37,12 +37,12 @@ const REJECTED_FILTERS = [
 
 export default <template>
   <EmailLogsList
-    @status="rejected"
-    @logType="rejected"
-    @sourceModel={{IncomingEmail}}
-    @headers={{REJECTED_HEADERS}}
     @filters={{REJECTED_FILTERS}}
+    @headers={{REJECTED_HEADERS}}
+    @logType="rejected"
     @onShowEmail={{routeAction "showIncomingEmail"}}
+    @sourceModel={{IncomingEmail}}
+    @status="rejected"
   >
     <:default
       as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
@@ -56,9 +56,9 @@ export default <template>
         </td>
         <td>
           <a
+            class="incoming-email-link"
             href
             {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
-            class="incoming-email-link"
           >
             {{emailLog.error}}
           </a>

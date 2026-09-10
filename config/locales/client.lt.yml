@@ -856,6 +856,9 @@ lt:
       timeline:
         target_deleted: "Įrašas ištrintas"
         target_deleted_by: "Įrašą ištrynė %{username} · %{relativeDate}"
+      author_penalty:
+        toast:
+          undo: "Anuliuoti"
       notes:
         delete: "Pašalinti"
       topic_label: "Tema"
@@ -1442,7 +1445,6 @@ lt:
       admin: "%{user} yra administratorius"
       moderator_tooltip: "Šis vartotojas yra moderatorius"
       admin_tooltip: "Šis vartotojas yra administratorius"
-      silenced_tooltip: "Šis narys nutildytas"
       suspended_notice: "Šis vartotojas nušalintas iki %{date}."
       suspended_permanently: "Šis narys suspenduotas"
       suspended_reason: "Priežastis:"
@@ -1499,6 +1501,14 @@ lt:
       tracked_topics_link: "Rodyti"
       automatically_unpin_topics: "Automatiškai atsegti temas pasiekus apačią"
       apps: "Programėlės"
+      mcp_authorizations:
+        endpoint: "Ištekliai"
+        details: "Detalės"
+        never: "Niekada"
+        status: "Statusas"
+        statuses:
+          active: "Aktyvus"
+          revoked: "Atšauktas"
       revoke_access: "Panaiktinti teises"
       undo_revoke_access: "Atstatyti atgal panaikintas teises"
       api_approved: "Patvirtinta:"
@@ -4261,6 +4271,65 @@ lt:
       config:
         developer:
           title: "Programuotojams"
+        mcp:
+          tabs:
+            access: "Prieiga"
+            activity: "Aktyvumas"
+          overview:
+            status: "Statusas"
+          access:
+            title: "Prieiga"
+            group: "Grupė"
+            groups: "Grupės"
+            actions: "Veiksmai"
+            edit: "Redaguoti"
+            delete: "Pašalinti"
+          primitives:
+            group_by: "Grupuoti pagal"
+            group_by_options:
+              scope: "Apimtis"
+              kind: "Tipas"
+            kind: "Tipas"
+            scope: "Apimtis"
+          clients:
+            actions: "Veiksmai"
+            block: "Blokuoti"
+            presets:
+              custom: "Išskirtinės"
+          authorizations:
+            user: "Narys"
+            status: "Statusas"
+            actions: "Veiksmai"
+          activity:
+            time: "Laikas"
+            user: "Narys"
+            duration: "Trukmė"
+          values:
+            server_status:
+              disabled: "Uždrausta"
+            client_trust:
+              approved: "Patvirtinta"
+            authorization_status:
+              active: "Aktyvus"
+              revoked: "Atšauktas"
+            activity_outcome:
+              success: "Sėkmingai"
+              error: "Klaida"
+            primitive_state:
+              enabled: "Galimas"
+              disabled: "Uždrausta"
+            primitive_kind:
+              all: "Visų rūšių"
+              tool: "Įrankis"
+              resource: "Ištekliai"
+            primitive_risk:
+              read: "Tik skaityti"
+              moderation: "Moderavimas"
+            filter:
+              all: "Visi"
+          never: "Niekada"
+          actions:
+            revoke: "Pašalinti"
         emojis:
           title: "Emoji"
         flags:

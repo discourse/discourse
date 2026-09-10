@@ -357,18 +357,6 @@ after_initialize do
     scope.shared_issue_visible?(object.topic)
   end
 
-  on(:upcoming_change_enabled) do |setting_name|
-    if setting_name == :enable_solved_badges
-      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: true)
-    end
-  end
-
-  on(:upcoming_change_disabled) do |setting_name|
-    if setting_name == :enable_solved_badges
-      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: false)
-    end
-  end
-
   on(:post_destroyed) do |post|
     DiscourseSolved::UnacceptAnswer.call(
       params: {
@@ -494,4 +482,35 @@ after_initialize do
 
   DiscourseDev::DiscourseSolved.populate(self)
   DiscourseAutomation::EntryPoint.inject(self) if defined?(DiscourseAutomation)
+end
+
+after_initialize do
+  require_relative "lib/discourse_solved/mcp_tools"
+  register_mcp_tool(
+    "discourse_solved_solution_set",
+    title: "Set accepted solution",
+    description: "Accepts or unaccepts a post as the topic solution when permitted.",
+    implementation: DiscourseSolved::McpTools::SetSolution,
+    input_schema: {
+      type: "object",
+      properties: {
+        post_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        accepted: {
+          type: "boolean",
+        },
+      },
+      required: %w[post_id accepted],
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-solved:write],
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.solved_enabled },
+  )
 end

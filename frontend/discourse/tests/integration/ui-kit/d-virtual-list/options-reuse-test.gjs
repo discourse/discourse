@@ -56,10 +56,10 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
           }
         </style>
         <DVirtualList
+          @edgeThreshold={{state.edgeThreshold}}
+          @estimateSize={{countingEstimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{countingEstimate}}
-          @edgeThreshold={{state.edgeThreshold}}
           as |item|
         >
           <div class="row" style="height: 40px">{{item.text}}</div>
@@ -102,9 +102,9 @@ module("Integration | ui-kit | DVirtualList | options reuse", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @overscan={{0}}
           as |item|
         >

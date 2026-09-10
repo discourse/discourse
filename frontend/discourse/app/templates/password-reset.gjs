@@ -46,38 +46,38 @@ export default <template>
 
           {{#if @controller.displaySecurityKeyForm}}
             <SecurityKeyForm
+              @action={{@controller.authenticateSecurityKey}}
+              @backupEnabled={{@controller.backupEnabled}}
+              @otherMethodAllowed={{@controller.otherMethodAllowed}}
               @setSecondFactorMethod={{fn
                 (mut @controller.selectedSecondFactorMethod)
               }}
-              @backupEnabled={{@controller.backupEnabled}}
               @totpEnabled={{@controller.secondFactorRequired}}
-              @otherMethodAllowed={{@controller.otherMethodAllowed}}
-              @action={{@controller.authenticateSecurityKey}}
             />
           {{else}}
             <SecondFactorForm
+              @backupEnabled={{@controller.backupEnabled}}
+              @isLogin={{false}}
               @secondFactorMethod={{@controller.selectedSecondFactorMethod}}
               @secondFactorToken={{@controller.secondFactorToken}}
-              @backupEnabled={{@controller.backupEnabled}}
               @totpEnabled={{@controller.secondFactorRequired}}
-              @isLogin={{false}}
             >
               <DSecondFactorInput
+                id="second-factor"
+                value={{@controller.secondFactorToken}}
                 @onChange={{fn (mut @controller.secondFactorToken)}}
                 @secondFactorMethod={{@controller.selectedSecondFactorMethod}}
-                value={{@controller.secondFactorToken}}
-                id="second-factor"
               />
             </SecondFactorForm>
           {{/if}}
 
           {{#unless @controller.displaySecurityKeyForm}}
             <DButton
-              @isLoading={{@controller.isLoading}}
-              @action={{@controller.submit}}
-              @label="submit"
-              type="submit"
               class="btn-primary"
+              type="submit"
+              @action={{@controller.submit}}
+              @isLoading={{@controller.isLoading}}
+              @label="submit"
             />
           {{/unless}}
         {{else}}
@@ -89,12 +89,12 @@ export default <template>
 
           <div class="input">
             <DPasswordField
-              @value={{@controller.accountPassword}}
-              @capsLockOn={{@controller.capsLockOn}}
-              type={{if @controller.maskPassword "password" "text"}}
-              autofocus="autofocus"
               autocomplete="new-password"
+              autofocus="autofocus"
               id="new-account-password"
+              type={{if @controller.maskPassword "password" "text"}}
+              @capsLockOn={{@controller.capsLockOn}}
+              @value={{@controller.accountPassword}}
             />
             <div class="change-password__password-info">
               <div class="change-password_tip-validation">
@@ -117,11 +117,11 @@ export default <template>
           </div>
 
           <DButton
-            @isLoading={{@controller.isLoading}}
-            @action={{@controller.submit}}
-            @label="user.change_password.set_password"
-            type="submit"
             class="btn-primary"
+            type="submit"
+            @action={{@controller.submit}}
+            @isLoading={{@controller.isLoading}}
+            @label="user.change_password.set_password"
           />
         {{/if}}
       {{/if}}

@@ -122,7 +122,7 @@ sk:
         process_started: "Začal sa proces odstraňovania kanála. Toto modálne okno sa čoskoro zatvorí a odstránený kanál už nikde neuvidíte."
       channels_list_popup:
         browse: "Prehľadávanie kanálov"
-        create: "Nový kanál"
+        create: "Nový kanál..."
       close: "Zavrieť"
       remove: "Odstrániť"
       collapse: "Zatvoriť zásuvku chatu"
@@ -139,8 +139,6 @@ sk:
       muted: "ignorovaní"
       joined: "vytvorený"
       empty_state:
-        direct_message_cta: "Začať osobný chat"
-        direct_message: "Môžete tiež začať osobný chat s jedným alebo viacerými používateľmi."
         title: "Nenašli sa žiadne kanály"
         my_threads: "Zatiaľ nemáte žiadne vlákna. Tu sa zobrazia vlákna, ktorých sa zúčastňujete."
       email_frequency:
@@ -562,14 +560,20 @@ sk:
       direct_messages:
         title: "DMs"
         aria_label: "Prepnúť na priame správy"
-        new: "Vytvorenie osobného chatu"
         create: "Choď"
-        leave: "Opustite tento osobný rozhovor"
-        close: "Zatvorte tento osobný chat"
+        leave: "Opustiť kanál"
+        close: "Zatvoriť kanál"
         cannot_create: "Ľutujeme, nemôžete posielať priame správy."
       channel_list:
         title: "Kanály"
         aria_label: "Prepnutie na zoznam kanálov"
+        options:
+          filter: "Filter"
+        filter:
+          all: "Všetky kanály"
+          mentions: "Zmienky"
+        sort:
+          priority: "Priorita"
       incoming_webhooks:
         back: "Späť"
         channel_placeholder: "Vyberte kanál"
@@ -735,11 +739,6 @@ sk:
           direct_html: '<span>%{username}</span> <span>vás spomenul v "%{channel}"</span>'
           other_plain: 'spomínaný %{identifier} v "%{channel}“'
           other_html: '<span>%{username}</span> <span>spomínaný %{identifier} v "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "vás spomenul v osobnom chate"
-          direct_html: "<span>%{username}</span> <span>vás spomenul v osobnom chate</span>"
-          other_plain: "spomenul %{identifier} v osobnom chate"
-          other_html: "<span>%{username}</span> <span>spomenutý %{identifier} v osobnom chate</span>"
         chat_message: "Nová správa v chate"
         chat_quoted: "%{username} citoval tvoju správu na chate"
       titles:
@@ -809,8 +808,6 @@ sk:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        title: Vytvorenie osobného chatu
       panels:
         chat:
           label: "Chat"

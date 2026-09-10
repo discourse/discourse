@@ -1079,6 +1079,9 @@ he:
         note_added: "הערת פיקוח"
         note_added_by: "הערת פיקוח מאת %{username} · %{relativeDate}"
         no_events: "אין אירועי ציר זמן להצגה"
+      author_penalty:
+        toast:
+          undo: "ביטול פעולה"
       notes:
         add_note_description: "אפשר להוסיף הערה כדי לספק הקשר למפקחים האחרים."
         add_note_button: "הוספת הערה"
@@ -1741,7 +1744,6 @@ he:
       admin: "%{user} הוא מנהל מערכת"
       moderator_tooltip: "משתמש זה הוא מפקח"
       admin_tooltip: "משתמש זה חבר הנהלה"
-      silenced_tooltip: "משתמש זה מושתק"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: %{date}."
       suspended_permanently: "משתמש זה מושעה."
       suspended_reason: "הסיבה: "
@@ -1800,6 +1802,16 @@ he:
       tracked_topics_link: "הצגה"
       automatically_unpin_topics: "ביטול נעיצה אוטומטית של נושאים עם הגעה לתחתית"
       apps: "אפליקציות"
+      mcp_authorizations:
+        endpoint: "משאב"
+        scopes: "תחומים"
+        details: "פרטים"
+        last_used: "שימוש אחרון"
+        never: "לעולם לא"
+        status: "מצב"
+        statuses:
+          active: "פעיל"
+          revoked: "נשל"
       revoke_access: "שלילת גישה"
       undo_revoke_access: "ביטול שלילת גישה"
       api_approved: "אושרו:"
@@ -6019,6 +6031,74 @@ he:
           header_description: "כאן יש לספק מידע על האתר והצוות שלך כדי שאנשים יוכלו ללמוד מה מהות הקהילה שלך, מי העומדים מאחרויה ואיך לפנות אליך אם קורה משהו. מוצג ב<a href='%{basePath}/about'>עמוד על</a> האתר שלך."
         developer:
           title: "מפתחים"
+        mcp:
+          tabs:
+            access: "גישה"
+            activity: "פעילות"
+          overview:
+            status: "מצב"
+            tools: "כלים"
+          access:
+            title: "גישה"
+            group: "קבוצה"
+            groups: "קבוצות"
+            actions: "פעולות"
+            edit: "עריכה"
+            delete: "מחיקה"
+          primitives:
+            group_by: "קיבוץ לפי"
+            group_by_options:
+              scope: "היקף"
+              provider: "ספק"
+              kind: "סוג"
+            provider: "ספק"
+            kind: "סוג"
+            scope: "היקף"
+            state: "מדינה"
+            scopes: "תחומים"
+          clients:
+            actions: "פעולות"
+            block: "חסימה"
+            use_preset: "הגדרה"
+            presets:
+              custom: "מותאם"
+          authorizations:
+            user: "משתמש"
+            last_used: "שימוש אחרון"
+            status: "מצב"
+            actions: "פעולות"
+          activity:
+            rate_limits: "מגבלות קצב"
+            outcome: "תוצאה"
+            time: "מועד"
+            user: "משתמש"
+            duration: "משך"
+          values:
+            server_status:
+              disabled: "כבוי"
+            client_trust:
+              approved: "אושר"
+            authorization_status:
+              active: "פעיל"
+              revoked: "נשל"
+            activity_outcome:
+              success: "הצלחה"
+              error: "תקלה"
+            primitive_state:
+              enabled: "פעיל"
+              disabled: "כבוי"
+            primitive_kind:
+              all: "כל הסוגים"
+              tool: "כלי"
+              resource: "משאב"
+            primitive_risk:
+              read: "לקריאה בלבד"
+              moderation: "פיקוח"
+            filter:
+              all: "הכול"
+          never: "לעולם לא"
+          actions:
+            revoke: "שלילה"
         experimental:
           title: "ניסיוני"
           header_description: "הפעלת/כיבוי יכולות ניסיוניות לאתר שלך, ברובן אפשר לשלוט לפי קבוצות"

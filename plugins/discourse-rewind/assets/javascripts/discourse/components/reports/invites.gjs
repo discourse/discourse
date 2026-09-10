@@ -113,8 +113,8 @@ export default class Invites extends Component {
               </div>
 
               <a
-                href={{getURL (concat "/u/" this.mostActiveInvitee.username)}}
                 class="guest-book__signature"
+                href={{getURL (concat "/u/" this.mostActiveInvitee.username)}}
               >
                 {{dBoundAvatarTemplate
                   this.mostActiveInvitee.avatar_template

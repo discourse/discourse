@@ -360,6 +360,11 @@ class UserMerger
       .where(deleted_by_id: @source_user.id)
       .update_all(deleted_by_id: @target_user.id)
 
+    McpAuditLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    McpOauthAuthorization.where(revoked_by_user_id: @source_user.id).update_all(
+      revoked_by_user_id: @target_user.id,
+    )
+
     update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
     update_user_id(
       :muted_users,

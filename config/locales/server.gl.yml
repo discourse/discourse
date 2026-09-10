@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 gl:
+  mcp:
+    oauth:
+      deny: "Rexeitar"
+      approve: "Autorizar"
   llms_txt:
     sections:
       optional: "Opcional"
@@ -3550,8 +3554,6 @@ gl:
         title: "Si"
       approve_and_unhide:
         title: "Si"
-      delete_post:
-        complete: "Publicación eliminada"
       delete_user:
         complete: "Usuario eliminado"
         reason: "Eliminado a través da cola de revisións"

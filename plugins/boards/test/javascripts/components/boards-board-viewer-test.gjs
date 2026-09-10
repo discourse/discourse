@@ -68,8 +68,8 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
       await render(
         <template>
           <BoardsBoardViewer
-            @model={{this.model}}
             @highlightCardId={{this.highlightCardId}}
+            @model={{this.model}}
             @openBoardSettings={{this.openBoardSettings}}
           />
         </template>

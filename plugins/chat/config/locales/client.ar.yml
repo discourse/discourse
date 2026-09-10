@@ -148,7 +148,6 @@ ar:
         process_started: "لقد بدأت عملية حذف القناة. سيتم إغلاق هذا النموذج بعد قليل، ولن يصبح بإمكانك رؤية القناة المحذوفة في أي مكان."
       channels_list_popup:
         browse: "استعراض القنوات"
-        create: "قناة جديدة"
       close: "إغلاق"
       remove: "إزالة"
       collapse: "طي ساحب الدردشة"
@@ -167,8 +166,6 @@ ar:
       muted: "تم كتمه"
       joined: "انضم"
       empty_state:
-        direct_message_cta: "بدء دردشة شخصية"
-        direct_message: "يمكنك أيضًا بدء دردشة شخصية مع أحد المستخدمين أو أكثر."
         title: "لم يتم العثور على أي قناة"
         my_threads: "ليس لديك أي سلاسل دردشة حتى الآن. سيتم عرض سلاسل الدردشة التي تشارك فيها هنا."
       email_frequency:
@@ -699,14 +696,17 @@ ar:
       direct_messages:
         title: "الرسائل المباشرة"
         aria_label: "التبديل إلى الرسائل المباشرة"
-        new: "إنشاء دردشة شخصية"
         create: "إنشاء"
-        leave: "مغادرة هذه الدردشة الشخصية"
-        close: "إغلاق هذه الدردشة الشخصية"
         cannot_create: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
       channel_list:
         title: "القنوات"
         aria_label: "التبديل إلى قائمة القنوات"
+        options:
+          filter: "عامل التصفية"
+        filter:
+          mentions: "الإشارات"
+        sort:
+          priority: "الأولوية"
       incoming_webhooks:
         back: "العودة"
         channel_placeholder: "اختيار قناة"
@@ -897,11 +897,6 @@ ar:
           direct_html: 'أشار <span>%{username}</span> <span>إليك في "%{channel}"</span>'
           other_plain: 'أشار إلى %{identifier} في "%{channel}"'
           other_html: 'أشار <span>%{username}</span> <span>إلى %{identifier} في "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "أشار إليك في دردشة شخصية"
-          direct_html: "أشار <span>%{username}</span> <span>إليك في دردشة شخصية</span>"
-          other_plain: "أشار إلى %{identifier} في دردشة شخصية"
-          other_html: "أشار <span>%{username}</span> <span>إلى %{identifier} في دردشة شخصية</span>"
         chat_message: "رسالة دردشة جديدة"
         chat_quoted: "اقتبس %{username} رسالة الدردشة الخاصة بك"
       titles:
@@ -975,9 +970,6 @@ ar:
         chat:
           title: الدردشة
     sidebar:
-      start_new_dm:
-        text: بدء رسالة مباشرة جديدة
-        title: إنشاء دردشة شخصية
       panels:
         chat:
           label: "الدردشة"

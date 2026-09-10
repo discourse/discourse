@@ -1081,6 +1081,9 @@ cs:
         note_added: "Poznámka moderátora"
         note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
         no_events: "Na časové ose nejsou k zobrazení žádné události"
+      author_penalty:
+        toast:
+          undo: "Zpět"
       notes:
         add_note_description: "Přidejte poznámku, která poskytne ostatním moderátorům kontext."
         add_note_button: "Přidat poznámku"
@@ -1768,7 +1771,6 @@ cs:
       admin: "%{user} je administrátor"
       moderator_tooltip: "Tento uživatel je moderátor"
       admin_tooltip: "Tento uživatel je správce"
-      silenced_tooltip: "Tento uživatel je ztišen."
       suspended_notice: "Uživatel je pozastaven do %{date}."
       suspended_permanently: "Tento uživatel je pozastaven."
       suspended_reason: "Důvod: "
@@ -1827,6 +1829,16 @@ cs:
       tracked_topics_link: "Zobrazit"
       automatically_unpin_topics: "Automaticky odepnout témata, když se dostanu na konec"
       apps: "Aplikace"
+      mcp_authorizations:
+        endpoint: "Zdroj"
+        scopes: "Rozsah"
+        details: "Podrobnosti"
+        last_used: "Poslední použití"
+        never: "Nikdy"
+        status: "Stav"
+        statuses:
+          active: "Aktivní"
+          revoked: "Zrušeno"
       revoke_access: "Odebrat přístup"
       undo_revoke_access: "Zrušit odebrání přístupu"
       api_approved: "Schváleno:"
@@ -6129,6 +6141,68 @@ cs:
           header_description: "Zde uveďte informace o tomto webu a svém týmu, aby se lidé dozvěděli, o čem je vaše komunita, kdo za ní stojí a jak vás kontaktovat v případě problému. Zobrazeno na stránce <a href='%{basePath}/about'>O tomto webu</a>."
         developer:
           title: "Vývojáři"
+        mcp:
+          tabs:
+            access: "Přístup"
+            activity: "Aktivita"
+          overview:
+            status: "Stav"
+          access:
+            title: "Přístup"
+            group: "Skupina"
+            groups: "Skupiny"
+            actions: "Akce"
+            edit: "Upravit"
+            delete: "Smazat"
+          primitives:
+            group_by_options:
+              scope: "Rozsah"
+              kind: "Typ"
+            kind: "Typ"
+            scope: "Rozsah"
+            scopes: "Rozsah"
+          clients:
+            actions: "Akce"
+            block: "Zablokovat"
+            presets:
+              custom: "Přizpůsobené"
+          authorizations:
+            user: "Uživatel"
+            last_used: "Poslední použití"
+            status: "Stav"
+            actions: "Akce"
+          activity:
+            rate_limits: "Limity"
+            outcome: "Výsledky"
+            time: "Čas"
+            user: "Uživatel"
+            duration: "Doba trvání"
+          values:
+            server_status:
+              disabled: "Vypnuto"
+            client_trust:
+              approved: "Schválen"
+            authorization_status:
+              active: "Aktivní"
+              revoked: "Zrušeno"
+            activity_outcome:
+              success: "Úspěch"
+              error: "Chyba"
+            primitive_state:
+              enabled: "Zapnuto"
+              disabled: "Vypnuto"
+            primitive_kind:
+              all: "Všechny typy"
+              tool: "Nástroj"
+              resource: "Zdroj"
+            primitive_risk:
+              read: "Pouze pro čtení"
+              moderation: "Moderování"
+            filter:
+              all: "Vše"
+          never: "Nikdy"
+          actions:
+            revoke: "Odvolat"
         experimental:
           title: "Experimentální"
           header_description: "Zapněte nebo vypněte experimentální funkce pro svůj web, většinu z nich lze ovládat pomocí skupin"

@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 th:
+  mcp:
+    oauth:
+      deny: "ปฏิเสธ"
   llms_txt:
     sections:
       optional: "ทางเลือก"
@@ -640,8 +643,6 @@ th:
         title: "ใช่"
       approve_and_unhide:
         title: "ใช่"
-      delete_post:
-        complete: "โพสต์ถูกลบ"
       delete_user:
         complete: "ผู้ใช้ถูกลบ"
   fallback_username: "ผู้ใช้"

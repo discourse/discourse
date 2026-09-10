@@ -37,12 +37,12 @@ export default class ImagesUploader extends Component {
       >
         {{dIcon "far-image"}}&nbsp;{{this.uploadButtonText}}
         <input
-          {{didInsert this.uppyUpload.setup}}
+          accept="image/*"
           class="hidden-upload-field"
           disabled={{this.uppyUpload.uploading}}
-          type="file"
-          accept="image/*"
           multiple
+          type="file"
+          {{didInsert this.uppyUpload.setup}}
         />
       </label>
       {{#if this.uploadingOrProcessing}}

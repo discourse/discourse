@@ -19,17 +19,17 @@ export default class DBreadcrumbsContainer extends Component {
   }
 
   <template>
-    <ul {{this.registerContainer}} class="d-breadcrumbs" ...attributes>
+    <ul class="d-breadcrumbs" ...attributes {{this.registerContainer}}>
       {{#each this.breadcrumbs.items as |item index|}}
         {{#let item.templateForContainer as |Template|}}
           <Template
+            aria-current={{if (eq index this.lastItemIndex) "page"}}
+            class={{dConcatClass "d-breadcrumbs__item" @additionalItemClasses}}
+            @isLast={{eq index this.lastItemIndex}}
             @linkClass={{dConcatClass
               "d-breadcrumbs__link"
               @additionalLinkClasses
             }}
-            @isLast={{eq index this.lastItemIndex}}
-            aria-current={{if (eq index this.lastItemIndex) "page"}}
-            class={{dConcatClass "d-breadcrumbs__item" @additionalItemClasses}}
           />
         {{/let}}
       {{/each}}

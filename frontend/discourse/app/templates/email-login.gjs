@@ -10,7 +10,7 @@ export default <template>
   <div class="container email-login clearfix">
     <div class="content-wrapper">
       <div class="image-wrapper">
-        <img src={{@controller.lockImageUrl}} class="password-reset-img" alt />
+        <img alt class="password-reset-img" src={{@controller.lockImageUrl}} />
       </div>
 
       <form>
@@ -25,29 +25,29 @@ export default <template>
             {{#if @controller.secondFactorRequired}}
               {{#if @controller.model.security_key_required}}
                 <SecurityKeyForm
-                  @setShowSecurityKey={{fn
-                    (mut @controller.model.security_key_required)
-                  }}
+                  @action={{@controller.authenticateSecurityKey}}
+                  @backupEnabled={{@controller.model.backup_codes_enabled}}
+                  @otherMethodAllowed={{@controller.secondFactorRequired}}
                   @setSecondFactorMethod={{fn
                     (mut @controller.secondFactorMethod)
                   }}
-                  @backupEnabled={{@controller.model.backup_codes_enabled}}
+                  @setShowSecurityKey={{fn
+                    (mut @controller.model.security_key_required)
+                  }}
                   @totpEnabled={{@controller.model.totp_enabled}}
-                  @otherMethodAllowed={{@controller.secondFactorRequired}}
-                  @action={{@controller.authenticateSecurityKey}}
                 />
               {{else}}
                 <SecondFactorForm
+                  @backupEnabled={{@controller.model.backup_codes_enabled}}
+                  @isLogin={{true}}
                   @secondFactorMethod={{@controller.secondFactorMethod}}
                   @secondFactorToken={{@controller.secondFactorToken}}
-                  @backupEnabled={{@controller.model.backup_codes_enabled}}
                   @totpEnabled={{@controller.model.totp_enabled}}
-                  @isLogin={{true}}
                 >
                   <DSecondFactorInput
+                    value={{@controller.secondFactorToken}}
                     @onChange={{fn (mut @controller.secondFactorToken)}}
                     @secondFactorMethod={{@controller.secondFactorMethod}}
-                    value={{@controller.secondFactorToken}}
                   />
                 </SecondFactorForm>
               {{/if}}
@@ -64,10 +64,10 @@ export default <template>
 
             {{#unless @controller.model.security_key_required}}
               <DButton
-                @label="email_login.confirm_button"
-                @action={{@controller.finishLogin}}
-                type="submit"
                 class="btn-primary"
+                type="submit"
+                @action={{@controller.finishLogin}}
+                @label="email_login.confirm_button"
               />
             {{/unless}}
           </div>

@@ -21,21 +21,21 @@ export default class AiHelperCustomPrompt extends Component {
     <form class="ai-custom-prompt" {{on "submit" this.handleSubmit}}>
 
       <input
-        {{on "input" (withEventValue (fn (mut @value)))}}
-        value={{@value}}
+        autofocus="autofocus"
+        class="ai-custom-prompt__input"
         placeholder={{i18n
           "discourse_ai.ai_helper.context_menu.custom_prompt.placeholder"
         }}
-        class="ai-custom-prompt__input"
         type="text"
-        autofocus="autofocus"
+        value={{@value}}
+        {{on "input" (withEventValue (fn (mut @value)))}}
       />
 
       <DButton
-        @icon="discourse-sparkles"
+        class="ai-custom-prompt__submit btn-primary"
         @action={{fn @submit @promptArgs}}
         @disabled={{not @value.length}}
-        class="ai-custom-prompt__submit btn-primary"
+        @icon="discourse-sparkles"
       />
     </form>
   </template>

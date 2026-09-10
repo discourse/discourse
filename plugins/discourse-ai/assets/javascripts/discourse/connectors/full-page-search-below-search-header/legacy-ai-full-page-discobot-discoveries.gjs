@@ -34,16 +34,6 @@ export default class LegacyAiFullPageDiscobotDiscoveries extends Component {
     this.#checkCredits();
   }
 
-  async #checkCredits() {
-    try {
-      this.creditsAvailable =
-        await this.aiCredits.isFeatureCreditAvailable("discoveries");
-    } catch {
-      this.creditsAvailable = true;
-    }
-    this.creditCheckComplete = true;
-  }
-
   get shouldShow() {
     return this.creditCheckComplete && this.creditsAvailable;
   }
@@ -54,6 +44,16 @@ export default class LegacyAiFullPageDiscobotDiscoveries extends Component {
     } else {
       return 10000;
     }
+  }
+
+  async #checkCredits() {
+    try {
+      this.creditsAvailable =
+        await this.aiCredits.isFeatureCreditAvailable("discoveries");
+    } catch {
+      this.creditsAvailable = true;
+    }
+    this.creditCheckComplete = true;
   }
 
   <template>

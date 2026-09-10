@@ -28,25 +28,25 @@ export default <template>
         {{#if @controller.model.remote_theme.is_git}}
           {{#if @controller.model.remote_theme.commits_behind}}
             <DButton
+              class="btn-primary"
               @action={{@controller.updateToLatest}}
               @icon="download"
               @label="admin.customize.theme.update_to_latest"
-              class="btn-primary"
             />
           {{else}}
             <DButton
+              class="btn-default"
               @action={{@controller.checkForThemeUpdates}}
               @icon="arrows-rotate"
               @label="admin.customize.theme.check_for_updates"
-              class="btn-default"
             />
           {{/if}}
 
           <DButton
+            class="btn-default"
             @action={{@controller.changeSource}}
             @icon="code-branch"
             @label="admin.customize.theme.change_source.button"
-            class="btn-default"
           />
 
           <span class="status-message">
@@ -127,22 +127,22 @@ export default <template>
       {{#unless @controller.model.component}}
         <InlineEditCheckbox
           @action={{@controller.applyDefault}}
-          @labelKey="admin.customize.theme.is_default"
           @checked={{@controller.model.default}}
+          @labelKey="admin.customize.theme.is_default"
           @modelId={{@controller.model.id}}
         />
         <InlineEditCheckbox
           @action={{@controller.applyUserSelectable}}
-          @labelKey="admin.customize.theme.user_selectable"
           @checked={{@controller.model.user_selectable}}
+          @labelKey="admin.customize.theme.user_selectable"
           @modelId={{@controller.model.id}}
         />
       {{/unless}}
       {{#if @controller.model.remote_theme}}
         <InlineEditCheckbox
           @action={{@controller.applyAutoUpdateable}}
-          @labelKey="admin.customize.theme.auto_update"
           @checked={{@controller.model.auto_update}}
+          @labelKey="admin.customize.theme.auto_update"
           @modelId={{@controller.model.id}}
         />
       {{/if}}
@@ -163,7 +163,6 @@ export default <template>
             <div class="color-palette-input-group">
               <ColorPalettePicker
                 @content={{@controller.filteredColorSchemes}}
-                @value={{@controller.colorSchemeId}}
                 @icon="paintbrush"
                 @options={{hash
                   filterable=true
@@ -172,6 +171,7 @@ export default <template>
                     (i18n "admin.customize.theme.default_light_scheme")
                   )
                 }}
+                @value={{@controller.colorSchemeId}}
               />
             </div>
 
@@ -181,8 +181,8 @@ export default <template>
 
               {{#if @controller.colorSchemeId}}
                 <LinkTo
-                  @route="adminConfig.colorPalettes.show"
                   @model={{@controller.colorSchemeId}}
+                  @route="adminConfig.colorPalettes.show"
                 >
                   {{i18n "admin.customize.theme.edit_colors"}}
                 </LinkTo>
@@ -193,14 +193,14 @@ export default <template>
           <div class="setting-controls">
             {{#if @controller.lightColorSchemeChanged}}
               <DButton
+                class="ok submit-light-edit"
                 @action={{@controller.changeLightScheme}}
                 @icon="check"
-                class="ok submit-light-edit"
               />
               <DButton
+                class="cancel cancel-light-edit"
                 @action={{@controller.cancelChangeLightScheme}}
                 @icon="xmark"
-                class="cancel cancel-light-edit"
               />
             {{/if}}
           </div>
@@ -218,7 +218,6 @@ export default <template>
             <div class="color-palette-input-group">
               <ColorPalettePicker
                 @content={{@controller.filteredColorSchemes}}
-                @value={{@controller.darkColorSchemeId}}
                 @icon="paintbrush"
                 @options={{hash
                   filterable=true
@@ -227,6 +226,7 @@ export default <template>
                     (i18n "admin.customize.theme.default_light_scheme")
                   )
                 }}
+                @value={{@controller.darkColorSchemeId}}
               />
             </div>
 
@@ -235,8 +235,8 @@ export default <template>
 
               {{#if @controller.darkColorSchemeId}}
                 <LinkTo
-                  @route="adminConfig.colorPalettes.show"
                   @model={{@controller.darkColorSchemeId}}
+                  @route="adminConfig.colorPalettes.show"
                 >
                   {{i18n "admin.customize.theme.edit_colors"}}
                 </LinkTo>
@@ -246,14 +246,14 @@ export default <template>
           <div class="setting-controls">
             {{#if @controller.darkColorSchemeChanged}}
               <DButton
+                class="ok submit-dark-edit"
                 @action={{@controller.changeDarkScheme}}
                 @icon="check"
-                class="ok submit-dark-edit"
               />
               <DButton
+                class="cancel cancel-dark-edit"
                 @action={{@controller.cancelChangeDarkScheme}}
                 @icon="xmark"
-                class="cancel cancel-dark-edit"
               />
             {{/if}}
           </div>
@@ -268,9 +268,9 @@ export default <template>
     >
       <div class="row setting">
         <ThemeSettingRelativesSelector
-          @setting={{@controller.relativesSelectorSettingsForComponent}}
-          @model={{@controller.model}}
           class="theme-setting"
+          @model={{@controller.model}}
+          @setting={{@controller.relativesSelectorSettingsForComponent}}
         />
       </div>
     </section>
@@ -287,9 +287,9 @@ export default <template>
           }}
         >
           <ThemeSettingRelativesSelector
-            @setting={{@controller.relativesSelectorSettingsForTheme}}
-            @model={{@controller.model}}
             class="theme-setting"
+            @model={{@controller.model}}
+            @setting={{@controller.relativesSelectorSettingsForTheme}}
           />
         </PluginOutlet>
       </div>
@@ -317,9 +317,9 @@ export default <template>
       {{/if}}
 
       <DButton
+        class="btn-default edit edit-code"
         @action={{@controller.editTheme}}
         @label="admin.customize.theme.edit_css_html"
-        class="btn-default edit edit-code"
       />
     </div>
 
@@ -337,9 +337,9 @@ export default <template>
                 >{{upload.filename}}</a></span>
               <span class="col">
                 <DButton
+                  class="second btn-default btn-default cancel-edit"
                   @action={{fn @controller.removeUpload upload}}
                   @icon="xmark"
-                  class="second btn-default btn-default cancel-edit"
                 />
               </span>
             </li>
@@ -351,10 +351,10 @@ export default <template>
           }}</div>
       {{/if}}
       <DButton
+        class="btn-default upload"
         @action={{@controller.addUploadModal}}
         @icon="plus"
         @label="admin.customize.theme.add"
-        class="btn-default upload"
       />
     </div>
   {{/unless}}
@@ -398,9 +398,9 @@ export default <template>
       >
         {{#each @controller.themeSiteSettings as |setting|}}
           <ThemeSiteSettingEditor
-            @setting={{setting}}
-            @model={{@controller.model}}
             class="theme-site-setting control-unit"
+            @model={{@controller.model}}
+            @setting={{setting}}
           />
         {{/each}}
       </section>
@@ -418,9 +418,9 @@ export default <template>
       <section class="form-horizontal theme settings control-unit">
         {{#each @controller.settings as |setting|}}
           <ThemeSettingEditor
-            @setting={{setting}}
-            @model={{@controller.model}}
             class="theme-setting control-unit"
+            @model={{@controller.model}}
+            @setting={{setting}}
           />
         {{/each}}
       </section>
@@ -442,12 +442,12 @@ export default <template>
             }}
           />
           <ComboBox
-            @valueProperty="value"
+            class="translation-selector"
             @content={{@controller.availableLocales}}
-            @value={{@controller.locale}}
             @onChange={{@controller.updateLocale}}
             @options={{hash filterable=true}}
-            class="translation-selector"
+            @value={{@controller.locale}}
+            @valueProperty="value"
           />
         </div>
       </div>
@@ -460,9 +460,9 @@ export default <template>
 
           {{#each @controller.translations as |translation|}}
             <ThemeTranslation
-              @translation={{translation}}
-              @model={{@controller.model}}
               class="theme-translation"
+              @model={{@controller.model}}
+              @translation={{translation}}
             />
           {{/each}}
         </section>
@@ -476,17 +476,17 @@ export default <template>
   />
   <div class="theme-controls">
     <a
+      class="btn btn-default"
       href={{@controller.previewUrl}}
-      title={{i18n "admin.customize.explain_preview"}}
       rel="noopener noreferrer"
       target="_blank"
-      class="btn btn-default"
+      title={{i18n "admin.customize.explain_preview"}}
     >{{dIcon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
     {{#unless @controller.model.system}}
       <DButton
         class="btn-default export"
-        @href={{@controller.downloadUrl}}
         @action={{@controller.exportAction}}
+        @href={{@controller.downloadUrl}}
         @icon="download"
         @label="admin.export_json.button_text"
       />
@@ -494,46 +494,46 @@ export default <template>
 
     {{#if @controller.showConvert}}
       <DButton
-        @action={{@controller.switchType}}
-        @label="admin.customize.theme.convert"
-        @icon="rotate"
-        @title={{@controller.convertTooltip}}
         class="btn-default btn-normal"
+        @action={{@controller.switchType}}
+        @icon="rotate"
+        @label="admin.customize.theme.convert"
+        @title={{@controller.convertTooltip}}
       />
     {{/if}}
 
     {{#if @controller.model.component}}
       {{#if @controller.model.enabled}}
         <DButton
+          class="btn-default"
           @action={{@controller.disableComponent}}
           @icon="ban"
           @label="admin.customize.theme.disable"
-          class="btn-default"
         />
       {{else}}
         <DButton
+          class="btn-default"
           @action={{@controller.enableComponent}}
           @icon="check"
           @label="admin.customize.theme.enable"
-          class="btn-default"
         />
       {{/if}}
     {{/if}}
     {{#if (and @controller.hasSettings (not @controller.model.system))}}
       <DButton
-        @action={{@controller.showThemeSettingsEditor}}
-        @label="admin.customize.theme.settings_editor"
-        @icon="pencil"
-        @title="admin.customize.theme.settings_editor"
         class="btn-default btn-normal"
+        @action={{@controller.showThemeSettingsEditor}}
+        @icon="pencil"
+        @label="admin.customize.theme.settings_editor"
+        @title="admin.customize.theme.settings_editor"
       />
     {{/if}}
     {{#unless (or @controller.model.system @controller.model.default)}}
       <DButton
-        @action={{@controller.destroyTheme}}
-        @label="admin.customize.delete"
-        @icon="trash-can"
         class="btn-danger delete"
+        @action={{@controller.destroyTheme}}
+        @icon="trash-can"
+        @label="admin.customize.delete"
       />
     {{/unless}}
   </div>

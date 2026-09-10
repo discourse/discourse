@@ -91,7 +91,7 @@ module("Component | ChatMessage", function (hooks) {
     this.message = new ChatFabricators(getOwner(this)).message();
     await render(
       <template>
-        <ChatMessage @message={{this.message}} @interactive={{false}} />
+        <ChatMessage @interactive={{false}} @message={{this.message}} />
       </template>
     );
 

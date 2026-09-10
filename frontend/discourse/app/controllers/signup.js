@@ -53,7 +53,7 @@ export default class SignupPageController extends Controller {
     getAuthOptionsUsername: () => this.authOptions?.username,
     getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
-    isInvalid: () => this.isDestroying || this.isDestroyed,
+    isInvalid: () => this.isDestroying,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
     updateUsernames: (username) => {
       this.accountUsername = username;
@@ -116,25 +116,6 @@ export default class SignupPageController extends Controller {
     return this.nameValidationHelper.forceValidationReason;
   }
 
-  @bind
-  actionOnEnter(event) {
-    if (!this.submitDisabled && event.key === "Enter") {
-      event.preventDefault();
-      event.stopPropagation();
-      this.createAccount();
-      return false;
-    }
-  }
-
-  @bind
-  selectKitFocus(event) {
-    const target = document.getElementById(event.target.getAttribute("for"));
-    if (target?.classList.contains("select-kit")) {
-      event.preventDefault();
-      target.querySelector(".select-kit-header").click();
-    }
-  }
-
   @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
   get showCreateForm() {
     return (
@@ -156,11 +137,6 @@ export default class SignupPageController extends Controller {
 
   get codeSignupOnEmailStep() {
     return this.codeSignupStep === "email";
-  }
-
-  @action
-  updateCodeSignupStep(step) {
-    this.codeSignupStep = step;
   }
 
   @computed("site.desktopView", "hasAuthOptions")
@@ -320,97 +296,11 @@ export default class SignupPageController extends Controller {
     });
   }
 
-  @action
-  setAccountUsername(event) {
-    this.accountUsername = event.target.value;
-  }
-
-  @action
-  checkEmailAvailability() {
-    if (this.emailValidation.reason) {
-      this.set("emailValidationVisible", true);
-    } else {
-      this.set("emailValidationVisible", false);
-    }
-
-    if (
-      !this.emailValidation.ok ||
-      this.serverAccountEmail === this.accountEmail
-    ) {
-      return;
-    }
-
-    return User.checkEmail(this.accountEmail)
-      .then((result) => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
-
-        if (result.failed) {
-          this.setProperties({
-            serverAccountEmail: this.accountEmail,
-            serverEmailValidation: EmberObject.create({
-              failed: true,
-              element: document.querySelector("#new-account-email"),
-              reason: result.errors[0],
-            }),
-          });
-        } else {
-          this.setProperties({
-            serverAccountEmail: this.accountEmail,
-            serverEmailValidation: EmberObject.create({
-              ok: true,
-              reason: i18n("user.email.ok"),
-            }),
-          });
-        }
-      })
-      .catch(() => {
-        this.setProperties({
-          serverAccountEmail: null,
-          serverEmailValidation: null,
-        });
-      });
-  }
-
   get emailDisabled() {
     return (
       this.authOptions?.email === this.accountEmail &&
       this.authOptions?.email_valid
     );
-  }
-
-  authProviderDisplayName(name) {
-    return (
-      findAll()
-        .find((p) => p.name === name)
-        ?.get("prettyName") || name
-    );
-  }
-
-  @observes("emailValidation", "accountEmail")
-  prefillUsername() {
-    if (this.prefilledUsername) {
-      // If username field has been filled automatically, and email field just changed,
-      // then remove the username.
-      if (this.accountUsername === this.prefilledUsername) {
-        this.accountUsername = "";
-      }
-      this.set("prefilledUsername", null);
-    }
-    if (
-      this.get("emailValidation.ok") &&
-      (isEmpty(this.accountUsername) || this.authOptions?.email)
-    ) {
-      // If email is valid and username has not been entered yet,
-      // or email and username were filled automatically by 3rd party auth,
-      // then look for a registered username that matches the email.
-      discourseDebounce(
-        this,
-        () => this.usernameValidationHelper.fetchExistingUsername(),
-        500
-      );
-    }
   }
 
   // Determines whether at least one login button is enabled
@@ -446,6 +336,127 @@ export default class SignupPageController extends Controller {
     return this.authOptions ? "activate" : "signup";
   }
 
+  @computed("authOptions.associate_url", "authOptions.auth_provider")
+  get associateHtml() {
+    if (!this.authOptions?.associate_url) {
+      return;
+    }
+    return i18n("create_account.associate", {
+      associate_link: this.authOptions?.associate_url,
+      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
+    });
+  }
+
+  @bind
+  actionOnEnter(event) {
+    if (!this.submitDisabled && event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.createAccount();
+      return false;
+    }
+  }
+
+  @bind
+  selectKitFocus(event) {
+    const target = document.getElementById(event.target.getAttribute("for"));
+    if (target?.classList.contains("select-kit")) {
+      event.preventDefault();
+      target.querySelector(".select-kit-header").click();
+    }
+  }
+
+  @action
+  updateCodeSignupStep(step) {
+    this.codeSignupStep = step;
+  }
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
+
+  @action
+  checkEmailAvailability() {
+    if (this.emailValidation.reason) {
+      this.set("emailValidationVisible", true);
+    } else {
+      this.set("emailValidationVisible", false);
+    }
+
+    if (
+      !this.emailValidation.ok ||
+      this.serverAccountEmail === this.accountEmail
+    ) {
+      return;
+    }
+
+    return User.checkEmail(this.accountEmail)
+      .then((result) => {
+        if (this.isDestroying) {
+          return;
+        }
+
+        if (result.failed) {
+          this.setProperties({
+            serverAccountEmail: this.accountEmail,
+            serverEmailValidation: EmberObject.create({
+              failed: true,
+              element: document.querySelector("#new-account-email"),
+              reason: result.errors[0],
+            }),
+          });
+        } else {
+          this.setProperties({
+            serverAccountEmail: this.accountEmail,
+            serverEmailValidation: EmberObject.create({
+              ok: true,
+              reason: i18n("user.email.ok"),
+            }),
+          });
+        }
+      })
+      .catch(() => {
+        this.setProperties({
+          serverAccountEmail: null,
+          serverEmailValidation: null,
+        });
+      });
+  }
+
+  authProviderDisplayName(name) {
+    return (
+      findAll()
+        .find((p) => p.name === name)
+        ?.get("prettyName") || name
+    );
+  }
+
+  @observes("emailValidation", "accountEmail")
+  prefillUsername() {
+    if (this.prefilledUsername) {
+      // If username field has been filled automatically, and email field just changed,
+      // then remove the username.
+      if (this.accountUsername === this.prefilledUsername) {
+        this.accountUsername = "";
+      }
+      this.set("prefilledUsername", null);
+    }
+    if (
+      this.get("emailValidation.ok") &&
+      (isEmpty(this.accountUsername) || this.authOptions?.email)
+    ) {
+      // If email is valid and username has not been entered yet,
+      // or email and username were filled automatically by 3rd party auth,
+      // then look for a registered username that matches the email.
+      discourseDebounce(
+        this,
+        () => this.usernameValidationHelper.fetchExistingUsername(),
+        500
+      );
+    }
+  }
+
   fetchConfirmationValue() {
     if (this._challengeDate === undefined && this._hpPromise) {
       // Request already in progress
@@ -454,7 +465,7 @@ export default class SignupPageController extends Controller {
 
     this._hpPromise = ajax("/session/hp.json")
       .then((json) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -513,7 +524,7 @@ export default class SignupPageController extends Controller {
     this.set("formSubmitted", true);
     return User.createAccount(attrs).then(
       (result) => {
-        if (this.isDestroying || this.isDestroyed) {
+        if (this.isDestroying) {
           return;
         }
 
@@ -564,17 +575,6 @@ export default class SignupPageController extends Controller {
         return this.set("flash", i18n("create_account.failed"));
       }
     );
-  }
-
-  @computed("authOptions.associate_url", "authOptions.auth_provider")
-  get associateHtml() {
-    if (!this.authOptions?.associate_url) {
-      return;
-    }
-    return i18n("create_account.associate", {
-      associate_link: this.authOptions?.associate_url,
-      provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
-    });
   }
 
   @action

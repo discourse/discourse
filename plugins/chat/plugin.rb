@@ -91,6 +91,12 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
   UserUpdater::OPTION_ATTR.push(:chat_announce_new_messages)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_filter_dms)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_starred)
+  UserUpdater::OPTION_ATTR.push(:chat_channel_list_sort_dms)
   UserUpdater::OPTION_ATTR.push(:chat_new_message_sound)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
@@ -309,6 +315,46 @@ after_initialize do
   end
 
   add_to_serializer(:user_option, :chat_announce_new_messages) { object.chat_announce_new_messages }
+
+  add_to_serializer(:user_option, :chat_channel_list_filter) { object.chat_channel_list_filter }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter) do
+    object.chat_channel_list_filter
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort) { object.chat_channel_list_sort }
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_starred) do
+    object.chat_channel_list_sort_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_sort_dms) { object.chat_channel_list_sort_dms }
+
+  add_to_serializer(:current_user_option, :chat_channel_list_sort_dms) do
+    object.chat_channel_list_sort_dms
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_starred) do
+    object.chat_channel_list_filter_starred
+  end
+
+  add_to_serializer(:user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
+
+  add_to_serializer(:current_user_option, :chat_channel_list_filter_dms) do
+    object.chat_channel_list_filter_dms
+  end
 
   add_to_serializer(:current_user_option, :chat_announce_new_messages) do
     object.chat_announce_new_messages
@@ -599,4 +645,84 @@ after_initialize do
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
   end
+end
+
+after_initialize do
+  require_relative "lib/chat/mcp_tools"
+
+  register_mcp_tool(
+    "chat_channel_list",
+    title: "List chat channels",
+    description:
+      "Lists chat channels followed by the authenticated user, including direct-message channels.",
+    implementation: Chat::McpTools::ListChannels,
+    required_scopes: %w[chat:read],
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "chat_message_list",
+    title: "List chat messages",
+    description: "Reads a bounded page of messages from a visible chat channel.",
+    implementation: Chat::McpTools::ListMessages,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+      },
+      required: ["channel_id"],
+      additionalProperties: false,
+    },
+    required_scopes: %w[chat:read],
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> { SiteSetting.chat_enabled },
+  )
+  register_mcp_tool(
+    "chat_message_create",
+    title: "Create chat message",
+    description: "Creates a message in a chat channel as the authenticated user.",
+    implementation: Chat::McpTools::CreateMessage,
+    input_schema: {
+      type: "object",
+      properties: {
+        channel_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        message: {
+          type: "string",
+          minLength: 1,
+        },
+        thread_id: {
+          type: "integer",
+        },
+        reply_to_message_id: {
+          type: "integer",
+        },
+      },
+      required: %w[channel_id message],
+      additionalProperties: false,
+    },
+    required_scopes: %w[chat:write],
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.chat_enabled },
+  )
 end

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Badge from "discourse/models/badge";
+import UserBadge from "discourse/models/user-badge";
 import pretender, {
   parsePostData,
   response,
@@ -47,6 +48,86 @@ module("Unit | Model | badge", function (hooks) {
     const badge = Badge.createFromJson(badgeJson);
 
     assert.false(Array.isArray(badge), "does not returns an array");
+  });
+
+  test("has_badge is kept when the payload provides it", function (assert) {
+    const badges = Badge.createFromJson({
+      badge_types: [{ id: 6, name: "Silver 1" }],
+      badges: [
+        {
+          id: 1127,
+          name: "Badge 1",
+          description: null,
+          badge_type_id: 6,
+          has_badge: true,
+        },
+        {
+          id: 1128,
+          name: "Badge 2",
+          description: null,
+          badge_type_id: 6,
+          has_badge: false,
+        },
+      ],
+    });
+
+    assert.true(badges[0].has_badge, "true is preserved");
+    assert.false(badges[1].has_badge, "false is preserved");
+  });
+
+  test("has_badge is cleared by a payload that omits it", function (assert) {
+    Badge.createFromJson({
+      badge_types: [{ id: 6, name: "Silver 1" }],
+      badges: [
+        {
+          id: 1126,
+          name: "Badge 1",
+          description: null,
+          badge_type_id: 6,
+          has_badge: true,
+        },
+      ],
+    });
+
+    const sideloaded = Badge.createFromJson({
+      badge_types: [{ id: 6, name: "Silver 1" }],
+      badges: [
+        { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 },
+      ],
+    });
+
+    assert.false(
+      sideloaded[0].has_badge,
+      "a payload that cannot know about the viewer's grants clears the flag"
+    );
+  });
+
+  test("has_badge survives a badge sideloaded with user badges", function (assert) {
+    Badge.createFromJson({
+      badge_types: [{ id: 6, name: "Silver 1" }],
+      badges: [
+        {
+          id: 1129,
+          name: "Badge 1",
+          description: null,
+          badge_type_id: 6,
+          has_badge: true,
+        },
+      ],
+    });
+
+    const userBadges = UserBadge.createFromJson({
+      badge_types: [{ id: 6, name: "Silver 1" }],
+      badges: [
+        { id: 1129, name: "Badge 1", description: null, badge_type_id: 6 },
+      ],
+      user_badges: [{ id: 42, badge_id: 1129, granted_at: "2020-01-01" }],
+    });
+
+    assert.true(
+      userBadges[0].badge.has_badge,
+      "a payload that cannot know the viewer's grants leaves the flag alone"
+    );
   });
 
   test("updateFromJson", function (assert) {

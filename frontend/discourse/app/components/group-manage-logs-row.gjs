@@ -26,21 +26,21 @@ export default class GroupManageLogsRow extends Component {
     <tr class="group-manage-logs-row">
       <td>
         <DButton
+          class="btn-default"
           @action={{fn this.filter (hash value=this.log.action key="action")}}
           @translatedLabel={{this.log.actionTitle}}
-          class="btn-default"
         />
       </td>
 
       <td>
         <span>{{dAvatar this.log.acting_user imageSize="tiny"}}</span>
         <DButton
+          class="btn-default"
           @action={{fn
             this.filter
             (hash value=this.log.acting_user.username key="acting_user")
           }}
           @translatedLabel={{this.log.acting_user.username}}
-          class="btn-default"
         />
       </td>
 
@@ -48,12 +48,12 @@ export default class GroupManageLogsRow extends Component {
         {{#if this.log.target_user}}
           <span>{{dAvatar this.log.target_user imageSize="tiny"}}</span>
           <DButton
+            class="btn-default"
             @action={{fn
               this.filter
               (hash value=this.log.target_user.username key="target_user")
             }}
             @translatedLabel={{this.log.target_user.username}}
-            class="btn-default"
           />
         {{/if}}
       </td>
@@ -61,12 +61,12 @@ export default class GroupManageLogsRow extends Component {
       <td>
         {{#if this.log.subject}}
           <DButton
+            class="btn-default"
             @action={{fn
               this.filter
               (hash value=this.log.subject key="subject")
             }}
             @translatedLabel={{this.log.subject}}
-            class="btn-default"
           />
         {{/if}}
       </td>
@@ -76,9 +76,9 @@ export default class GroupManageLogsRow extends Component {
       <td class="group-manage-logs-expand-details">
         {{#if this.log.prev_value}}
           <DButton
+            class="btn-default"
             @action={{this.toggleDetails}}
             @icon={{if this.expandDetails "angle-up" "angle-down"}}
-            class="btn-default"
           />
         {{/if}}
       </td>

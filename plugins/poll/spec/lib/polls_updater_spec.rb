@@ -141,6 +141,7 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         expect(digests.size).to eq(2)
         expect(poll_record.poll_votes.count).to eq(1)
       end
+
       describe "when there are no votes" do
         it "at any time" do
           post # create the post

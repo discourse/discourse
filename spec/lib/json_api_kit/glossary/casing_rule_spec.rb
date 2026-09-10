@@ -1,0 +1,132 @@
+# frozen_string_literal: true
+
+RSpec.describe JsonApiKit::Glossary::CasingRule do
+  let(:rule) { described_class }
+  let(:name) { JsonApiKit::Name::Field.new(value:, type: "topics") }
+  let(:value) { "createdAt" }
+
+  describe "#declared_attributes" do
+    subject(:declared_attributes) { rule.declared_attributes(name => "2026-08-01") }
+
+    it "returns the attributes with their names in snake case" do
+      expect(declared_attributes).to eq(name.with(value: "created_at") => "2026-08-01")
+    end
+
+    context "when a name has an underscore" do
+      let(:value) { "created_at" }
+
+      it { expect { declared_attributes }.to raise_error(JsonApiKit::Glossary::Correction) }
+    end
+  end
+
+  describe "#declared_name" do
+    subject(:declared_name) { rule.declared_name(name) }
+
+    it "returns the name in snake case" do
+      expect(declared_name).to eq(name.with(value: "created_at"))
+    end
+
+    context "when the value is a list of names" do
+      let(:name) { JsonApiKit::Name::Member.new(value: "-createdAt,title") }
+
+      it "returns every name in snake case" do
+        expect(declared_name).to eq(name.with(value: "-created_at,title"))
+      end
+    end
+
+    context "when the value is a path" do
+      let(:name) { JsonApiKit::Name::Member.new(value: "solvedStatus.answeredAt") }
+
+      it "returns every segment" do
+        expect(declared_name).to eq(name.with(value: "solved_status.answered_at"))
+      end
+    end
+
+    context "when the name has a hyphen" do
+      let(:name) { JsonApiKit::Name::Member.new(value: "solved-statuses") }
+
+      it "keeps the hyphen" do
+        expect(declared_name).to eq(name)
+      end
+    end
+
+    context "when the name starts with a capital" do
+      let(:value) { "CreatedAt" }
+
+      it { expect { declared_name }.to raise_error(JsonApiKit::Glossary::Correction) }
+    end
+
+    context "when the name ends with capitals" do
+      let(:value) { "createdAT" }
+
+      it { expect { declared_name }.to raise_error(JsonApiKit::Glossary::Correction) }
+    end
+
+    context "when the name has an underscore" do
+      let(:value) { "created_at" }
+
+      it { expect { declared_name }.to raise_error(JsonApiKit::Glossary::Correction) }
+
+      it "raises a correction with the name in snake case" do
+        expect { declared_name }.to raise_error(having_attributes(name:))
+      end
+    end
+
+    context "when the name comes from a client" do
+      let(:value) { "sentByClient" }
+
+      it "adds nothing to the memo" do
+        expect { declared_name }.not_to change(described_class::MEMBER_NAMES, :size)
+      end
+    end
+  end
+
+  describe "#member_attributes" do
+    subject(:member_attributes) { rule.member_attributes(attributes) }
+
+    let(:attributes) { { name => "2026-08-01" } }
+    let(:value) { "created_at" }
+
+    it "returns the attributes with their names in camel case" do
+      expect(member_attributes).to eq(name.with(value: "createdAt") => "2026-08-01")
+    end
+
+    it "returns the same object for a name it converted before" do
+      expect(member_attributes.keys.first).to equal(rule.member_attributes(attributes).keys.first)
+    end
+  end
+
+  describe "#member_name" do
+    subject(:member_name) { rule.member_name(name) }
+
+    let(:value) { "created_at" }
+
+    it "returns the name in camel case" do
+      expect(member_name).to eq(name.with(value: "createdAt"))
+    end
+
+    context "when the name is a path" do
+      let(:name) { JsonApiKit::Name::Member.new(value: "last_poster.last_seen_at") }
+
+      it "returns every segment" do
+        expect(member_name).to eq(name.with(value: "lastPoster.lastSeenAt"))
+      end
+    end
+
+    context "when the name has a hyphen" do
+      let(:name) { JsonApiKit::Name::Member.new(value: "solved-statuses") }
+
+      it "keeps the hyphen" do
+        expect(member_name).to eq(name)
+      end
+    end
+
+    context "when the name comes from a client" do
+      let(:value) { "named_by_client" }
+
+      it "adds nothing to the memo" do
+        expect { member_name }.not_to change(described_class::MEMBER_NAMES, :size)
+      end
+    end
+  end
+end

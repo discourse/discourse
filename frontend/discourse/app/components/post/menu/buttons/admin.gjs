@@ -16,11 +16,11 @@ export default class PostMenuAdminButton extends Component {
       class="post-action-menu__admin show-post-admin-menu"
       ...attributes
       @action={{@buttonActions.openAdminMenu}}
+      @ariaLabel="post.controls.admin"
       @forwardEvent={{true}}
       @icon="wrench"
       @label={{if @showLabel "post.controls.admin_action"}}
       @title="post.controls.admin"
-      @ariaLabel="post.controls.admin"
     />
   </template>
 }

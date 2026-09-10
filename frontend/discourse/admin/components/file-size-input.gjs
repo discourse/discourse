@@ -42,17 +42,17 @@ export default class FileSizeInput extends Component {
     }
   }
 
-  @action
-  keyDown(event) {
-    allowOnlyNumericInput(event);
-  }
-
   get dropdownOptions() {
     return [
       { label: i18n("number.human.storage_units.units.kb"), value: UNIT_KB },
       { label: i18n("number.human.storage_units.units.mb"), value: UNIT_MB },
       { label: i18n("number.human.storage_units.units.gb"), value: UNIT_GB },
     ];
+  }
+
+  @action
+  keyDown(event) {
+    allowOnlyNumericInput(event);
   }
 
   @action
@@ -107,18 +107,18 @@ export default class FileSizeInput extends Component {
     <div class="file-size-picker">
       <input
         class="file-size-input"
-        value={{this.number}}
-        type="number"
         step="any"
+        type="number"
+        value={{this.number}}
         {{on "input" this.handleFileSizeChange}}
         {{on "keydown" this.keyDown}}
       />
       <ComboBox
         class="file-size-unit-selector"
-        @valueProperty="value"
         @content={{this.dropdownOptions}}
-        @value={{this.unit}}
         @onChange={{this.onFileSizeUnitChange}}
+        @value={{this.unit}}
+        @valueProperty="value"
       />
     </div>
   </template>

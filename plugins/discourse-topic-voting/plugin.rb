@@ -230,18 +230,6 @@ after_initialize do
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
   end
 
-  on(:upcoming_change_enabled) do |setting_name|
-    if setting_name == :enable_topic_voting_badges
-      DiscourseTopicVoting::EnableTopicVotingBadgesToggled.call(enabled: true)
-    end
-  end
-
-  on(:upcoming_change_disabled) do |setting_name|
-    if setting_name == :enable_topic_voting_badges
-      DiscourseTopicVoting::EnableTopicVotingBadgesToggled.call(enabled: false)
-    end
-  end
-
   Discourse::Application.routes.prepend do
     get "c/*category_slug_path_with_id/l/votes.rss" => "list#votes_feed", :format => :rss
   end
@@ -264,4 +252,35 @@ after_initialize do
       guardian: user.guardian,
     )
   end
+end
+
+after_initialize do
+  require_relative "lib/discourse_topic_voting/mcp_tools"
+  register_mcp_tool(
+    "discourse_topic_voting_vote_set",
+    title: "Set topic vote",
+    description: "Casts or removes the authenticated user's vote on a visible votable topic.",
+    implementation: DiscourseTopicVoting::McpTools::SetVote,
+    input_schema: {
+      type: "object",
+      properties: {
+        topic_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        voted: {
+          type: "boolean",
+        },
+      },
+      required: %w[topic_id voted],
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-topic-voting:write],
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+    },
+    risk: :write,
+    availability: -> { SiteSetting.topic_voting_enabled },
+  )
 end

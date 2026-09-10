@@ -1013,6 +1013,9 @@ hu:
         note_added: "Moderátori megjegyzés"
         note_added_by: "%{username} moderátor megjegyzése · %{relativeDate}"
         no_events: "Nincsenek megjeleníthető idővonal-események"
+      author_penalty:
+        toast:
+          undo: "Visszavonás"
       notes:
         add_note_description: "Adj hozzá egy megjegyzést, amely kontextust biztosít más moderátoroknak."
         add_note_button: "Megjegyzés hozzáadása"
@@ -1658,7 +1661,6 @@ hu:
       admin: "%{user} egy adminisztrátor"
       moderator_tooltip: "Ez a felhasználó egy moderátor"
       admin_tooltip: "Ez a felhasználó egy adminisztrátor"
-      silenced_tooltip: "Ez a felhasználó némítva van"
       suspended_notice: "Ez a felhasználó eddig felfüggesztett: %{date}."
       suspended_permanently: "Ez a felhasználó felfüggesztett."
       suspended_reason: "Ok: "
@@ -1718,6 +1720,16 @@ hu:
       tracked_topics_link: "Megjelenítés"
       automatically_unpin_topics: "Automatikusan megszünteti a témák kitűzését, ha eléri az alját"
       apps: "Alkalmazások"
+      mcp_authorizations:
+        endpoint: "Forrás"
+        scopes: "Hatókör"
+        details: "Részletek"
+        last_used: "Utoljára használva"
+        never: "Soha"
+        status: "Állapot"
+        statuses:
+          active: "Aktív"
+          revoked: "Visszavonva"
       revoke_access: "Hozzáférés visszavonása"
       undo_revoke_access: "Hozzáférés visszaállítása"
       api_approved: "Jóváhagyva:"
@@ -5707,6 +5719,70 @@ hu:
           header_description: "Adjon meg itt információkat erről a webhelyről és csapatáról, hogy az emberek megtudják, miről szól a közössége, ki áll a háttérben, és hogyan érhetik el Önt probléma esetén. Megjelenik a webhely <a href='%{basePath}/about'>Névjegy oldalon</a>."
         developer:
           title: "Fejlesztői"
+        mcp:
+          tabs:
+            access: "Hozzáférés"
+            activity: "Tevékenység"
+          overview:
+            status: "Állapot"
+          access:
+            title: "Hozzáférés"
+            group: "Csoport"
+            groups: "Csoportok"
+            actions: "Műveletek"
+            edit: "Szerkesztés"
+            delete: "Törlés"
+          primitives:
+            group_by_options:
+              scope: "Hatókör"
+              provider: "Szolgáltató"
+              kind: "Típus"
+            provider: "Szolgáltató"
+            kind: "Típus"
+            scope: "Hatókör"
+            state: "Állam"
+            scopes: "Hatókör"
+          clients:
+            actions: "Műveletek"
+            block: "Letiltás"
+            presets:
+              custom: "Egyéni"
+          authorizations:
+            user: "Felhasználó"
+            last_used: "Utoljára használva"
+            status: "Állapot"
+            actions: "Műveletek"
+          activity:
+            rate_limits: "Korlátozások"
+            outcome: "Eredmény"
+            time: "Idő"
+            user: "Felhasználó"
+            duration: "Időtartam"
+          values:
+            server_status:
+              disabled: "Kikapcsolva"
+            client_trust:
+              approved: "Jóváhagyott"
+            authorization_status:
+              active: "Aktív"
+              revoked: "Visszavonva"
+            activity_outcome:
+              success: "Sikeres"
+              error: "Hiba"
+            primitive_state:
+              enabled: "Bekapcsolva"
+              disabled: "Kikapcsolva"
+            primitive_kind:
+              all: "Összes típus"
+              resource: "Forrás"
+            primitive_risk:
+              read: "Csak olvasható"
+              moderation: "Moderálás"
+            filter:
+              all: "Összes"
+          never: "Soha"
+          actions:
+            revoke: "Visszavonás"
         experimental:
           title: "Kísérleti"
           header_description: "Kísérleti funkciók be- vagy kikapcsolása webhelyén, ezek többsége csoportszinten vezérelhető"

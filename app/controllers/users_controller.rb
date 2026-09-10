@@ -612,10 +612,19 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
+    # Anonymous callers are only ever running signup, so once local registration
+    # is closed the endpoint would just be a username-existence oracle.
+    if !current_user &&
+         (!SiteSetting.allow_new_registrations || SiteSetting.enable_discourse_connect)
+      raise Discourse::InvalidAccess
+    end
+
+    # The check is advisory and `create` re-validates, so a throttled caller gets
+    # an optimistic answer rather than an error that blocks the signup form.
     begin
-      RateLimiter.new(current_user, "check-username-#{request.remote_ip}", 10, 1.minute).performed!
+      RateLimiter.new(current_user, "check-username-#{request.remote_ip}", 60, 1.minute).performed!
     rescue RateLimiter::LimitExceeded
-      return render json: failed_json.merge(errors: [I18n.t("rate_limiter.slow_down")])
+      return render_available_true
     end
 
     if !params[:username].present?
@@ -649,7 +658,16 @@ class UsersController < ApplicationController
       )
     end
 
-    render json: { username: }
+    # Keep a chosen avatar intact. Otherwise return the avatar derived from the
+    # suggestion so account-setup screens can update their preview immediately.
+    avatar_template =
+      if current_user&.uploaded_avatar_id
+        current_user.avatar_template
+      else
+        User.default_template(username)
+      end
+
+    render json: { username:, avatar_template: }
   end
 
   def check_email
@@ -1240,11 +1258,15 @@ class UsersController < ApplicationController
     end
 
     User.transaction do
+      @user.lock!
+      revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
+
       primary_email = @user.primary_email
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
       if primary_email.save
+        @user.revoke_approval! if revoke_approval
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
         EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)

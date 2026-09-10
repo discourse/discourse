@@ -156,9 +156,9 @@ export default class DashboardSystem extends Component {
 
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.system.title"}}
-      @layout="row"
       ...attributes
+      @layout="row"
+      @title={{i18n "admin.dashboard.sections.system.title"}}
     >
       {{#if @fetchError}}
         <div class="db-section__error" role="alert">
@@ -253,9 +253,9 @@ export default class DashboardSystem extends Component {
             <div>
               {{#if this.barSegments}}
                 <div
+                  aria-label={{this.barLabel}}
                   class="db-bar-track"
                   role="img"
-                  aria-label={{this.barLabel}}
                 >
                   {{#each this.barSegments key="key" as |segment|}}
                     <span
@@ -334,7 +334,7 @@ export default class DashboardSystem extends Component {
             {{/if}}
 
             <div class="db-system__footer">
-              <LinkTo @route="admin.whatsNew" class="db-system__link">
+              <LinkTo class="db-system__link" @route="admin.whatsNew">
                 {{i18n "admin.dashboard.whats_new_in_discourse"}}
               </LinkTo>
             </div>

@@ -3,17 +3,22 @@
 module JsonApiKit
   module Declarations
     class Anchor
-      class Computed
-        def initialize(condition, guardian)
+      class Computed < Anchor
+        def initialize(name, &condition)
+          super(name)
           @condition = condition
-          @guardian = guardian
         end
 
-        def locate(scope, order:) = order.locate(condition.call(scope, guardian))
+        def accepts?(anchoring) = anchoring.without_value?
+
+        def locatable_in?(_order) = true
+
+        def locate(_anchoring, scope:, order:, guardian:) =
+          order.locate(condition.call(scope, guardian))
 
         private
 
-        attr_reader :condition, :guardian
+        attr_reader :condition
       end
     end
   end

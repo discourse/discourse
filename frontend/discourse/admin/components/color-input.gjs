@@ -99,21 +99,21 @@ export default class ColorInput extends Component {
 
   <template>
     {{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<DTextField
-      @value={{this.hexValue}}
-      @maxlength={{this.maxlength}}
-      @input={{this.onHexInput}}
-      class="hex-input"
       aria-labelledby={{this.ariaLabelledby}}
+      class="hex-input"
+      @input={{this.onHexInput}}
+      @maxlength={{this.maxlength}}
+      @value={{this.hexValue}}
       {{on "blur" this.handleBlur}}
       {{on "paste" this.handlePaste}}
     />
     <input
+      aria-labelledby={{this.ariaLabelledby}}
       class="picker"
+      title={{this.valueForPicker}}
       type="color"
       value={{this.valueForPicker}}
-      title={{this.valueForPicker}}
       {{on "input" this.onPickerInput}}
-      aria-labelledby={{this.ariaLabelledby}}
     />
   </template>
 }

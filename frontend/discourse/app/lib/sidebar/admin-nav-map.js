@@ -555,6 +555,52 @@ export const ADMIN_NAV_MAP = [
         settings_category: "developer",
       },
       {
+        name: "admin_mcp",
+        route: "adminConfig.mcp.index",
+        label: "admin.config.mcp.title",
+        description: "admin.config.mcp.header_description",
+        icon: "plug",
+        multi_tabbed: true,
+        links: [
+          {
+            name: "admin_mcp_capabilities",
+            route: "adminConfig.mcp.capabilities",
+            label: "admin.config.mcp.tabs.capabilities",
+            description: "admin.config.mcp.capabilities.description",
+          },
+          {
+            name: "admin_mcp_access",
+            route: "adminConfig.mcp.access",
+            label: "admin.config.mcp.tabs.access",
+            description: "admin.config.mcp.access.description",
+          },
+          {
+            name: "admin_mcp_clients",
+            route: "adminConfig.mcp.clients",
+            label: "admin.config.mcp.tabs.clients",
+            description: "admin.config.mcp.clients.description",
+          },
+          {
+            name: "admin_mcp_authorizations",
+            route: "adminConfig.mcp.authorizations",
+            label: "admin.config.mcp.tabs.authorizations",
+            description: "admin.config.mcp.authorizations.description",
+          },
+          {
+            name: "admin_mcp_activity",
+            route: "adminConfig.mcp.activity",
+            label: "admin.config.mcp.tabs.activity",
+            description: "admin.config.mcp.activity.description",
+          },
+          {
+            name: "admin_mcp_settings",
+            route: "adminConfig.mcp.settings",
+            label: "settings",
+            description: "admin.config.mcp.settings.description",
+          },
+        ],
+      },
+      {
         name: "admin_embedding",
         route: "adminEmbedding",
         label: "admin.config.embedding.title",

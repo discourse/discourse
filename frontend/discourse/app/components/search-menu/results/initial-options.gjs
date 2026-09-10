@@ -176,10 +176,10 @@ export default class InitialOptions extends Component {
         {{#if this.termMatchesContextTypeKeyword}}
           {{#if this.showSearchShortcuts}}
             <AssistantItem
-              @slug={{this.slug}}
-              @extraHint={{true}}
               @closeSearchMenu={{@closeSearchMenu}}
+              @extraHint={{true}}
               @searchTermChanged={{@searchTermChanged}}
+              @slug={{this.slug}}
               @suggestionKeyword={{this.contextTypeKeyword}}
             />
           {{/if}}
@@ -191,25 +191,25 @@ export default class InitialOptions extends Component {
               (and this.search.activeGlobalSearchTerm this.showSearchShortcuts)
             }}
               <AssistantItem
-                @suffix={{i18n "search.in_topics_posts"}}
                 @closeSearchMenu={{@closeSearchMenu}}
-                @searchAllTopics={{true}}
                 @extraHint={{true}}
+                @searchAllTopics={{true}}
                 @searchTermChanged={{@searchTermChanged}}
+                @suffix={{i18n "search.in_topics_posts"}}
                 @suggestionKeyword={{this.contextTypeKeyword}}
               />
             {{/if}}
 
             {{#if (and this.search.searchContext this.showSearchShortcuts)}}
               <this.contextTypeComponent
-                @slug={{this.slug}}
-                @suggestionKeyword={{this.contextTypeKeyword}}
-                @results={{this.initialResults}}
-                @withInLabel={{this.withInLabel}}
-                @suffix={{this.suffix}}
-                @label={{this.label}}
                 @closeSearchMenu={{@closeSearchMenu}}
+                @label={{this.label}}
+                @results={{this.initialResults}}
                 @searchTermChanged={{@searchTermChanged}}
+                @slug={{this.slug}}
+                @suffix={{this.suffix}}
+                @suggestionKeyword={{this.contextTypeKeyword}}
+                @withInLabel={{this.withInLabel}}
               />
 
               {{#if
@@ -220,8 +220,8 @@ export default class InitialOptions extends Component {
                 )
               }}
                 <RecentSearches
-                  @location={{@location}}
                   @closeSearchMenu={{@closeSearchMenu}}
+                  @location={{@location}}
                   @searchTermChanged={{@searchTermChanged}}
                 />
               {{/if}}
@@ -233,8 +233,8 @@ export default class InitialOptions extends Component {
             />
             {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
               <RecentSearches
-                @location={{@location}}
                 @closeSearchMenu={{@closeSearchMenu}}
+                @location={{@location}}
                 @searchTermChanged={{@searchTermChanged}}
               />
             {{/if}}
