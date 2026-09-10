@@ -11,6 +11,99 @@ import {
 module("Unit | Service | chat-channel-list-preferences", function (hooks) {
   setupTest(hooks);
 
+  test("temporarily bypasses each section without saving and reapplies the same preference", async function (assert) {
+    const user = logIn(this.owner);
+    user.set("user_option.chat_channel_list_filter", "unread");
+    user.set("user_option.chat_channel_list_filter_dms", "mentions");
+    user.set("user_option.chat_channel_list_filter_starred", "active");
+    const preferences = this.owner.lookup(
+      "service:chat-channel-list-preferences"
+    );
+    const requests = [];
+    pretender.put("/u/eviltrout.json", (request) => {
+      requests.push(request);
+      return response(200, { user: {} });
+    });
+
+    for (const section of ["channels", "dms", "starred"]) {
+      const preferred = preferences.filterFor(section);
+      preferences.showAllChannels(section);
+      assert.strictEqual(
+        preferences.effectiveFilterFor(section),
+        "all",
+        "the effective filter is bypassed"
+      );
+      assert.strictEqual(
+        preferences.filterFor(section),
+        preferred,
+        "the preferred filter is retained"
+      );
+      await preferences.setFilter(section, preferred);
+      assert.strictEqual(
+        preferences.effectiveFilterFor(section),
+        preferred,
+        "reselecting the preference reapplies it"
+      );
+    }
+    preferences.showAllChannels("channels");
+    assert.strictEqual(
+      preferences.effectiveFilterFor("dms"),
+      "mentions",
+      "DM filters are independent"
+    );
+    assert.strictEqual(
+      preferences.effectiveFilterFor("starred"),
+      "active",
+      "starred filters are independent"
+    );
+    preferences.toggleFilter("channels");
+    assert.strictEqual(
+      preferences.effectiveFilterFor("channels"),
+      "unread",
+      "the toggle restores the preference"
+    );
+    assert.strictEqual(
+      user.user_option.chat_channel_list_filter,
+      "unread",
+      "the user option is unchanged"
+    );
+    assert.strictEqual(
+      requests.length,
+      0,
+      "temporary changes and reselecting the preference make no requests"
+    );
+  });
+
+  test("changing sorting retains the override and choosing another filter clears it", async function (assert) {
+    const user = logIn(this.owner);
+    user.set("user_option.chat_channel_list_filter", "unread");
+    const preferences = this.owner.lookup(
+      "service:chat-channel-list-preferences"
+    );
+    pretender.put("/u/eviltrout.json", () => response(200, { user: {} }));
+    preferences.showAllChannels("channels");
+    await preferences.setSort("channels", "recent_activity");
+    assert.true(
+      preferences.isFilterBypassedFor("channels"),
+      "sorting retains the override"
+    );
+    await preferences.setFilter("channels", "invalid");
+    assert.true(
+      preferences.isFilterBypassedFor("channels"),
+      "invalid filter selections retain the override"
+    );
+    await preferences.setFilter("channels", "mentions");
+    assert.false(
+      preferences.isFilterBypassedFor("channels"),
+      "choosing a filter clears the override"
+    );
+    assert.strictEqual(
+      preferences.effectiveFilterFor("channels"),
+      "mentions",
+      "the newly selected filter takes effect"
+    );
+  });
+
   test("initializes from the current user", function (assert) {
     const currentUser = logIn(this.owner);
     currentUser.set("user_option.chat_channel_list_filter", "mentions");
@@ -340,7 +433,7 @@ module("Unit | Service | chat-channel-list-preferences", function (hooks) {
 
   test("rolls back a failed save", async function (assert) {
     const currentUser = logIn(this.owner);
-    currentUser.set("user_option.chat_channel_list_filter", "all");
+    currentUser.set("user_option.chat_channel_list_filter", "mentions");
     pretender.put("/u/eviltrout.json", () => {
       return response(422, { errors: ["Unable to save"] });
     });
@@ -349,18 +442,24 @@ module("Unit | Service | chat-channel-list-preferences", function (hooks) {
       "service:chat-channel-list-preferences"
     );
 
+    preferences.showAllChannels("channels");
+
     assert.false(
       await preferences.setFilter("channels", CHAT_CHANNEL_LIST_FILTERS.UNREAD),
       "the failed request is reported"
     );
+    assert.true(
+      preferences.isFilterBypassedFor("channels"),
+      "the temporary override is restored after failure"
+    );
     assert.strictEqual(
       preferences.filterFor("channels"),
-      "all",
+      "mentions",
       "the service value is restored"
     );
     assert.strictEqual(
       currentUser.user_option.chat_channel_list_filter,
-      "all",
+      "mentions",
       "the user option is restored"
     );
     assert.false(

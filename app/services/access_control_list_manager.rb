@@ -19,6 +19,7 @@ class AccessControlListManager
 
   model :previous_permissions, optional: true
   model :flattened_acl_with_mandatory, optional: true
+  policy :has_valid_permissions
   policy :has_no_banned_acl
   policy :has_at_least_one_acl
 
@@ -45,6 +46,11 @@ class AccessControlListManager
 
   def fetch_flattened_acl_with_mandatory(params:)
     AccessControlList.inject_mandatory_acl(params.flattened_acl, params.target)
+  end
+
+  def has_valid_permissions(params:, flattened_acl_with_mandatory:)
+    valid_permissions = params.target.class.const_get(:ACL_PERMISSIONS).values
+    flattened_acl_with_mandatory.all? { |acl| valid_permissions.include?(acl[:permission].to_s) }
   end
 
   def has_no_banned_acl(params:, flattened_acl_with_mandatory:)

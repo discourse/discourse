@@ -700,6 +700,24 @@ RSpec.describe RemoteTheme do
     end
   end
 
+  describe "version validations" do
+    it "accepts -latest versions" do
+      remote = RemoteTheme.new(minimum_discourse_version: "2026.8.0-latest")
+      remote.validate
+      expect(remote.errors[:minimum_discourse_version]).to be_empty
+
+      remote = RemoteTheme.new(maximum_discourse_version: "2026.8.0-latest.1")
+      remote.validate
+      expect(remote.errors[:maximum_discourse_version]).to be_empty
+    end
+
+    it "rejects malformed versions" do
+      remote = RemoteTheme.new(minimum_discourse_version: "2026.8.0-nightly")
+      remote.validate
+      expect(remote.errors[:minimum_discourse_version]).to be_present
+    end
+  end
+
   describe ".extract_theme_info" do
     let(:importer) { mock }
 

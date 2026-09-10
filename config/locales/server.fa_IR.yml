@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  mcp:
+    oauth:
+      deny: "رد کردن"
+      approve: "اجازه دادن"
   llms_txt:
     sections:
       optional: "اختیاری"

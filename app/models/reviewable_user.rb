@@ -49,7 +49,7 @@ class ReviewableUser < Reviewable
     end
 
     if status == "pending" && target&.uploaded_avatar_id.present?
-      build_action(actions, :remove_avatar, icon: "user-xmark")
+      build_action(actions, :remove_avatar, icon: "user-xmark", secondary: true)
     end
 
     if guardian.can_approve?(target)

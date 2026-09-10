@@ -234,7 +234,6 @@ gem "landlock", require: false
 
 gem "sshkey", require: false
 
-gem "rchardet", require: false
 gem "lz4-ruby", require: false, platform: :ruby
 
 gem "sanitize"

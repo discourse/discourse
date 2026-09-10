@@ -23,22 +23,6 @@ module DiscourseVips
     )
   end
 
-  def self.svg_dimensions(input_path:, timeout:)
-    Client.call(["svg-dimensions", input_path], operation: :upload_svg_dimensions, timeout:)
-  end
-
-  def self.animated?(input_path:, timeout:)
-    Client.call(["animated", input_path], operation: :upload_animation_probe, timeout:)
-  end
-
-  def self.svg_to_png(input_path:, output_path:, timeout:)
-    Client.call(
-      ["svg-to-png", input_path, output_path],
-      operation: :topic_og_asset_render,
-      timeout:,
-    )
-  end
-
   def self.topic_og_render(input_path:, output_path:, timeout:)
     Client.call(
       ["topic-og-render", input_path, output_path],

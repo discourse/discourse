@@ -1,3 +1,4 @@
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import {
   QUALITY_HIGH,
   QUALITY_MAXIMUM,
@@ -114,9 +115,8 @@ export async function applyVideoQuality(
       }
       Object.assign(parameters.encodings[0], encoding);
       await sender.setParameters(parameters);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to apply video quality", error);
+    } catch {
+      voiceLog.warn("[voice] failed to apply video quality");
     }
   }
 }
@@ -136,9 +136,8 @@ export async function applyVoiceQuality(senders, tier = QUALITY_STANDARD) {
         delete parameters.encodings[0].maxBitrate;
       }
       await sender.setParameters(parameters);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] failed to apply voice quality", error);
+    } catch {
+      voiceLog.warn("[voice] failed to apply voice quality");
     }
   }
 }
@@ -157,8 +156,7 @@ export async function applyScreenAudioQuality(sender) {
     }
     parameters.encodings[0].maxBitrate = 128_000;
     await sender.setParameters(parameters);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn("[voice] failed to apply screen audio quality", error);
+  } catch {
+    voiceLog.warn("[voice] failed to apply screen audio quality");
   }
 }

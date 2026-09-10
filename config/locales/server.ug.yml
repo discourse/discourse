@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ug:
+  mcp:
+    oauth:
+      deny: "رەت قىل"
+      approve: "دەلىللە"
   llms_txt:
     sections:
       optional: "تاللاشچان"
@@ -4450,6 +4454,10 @@ ug:
   performance_report:
     initial_post_raw: بۇ تېمىدا تور بېكىتىڭىزنىڭ كۈندىلىك ئۈنۈم دوكلاتى بار.
     initial_topic_title: تور بېكەت ئۈنۈم دوكلاتى
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "بۇ CSV ھۆججەتتىكى تۈر بەك كۆپ. تۈر سانى %{count} ئاشمىغان CSV ھۆججىتىنى تەمىنلەڭ."
+      other: "بۇ CSV ھۆججەتتىكى تۈر بەك كۆپ. تۈر سانى %{count} ئاشمىغان CSV ھۆججىتىنى تەمىنلەڭ."
   tags:
     title: "بەلگە"
     restricted_tag_disallowed: '«%{tag}» بەلگىنى قوللىنالمايسىز.'

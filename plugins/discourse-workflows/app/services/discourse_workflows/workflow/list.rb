@@ -53,7 +53,7 @@ module DiscourseWorkflows
       scope =
         DiscourseWorkflows::Workflow
           .filtered(
-            name: params.filter,
+            filter: params.filter,
             trigger_type: params.trigger_type,
             exclude_id: params.exclude_id,
             tags: params.tag_names,
@@ -85,7 +85,7 @@ module DiscourseWorkflows
 
     def fetch_total_rows(params:)
       DiscourseWorkflows::Workflow.filtered(
-        name: params.filter,
+        filter: params.filter,
         trigger_type: params.trigger_type,
         exclude_id: params.exclude_id,
         tags: params.tag_names,

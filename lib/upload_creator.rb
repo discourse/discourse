@@ -196,25 +196,18 @@ class UploadCreator
           # consistently whether it's running from our docker container or not
           begin
             w, h =
-              if GlobalSetting.enable_vips_image_processing
-                DiscourseVips.svg_dimensions(
-                  input_path: @file.path,
+              ImageMagick
+                .identify(
+                  "-ping",
+                  "-format",
+                  "%w %h",
+                  "MSVG:#{@file.path}",
+                  operation: :upload_svg_dimensions,
+                  read: [@file.path],
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
-              else
-                ImageMagick
-                  .identify(
-                    "-ping",
-                    "-format",
-                    "%w %h",
-                    "MSVG:#{@file.path}",
-                    operation: :upload_svg_dimensions,
-                    read: [@file.path],
-                    timeout: Upload::MAX_IDENTIFY_SECONDS,
-                  )
-                  .split(" ")
-                  .map(&:to_i)
-              end
+                .split(" ")
+                .map(&:to_i)
           rescue StandardError
             # use default 0, 0
           end
@@ -703,10 +696,8 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          begin
-            if GlobalSetting.enable_vips_image_processing
-              DiscourseVips.animated?(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
-            else
+          frames =
+            begin
               ImageMagick.identify(
                 "-ping",
                 "-format",
@@ -715,11 +706,12 @@ class UploadCreator
                 operation: :upload_animation_probe,
                 read: [@file.path],
                 timeout: Upload::MAX_IDENTIFY_SECONDS,
-              ).to_i > 1
+              ).to_i
+            rescue StandardError
+              1
             end
-          rescue StandardError
-            false
-          end
+
+          frames > 1
         else
           false
         end

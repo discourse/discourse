@@ -115,7 +115,6 @@ fa_IR:
         process_started: "روند حذف کانال شروع شده است. این پنجره به زودی بسته می شود، دیگر کانال حذف شده را در هیچ کجا نخواهید دید."
       channels_list_popup:
         browse: "مرور کانال‌ها"
-        create: "کانال جدید"
       close: "بستن"
       remove: "پاک کردن"
       collapse: "جمع کردن کشو چت"
@@ -130,8 +129,6 @@ fa_IR:
       muted: "خاموش"
       joined: "ملحق شده"
       empty_state:
-        direct_message_cta: "شروع گفتگوی شخصی"
-        direct_message: "شما همچنین می‌توانید یک گفتگو شخصی را با یک یا چند کاربر شروع کنید."
         title: "هیچ کانالی پیدا نشد"
         my_threads: "شما هنوز هیچ موضوعی ندارید. موضوعاتی که در آنها شرکت می کنید در اینجا نمایش داده می شوند."
       email_frequency:
@@ -310,9 +307,13 @@ fa_IR:
           relevance: "ارتباطات"
           latest: "آخرین"
       direct_messages:
-        new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
+      channel_list:
+        options:
+          filter: "فیلتر"
+        filter:
+          mentions: "اشاره‌ها"
       incoming_webhooks:
         back: "بازگشت"
         channel_placeholder: "یک کانال را انتخاب کنید"
@@ -431,8 +432,6 @@ fa_IR:
         chat:
           title: گفتگو
     sidebar:
-      start_new_dm:
-        title: ایجاد گفتگوی شخصی
       panels:
         chat:
           label: "گفتگو"

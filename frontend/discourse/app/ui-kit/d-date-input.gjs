@@ -79,13 +79,8 @@ export default class DDateInput extends Component {
       this._picker.setDate(parsedDate, true);
     }
 
-    if (this._picker && this.relativeDate) {
-      const parsedRelativeDate =
-        this.relativeDate instanceof moment
-          ? this.relativeDate
-          : moment(this.relativeDate);
-
-      this._picker.setMinDate(parsedRelativeDate, true);
+    if (this._picker) {
+      this._picker.setMinDate(this.relativeDate);
     }
 
     if (this._picker && !this.date) {
@@ -122,7 +117,12 @@ export default class DDateInput extends Component {
       defaultOptions.minDate = moment(this.relativeDate).toDate();
     }
 
-    return new Pikaday({ ...defaultOptions, ...this._opts() });
+    const picker = new Pikaday({ ...defaultOptions, ...this._opts() });
+    const pikadaySetMinDate = picker.setMinDate.bind(picker);
+    picker.setMinDate = (date) =>
+      pikadaySetMinDate(date ? moment(date).toDate() : null);
+
+    return picker;
   }
 
   _loadNativePicker(container) {
@@ -139,11 +139,15 @@ export default class DDateInput extends Component {
       picker.value = date ? moment(date).format("YYYY-MM-DD") : null;
     };
     picker.setMinDate = (date) => {
-      picker.min = date;
+      picker.min = date ? moment(date).format("YYYY-MM-DD") : "";
     };
 
     if (this.date) {
       picker.setDate(this.date);
+    }
+
+    if (this.relativeDate) {
+      picker.setMinDate(this.relativeDate);
     }
 
     return Promise.resolve(picker);

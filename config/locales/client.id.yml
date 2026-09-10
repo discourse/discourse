@@ -1131,6 +1131,12 @@ id:
       ignored_users: "Diabaikan"
       tracked_topics_link: "Tunjukkan"
       apps: "Aplikasi"
+      mcp_authorizations:
+        details: "Detil"
+        never: "Tidak pernah"
+        status: "Status"
+        statuses:
+          active: "Aktif"
       revoke_access: "Cabut Akses"
       undo_revoke_access: "Batalkan Cabut Akses"
       api_approved: "Disetujui:"
@@ -2462,6 +2468,52 @@ id:
           impact_role_moderators: "Moderator"
           impact_role_staff: "Staf"
       config:
+        mcp:
+          tabs:
+            access: "Mengakses"
+            activity: "Activity"
+          overview:
+            status: "Status"
+          access:
+            title: "Mengakses"
+            groups: "Grup"
+            actions: "Aksi"
+            edit: "Ubah"
+            delete: "Hapus"
+          primitives:
+            group_by_options:
+              kind: "Tipe"
+            kind: "Tipe"
+          clients:
+            actions: "Aksi"
+          authorizations:
+            user: "Pengguna"
+            status: "Status"
+            actions: "Aksi"
+          activity:
+            time: "Waktu"
+            user: "Pengguna"
+            duration: "Durasi"
+          values:
+            server_status:
+              disabled: "Dinonaktifkan"
+            client_trust:
+              approved: "Disetujui"
+            authorization_status:
+              active: "Aktif"
+            activity_outcome:
+              success: "Sukses"
+              error: "Gangguan"
+            primitive_state:
+              enabled: "Diaktifkan"
+              disabled: "Dinonaktifkan"
+            primitive_kind:
+              all: "Semua tipe"
+            filter:
+              all: "Semua"
+          never: "Tidak pernah"
+          actions:
+            revoke: "Cabut"
         login:
           sub_pages:
             common_settings:

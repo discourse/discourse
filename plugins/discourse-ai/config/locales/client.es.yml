@@ -19,6 +19,14 @@ es:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Preguntar a la IA"
+        ask_ai:
+          title: "Preguntar a la IA"
+          date: "Fecha"
+          outcomes:
+            failed: "Falló"
         emotion:
           title: "Emoción"
         reports:

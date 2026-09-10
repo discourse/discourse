@@ -19,6 +19,14 @@ nl:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "AI vragen"
+        ask_ai:
+          title: "AI vragen"
+          date: "Datum"
+          outcomes:
+            failed: "Mislukt"
         emotion:
           title: "Emotie"
         reports:

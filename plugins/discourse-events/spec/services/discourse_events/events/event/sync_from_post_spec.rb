@@ -123,7 +123,11 @@ RSpec.describe DiscourseEvents::Events::Event::SyncFromPost do
         }
       end
 
-      it { is_expected.to be_a_failure }
+      it { is_expected.to fail_with_an_invalid_model(:event) }
+
+      it "exposes the invalid event and its errors" do
+        expect(result[:event].errors[:max_attendees]).to be_present
+      end
 
       it "does not persist the event" do
         expect { result }.not_to change { DiscourseEvents::Events::Event.count }

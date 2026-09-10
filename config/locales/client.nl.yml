@@ -1736,6 +1736,16 @@ nl:
       tracked_topics_link: "Weergeven"
       automatically_unpin_topics: "Topics automatisch losmaken als ik de onderkant bereik"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Bron"
+        scopes: "Scopes"
+        details: "Details"
+        last_used: "Laatst gebruikt"
+        never: "Nooit"
+        status: "Status"
+        statuses:
+          active: "Actief"
+          revoked: "Ingetrokken"
       revoke_access: "Toegang intrekken"
       undo_revoke_access: "Toegang intrekken ongedaan maken"
       api_approved: "Goedgekeurd:"
@@ -5889,6 +5899,76 @@ nl:
         developer:
           title: "Ontwikkelaar"
           header_description: "Ontwikkelaarsinstellingen om de veilige modus en andere geavanceerde functies te beheren"
+        mcp:
+          title: "MCP-server"
+          tabs:
+            access: "Toegang"
+            activity: "Activiteit"
+          overview:
+            status: "Status"
+            tools: "Tools"
+          access:
+            title: "Toegang"
+            group: "Groep"
+            groups: "Groepen"
+            actions: "Acties"
+            edit: "Bewerken"
+            delete: "Verwijderen"
+          primitives:
+            group_by: "Groeperen op"
+            group_by_options:
+              scope: "Bereik"
+              provider: "Provider"
+              kind: "Type"
+            provider: "Provider"
+            kind: "Type"
+            scope: "Bereik"
+            state: "Staat"
+            scopes: "Scopes"
+          clients:
+            actions: "Acties"
+            block: "Blokkeren"
+            use_preset: "Instellen"
+            presets:
+              custom: "Aangepast"
+          authorizations:
+            user: "Gebruiker"
+            scopes: "Toegekende bereiken"
+            last_used: "Laatst gebruikt"
+            status: "Status"
+            actions: "Acties"
+          activity:
+            rate_limits: "Frequentielimieten"
+            outcome: "Resultaat"
+            time: "Tijd"
+            user: "Gebruiker"
+            duration: "Duur"
+          values:
+            server_status:
+              disabled: "Uitgeschakeld"
+            client_trust:
+              approved: "Goedgekeurd"
+            authorization_status:
+              active: "Actief"
+              revoked: "Ingetrokken"
+            activity_outcome:
+              success: "Succes"
+              error: "Fout"
+            primitive_state:
+              enabled: "Ingeschakeld"
+              disabled: "Uitgeschakeld"
+            primitive_kind:
+              all: "Alle typen"
+              tool: "Tool"
+              resource: "Bron"
+            primitive_risk:
+              read: "Alleen-lezen"
+              moderation: "Moderatie"
+            filter:
+              all: "Alles"
+          never: "Nooit"
+          actions:
+            revoke: "Intrekken"
         experimental:
           title: "Experimenteel"
           header_description: "Schakel experimentele functies voor je site in of uit. De meeste hiervan kunnen op groepsbasis worden beheerd."

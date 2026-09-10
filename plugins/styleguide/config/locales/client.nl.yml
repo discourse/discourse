@@ -32,6 +32,10 @@ nl:
           title: "Datum-/tijdinvoer"
         menus:
           title: "Menu's"
+        context_menu:
+          actions:
+            duplicate: "Dupliceren"
+            delete: "Verwijderen"
         multi_select:
           title: "Meervoudige selectie"
         toasts:

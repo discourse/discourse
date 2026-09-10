@@ -64,7 +64,8 @@ describe Jobs::ExportCsvFile do
                   files << entry.name
 
                   input_stream = entry.get_input_stream
-                  parsed_csv = CSV.parse(input_stream.read)
+                  content = input_stream.read.force_encoding(Encoding::UTF_8)
+                  parsed_csv = CSV.parse(content.delete_prefix(Encodings::BOM))
 
                   expect(parsed_csv[0]).to eq(%w[username status first_answered_at last_updated_at])
                   invitee_1 = post_event.invitees.find_by(user_id: user_1.id)
