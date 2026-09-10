@@ -22,7 +22,7 @@ module Boards
     end
 
     def can_view_card(guardian:, card:)
-      guardian.can_view_boards_card?(card)
+      guardian.can_view_card?(card)
     end
 
     def create_view_history(guardian:, card:)

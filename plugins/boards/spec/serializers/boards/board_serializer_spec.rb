@@ -136,4 +136,48 @@ RSpec.describe Boards::BoardSerializer do
     expect(default_payload).to include(acl: nil)
     expect(acl_payload[:acl]).to eq(AccessControlList.where(target: board).flattened_list)
   end
+
+  it "gives archived board managers only the unarchive capability and reports slug reuse" do
+    board =
+      Fabricate(
+        :boards_board,
+        slug: "archived-board",
+        archived: true,
+        original_slug: "roadmap",
+        additional_manage_groups: [manage_group],
+      )
+    Fabricate(:boards_board, slug: "roadmap")
+
+    payload = described_class.new(board, root: false, scope: manager.guardian).as_json
+
+    expect(payload).to include(
+      archived: true,
+      old_slug_used: true,
+      can_write: false,
+      can_manage: false,
+      can_archive: false,
+      can_unarchive: true,
+    )
+  end
+
+  it "does not offer unarchiving to a board editor" do
+    board =
+      Fabricate(:boards_board, slug: "archived-board", archived: true, original_slug: "unused")
+    Fabricate(
+      :access_control_list_with_groups,
+      target: board,
+      permission: "edit",
+      groups: [write_group],
+    )
+
+    payload = described_class.new(board, root: false, scope: writer.guardian).as_json
+
+    expect(payload).to include(
+      archived: true,
+      old_slug_used: false,
+      can_write: false,
+      can_manage: false,
+      can_unarchive: false,
+    )
+  end
 end

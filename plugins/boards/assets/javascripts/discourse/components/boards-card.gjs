@@ -199,7 +199,7 @@ export default class BoardsCard extends Component {
   }
 
   get canShowActions() {
-    return this.args.canWrite;
+    return this.args.board.canWrite;
   }
 
   get showAssignButton() {
@@ -212,9 +212,10 @@ export default class BoardsCard extends Component {
 
   get canAssign() {
     return (
+      !this.args.board.archived &&
       this.siteSettings.assign_enabled &&
       this.currentUser?.can_assign &&
-      (this.isTopicCard || this.args.canWrite)
+      (this.isTopicCard || this.args.board.canWrite)
     );
   }
 
@@ -264,7 +265,7 @@ export default class BoardsCard extends Component {
       .show(BoardsCardDetailModal, {
         model: {
           card: this.args.card,
-          canWrite: this.args.canWrite,
+          board: this.args.board,
           onUpdateCard: this.args.onUpdateCard,
         },
       })
@@ -388,7 +389,7 @@ export default class BoardsCard extends Component {
 
   @action
   dragStart(event) {
-    if (!this.args.canWrite) {
+    if (!this.args.board.canWrite) {
       event.preventDefault();
       return;
     }
@@ -522,7 +523,7 @@ export default class BoardsCard extends Component {
       }}
       data-card-id={{@card.id}}
       data-topic-id={{@card.topic_id}}
-      draggable={{if @canWrite "true" "false"}}
+      draggable={{@board.canWrite}}
       role="button"
       tabindex="0"
       {{on "dragstart" this.dragStart}}

@@ -35,6 +35,14 @@ module Boards
       )
     end
 
+    def self.publish_board_archived!(board, client_id:)
+      publish!(board, { type: "board_archived", client_id: client_id })
+    end
+
+    def self.publish_board_unarchived!(board, client_id:)
+      publish!(board, { type: "board_unarchived", client_id: client_id })
+    end
+
     def self.publish_topic_memberships_changed!(topic, client_id:, refresh_stream: false)
       data = { reload_topic: true, client_id: }
       data[:refresh_stream] = true if refresh_stream
@@ -53,6 +61,8 @@ module Boards
     private_class_method :publish_card_event!
 
     def self.publish!(board, data)
+      return if board.archived? && data[:type] != "board_archived"
+
       group_ids = board.permission_acl.group_ids_with_any_permission(%w[view edit manage])
       opts = {}
       # Anonymous viewers belong to no group, so a board readable by anonymous

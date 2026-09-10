@@ -406,6 +406,7 @@ en:
       tooltip: "Notification level: %{level}"
 
     back_button: "Back"
+    confirm_button: "Confirm"
 
     welcome_banner:
       header:

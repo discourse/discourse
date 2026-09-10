@@ -30,7 +30,7 @@ module Boards
     end
 
     def can_manage(guardian:, board:)
-      guardian.can_manage_boards_board?(board)
+      guardian.can_manage_board?(board)
     end
 
     def fetch_column(board:, params:)

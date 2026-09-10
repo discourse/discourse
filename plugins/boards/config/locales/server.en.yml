@@ -8,6 +8,7 @@ en:
       "Boards::Board_user_will_lose_permission_on_create": "If you create this board with these permissions, you will not be able to manage it. Continue?"
   boards:
     errors:
+      slug_unavailable: "That board slug is already in use. Please choose another slug."
       board_not_found: "Board not found"
       board_read_forbidden: "You do not have permission to view this board"
       board_write_forbidden: "You do not have permission to modify this board"

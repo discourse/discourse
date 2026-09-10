@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -27,6 +27,24 @@ export default class BoardsPage extends Component {
   @service modal;
   @service router;
   @service toasts;
+
+  get statusOptions() {
+    return {
+      status: [
+        { value: "all", label: i18n("boards.status.all") },
+        {
+          value: "open",
+          label: i18n("boards.status.open"),
+          filterFn: (board) => !board.archived,
+        },
+        {
+          value: "archived",
+          label: i18n("boards.status.archived"),
+          filterFn: (board) => board.archived,
+        },
+      ],
+    };
+  }
 
   @action
   openNewBoardModal() {
@@ -85,6 +103,9 @@ export default class BoardsPage extends Component {
 
       <DFilterControls
         @array={{@boards}}
+        @defaultDropdownValue={{hash status="open"}}
+        @dropdownFilterQueryParams={{hash status="status"}}
+        @dropdownOptions={{this.statusOptions}}
         @inputPlaceholder={{i18n "boards.filter_boards"}}
         @minItemsForFilter={{1}}
         @noResultsMessage={{i18n "boards.filter_boards_no_results"}}

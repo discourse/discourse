@@ -22,6 +22,7 @@ import discourseLater from "discourse/lib/later";
 import DiscourseURL from "discourse/lib/url";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
@@ -41,6 +42,7 @@ import Board from "../models/board";
 import Card from "../models/card";
 import Column from "../models/column";
 import BoardsColumn from "./boards-column";
+import BoardsArchive from "./modal/boards-archive";
 import BoardsBoardSettings from "./modal/boards-board-settings";
 import BoardsCardDetailModal from "./modal/boards-card-detail";
 import BoardsColumnSettings from "./modal/boards-column-settings";
@@ -186,7 +188,7 @@ export default class BoardsBoardViewer extends Component {
       });
     }
 
-    if (this.args.openBoardSettings && this.canManage) {
+    if (this.args.openBoardSettings && this.board.canManage) {
       schedule("afterRender", () => {
         if (this.isDestroying) {
           return;
@@ -201,14 +203,6 @@ export default class BoardsBoardViewer extends Component {
     this._clearDropHighlight();
     this._cleanupPromotion();
     this.#stopHorizontalAutoScroll();
-  }
-
-  get canWrite() {
-    return this.board.can_write;
-  }
-
-  get canManage() {
-    return this.board.can_manage;
   }
 
   get boardCategories() {
@@ -250,6 +244,10 @@ export default class BoardsBoardViewer extends Component {
     }
 
     switch (data.type) {
+      case "board_archived":
+      case "board_unarchived":
+        reload();
+        break;
       case "card_created":
         this.#handleCardCreated(data.card);
         break;
@@ -329,7 +327,7 @@ export default class BoardsBoardViewer extends Component {
 
   @action
   async onDrop(cardId, toColumnId, afterCardId, fromColumnId) {
-    if (!fromColumnId) {
+    if (!this.board.canWrite || !fromColumnId) {
       return;
     }
 
@@ -799,6 +797,29 @@ export default class BoardsBoardViewer extends Component {
   // Board settings actions
 
   @action
+  openArchiveModal(closeMenu) {
+    closeMenu();
+    this.modal.show(BoardsArchive, {
+      model: {
+        board: this.board,
+        onSuccess: async (board) => {
+          this.toasts.success({
+            data: {
+              message: board.archived
+                ? i18n("boards.board.archived_successfully")
+                : i18n("boards.board.unarchived_successfully"),
+            },
+            duration: "short",
+          });
+          Object.assign(this.board, board);
+          await this.#handleBoardUpdated();
+          DiscourseURL.replaceState(boardsBoardUrl(this.board));
+        },
+      },
+    });
+  }
+
+  @action
   openBoardSettings(closeMenu) {
     closeMenu();
     this.#openBoardSettingsModal();
@@ -1246,7 +1267,7 @@ export default class BoardsBoardViewer extends Component {
             DiscourseURL.routeTo(url);
           },
         }
-      : { card, canWrite: this.canWrite, onUpdateCard: this.onUpdateCard };
+      : { card, board: this.board, onUpdateCard: this.onUpdateCard };
 
     this.modal.show(ModalComponent, { model }).finally(() => {
       if (!navigatedAway && !this.isDestroying) {
@@ -1388,9 +1409,19 @@ export default class BoardsBoardViewer extends Component {
       <div class="discourse-boards-board-viewer__header">
         <div class="discourse-boards-board-viewer__title-wrapper">
           <BackButton @label="boards.board.all_boards" @route="boards" />
-          <h2
-            class="discourse-boards-board-viewer__title"
-          >{{this.board.fancyTitle}}</h2>
+          <h2 class="discourse-boards-board-viewer__title">
+            {{#if this.board.archived}}
+              <DTooltip>
+                <:trigger>
+                  {{dIcon "box-archive"}}
+                </:trigger>
+                <:content>
+                  <span>{{i18n "boards.board.archived_tooltip"}}</span>
+                </:content>
+              </DTooltip>
+            {{/if}}
+            {{this.board.fancyTitle}}
+          </h2>
 
           <div class="discourse-boards-board-viewer__metadata">
             {{#if this.hasBoardFilters}}
@@ -1417,43 +1448,67 @@ export default class BoardsBoardViewer extends Component {
         </div>
 
         <div class="discourse-boards-board-viewer__controls">
-          <DMenu
-            @icon="ellipsis"
-            @identifier="boards-board-controls"
-            @title="boards.board.controls"
-            @triggerClass="btn-flat"
-          >
-            <:content as |args|>
-              <DDropdownMenu as |dropdown|>
-                {{#if this.canManage}}
-                  <dropdown.item data-identifier="add-column">
-                    <DButton
-                      class="btn-transparent"
-                      @action={{fn this.openAddColumnModal args.close}}
-                      @icon="plus"
-                      @label="boards.board.add_column"
-                    />
-                  </dropdown.item>
-                  <dropdown.item data-identifier="board-settings">
-                    <DButton
-                      class="btn-transparent"
-                      @action={{fn this.openBoardSettings args.close}}
-                      @icon="gear"
-                      @label="boards.board.board_settings"
-                    />
-                  </dropdown.item>
-                  <dropdown.item data-identifier="delete-board">
-                    <DButton
-                      class="btn-transparent btn-danger"
-                      @action={{fn this.deleteBoard args.close}}
-                      @icon="trash-can"
-                      @label="boards.board.delete_board"
-                    />
-                  </dropdown.item>
-                {{/if}}
-              </DDropdownMenu>
-            </:content>
-          </DMenu>
+          {{#if
+            (or
+              this.board.canManage
+              this.board.can_archive
+              this.board.can_unarchive
+            )
+          }}
+            <DMenu
+              @icon="ellipsis"
+              @identifier="boards-board-controls"
+              @title="boards.board.controls"
+              @triggerClass="btn-flat"
+            >
+              <:content as |args|>
+                <DDropdownMenu as |dropdown|>
+                  {{#if this.board.canManage}}
+                    <dropdown.item data-identifier="add-column">
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openAddColumnModal args.close}}
+                        @icon="plus"
+                        @label="boards.board.add_column"
+                      />
+                    </dropdown.item>
+                    <dropdown.item data-identifier="board-settings">
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openBoardSettings args.close}}
+                        @icon="gear"
+                        @label="boards.board.board_settings"
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                  {{#if (or this.board.can_archive this.board.can_unarchive)}}
+                    <dropdown.item data-identifier="archive-board">
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openArchiveModal args.close}}
+                        @icon="box-archive"
+                        @label={{if
+                          this.board.archived
+                          "boards.board.unarchive_board_menu"
+                          "boards.board.archive_board"
+                        }}
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                  {{#if this.board.canManage}}
+                    <dropdown.item data-identifier="delete-board">
+                      <DButton
+                        class="btn-transparent btn-danger"
+                        @action={{fn this.deleteBoard args.close}}
+                        @icon="trash-can"
+                        @label="boards.board.delete_board"
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                </DDropdownMenu>
+              </:content>
+            </DMenu>
+          {{/if}}
           {{#if this.fullscreen}}
             <DButton
               class="btn-flat discourse-boards-board-viewer__exit-fullscreen"
@@ -1485,8 +1540,6 @@ export default class BoardsBoardViewer extends Component {
               @allColumns={{this.columns}}
               @allSameCategory={{this.allSameCategory}}
               @board={{this.board}}
-              @canManage={{this.canManage}}
-              @canWrite={{this.canWrite}}
               @column={{column}}
               @dragData={{this.dragData}}
               @dropHighlightCardId={{this.dropHighlightCardId}}
@@ -1506,7 +1559,7 @@ export default class BoardsBoardViewer extends Component {
               @onUpdateCard={{this.onUpdateCard}}
             />
           {{/each}}
-          {{#if this.canManage}}
+          {{#if this.board.canManage}}
             <button
               class="discourse-boards-board-container__add-column"
               title={{i18n "boards.board.add_column"}}
@@ -1523,8 +1576,8 @@ export default class BoardsBoardViewer extends Component {
           <div class="discourse-boards-board-viewer__empty-column">
             {{dIcon "table-columns"}}
             <h3>{{i18n "boards.board.empty_board"}}</h3>
-            <p>{{i18n "boards.board.empty_board_cta"}}</p>
-            {{#if this.canManage}}
+            {{#if this.board.canManage}}
+              <p>{{i18n "boards.board.empty_board_cta"}}</p>
               <DButton
                 class="btn-primary"
                 @action={{this.openAddColumnModal}}

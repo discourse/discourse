@@ -31,6 +31,19 @@ RSpec.describe Jobs::Boards::CardPostProcess do
   end
 
   describe "#execute" do
+    context "when the board is archived" do
+      subject(:result) { described_class.new.execute(card_id: card.id, title: card.title) }
+
+      let(:messages) { MessageBus.track_publish("/boards/#{board.id}") { result } }
+
+      it "leaves archived cards untouched without publishing updates" do
+        board.update!(archived: true)
+
+        expect(messages).to be_empty
+        expect(card.reload.inline_onebox_data).to be_nil
+      end
+    end
+
     let(:onebox_data) do
       {
         "url" => card.title,
