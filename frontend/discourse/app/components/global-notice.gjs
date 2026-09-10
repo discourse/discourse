@@ -119,8 +119,6 @@ export default class GlobalNotice extends Component {
         })
       );
     } else if (this.site.get("isReadOnly")) {
-      // Operational readonly (failover, maintenance, user-triggered) takes
-      // display precedence over site_archived.
       notices.push(
         Notice.create({
           text: this.currentUser

@@ -332,8 +332,7 @@ module Discourse
   end
 
   # Raised when the site is archived (site_archived setting) and a write is
-  # attempted from an action not declared with `allow_when_archived`. Distinct
-  # from ReadOnly so operational read-only precedence is preserved.
+  # attempted from an action not declared with `allow_when_archived`.
   class SiteArchived < StandardError
   end
 
