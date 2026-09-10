@@ -57,13 +57,16 @@ module Reports::SiteTraffic
               (COALESCE(MAX(lc.logged_in), 0) + COALESCE(MAX(lc.anonymous), 0)) AS page_view_likely_crawler,
               SUM(CASE WHEN ar.req_type = :page_view_crawler THEN ar.count ELSE 0 END) AS page_view_crawler,
               SUM(CASE WHEN ar.req_type = :page_view_embed THEN ar.count ELSE 0 END) AS page_view_embed,
-              SUM(
-                CASE WHEN ar.req_type = :page_view_anon THEN ar.count
-                    WHEN ar.req_type = :page_view_logged_in THEN ar.count
-                    WHEN ar.req_type = :page_view_anon_browser THEN -ar.count
-                    WHEN ar.req_type = :page_view_logged_in_browser THEN -ar.count
-                    ELSE 0
-                END
+              GREATEST(
+                0,
+                SUM(
+                  CASE WHEN ar.req_type = :page_view_anon THEN ar.count
+                      WHEN ar.req_type = :page_view_logged_in THEN ar.count
+                      WHEN ar.req_type = :page_view_anon_browser THEN -ar.count
+                      WHEN ar.req_type = :page_view_logged_in_browser THEN -ar.count
+                      ELSE 0
+                  END
+                )
               ) AS page_view_other
             FROM application_requests ar
             LEFT JOIN likely_crawlers lc ON lc.date = ar.date
