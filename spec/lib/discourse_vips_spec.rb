@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe DiscourseVips do
   describe ".version" do
     it "returns the libvips version" do
@@ -30,6 +32,85 @@ RSpec.describe DiscourseVips do
 
     it "normalizes floating-point grayscale JXL color values" do
       expect(dominant_color("dominant-color-float.jxl")).to eq("808080")
+    end
+  end
+
+  describe ".topic_og_render" do
+    it "preserves the rendered size of short title text" do
+      Dir.mktmpdir do |directory|
+        rendered_titles =
+          [false, true].map do |marked_title|
+            input_path = File.join(directory, "title-#{marked_title}.svg")
+            output_path = File.join(directory, "title-#{marked_title}.png")
+            marker = marked_title ? 'class="topic-og-title"' : ""
+            File.write(input_path, <<~SVG)
+              <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+                <text #{marker} x="80" y="190" font-family="sans-serif" font-size="62" font-weight="700">Hello world</text>
+              </svg>
+            SVG
+
+            described_class.topic_og_render(input_path:, output_path:, timeout: 5)
+
+            ChunkyPNG::Image.from_file(output_path).crop(80, 100, 1040, 100).pixels
+          end
+
+        expect(rendered_titles.first.any? { |pixel| ChunkyPNG::Color.a(pixel).positive? }).to eq(
+          true,
+        )
+        expect(rendered_titles.last).to eq(rendered_titles.first)
+      end
+    end
+
+    it "renders adjacent image assets on an 8-bit transparent canvas" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "og.svg")
+        output_path = File.join(directory, "og.png")
+        asset_path = File.join(directory, "logo.png")
+        ChunkyPNG::Image.new(10, 10, ChunkyPNG::Color.rgb(255, 0, 0)).save(asset_path)
+        File.write(input_path, <<~SVG)
+          <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+            <image href="#{asset_path}" width="100" height="100"/>
+          </svg>
+        SVG
+
+        described_class.topic_og_render(input_path:, output_path:, timeout: 5)
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png.width, png.height]).to eq([1200, 630])
+        expect(File.binread(output_path).getbyte(24)).to eq(8)
+        expect(png[50, 50]).to eq(ChunkyPNG::Color.rgb(255, 0, 0))
+        expect(ChunkyPNG::Color.a(png[200, 200])).to eq(0)
+      end
+    end
+
+    it "rejects malformed SVGs" do
+      file = file_from_contents('<svg width="1200" height="630">', "invalid.svg")
+
+      Dir.mktmpdir do |directory|
+        expect {
+          described_class.topic_og_render(
+            input_path: file.path,
+            output_path: File.join(directory, "output.png"),
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage)
+      end
+    end
+
+    it "preserves the SVG when the output points to the input file" do
+      svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"/>'
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "input.svg")
+        output_path = File.join(directory, "output.png")
+        File.write(input_path, svg)
+        File.link(input_path, output_path)
+
+        expect {
+          described_class.topic_og_render(input_path:, output_path:, timeout: 5)
+        }.to raise_error(DiscourseVips::Error, "SVG input and PNG output must be different files")
+        expect(File.read(input_path)).to eq(svg)
+      end
     end
   end
 

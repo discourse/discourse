@@ -23,6 +23,15 @@ module DiscourseVips
     )
   end
 
+  def self.topic_og_render(input_path:, output_path:, timeout:)
+    Client.call(
+      ["topic-og-render", input_path, output_path],
+      operation: :topic_og_render,
+      timeout:,
+      nice: 10,
+    )
+  end
+
   def self.before_fork
     Client.before_fork
   end
