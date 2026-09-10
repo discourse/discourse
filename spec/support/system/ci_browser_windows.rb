@@ -14,12 +14,31 @@ class CiBrowserWindows
     "gc" => %w[MinorGC MajorGC V8.GCScavenger V8.GCCompactor V8.GCFinalizeMC],
     "parse_html" => %w[ParseHTML],
   }.freeze
-  SAFE_EVENT_NAMES = CATEGORY_NAMES.values.flatten.to_h { |name| [name, name.freeze] }.freeze
+  TASK_EVENT_NAMES = %w[ThreadPool_RunTask ThreadControllerImpl::RunTask].freeze
+  TASK_SOURCES = {
+    "third_party/blink/renderer/bindings/core/v8/script_streamer.cc" => "script_streaming",
+    "third_party/blink/renderer/bindings/core/v8/script_decoder.cc" => "script_decoding",
+    "v8/src/maglev/maglev-concurrent-dispatcher.cc" => "maglev_compile",
+    "v8/src/baseline/baseline-batch-compiler.cc" => "baseline_compile",
+    "v8/src/compiler-dispatcher/optimizing-compile-dispatcher.cc" => "optimizing_compile",
+    "v8/src/heap/scavenger.cc" => "gc_scavenge",
+    "v8/src/heap/concurrent-marking.cc" => "gc_mark",
+    "cc/raster/categorized_worker_pool.cc" => "categorized_worker_pool",
+    "third_party/blink/renderer/core/script/html_parser_script_runner.cc" => "html_script_runner",
+    "third_party/blink/renderer/core/html/parser/html_document_parser.cc" => "html_parser",
+    "ipc/ipc_mojo_bootstrap.cc" => "ipc_mojo",
+  }.freeze
+  TASK_GROUPS = (TASK_SOURCES.values + ["other_task"]).freeze
+  SAFE_EVENT_NAMES =
+    (CATEGORY_NAMES.values.flatten + TASK_EVENT_NAMES).to_h { |name| [name, name.freeze] }.freeze
   SAFE_PHASES = %w[B E X M].to_h { |phase| [phase, phase.freeze] }.freeze
   TIMING_FIELDS = %w[ts dur tts tdur].each(&:freeze).freeze
   MAX_EVENT_ROWS = 200_000
   private_constant :WINDOWS,
                    :CATEGORY_NAMES,
+                   :TASK_EVENT_NAMES,
+                   :TASK_SOURCES,
+                   :TASK_GROUPS,
                    :SAFE_EVENT_NAMES,
                    :SAFE_PHASES,
                    :TIMING_FIELDS,
@@ -80,6 +99,11 @@ class CiBrowserWindows
       row["args"] = { "name" => name || "other" }
     else
       row["name"] = SAFE_EVENT_NAMES.fetch(event["name"], "other")
+      if TASK_EVENT_NAMES.include?(row["name"])
+        source = event.dig("args", "src_file")
+        source = source.sub(%r{\A(?:\.\.?/)+}, "") if source.is_a?(String)
+        row["task_origin"] = TASK_SOURCES.fetch(source, "other_task")
+      end
       TIMING_FIELDS.each { |key| row[key] = event[key] if finite_number?(event[key]) }
     end
     row
@@ -168,6 +192,11 @@ class CiBrowserWindows
       if process == "renderer"
         thread = thread_names[key] == "CrRendererMain" ? "main" : "helper"
         intervals["renderer_#{thread}"][key] << interval
+        if TASK_EVENT_NAMES.include?(event["name"])
+          origin = TASK_GROUPS.include?(event["task_origin"]) ? event["task_origin"] : "other_task"
+          intervals["renderer_#{thread}_tasks"][key] << interval
+          intervals["task_#{thread}_#{origin}"][key] << interval
+        end
       end
       CATEGORY_NAMES.each do |label, names|
         intervals["category_#{label}"][key] << interval if names.include?(event["name"])
@@ -184,6 +213,20 @@ class CiBrowserWindows
         %w[main helper].to_h { |label| [label, union_seconds(intervals["renderer_#{label}"])] },
       nonadditive_category_cpu_seconds:
         CATEGORY_NAMES.keys.to_h { |label| [label, union_seconds(intervals["category_#{label}"])] },
+      renderer_task_cpu_seconds:
+        %w[main helper].to_h do |thread|
+          [thread, union_seconds(intervals["renderer_#{thread}_tasks"])]
+        end,
+      nonadditive_renderer_task_origin_cpu_seconds:
+        %w[main helper].to_h do |thread|
+          [
+            thread,
+            TASK_GROUPS.to_h do |origin|
+              [origin, union_seconds(intervals["task_#{thread}_#{origin}"])]
+            end,
+          ]
+        end,
+      task_origin_semantics: "posting_location_not_leaf_execution",
       cpu_coverage: "available_thread_timestamps_only",
     }
   end
