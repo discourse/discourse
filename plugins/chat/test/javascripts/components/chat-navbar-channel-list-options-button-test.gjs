@@ -44,11 +44,11 @@ module(
       );
 
       assert
-        .dom(".chat-channel-list-filter-toggle .d-icon-eye")
+        .dom(".chat-channel-list-filter-toggle .d-icon-filter-circle-xmark")
         .exists("mobile offers the temporary override");
       await click(".chat-channel-list-filter-toggle");
       assert
-        .dom(".chat-channel-list-filter-toggle .d-icon-eye-slash")
+        .dom(".chat-channel-list-filter-toggle .d-icon-filter")
         .exists("mobile can reapply filters");
       await click(".chat-channel-list-options-button");
 

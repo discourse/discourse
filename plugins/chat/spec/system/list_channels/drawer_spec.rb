@@ -141,7 +141,7 @@ RSpec.describe "List channels | Drawer" do
 
         drawer_page.channels_index.show_all_channels
         expect(drawer_page).to have_channel(channel_1)
-        expect(drawer_page).to have_selector(".chat-channel-list-filter-toggle .d-icon-eye-slash")
+        expect(drawer_page).to have_selector(".chat-channel-list-filter-toggle .d-icon-filter")
 
         drawer_page.channels_index.toggle_channel_filter
         expect(drawer_page).to have_no_channel(channel_1)

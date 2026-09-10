@@ -247,7 +247,7 @@ function channelListActions(section, menuService, preferences, links) {
   if (bypassed || (!preferences.isDefaultFilterFor(section) && !links.length)) {
     actions.push({
       id: "toggleChannelFilter",
-      icon: bypassed ? "eye-slash" : "eye",
+      icon: bypassed ? "filter" : "filter-circle-xmark",
       title: i18n(
         bypassed
           ? "chat.channel_list.apply_filters"

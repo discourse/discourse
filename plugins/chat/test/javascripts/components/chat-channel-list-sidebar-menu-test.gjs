@@ -674,7 +674,7 @@ module(
             "the filter explanation is retained"
           );
         assert
-          .dom(".chat-channel-list-filter-toggle .d-icon-eye")
+          .dom(".chat-channel-list-filter-toggle .d-icon-filter-circle-xmark")
           .exists("the header offers to show all");
         await click(".empty-state__cta .btn");
         assert.strictEqual(
@@ -695,7 +695,7 @@ module(
             "the header offers to reapply filters"
           );
         assert
-          .dom(".chat-channel-list-filter-toggle .d-icon-eye-slash")
+          .dom(".chat-channel-list-filter-toggle .d-icon-filter")
           .exists("the icon changes");
         await click(".chat-channel-list-filter-toggle");
         assert.strictEqual(

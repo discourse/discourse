@@ -34,7 +34,7 @@ export default class ChatChannelListFilterToggle extends Component {
         ...attributes
         @action={{this.toggle}}
         @disabled={{this.disabled}}
-        @icon={{if this.bypassed "eye-slash" "eye"}}
+        @icon={{if this.bypassed "filter" "filter-circle-xmark"}}
         @title={{if
           this.bypassed
           "chat.channel_list.apply_filters"

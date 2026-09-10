@@ -65,7 +65,9 @@ RSpec.describe "Chat sidebar channel list options" do
     chat_sidebar.set_channel_filter("mentions")
 
     expect(page).to have_no_css(".chat-sidebar-channels-filter-empty-state")
-    expect(page).to have_css("[data-sidebar-action-id='toggleChannelFilter'] .d-icon-eye")
+    expect(page).to have_css(
+      "[data-sidebar-action-id='toggleChannelFilter'] .d-icon-filter-circle-xmark",
+    )
 
     chat_sidebar.toggle_channel_filter
 
@@ -76,7 +78,7 @@ RSpec.describe "Chat sidebar channel list options" do
     end
 
     expect(chat_sidebar.channel_names).to eq(["Zulu channel", "Alpha channel"])
-    expect(page).to have_css("[data-sidebar-action-id='toggleChannelFilter'] .d-icon-eye-slash")
+    expect(page).to have_css("[data-sidebar-action-id='toggleChannelFilter'] .d-icon-filter")
     chat_sidebar.toggle_channel_filter
     expect(chat_sidebar).to have_no_channel(read_channel)
     expect(chat_sidebar).to have_no_channel(unread_channel)
