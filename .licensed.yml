@@ -73,6 +73,7 @@ reviewed:
     - net-smtp # Ruby (bundled gem)
     - nio4r # MIT + BSD
     - oauth # MIT
+    - oauth2 # MIT
     - oauth-tty # MIT
     - omniauth # MIT
     - pg # Ruby
