@@ -241,6 +241,7 @@ en:
         "condition:time_window": "Time window"
         "action:topic_tags": "Topic tags"
         "action:tag_group": "Tag group"
+        "action:site_setting": "Site setting"
         "action:code": "Code"
         "action:topic": "Topic"
         "action:post": "Post"
@@ -304,6 +305,7 @@ en:
         "condition:time_window": "Branch the workflow based on the current day and time"
         "action:topic_tags": "Add or remove tags on a topic"
         "action:tag_group": "Add or remove tags in a tag group"
+        "action:site_setting": "Change the value of a site setting"
         "action:code": "Run custom JavaScript code"
         "action:topic": "Create, retrieve, list, close, archive, or set custom fields on topics"
         "action:post": "Create, edit, delete, recover, retrieve, or list posts"
@@ -433,6 +435,12 @@ en:
         tag_group_id: "Tag group"
         tag_group_id_placeholder: "Select a tag group"
         tag_names: "Tags"
+        actor_username: "Performed by user"
+      site_setting:
+        name: "Setting"
+        name_placeholder: "Select a site setting"
+        value: "Value"
+        value_description: "Enter the value as you would in admin settings. Lists use | between entries; booleans are true or false."
         actor_username: "Performed by user"
       topic_category:
         topic_id: "Topic ID"
