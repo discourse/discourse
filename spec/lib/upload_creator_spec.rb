@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "file_store/s3_store"
+require "vips"
 
 RSpec.describe UploadCreator do
   fab!(:user)
@@ -331,7 +332,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe "converting to jpeg" do
+    shared_examples "JPEG upload conversion" do |enable_vips|
       def image_quality(path)
         local_path = File.join(Rails.root, "public", path)
         Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
@@ -389,6 +390,64 @@ RSpec.describe UploadCreator do
         expect(FastImage.size(Discourse.store.path_for(upload))).to eq([303, 231])
       end
 
+      it "preserves a static GIF color profile when metadata stripping is disabled" do
+        SiteSetting.composer_media_optimization_image_enabled = false
+        SiteSetting.strip_image_metadata = false
+        profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
+        Dir.mktmpdir do |directory|
+          input_path = File.join(directory, "profile.gif")
+          source = File.join(directory, "source.png")
+          random = Random.new(17)
+          image = ChunkyPNG::Image.new(400, 400)
+          400.times do |row|
+            400.times do |column|
+              value = random.rand(256)
+              image[column, row] = ChunkyPNG::Color.rgb(value, value * 37 % 256, value * 71 % 256)
+            end
+          end
+          image.save(source)
+          ImageMagick.magick(
+            source,
+            "-strip",
+            input_path,
+            operation: :upload_format_conversion,
+            read: [source],
+            write: [directory],
+          )
+          gif = File.binread(input_path)
+          offset = 13 + ((gif.getbyte(10) & 128).zero? ? 0 : 3 * (2 << (gif.getbyte(10) & 7)))
+          extension = "\x21\xff\x0bICCRGBG1012".b
+          original_profile = File.binread(profile)
+          original_profile
+            .bytes
+            .each_slice(255) { |bytes| extension << bytes.length.chr << bytes.pack("C*") }
+          extension << "\0".b
+          File.binwrite(input_path, gif.byteslice(0, offset) + extension + gif.byteslice(offset..))
+          expect(
+            ImageMagick.identify(
+              "-format",
+              "%[profiles]",
+              input_path,
+              operation: :upload_format_conversion,
+              read: [input_path],
+            ),
+          ).to include("icc")
+
+          File.open(input_path) do |file|
+            upload =
+              UploadCreator.new(file, "profile.gif", force_optimize: true).create_for(user.id)
+
+            expect(upload).to be_persisted
+            expect(upload.animated).to eq(false)
+            output_path = Discourse.store.path_for(upload)
+            expect(FastImage.type(output_path)).to eq(:jpeg)
+            expect(Vips::Image.jpegload(output_path).get("icc-profile-data")).to eq(
+              original_profile,
+            )
+          end
+        end
+      end
+
       it "does not convert site-setting images to JPEG" do
         upload =
           UploadCreator.new(
@@ -427,14 +486,44 @@ RSpec.describe UploadCreator do
         it "alters the image quality" do
           upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
 
-          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          output_path = Discourse.store.path_for(upload)
+          expect(FastImage.type(output_path)).to eq(:jpeg)
+          expect(FastImage.size(output_path)).to eq([303, 231])
+
+          if enable_vips
+            SiteSetting.recompress_original_jpg_quality = 70
+            higher_quality_upload =
+              UploadCreator.new(
+                file_from_fixtures(filename),
+                filename,
+                force_optimize: true,
+              ).create_for(user.id)
+
+            expect(higher_quality_upload).to be_persisted
+            expect(FastImage.type(Discourse.store.path_for(higher_quality_upload))).to eq(:jpeg)
+            expect(upload.filesize).to be < higher_quality_upload.filesize
+          else
+            expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          end
 
           upload.create_thumbnail!(100, 100)
           upload.reload
 
-          expect(image_quality(upload.optimized_images.first.url)).to eq(
-            SiteSetting.image_preview_jpg_quality,
-          )
+          if enable_vips
+            preview = upload.optimized_images.first
+            lower_quality_filesize = preview.filesize
+            preview.destroy!
+            SiteSetting.image_preview_jpg_quality = 90
+
+            upload.create_thumbnail!(100, 100)
+            upload.reload
+
+            expect(upload.optimized_images.first.filesize).to be > lower_quality_filesize
+          else
+            expect(image_quality(upload.optimized_images.first.url)).to eq(
+              SiteSetting.image_preview_jpg_quality,
+            )
+          end
         end
 
         it "does not convert animated images" do
@@ -500,6 +589,18 @@ RSpec.describe UploadCreator do
           expect(upload.original_filename).to eq("animated.webp")
         end
       end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "JPEG upload conversion", false
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "JPEG upload conversion", true
     end
 
     describe "converting HEIF to jpeg" do

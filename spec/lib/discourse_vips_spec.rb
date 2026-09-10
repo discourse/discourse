@@ -33,6 +33,88 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".convert_to_jpeg" do
+    it "flattens transparent PNG pixels onto white" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.convert_to_jpeg(
+          input_path: file_from_fixtures("dominant-color-transparent.png").path,
+          output_path:,
+          input_format: "png",
+          quality: 92,
+          timeout: 5,
+        )
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq("FFFFFF")
+      end
+    end
+
+    it "encodes JPEG inputs at the requested quality" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+        input_path = file_from_fixtures("logo.jpg").path
+
+        described_class.convert_to_jpeg(
+          input_path:,
+          output_path:,
+          input_format: "jpeg",
+          quality: 40,
+          timeout: 5,
+        )
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(FastImage.size(output_path)).to eq(FastImage.size(input_path))
+        higher_quality_path = File.join(directory, "higher-quality.jpg")
+        described_class.convert_to_jpeg(
+          input_path:,
+          output_path: higher_quality_path,
+          input_format: "jpeg",
+          quality: 95,
+          timeout: 5,
+        )
+        expect(File.size(output_path)).to be < File.size(higher_quality_path)
+      end
+    end
+
+    it "preserves the input when the output refers to the same file" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "original.jpg")
+        FileUtils.cp(file_from_fixtures("logo.jpg").path, input_path)
+        original = File.binread(input_path)
+
+        expect {
+          described_class.convert_to_jpeg(
+            input_path:,
+            output_path: input_path,
+            input_format: "jpeg",
+            quality: 40,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::Error, /separate input and output/)
+        expect(File.binread(input_path)).to eq(original)
+      end
+    end
+
+    it "rejects input that does not match its declared PNG format" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        expect {
+          described_class.convert_to_jpeg(
+            input_path: file_from_fixtures("logo.jpg").path,
+            output_path:,
+            input_format: "png",
+            quality: 92,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage)
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+  end
+
   describe "worker lifecycle" do
     it "recovers after the worker exits unexpectedly" do
       described_class.version

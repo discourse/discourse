@@ -46,6 +46,13 @@ class DiscourseVipsWorker
         letter_avatar(*arguments)
       when "dominant-color"
         dominant_color(*arguments)
+      when "convert-to-jpeg"
+        convert_to_jpeg(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          input_format: arguments[2],
+          quality: arguments[3],
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -133,6 +140,189 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :dominant_color
+
+    def self.convert_to_jpeg(input_path:, output_path:, input_format:, quality:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        if File.expand_path(input_path) == File.expand_path(output_path) ||
+             (File.exist?(output_path) && File.identical?(input_path, output_path))
+          raise ArgumentError, "JPEG conversion requires separate input and output files"
+        end
+
+        block_loaders(
+          allowed: %w[
+            VipsForeignLoadJpeg
+            VipsForeignLoadPng
+            VipsForeignLoadNsgif
+            VipsForeignLoadWebp
+            VipsForeignLoadHeif
+          ],
+        )
+
+        begin
+          image =
+            case input_format
+            when "jpeg", "jpg"
+              load_image_for_orientation(input_path:, loader: :jpegload)
+            when "png"
+              load_image_for_orientation(input_path:, loader: :pngload)
+            when "gif"
+              gif = Vips::Image.gifload(input_path, access: :sequential, n: 1)
+              profile = gif_icc_profile(input_path)
+              gif.set_type(Vips::BLOB_TYPE, "icc-profile-data", profile) if profile
+              gif
+            when "webp"
+              load_image_for_orientation(input_path:, loader: :webpload, n: 1)
+            when "avif"
+              load_image_for_orientation(input_path:, loader: :heifload, n: 1)
+            else
+              raise ArgumentError, "unsupported JPEG conversion input format"
+            end
+          image = image.autorot
+          if image.has_alpha?
+            white = image.format == :ushort ? 65_535 : 255
+            image = image.flatten(background: Array.new(image.bands - 1, white))
+          end
+          image.jpegsave(
+            output_path,
+            Q: Integer(quality),
+            interlace: false,
+            subsample_mode: jpeg_subsample_mode(image:, input_path:),
+          )
+          nil
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :convert_to_jpeg
+
+    def self.jpeg_subsample_mode(image:, input_path:)
+      return :auto if image.get_typeof("jpeg-chroma-subsample") == 0
+
+      case image.get("jpeg-chroma-subsample")
+      when "4:4:4"
+        :off
+      when "4:2:0"
+        jpeg_sampling_factors(input_path) == [[2, 2], [1, 1], [1, 1]] ? :on : :off
+      else
+        :auto
+      end
+    end
+    private_class_method :jpeg_subsample_mode
+
+    def self.jpeg_sampling_factors(input_path)
+      File.open(input_path, "rb") do |file|
+        raise InvalidImage, "invalid JPEG signature" unless file.read(2) == "\xFF\xD8".b
+
+        loop do
+          raise InvalidImage, "invalid JPEG marker" unless file.getbyte == 0xFF
+          marker = file.getbyte
+          marker = file.getbyte while marker == 0xFF
+          if !marker || marker == 0 || marker == 0xDA || marker == 0xD9
+            raise InvalidImage, "JPEG frame header missing"
+          end
+          next if marker == 0x01
+
+          length_bytes = file.read(2)
+          raise InvalidImage, "truncated JPEG segment" unless length_bytes&.bytesize == 2
+          length = length_bytes.unpack1("n")
+          if length < 2 || length - 2 > file.size - file.pos
+            raise InvalidImage, "invalid JPEG segment length"
+          end
+
+          if (0xC0..0xCF).cover?(marker) && ![0xC4, 0xC8, 0xCC].include?(marker)
+            raise InvalidImage, "invalid JPEG frame header" if length < 8
+            header = file.read(6)
+            components = header.getbyte(5)
+            if components == 0 || length != 8 + 3 * components
+              raise InvalidImage, "invalid JPEG frame components"
+            end
+            return(
+              Array.new(components) do
+                component = file.read(3)
+                sampling = component.getbyte(1)
+                horizontal = sampling >> 4
+                vertical = sampling & 0x0F
+                unless (1..4).cover?(horizontal) && (1..4).cover?(vertical)
+                  raise InvalidImage, "invalid JPEG sampling factors"
+                end
+                [horizontal, vertical]
+              end
+            )
+          end
+
+          file.seek(length - 2, IO::SEEK_CUR)
+        end
+      end
+    end
+    private_class_method :jpeg_sampling_factors
+
+    def self.gif_icc_profile(input_path)
+      File.open(input_path, "rb") do |file|
+        header = read_gif_bytes(file: file, length: 13)
+        unless header.start_with?("GIF87a", "GIF89a")
+          raise InvalidImage, "invalid GIF header"
+        end
+        packed = header.getbyte(10)
+        read_gif_bytes(file: file, length: 3 * (2 << (packed & 7))) if packed & 128 != 0
+        profile = nil
+
+        loop do
+          case file.getbyte
+          when 0x3b
+            return profile
+          when 0x21
+            label = file.getbyte
+            if label == 0xff
+              length = file.getbyte
+              raise InvalidImage, "truncated GIF extension" unless length
+              identifier = read_gif_bytes(file: file, length: length)
+              data = gif_subblocks(file: file, collect: identifier == "ICCRGBG1012")
+              profile = data if identifier == "ICCRGBG1012"
+            else
+              gif_subblocks(file: file, collect: false)
+            end
+          when 0x2c
+            descriptor = read_gif_bytes(file: file, length: 9)
+            packed = descriptor.getbyte(8)
+            read_gif_bytes(file: file, length: 3 * (2 << (packed & 7))) if packed & 128 != 0
+            read_gif_bytes(file: file, length: 1)
+            gif_subblocks(file: file, collect: false)
+          else
+            raise InvalidImage, "invalid GIF block"
+          end
+        end
+      end
+    end
+    private_class_method :gif_icc_profile
+
+    def self.gif_subblocks(file:, collect:)
+      data = +"".b if collect
+      loop do
+        length = file.getbyte
+        raise InvalidImage, "truncated GIF subblock" unless length
+        return data if length.zero?
+        block = read_gif_bytes(file: file, length: length)
+        data << block if collect
+      end
+    end
+    private_class_method :gif_subblocks
+
+    def self.read_gif_bytes(file:, length:)
+      bytes = file.read(length)
+      raise InvalidImage, "truncated GIF data" unless bytes&.bytesize == length
+      bytes
+    end
+    private_class_method :read_gif_bytes
+
+    def self.load_image_for_orientation(input_path:, loader:, **options)
+      image = Vips::Image.public_send(loader, input_path, access: :sequential, **options)
+      if image.get_typeof("orientation") != 0 && image.get("orientation") > 2
+        image = Vips::Image.public_send(loader, input_path, access: :random, **options)
+      end
+      image
+    end
+    private_class_method :load_image_for_orientation
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)

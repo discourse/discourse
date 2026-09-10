@@ -23,6 +23,14 @@ module DiscourseVips
     )
   end
 
+  def self.convert_to_jpeg(input_path:, output_path:, input_format:, quality:, timeout:)
+    Client.call(
+      ["convert-to-jpeg", input_path, output_path, input_format, quality],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
   def self.before_fork
     Client.before_fork
   end
