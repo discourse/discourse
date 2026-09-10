@@ -20,6 +20,14 @@ function pressWithModifier(element, key) {
   );
 }
 
+function completionLabels() {
+  return [
+    ...document.querySelectorAll(
+      ".cm-tooltip-autocomplete .cm-completionLabel"
+    ),
+  ].map((label) => label.textContent.trim());
+}
+
 function highlightedTokens(element) {
   return [...element.querySelectorAll(".cm-content span[class]")].map((span) =>
     span.textContent.trim()
@@ -178,6 +186,66 @@ module("Integration | Component | code-editor", function (hooks) {
     assert.true(
       labels.includes("allow_title"),
       "a column from the configured schema is offered"
+    );
+  });
+
+  test("offers the completions a caller lists, with no language set", async function (assert) {
+    let view;
+    const onSetup = (editorView) => (view = editorView);
+    const completions = ["alpha_one", { label: "alpha_two", detail: "number" }];
+
+    await render(
+      <template>
+        <CodeEditor
+          @completions={{completions}}
+          @onSetup={{onSetup}}
+          @value="alp"
+        />
+      </template>
+    );
+
+    view.dispatch({ selection: { anchor: view.state.doc.length } });
+    startCompletion(view);
+    await waitUntil(() =>
+      document.querySelector(".cm-tooltip-autocomplete li")
+    );
+
+    assert.deepEqual(completionLabels(), ["alpha_one", "alpha_two"]);
+  });
+
+  test("stacks a caller's completion source on the language's own", async function (assert) {
+    let view;
+    const onSetup = (editorView) => (view = editorView);
+    const languageOptions = { schema: { badges: ["allow_title"] } };
+    const completions = (context) => {
+      const word = context.matchBefore(/\w+/);
+      return word && { from: word.from, options: [{ label: "b_custom" }] };
+    };
+
+    await render(
+      <template>
+        <CodeEditor
+          @completions={{completions}}
+          @language="sql"
+          @languageOptions={{languageOptions}}
+          @onSetup={{onSetup}}
+          @value="SELECT b"
+        />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    view.dispatch({ selection: { anchor: view.state.doc.length } });
+    startCompletion(view);
+    await waitUntil(() =>
+      document.querySelector(".cm-tooltip-autocomplete li")
+    );
+
+    const labels = completionLabels();
+    assert.true(labels.includes("badges"), "the language still offers its own");
+    assert.true(
+      labels.includes("b_custom"),
+      "the caller's source is offered too"
     );
   });
 

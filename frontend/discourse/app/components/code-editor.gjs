@@ -10,22 +10,31 @@ import { i18n } from "discourse-i18n";
 /**
  * A code editor with syntax highlighting.
  *
- * Pass `@language` for one of the named shortcuts, and `@extensions` to add
- * behaviour on top of it. Both are optional: with neither, this is a plain
- * text editor.
+ * `@language` picks a named shortcut, `@completions` adds words or a source
+ * next to whatever the language offers, and `@extensions` takes over with raw
+ * CodeMirror. All three are optional: with none, this is a plain text editor.
  *
  * @param {string} [language] a name from `discourse/lib/codemirror-languages`
  * @param {object} [languageOptions] configuration for that language, read when it resolves
- * @param {Function} [extensions] receives the CodeMirror modules, returns extensions
+ * @param {Array<string|import("@codemirror/autocomplete").Completion>|import("@codemirror/autocomplete").CompletionSource} [completions]
+ *   words to offer, or a source deciding what to offer at the cursor
+ * @param {import("discourse/lib/codemirror-languages").CodemirrorExtensionBuilder} [extensions]
+ *   receives the CodeMirror modules, returns extensions
  * @param {string} [value]
  * @param {Function} [onChange] called with the document on every edit
+ * @param {Function} [onFocusIn]
+ * @param {Function} [onFocusOut]
+ * @param {Function} [onSetup] called with the `EditorView` once it exists
  * @param {boolean} [disabled] renders the content read-only
  * @param {boolean} [resizable] adds a drag handle for the editor's height
  * @param {boolean} [autofocus] focuses the editor once it is ready
+ * @param {boolean} [lineNumbers] shows a gutter; defaults to true
+ * @param {boolean} [lineWrapping] wraps long lines instead of scrolling
+ * @param {string} [placeholder] shown while the document is empty
  * @param {boolean} [htmlPlaceholder] treats the placeholder as trusted markup
  * @param {Array<{line: number, message: string}>} [lineWarnings] warnings to mark, 1-based
- * @param {Function} [save] bound to the platform's save shortcut
- * @param {Function} [submit] bound to the platform's submit shortcut
+ * @param {Function} [save] bound to Mod-S
+ * @param {Function} [submit] bound to Mod-Enter
  */
 export default class CodeEditor extends Component {
   @tracked Editor;
@@ -74,6 +83,7 @@ export default class CodeEditor extends Component {
           <this.Editor
             @autofocus={{@autofocus}}
             @change={{@onChange}}
+            @completions={{@completions}}
             @extensions={{@extensions}}
             @focusIn={{@onFocusIn}}
             @focusOut={{@onFocusOut}}

@@ -7,6 +7,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import {
   autocompletion,
   closeCompletion,
+  completeFromList,
   completionKeymap,
   completionStatus,
 } from "@codemirror/autocomplete";
@@ -32,6 +33,7 @@ export default class CodemirrorEditor extends Component {
   #language = new Compartment();
   #readOnly = new Compartment();
   #placeholder = new Compartment();
+  #completions = new Compartment();
   #container = null;
   #lastWarnings = null;
 
@@ -85,6 +87,28 @@ export default class CodemirrorEditor extends Component {
     return placeholder(this.#placeholderContent);
   }
 
+  /**
+   * A caller's completions sit beside the language's own rather than replacing
+   * them, so a list of words still gets the SQL schema or the JavaScript scope.
+   */
+  get #completionExtensions() {
+    const completions = this.args.completions;
+    if (!completions) {
+      return [];
+    }
+
+    const source =
+      typeof completions === "function"
+        ? completions
+        : completeFromList(completions);
+
+    return [
+      EditorState.languageData.of(() => [{ autocomplete: source }]),
+      autocompletion(),
+      keymap.of(completionKeymap),
+    ];
+  }
+
   get #readOnlyExtensions() {
     if (!this.args.readOnly) {
       return [];
@@ -103,6 +127,7 @@ export default class CodemirrorEditor extends Component {
       this.#language.of([]),
       this.#readOnly.of(this.#readOnlyExtensions),
       this.#placeholder.of(this.#placeholderExtension),
+      this.#completions.of(this.#completionExtensions),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           const value = update.state.doc.toString();
@@ -196,6 +221,13 @@ export default class CodemirrorEditor extends Component {
 
     this.updateLanguage();
     this.args.onSetup?.(this.view);
+  }
+
+  @bind
+  updateCompletions() {
+    this.view?.dispatch({
+      effects: this.#completions.reconfigure(this.#completionExtensions),
+    });
   }
 
   @bind
@@ -315,6 +347,7 @@ export default class CodemirrorEditor extends Component {
       {{didUpdate this.updateLanguage @language}}
       {{didUpdate this.updateReadOnly @readOnly}}
       {{didUpdate this.updatePlaceholder @placeholder}}
+      {{didUpdate this.updateCompletions @completions}}
       {{didUpdate this.updateWarnings @lineWarnings}}
       {{willDestroy this.teardown}}
     ></div>
