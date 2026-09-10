@@ -3,9 +3,10 @@ import * as cmLanguage from "@codemirror/language";
 import * as cmState from "@codemirror/state";
 import * as cmView from "@codemirror/view";
 import * as lezerHighlight from "@lezer/highlight";
+import type { CodemirrorParams } from "discourse/lib/codemirror-languages";
 import { expressionUtils } from "./expression-utils";
 
-export function buildCmParams() {
+export function buildCmParams(): CodemirrorParams {
   return {
     cmAutocomplete,
     cmLanguage,

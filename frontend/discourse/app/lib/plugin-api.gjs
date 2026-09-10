@@ -3377,7 +3377,9 @@ class _PluginApi {
    * the extensions to apply.
    *
    * ```
-   * api.registerCodemirrorLanguage("toml", () => import("../lib/toml-language"));
+   * api.registerCodemirrorLanguage("toml", () =>
+   *   import("discourse/plugins/my-plugin/discourse/lib/toml-language")
+   * );
    * ```
    *
    * @param {string} name - The name a field refers to the language by.
