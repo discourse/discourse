@@ -664,8 +664,8 @@ after_initialize do
     availability: -> { SiteSetting.chat_enabled },
   )
   register_mcp_tool(
-    "chat_message_list",
-    title: "List chat messages",
+    "discourse_get_chat_messages",
+    title: "Get chat messages",
     description: "Reads a bounded page of messages from a visible chat channel.",
     implementation: Chat::McpTools::ListMessages,
     input_schema: {
@@ -675,10 +675,23 @@ after_initialize do
           type: "integer",
           minimum: 1,
         },
-        limit: {
+        page_size: {
           type: "integer",
           minimum: 1,
-          maximum: 100,
+          maximum: 50,
+          default: 50,
+        },
+        target_message_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        direction: {
+          type: "string",
+          enum: %w[past future],
+        },
+        target_date: {
+          type: "string",
+          format: "date-time",
         },
       },
       required: ["channel_id"],

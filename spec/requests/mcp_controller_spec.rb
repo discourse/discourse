@@ -98,18 +98,18 @@ describe "MCP transport" do
   end
 
   it "returns an OAuth insufficient-scope challenge for an exposed tool" do
-    McpPrimitive.create!(kind: "tool", identifier: "discourse_post_get", enabled: true)
+    McpPrimitive.create!(kind: "tool", identifier: "discourse_read_post", enabled: true)
     scoped_payload =
       payload.deep_merge(
         method: "tools/call",
         params: {
-          name: "discourse_post_get",
+          name: "discourse_read_post",
           arguments: {
             post_id: 1,
           },
         },
       )
-    scoped_headers = headers.merge("HTTP_MCP_NAME" => "discourse_post_get")
+    scoped_headers = headers.merge("HTTP_MCP_NAME" => "discourse_read_post")
 
     post "/mcp", params: scoped_payload.to_json, headers: scoped_headers
 
@@ -118,6 +118,39 @@ describe "MCP transport" do
       'error="insufficient_scope"',
       'scope="mcp:content:read"',
     )
+  end
+
+  it "does not allow content-write access to update a profile" do
+    McpPrimitive.create!(kind: "tool", identifier: "discourse_update_user", enabled: true)
+    scoped_payload =
+      payload.deep_merge(
+        params: {
+          name: "discourse_update_user",
+          arguments: {
+            username: admin.username,
+            bio_raw: "Changed without profile access",
+          },
+        },
+      )
+    scoped_headers = headers.merge("HTTP_MCP_NAME" => "discourse_update_user")
+    content_write_authorization =
+      DiscourseMcp::OAuth::AuthorizationGrant.create!(
+        user: admin,
+        client:,
+        redirect_uri: client.redirect_uris.first,
+        requested_scopes: %w[mcp:profile:read mcp:content:write],
+      )
+    content_write_token = McpOauthAccessToken.issue!(authorization: content_write_authorization)
+    scoped_headers["HTTP_AUTHORIZATION"] = "Bearer #{content_write_token}"
+
+    post "/mcp", params: scoped_payload.to_json, headers: scoped_headers
+
+    expect(response.status).to eq(403)
+    expect(response.headers["WWW-Authenticate"]).to include(
+      'error="insufficient_scope"',
+      'scope="mcp:profile:write"',
+    )
+    expect(admin.user_profile.reload.bio_raw).not_to eq("Changed without profile access")
   end
 
   it "negotiates a compatible protocol through the standard initialize request" do
