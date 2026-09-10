@@ -155,7 +155,7 @@ module Chat
     def perform_unsilence_user(performed_by, _args)
       UserSilencer.unsilence(chat_message_creator, performed_by, reviewable_id: id)
 
-      create_result(:success) { |result| result.remove_reviewable_ids = [] }
+      create_result(:success)
     end
 
     def perform_delete_and_ignore(performed_by, args)
