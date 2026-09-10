@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -88,6 +89,11 @@ export default class AceEditor extends Component {
 
   constructor() {
     super(...arguments);
+
+    deprecated("<AceEditor> is deprecated. Use <CodeEditor> instead.", {
+      since: "2026.9.0",
+      id: "discourse.ace-editor",
+    });
 
     loadAce().then((ace) => {
       if (this.isDestroying) {
