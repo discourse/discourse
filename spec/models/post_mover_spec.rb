@@ -45,7 +45,7 @@ RSpec.describe PostMover do
     fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:reply) { Fabricate(:post, topic: topic) }
 
-    it "rejects the split when the user cannot move posts from the source topic" do
+    it "does not create a topic when the user cannot move posts from the source topic" do
       mover = described_class.new(topic, Fabricate(:user), [reply.id])
 
       expect do
@@ -55,7 +55,7 @@ RSpec.describe PostMover do
       end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
     end
 
-    it "rejects the split when the user can only reply in the destination category" do
+    it "does not create a topic when the user can only reply in the destination category" do
       user = Fabricate(:trust_level_4)
       category = Fabricate(:category)
       category.set_permissions(everyone: :reply)
