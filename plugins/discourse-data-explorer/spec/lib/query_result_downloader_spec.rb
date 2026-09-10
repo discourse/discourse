@@ -27,7 +27,9 @@ describe DiscourseDataExplorer::QueryResultDownloader do
       expect(result[:error]).to be_nil
       expect(result[:format]).to eq(:csv)
 
-      rows = result[:data].split("\n")
+      expect(result[:data]).to start_with(Encodings::BOM)
+
+      rows = result[:data].delete_prefix(Encodings::BOM).split("\n")
       expect(rows[0]).to eq("id,name")
       expect(rows[1]).to eq("1,tomtom")
       expect(rows[2]).to eq("2,steak")

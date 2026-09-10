@@ -166,8 +166,8 @@ module PageObjects
         has_no_css?(public_channel_selector(channel))
       end
 
-      def has_no_browse_page_button?
-        has_no_css?(".open-browse-page-btn")
+      def has_no_channel_list_options_button?
+        has_no_css?(".chat-channel-list-options-button")
       end
 
       def has_add_member_button?

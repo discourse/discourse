@@ -13,9 +13,11 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { afterRender } from "discourse/lib/decorators";
+import { triggerBlobDownload } from "discourse/lib/download-blob";
 import round from "discourse/lib/round";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import pollBounds from "discourse/plugins/poll/lib/poll-bounds";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import {
   MULTIPLE_POLL_TYPE,
@@ -282,22 +284,16 @@ export default class PollComponent extends Component {
     return this.poll.ranked_choice_outcome || null;
   }
 
-  get min() {
-    let min = parseInt(this.poll.min, 10);
-    if (isNaN(min) || min < 0) {
-      min = 1;
-    }
+  get #bounds() {
+    return pollBounds(this.poll, this.poll.options?.length ?? 0);
+  }
 
-    return min;
+  get min() {
+    return this.#bounds.min;
   }
 
   get max() {
-    let max = parseInt(this.poll.max, 10);
-    const numOptions = this.poll.options.length;
-    if (isNaN(max) || max > numOptions) {
-      max = numOptions;
-    }
-    return max;
+    return this.#bounds.max;
   }
 
   get closed() {
@@ -891,17 +887,13 @@ export default class PollComponent extends Component {
       },
     })
       .then((csvContent) => {
-        const downloadLink = document.createElement("a");
-        const blob = new Blob([csvContent], {
+        const blob = new Blob(["\uFEFF" + csvContent], {
           type: "text/csv;charset=utf-8;",
         });
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.setAttribute(
-          "download",
-          `poll-export-${this.poll.name}-${this.post.id}.csv`
-        );
-        downloadLink.click();
-        downloadLink.remove();
+
+        triggerBlobDownload(blob, {
+          fallbackFilename: `poll-export-${this.poll.name}-${this.post.id}.csv`,
+        });
       })
       .catch((error) => {
         if (error) {

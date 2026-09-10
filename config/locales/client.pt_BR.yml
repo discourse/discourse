@@ -1750,6 +1750,16 @@ pt_BR:
       tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos ao terminar de ler"
       apps: "Aplicativos"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Escopos"
+        details: "Detalhes"
+        last_used: "Último uso"
+        never: "Nunca"
+        status: "Status"
+        statuses:
+          active: "Ativo(a)"
+          revoked: "Regovado(a)"
       revoke_access: "Revogar acesso"
       undo_revoke_access: "Desfazer revogação de acesso"
       api_approved: "Aprovada:"
@@ -5783,6 +5793,74 @@ pt_BR:
           header_description: "Forneça informações sobre o site aqui para que a sua equipe e as pessoas entendam os princípios da sua comunidade e saibam quem a administra e como entrar em contato se houver algum problema. É exibido na <a href='%{basePath}/about'>página Sobre</a> do seu site."
         developer:
           title: "Desenvolvedor(a)"
+        mcp:
+          tabs:
+            access: "Acesso"
+            activity: "Atividade"
+          overview:
+            status: "Status"
+            tools: "Ferramentas"
+          access:
+            title: "Acesso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Ações"
+            edit: "Editar"
+            delete: "Excluir"
+          primitives:
+            group_by: "Agrupar por"
+            group_by_options:
+              scope: "Escopo"
+              provider: "Provedor"
+              kind: "Tipo"
+            provider: "Provedor"
+            kind: "Tipo"
+            scope: "Escopo"
+            state: "Estado"
+            scopes: "Escopos"
+          clients:
+            actions: "Ações"
+            block: "Bloqueado(a)"
+            use_preset: "Configurar"
+            presets:
+              custom: "Personalizadas"
+          authorizations:
+            user: "Usuário(a)"
+            last_used: "Último uso"
+            status: "Status"
+            actions: "Ações"
+          activity:
+            rate_limits: "Limites de frequência"
+            outcome: "Resultado"
+            time: "Hora"
+            user: "Usuário(a)"
+            duration: "Duração"
+          values:
+            server_status:
+              disabled: "Desativados"
+            client_trust:
+              approved: "Aprovado (approved)"
+            authorization_status:
+              active: "Ativo(a)"
+              revoked: "Regovado(a)"
+            activity_outcome:
+              success: "Sucesso"
+              error: "Erro"
+            primitive_state:
+              enabled: "Ativados"
+              disabled: "Desativados"
+            primitive_kind:
+              all: "Todos os tipos"
+              tool: "Ferramenta"
+              resource: "Recurso"
+            primitive_risk:
+              read: "Somente leitura"
+              moderation: "Moderação"
+            filter:
+              all: "Todas"
+          never: "Nunca"
+          actions:
+            revoke: "Revogar"
         experimental:
           title: "Experimental"
           header_description: "Ative ou desative os recursos experimentais para seu site, a maioria deles pode ser controlado em grupo"

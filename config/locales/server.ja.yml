@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ja:
+  mcp:
+    oauth:
+      deny: "拒否"
+      approve: "承認"
   llms_txt:
     sections:
       optional: "オプション"
@@ -4504,6 +4508,9 @@ ja:
   performance_report:
     initial_post_raw: このトピックには、サイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
+  watched_words:
+    upload_too_many_csv_entries:
+      other: "CSV ファイルのエントリが多すぎます。%{count} エントリ以下の CSV ファイルを提供してください。"
   tags:
     title: "タグ"
     restricted_tag_disallowed: 'タグ "%{tag}" を適用できません。'

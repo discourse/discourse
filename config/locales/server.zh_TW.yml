@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  mcp:
+    oauth:
+      resource: "MCP 服務器"
+      deny: "拒絕"
+      approve: "授權"
   llms_txt:
     sections:
       optional: "選填"
@@ -2024,7 +2029,6 @@ zh_TW:
     discourse_connect_allowed_redirect_domains: "將 DiscourseConnect 提供的 return_paths 限制在這些網域（預設回傳路徑必須位於目前網站）。使用 * 可允許任何網域作為回傳路徑。不允許子網域萬用字元（`*.foobar.com`）。"
     enable_local_logins: "啟用基于本地使用者名和密碼登錄的帳號。警告：如果禁用，并且您之前沒有配置至少一種備用登錄方法，您可能無法登錄。"
     enable_local_logins_via_email: "允許使用者請求通過電子郵件向他們發送一鍵登錄連結。"
-    enable_local_logins_via_code: "允許成員使用一次性電子郵件代碼（OTP）更快註冊及登入。"
     enable_random_usernames: '針對使用一次性電子郵件驗證碼建立的帳戶，系統會以「形容詞 + 名詞 + 兩個隨機數字」的格式（例如：QuietFalcon34）生成隨機使用者名稱。新會員可在註冊過程中變更其使用者名稱。'
     random_username_adjectives: '用於隨機產生使用者名稱前半部的詞彙。詞彙組合時，第一個字母會大寫。'
     random_username_nouns: '用於隨機產生使用者名稱後半部的詞彙。詞彙組合時，第一個字母會大寫。'
@@ -5096,6 +5100,9 @@ zh_TW:
   performance_report:
     initial_post_raw: 此主題包括您網站的每日表現報告。
     initial_topic_title: 網站表現報告
+  watched_words:
+    upload_too_many_csv_entries:
+      other: "CSV 檔案中的項目太多。請提供項目不超過 %{count} 筆的 CSV 檔案。"
   tags:
     title: "標簽"
     groups:

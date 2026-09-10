@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::Individual do
-  subject(:document) { described_class.new(reading, urls:) }
+  subject(:document) { described_class.new(reading, client:, fieldsets:) }
 
   fab!(:topic) { Fabricate(:topic, title: "One record read on its own") }
-
+  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
       model Topic

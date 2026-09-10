@@ -11,7 +11,6 @@ import generateDtsBundle from "./dts-generator.js";
 import processPackageJson from "./process-package-json.js";
 
 const packageNames = [
-  "@ember-compat/tracked-built-ins",
   "@ember/render-modifiers",
   "@ember/string",
   "@ember/test-helpers",

@@ -136,7 +136,7 @@ fr:
         process_started: "Le processus de suppression du canal a commencé. Ce modal sera bientôt fermé et vous ne verrez plus le canal supprimé nulle part."
       channels_list_popup:
         browse: "Parcourir les canaux"
-        create: "Nouveau canal"
+        create: "Nouveau canal..."
       close: "Fermer"
       remove: "Supprimer"
       collapse: "Réduire le tiroir de discussion"
@@ -151,8 +151,6 @@ fr:
       muted: "en sourdine"
       joined: "rejoint"
       empty_state:
-        direct_message_cta: "Commencer une discussion privée"
-        direct_message: "Vous pouvez également démarrer une discussion privée avec un ou plusieurs utilisateurs."
         title: "Aucun canal trouvé"
         my_threads: "Vous n'avez pas encore de fils de discussion. Les sujets auxquels vous participez seront affichés ici."
       email_frequency:
@@ -599,14 +597,20 @@ fr:
       direct_messages:
         title: "DM"
         aria_label: "Passer aux messages directs"
-        new: "Créer une conversation personnelle"
         create: "Valider"
-        leave: "Quitter cette discussion privée"
-        close: "Fermer ce chat personnel"
+        leave: "Quitter le canal"
+        close: "Fermer le canal"
         cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages directs."
       channel_list:
         title: "Canaux"
         aria_label: "Passer à la liste des chaînes"
+        options:
+          filter: "Filtre"
+        filter:
+          all: "Tous les canaux"
+          mentions: "Mentions"
+        sort:
+          priority: "Priorité"
       incoming_webhooks:
         back: "Retour"
         channel_placeholder: "Sélectionnez un canal"
@@ -761,11 +765,6 @@ fr:
           direct_html: '<span>%{username}</span> <span>vous a mentionné(e) dans « %{channel} »</span>'
           other_plain: 'a mentionné %{identifier} dans « %{channel} »'
           other_html: '<span>%{username}</span> <span>a mentionné %{identifier} dans « %{channel} »</span>'
-        direct_message_chat_mention:
-          direct: "vous a mentionné(e) dans la discussion privée"
-          direct_html: "<span>%{username}</span> <span>vous a mentionné(e) dans une discussion privée</span>"
-          other_plain: "a mentionné %{identifier} dans une discussion privée"
-          other_html: "<span>%{username}</span> <span>a mentionné %{identifier} dans une discussion privée</span>"
         chat_message: "Nouveau message de discussion"
         chat_quoted: "%{username} a cité votre message de discussion"
       titles:
@@ -835,9 +834,6 @@ fr:
         chat:
           title: Discussion
     sidebar:
-      start_new_dm:
-        text: Nouveau message direct
-        title: Créer une conversation personnelle
       panels:
         chat:
           label: "Discussion"

@@ -1274,6 +1274,15 @@ te:
       ignored_users_instructions: "ఈ సభ్యుల నుండి అన్ని పోస్ట్‌లు, నోటిఫికేషన్‌లు మరియు సందేశాలను అణచివేయండి."
       tracked_topics_link: "చూపించండి"
       apps: "యాప్‌లు"
+      mcp_authorizations:
+        endpoint: "వనరు"
+        scopes: "పరిధులు"
+        details: "వివరాలు"
+        never: "ఎప్పటికీ వద్దు"
+        status: "స్థితి"
+        statuses:
+          active: "క్రియాశీల"
+          revoked: "రద్దు చేయబడింది"
       revoke_access: "యాక్సెస్‌ని రద్దు చేయండి"
       undo_revoke_access: "యాక్సెస్‌ ఉపసంహరణ ని రద్దు చేయండి"
       api_approved: "ఆమోదించబడింది:"
@@ -4414,6 +4423,63 @@ te:
           title: "మీ సైట్ గురించి"
         developer:
           title: "డవలపరు"
+        mcp:
+          tabs:
+            access: "యాక్సెస్"
+            activity: "కలాపం"
+          overview:
+            status: "స్థితి"
+          access:
+            title: "యాక్సెస్"
+            group: "సమూహం"
+            groups: "సమూహాలు"
+            actions: "చర్యలు"
+            edit: "సవరించండి"
+            delete: "తొలగించు"
+          primitives:
+            group_by_options:
+              scope: "పరిధి"
+              kind: "రకం"
+            kind: "రకం"
+            scope: "పరిధి"
+            scopes: "పరిధులు"
+          clients:
+            actions: "చర్యలు"
+            block: "బ్లాక్"
+            presets:
+              custom: "అనురూప"
+          authorizations:
+            user: "సభ్యుడు"
+            status: "స్థితి"
+            actions: "చర్యలు"
+          activity:
+            time: "కాలం"
+            user: "సభ్యుడు"
+            duration: "వ్యవధి"
+          values:
+            server_status:
+              disabled: "నిలిపివేయబడింది"
+            client_trust:
+              approved: "ఆమోదించబడింది"
+            authorization_status:
+              active: "క్రియాశీల"
+              revoked: "రద్దు చేయబడింది"
+            activity_outcome:
+              success: "విజయం"
+              error: "లోపం"
+            primitive_state:
+              enabled: "ప్రారంభించబడింది"
+              disabled: "నిలిపివేయబడింది"
+            primitive_kind:
+              resource: "వనరు"
+            primitive_risk:
+              read: "చదవడానికి మాత్రమే"
+              moderation: "మోడరేషన్"
+            filter:
+              all: "అన్నీ"
+          never: "ఎప్పటికీ వద్దు"
+          actions:
+            revoke: "ఉపసంహరించుకోండి"
         emojis:
           title: "ఇమోజి"
         flags:

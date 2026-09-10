@@ -10,6 +10,7 @@ import {
   isRailsTesting,
   isTesting,
 } from "discourse/lib/environment";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
@@ -115,7 +116,7 @@ export default class DDecoratedHtml extends Component {
   renderGlimmerInfos = trackedArray();
   decoratedContent = helperFn(({ decorateArgs }) => {
     // Releasing a deferred render must consume the latest arguments.
-    this._pointerRevision;
+    manuallyTrack(this._pointerRevision);
     if (this.#pressedElement) {
       this.#renderDeferred = true;
       return this.#pressedElement;

@@ -19,6 +19,14 @@ de:
         categories:
           discourse_ai: "Discourse KI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "KI fragen"
+        ask_ai:
+          title: "KI fragen"
+          date: "Datum"
+          outcomes:
+            failed: "Fehlgeschlagen"
         emotion:
           title: "Emotion"
           description: "Die Tabelle zeigt die Anzahl der Beiträge an, die einer bestimmten Emotion zugeordnet wurden. Je nach gewählter Methode zur Emotionsklassifizierung werden die Beiträge entweder mit dem konfigurierten Emotionsklassifizierungsmodell („SamLowe/roberta-base-go_emotions“) oder mit dem konfigurierten Emotionsklassifizierungsagenten klassifiziert."
