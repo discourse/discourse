@@ -8,6 +8,10 @@ hr:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Datum"
+          outcomes:
+            failed: "Neuspješno"
         reports:
           filters:
             sort_by:

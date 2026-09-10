@@ -22,7 +22,10 @@ import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
@@ -98,6 +101,14 @@ export default class CodeLoginForm extends Component {
 
   get isSignup() {
     return this.args.context === "signup";
+  }
+
+  get isInvite() {
+    return this.args.context === "invite";
+  }
+
+  get isInviteEmailLocked() {
+    return this.isInvite && this.args.emailLocked;
   }
 
   get isEmailStep() {
@@ -213,6 +224,17 @@ export default class CodeLoginForm extends Component {
   }
 
   @action
+  async requestCode() {
+    if (this.verifying) {
+      return;
+    }
+
+    this.verifying = true;
+    await this.sendCode();
+    this.verifying = false;
+  }
+
+  @action
   async resendCode() {
     if (this.resendDisabled) {
       return;
@@ -262,6 +284,10 @@ export default class CodeLoginForm extends Component {
       timezone: moment.tz.guess(),
     };
 
+    if (this.isInvite) {
+      data.invite_key = this.args.inviteKey;
+    }
+
     if (this.isSecondFactorStep) {
       data.second_factor_token =
         this.securityKeyCredential || this.secondFactorToken;
@@ -277,10 +303,15 @@ export default class CodeLoginForm extends Component {
     }
 
     try {
-      const result = await ajax("/session/login-code/verify", {
-        type: "POST",
-        data,
-      });
+      const verify = () =>
+        ajax("/session/login-code/verify", {
+          type: "POST",
+          data,
+        });
+      const result =
+        this.isSignup && this.isCodeStep
+          ? await applyBehaviorTransformer("create-account", verify)
+          : await verify();
 
       if (
         (result?.user_fields_required || result?.name_required) &&
@@ -573,6 +604,7 @@ export default class CodeLoginForm extends Component {
         data: {
           email: this.email,
           signup: this.isSignup,
+          invite_key: this.isInvite ? this.args.inviteKey : undefined,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },
@@ -700,59 +732,82 @@ export default class CodeLoginForm extends Component {
       {{/unless}}
 
       {{#if this.isEmailStep}}
-        {{#if this.isSignup}}
-          <p class="code-login-form__instructions">
-            {{i18n "code_login.signup_instructions"}}
-          </p>
-        {{/if}}
-
-        <Form
-          class="code-login-form__email-step"
-          @data={{hash email=this.email}}
-          @onSubmit={{this.submitEmail}}
-          as |form|
-        >
-          <form.Field
-            @format="full"
-            @name="email"
-            @title={{i18n "code_login.email_label"}}
-            @type="input-email"
-            @validate={{this.validateEmail}}
-            @validation="required"
-            as |field|
-          >
-            <field.Control autocomplete="username" autofocus="autofocus" />
-          </form.Field>
-
-          {{! Lets a signup flow add its own fields to this form — an agreement
-          it needs accepted before the account exists, say — so they are
-          validated and submitted together with the email. }}
-          <PluginOutlet
-            @name="code-login-email-step-fields"
-            @outletArgs={{lazyHash form=form context=@context}}
-          />
-
-          {{#if this.codeError}}
-            <div aria-live="polite" class="code-login-form__error" role="alert">
-              {{this.codeError}}
-            </div>
-          {{/if}}
-
-          <div class="code-login-form__email-actions">
-            <form.Submit
+        {{#if this.isInviteEmailLocked}}
+          <div class="code-login-form__email-step">
+            <p class="code-login-form__instructions">
+              {{i18n "invites.code_instructions" email=this.email}}
+            </p>
+            <DButton
               class="btn-primary code-login-form__continue"
-              @label="code_login.continue_button"
+              @action={{this.requestCode}}
+              @isLoading={{this.verifying}}
+              @label="invites.send_code"
             />
-
-            {{#if @onUsePassword}}
-              <DButton
-                class="btn-flat code-login-form__password-toggle"
-                @action={{@onUsePassword}}
-                @label="code_login.use_password_instead"
-              />
+            {{#if this.codeError}}
+              <div class="code-login-form__error" role="alert">
+                {{this.codeError}}
+              </div>
             {{/if}}
           </div>
-        </Form>
+        {{else}}
+          {{#if this.isSignup}}
+            <p class="code-login-form__instructions">
+              {{i18n "code_login.signup_instructions"}}
+            </p>
+          {{/if}}
+
+          <Form
+            class="code-login-form__email-step"
+            @data={{hash email=this.email}}
+            @onSubmit={{this.submitEmail}}
+            as |form|
+          >
+            <form.Field
+              @format="full"
+              @name="email"
+              @title={{i18n "code_login.email_label"}}
+              @type="input-email"
+              @validate={{this.validateEmail}}
+              @validation="required"
+              as |field|
+            >
+              <field.Control autocomplete="username" autofocus="autofocus" />
+            </form.Field>
+
+            {{! Lets a signup flow add its own fields to this form — an agreement
+            it needs accepted before the account exists, say — so they are
+            validated and submitted together with the email. }}
+            <PluginOutlet
+              @name="code-login-email-step-fields"
+              @outletArgs={{lazyHash form=form context=@context}}
+            />
+
+            {{#if this.codeError}}
+              <div
+                aria-live="polite"
+                class="code-login-form__error"
+                role="alert"
+              >
+                {{this.codeError}}
+              </div>
+            {{/if}}
+
+            <div class="code-login-form__email-actions">
+              <form.Submit
+                class="btn-primary code-login-form__continue"
+                @label="code_login.continue_button"
+              />
+
+              {{#if @onUsePassword}}
+                <DButton
+                  class="btn-flat code-login-form__password-toggle"
+                  @action={{@onUsePassword}}
+                  @label="code_login.use_password_instead"
+                />
+              {{/if}}
+            </div>
+          </Form>
+        {{/if}}
       {{else if this.isCodeStep}}
         <div class="code-login-form__code-step">
           {{#unless this.isSignup}}
@@ -763,6 +818,13 @@ export default class CodeLoginForm extends Component {
               {{this.codeInstructions}}
             </p>
           {{/unless}}
+
+          {{#if this.isSignup}}
+            <PluginOutlet
+              @name="code-login-after-code"
+              @outletArgs={{lazyHash context=@context}}
+            />
+          {{/if}}
 
           {{#each this.otpGenerationArray as |generation|}}
             <DOtp
@@ -797,11 +859,13 @@ export default class CodeLoginForm extends Component {
               @disabled={{this.resendDisabled}}
               @translatedLabel={{this.resendLabel}}
             />
-            <DButton
-              class="btn-flat code-login-form__change-email"
-              @action={{this.changeEmail}}
-              @label="code_login.use_different_email"
-            />
+            {{#unless this.isInviteEmailLocked}}
+              <DButton
+                class="btn-flat code-login-form__change-email"
+                @action={{this.changeEmail}}
+                @label="code_login.use_different_email"
+              />
+            {{/unless}}
           </div>
         </div>
       {{else if this.isCompleteStep}}

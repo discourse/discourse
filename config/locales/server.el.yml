@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 el:
+  mcp:
+    oauth:
+      deny: "Άρνηση"
+      approve: "Εξουσιοδότηση"
   llms_txt:
     sections:
       optional: "Προαιρετικό"

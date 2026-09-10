@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 id:
+  mcp:
+    oauth:
+      deny: "Menolak"
+      approve: "Izinkan"
   llms_txt:
     sections:
       optional: "Opsional"

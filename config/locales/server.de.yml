@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 de:
+  mcp:
+    oauth:
+      resource: "MCP-Server"
+      deny: "ablehnen"
+      approve: "Autorisieren"
   llms_txt:
     sections:
       optional: "Optional"
@@ -2071,7 +2076,6 @@ de:
     discourse_connect_allowed_redirect_domains: "Beschränke die von DiscourseConnect zur Verfügung gestellten return_paths auf diese Domains (standardmäßig muss der Rückgabepfad auf der aktuellen Website liegen). Verwende *, um jede beliebige Domain als Rückgabepfad zuzulassen. Wildcards für Subdomains (`*.foobar.com`) sind nicht erlaubt."
     enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Anmeldemethode konfiguriert hast."
     enable_local_logins_via_email: "Erlaube Benutzern, einen Ein-Klick-Anmelde-Link anzufordern, der ihnen per E-Mail zugeschickt wird."
-    enable_local_logins_via_code: "Erlaube Mitgliedern, sich mithilfe von Einmalcodes per E-Mail (Einmalpasswörter) schneller zu registrieren und anzumelden."
     allow_passkeys_for_2fa: "Erlaube Benutzern, bei der Bestätigung einer sensiblen Aktion einen Passkey zur Zwei-Faktor-Authentifizierung zu verwenden."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige einen Hinweis für wiederkehrende anonyme Benutzer an, der sie auffordert, sich für ein Konto zu registrieren."
@@ -5406,6 +5410,10 @@ de:
   performance_report:
     initial_post_raw: Dieses Thema enthält tägliche Leistungsberichte für deine Website.
     initial_topic_title: Berichte zur Website-Leistung
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Eintrag bereit."
+      other: "Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Einträgen bereit."
   tags:
     title: "Schlagwörter"
     groups:

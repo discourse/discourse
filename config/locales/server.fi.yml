@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 fi:
+  mcp:
+    oauth:
+      deny: "Hylkää"
+      approve: "Anna käyttöoikeus"
   llms_txt:
     sections:
       optional: "Valinnainen"
@@ -4406,6 +4410,10 @@ fi:
   performance_report:
     initial_post_raw: Tämä ketju sisältää päivittäisiä suorituskykyrapotteja sivustoltasi
     initial_topic_title: Sivuston suorituskykyraportit
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Liian monta merkintää CSV-tiedostossa. Anna CSV-tiedosto, jossa on enintään %{count} merkintä."
+      other: "Liian monta merkintää CSV-tiedostossa. Anna CSV-tiedosto, jossa on enintään %{count} merkintää."
   tags:
     title: "Tunnisteet"
     restricted_tag_disallowed: 'Et voi käyttää tunnistetta "%{tag}".'

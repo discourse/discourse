@@ -38,6 +38,17 @@ acceptance("Badges", function (needs) {
       "CustomBadge"
     );
   });
+
+  test("marks a badge the current user holds as granted", async function (assert) {
+    await visit("/badges/50/custombadge");
+
+    assert
+      .dom(".show-badge-details .check-display")
+      .exists("the badge is marked as granted");
+    assert
+      .dom(".badge-grant-info .btn-default")
+      .exists("the badge title can be selected");
+  });
 });
 
 acceptance("Badges - favorites", function (needs) {

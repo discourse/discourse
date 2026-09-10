@@ -7,6 +7,10 @@ en:
       "Boards::Board_user_will_lose_permission": "You will lose permissions to manage this board if you make this change. Continue?"
       "Boards::Board_user_will_lose_permission_on_create": "If you create this board with these permissions, you will not be able to manage it. Continue?"
   boards:
+    board:
+      errors:
+        acl_update_failed: "Failed to update board permissions."
+        acl_create_failed: "Failed to create board permissions."
     errors:
       board_not_found: "Board not found"
       board_read_forbidden: "You do not have permission to view this board"

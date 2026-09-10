@@ -1,4 +1,5 @@
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import {
   playUserJoinedSound,
   playUserLeftSound,
@@ -98,9 +99,8 @@ export default class RosterHandler {
     );
     const currentUserId = this.#getCurrentUserId();
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] handleParticipants room=${roomId}, participants=[${Array.from(participantIds)}], currentUser=${currentUserId}`
+    voiceLog.info(
+      `[voice] handleParticipants room=${roomId}, count=${participantIds.size}`
     );
 
     if (this.#roleChangeInProgress.has(roomId)) {
@@ -156,10 +156,8 @@ export default class RosterHandler {
           if (existingPeerIds.size > 0 || !this.#isConnectingRoom(roomId)) {
             hasNewPeer = true;
           }
-          // eslint-disable-next-line no-console
-          console.log(
-            `[voice] creating peer connection to user ${participantId}`
-          );
+
+          voiceLog.info("[voice] creating peer connection");
 
           await this.#createAndOfferPeer(roomId, participantId);
         } else {
@@ -343,11 +341,9 @@ export default class RosterHandler {
       // the microphone to match the new role.
       try {
         await this.#livekit.sessionFor(roomId)?.refreshPublications();
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice-livekit] failed to refresh publications after a role change in room ${roomId}`,
-          error
+      } catch {
+        voiceLog.warn(
+          `[voice-livekit] failed to refresh publications after a role change in room ${roomId}`
         );
       }
     }

@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 sw:
+  mcp:
+    oauth:
+      approve: "Idhini"
   llms_txt:
     sections:
       optional: "Sio Muhimu"

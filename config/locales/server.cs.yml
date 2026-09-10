@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 cs:
+  mcp:
+    oauth:
+      deny: "Odmítnout"
+      approve: "Autorizovat"
   llms_txt:
     sections:
       optional: "Volitelné"
@@ -4239,6 +4243,12 @@ cs:
   performance_report:
     initial_post_raw: Toto téma zahrnuje denní přehledy výkonu vašeho webu.
     initial_topic_title: Zprávy o výkonu webových stránek
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamem."
+      few: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
+      many: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
+      other: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
   tags:
     title: "Štítky"
     restricted_tag_disallowed: 'Nelze použít štítek "%{tag}".'

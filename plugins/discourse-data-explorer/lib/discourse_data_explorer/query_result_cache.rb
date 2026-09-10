@@ -6,17 +6,19 @@ module DiscourseDataExplorer
     MAX_CACHE_SIZE = 200.kilobytes
     MAX_CACHE_ENTRIES = 50
 
-    def self.cache_key(query_id, params_hash)
-      h = params_hash || {}
-      h = h.to_unsafe_h if h.respond_to?(:to_unsafe_h)
-      normalized = h.sort.to_h.to_json
-      digest = Digest::SHA256.hexdigest(normalized)
-      "data_explorer:result:#{query_id}:#{digest}"
+    def self.visibility_scope(user)
+      return "admin" if user.admin? && !SiteSetting.suppress_secured_categories_from_admin
+
+      user.id
     end
 
-    def self.read(query_id, params_hash, max_age: nil)
-      key = cache_key(query_id, params_hash)
-      raw = Discourse.redis.get(key)
+    def self.cache_key(query_id, user, params_hash)
+      digest = Digest::SHA256.hexdigest((params_hash || {}).sort.to_h.to_json)
+      "data_explorer:result:#{query_id}:#{visibility_scope(user)}:#{digest}"
+    end
+
+    def self.read(query_id, user, params_hash, max_age: nil)
+      raw = Discourse.redis.get(cache_key(query_id, user, params_hash))
       return nil if raw.nil?
 
       result = MultiJson.load(raw)
@@ -32,19 +34,30 @@ module DiscourseDataExplorer
     end
     private_class_method :within_max_age?
 
-    def self.write(query_id, params_hash, result_json)
+    def self.write(query_id, user, params_hash, result_json)
       payload = result_json.merge("cached_at" => Time.now.utc.iso8601)
       serialized = MultiJson.dump(payload)
       return false if serialized.bytesize > MAX_CACHE_SIZE
 
-      key = cache_key(query_id, params_hash)
+      key = cache_key(query_id, user, params_hash)
       index_key = cache_index_key(query_id)
       now = Time.now.to_f
-      prune_stale_entries(index_key, now)
-      return false if limit_reached?(index_key, key)
 
-      Discourse.redis.setex(key, CACHE_TTL, serialized)
+      _pruned, score, oldest =
+        Discourse.redis.pipelined do |redis|
+          redis.zremrangebyscore(index_key, "-inf", now - CACHE_TTL)
+          redis.zscore(index_key, key)
+          redis.zrange(index_key, 0, -MAX_CACHE_ENTRIES)
+        end
+      evicted = score.nil? ? Array(oldest) : []
+
       Discourse.redis.multi do |redis|
+        if evicted.present?
+          redis.del(evicted)
+          redis.zrem(index_key, evicted)
+        end
+
+        redis.setex(key, CACHE_TTL, serialized)
         redis.zadd(index_key, now, key)
         redis.expire(index_key, CACHE_TTL)
       end
@@ -52,25 +65,13 @@ module DiscourseDataExplorer
     end
 
     def self.invalidate(query_id)
-      keys = Discourse.redis.scan_each(match: "data_explorer:result:#{query_id}:*").to_a
+      keys =
+        Discourse.redis.scan_each(match: "data_explorer:result:#{query_id}:*", count: 1000).to_a
       Discourse.redis.del(*keys) if keys.present?
-      Discourse.redis.del(cache_index_key(query_id))
     end
 
     def self.cache_index_key(query_id)
       "data_explorer:result:#{query_id}:keys"
     end
-
-    def self.limit_reached?(index_key, key)
-      return false if Discourse.redis.zscore(index_key, key)
-
-      Discourse.redis.zcard(index_key) >= MAX_CACHE_ENTRIES
-    end
-
-    def self.prune_stale_entries(index_key, now)
-      Discourse.redis.zremrangebyscore(index_key, "-inf", now - CACHE_TTL)
-    end
-
-    private_class_method :limit_reached?, :prune_stale_entries
   end
 end

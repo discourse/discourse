@@ -28,6 +28,7 @@ export default <template>
       <DBadgeCard
         @badge={{@controller.model}}
         @count={{@controller.userBadgesGrantCount}}
+        @granted={{@controller.currentUserHasBadge}}
         @size="large"
       />
       <div

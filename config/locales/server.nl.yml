@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 nl:
+  mcp:
+    oauth:
+      resource: "MCP-server"
+      deny: "Weigeren"
+      approve: "Autoriseren"
   llms_txt:
     sections:
       optional: "Optioneel"
@@ -4849,6 +4854,10 @@ nl:
   performance_report:
     initial_post_raw: Dit topic bevat dagelijkse prestatierapporten voor je website.
     initial_topic_title: Performancerapportages van de website
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Te veel vermeldingen in het CSV-bestand. Geef een CSV-bestand op met niet meer dan %{count} vermelding."
+      other: "Te veel vermeldingen in het CSV-bestand. Geef een CSV-bestand op met niet meer dan %{count} vermeldingen."
   tags:
     title: "Tags"
     restricted_tag_disallowed: 'Je kunt de tag "%{tag}" niet toepassen.'

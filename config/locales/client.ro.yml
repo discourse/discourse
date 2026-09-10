@@ -1515,6 +1515,14 @@ ro:
       tracked_topics_link: "Arată"
       automatically_unpin_topics: "Detașare automată a subiectelor când ajung la sfârșitul paginii"
       apps: "Aplicații"
+      mcp_authorizations:
+        details: "Detalii"
+        last_used: "Ultima utilizare"
+        never: "Niciodată"
+        status: "Stare"
+        statuses:
+          active: "Activă"
+          revoked: "Revocat"
       revoke_access: "Revocă accesul"
       undo_revoke_access: "Anulează revocarea accesului"
       api_approved: "Aprobate:"
@@ -4039,6 +4047,63 @@ ro:
           header_description: "Furnizează aici informații despre acest site și despre echipa ta, astfel încât oamenii să poată afla despre ce este comunitatea ta, cine se află în spatele acesteia și cum să vă contacteze în cazul în care există o problemă. Afișate pe <a href='%{basePath}/about'>pagina Despre</a>a site-ului tău."
         developer:
           title: "Dezvoltator"
+        mcp:
+          tabs:
+            access: "Acces"
+            activity: "Activitate"
+          overview:
+            status: "Stare"
+          access:
+            title: "Acces"
+            group: "Grup"
+            groups: "Grupuri"
+            actions: "Acțiuni"
+            edit: "Editează"
+            delete: "Șterge"
+          primitives:
+            group_by_options:
+              provider: "Furnizor"
+              kind: "Tip"
+            provider: "Furnizor"
+            kind: "Tip"
+          clients:
+            actions: "Acțiuni"
+            block: "Blochează"
+            presets:
+              custom: "Personalizat"
+          authorizations:
+            user: "Utilizator"
+            last_used: "Ultima utilizare"
+            status: "Stare"
+            actions: "Acțiuni"
+          activity:
+            rate_limits: "Limite de rată"
+            time: "Oră"
+            user: "Utilizator"
+            duration: "Durată"
+          values:
+            server_status:
+              disabled: "Dezactivate"
+            client_trust:
+              approved: "Aprobat"
+            authorization_status:
+              active: "Activă"
+              revoked: "Revocat"
+            activity_outcome:
+              success: "Succes"
+              error: "Eroare"
+            primitive_state:
+              enabled: "Activate"
+              disabled: "Dezactivate"
+            primitive_kind:
+              all: "Toate tipurile"
+            primitive_risk:
+              moderation: "Moderare"
+            filter:
+              all: "Toate"
+          never: "Niciodată"
+          actions:
+            revoke: "Revocă"
         experimental:
           title: "Experimental"
           header_description: "Activează sau dezactivează funcțiile experimentale pentru site-ul tău, cele mai multe dintre acestea pot fi controlate pe bază de grup"

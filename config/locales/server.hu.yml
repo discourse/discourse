@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hu:
+  mcp:
+    oauth:
+      deny: "Tiltás"
+      approve: "Engedélyezés"
   llms_txt:
     sections:
       optional: "Nem kötelező"
@@ -4603,6 +4607,10 @@ hu:
   performance_report:
     initial_post_raw: Ez a téma a webhely napi teljesítményjelentéseit tartalmazza.
     initial_topic_title: Weboldal teljesítményjelentések
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Túl sok bejegyzés a CSV-fájlban. Kérjük, adjon meg egy CSV-fájlt, amely legfeljebb %{count} bejegyzést tartalmaz."
+      other: "Túl sok bejegyzés a CSV-fájlban. Kérjük, adjon meg egy CSV-fájlt, amely legfeljebb %{count} bejegyzést tartalmaz."
   tags:
     title: "Címkék"
     restricted_tag_disallowed: 'Nem alkalmazhatja a "%{tag}" címkét.'

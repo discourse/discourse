@@ -136,7 +136,7 @@ tr_TR:
         process_started: "Kanalı silme işlemi başladı. Bu mod kısa bir süre sonra kapanacak, silinen kanalı artık hiçbir yerde görmeyeceksiniz."
       channels_list_popup:
         browse: "Kanallara göz atın"
-        create: "Yeni kanal"
+        create: "Yeni kanal..."
       close: "Kapat"
       remove: "Kaldır"
       collapse: "Sohbet Çekmecesini Daralt"
@@ -151,8 +151,6 @@ tr_TR:
       muted: "sessize alındı"
       joined: "katıldı"
       empty_state:
-        direct_message_cta: "Kişisel bir Sohbet başlatın"
-        direct_message: "Bir veya daha fazla kullanıcıyla da kişisel sohbet başlatabilirsiniz."
         title: "Kanal bulunamadı"
         my_threads: "Henüz konunuz yok. Katıldığınız konular burada gösterilir."
       email_frequency:
@@ -553,14 +551,20 @@ tr_TR:
       direct_messages:
         title: "DM'ler"
         aria_label: "Doğrudan mesajlara geç"
-        new: "Kişisel sohbet oluşturun"
         create: "Git"
-        leave: "Bu kişisel sohbetten ayrıl"
-        close: "Bu kişisel sohbeti kapat"
+        leave: "Kanaldan ayrıl"
+        close: "Kanalı kapat"
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
       channel_list:
         title: "Kanallar"
         aria_label: "Kanal listesine geç"
+        options:
+          filter: "Filtre"
+        filter:
+          all: "Tüm kanallar"
+          mentions: "Bahsetmeler"
+        sort:
+          priority: "Öncelik"
       incoming_webhooks:
         back: "Geri"
         channel_placeholder: "Kanal seçin"
@@ -715,11 +719,6 @@ tr_TR:
           direct_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda sizden bahsetti</span>'
           other_plain: '"%{channel}" adlı kanalda %{identifier} bahsetti'
           other_html: '<span>%{username}</span> <span>"%{channel}" adlı kanalda şundan bahsetti: %{identifier}</span>'
-        direct_message_chat_mention:
-          direct: "kişisel sohbette sizden bahsetti"
-          direct_html: "<span>%{username}</span> <span>kişisel sohbette sizden bahsetti</span>"
-          other_plain: "kişisel sohbette %{identifier} adlı kullanıcıdan bahsetti"
-          other_html: "<span>%{username}</span> <span>kişisel sohbette şundan bahsetti: %{identifier}</span>"
         chat_message: "Yeni sohbet mesajı"
         chat_quoted: "%{username} sohbet mesajınızı alıntıladı"
       titles:
@@ -789,9 +788,6 @@ tr_TR:
         chat:
           title: Sohbet
     sidebar:
-      start_new_dm:
-        text: Yeni DM başlat
-        title: Kişisel sohbet oluşturun
       panels:
         chat:
           label: "Sohbet"

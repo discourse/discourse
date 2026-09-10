@@ -120,7 +120,7 @@ ja:
         process_started: "チャンネルの削除処理が開始しました。このモーダルは間もなく閉じられ、削除されたチャンネルがどこにも表示されなくなります。"
       channels_list_popup:
         browse: "チャンネルを閲覧する"
-        create: "新しいチャンネル"
+        create: "新しいチャンネル..."
       close: "閉じる"
       remove: "削除"
       collapse: "チャットドロワーを折りたたむ"
@@ -134,8 +134,6 @@ ja:
       muted: "ミュート中"
       joined: "参加中"
       empty_state:
-        direct_message_cta: "パーソナルチャットを開始"
-        direct_message: "1 人または複数のユーザーとパーソナルチャットを開始することもできます。"
         title: "チャンネルが見つかりません"
         my_threads: "まだスレッドがありません。ここに、参加しているスレッドが表示されます。"
       email_frequency:
@@ -499,14 +497,20 @@ ja:
       direct_messages:
         title: "DM"
         aria_label: "ダイレクトメッセージに切り替える"
-        new: "パーソナルチャットを作成"
         create: "開始"
-        leave: "このパーソナルチャットから退出する"
-        close: "このパーソナルチャットを閉じる"
+        leave: "チャンネルから退出する"
+        close: "チャンネルを閉鎖する"
         cannot_create: "ダイレクトメッセージを送信できません。"
       channel_list:
         title: "チャンネル"
         aria_label: "チャンネルリストに切り替える"
+        options:
+          filter: "フィルター"
+        filter:
+          all: "すべてのチャンネル"
+          mentions: "メンション"
+        sort:
+          priority: "優先度"
       incoming_webhooks:
         back: "戻る"
         channel_placeholder: "チャンネルを選択する"
@@ -648,11 +652,6 @@ ja:
           direct_html: '<span>%{username}</span> <span>があなたを "%{channel}" でメンションしました</span>'
           other_plain: 'が %{identifier} を "%{channel}" でメンションしました'
           other_html: '<span>%{username}</span> <span>が %{identifier} を "%{channel}" でメンションしました</span>'
-        direct_message_chat_mention:
-          direct: "があなたをパーソナルチャットでメンションしました"
-          direct_html: "<span>%{username}</span> <span>があなたをパーソナルチャットでメンションしました</span>"
-          other_plain: "が %{identifier} をパーソナルチャットでメンションしました"
-          other_html: "<span>%{username}</span> <span>が %{identifier} をパーソナルチャットでメンションしました</span>"
         chat_message: "新しいチャットメッセージ"
         chat_quoted: "%{username} があなたのチャットメッセージを引用しました"
       titles:
@@ -721,9 +720,6 @@ ja:
         chat:
           title: チャット
     sidebar:
-      start_new_dm:
-        text: 新しい DM を開始
-        title: パーソナルチャットを作成
       panels:
         chat:
           label: "チャット"
