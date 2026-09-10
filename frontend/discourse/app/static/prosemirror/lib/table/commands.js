@@ -10,6 +10,19 @@ import {
   tableGrid,
 } from "./grid";
 
+export function insertTableBreak(state, dispatch) {
+  if (!(state.selection instanceof TextSelection) || !currentCell(state)) {
+    return false;
+  }
+
+  dispatch?.(
+    state.tr
+      .replaceSelectionWith(state.schema.nodes.hard_break.create())
+      .scrollIntoView()
+  );
+  return true;
+}
+
 export function runCommand(view, command) {
   if (!view.editable) {
     return false;
