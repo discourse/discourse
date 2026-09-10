@@ -7,6 +7,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatModalCreateChannel from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import {
@@ -41,6 +42,7 @@ const SORT_LABEL_KEYS = {
 export default class ChatChannelListSidebarMenu extends Component {
   @service chat;
   @service chatChannelListPreferences;
+  @service chatGuardian;
   @service currentUser;
   @service modal;
   @service router;
@@ -63,6 +65,10 @@ export default class ChatChannelListSidebarMenu extends Component {
 
   get showNewMessage() {
     return this.args.data?.showNewMessage && this.chat.userCanDirectMessage;
+  }
+
+  get showNewGroupChat() {
+    return this.showNewMessage && this.chatGuardian.canUseGroupChat();
   }
 
   get hasTopLevelActions() {
@@ -100,6 +106,14 @@ export default class ChatChannelListSidebarMenu extends Component {
   @action
   openCreateChannel() {
     this.modal.show(ChatModalCreateChannel);
+    this.args.close?.();
+  }
+
+  @action
+  openNewGroupChat() {
+    this.modal.show(ChatModalNewMessage, {
+      model: { initialMode: MODES.new_group },
+    });
     this.args.close?.();
   }
 
@@ -152,6 +166,18 @@ export default class ChatChannelListSidebarMenu extends Component {
             role="menuitem"
             @action={{this.openNewMessage}}
             @label="chat.direct_messages.new"
+            @suffixIcon="plus"
+          />
+        </dropdown.item>
+      {{/if}}
+
+      {{#if this.showNewGroupChat}}
+        <dropdown.item role="none">
+          <DButton
+            data-menu-option-id="startGroupChat"
+            role="menuitem"
+            @action={{this.openNewGroupChat}}
+            @label="chat.direct_messages.new_group"
             @suffixIcon="plus"
           />
         </dropdown.item>
