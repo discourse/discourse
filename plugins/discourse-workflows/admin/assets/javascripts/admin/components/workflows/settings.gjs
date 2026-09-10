@@ -1,14 +1,115 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import SiteSettingComponent from "discourse/admin/components/site-setting";
+import SiteSetting from "discourse/admin/models/site-setting";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { escapeExpression } from "discourse/lib/utilities";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import ErrorWorkflowChooser from "./error-workflow-chooser";
 import InUseDialog from "./in-use-dialog";
+import WorkflowSettingFieldList from "./setting-field-list";
+import SettingsPublishNotice from "./settings-publish-notice";
+
+const FIELD_TYPE_TO_SITE_SETTING_TYPE = {
+  string: { type: "string" },
+  integer: { type: "integer" },
+  boolean: { type: "bool" },
+  enum: { type: "enum" },
+  category: { type: "category" },
+  category_list: { type: "list", list_type: "category" },
+  group: { type: "group" },
+  group_list: { type: "list", list_type: "group" },
+  tag_list: { type: "list", list_type: "tag" },
+  simple_list: { type: "simple_list" },
+};
+
+// trackChanges = false keeps these rows out of the global unsaved-changes
+// banner used by the real site settings page, since they aren't site settings.
+class WorkflowSettingFieldRow extends SiteSettingComponent {
+  @service toasts;
+
+  trackChanges = false;
+
+  // These rows have no "default" concept to compare against (buildFieldSetting
+  // always sets default: ""), so the inherited overridden/reset UI is meaningless.
+  get groupedOverridden() {
+    return false;
+  }
+
+  get overridden() {
+    return false;
+  }
+
+  get staffLogFilter() {
+    return null;
+  }
+
+  async _save(settings) {
+    const setting = settings[0];
+    const wasPublished = Boolean(setting.workflow.activeVersionId);
+
+    const response = await ajax(
+      `/admin/plugins/discourse-workflows/workflows/${setting.workflow.id}/setting-fields/${setting.workflowSettingFieldId}/value.json`,
+      { type: "PUT", data: { value: setting.buffered.get("value") } }
+    );
+
+    // Mutated in place (not reassigned) so other rows' @cached SiteSetting
+    // wrappers aren't rebuilt, discarding their own in-progress edits.
+    const savedField = setting.workflow.settingFields.find(
+      (field) => field.id === setting.workflowSettingFieldId
+    );
+    if (savedField) {
+      Object.assign(savedField, response.workflow_setting_field);
+    }
+
+    setting.workflow.setProperties({
+      versionId: response.workflow.version_id,
+      activeVersionId: response.workflow.active_version_id,
+      hasUnpublishedChanges: response.workflow.has_unpublished_changes,
+    });
+
+    if (
+      wasPublished &&
+      response.workflow.active_version_id &&
+      !response.workflow.has_unpublished_changes
+    ) {
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n("discourse_workflows.settings.fields.value_published"),
+        },
+      });
+    }
+
+    return response;
+  }
+}
+
+function buildFieldSetting(field, workflow) {
+  const { type, list_type } =
+    FIELD_TYPE_TO_SITE_SETTING_TYPE[field.field_type] ??
+    FIELD_TYPE_TO_SITE_SETTING_TYPE.string;
+
+  return SiteSetting.create({
+    setting: field.key,
+    humanized_name: field.label,
+    description: escapeExpression(field.description),
+    type,
+    list_type,
+    valid_values: field.type_options?.choices,
+    value: field.value ?? "",
+    default: "",
+    workflow,
+    workflowSettingFieldId: field.id,
+  });
+}
 
 export default class WorkflowSettings extends Component {
   @service router;
@@ -29,6 +130,25 @@ export default class WorkflowSettings extends Component {
           },
         ]
       : [];
+
+  get fieldsDescription() {
+    const workflow = this.args.workflow;
+    const willAutoPublish =
+      Boolean(workflow.activeVersionId) && !workflow.hasUnpublishedChanges;
+
+    return i18n(
+      willAutoPublish
+        ? "discourse_workflows.settings.fields.description_will_publish"
+        : "discourse_workflows.settings.fields.description_will_draft"
+    );
+  }
+
+  @cached
+  get fieldSettings() {
+    return this.args.workflow.settingFields.map((field) =>
+      buildFieldSetting(field, this.args.workflow)
+    );
+  }
 
   @action
   async deleteWorkflow() {
@@ -88,6 +208,21 @@ export default class WorkflowSettings extends Component {
   }
 
   <template>
+    <SettingsPublishNotice @workflow={{@workflow}} />
+
+    <DPageSubheader
+      @descriptionLabel={{this.fieldsDescription}}
+      @titleLabel={{i18n "discourse_workflows.settings.fields.title"}}
+    />
+
+    <section class="form-horizontal settings workflows-settings__field-values">
+      {{#each this.fieldSettings as |setting|}}
+        <WorkflowSettingFieldRow @setting={{setting}} />
+      {{/each}}
+    </section>
+
+    <WorkflowSettingFieldList @workflow={{@workflow}} />
+
     <Form
       class="workflows-settings"
       @data={{this.formData}}

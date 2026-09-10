@@ -142,10 +142,6 @@
     text-align: center;
   }
 
-  &__publish-btn {
-    min-width: 6.5em;
-  }
-
   &__top-bar {
     position: absolute;
     top: var(--space-2);
@@ -166,65 +162,6 @@
   &__publish-status {
     grid-column: 1;
     justify-self: center;
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    min-width: 0;
-    max-width: min(100%, 36rem);
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    background: var(--secondary);
-    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
-  }
-
-  &__publish-status-body {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
-    min-width: 0;
-    line-height: 1.2;
-  }
-
-  &__publish-status-icon {
-    flex: 0 0 auto;
-    margin-top: 0.1rem;
-    color: var(--workflow-status-running);
-    font-size: var(--font-down-1);
-  }
-
-  &__publish-status-text {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  &__publish-status-title {
-    overflow: hidden;
-    color: var(--primary-high);
-    font-size: var(--font-down-1);
-    font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__publish-status-detail {
-    overflow: hidden;
-    color: var(--primary-medium);
-    font-size: var(--font-down-2);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__publish-status-btn {
-    flex: 0 0 auto;
-  }
-
-  &__publish-status-actions {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    gap: var(--space-1);
   }
 
   &__toolbar-top-right {

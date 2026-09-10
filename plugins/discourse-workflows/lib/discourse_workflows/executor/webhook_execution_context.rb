@@ -108,7 +108,12 @@ module DiscourseWorkflows
           )
         resolver_context.merge!("$json" => current_item.fetch("json") { {} })
 
-        @sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context, user: user)
+        @sandbox =
+          DiscourseWorkflows::JsSandbox.new(
+            resolver_context,
+            user: user,
+            settings: preloaded_workflow_settings,
+          )
         @resolver =
           DiscourseWorkflows::ExpressionResolver.new(
             resolver_context,
@@ -127,6 +132,7 @@ module DiscourseWorkflows
             node_context: node_context,
             user: user,
             resolver: @resolver,
+            workflow_settings: preloaded_workflow_settings,
             workflow: @execution.workflow,
             execution_id: @execution.id,
             resume_token: @execution.resume_token,
@@ -137,6 +143,14 @@ module DiscourseWorkflows
             resolver_context: resolver_context,
             workflow_snapshot: @snapshot,
           )
+      end
+
+      # Resolves from the same frozen snapshot the rest of this execution's
+      # node graph comes from, so $settings never mixes an old execution
+      # graph with a newer, unrelated field value.
+      def preloaded_workflow_settings
+        @preloaded_workflow_settings ||=
+          DiscourseWorkflows::SettingValueResolver.new(@snapshot.setting_schema).resolve
       end
 
       def execution_snapshot

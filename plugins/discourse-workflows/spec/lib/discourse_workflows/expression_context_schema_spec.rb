@@ -9,12 +9,13 @@ RSpec.describe DiscourseWorkflows::ExpressionContextSchema do
       expect(schema).to have_key(:item_prefix)
     end
 
-    it "declares $helpers, $site_settings, $vars, $current_user, $execution as environment symbols" do
+    it "declares $helpers, $site_settings, $vars, $settings, $current_user, $execution as environment symbols" do
       symbols = described_class.environment_symbols.keys
       expect(symbols).to contain_exactly(
         "$helpers",
         "$site_settings",
         "$vars",
+        "$settings",
         "$current_user",
         "$execution",
       )

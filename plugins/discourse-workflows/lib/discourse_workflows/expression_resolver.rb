@@ -32,15 +32,17 @@ module DiscourseWorkflows
       with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_hash(hash) }
     end
 
-    def self.resolve_segments(template, context: {}, user: nil)
-      with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_segments(template) }
+    def self.resolve_segments(template, context: {}, user: nil, settings: nil)
+      with_owned_sandbox(context, user: user, settings: settings) do |resolver|
+        resolver.resolve_segments(template)
+      end
     rescue MiniRacer::Error, JsSandbox::BudgetExceededError, JsSandbox::SandboxError => e
       Rails.logger.warn("Expression evaluation failed: #{e.message}")
       []
     end
 
-    def self.with_owned_sandbox(context, user: nil)
-      sandbox = JsSandbox.new(context, user: user)
+    def self.with_owned_sandbox(context, user: nil, settings: nil)
+      sandbox = JsSandbox.new(context, user: user, settings: settings)
       resolver = new(context, user: user, sandbox: sandbox)
       yield resolver
     ensure

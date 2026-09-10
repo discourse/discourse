@@ -34,6 +34,76 @@ RSpec.describe DiscourseWorkflows::Workflow do
     end
   end
 
+  describe "#restore_from_version!" do
+    fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
+
+    it "restores a field's value from the target version" do
+      field =
+        workflow.setting_fields.create!(
+          key: "priority",
+          label: "Priority",
+          field_type: "string",
+          value: "urgent",
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      field.update!(value: "low")
+      workflow.snapshot!(user: user)
+
+      workflow.restore_from_version!(old_version, user: user)
+
+      expect(workflow.setting_fields.find_by(key: "priority").value).to eq("urgent")
+    end
+
+    it "recreates a deleted field with both its definition and value" do
+      field =
+        workflow.setting_fields.create!(
+          key: "priority",
+          label: "Priority",
+          field_type: "string",
+          value: "urgent",
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      field.destroy!
+      workflow.snapshot!(user: user)
+      workflow.reload
+
+      workflow.restore_from_version!(old_version, user: user)
+
+      restored = workflow.setting_fields.find_by(key: "priority")
+      expect(restored).to be_present
+      expect(restored.label).to eq("Priority")
+      expect(restored.value).to eq("urgent")
+    end
+
+    it "deletes a field that no longer exists in the target version" do
+      field =
+        workflow.setting_fields.create!(
+          key: "priority",
+          label: "Priority",
+          field_type: "string",
+          value: "urgent",
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      other_field =
+        workflow.setting_fields.create!(
+          key: "extra",
+          label: "Extra",
+          field_type: "string",
+          value: "keep-me",
+        )
+      workflow.snapshot!(user: user)
+
+      workflow.restore_from_version!(old_version, user: user)
+
+      expect(workflow.setting_fields.find_by(key: "priority")).to be_present
+      expect(workflow.setting_fields.find_by(id: other_field.id)).to be_nil
+      expect(field.reload).to be_present
+    end
+  end
+
   describe "#node_static_data" do
     fab!(:workflow) do
       Fabricate(

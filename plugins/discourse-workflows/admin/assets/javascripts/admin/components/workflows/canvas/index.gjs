@@ -17,6 +17,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BuildWithAiModal from "../build-with-ai-modal";
+import PublishBanner from "../publish-banner";
 import {
   buildCanvasClipboardPayload,
   isSerializedCanvasClipboardPayload,
@@ -46,7 +47,6 @@ import WorkflowNode from "./workflow-node";
 
 export default class WorkflowCanvas extends Component {
   @service keyboardShortcuts;
-  @service dialog;
   @service menu;
   @service router;
   @service workflowsNodeTypes;
@@ -57,7 +57,6 @@ export default class WorkflowCanvas extends Component {
   @tracked rete = null;
   @tracked areaTransform = { x: 0, y: 0, k: 1 };
   @tracked workflowPublishedOverride = null;
-  @tracked hasUnpublishedChangesOverride = null;
   @tracked selectionVersion = 0;
   @tracked aiPanelOpen = false;
   clipboardPayload = null;
@@ -91,35 +90,8 @@ export default class WorkflowCanvas extends Component {
     );
   }
 
-  get hasUnpublishedChanges() {
-    return (
-      this.hasUnpublishedChangesOverride ??
-      Boolean(this.args.hasUnpublishedChanges)
-    );
-  }
-
-  get publishDisabled() {
-    return this.workflowPublished && !this.hasUnpublishedChanges;
-  }
-
   get hasNodes() {
     return (this.args.nodes || []).length > 0;
-  }
-
-  get showPublishButton() {
-    return this.hasNodes && !this.publishDisabled;
-  }
-
-  get showToolbarPublishButton() {
-    return this.showPublishButton && !this.showUnpublishedChangesMessage;
-  }
-
-  get showUnpublishedChangesMessage() {
-    return this.showPublishButton;
-  }
-
-  get showDiscardChangesButton() {
-    return this.workflowPublished && this.hasUnpublishedChanges;
   }
 
   get aiAuthoringAvailable() {
@@ -171,68 +143,6 @@ export default class WorkflowCanvas extends Component {
   isStickyNoteSelected(clientId) {
     this.selectionVersion;
     return this.rete.isStickyNoteSelected(clientId);
-  }
-
-  @action
-  async publishWorkflow() {
-    if (!this.hasNodes) {
-      return;
-    }
-
-    this.workflowPublishedOverride = true;
-    this.hasUnpublishedChangesOverride = false;
-    try {
-      await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}.json`,
-        {
-          type: "PUT",
-          data: {
-            workflow: {
-              published: true,
-            },
-          },
-        }
-      );
-      if (this.args.workflow) {
-        this.args.workflow.activeVersionId = this.args.workflow.versionId;
-        this.args.workflow.hasUnpublishedChanges = false;
-      }
-      this.workflowPublishedOverride = null;
-      this.hasUnpublishedChangesOverride = null;
-    } catch {
-      this.workflowPublishedOverride = this.args.workflowPublished;
-      this.hasUnpublishedChangesOverride = this.args.hasUnpublishedChanges;
-    }
-  }
-
-  @action
-  async discardWorkflow() {
-    const confirmed = await this.dialog.confirm({
-      message: i18n("discourse_workflows.discard_changes_confirmation"),
-      confirmButtonLabel: "discourse_workflows.discard_changes",
-      cancelButtonLabel: "discourse_workflows.keep_editing",
-    });
-
-    if (!confirmed) {
-      return;
-    }
-
-    this.hasUnpublishedChangesOverride = false;
-
-    try {
-      const response = await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/discard-draft.json`,
-        {
-          type: "POST",
-        }
-      );
-
-      this.args.onDiscardWorkflow?.(response.workflow);
-      this.hasUnpublishedChangesOverride = null;
-    } catch (e) {
-      this.hasUnpublishedChangesOverride = this.args.hasUnpublishedChanges;
-      popupAjaxError(e);
-    }
   }
 
   @action
@@ -570,7 +480,8 @@ export default class WorkflowCanvas extends Component {
         result.nodes,
         result.connections,
         result.stickyNotes,
-        result.staticData
+        result.staticData,
+        result.settingFields
       );
     } catch {
       this.#showImportError();
@@ -1141,56 +1052,16 @@ export default class WorkflowCanvas extends Component {
 
         {{#if @onOpenNodePanel}}
           <div class="workflows-canvas__top-bar">
-            {{#if this.showUnpublishedChangesMessage}}
+            {{#if this.hasNodes}}
               <div class="workflows-canvas__publish-status">
-                <span
-                  class="workflows-canvas__publish-status-body"
-                  role="status"
-                >
-                  <span class="workflows-canvas__publish-status-icon">
-                    {{dIcon "triangle-exclamation"}}
-                  </span>
-                  <span class="workflows-canvas__publish-status-text">
-                    <span class="workflows-canvas__publish-status-title">
-                      {{i18n "discourse_workflows.unpublished_changes_message"}}
-                    </span>
-                    <span class="workflows-canvas__publish-status-detail">
-                      {{i18n
-                        "discourse_workflows.unpublished_changes_message_detail"
-                      }}
-                    </span>
-                  </span>
-                </span>
-
-                <span class="workflows-canvas__publish-status-actions">
-                  <DButton
-                    class="btn-primary btn-small workflows-canvas__publish-status-btn"
-                    @action={{this.publishWorkflow}}
-                    @translatedLabel={{i18n "discourse_workflows.publish"}}
-                  />
-
-                  {{#if this.showDiscardChangesButton}}
-                    <DButton
-                      class="btn-default btn-small workflows-canvas__publish-status-btn"
-                      @action={{this.discardWorkflow}}
-                      @translatedLabel={{i18n
-                        "discourse_workflows.discard_changes"
-                      }}
-                    />
-                  {{/if}}
-                </span>
+                <PublishBanner
+                  @onDiscard={{@onDiscardWorkflow}}
+                  @workflow={{@workflow}}
+                />
               </div>
             {{/if}}
 
             <div class="workflows-canvas__toolbar-top-right">
-              {{#if this.showToolbarPublishButton}}
-                <DButton
-                  class="btn-primary workflows-canvas__publish-btn"
-                  @action={{this.publishWorkflow}}
-                  @translatedLabel={{i18n "discourse_workflows.publish"}}
-                />
-              {{/if}}
-
               {{#if this.aiAuthoringAvailable}}
                 <DButton
                   class="btn-default workflows-canvas__ai-btn"
