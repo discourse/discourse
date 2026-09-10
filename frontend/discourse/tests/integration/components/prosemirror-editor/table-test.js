@@ -1032,6 +1032,49 @@ module(
       );
     });
 
+    test("deleting trailing rows through the menu preserves columns", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE, {
+        withMenus: true,
+      });
+      const { view } = editor;
+
+      for (const row of [2, 1]) {
+        await selectCell(view, row, 2);
+        await pressKey(view, "Enter", { altKey: true });
+        await waitFor('.fk-d-menu[data-identifier="composer-table-menu"]');
+        await click(".composer-table-menu__delete-row");
+        assert.deepEqual(
+          locateTable(view).grid.rows.map((tableRow) => tableRow.cells.length),
+          Array(row).fill(3),
+          "the row menu removes only the final row"
+        );
+      }
+    });
+
+    test("dragging the bottom control inward preserves columns", async function (assert) {
+      const [editor] = await setupRichEditor(assert, TABLE);
+      const original = editor.value;
+
+      for (let iteration = 0; iteration < 3; iteration++) {
+        await dragAppend(find(".composer-table__append.--row"), 400);
+        assert.true(
+          locateTable(editor.view).grid.height > 3,
+          "dragging out adds empty rows"
+        );
+        await dragAppend(find(".composer-table__append.--row"), -600);
+        assert.strictEqual(
+          editor.value,
+          original,
+          "dragging inward removes only the empty trailing rows"
+        );
+        assert.deepEqual(
+          locateTable(editor.view).grid.rows.map((row) => row.cells.length),
+          [3, 3, 3],
+          "repeated row removal does not create columns"
+        );
+      }
+    });
+
     test("dragging an append bar back removes empty rows or columns", async function (assert) {
       const [editor] = await setupRichEditor(
         assert,
