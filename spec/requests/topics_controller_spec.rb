@@ -342,22 +342,32 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
-      it "does not allow posts to be moved to a private category when other destination options are supplied" do
-        [
-          { destination_topic_id: dest_topic.id },
-          { archetype: Archetype.default },
-        ].each do |options|
-          post "/t/#{topic.id}/move-posts.json",
-               params: {
-                 title: "Logan is a good movie",
-                 post_ids: [p2.id],
-                 category_id: staff_category.id,
-               }.merge(options)
+      it "does not allow posts to be moved to a private category when a destination topic is supplied" do
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               title: "Logan is a good movie",
+               post_ids: [p2.id],
+               category_id: staff_category.id,
+               destination_topic_id: dest_topic.id,
+             }
 
-          expect(response).to be_forbidden
-          expect(response.parsed_body["errors"]).to be_present
-          expect(p2.reload.topic_id).to eq(topic.id)
-        end
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
+      end
+
+      it "does not allow posts to be moved to a private category when an archetype is supplied" do
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               title: "Logan is a good movie",
+               post_ids: [p2.id],
+               category_id: staff_category.id,
+               archetype: Archetype.default,
+             }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
       end
 
       it "ignores unrelated post IDs without exposing their reviewables" do
