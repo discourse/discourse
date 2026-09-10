@@ -25,7 +25,7 @@ module JsonApiKit
           title: "Window size is negative",
           detail: ->(error) { "#{error.parameter} must be 0 or greater." },
         }.freeze
-        WINDOW_PARAMETER = ->(error) { error.base.page.window_names.first }
+        WINDOW_PARAMETER = ->(error) { error.window_parameters.first }
         UNKNOWN_PARAMETER = {
           title: "No such parameter",
           detail: ->(error) { "There is no parameter named #{error.parameter}." },
@@ -34,36 +34,35 @@ module JsonApiKit
         RULES = {
           [:"page.anchor", :wrong_length] => {
             title: "Too many anchors",
-            detail: ->(error) do
-              "Use one anchor only. This request has #{error.base.page.anchor.size}."
-            end,
+            detail: ->(error) { "Use one anchor only. This request has #{error.anchor_count}." },
           },
           [:"page.anchor", :present] => {
             title: "Anchor and cursor cannot be combined",
-            detail: ->(error) do
-              "Use page[anchor] or page[#{error.base.page.cursor_name}], not both."
-            end,
+            detail: ->(error) { "Use page[anchor] or #{error.cursor_parameter}, not both." },
           },
           [:"page.anchor", :blank] => {
             title: "Anchor is required",
-            detail: ->(error) { "#{error.base.page.window_names.join(", ")} need an anchor." },
+            detail: ->(error) do
+              "#{error.window_parameters.join(", ")} " \
+                "need an anchor."
+            end,
           },
           [:"page.anchor", :no_such_name] => {
             title: "No such anchor",
-            detail: ->(error) { "There is no anchor named #{error.options[:name]}." },
-            source: ->(error) { "page[anchor][#{error.options[:name]}]" },
+            detail: ->(error) { "There is no anchor named #{error.name}." },
+            source: ->(error) { error.member_parameter },
           },
           [:"page.anchor", :not_the_sort] => {
             title: "Anchor does not match the sort",
             detail: ->(error) do
-              "The anchor is #{error.options[:name]}, but this request sorts by " \
-                "#{error.options[:key]}."
+              "The anchor is #{error.name}, but this request sorts " \
+                "by #{error.key}."
             end,
-            source: ->(error) { "page[anchor][#{error.options[:name]}]" },
+            source: ->(error) { error.member_parameter },
           },
           %i[sort no_such_name] => {
             title: "No such sort",
-            detail: ->(error) { "There is no sort named #{error.options[:name]}." },
+            detail: ->(error) { "There is no sort named #{error.name}." },
           },
           %i[sort unknown_direction] => {
             title: "No such sort direction",
@@ -71,12 +70,12 @@ module JsonApiKit
           },
           %i[filter no_such_name] => {
             title: "No such filter",
-            detail: ->(error) { "There is no filter named #{error.options[:name]}." },
-            source: ->(error) { "filter[#{error.options[:name]}]" },
+            detail: ->(error) { "There is no filter named #{error.name}." },
+            source: ->(error) { error.member_parameter },
           },
           %i[include no_such_name] => {
             title: "No such relationship path",
-            detail: ->(error) { "There is no relationship path named #{error.options[:name]}." },
+            detail: ->(error) { "There is no relationship path named #{error.name}." },
           },
           %i[fields bad_shape] => {
             title: "Invalid fields parameter",
@@ -84,12 +83,14 @@ module JsonApiKit
           },
           %i[fields bad_value] => {
             title: "Invalid fields value",
-            detail: ->(error) { "fields[#{error.options[:name]}] must be a list of field names." },
-            source: ->(error) { "fields[#{error.options[:name]}]" },
+            detail: ->(error) do
+              "#{error.member_parameter(error.options[:name])} must be a list of field names."
+            end,
+            source: ->(error) { error.member_parameter(error.options[:name]) },
           },
           %i[sort bad_shape] => {
             title: "Invalid sort parameter",
-            detail: ->(_) { "sort must be a comma-separated list, as in sort=-created_at." },
+            detail: ->(_) { "sort must be a comma-separated list, as in sort=-createdAt." },
           },
           %i[filter bad_shape] => {
             title: "Invalid filter parameter",
@@ -97,15 +98,13 @@ module JsonApiKit
           },
           %i[filter bad_value] => {
             title: "Invalid filter value",
-            detail: ->(error) do
-              "filter[#{error.options[:name]}] must be a value or a list of values."
-            end,
-            source: ->(error) { "filter[#{error.options[:name]}]" },
+            detail: ->(error) { "#{error.member_parameter} must be a value or a list of values." },
+            source: ->(error) { error.member_parameter },
           },
           [:"page.anchor", :bad_value] => {
             title: "Invalid anchor value",
-            detail: ->(error) { "page[anchor][#{error.options[:name]}] must be a single value." },
-            source: ->(error) { "page[anchor][#{error.options[:name]}]" },
+            detail: ->(error) { "#{error.member_parameter} must be a single value." },
+            source: ->(error) { error.member_parameter },
           },
           %i[page bad_shape] => {
             title: "Invalid page parameter",
@@ -152,15 +151,16 @@ module JsonApiKit
           [:"page.before", :unreadable_cursor] => INVALID_CURSOR,
         }.freeze
 
-        def initialize(errors)
+        def initialize(errors, glossary:)
           @errors = errors
+          @glossary = glossary
         end
 
-        def to_a = errors.map { Error.new(it, **rule_for(it)) }
+        def to_a = errors.map { Error.new(it, glossary:, **rule_for(it)) }
 
         private
 
-        attr_reader :errors
+        attr_reader :errors, :glossary
 
         def rule_for(error) = RULES.fetch([error.attribute, error.type], UNKNOWN_PARAMETER)
       end

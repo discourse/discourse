@@ -18,6 +18,7 @@ RSpec.describe JsonApiKit::Document do
     end
   end
   let(:guardian) { Guardian.new }
+  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end
@@ -25,7 +26,14 @@ RSpec.describe JsonApiKit::Document do
 
   describe "Collection.for" do
     subject(:document) do
-      JsonApiKit::Document::Collection.for(parameters, resource:, guardian:, urls:, scoped_to:)
+      JsonApiKit::Document::Collection.for(
+        parameters,
+        resource:,
+        guardian:,
+        urls:,
+        glossary:,
+        scoped_to:,
+      )
     end
 
     let(:scoped_to) { nil }
@@ -60,7 +68,7 @@ RSpec.describe JsonApiKit::Document do
 
   describe "Individual.for" do
     subject(:document) do
-      JsonApiKit::Document::Individual.for(id, parameters, resource:, guardian:, urls:)
+      JsonApiKit::Document::Individual.for(id, parameters, resource:, guardian:, urls:, glossary:)
     end
 
     let(:id) { topic.id }

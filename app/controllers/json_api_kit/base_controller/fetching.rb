@@ -2,14 +2,20 @@
 
 module JsonApiKit
   class BaseController
-    module Reading
+    module Fetching
       extend ActiveSupport::Concern
 
       ROOT = "/api"
 
       def index
         render_document(
-          Document::Collection.for(request.query_parameters, resource:, guardian:, urls:),
+          Document::Collection.for(
+            request.query_parameters,
+            resource:,
+            guardian:,
+            urls:,
+            glossary:,
+          ),
         )
       end
 
@@ -21,6 +27,7 @@ module JsonApiKit
             resource:,
             guardian:,
             urls:,
+            glossary:,
           ),
         )
       end

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::Individual do
-  subject(:document) { described_class.new(reading, urls:) }
+  subject(:document) { described_class.new(reading, urls:, glossary:) }
+
+  let(:glossary) { JsonApiKit::Glossary.new([JsonApiKit::Glossary::CasingRule]) }
 
   fab!(:topic) { Fabricate(:topic, title: "One record read on its own") }
 

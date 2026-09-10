@@ -69,7 +69,7 @@ module JsonApiKit
             def window? = window_names.present?
 
             def window_names
-              { before_size:, after_size:, include_anchor: }.compact.keys.map { "page[#{it}]" }
+              { before_size:, after_size:, include_anchor: }.compact.keys
             end
 
             private

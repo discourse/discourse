@@ -4,8 +4,12 @@ module JsonApiKit
   class Url
     PAGE = "page"
 
-    ENDS = %w[after before].freeze
-    WINDOW = %w[anchor before_size after_size include_anchor].freeze
+    KIT = Glossary.kit
+    REPLACED_MEMBERS =
+      %w[after before anchor before_size after_size include_anchor]
+        .map { KIT.member_name(it) }
+        .freeze
+        .freeze
 
     def initialize(address, parameters = {})
       @address = address
@@ -16,7 +20,7 @@ module JsonApiKit
       self.class.new(
         address,
         parameters.merge(
-          PAGE => page_parameters.except(*ENDS, *WINDOW).merge(page.transform_keys(&:to_s)),
+          PAGE => page_parameters.except(*REPLACED_MEMBERS).merge(member_names(page)),
         ),
       )
     end
@@ -28,6 +32,8 @@ module JsonApiKit
     attr_reader :address, :parameters
 
     def page_parameters = parameters.fetch(PAGE, {})
+
+    def member_names(page) = page.transform_keys { KIT.member_name(it) }
 
     def query_string = parameters.to_query.presence&.then { "?#{it}" }
   end

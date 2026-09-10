@@ -52,6 +52,12 @@ RSpec.describe JsonApiKit::ApiVersion do
       end
     end
 
+    context "when the other is not a version" do
+      it "is not equal" do
+        expect(version).not_to eq("2026-09-01")
+      end
+    end
+
     context "when the other version has the same date" do
       let(:other) { described_class.parse(raw) }
 
