@@ -5,7 +5,7 @@ import loaderShim from "discourse/lib/loader-shim";
 // These effectively become public APIs for plugins, so add/remove them carefully
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
 loaderShim("@ember-compat/tracked-built-ins", () =>
-  importSync("@ember-compat/tracked-built-ins")
+  importSync("tracked-built-ins")
 );
 loaderShim("@ember/-internals/metal", () =>
   importSync("@ember/-internals/metal")
