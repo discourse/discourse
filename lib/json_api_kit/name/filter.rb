@@ -2,11 +2,6 @@
 
 module JsonApiKit
   module Name
-    Filter =
-      Data.define(:value, :type) do
-        include Name
-
-        def kind = :filter
-      end
+    Filter = Data.define(:value, :type) { include Name }
   end
 end

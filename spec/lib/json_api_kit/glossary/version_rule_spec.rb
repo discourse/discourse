@@ -53,6 +53,14 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
     )
   end
 
+  describe "#declared_attributes" do
+    subject(:declared_attributes) { rule.declared_attributes(name => "2026-08-01") }
+
+    it "returns the attributes with their current names" do
+      expect(declared_attributes).to eq(name.with(value: "published_at") => "2026-08-01")
+    end
+  end
+
   describe "#declared_name" do
     subject(:declared_name) { rule.declared_name(name) }
 
@@ -65,7 +73,7 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
       let(:second_change) { JsonApiKitSpec::LabelToNameChange.new(__FILE__) }
       let(:value) { "name" }
 
-      it "returns the current name of the old name" do
+      it "returns the current name" do
         expect(declared_name).to eq(name.with(value: "title"))
       end
 
@@ -94,6 +102,16 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
           an_instance_of(JsonApiKit::Glossary::Correction).and(having_attributes(name:)),
         )
       end
+    end
+  end
+
+  describe "#member_attributes" do
+    subject(:member_attributes) { rule.member_attributes(name => "2026-08-01") }
+
+    let(:value) { "published_at" }
+
+    it "returns the attributes with the names of this version" do
+      expect(member_attributes).to eq(name.with(value: "posted_at") => "2026-08-01")
     end
   end
 

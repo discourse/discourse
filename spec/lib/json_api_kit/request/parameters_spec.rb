@@ -17,6 +17,18 @@ module JsonApiKitSpec
       renamed_attribute from: :handle, to: :username
     end
   end
+
+  class ParametersShapeChange < JsonApiKit::VersionChange
+    version "2026-09-15"
+    description "The `words` attribute of the topics resource becomes `title`, one string."
+
+    resource :topics do
+      renamed_attribute from: :words,
+                        to: :title,
+                        down: ->(title) { title.to_s.split(" ") },
+                        up: ->(words) { words.to_a.join(" ") }
+    end
+  end
 end
 
 RSpec.describe JsonApiKit::Request::Parameters do
@@ -147,6 +159,21 @@ RSpec.describe JsonApiKit::Request::Parameters do
           "page" => {
             "anchor" => {
               "created_at" => "2026-08-01",
+            },
+          },
+        )
+      end
+    end
+
+    context "when the anchor has a reshaped field" do
+      let(:change) { JsonApiKitSpec::ParametersShapeChange.new(__FILE__) }
+      let(:parameters) { { "page" => { "anchor" => { "words" => %w[Anchors and pages] } } } }
+
+      it "converts the field to its current name and shape" do
+        expect(declared_parameters).to eq(
+          "page" => {
+            "anchor" => {
+              "title" => "Anchors and pages",
             },
           },
         )

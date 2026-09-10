@@ -2,11 +2,6 @@
 
 module JsonApiKit
   module Name
-    Relationship =
-      Data.define(:value, :type) do
-        include Name
-
-        def kind = :relationship
-      end
+    Relationship = Data.define(:value, :type) { include Name }
   end
 end

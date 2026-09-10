@@ -2,11 +2,6 @@
 
 module JsonApiKit
   module Name
-    Anchor =
-      Data.define(:value, :type) do
-        include Name
-
-        def kind = :anchor
-      end
+    Anchor = Data.define(:value, :type) { include Name }
   end
 end

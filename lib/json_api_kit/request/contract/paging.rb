@@ -102,8 +102,8 @@ module JsonApiKit
             def raw_cursors = { after:, before: }.compact
 
             def check_cursors
-              (raw_cursors.keys - cursors.keys).each do
-                errors.add(it, :unreadable_cursor, message: "unreadable cursor")
+              (raw_cursors.keys - cursors.keys).each do |name|
+                errors.add(name, :unreadable_cursor, message: "unreadable cursor")
               end
             end
 

@@ -9,8 +9,8 @@ module JsonApiKit
           value.to_h do |fieldset_type, fields|
             [
               fieldset_type,
-              names(fields, path + [fieldset_type]) do
-                Name::Field.new(value: it, type: fieldset_type)
+              names(fields, path + [fieldset_type]) do |field|
+                Name::Field.new(value: field, type: fieldset_type)
               end,
             ]
           end

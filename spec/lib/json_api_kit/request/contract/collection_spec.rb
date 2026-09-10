@@ -39,7 +39,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     context "when a parameter is unknown" do
       let(:params) { { sorts: { created_at: :asc } } }
 
-      it "refuses the parameter" do
+      it "adds an error on the parameter" do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:sorts)
       end
@@ -48,7 +48,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     context "when a page parameter is unknown" do
       let(:params) { { page: { sise: 2 } } }
 
-      it "refuses it under the parameter it came in" do
+      it "adds an error under the parameter it came in" do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:"page.sise")
       end
@@ -88,7 +88,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
         expect(contract.sort).to eq("created_at" => :desc, "title" => :asc)
       end
 
-      context "when there’s a hyphen in the sort name" do
+      context "when the sort name has a hyphen" do
         let(:params) { { sort: "last-posted-at" } }
 
         it "converts it as a hash" do
@@ -96,7 +96,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
         end
       end
 
-      context "when there’s also a cursor" do
+      context "when a cursor comes with the sort" do
         let(:params) { { sort: "title", page: { after: cursor } } }
 
         it "checks the cursor against that sort" do
@@ -158,7 +158,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
       end
     end
 
-    context "when  fieldset is a list of symbols" do
+    context "when fieldset is a list of symbols" do
       let(:params) { { fields: { topics: %i[title] } } }
 
       it "converts it as a list of fields" do
@@ -174,6 +174,12 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
     before { contract.valid? }
 
+    it { is_expected.to validate_length_of(:anchor).as_array.is_equal_to(1).allow_nil }
+    it { is_expected.to allow_value({ id: 12 }, :first_unread).for(:anchor) }
+    it { is_expected.not_to allow_value({}, { id: 12, title: "a topic" }).for(:anchor) }
+    it { is_expected.not_to allow_value({ id: { a: 1 } }, { id: %w[a b] }).for(:anchor) }
+    it { is_expected.not_to allow_value({ secrets: 12 }, :guesswork).for(:anchor) }
+
     context "when the anchor is not the sort" do
       let(:params) { { sort: { created_at: :asc }, page: { anchor: { title: "A" } } } }
 
@@ -184,12 +190,6 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
         )
       end
     end
-
-    it { is_expected.to validate_length_of(:anchor).as_array.is_equal_to(1).allow_nil }
-    it { is_expected.to allow_value({ id: 12 }, :first_unread).for(:anchor) }
-    it { is_expected.not_to allow_value({}, { id: 12, title: "a topic" }).for(:anchor) }
-    it { is_expected.not_to allow_value({ id: { a: 1 } }, { id: %w[a b] }).for(:anchor) }
-    it { is_expected.not_to allow_value({ secrets: 12 }, :guesswork).for(:anchor) }
 
     context "when the anchor name matches the sort" do
       let(:params) { { sort: { title: :asc }, page: {} } }
@@ -315,7 +315,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     it { is_expected.not_to allow_value("").for(:before_size) }
     it { is_expected.not_to allow_value("").for(:after_size) }
 
-    context "when both `page[before_size]` and `page[after_size]` are provided" do
+    context "when the page holds both sizes" do
       let(:params) { { page: { anchor: { id: 12 }, before_size: 25 } } }
 
       it { is_expected.to allow_value(20).for(:after_size).against(:window_size) }

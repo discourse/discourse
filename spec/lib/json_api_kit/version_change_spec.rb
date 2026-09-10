@@ -10,6 +10,18 @@ module JsonApiKitSpec
     end
   end
 
+  class ReshapeThingsWordsToTitle < JsonApiKit::VersionChange
+    version "2026-09-20"
+    description "The `words` attribute of the things resource becomes `title`, one string."
+
+    resource :things do
+      renamed_attribute from: :words,
+                        to: :title,
+                        down: ->(title) { title.to_s.split(" ") },
+                        up: ->(words) { words.to_a.join(" ") }
+    end
+  end
+
   class RenameThingsAndPeople < JsonApiKit::VersionChange
     version "2026-10-01"
     description "Two resources change their names."
@@ -25,8 +37,9 @@ module JsonApiKitSpec
 end
 
 RSpec.describe JsonApiKit::VersionChange do
-  subject(:change) { JsonApiKitSpec::RenameThingsLabelToName.new(__FILE__) }
+  subject(:change) { change_class.new(__FILE__) }
 
+  let(:change_class) { JsonApiKitSpec::RenameThingsLabelToName }
   let(:version) { JsonApiKit::ApiVersion.parse("2026-09-15") }
   let(:later_version) { JsonApiKit::ApiVersion.parse("2026-10-01") }
   let(:fixtures) { Rails.root.join("spec/fixtures/json_api_kit") }
@@ -88,6 +101,18 @@ RSpec.describe JsonApiKit::VersionChange do
 
       it { expect { changes }.to raise_error(ArgumentError, /has no description/) }
     end
+
+    context "when a change renames one name twice" do
+      let(:directory) { "api_changes_with_two_renames_from_one_name" }
+
+      it { expect { changes }.to raise_error(ArgumentError, /renames label twice/) }
+    end
+
+    context "when a change renames two names to one name" do
+      let(:directory) { "api_changes_with_two_renames_to_one_name" }
+
+      it { expect { changes }.to raise_error(ArgumentError, /renames two names to title/) }
+    end
   end
 
   describe ".after" do
@@ -108,6 +133,32 @@ RSpec.describe JsonApiKit::VersionChange do
       it "returns no change" do
         expect(changes).to be_empty
       end
+    end
+  end
+
+  describe ".resource" do
+    context "when a rename declares one converter only" do
+      subject(:declaration) do
+        Class.new(described_class) do
+          version "2026-09-15"
+          description "Half a shape change."
+          resource(:things) { renamed_attribute from: :a, to: :b, down: ->(value) { value } }
+        end
+      end
+
+      it { expect { declaration }.to raise_error(ArgumentError, /both up: and down:/) }
+    end
+
+    context "when a converter is not callable" do
+      subject(:declaration) do
+        Class.new(described_class) do
+          version "2026-09-15"
+          description "A converter that is not one."
+          resource(:things) { renamed_attribute from: :a, to: :b, up: nil, down: nil }
+        end
+      end
+
+      it { expect { declaration }.to raise_error(ArgumentError, /must respond to call/) }
     end
   end
 
@@ -148,7 +199,7 @@ RSpec.describe JsonApiKit::VersionChange do
       end
     end
 
-    context "when the name is a filter with that name" do
+    context "when the name is a filter with the same spelling" do
       let(:name) { JsonApiKit::Name::Filter.new(value: "label", type: "things") }
 
       it "returns the name" do
@@ -169,6 +220,39 @@ RSpec.describe JsonApiKit::VersionChange do
     end
   end
 
+  describe "#current_attributes" do
+    subject(:current_attributes) { change.current_attributes(attributes) }
+
+    let(:attributes) { { name => "A", other_name => "B" } }
+    let(:other_name) { JsonApiKit::Name::Field.new(value: "size", type: "things") }
+
+    it "returns a renamed attribute under its current name" do
+      expect(current_attributes).to include(name.with(value: "name") => "A")
+    end
+
+    it "keeps an attribute the change does not rename" do
+      expect(current_attributes).to include(other_name => "B")
+    end
+
+    context "when the change reshapes the value" do
+      let(:change_class) { JsonApiKitSpec::ReshapeThingsWordsToTitle }
+      let(:attributes) { { name => %w[Bands of a listing] } }
+      let(:name) { JsonApiKit::Name::Field.new(value: "words", type: "things") }
+
+      it "returns the value in its current shape" do
+        expect(current_attributes).to eq(name.with(value: "title") => "Bands of a listing")
+      end
+
+      context "when the value is null" do
+        let(:attributes) { { name => nil } }
+
+        it "returns the value the converter gives for null" do
+          expect(current_attributes).to eq(name.with(value: "title") => "")
+        end
+      end
+    end
+  end
+
   describe "#previous" do
     subject(:previous_name) { change.previous(name) }
 
@@ -179,15 +263,37 @@ RSpec.describe JsonApiKit::VersionChange do
     end
   end
 
-  describe "#introduces?" do
-    context "when the change renames another name to this one" do
-      let(:name) { JsonApiKit::Name::Field.new(value: "name", type: "things") }
+  describe "#previous_attributes" do
+    subject(:previous_attributes) { change.previous_attributes(attributes) }
 
-      it { expect(change).to be_introduces(name) }
+    let(:attributes) { { name => "A", other_name => "B" } }
+    let(:name) { JsonApiKit::Name::Field.new(value: "name", type: "things") }
+    let(:other_name) { JsonApiKit::Name::Field.new(value: "size", type: "things") }
+
+    it "returns a renamed attribute under its name before the change" do
+      expect(previous_attributes).to include(name.with(value: "label") => "A")
     end
 
-    context "when the change renames this name away" do
-      it { expect(change).not_to be_introduces(name) }
+    it "keeps an attribute the change does not rename" do
+      expect(previous_attributes).to include(other_name => "B")
+    end
+
+    context "when the change reshapes the value" do
+      let(:change_class) { JsonApiKitSpec::ReshapeThingsWordsToTitle }
+      let(:attributes) { { name => "Bands of a listing" } }
+      let(:name) { JsonApiKit::Name::Field.new(value: "title", type: "things") }
+
+      it "returns the value in its shape before the change" do
+        expect(previous_attributes).to eq(name.with(value: "words") => %w[Bands of a listing])
+      end
+
+      context "when the value is null" do
+        let(:attributes) { { name => nil } }
+
+        it "returns the value the converter gives for null" do
+          expect(previous_attributes).to eq(name.with(value: "words") => [])
+        end
+      end
     end
   end
 end

@@ -3,22 +3,14 @@
 module JsonApiKit
   class VersionChange
     Rename =
-      Data.define(:kind, :type, :from, :to) do
-        def current(name)
-          return name unless applies_to?(name) && name.value == from
-          name.with(value: to)
-        end
+      Data.define(:from, :to, :up, :down) do
+        def current = to
 
-        def previous(name)
-          return name unless introduces?(name)
-          name.with(value: from)
-        end
+        def current_pairs(value) = [[to, up.call(value)]]
 
-        def introduces?(name) = applies_to?(name) && name.value == to
+        def previous = from
 
-        private
-
-        def applies_to?(name) = name.kind == kind && name.type == type
+        def previous_pairs(value) = [[from, down.call(value)]]
       end
   end
 end

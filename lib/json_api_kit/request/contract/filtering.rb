@@ -18,8 +18,8 @@ module JsonApiKit
         def check_filter_names
           refuse_unknown(
             :filter,
-            (filter.keys - resource.filter_names).map do
-              Name::Filter.new(value: it.to_s, type: resource.type)
+            (filter.keys - resource.filter_names).map do |name|
+              Name::Filter.new(value: name.to_s, type: resource.type)
             end,
           )
         end

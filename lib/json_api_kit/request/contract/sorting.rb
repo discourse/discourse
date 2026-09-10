@@ -40,8 +40,8 @@ module JsonApiKit
         def check_sort_names
           refuse_unknown(
             :sort,
-            (sort.keys - resource.sort_names).map do
-              Name::Sort.new(value: it.to_s, type: resource.type)
+            (sort.keys - resource.sort_names).map do |name|
+              Name::Sort.new(value: name.to_s, type: resource.type)
             end,
           )
         end

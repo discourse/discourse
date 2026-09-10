@@ -2,11 +2,6 @@
 
 module JsonApiKit
   module Name
-    Member =
-      Data.define(:value) do
-        include Name
-
-        def kind = :member
-      end
+    Member = Data.define(:value) { include Name }
   end
 end

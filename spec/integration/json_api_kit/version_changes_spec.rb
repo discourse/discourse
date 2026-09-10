@@ -13,6 +13,10 @@ module JsonApiKitSpec
 
     resource :topics do
       renamed_attribute from: :posted_at, to: :created_at
+      renamed_attribute from: :words,
+                        to: :title,
+                        down: ->(title) { title.to_s.split(" ") },
+                        up: ->(words) { words.to_a.join(" ") }
     end
   end
 end
@@ -48,7 +52,27 @@ RSpec.describe "JSON:API version changes", type: :request do
     end
 
     it "sends the attributes under the names of that version" do
-      expect(attributes.keys).to contain_exactly("title", "postedAt")
+      expect(attributes.keys).to contain_exactly("words", "postedAt")
+    end
+
+    it "sends a reshaped attribute in the shape of that version" do
+      expect(attributes["words"]).to eq(%w[Bands of a segmented listing])
+    end
+
+    context "when the request selects the reshaped field" do
+      let(:query) { { "fields" => { "topics" => "words" } } }
+
+      it "sends that field only" do
+        expect(attributes.keys).to contain_exactly("words")
+      end
+    end
+
+    context "when the request sorts by the reshaped field" do
+      let(:query) { { "sort" => "words" } }
+
+      it "orders the rows by that attribute" do
+        expect(ids).to eq([oldest.id.to_s, newest.id.to_s, middle.id.to_s])
+      end
     end
 
     context "when the request selects the renamed field" do
@@ -86,10 +110,29 @@ RSpec.describe "JSON:API version changes", type: :request do
       end
     end
 
+    context "when the request anchors a window on the reshaped field" do
+      let(:query) do
+        {
+          "sort" => "words",
+          "page" => {
+            "anchor" => {
+              "words" => %w[Bands of a segmented listing],
+            },
+            "beforeSize" => "1",
+            "afterSize" => "0",
+          },
+        }
+      end
+
+      it "sends the rows of the window" do
+        expect(ids).to eq([oldest.id.to_s, newest.id.to_s])
+      end
+    end
+
     context "when a refusal includes the renamed field" do
       let(:query) do
         {
-          "sort" => "title",
+          "sort" => "words",
           "page" => {
             "anchor" => {
               "postedAt" => middle.created_at.iso8601(6),
@@ -102,7 +145,7 @@ RSpec.describe "JSON:API version changes", type: :request do
         expect(error).to eq(
           refusal(
             title: "Anchor does not match the sort",
-            detail: "The anchor is postedAt, but this request sorts by title.",
+            detail: "The anchor is postedAt, but this request sorts by words.",
             parameter: "page[anchor][postedAt]",
           ).deep_stringify_keys,
         )
@@ -134,7 +177,7 @@ RSpec.describe "JSON:API version changes", type: :request do
     end
 
     it "sends the attributes under the names of the first version" do
-      expect(attributes.keys).to contain_exactly("title", "postedAt")
+      expect(attributes.keys).to contain_exactly("words", "postedAt")
     end
   end
 
