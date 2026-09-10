@@ -162,7 +162,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     expect(boards.last.permission_acl.permission_group_ids("edit")).to be_empty
   end
 
-  it "rolls back creation when input groups receive a banned permission" do
+  it "rejects automatic input groups before creating a board" do
     config =
       configuration.merge(
         "acl" => {
@@ -176,7 +176,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     expect do
       expect { execute_node(config, items:) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.create_board.acl_failed"),
+        I18n.t("discourse_workflows.errors.access_control.missing_groups"),
       )
     end.not_to change { Boards::Board.count }
   end
