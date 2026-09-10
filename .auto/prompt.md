@@ -10,8 +10,8 @@ tests into additional jobs. A skipped test suite is not a successful optimizatio
 Use this draft PR as the measurement environment. Keep the base revision fixed
 at 0708de39bcebe79c8469dfd88cd568c8e71b42c7 during the experiment. Record external
 plugin/theme revisions and cache behavior when assessing noisy results.
-Controlled measurements used a temporary PR-head checkout to prevent updates to
-main from changing tested sources. Final validation restores normal merge checkout.
+Controlled measurements use a temporary PR-head checkout to prevent updates to
+main from changing tested sources. Restore normal merge checkout for final validation.
 
 ## Procedure
 
@@ -27,8 +27,8 @@ main from changing tested sources. Final validation restores normal merge checko
    Require three complete successful measurements at or below 480 seconds before
    declaring the target achieved. Report every measurement, including outliers.
 
-Initial experiment budget: six candidate revisions, plus baseline and
-confirmation measurements, unless the user changes this limit.
+Continue experiments until the eight-minute goal is achieved. There is no
+experiment-count limit. Preserve the existing jobs and complete test coverage.
 
 ## Initial observations
 

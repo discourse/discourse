@@ -20,6 +20,7 @@ RSpec.configure do |config|
 
     mutex = Mutex.new
     condition_variable = ConditionVariable.new
+    readiness_condition = ConditionVariable.new
     test_running = false
     is_waiting = false
 
@@ -28,6 +29,7 @@ RSpec.configure do |config|
         loop do
           mutex.synchronize do
             is_waiting = true
+            readiness_condition.signal
             condition_variable.wait(mutex)
             is_waiting = false
           end
@@ -69,7 +71,7 @@ RSpec.configure do |config|
       ensure
         mutex.synchronize { test_running = false }
         backtrace_logger.wakeup
-        sleep 0.01 while !mutex.synchronize { is_waiting }
+        mutex.synchronize { readiness_condition.wait(mutex) until is_waiting }
       end
     end
 
