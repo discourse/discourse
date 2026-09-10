@@ -31,7 +31,8 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_all_site_settings",
         route: "adminSiteSettingsCategory",
-        routeModels: ["all_settings"],
+        routeModels: ["all_results"],
+        currentWhen: "adminSiteSettingsCategory",
         label: "admin.config.site_settings.title",
         description: "admin.config.site_settings.header_description",
         icon: "gear",
