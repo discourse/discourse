@@ -55,6 +55,29 @@ describe DiscourseAi::AdminDashboard::AskAi do
     )
   end
 
+  it "only provides query links when Data Explorer is enabled" do
+    SiteSetting.data_explorer_enabled = true
+    result =
+      described_class.build(start_date: "2026-09-01", end_date: "2026-09-02", current_user: admin)
+    expect(result[:data_explorer_query_ids]).to eq(activity: -45, outcomes: -46)
+
+    SiteSetting.data_explorer_enabled = false
+    result =
+      described_class.build(start_date: "2026-09-01", end_date: "2026-09-02", current_user: admin)
+    expect(result[:data_explorer_query_ids]).to be_nil
+  end
+
+  it "returns metrics without query links when Data Explorer is not installed" do
+    hide_const("DiscourseDataExplorer")
+    allow(SiteSetting).to receive(:data_explorer_enabled).and_raise(NoMethodError)
+
+    result =
+      described_class.build(start_date: "2026-09-01", end_date: "2026-09-02", current_user: admin)
+
+    expect(result).to include(questions: 0, data_explorer_query_ids: nil)
+    expect(SiteSetting).not_to have_received(:data_explorer_enabled)
+  end
+
   it "returns zero counts and no latency for an empty period" do
     result =
       described_class.build(start_date: "2026-09-01", end_date: "2026-09-02", current_user: admin)
