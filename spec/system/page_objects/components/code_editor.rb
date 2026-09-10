@@ -3,6 +3,7 @@
 module PageObjects
   module Components
     class CodeEditor < PageObjects::Components::Base
+      # Takes a selector, or an element already found by the caller.
       def initialize(selector = ".code-editor")
         @selector = selector
       end
@@ -36,18 +37,20 @@ module PageObjects
       end
 
       def editor
-        find(@selector)
+        @selector.is_a?(String) ? find(@selector) : @selector
       end
 
       def editor_content
         editor.find(".cm-content")
       end
 
-      def has_content?(content)
+      # Named apart from Capybara's text matchers, which would otherwise take
+      # over `have_text` and check the page instead of the document.
+      def has_value?(content)
         value == content
       end
 
-      def has_text?(content)
+      def has_value_including?(content)
         value.include?(content)
       end
     end

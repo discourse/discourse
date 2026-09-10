@@ -69,7 +69,7 @@ describe "Admin Customize Form Templates" do
     it "prefills the form data" do
       visit("/admin/customize/form-templates/#{form_template.id}")
       expect(form_template_page).to have_name_value(form_template.name)
-      expect(code_editor).to have_content(form_template.template)
+      expect(code_editor).to have_value(form_template.template)
     end
   end
 
@@ -77,7 +77,7 @@ describe "Admin Customize Form Templates" do
     form_template_page.visit_new
     form_template_page.type_in_template_name("New Template")
     form_template_page.click_quick_insert(field_type)
-    expect(code_editor).to have_text(content)
+    expect(code_editor).to have_value_including(content)
   end
 
   describe "when visiting the page to create a new form template" do

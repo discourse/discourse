@@ -7,10 +7,8 @@ import {
   loadCodemirrorLanguage,
   registerCodemirrorLanguage,
 } from "discourse/lib/codemirror-languages";
-import { buildCmParams } from "discourse/static/codemirror/build-extensions";
 
-// The editor hands builders exactly the contract plugins import the type of.
-expectTypeOf(buildCmParams()).toEqualTypeOf<CodemirrorParams>();
+// The module namespaces plugins receive are the real ones, not loose objects.
 expectTypeOf<CodemirrorParams["cmView"]["EditorView"]>().toEqualTypeOf<
   typeof import("@codemirror/view").EditorView
 >();

@@ -49,7 +49,6 @@ const FIELD_CONTROL_REGISTRY = {
   },
 
   code: { kind: "field", type: "code", renderer: CodeControl },
-  liquid: { kind: "field", type: "custom", renderer: LiquidControl },
   combo_box: { kind: "field", type: "custom", renderer: ComboBox },
   credential: { kind: "field", type: "custom", renderer: Credential },
   data_table_select: {
@@ -58,6 +57,7 @@ const FIELD_CONTROL_REGISTRY = {
     renderer: DataTableSelect,
   },
   group_select: { kind: "field", type: "custom", renderer: GroupSelect },
+  liquid: { kind: "field", type: "custom", renderer: LiquidControl },
   data_table_column_select: {
     kind: "field",
     type: "custom",

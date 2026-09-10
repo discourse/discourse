@@ -666,14 +666,14 @@ table.group-reports {
   .query-new__sql-editor {
     margin-bottom: 1.5em;
 
-    .code-editor,
-    .code-editor > .loading-container {
-      width: 100%;
-    }
-
     // the grippie lets the editor grow; give it a sensible starting height
     .code-editor {
+      width: 100%;
       min-height: 200px;
+
+      > .loading-container {
+        width: 100%;
+      }
     }
   }
 

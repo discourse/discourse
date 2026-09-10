@@ -84,13 +84,13 @@ describe "Admin Customize Themes" do
 
       visit("/admin/customize/themes/#{theme.id}/common/head_tag/edit")
 
-      expect(code_editor).to have_text("console.log('test')")
+      expect(code_editor).to have_value_including("console.log('test')")
     end
 
     it "can edit the js field" do
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
 
-      expect(code_editor).to have_text("// Your code here")
+      expect(code_editor).to have_value_including("// Your code here")
       code_editor.set_input("console.log('test')\n")
       find(".save-theme").click
 
@@ -105,7 +105,7 @@ describe "Admin Customize Themes" do
         .update!(value: "console.log('second test')")
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
 
-      expect(code_editor).to have_text("console.log('second test')")
+      expect(code_editor).to have_value_including("console.log('second test')")
     end
 
     it "shows the description of the field the admin switches to" do

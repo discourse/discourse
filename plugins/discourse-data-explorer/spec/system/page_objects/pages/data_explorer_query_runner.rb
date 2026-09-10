@@ -100,14 +100,9 @@ module PageObjects
       end
 
       def fill_new_query_sql(text)
-        page.execute_script(<<~JS, text)
-          const view = document
-            .querySelector(".query-new .editor-panel .codemirror-editor")
-            .codemirrorView;
-          view.dispatch({
-            changes: { from: 0, to: view.state.doc.length, insert: arguments[0] },
-          });
-        JS
+        PageObjects::Components::CodeEditor.new(".query-new .editor-panel .code-editor").set_input(
+          text,
+        )
         self
       end
 

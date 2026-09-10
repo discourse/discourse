@@ -8,7 +8,6 @@ import {
   autocompletion,
   closeCompletion,
   completeFromList,
-  completionKeymap,
   completionStatus,
 } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
@@ -108,7 +107,6 @@ export default class CodemirrorEditor extends Component {
     return [
       EditorState.languageData.of(() => [{ autocomplete: source }]),
       autocompletion(),
-      keymap.of(completionKeymap),
     ];
   }
 
@@ -255,8 +253,6 @@ export default class CodemirrorEditor extends Component {
       return;
     }
 
-    // Options are watched by identity, so a schema that arrives after mount is
-    // picked up while an inline hash still costs a rebuild per render.
     // A shortcut brings the shared palette with it; consumers that build their
     // own extensions style them however they like.
     this.view.dispatch({
@@ -269,7 +265,6 @@ export default class CodemirrorEditor extends Component {
               // the UI has to be switched on for them to surface. Consumers
               // building their own extensions bring their own.
               autocompletion(),
-              keymap.of(completionKeymap),
             ]
           : []
       ),

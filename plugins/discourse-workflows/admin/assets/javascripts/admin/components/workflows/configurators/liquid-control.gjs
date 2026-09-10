@@ -80,8 +80,6 @@ export default class LiquidControl extends Component {
       siteSettings: this.siteSettings,
       workflowVars: this.workflowsNodeTypes.workflowVars,
       nodes: graph.nodes,
-      // Read on demand: mode is a sibling field, and the editor is not rebuilt
-      // when it changes.
       perItem: () => this.#perItem,
     });
   }

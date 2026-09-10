@@ -94,11 +94,6 @@ export default class AdminThemeEditor extends Component {
       : null;
   }
 
-  @computed("fieldName", "currentTargetName")
-  get editorId() {
-    return `${this.fieldName}|${this.currentTargetName}`;
-  }
-
   get visibleTargets() {
     return this.theme.targets.filter((target) => {
       if (target.edited) {
