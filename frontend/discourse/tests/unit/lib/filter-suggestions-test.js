@@ -246,6 +246,22 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
     assert.true(names.includes("status:unsolved"), "includes status:unsolved");
   });
 
+  test("number suggestions respect the minimum", async function (assert) {
+    const tips = [{ name: "max_results:", type: "number", min: 1 }];
+
+    const { suggestions } = await FilterSuggestions.getSuggestions(
+      "max_results:",
+      tips,
+      buildContext()
+    );
+
+    assert.deepEqual(
+      suggestions.map((suggestion) => suggestion.term),
+      ["1", "5", "10", "20"],
+      "omits values below the minimum"
+    );
+  });
+
   test("top-level tips are limited to 20", async function (assert) {
     const many = [];
     for (let i = 0; i < 30; i++) {
