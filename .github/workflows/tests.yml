@@ -28,7 +28,7 @@ jobs:
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
-          matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
+          (matrix.build_type == 'backend' || (matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat')))
           && 'cdck-linux-16-core'
           || 'cdck-linux-8-core'
         )
@@ -431,6 +431,24 @@ jobs:
 
           printf 'CI_MEMORY {"cgroup_version":"%s","peak_mib":%s,"limit_mib":%s,"runner_memtotal_mib":%s,"oom":%s,"oom_kill":%s}\n' \
             "$cgroup_version" "$peak_mib" "$limit_mib" "$runner_mib" "$oom" "$oom_kill"
+          usage_seconds=null
+          nr_throttled=null
+          throttled_seconds=null
+          quota_cores=null
+          processor_count=$(nproc 2>/dev/null || true)
+          processor_count=${processor_count:-null}
+          if [ "$cgroup_version" = 2 ]; then
+            usage_seconds=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { printf "%.6f", $2 / 1000000 }' "$memory_dir/cpu.stat" 2>/dev/null || true)
+            nr_throttled=$(awk '$1 == "nr_throttled" && $2 ~ /^[0-9]+$/ { print $2 }' "$memory_dir/cpu.stat" 2>/dev/null || true)
+            throttled_seconds=$(awk '$1 == "throttled_usec" && $2 ~ /^[0-9]+$/ { printf "%.6f", $2 / 1000000 }' "$memory_dir/cpu.stat" 2>/dev/null || true)
+            quota_cores=$(awk 'NF == 2 && $1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && $1 > 0 && $2 > 0 { printf "%.6f", $1 / $2 }' "$memory_dir/cpu.max" 2>/dev/null || true)
+            usage_seconds=${usage_seconds:-null}
+            nr_throttled=${nr_throttled:-null}
+            throttled_seconds=${throttled_seconds:-null}
+            quota_cores=${quota_cores:-null}
+          fi
+          printf 'CI_CPU {"usage_seconds":%s,"nr_throttled":%s,"throttled_seconds":%s,"quota_cores":%s,"nproc":%s}\n' \
+            "$usage_seconds" "$nr_throttled" "$throttled_seconds" "$quota_cores" "$processor_count"
           {
             printf '### Container memory\n\n'
             printf '| Measurement | MiB |\n| --- | ---: |\n'
