@@ -22,7 +22,8 @@ module DiscourseAi
                 },
                 {
                   name: "dry_run",
-                  description: "When true, only count matching posts without processing data",
+                  description:
+                    "When true, only count matching posts (capped at the tool's result limit) without processing data",
                   type: "boolean",
                 },
               ],
@@ -36,9 +37,9 @@ module DiscourseAi
               **Filters:**
               - username:user1 or usernames:user1,user2 - posts by specific users
               - group:group1 or groups:group1,group2 - posts by users in specific groups
-              - post_type:first|reply - first posts only or replies only
-              - keywords:word1,word2 - full-text search in post content
-              - topic_keywords:word1,word2 - full-text search in topics (returns all posts from matching topics)
+              - post_type:regular|first|reply|whisper|moderator_action|small_action|all - only regular posts unless whisper|moderator_action|small_action|all is given
+              - keywords:word1,word2 - full-text search in post content, matches any word
+              - topic_keywords:word1,word2 - full-text search in topics, matches any word (returns regular posts from matching topics; use post_type:all to include other visible post types)
               - topic:123 or topics:123,456 - specific topics by ID
               - category:name1 or categories:name1,name2 - posts in categories and subcategories (by name/slug/id)
                 Prefix a category with = to exclude subcategories, for example category:=bugs.
@@ -49,16 +50,16 @@ module DiscourseAi
                 Prefix with - or use exclude_tag:tag1 / exclude_tags:tag1,tag2 to exclude tags
               - after:YYYY-MM-DD, before:YYYY-MM-DD - filter by post creation date
               - topic_after:YYYY-MM-DD, topic_before:YYYY-MM-DD - filter by topic creation date
-              - status:open|closed|archived|noreplies|single_user - topic status filters
-              - max_results:N - limit results (per OR group)
+              - status:open|closed|archived|listed|unlisted|deleted|public|noreplies|single_user - topic status filters
+              - max_results:N - lower the result cap for the whole query (cannot raise it above the tool's own cap), not per OR group
               - order:latest|oldest|latest_topic|oldest_topic|likes - sort order
               #{assign_tip}
 
-              **OR Logic:** Each OR group processes independently - filters don't cross boundaries.
+              **OR Logic:** Each OR group processes independently - filters don't cross boundaries, except max_results and order, which apply to the whole query.
 
               Examples:
               - 'username:sam after:2023-01-01' - sam's posts after date
-              - 'max_results:50 category:bugs OR tag:urgent' - (≤50 bug posts, including bug subcategories) OR (all urgent posts)
+              - 'max_results:50 category:bugs OR tag:urgent' - bug posts (including subcategories) OR urgent posts, ≤50 in total
               - 'category:=bugs' - posts directly in bugs, excluding bug subcategories
             TEXT
           end
@@ -94,10 +95,8 @@ module DiscourseAi
           @dry_run = parameters[:dry_run].nil? ? false : parameters[:dry_run]
 
           post = Post.find_by(id: context.post_id)
-          goals = parameters[:goals] || ""
-          dry_run = parameters[:dry_run].nil? ? false : parameters[:dry_run]
 
-          return { error: "No goals provided" } if goals.blank?
+          return { error: "No goals provided" } if @goals.blank?
           return { error: "No filter provided" } if @filter.blank?
 
           guardian = nil
@@ -118,10 +117,10 @@ module DiscourseAi
 
           blk.call details
 
-          if dry_run
-            { dry_run: true, goals: goals, filter: @filter, number_of_posts: @result_count }
+          if @dry_run
+            { dry_run: true, goals: @goals, filter: @filter, number_of_posts: @result_count }
           else
-            process_filter(filter, goals, post, &blk)
+            process_filter(filter, @goals, post, &blk)
           end
         rescue StandardError => e
           { error: "Error processing research: #{e.message}" }
