@@ -264,9 +264,20 @@ RSpec.describe Tag do
       it "returns original name when tag is in user locale" do
         SiteSetting.content_localization_enabled = true
         I18n.locale = "en"
+        Fabricate(:tag_localization, tag: localized_tag, locale: "en", name: "felines")
 
         expect(Tag.top_tags).to include(
           { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+        )
+      end
+
+      it "returns original name when the tag source locale is missing" do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "ja"
+        localized_tag.update!(locale: nil)
+
+        expect(Tag.top_tags).to contain_exactly(
+          { id: localized_tag.id, name: localized_tag.name, slug: localized_tag.slug },
         )
       end
 

@@ -713,6 +713,19 @@ describe "Content Localization" do
         expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
       end
 
+      it "shows the original tag name consistently when its source language is missing" do
+        tag.update!(locale: nil)
+        sign_in(japanese_user)
+
+        visit("/")
+
+        expect(sidebar).to have_section_link(tag.name)
+        expect(topic_list).to have_topic_tag(topic, tag.name)
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name(tag.name)
+      end
+
       it "displays localized tag names in the composer tag chooser" do
         SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
         SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
