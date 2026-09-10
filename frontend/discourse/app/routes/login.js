@@ -36,14 +36,10 @@ export default class extends DiscourseRoute {
       return;
     }
 
-    const { isReadOnly, isStaffWritesOnly } = this.site;
+    const { isReadOnly, isStaffWritesOnly, isArchived } = this.site;
     const { isAppWebview } = this.capabilities;
-    const {
-      allow_login_in_readonly_mode,
-      auth_immediately,
-      enable_discourse_connect,
-      login_required,
-    } = this.siteSettings;
+    const { auth_immediately, enable_discourse_connect, login_required } =
+      this.siteSettings;
     const { pathname: url } = window.location;
     const { search: query } = window.location;
     const { referrer } = document;
@@ -54,7 +50,7 @@ export default class extends DiscourseRoute {
       : homepageNavigationDestination();
 
     // Regular users can't log in but staff can when the site is read-only
-    if (isReadOnly && !isStaffWritesOnly && !allow_login_in_readonly_mode) {
+    if (isReadOnly && !isStaffWritesOnly && !isArchived) {
       if (from) {
         transition.abort();
       } else {

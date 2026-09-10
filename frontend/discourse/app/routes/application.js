@@ -80,9 +80,9 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   async logout() {
-    const { isReadOnly, isStaffWritesOnly } = this.site;
+    const { isReadOnly, isStaffWritesOnly, isArchived } = this.site;
 
-    if (isReadOnly && !isStaffWritesOnly) {
+    if (isReadOnly && !isStaffWritesOnly && !isArchived) {
       this.dialog.alert(i18n("read_only_mode.logout_disabled"));
     } else if (this.currentUser) {
       const pushSubscription = await getCurrentPushSubscription();

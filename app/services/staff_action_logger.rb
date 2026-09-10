@@ -961,6 +961,16 @@ class StaffActionLogger
     )
   end
 
+  def log_change_archive_mode(state)
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:change_archive_mode],
+        previous_value: !state,
+        new_value: state,
+      ),
+    )
+  end
+
   def log_check_personal_message(topic, opts = {})
     raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
     UserHistory.create!(

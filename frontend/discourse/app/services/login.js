@@ -29,11 +29,13 @@ export default class LoginService extends Service {
   }
 
   get readOnlySignupMessage() {
-    return i18n(
-      this.site.isStaffWritesOnly
-        ? "staff_writes_only_mode.signup_disabled"
-        : "read_only_mode.signup_disabled"
-    );
+    if (this.site.isStaffWritesOnly) {
+      return i18n("staff_writes_only_mode.signup_disabled");
+    }
+    if (this.site.isArchived) {
+      return i18n("archive_mode.signup_disabled");
+    }
+    return i18n("read_only_mode.signup_disabled");
   }
 
   @action

@@ -119,12 +119,14 @@ export default class GlobalNotice extends Component {
         })
       );
     } else if (this.site.get("isReadOnly")) {
+      const archived = this.site.get("isArchived");
+      const scope = archived ? "archive_mode" : "read_only_mode";
       notices.push(
         Notice.create({
           text: this.currentUser
-            ? i18n("read_only_mode.enabled")
-            : i18n("read_only_mode.enabled_anonymous"),
-          id: "alert-read-only",
+            ? i18n(`${scope}.enabled`)
+            : i18n(`${scope}.enabled_anonymous`),
+          id: archived ? "alert-archive-mode" : "alert-read-only",
         })
       );
     }

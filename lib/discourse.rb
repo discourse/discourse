@@ -791,11 +791,16 @@ module Discourse
   # Pseudo readonly mode, where staff can still write
   STAFF_WRITES_ONLY_MODE_KEY = "readonly_mode:staff_writes_only"
 
+  # Readonly mode representing a site permanently frozen as an archive.
+  # Reads and logins remain available, but no writes.
+  ARCHIVE_MODE_KEY = "readonly_mode:archive"
+
   READONLY_KEYS = [
     READONLY_MODE_KEY,
     PG_READONLY_MODE_KEY,
     USER_READONLY_MODE_KEY,
     PG_FORCE_READONLY_MODE_KEY,
+    ARCHIVE_MODE_KEY,
   ]
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY, expires: nil)
@@ -808,6 +813,7 @@ module Discourse
         USER_READONLY_MODE_KEY,
         PG_FORCE_READONLY_MODE_KEY,
         STAFF_WRITES_ONLY_MODE_KEY,
+        ARCHIVE_MODE_KEY,
       ].exclude?(key)
     end
 
@@ -894,6 +900,21 @@ module Discourse
 
   def self.staff_writes_only_mode?
     Discourse.redis.get(STAFF_WRITES_ONLY_MODE_KEY).present?
+  end
+
+  def self.archive_mode?
+    Discourse.redis.get(ARCHIVE_MODE_KEY).present?
+  end
+
+  # True when archive is the effective readonly reason. Any other readonly
+  # reason (failover, ops-triggered readonly, staff-writes-only) takes
+  # precedence and disables the archive-specific carve-outs.
+  def self.archive_mode_active?
+    return false unless archive_mode?
+    return false if staff_writes_only_mode?
+    return false if recently_readonly?
+    return false if GlobalSetting.pg_force_readonly_mode
+    !Discourse.redis.exists?(*(READONLY_KEYS - [ARCHIVE_MODE_KEY]))
   end
 
   def self.pg_readonly_mode?

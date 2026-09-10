@@ -179,6 +179,7 @@ class UserHistory < ActiveRecord::Base
         admin_onboarding_dismissed: 130,
         removed_avatar: 131,
         create_group: 132,
+        change_archive_mode: 133,
       )
   end
 
@@ -224,6 +225,7 @@ class UserHistory < ActiveRecord::Base
       unlock_trust_level
       activate_user
       change_readonly_mode
+      change_archive_mode
       backup_download
       backup_destroy
       post_locked

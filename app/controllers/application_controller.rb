@@ -259,12 +259,16 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::ReadOnly do
     unless response_body
+      key = Discourse.archive_mode_active? ? "archive_mode_enabled" : "read_only_mode_enabled"
       respond_to do |format|
-        format.json do
-          render_json_error I18n.t("read_only_mode_enabled"), type: :read_only, status: 503
-        end
+        format.json { render_json_error I18n.t(key), type: :read_only, status: 503 }
         format.html do
-          render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+          render status: :service_unavailable,
+                 layout: "no_ember",
+                 template: "exceptions/read_only",
+                 locals: {
+                   message_key: key,
+                 }
         end
       end
     end

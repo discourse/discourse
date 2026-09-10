@@ -38,12 +38,37 @@ export default class AdminBackupsActions extends Component {
     }
   }
 
+  @action
+  toggleArchiveMode() {
+    if (!this.site.isArchived) {
+      this.dialog.yesNoConfirm({
+        message: i18n("admin.backups.archive_mode.enable.confirm"),
+        didConfirm: () => this.#toggleArchiveMode(true),
+      });
+    } else {
+      this.#toggleArchiveMode(false);
+    }
+  }
+
   async #toggleReadOnlyMode(enable) {
     try {
       await ajax("/admin/backups/readonly", {
         type: "PUT",
         data: { enable },
       });
+      this.site.set("isReadOnly", enable);
+    } catch (err) {
+      popupAjaxError(err);
+    }
+  }
+
+  async #toggleArchiveMode(enable) {
+    try {
+      await ajax("/admin/site/archive", {
+        type: "PUT",
+        data: { enable },
+      });
+      this.site.set("isArchived", enable);
       this.site.set("isReadOnly", enable);
     } catch (err) {
       popupAjaxError(err);
@@ -94,6 +119,23 @@ export default class AdminBackupsActions extends Component {
         this.site.isReadOnly
         "admin.backups.read_only.disable.title"
         "admin.backups.read_only.enable.title"
+      }}
+    />
+
+    <@actions.Default
+      class="admin-backups__toggle-archive"
+      @action={{this.toggleArchiveMode}}
+      @disabled={{@backups.isOperationRunning}}
+      @icon={{if this.site.isArchived "box-open" "box-archive"}}
+      @label={{if
+        this.site.isArchived
+        "admin.backups.archive_mode.disable.label"
+        "admin.backups.archive_mode.enable.label"
+      }}
+      @title={{if
+        this.site.isArchived
+        "admin.backups.archive_mode.disable.title"
+        "admin.backups.archive_mode.enable.title"
       }}
     />
   </template>

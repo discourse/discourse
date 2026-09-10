@@ -100,6 +100,8 @@ Discourse::Application.routes.draw do
       get "search" => "search#index"
       get "schema/:setting_name" => "admin#index"
 
+      put "site/archive" => "site#archive", :constraints => AdminConstraint.new
+
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
       get "plugins/:plugin_id/settings" => "plugins#show"
