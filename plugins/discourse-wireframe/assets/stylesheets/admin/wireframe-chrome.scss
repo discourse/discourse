@@ -2880,8 +2880,8 @@ body.wireframe-active .wireframe-block-chrome.--media-background {
     opacity: 1;
   }
 
-  &--n,
-  &--s {
+  &.--n,
+  &.--s {
     left: 50%;
     width: 24px;
     height: 4px;
@@ -2889,8 +2889,8 @@ body.wireframe-active .wireframe-block-chrome.--media-background {
     cursor: ns-resize;
   }
 
-  &--e,
-  &--w {
+  &.--e,
+  &.--w {
     top: 50%;
     width: 4px;
     height: 24px;
@@ -2898,49 +2898,49 @@ body.wireframe-active .wireframe-block-chrome.--media-background {
     cursor: ew-resize;
   }
 
-  &--n {
+  &.--n {
     top: -2px;
   }
 
-  &--s {
+  &.--s {
     bottom: -2px;
   }
 
-  &--e {
+  &.--e {
     right: -2px;
   }
 
-  &--w {
+  &.--w {
     left: -2px;
   }
 
-  &--ne,
-  &--nw,
-  &--se,
-  &--sw {
+  &.--ne,
+  &.--nw,
+  &.--se,
+  &.--sw {
     width: 8px;
     height: 8px;
   }
 
-  &--nw {
+  &.--nw {
     top: -3px;
     left: -3px;
     cursor: nwse-resize;
   }
 
-  &--ne {
+  &.--ne {
     top: -3px;
     right: -3px;
     cursor: nesw-resize;
   }
 
-  &--se {
+  &.--se {
     bottom: -3px;
     right: -3px;
     cursor: nwse-resize;
   }
 
-  &--sw {
+  &.--sw {
     bottom: -3px;
     left: -3px;
     cursor: nesw-resize;
