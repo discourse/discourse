@@ -12,6 +12,14 @@ module JsonApiKit
 
       def merged_attributes(**) = declare(Declaration::MergedAttributes.new(type, **))
 
+      def renamed_sort(from:, to:)
+        declare(Declaration::RenamedName.new(type, [Name::Sort], from:, to:))
+      end
+
+      def renamed_filter(from:, to:)
+        declare(Declaration::RenamedName.new(type, [Name::Filter], from:, to:))
+      end
+
       def to_a = transformations
 
       private
