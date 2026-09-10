@@ -183,12 +183,6 @@ loaderShim("ember-this-fallback/this-fallback-helper", () =>
 loaderShim("ember-this-fallback/try-lookup-helper", () =>
   importSync("./lib/ember-this-fallback/try-lookup-helper")
 );
-loaderShim("ember-buffered-proxy/helpers", () =>
-  importSync("ember-buffered-proxy/helpers")
-);
-loaderShim("ember-buffered-proxy/mixin", () =>
-  importSync("ember-buffered-proxy/mixin")
-);
 loaderShim("ember-buffered-proxy/proxy", () =>
-  importSync("ember-buffered-proxy/proxy")
+  importSync("./lib/buffered-proxy")
 );
