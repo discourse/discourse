@@ -21,7 +21,7 @@ export const RECENT_FALLBACK: readonly string[] = [
   "paragraph",
   "image",
   "card",
-  "list",
+  "button-link",
 ];
 
 /**
@@ -31,27 +31,10 @@ export const RECENT_FALLBACK: readonly string[] = [
 export const CATEGORY_LEADS: Readonly<
   Record<BlockCategory, readonly string[]>
 > = {
-  layout: [
-    "layout",
-    "section",
-    "head",
-    "spacer",
-    "divider",
-    "tabs",
-    "accordion",
-    "carousel",
-    "table",
-  ],
-  text: ["heading", "paragraph", "list", "quote", "callout", "stats"],
-  media: ["image", "video", "embed", "icon"],
-  actions: [
-    "card",
-    "cta-banner",
-    "wf:cta-actions",
-    "button-link",
-    "new-topic-button",
-    "link-list",
-  ],
+  layout: ["layout", "section", "spacer", "divider", "tabs", "carousel"],
+  text: ["heading", "paragraph", "callout"],
+  media: ["image"],
+  actions: ["card", "button-link", "new-topic-button"],
   community: [
     "recent-topics",
     "topic-card",

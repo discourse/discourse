@@ -1,5 +1,7 @@
 # Card and block catalogue audit
 
+For the post-consolidation inventory, see [Block editor readiness](BLOCK_EDITOR_READINESS.md).
+
 Current entry point: [Static Card implementation plan](STATIC_CARD_EDITOR_PLAN.md).
 This audit is design history. Later leaf-card, identity and clean-break decisions
 supersede conflicting proposals below; no backward compatibility is required.

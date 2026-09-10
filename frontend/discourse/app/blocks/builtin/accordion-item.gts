@@ -22,6 +22,7 @@ interface AccordionItemSignature {
  * edit its content in place rather than having to expand it first.
  */
 @block("accordion-item", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/accordion-item"),
   container: true,
   displayName: "Accordion item",

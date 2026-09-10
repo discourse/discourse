@@ -62,6 +62,7 @@ interface HeadBlockSignature {
  * ```
  */
 @block("head", {
+  paletteHidden: true,
   container: true,
   displayName: "Conditional",
   icon: "code-branch",

@@ -15,6 +15,7 @@ interface AccordionSignature {
  * later refinement; for now sections open independently.)
  */
 @block("accordion", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/accordion"),
   container: true,
   displayName: "Accordion",

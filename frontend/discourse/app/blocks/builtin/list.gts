@@ -21,6 +21,7 @@ interface ListSignature {
  * separate `list` blocks for nesting.
  */
 @block("list", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/list"),
   displayName: "List",
   icon: "list",

@@ -37,6 +37,7 @@ interface QuoteSignature {
  * in place on the canvas.
  */
 @block("quote", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/quote"),
   displayName: "Quote",
   icon: "quote-left",

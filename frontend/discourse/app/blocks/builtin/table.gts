@@ -67,6 +67,7 @@ interface RenderedRow {
   icon: "table",
   category: "layout",
   description: "A table whose cells hold blocks, with optional headers.",
+  paletteHidden: true,
   args: {
     columns: {
       type: "number",

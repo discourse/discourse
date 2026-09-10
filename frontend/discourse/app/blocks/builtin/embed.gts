@@ -28,6 +28,7 @@ interface EmbedSignature {
  * trust level as the HTML staff already write in themes.
  */
 @block("embed", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/embed"),
   displayName: "Embed",
   icon: "code",

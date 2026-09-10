@@ -20,6 +20,7 @@ interface WFCtaActionsSignature {
  * can't be changed in place — only by detaching the composition.
  */
 @block("wf:cta-actions", {
+  paletteHidden: true,
   displayName: "CTA actions",
   category: "actions",
   icon: "arrows-left-right",

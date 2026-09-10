@@ -31,6 +31,7 @@ interface LinkListSignature {
  * blocks.
  */
 @block("link-list", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/link-list"),
   displayName: "Link list",
   icon: "link",

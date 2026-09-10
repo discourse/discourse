@@ -27,6 +27,7 @@ interface StatsSignature {
  * `{ value, label, icon, href }` objects) reflowed into equal columns.
  */
 @block("stats", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/stats"),
   displayName: "Stats",
   icon: "chart-column",

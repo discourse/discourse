@@ -9,6 +9,7 @@ import {
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import PalettePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/palette-panel";
+import { buildBlockPalette } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 
 // Replace an already-instantiated wireframe service with a plain stub. The real
 // services are booted into the test owner, so a bare `register` won't swap the
@@ -22,6 +23,68 @@ module(
   "Integration | discourse-wireframe | Component | palette-panel",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("deferred blocks stay registered but are absent from insertion choices", async function (assert) {
+      const blocks = this.owner.lookup("service:blocks");
+      const deferred = [
+        "accordion-item",
+        "cta-banner",
+        "wf:cta-actions",
+        "table",
+        "accordion",
+        "list",
+        "link-list",
+        "stats",
+        "quote",
+        "icon",
+        "video",
+        "embed",
+        "head",
+      ];
+      const palette = buildBlockPalette(blocks);
+      this.owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
+      const recentBlocks = this.owner.lookup("service:wireframe-recent-blocks");
+      for (const name of deferred) {
+        recentBlocks.record(name);
+      }
+
+      await render(<template><PalettePanel /></template>);
+
+      for (const name of deferred) {
+        assert.true(Boolean(blocks.getBlock(name)), `${name} stays registered`);
+        assert.false(
+          palette.some((entry) => entry.blockName === name),
+          `${name} is absent from the shared insertion catalogue`
+        );
+        assert
+          .dom(`[data-block-name='${name}']`)
+          .doesNotExist(`${name} is absent from palette groups and recents`);
+      }
+
+      await fillIn(".wireframe-palette__search", "CTA");
+      assert
+        .dom(".wireframe-block-row")
+        .doesNotExist("search does not offer deferred calls to action");
+      assert.true(
+        palette.some((entry) => entry.blockName === "card"),
+        "Card remains available"
+      );
+      assert.true(
+        palette.some((entry) => entry.blockName === "button-link"),
+        "individual action buttons remain available"
+      );
+      for (const name of [
+        "topic-card",
+        "featured-badges",
+        "category-banner",
+        "tag-banner",
+      ]) {
+        assert.true(
+          palette.some((entry) => entry.blockName === name),
+          `${name} remains available despite partial editor support`
+        );
+      }
+    });
 
     test("static Card catalogue offers one leaf without competing legacy registrations", async function (assert) {
       await render(<template><PalettePanel /></template>);
@@ -157,7 +220,7 @@ module(
       ) {
         names.push(el.dataset.blockName);
       }
-      assert.deepEqual(names.slice(0, 3), ["heading", "paragraph", "list"]);
+      assert.deepEqual(names.slice(0, 3), ["heading", "paragraph", "callout"]);
     });
 
     test("offers the default blocks as Recent until the layout has taught it anything", async function (assert) {
@@ -175,6 +238,9 @@ module(
     test("tops Recent up with the block types the layout uses most", async function (assert) {
       this.owner.lookup("service:wireframe-publish-target").setActiveTheme(7);
       this.owner.lookup("service:wireframe-recent-blocks").record("icon");
+      this.owner
+        .lookup("service:wireframe-recent-blocks")
+        .record("button-link");
       stubService(this.owner, "wireframe-layout-query", {
         editableOutlets: ["homepage-blocks"],
         // The root layout wraps the content; only its children count.
@@ -203,8 +269,8 @@ module(
       ].map((el) => el.dataset.blockName);
       assert.deepEqual(
         recentNames,
-        ["icon", "callout", "list", "quote", "layout", "heading"],
-        "inserted first, then most used, then defaults, six in all"
+        ["button-link", "callout", "layout", "heading", "paragraph", "image"],
+        "inserted first, then most used, then defaults, skipping hidden blocks"
       );
     });
 

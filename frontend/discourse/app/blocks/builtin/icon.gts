@@ -26,6 +26,7 @@ interface IconSignature {
  * this one stands on its own.
  */
 @block("icon", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/icon"),
   displayName: "Icon",
   icon: "star",

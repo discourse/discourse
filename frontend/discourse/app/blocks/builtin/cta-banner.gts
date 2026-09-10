@@ -41,6 +41,7 @@ interface CtaBannerSignature {
  * the block conditions system — the block itself just renders.
  */
 @block("cta-banner", {
+  paletteHidden: true,
   thumbnail: () => import("discourse/blocks/thumbnails/cta-banner"),
   displayName: "CTA banner",
   icon: "bullhorn",
