@@ -11,10 +11,18 @@ import { i18n } from "discourse-i18n";
 module("Integration | Component | WatchedWordUploader", function (hooks) {
   setupRenderingTest(hooks);
 
+  let uploadedActionKey;
+
   hooks.beforeEach(function () {
-    pretender.post("/admin/customize/watched_words/upload.json", function () {
-      return response(200, {});
-    });
+    uploadedActionKey = undefined;
+
+    pretender.post(
+      "/admin/customize/watched_words/upload.json",
+      function (request) {
+        uploadedActionKey = request.requestBody.get("action_key");
+        return response(200, {});
+      }
+    );
   });
 
   test("sets the proper action key on uploads", async function (assert) {
@@ -23,12 +31,11 @@ module("Integration | Component | WatchedWordUploader", function (hooks) {
 
     const done = assert.async();
     this.set("actionNameKey", "flag");
-    this.set("doneUpload", function () {
+    this.set("doneUpload", () => {
       assert.strictEqual(
-        Object.entries(
-          this.uppyUpload.uppyWrapper.uppyInstance.getState().files
-        )[0][1].meta.action_key,
-        "flag"
+        uploadedActionKey,
+        "flag",
+        "sends the action key with the upload"
       );
       assert.true(
         dialog.alert.calledWith(
