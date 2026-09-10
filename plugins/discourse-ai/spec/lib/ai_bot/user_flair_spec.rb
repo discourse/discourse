@@ -46,6 +46,17 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
     expect(group.bio_cooked).to be_present
   end
 
+  it "gives an existing AI users group without a bio the default bio" do
+    Fabricate(:ai_agent, user: bot_user)
+    group = Group.find_by(name: described_class::GROUP_NAME)
+    group.update_columns(bio_raw: nil, bio_cooked: nil)
+
+    described_class.sync_all!
+
+    expect(group.reload.bio_raw).to eq(I18n.t("discourse_ai.ai_bot.ai_users_bio"))
+    expect(group.bio_cooked).to be_present
+  end
+
   it "keeps an edited bio on an existing AI users group" do
     Fabricate(:ai_agent, user: bot_user)
     group = Group.find_by(name: described_class::GROUP_NAME)

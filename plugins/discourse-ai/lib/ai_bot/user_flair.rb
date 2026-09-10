@@ -61,7 +61,7 @@ module DiscourseAi::AiBot::UserFlair
 
   def self.ensure_group!
     group = Group.find_or_initialize_by(name: GROUP_NAME)
-    group.bio_raw = I18n.t("discourse_ai.ai_bot.ai_users_bio") if group.new_record?
+    group.bio_raw = I18n.t("discourse_ai.ai_bot.ai_users_bio") if group.bio_raw.blank?
     group.assign_attributes(
       automatic: true,
       flair_icon: FLAIR_ICON,
