@@ -60,21 +60,32 @@ RSpec.describe "Chat sidebar channel list options" do
     expect(chat_sidebar).to have_channel(unread_channel)
     expect(chat_sidebar).to have_no_channel(read_channel)
     expect(chat_sidebar.channel_names).to eq(["Zulu channel"])
+    expect(page).to have_no_css("[data-sidebar-action-id='toggleChannelFilter']")
 
     chat_sidebar.set_channel_filter("mentions")
 
+    expect(page).to have_no_css(".chat-sidebar-channels-filter-empty-state")
     expect(page).to have_css(
-      ".chat-sidebar-channels-filter-empty-state",
-      text: "No channels match this filter.",
+      "[data-sidebar-action-id='toggleChannelFilter'] .d-icon-filter-circle-xmark",
     )
 
-    chat_sidebar.show_all_channels
+    chat_sidebar.toggle_channel_filter
 
     expect(chat_sidebar).to have_channel(unread_channel)
     expect(chat_sidebar).to have_channel(read_channel)
-    try_until_success(reason: "reset channel filter preference saves asynchronously") do
-      expect(current_user.user_option.reload.chat_channel_list_filter).to eq("all")
+    try_until_success(reason: "temporary override retains the saved filter") do
+      expect(current_user.user_option.reload.chat_channel_list_filter).to eq("mentions")
     end
+
+    expect(chat_sidebar.channel_names).to eq(["Zulu channel", "Alpha channel"])
+    expect(page).to have_css("[data-sidebar-action-id='toggleChannelFilter'] .d-icon-filter")
+    chat_sidebar.toggle_channel_filter
+    expect(chat_sidebar).to have_no_channel(read_channel)
+    expect(chat_sidebar).to have_no_channel(unread_channel)
+    chat_sidebar.toggle_channel_filter
+    page.refresh
+    expect(chat_sidebar).to have_no_channel(read_channel)
+    expect(chat_sidebar).to have_no_channel(unread_channel)
   end
 
   it "opens the new channel modal for staff from the channels options menu" do
@@ -99,19 +110,16 @@ RSpec.describe "Chat sidebar channel list options" do
     within(chat_sidebar.starred_section) do
       expect(page).to have_no_css(".channel-#{read_channel.id}")
     end
-    expect(page).to have_css(
-      ".sidebar-section[data-section-name='chat-starred-channels']",
-      text: "No channels match this filter.",
-    )
+    expect(page).to have_css(".sidebar-section[data-section-name='chat-starred-channels']")
     try_until_success(reason: "starred filter preference saves asynchronously") do
       expect(current_user.user_option.reload.chat_channel_list_filter_starred).to eq("unread")
     end
 
-    chat_sidebar.show_all_channels
+    chat_sidebar.toggle_channel_filter
 
     within(chat_sidebar.starred_section) { expect(page).to have_css(".channel-#{read_channel.id}") }
-    try_until_success(reason: "reset starred filter preference saves asynchronously") do
-      expect(current_user.user_option.reload.chat_channel_list_filter_starred).to eq("all")
+    try_until_success(reason: "temporary override retains the starred filter") do
+      expect(current_user.user_option.reload.chat_channel_list_filter_starred).to eq("unread")
     end
   end
 
@@ -133,19 +141,16 @@ RSpec.describe "Chat sidebar channel list options" do
     chat_sidebar.set_dm_filter("unread")
 
     within(chat_sidebar.dms_section) { expect(page).to have_no_css(".channel-#{dm_channel.id}") }
-    expect(page).to have_css(
-      ".sidebar-section[data-section-name='chat-dms']",
-      text: "No channels match this filter.",
-    )
+    expect(page).to have_css(".sidebar-section[data-section-name='chat-dms']")
     try_until_success(reason: "DM filter preference saves asynchronously") do
       expect(current_user.user_option.reload.chat_channel_list_filter_dms).to eq("unread")
     end
 
-    chat_sidebar.show_all_channels
+    chat_sidebar.toggle_channel_filter
 
     within(chat_sidebar.dms_section) { expect(page).to have_css(".channel-#{dm_channel.id}") }
-    try_until_success(reason: "reset DM filter preference saves asynchronously") do
-      expect(current_user.user_option.reload.chat_channel_list_filter_dms).to eq("all")
+    try_until_success(reason: "temporary override retains the DM filter") do
+      expect(current_user.user_option.reload.chat_channel_list_filter_dms).to eq("unread")
     end
   end
 end

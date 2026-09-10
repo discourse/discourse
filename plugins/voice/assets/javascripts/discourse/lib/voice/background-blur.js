@@ -1,3 +1,4 @@
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 // Camera background blur.
 //
 // Runs the raw camera stream through MediaPipe selfie segmentation and
@@ -5,7 +6,6 @@
 // cutout in front — then captures the canvas as the outgoing stream.
 // Mirrors the NoiseSuppressionManager contract: setup(raw stream) returns
 // the processed stream; the caller keeps ownership of the raw stream.
-
 import { voiceAssetUrl } from "./voice-assets";
 
 const ENABLED_KEY = "voice_video_blur_enabled";
@@ -256,9 +256,8 @@ export default class BackgroundBlurManager {
 
     try {
       this.#renderFrame();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn("[voice] background blur frame failed", error);
+    } catch {
+      voiceLog.warn("[voice] background blur frame failed");
     }
 
     this.#scheduleRender();

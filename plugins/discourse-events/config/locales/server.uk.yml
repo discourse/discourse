@@ -155,6 +155,12 @@ uk:
           acting_user_not_allowed_to_create_event: "Поточний користувач не може створювати події."
           acting_user_not_allowed_to_act_on_this_event: "Поточний користувач не має права впливати на цю подію."
           invalid_allowed_groups: "Неправильні дозволені групи."
+          invalid_hosts: "Не можна додати один хост до цієї події."
+          too_many_hosts:
+            one: "Подія обмежена для %{count} хоста."
+            few: "Подія обмежена для %{count} хостів."
+            many: "Подія обмежена для %{count} хостів."
+            other: "Подія обмежена для %{count} хостів."
           acting_user_not_allowed_to_invite_these_groups: "Поточний користувач не має права запрошувати ці групи."
           custom_field_is_invalid: "Користувацьке поле `%{field}` не допускається."
           name:

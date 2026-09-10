@@ -13,10 +13,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
-import ChatSidebarChannelListFilterEmptyState from "discourse/plugins/chat/discourse/components/chat-sidebar-channel-list-filter-empty-state";
-import ChatSidebarDmsFilterEmptyState from "discourse/plugins/chat/discourse/components/chat-sidebar-dms-filter-empty-state";
 import ChatSidebarIndicators from "discourse/plugins/chat/discourse/components/chat-sidebar-indicators";
-import ChatSidebarStarredFilterEmptyState from "discourse/plugins/chat/discourse/components/chat-sidebar-starred-filter-empty-state";
 import { CHANNEL_LIST_SECTION_OPTIONS } from "discourse/plugins/chat/discourse/lib/chat-channel-list-options";
 import {
   CHAT_PANEL,
@@ -242,6 +239,26 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
       return showSuffix ? "" : "";
     }
   };
+}
+
+function channelListActions(section, menuService, preferences, links) {
+  const actions = [];
+  const bypassed = preferences.isFilterBypassedFor(section);
+  if (bypassed || (!preferences.isDefaultFilterFor(section) && !links.length)) {
+    actions.push({
+      id: "toggleChannelFilter",
+      icon: bypassed ? "filter" : "filter-circle-xmark",
+      title: i18n(
+        bypassed
+          ? "chat.channel_list.apply_filters"
+          : "chat.channel_list.empty.show_all"
+      ),
+      disabled: preferences.isSavingFilterFor(section),
+      action: () => preferences.toggleFilter(section),
+    });
+  }
+  actions.push(channelListOptionsAction(section, menuService));
+  return actions;
 }
 
 function channelListOptionsAction(section, menuService) {
@@ -497,14 +514,6 @@ export default {
               return this.sectionLinks;
             }
 
-            get emptyStateComponent() {
-              if (
-                !this.chatChannelListPreferences.isDefaultFilterFor("starred")
-              ) {
-                return ChatSidebarStarredFilterEmptyState;
-              }
-            }
-
             get displaySection() {
               return (
                 this.chatStateManager.hasPreloadedChannels &&
@@ -518,7 +527,20 @@ export default {
             }
 
             get actions() {
-              return [channelListOptionsAction("starred", this.menuService)];
+              return channelListActions(
+                "starred",
+                this.menuService,
+                this.chatChannelListPreferences,
+                this.sectionLinks
+              );
+            }
+
+            get actionsInline() {
+              return true;
+            }
+
+            get persistentActions() {
+              return this.actions.length > 1;
             }
 
             get actionsIcon() {
@@ -700,16 +722,6 @@ export default {
                 );
               }
 
-              get emptyStateComponent() {
-                if (
-                  !this.chatChannelListPreferences.isDefaultFilterFor(
-                    "channels"
-                  )
-                ) {
-                  return ChatSidebarChannelListFilterEmptyState;
-                }
-              }
-
               get name() {
                 return "chat-channels";
               }
@@ -727,7 +739,20 @@ export default {
                   return [];
                 }
 
-                return [channelListOptionsAction("channels", this.menuService)];
+                return channelListActions(
+                  "channels",
+                  this.menuService,
+                  this.chatChannelListPreferences,
+                  this.sectionLinks
+                );
+              }
+
+              get actionsInline() {
+                return true;
+              }
+
+              get persistentActions() {
+                return this.actions.length > 1;
               }
 
               get actionsIcon() {
@@ -1022,7 +1047,20 @@ export default {
               }
 
               get actions() {
-                return [channelListOptionsAction("dms", this.menuService)];
+                return channelListActions(
+                  "dms",
+                  this.menuService,
+                  this.chatChannelListPreferences,
+                  this.sectionLinks
+                );
+              }
+
+              get actionsInline() {
+                return true;
+              }
+
+              get persistentActions() {
+                return this.actions.length > 1;
               }
 
               get actionsIcon() {
@@ -1031,14 +1069,6 @@ export default {
 
               get links() {
                 return this.sectionLinks;
-              }
-
-              get emptyStateComponent() {
-                if (
-                  !this.chatChannelListPreferences.isDefaultFilterFor("dms")
-                ) {
-                  return ChatSidebarDmsFilterEmptyState;
-                }
               }
 
               get displaySection() {

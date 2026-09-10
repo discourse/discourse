@@ -212,8 +212,10 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     it "returns the threads of the channel" do
       get "/chat/api/channels/#{public_channel.id}/threads"
       expect(response.status).to eq(200)
+      # thread_1 and thread_3 have memberships with last_read IS NULL → unread (sort first)
+      # thread_2 has no membership → sorts by date after unread threads
       expect(response.parsed_body["threads"].map { |thread| thread["id"] }).to eq(
-        [thread_3.id, thread_2.id, thread_1.id],
+        [thread_3.id, thread_1.id, thread_2.id],
       )
     end
 

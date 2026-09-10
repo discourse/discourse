@@ -1344,6 +1344,12 @@ nb_NO:
       tracked_topics_link: "Vis"
       automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen"
       apps: "Programmer"
+      mcp_authorizations:
+        details: "Detaljer"
+        never: "Aldri"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
       revoke_access: "Trekk tilbake tilgang"
       undo_revoke_access: "Angre tilbaketrekking av tilgang"
       api_approved: "Godkjent:"
@@ -4398,6 +4404,60 @@ nb_NO:
       config:
         developer:
           title: "Utvikler"
+        mcp:
+          tabs:
+            access: "Tilgang"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Tilgang"
+            group: "Gruppe"
+            groups: "Grupper"
+            actions: "Handlinger"
+            edit: "Rediger"
+            delete: "Slett"
+          primitives:
+            group_by_options:
+              provider: "Tilbyder"
+              kind: "Type"
+            provider: "Tilbyder"
+            kind: "Type"
+          clients:
+            actions: "Handlinger"
+            block: "Blokker"
+            presets:
+              custom: "Egendefinert"
+          authorizations:
+            user: "Bruker"
+            status: "Status"
+            actions: "Handlinger"
+          activity:
+            time: "Tid"
+            user: "Bruker"
+            duration: "Varighet"
+          values:
+            server_status:
+              disabled: "Deaktivert"
+            client_trust:
+              approved: "Godkjent"
+            authorization_status:
+              active: "Aktiv"
+            activity_outcome:
+              success: "Suksess"
+              error: "Feil"
+            primitive_state:
+              enabled: "Aktivert"
+              disabled: "Deaktivert"
+            primitive_kind:
+              all: "Alle typer"
+            primitive_risk:
+              moderation: "Moderering"
+            filter:
+              all: "Alle"
+          never: "Aldri"
+          actions:
+            revoke: "Trekk tilbake"
         emojis:
           title: "Emoji"
         flags:

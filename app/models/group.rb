@@ -37,6 +37,7 @@ class Group < ActiveRecord::Base
   has_many :group_requests, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
   has_many :group_associated_groups, dependent: :destroy
+  has_many :mcp_group_scopes, dependent: :destroy
 
   has_many :group_archived_messages, dependent: :destroy
 

@@ -55,9 +55,7 @@ module DiscourseAi
         return false if Guardian.new(user).is_silenced?
 
         agent = discover_agent
-        if agent.nil? || !agent.enabled? || !user.in_any_groups?(agent.allowed_group_ids.to_a)
-          return false
-        end
+        return false if agent.nil? || !user.in_any_groups?(agent.allowed_group_ids.to_a)
 
         llm_model_id = agent.default_llm_id.presence || SiteSetting.ai_default_llm_model
         llm_model_id.present? && LlmModel.exists?(id: llm_model_id)

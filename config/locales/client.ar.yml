@@ -2152,6 +2152,16 @@ ar:
       tracked_topics_link: "إظهار"
       automatically_unpin_topics: "إلغاء تثبيت الموضوعات تلقائيًا عند وصولي إلى نهايتها"
       apps: "التطبيقات"
+      mcp_authorizations:
+        endpoint: "المورد"
+        scopes: "النطاقات"
+        details: "التفاصيل"
+        last_used: "آخر استخدام"
+        never: "أبدًا"
+        status: "الحالة"
+        statuses:
+          active: "نشطة"
+          revoked: "سُحب"
       revoke_access: "إلغاء الوصول"
       undo_revoke_access: "التراجع عن إلغاء الوصول"
       api_approved: "تمت الموافقة عليها:"
@@ -7496,6 +7506,80 @@ ar:
         developer:
           title: "المطور"
           header_description: "إعدادات المطوّر للتحكم في الوضع الآمن والميزات المتقدمة الأخرى"
+        mcp:
+          title: "خادم MCP"
+          tabs:
+            access: "الوصول"
+            activity: "النشاط"
+          overview:
+            status: "الحالة"
+            tools: "الأدوات"
+          access:
+            title: "الوصول"
+            group: "المجموعة"
+            groups: "المجموعات"
+            actions: "الإجراءات"
+            edit: "تعديل"
+            delete: "حذف"
+          primitives:
+            group_by: "التجميع حسب"
+            group_by_options:
+              scope: "المجال"
+              provider: "مقدِّم الخدمة"
+              kind: "النوع"
+            provider: "مقدِّم الخدمة"
+            kind: "النوع"
+            scope: "المجال"
+            state: "الحالة"
+            scopes: "النطاقات"
+          clients:
+            actions: "الإجراءات"
+            block: "حظر"
+            use_preset: "إعداد"
+            presets:
+              custom: "مخصَّصة"
+          authorizations:
+            user: "المستخدم"
+            scopes: "المجالات الممنوحة"
+            last_used: "آخر استخدام"
+            status: "الحالة"
+            actions: "الإجراءات"
+          activity:
+            errors: "الأخطاء"
+            rate_limits: "حدود المعدل"
+            outcome: "النتيجة"
+            time: "الوقت"
+            user: "المستخدم"
+            duration: "المدة"
+          values:
+            server_status:
+              available: "متوفر"
+              disabled: "متوقفة"
+            client_trust:
+              approved: "تمت الموافقة"
+            authorization_status:
+              active: "نشطة"
+              revoked: "سُحب"
+            activity_outcome:
+              success: "تم بنجاح"
+              error: "خطأ"
+            primitive_state:
+              enabled: "مفعَّلة"
+              disabled: "متوقفة"
+              unavailable: "غير متوفر"
+            primitive_kind:
+              all: "كل الأنواع"
+              tool: "أداة"
+              resource: "المورد"
+              prompt: "الأمر"
+            primitive_risk:
+              read: "للقراءة فقط"
+              moderation: "الإشراف"
+            filter:
+              all: "الكل"
+          never: "أبدًا"
+          actions:
+            revoke: "إلغاء"
         experimental:
           title: "تجريبي"
           header_description: "تفعيل/إيقاف الميزات التجريبية إلى وضع التشغيل أو الإيقاف لموقعك، ويمكن التحكم في معظم تلك الميزات بشكلٍ جماعي"

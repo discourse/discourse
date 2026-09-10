@@ -231,6 +231,8 @@ class OptimizedImage < ActiveRecord::Base
 
     instructions = ["#{from}[0]"]
 
+    instructions << "-colors" << opts[:colors].to_s if opts[:colors]
+
     instructions << "-quality" << opts[:quality].to_s if opts[:quality]
 
     # NOTE: ORDER is important!
@@ -332,42 +334,24 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
-    if GlobalSetting.enable_vips_image_processing
+    if GlobalSetting.enable_vips_image_processing && operation == :optimized_image_crop
       convert_with(instructions, from, to, opts, operation:) do
         input_format = instructions.first.split(":", 2).first.downcase
         output_format = instructions.last.split(":", 2).first.downcase
-        if operation == :optimized_image_downsize
-          quality = vips_quality(input_path: from, input_format:, output_format:)
-          DiscourseVips.downsize(
-            input_path: from,
-            output_path: to,
-            input_format:,
-            output_format:,
-            geometry: dimensions,
-            quality:,
-            timeout: MAX_CONVERT_SECONDS,
-          )
-        else
-          width, height = dimensions.split("x")
-          quality =
-            vips_quality(input_path: from, input_format:, output_format:, quality: opts[:quality])
-          arguments = {
-            input_path: from,
-            output_path: to,
-            input_format:,
-            output_format:,
-            width:,
-            height:,
-            quality:,
-            strip_metadata: SiteSetting.strip_image_metadata,
-            timeout: MAX_CONVERT_SECONDS,
-          }
-          if operation == :optimized_image_crop
-            DiscourseVips.crop(**arguments)
-          else
-            DiscourseVips.resize(**arguments)
-          end
-        end
+        width, height = dimensions.split("x")
+        quality =
+          vips_quality(input_path: from, input_format:, output_format:, quality: opts[:quality])
+        DiscourseVips.crop(
+          input_path: from,
+          output_path: to,
+          input_format:,
+          output_format:,
+          width:,
+          height:,
+          quality:,
+          strip_metadata: SiteSetting.strip_image_metadata,
+          timeout: MAX_CONVERT_SECONDS,
+        )
       end
     else
       convert_with(instructions, from, to, opts, operation:)

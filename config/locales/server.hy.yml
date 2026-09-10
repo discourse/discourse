@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 hy:
+  mcp:
+    oauth:
+      deny: "Մերժել"
+      approve: "Նույնականացնել"
   llms_txt:
     sections:
       optional: "Ընտրովի"

@@ -123,12 +123,21 @@ export default class Reviewable extends RestModel {
     });
   }
 
-  @computed("resolvedType", "reviewable_scores", "status")
+  get #offersApproveUser() {
+    return this.bundled_actions?.some((bundle) =>
+      bundle.actions?.some((action) => action.server_action === "approve_user")
+    );
+  }
+
+  @computed("resolvedType", "reviewable_scores", "status", "bundled_actions")
   get userReviewableContextQuestion() {
     if (this.resolvedType === "ReviewableUser") {
-      // in this case the only remaining action is "scrub record" so the question shouldn't show
+      // the spam question must not outlive the pending state: its only
+      // remaining answer would be a "Yes" that approves the user
       if (this.status !== PENDING) {
-        return null;
+        return this.#offersApproveUser
+          ? i18n("review.context_question.approve_user")
+          : null;
       }
       const isSuspectUser = this.reviewable_scores?.some(
         (score) => score.reason_type === "suspect_user"

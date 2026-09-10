@@ -1052,6 +1052,12 @@ lv:
       tracked_topics_link: "Parādīt"
       automatically_unpin_topics: "Automātiski atspraust tēmas, kad sasniedzu beigas"
       apps: "Lietotnes"
+      mcp_authorizations:
+        details: "Detaļas"
+        never: "Nekad"
+        status: "Statuss"
+        statuses:
+          active: "Aktīvs"
       revoke_access: "Liegt piekļuvi"
       undo_revoke_access: "Atcelt piekļuves liegšanu"
       api_approved: "Apstiprināts:"
@@ -2968,6 +2974,54 @@ lv:
       config:
         developer:
           title: "Izstrādātājs"
+        mcp:
+          tabs:
+            access: "Piekļuve"
+            activity: "Aktivitāte"
+          overview:
+            status: "Statuss"
+          access:
+            title: "Piekļuve"
+            group: "Grupa"
+            groups: "Grupas"
+            actions: "Darbības"
+            edit: "Labot"
+            delete: "Dzēst"
+          primitives:
+            group_by_options:
+              kind: "Tips"
+            kind: "Tips"
+          clients:
+            actions: "Darbības"
+            block: "Bloķēt"
+          authorizations:
+            user: "Lietotājs"
+            status: "Statuss"
+            actions: "Darbības"
+          activity:
+            time: "Laiks"
+            user: "Lietotājs"
+            duration: "Ilgums"
+          values:
+            server_status:
+              disabled: "Atslēgt"
+            client_trust:
+              approved: "Apstiprināt"
+            authorization_status:
+              active: "Aktīvs"
+            activity_outcome:
+              success: "Veiksmīgi"
+              error: "Kļūda..."
+            primitive_state:
+              enabled: "Ieslēgts"
+              disabled: "Atslēgt"
+            primitive_kind:
+              all: "Visi veidi"
+            filter:
+              all: "Visi"
+          never: "Nekad"
+          actions:
+            revoke: "Atsaukt"
         emojis:
           title: "Smaidiņi"
         files:

@@ -30,7 +30,7 @@ export default class GrantBadgeModal extends Component {
   @autoTrackedArray userBadges = [];
 
   get noAvailableBadges() {
-    !this.availableBadges.length;
+    return !this.availableBadges.length;
   }
 
   get badgeOptions() {

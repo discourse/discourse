@@ -6,11 +6,14 @@ module Jobs
       every 1.minute
 
       def execute(args)
-        DiscourseEvents::Events::EventDate.pending.find_each do |event_date|
-          send_reminder(event_date)
-          trigger_events(event_date)
-          finish(event_date)
-        end
+        DiscourseEvents::Events::EventDate
+          .pending
+          .includes(:event)
+          .find_each do |event_date|
+            send_reminder(event_date)
+            trigger_events(event_date)
+            finish(event_date)
+          end
       end
 
       def send_reminder(event_date)
@@ -56,30 +59,21 @@ module Jobs
       end
 
       def due_reminders(event_date)
-        return [] if event_date.event.reminders.blank?
         event_date
           .event
-          .reminders
-          .split(",")
-          .map do |reminder|
-            unit, value, type = reminder.split(".").reverse
-
-            next if type === "bumpTopic" || !validate_reminder_unit(unit)
-            reminder = "notification.#{value}.#{unit}" if type.blank?
-
-            date = event_date.starts_at - value.to_i.public_send(unit)
-            { description: reminder, date: date }
+          .parsed_reminders
+          .reject do |reminder|
+            reminder[:type] == DiscourseEvents::Events::Event::BUMP_TOPIC_REMINDER
           end
-          .compact
+          .map do |reminder|
+            {
+              description: "#{reminder[:type]}.#{reminder[:value]}.#{reminder[:unit]}",
+              date: event_date.starts_at - DiscourseEvents::Events::Event.reminder_offset(reminder),
+            }
+          end
           .select { |reminder| reminder[:date] <= Time.current }
           .sort_by { |reminder| reminder[:date] }
           .drop(event_date.reminder_counter)
-      end
-
-      private
-
-      def validate_reminder_unit(input)
-        ActiveSupport::Duration::PARTS.any? { |part| part.to_s == input }
       end
     end
   end

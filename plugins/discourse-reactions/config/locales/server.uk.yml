@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 uk:
+  discourse_reactions:
+    errors:
+      reaction_unavailable: "Реакція недоступна"
   site_settings:
     discourse_reactions_like_icon: "Визначає піктограму, яка використовується для головної кнопки реакції. Це має бути назва піктограми <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> , а не назва емодзі."
     discourse_reactions_reaction_for_like: "Визначає реакцію, пов’язану з дією Like. Історичні записи Like не будуть змінені, якщо цей параметр зміниться, <strong>рекомендуємо</strong> , щоб цей параметр ніколи не змінювали."

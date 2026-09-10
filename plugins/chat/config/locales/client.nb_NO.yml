@@ -127,6 +127,11 @@ nb_NO:
         sort:
           relevance: "Relevanse"
           latest: "Siste"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Omtalelser"
       incoming_webhooks:
         back: "Forrige"
         description: "Beskrivelse"

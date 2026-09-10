@@ -32,13 +32,14 @@ import optionalService from "discourse/lib/optional-service";
 import { showAlert } from "discourse/lib/post-action-feedback";
 import { survivingPenalty } from "discourse/lib/reviewable-penalty";
 import { resolveReviewableComponent } from "discourse/lib/reviewable-registry";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
-import { eq, not } from "discourse/truth-helpers";
+import { eq, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
@@ -127,7 +128,7 @@ export default class ReviewableItem extends Component {
   @cached
   get state() {
     // reading the argument is what ties this cache to a single reviewable
-    this.args.reviewable;
+    manuallyTrack(this.args.reviewable);
 
     return trackedObject({
       activeTab: "timeline",
@@ -229,6 +230,18 @@ export default class ReviewableItem extends Component {
     }
 
     return this.siteSettings?.reviewable_claiming !== "required";
+  }
+
+  get primaryBundles() {
+    return (this.args.reviewable?.bundled_actions ?? []).filter(
+      (bundle) => !bundle.secondary
+    );
+  }
+
+  get secondaryBundles() {
+    return (this.args.reviewable?.bundled_actions ?? []).filter(
+      (bundle) => bundle.secondary
+    );
   }
 
   get tagCategoryId() {
@@ -864,7 +877,7 @@ export default class ReviewableItem extends Component {
                     @label="review.cancel"
                   />
                 {{else}}
-                  {{#each @reviewable.bundled_actions as |bundle|}}
+                  {{#each this.primaryBundles as |bundle|}}
                     <ReviewableBundledAction
                       @authorPenalties={{@reviewable.author_penalties}}
                       @bundle={{bundle}}
@@ -873,13 +886,26 @@ export default class ReviewableItem extends Component {
                     />
                   {{/each}}
 
-                  {{#if @reviewable.can_edit}}
-                    <DButton
-                      class="reviewable-action btn-default edit"
-                      @action={{this.edit}}
-                      @disabled={{this.disabled}}
-                      @label="review.edit"
-                    />
+                  {{#if (or this.secondaryBundles.length @reviewable.can_edit)}}
+                    <div class="review-item__secondary-actions">
+                      {{#each this.secondaryBundles as |bundle|}}
+                        <ReviewableBundledAction
+                          @authorPenalties={{@reviewable.author_penalties}}
+                          @bundle={{bundle}}
+                          @performAction={{this.perform}}
+                          @reviewableUpdating={{this.disabled}}
+                        />
+                      {{/each}}
+
+                      {{#if @reviewable.can_edit}}
+                        <DButton
+                          class="reviewable-action btn-default edit"
+                          @action={{this.edit}}
+                          @disabled={{this.disabled}}
+                          @label="review.edit"
+                        />
+                      {{/if}}
+                    </div>
                   {{/if}}
                 {{/if}}
               </div>
