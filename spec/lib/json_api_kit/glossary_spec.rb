@@ -113,7 +113,7 @@ RSpec.describe JsonApiKit::Glossary do
       let(:value) { "words" }
 
       before do
-        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
           [JsonApiKitSpec::GlossaryShapeChange.new(__FILE__)],
         )
       end
@@ -208,7 +208,9 @@ RSpec.describe JsonApiKit::Glossary do
           .new(__FILE__)
       end
 
-      before { allow(JsonApiKit::VersionChange).to receive(:after).and_return([version_change]) }
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
 
       it "translates the correction through the remaining rules" do
         expect { declared_name }.to raise_error(
@@ -275,7 +277,7 @@ RSpec.describe JsonApiKit::Glossary do
       let(:value) { "postedAt" }
 
       before do
-        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
           [version_change],
         )
       end
@@ -304,7 +306,7 @@ RSpec.describe JsonApiKit::Glossary do
         let(:value) { "createdAt" }
 
         before do
-          allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+          allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
             [version_change, JsonApiKitSpec::GlossaryReuseChange.new(__FILE__)],
           )
         end
@@ -344,7 +346,9 @@ RSpec.describe JsonApiKit::Glossary do
           .new(__FILE__)
       end
 
-      before { allow(JsonApiKit::VersionChange).to receive(:after).and_return([version_change]) }
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
 
       it "returns the historical type in camel case" do
         expect(member_type).to eq("forumTopics")
@@ -365,7 +369,7 @@ RSpec.describe JsonApiKit::Glossary do
       subject(:glossary) { described_class.resource(version) }
 
       before do
-        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
           [JsonApiKitSpec::GlossaryShapeChange.new(__FILE__)],
         )
       end
@@ -414,7 +418,7 @@ RSpec.describe JsonApiKit::Glossary do
       subject(:glossary) { described_class.resource(version) }
 
       before do
-        allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
           [version_change],
         )
       end
