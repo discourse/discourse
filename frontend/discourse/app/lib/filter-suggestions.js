@@ -570,6 +570,7 @@ class FilterTypeValueSuggester {
     ];
 
     return options
+      .filter((opt) => Number(opt.value) >= (this.tip.min ?? 0))
       .filter((opt) => !this.searchTerm || opt.value.includes(this.searchTerm))
       .map((opt) => ({
         name: this.buildSuggestionName(opt.value),
