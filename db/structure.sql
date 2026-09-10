@@ -170,16 +170,6 @@ BEGIN
     RETURN NULL;
   END IF;
 
-  IF TG_OP = 'INSERT' AND NEW.source = 2 THEN
-    WITH deleted_events AS (
-      DELETE FROM browser_pageview_events
-      WHERE source = 1 AND session_id = NEW.session_id
-      RETURNING id
-    )
-    DELETE FROM browser_pageview_event_scores
-    WHERE event_id IN (SELECT id FROM deleted_events);
-  END IF;
-
   RETURN NEW;
 END;
 $$;
@@ -2142,6 +2132,27 @@ CREATE TABLE public.browser_pageview_event_scores (
 
 
 --
+-- Name: browser_pageview_event_scores_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_event_scores_backup (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    automation_ua_score smallint NOT NULL,
+    known_asn_score smallint NOT NULL,
+    velocity_score smallint NOT NULL,
+    churn_score smallint NOT NULL,
+    rapid_nav_score smallint NOT NULL,
+    referrer_score smallint NOT NULL,
+    engagement_score smallint NOT NULL,
+    ip_rotation_score smallint NOT NULL,
+    datacenter_asn_score smallint NOT NULL,
+    single_request_no_referrer_score smallint NOT NULL,
+    stale_browser_score smallint NOT NULL
+);
+
+
+--
 -- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2180,6 +2191,34 @@ CREATE TABLE public.browser_pageview_events (
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
     source smallint DEFAULT 2 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer,
+    browser smallint,
+    language character varying(255),
+    normalized_language character varying
+);
+
+
+--
+-- Name: browser_pageview_events_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_events_backup (
+    id bigint NOT NULL,
+    url character varying(2000) NOT NULL,
+    ip_address inet NOT NULL,
+    referrer character varying(2000),
+    user_agent character varying(1000) NOT NULL,
+    session_id character varying(32) NOT NULL,
+    topic_id integer,
+    user_id integer,
+    country_code character varying(2),
+    created_at timestamp without time zone NOT NULL,
+    asn integer,
+    score integer,
+    normalized_referrer character varying(2000),
+    normalized_referrer_version smallint,
+    source smallint NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
     browser smallint,
@@ -16296,11 +16335,27 @@ ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
 
 
 --
+-- Name: browser_pageview_event_scores_backup browser_pageview_event_scores_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores_backup
+    ADD CONSTRAINT browser_pageview_event_scores_backup_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: browser_pageview_event_scores browser_pageview_event_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.browser_pageview_event_scores
     ADD CONSTRAINT browser_pageview_event_scores_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_events_backup browser_pageview_events_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_events_backup
+    ADD CONSTRAINT browser_pageview_events_backup_pkey PRIMARY KEY (id);
 
 
 --
@@ -25109,6 +25164,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260910030427'),
+('20260910030404'),
+('20260910030345'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
@@ -25121,7 +25179,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260902075239'),
 ('20260901020329'),
 ('20260831162602'),
-('20260831011842'),
 ('20260831011840'),
 ('20260831011839'),
 ('20260831011836'),

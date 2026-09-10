@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require Rails.root.join(
-          "db/migrate/20260831011842_remove_duplicated_legacy_browser_pageview_events.rb",
+          "db/migrate/20260910030404_archive_duplicated_legacy_browser_pageview_events.rb",
         )
 
-RSpec.describe RemoveDuplicatedLegacyBrowserPageviewEvents do
+RSpec.describe ArchiveDuplicatedLegacyBrowserPageviewEvents do
   before do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
@@ -20,7 +20,7 @@ RSpec.describe RemoveDuplicatedLegacyBrowserPageviewEvents do
     ActiveRecord::Migration.verbose = @original_verbose
   end
 
-  it "removes duplicated legacy events after batches without matches" do
+  it "archives duplicated legacy events after batches without matches" do
     standalone_legacy = Fabricate(:browser_pageview_event, session_id: "legacy-session")
     another_standalone_legacy =
       Fabricate(:browser_pageview_event, session_id: "another-legacy-session")
@@ -38,7 +38,26 @@ RSpec.describe RemoveDuplicatedLegacyBrowserPageviewEvents do
       "ALTER TABLE browser_pageview_events ENABLE TRIGGER skip_piggyback_browser_pageview_events",
     )
 
+    event_data =
+      DB.query_single(
+        "SELECT to_jsonb(events) FROM browser_pageview_events events WHERE id = :id",
+        id: duplicated_legacy.id,
+      )
+    score_data =
+      DB.query_single(
+        "SELECT to_jsonb(scores) FROM browser_pageview_event_scores scores WHERE id = :id",
+        id: duplicated_score.id,
+      )
+
     stub_const(described_class, "BATCH_SIZE", 2) { described_class.new.up }
+    described_class.new.up
+
+    expect(
+      DB.query_single("SELECT to_jsonb(events) FROM browser_pageview_events_backup events"),
+    ).to eq(event_data)
+    expect(
+      DB.query_single("SELECT to_jsonb(scores) FROM browser_pageview_event_scores_backup scores"),
+    ).to eq(score_data)
 
     expect(BrowserPageviewEvent.pluck(:id)).to contain_exactly(
       beacon.id,

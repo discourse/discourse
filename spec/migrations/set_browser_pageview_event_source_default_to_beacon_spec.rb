@@ -5,25 +5,25 @@ require Rails.root.join(
         )
 
 require Rails.root.join(
-          "db/migrate/20260831011842_remove_duplicated_legacy_browser_pageview_events.rb",
+          "db/migrate/20260910030404_archive_duplicated_legacy_browser_pageview_events.rb",
         )
 
 RSpec.describe SetBrowserPageviewEventSourceDefaultToBeacon do
   %w[default explicit].each do |beacon_source|
-    it "removes legacy events when a #{beacon_source} beacon arrives after deduplication" do
+    it "preserves legacy events when a #{beacon_source} beacon arrives after archiving" do
       migration = described_class.new
       migration.suppress_messages { migration.down }
 
       legacy = Fabricate(:browser_pageview_event, session_id: "shared-session")
       another_legacy = Fabricate(:browser_pageview_event, session_id: legacy.session_id)
       unrelated_legacy = Fabricate(:browser_pageview_event)
-      BrowserPageviewEventScore.create!(event_id: legacy.id)
-      BrowserPageviewEventScore.create!(event_id: another_legacy.id)
+      legacy_score = BrowserPageviewEventScore.create!(event_id: legacy.id)
+      another_legacy_score = BrowserPageviewEventScore.create!(event_id: another_legacy.id)
       unrelated_score = BrowserPageviewEventScore.create!(event_id: unrelated_legacy.id)
 
       migration.suppress_messages do
         migration.up
-        RemoveDuplicatedLegacyBrowserPageviewEvents.new.up
+        ArchiveDuplicatedLegacyBrowserPageviewEvents.new.up
       end
       expect(BrowserPageviewEvent.count).to eq(3)
 
@@ -38,8 +38,17 @@ RSpec.describe SetBrowserPageviewEventSourceDefaultToBeacon do
         RETURNING id
       SQL
 
-      expect(BrowserPageviewEvent.pluck(:id)).to contain_exactly(unrelated_legacy.id, *beacon_ids)
-      expect(BrowserPageviewEventScore.pluck(:id)).to contain_exactly(unrelated_score.id)
+      expect(BrowserPageviewEvent.pluck(:id)).to contain_exactly(
+        legacy.id,
+        another_legacy.id,
+        unrelated_legacy.id,
+        *beacon_ids,
+      )
+      expect(BrowserPageviewEventScore.pluck(:id)).to contain_exactly(
+        legacy_score.id,
+        another_legacy_score.id,
+        unrelated_score.id,
+      )
     end
   end
 
