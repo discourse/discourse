@@ -2,6 +2,6 @@
 
 module JsonApiKit
   module Name
-    Relationship = Data.define(:value, :type) { include Name }
+    Relationship = Data.define(:value, :type) { include Name::ResourceScope }
   end
 end

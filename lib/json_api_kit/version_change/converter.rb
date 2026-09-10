@@ -10,6 +10,8 @@ module JsonApiKit
           @names = names
           super("cannot convert the value of #{names.join(", ")}")
         end
+
+        def convert_names(&) = self.class.new(names.flat_map(&))
       end
 
       def initialize(direction, callable, names)
