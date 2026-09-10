@@ -9,7 +9,7 @@ if defined?(DiscourseWorkflows)
             name: "action:create_board_column",
             version: "1.0",
             defaults: {
-              icon: "boards",
+              icon: "rectangle-list",
               color: "light-green",
             },
             group: "discourse_actions",

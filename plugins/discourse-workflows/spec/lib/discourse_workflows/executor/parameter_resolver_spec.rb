@@ -134,11 +134,12 @@ RSpec.describe DiscourseWorkflows::Executor::ParameterResolver do
       )
     end
 
-    it "keeps the permission literal and rejects unsupported values" do
+    it "keeps the selected permission literal for the resource service to validate" do
+      parameters["acl"]["entries"] = []
       parameters["acl"]["permission"] = "={{ 'manage' }}"
-      expect { resolver.resolve("acl") }.to raise_error(
-        DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.access_control.invalid_permission"),
+
+      expect(resolver.resolve("acl")).to eq(
+        [{ "type" => "group", "id" => group.id, "permission" => "={{ 'manage' }}" }],
       )
     end
 

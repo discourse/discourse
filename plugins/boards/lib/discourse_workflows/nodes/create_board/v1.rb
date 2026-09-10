@@ -51,7 +51,7 @@ if defined?(DiscourseWorkflows)
                   acl_target_type: "Boards::Board",
                   acl_target_key: Boards::Board.acl_target_key,
                   acl_target_name: "boards.manage.board",
-                  permissions: %w[view edit manage],
+                  permissions: Boards::Board::ACL_PERMISSIONS.values,
                 },
               },
             },

@@ -21,7 +21,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoardColumn::V1 do
       version: "1.0",
       group: "discourse_actions",
       defaults: {
-        icon: "boards",
+        icon: "rectangle-list",
         color: "light-green",
       },
       capabilities: {

@@ -76,11 +76,7 @@ module DiscourseWorkflows
       end
 
       def resolve_parameter_value(value, schema = nil)
-        if access_control_schema?(schema)
-          return(
-            Executor::AccessControlParameter.new(schema: schema, resolver: @resolver).resolve(value)
-          )
-        end
+        return resolve_access_control(value, schema) if access_control_schema?(schema)
         return value if no_data_expression?(schema)
         return resolve_fixed_collection_value(value, schema) if fixed_collection_schema?(schema)
         return resolve_collection_value(value, schema) if collection_schema?(schema)
@@ -97,6 +93,38 @@ module DiscourseWorkflows
           end
 
         coerce_parameter_value(resolved_value, schema)
+      end
+
+      def resolve_access_control(value, schema)
+        # Contracts normalize hash keys; keep the saved workflow configuration untouched.
+        Executor::AccessControlParameter.call(
+          params: {
+            value: value.deep_dup,
+          },
+          options:
+            (schema_value(schema, :control_options) || {}).with_indifferent_access.slice(
+              :required_permissions,
+              :acl_target_type,
+            ),
+          resolver: @resolver,
+        ) do
+          on_success { |acl:| return acl }
+          on_model_not_found(:input_group_ids) { |model| raise model.exception }
+          on_failed_policy(:valid_group_ids) do
+            raise NodeError, I18n.t("discourse_workflows.errors.access_control.invalid_groups")
+          end
+          on_failed_policy(:groups_exist) do
+            raise NodeError, I18n.t("discourse_workflows.errors.access_control.missing_groups")
+          end
+          on_model_not_found(:acl) { |model| raise model.exception }
+          on_failed_policy(:required_permissions_present) do |options:|
+            raise NodeError,
+                  I18n.t(
+                    "discourse_workflows.errors.access_control.required_permission",
+                    permissions: options.required_permissions.join(", "),
+                  )
+          end
+        end
       end
 
       def resolve_hash_parameter_value(value, schema)
