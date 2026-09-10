@@ -23,6 +23,14 @@ module DiscourseVips
     )
   end
 
+  def self.auto_orient(input_path:, output_path:, source_quality:, timeout:)
+    Client.call(
+      ["auto-orient", input_path, output_path, source_quality],
+      operation: :upload_auto_orient,
+      timeout:,
+    )
+  end
+
   def self.before_fork
     Client.before_fork
   end

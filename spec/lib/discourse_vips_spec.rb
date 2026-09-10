@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe DiscourseVips do
   describe ".version" do
     it "returns the libvips version" do
@@ -106,5 +108,139 @@ RSpec.describe DiscourseVips do
       operation: "upload_dominant_color",
       success: true,
     )
+  end
+
+  describe ".auto_orient" do
+    %w[
+      TopLeft
+      TopRight
+      BottomRight
+      BottomLeft
+      LeftTop
+      RightTop
+      RightBottom
+      LeftBottom
+    ].each_with_index do |orientation, index|
+      it "normalizes #{orientation} JPEG pixels and orientation metadata" do
+        Dir.mktmpdir do |directory|
+          input_path = File.join(directory, "oriented.jpg")
+          output_path = File.join(directory, "upright.jpg")
+          expected_path = File.join(directory, "expected.png")
+          actual_path = File.join(directory, "actual.png")
+          fixture = file_from_fixtures("exif_orientation.jpg").path
+          profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
+          ImageMagick.magick(
+            fixture,
+            "-resize",
+            "80x48!",
+            "-fill",
+            "red",
+            "-draw",
+            "rectangle 0,0 39,23",
+            "-fill",
+            "green",
+            "-draw",
+            "rectangle 40,0 79,23",
+            "-fill",
+            "blue",
+            "-draw",
+            "rectangle 0,24 39,47",
+            "-fill",
+            "white",
+            "-draw",
+            "rectangle 40,24 79,47",
+            "+profile",
+            "*",
+            "-quality",
+            "95",
+            "-interlace",
+            index.even? ? "Plane" : "None",
+            input_path,
+            operation: :upload_auto_orient,
+            read: [fixture, profile],
+            write: [directory],
+          )
+          orientation_tag = [0x0112, 3, 1, index + 1].pack("vvVV")
+          exif = "Exif\0\0II".b + [42, 8, 1].pack("vVv") + orientation_tag + [0].pack("V")
+          icc = "ICC_PROFILE\0\x01\x01".b + File.binread(profile)
+          jpeg = File.binread(input_path)
+          metadata = "\xff\xe1".b + [exif.bytesize + 2].pack("n") + exif
+          metadata << "\xff\xe2".b << [icc.bytesize + 2].pack("n") << icc
+          File.binwrite(input_path, jpeg.byteslice(0, 2) + metadata + jpeg.byteslice(2..))
+          expect(FastImage.new(input_path).orientation).to eq(index + 1)
+          ImageMagick.magick(
+            input_path,
+            "-auto-orient",
+            expected_path,
+            operation: :upload_auto_orient,
+            read: [input_path],
+            write: [directory],
+          )
+
+          described_class.auto_orient(input_path:, output_path:, source_quality: 95, timeout: 5)
+
+          image_info = FastImage.new(output_path)
+          expect(image_info.type).to eq(:jpeg)
+          expect(image_info.size).to eq(FastImage.size(expected_path))
+          expect(
+            ImageMagick.identify(
+              "-format",
+              "%[interlace]",
+              output_path,
+              operation: :upload_auto_orient,
+              read: [output_path],
+            ),
+          ).to eq("None")
+          expect(image_info.orientation).to be_nil.or eq(1)
+          ImageMagick.magick(
+            output_path,
+            actual_path,
+            operation: :upload_auto_orient,
+            read: [output_path],
+            write: [directory],
+          )
+          expected = ChunkyPNG::Image.from_file(expected_path)
+          actual = ChunkyPNG::Image.from_file(actual_path)
+          [0.25, 0.75].product([0.25, 0.75])
+            .each do |horizontal, vertical|
+              column = (actual.width * horizontal).to_i
+              row = (actual.height * vertical).to_i
+              %i[r g b].each do |channel|
+                difference =
+                  ChunkyPNG::Color.public_send(channel, actual[column, row]) -
+                    ChunkyPNG::Color.public_send(channel, expected[column, row])
+                expect(difference.abs).to be < 15
+              end
+            end
+          expect(
+            ImageMagick.identify(
+              "-format",
+              "%[profiles]",
+              output_path,
+              operation: :upload_auto_orient,
+              read: [output_path],
+            ),
+          ).to include("icc")
+        end
+      end
+    end
+
+    it "preserves the input when asked to overwrite it" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "original.jpg")
+        FileUtils.cp(file_from_fixtures("exif_orientation.jpg").path, input_path)
+        original = File.binread(input_path)
+
+        expect {
+          described_class.auto_orient(
+            input_path:,
+            output_path: input_path,
+            source_quality: 95,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::Error, /separate input and output/)
+        expect(File.binread(input_path)).to eq(original)
+      end
+    end
   end
 end

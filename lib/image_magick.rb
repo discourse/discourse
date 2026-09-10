@@ -47,6 +47,18 @@ module ImageMagick
     run("identify", *args, operation:, read:, write:, timeout:, failure_message:)
   end
 
+  def self.image_quality(input_path:, timeout:)
+    identify(
+      "-ping",
+      "-format",
+      "%Q",
+      input_path,
+      operation: :upload_quality_probe,
+      read: [input_path],
+      timeout:,
+    ).to_i
+  end
+
   def self.run(*command, operation:, read:, write:, timeout:, failure_message:)
     # A private scratch dir keeps ImageMagick's disk-backed pixel cache inside
     # the write allowlist, so large images that spill to disk still succeed.
