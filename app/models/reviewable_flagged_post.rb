@@ -178,7 +178,7 @@ class ReviewableFlaggedPost < Reviewable
   def perform_unsilence_user(performed_by, _args)
     UserSilencer.unsilence(target_user, performed_by, reviewable_id: id)
 
-    create_result(:success) { |result| result.remove_reviewable_ids = [] }
+    create_result(:success)
   end
 
   def perform_unsilence_user_and_ignore(performed_by, args)
