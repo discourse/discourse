@@ -13,7 +13,7 @@ import {
 } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { setDiagnostics } from "@codemirror/lint";
-import { Compartment, EditorState } from "@codemirror/state";
+import { Compartment, EditorState, Transaction } from "@codemirror/state";
 import {
   EditorView,
   keymap,
@@ -34,6 +34,7 @@ export default class CodemirrorEditor extends Component {
   #readOnly = new Compartment();
   #placeholder = new Compartment();
   #completions = new Compartment();
+  #history = new Compartment();
   #container = null;
   #lastWarnings = null;
 
@@ -122,7 +123,7 @@ export default class CodemirrorEditor extends Component {
     const extensions = [
       // Ahead of the defaults, so a host's own shortcut wins the binding.
       keymap.of(this.#commandKeymap),
-      history(),
+      this.#history.of(history()),
       keymap.of([...defaultKeymap, ...historyKeymap]),
       this.#language.of([]),
       this.#readOnly.of(this.#readOnlyExtensions),
@@ -316,6 +317,8 @@ export default class CodemirrorEditor extends Component {
       return;
     }
 
+    // A replacement from outside is a new document: undoing back into the
+    // old one would hand the caller stale content as if the user typed it.
     this.#suppressChange = true;
     this.view.dispatch({
       changes: {
@@ -323,7 +326,10 @@ export default class CodemirrorEditor extends Component {
         to: this.view.state.doc.length,
         insert: value,
       },
+      annotations: Transaction.addToHistory.of(false),
+      effects: this.#history.reconfigure([]),
     });
+    this.view.dispatch({ effects: this.#history.reconfigure(history()) });
     this.#lastValue = value;
     this.#suppressChange = false;
   }

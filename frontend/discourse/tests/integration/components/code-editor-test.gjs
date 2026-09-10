@@ -1,6 +1,8 @@
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { render, settled, waitFor, waitUntil } from "@ember/test-helpers";
 import { startCompletion } from "@codemirror/autocomplete";
+import { undo } from "@codemirror/commands";
 import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import { capabilities } from "discourse/services/capabilities";
@@ -187,6 +189,34 @@ module("Integration | Component | code-editor", function (hooks) {
       labels.includes("allow_title"),
       "a column from the configured schema is offered"
     );
+  });
+
+  test("a value replaced from outside cannot be undone into the old document", async function (assert) {
+    let view;
+    const onSetup = (editorView) => (view = editorView);
+    const state = new (class {
+      @tracked value = "one";
+    })();
+
+    await render(
+      <template>
+        <CodeEditor
+          @onChange={{fn (mut state.value)}}
+          @onSetup={{onSetup}}
+          @value={{state.value}}
+        />
+      </template>
+    );
+    view.dispatch({ changes: { from: 3, insert: " typed" } });
+    await settled();
+
+    state.value = "two";
+    await settled();
+    undo(view);
+    await settled();
+
+    assert.strictEqual(view.state.doc.toString(), "two");
+    assert.strictEqual(state.value, "two");
   });
 
   test("picks up language options that change after the editor is built", async function (assert) {
