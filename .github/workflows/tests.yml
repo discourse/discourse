@@ -308,6 +308,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
+          DISCOURSE_CI_BROWSER_PROFILE: "1"
           CHECKOUT_TIMEOUT: 10
         run: |
           LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
@@ -316,6 +317,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
+          DISCOURSE_CI_BROWSER_PROFILE: "1"
           CHECKOUT_TIMEOUT: 10
         run: |
           LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system
