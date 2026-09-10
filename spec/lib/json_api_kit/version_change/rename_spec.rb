@@ -3,8 +3,8 @@
 RSpec.describe JsonApiKit::VersionChange::Rename do
   subject(:rename) { described_class.new(from: old_name, to: new_name, up:, down:) }
 
-  let(:up) { JsonApiKit::VersionChange::Declaration::RenamedAttribute::NO_CONVERSION }
-  let(:down) { JsonApiKit::VersionChange::Declaration::RenamedAttribute::NO_CONVERSION }
+  let(:up) { JsonApiKit::VersionChange::Declaration::NO_CONVERSION }
+  let(:down) { JsonApiKit::VersionChange::Declaration::NO_CONVERSION }
   let(:old_name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "topics") }
   let(:new_name) { JsonApiKit::Name::Field.new(value: "created_at", type: "topics") }
 
