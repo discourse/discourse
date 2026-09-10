@@ -1,0 +1,417 @@
+[
+  {
+    "status": "passed",
+    "operation": "animated",
+    "worker_sha256": "f09e23eb449a2b35a6a1b1970f6977c95c842ac4a7b884d1744b77a5e6c8fa33",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "tiny_animated.gif",
+        "value": true
+      },
+      {
+        "sample": "static.gif",
+        "value": false
+      },
+      {
+        "sample": "animated.webp",
+        "value": true
+      },
+      {
+        "sample": "static.avif",
+        "value": false
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43453,
+    "head": "738595634abb404612426b82c18cfd62d364bc39"
+  },
+  {
+    "status": "passed",
+    "operation": "svg_dimensions",
+    "worker_sha256": "c3b7a487173f5019077b855442b14b7f216ef21752d4539ef0a390709c4bd09b",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "svg",
+        "value": [
+          80,
+          40
+        ]
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43454,
+    "head": "0163deb3a6d3d9818708c84eab199143819443bc"
+  },
+  {
+    "status": "passed",
+    "operation": "svg_to_png",
+    "worker_sha256": "ba3b8746146581a61289aa3e1dacedcbb546ce0cd660d9578dbb75fd22756f1d",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "svg",
+        "dimensions": [
+          80,
+          40
+        ],
+        "bytes": 345
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43455,
+    "head": "6e284700b188974b2248acde22c610a38a6b5996"
+  },
+  {
+    "status": "passed",
+    "operation": "topic_og_render",
+    "worker_sha256": "29a1d34b294b5ee7d5b55dc0b5a6a6708a5acb6f4589e7bdac040154ee6a5d0d",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "svg",
+        "dimensions": [
+          1200,
+          630
+        ],
+        "bytes": 14906
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43456,
+    "head": "3a8e7058a3e05a37a2fa20728c4ac958288d4c9f"
+  },
+  {
+    "status": "passed",
+    "operation": "heif_to_jpeg",
+    "worker_sha256": "817c1eab89ffbf9fead9905de81f297abe5a8891276d19e1184eb89f9abbd97e",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "heif",
+        "dimensions": [
+          60,
+          40
+        ],
+        "bytes": 1447
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43457,
+    "head": "f397f9246271b7a0cee5b76d7394b73630a72fe7"
+  },
+  {
+    "status": "passed",
+    "operation": "ico_to_png",
+    "worker_sha256": "b7790b393489b5d46be02f10b4f51485d307440e571cee8f2e788b6108ef8c04",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "ico",
+        "dimensions": [
+          60,
+          40
+        ],
+        "bytes": 356
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43462,
+    "head": "bafb4e7e8073dfd230c39372eae7fe07bfce9202"
+  },
+  {
+    "status": "passed",
+    "operation": "convert_to_jpeg",
+    "worker_sha256": "ae7280ab226f59d8fce56f49babf524877237216834f9045f5c3a0508f36ccf4",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "png",
+        "dimensions": [
+          80,
+          40
+        ],
+        "bytes": 846
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43463,
+    "head": "4d4c93120e3ee9cf273abaed095d10cad3ae0a19"
+  },
+  {
+    "status": "passed",
+    "operation": "auto_orient",
+    "worker_sha256": "b34f0b2224094f372fe631e19d5fdfa095027ee47068a3350bfdb342de1012a5",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "orientation-6",
+        "dimensions": [
+          40,
+          80
+        ],
+        "bytes": 846
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43464,
+    "head": "192f40ea2dd45482f0d74968e74b16bae0d442e2"
+  },
+  {
+    "status": "passed",
+    "operation": "downsize",
+    "worker_sha256": "abb31cc711f1af2e2e8ff6c42861c1de490cc5256fce79ac18487ab9dfb8682a",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "png",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 291
+      },
+      {
+        "sample": "jpeg",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 291
+      },
+      {
+        "sample": "svg",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 291
+      },
+      {
+        "sample": "gif",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 293
+      },
+      {
+        "sample": "webp",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 463
+      },
+      {
+        "sample": "ico",
+        "dimensions": [
+          10,
+          10
+        ],
+        "bytes": 365
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43465,
+    "head": "fb20bdf1edf94d96688c10199df529700e493885"
+  },
+  {
+    "status": "passed",
+    "operation": "resize",
+    "worker_sha256": "e9e2326833b22c7dcfedeecf215598ccd7f1f3efc411561a705691b15b1bb37d",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "png",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 99
+      },
+      {
+        "sample": "jpeg",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 99
+      },
+      {
+        "sample": "svg",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 99
+      },
+      {
+        "sample": "gif",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 101
+      },
+      {
+        "sample": "webp",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 273
+      },
+      {
+        "sample": "ico",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 235
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43466,
+    "head": "c3dfa1d0b963293a7a26e9ab54c39537be64ed6b"
+  },
+  {
+    "status": "passed",
+    "operation": "crop",
+    "worker_sha256": "b4f39cef241ae623499976c46da9f1ee75160ca700684112b3f62a2b51853b5a",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "png",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 99
+      },
+      {
+        "sample": "jpeg",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 99
+      },
+      {
+        "sample": "svg",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 99
+      },
+      {
+        "sample": "gif",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 101
+      },
+      {
+        "sample": "webp",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 273
+      },
+      {
+        "sample": "ico",
+        "dimensions": [
+          20,
+          10
+        ],
+        "bytes": 182
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43467,
+    "head": "5bf3c3f60e96ac28802b5f35d42deabc5d27ee3d"
+  },
+  {
+    "status": "passed",
+    "operation": "image_quality",
+    "worker_sha256": "9a6666e66d7e919bfe039e965062f0c2efa99e96ed60e71374c42bb049a70a7f",
+    "libvips": "8.18.4",
+    "landlock": true,
+    "results": [
+      {
+        "sample": "exif_orientation.jpg",
+        "value": 95
+      },
+      {
+        "sample": "png",
+        "value": 92
+      },
+      {
+        "sample": "svg",
+        "value": 92
+      },
+      {
+        "sample": "ico",
+        "value": 92
+      },
+      {
+        "sample": "avif",
+        "value": 92
+      },
+      {
+        "sample": "malformed",
+        "rejected": "DiscourseVips::InvalidImage"
+      }
+    ],
+    "pr": 43478,
+    "head": "5c23f31d6a333e1a356c027381a170de21f97053"
+  }
+]

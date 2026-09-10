@@ -1,6 +1,6 @@
 # Migration handoff
 
-All twelve draft PRs are published. Grok, Claude Code and Codex accepted the final cumulative source on the third review pass with no outstanding findings. The regression fix restores 8-bit cropped output when metadata is stripped; unstripped 16-bit output remains unchanged.
+All twelve draft PRs target `main` independently. Each diff contains one migrated operation and the helpers it needs. The setting loops use shared examples with explicit enabled and disabled contexts. Grok, Claude Code and Codex accepted the original cumulative implementation on the third review pass with no outstanding findings; subsequent extraction received a dependency review and separate worker checks. The regression fix restores 8-bit cropped output when metadata is stripped; unstripped 16-bit output remains unchanged.
 
 Review from least to most risky:
 
@@ -19,9 +19,9 @@ Review from least to most risky:
 | 11 | downsize | [#43465](https://github.com/discourse/discourse/pull/43465) | `tgxworld/vips-review-09-downsize` | `/tmp/discourse-vips-review-09-downsize-01a0846e` |
 | 12 | quality | [#43478](https://github.com/discourse/discourse/pull/43478) | `tgxworld/vips-review-12-quality` | `/tmp/discourse-vips-review-12-quality-01a0846e` |
 
-Merge order differs from review-risk order: follow the linear stack 01 animation → 02 SVG dimensions → 03 SVG assets → 04 OG → 05 HEIF → 06 ICO → 07 JPEG → 08 orientation → 09 downsize → 10 resize → 11 crop → 12 quality. No PR has been merged.
+There is no stacked merge order. Shared helpers appear in several independent diffs and need reconciliation as earlier PRs merge. The quality PR currently covers the caller present on main, `Upload#target_image_quality`; when the orientation and geometry migrations land, their source-quality queries must also be routed through the native estimator. The cumulative integration already demonstrates those final routes. No PR has been merged.
 
-Integration worktree: `/tmp/discourse-vips-migration-01a0846e`; branch `tgxworld/vips-animation-detection`; final commit `81f71327e66f0db320939fc8def0826e2e4ea1e0`. The integration branch is cumulative and was not published as an animation-only PR.
+Integration worktree: `/tmp/discourse-vips-migration-01a0846e`; branch `tgxworld/vips-animation-detection`; current commit `57f9cea8d1fcd71ae39cd59fe3362bc27c0e9bd1`. The integration branch is cumulative and was not published as an animation-only PR.
 
 Evidence worktree: `/tmp/discourse-vips-evidence-01a0846e`; branch `tgxworld/vips-migration-evidence`. Operation PR descriptions contain immutable before/after reports and production-image benchmarks. The evidence branch is not intended for merging.
 
@@ -31,4 +31,8 @@ Final coordinator commands included `tgx-dv test --name vips-migration-01a0846e 
 
 Production timings ran through the supplied SSH host with Landlock in `discourse/base:2.0.20260812-0036`, digest `sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5`, as the unprivileged `discourse` user. This is the official launcher default; a custom deployed-image override was not independently confirmed. Font availability and renderer-specific output differences are disclosed in each report. Some small operations are slower with libvips; no universal speedup is claimed.
 
-The current CI head map is retained in `published-prs.json`; all twelve exact heads have canonical GREEN verdicts.
+The current CI head map is retained in `published-prs.json`. Fresh full test workflows are running for the independent heads. The frontend global-coordinate failure on #43453 and theme-setup failure on #43455 are being retried; missing PNG decoder imports in four extracted specs were fixed and pushed. Earlier triage-only GREEN observations after retargeting are not treated as test coverage.
+
+The independent-PR follow-up passed 155 focused examples and lint. Each extracted worker passed calls through its actual client and Landlock sandbox; results are in `independent-worker-checks.json`. The broader 258-example run had two failures in unchanged dominant-color backfill examples, also reproduced in isolation and recorded for investigation. The focused run covers all modified shared examples.
+
+After adding the explicit PNG decoder imports, 66 extracted spec examples passed in the retained DV, followed by lint. The worker checks use each independent PR’s own facade, client and sandboxed worker; the RSpec runs use the cumulative integration application.
