@@ -19,6 +19,15 @@ zh_CN:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "询问 AI"
+        ask_ai:
+          title: "询问 AI"
+          seconds: "%{seconds} s"
+          date: "日期"
+          outcomes:
+            failed: "失败"
         emotion:
           title: "情绪"
           description: "该表格列出了按特定情绪分类的帖子数量。根据所选情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"

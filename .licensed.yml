@@ -33,7 +33,6 @@ ignored:
     - pp # Ruby (default gem)
     - prettyprint # Ruby (default gem)
     - racc # Ruby (default gem)
-    - rchardet # LGPL
     - rdoc # Ruby (default gem)
     - reline # Ruby (default gem)
     - ruby2_keywords # Ruby (default gem)
@@ -74,6 +73,7 @@ reviewed:
     - net-smtp # Ruby (bundled gem)
     - nio4r # MIT + BSD
     - oauth # MIT
+    - oauth2 # MIT
     - oauth-tty # MIT
     - omniauth # MIT
     - pg # Ruby

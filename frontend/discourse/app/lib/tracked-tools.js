@@ -423,3 +423,16 @@ export function enumerateTrackedEntries(obj) {
   const keys = enumerateTrackedKeys(obj);
   return keys.map((key) => [key, obj[key]]);
 }
+
+/**
+ * A no-op function which is used to signal the intent of consuming a getter
+ * for autotracking purposes. The actual autotracking happens when you call
+ * the getter, but would trip the `no-unused-expressions` line rule without this
+ * wrapper.
+ *
+ * Consuming state you do not use is generally a violation of Ember's declarative
+ * patterns, so reach for this only when absolutely necessary.
+ *
+ * @type {(value: unknown) => void}
+ */
+export function manuallyTrack() {}

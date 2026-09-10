@@ -184,7 +184,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
             body: hash_including("code" => "supersecretcode", "p" => "someallowedvalue"),
           ).to_return(
             status: 200,
-            body: { id_token: @token }.to_json,
+            body: { access_token: "AnAccessToken", id_token: @token }.to_json,
             headers: {
               "Content-Type" => "application/json",
             },

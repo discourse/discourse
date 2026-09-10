@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 sq:
+  mcp:
+    oauth:
+      deny: "Mohoni"
+      approve: "Autorizo"
   llms_txt:
     sections:
       optional: "Fakultative"

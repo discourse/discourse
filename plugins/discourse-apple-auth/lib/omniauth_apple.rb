@@ -20,7 +20,8 @@ module OmniAuth
       option :client_options,
              site: "https://appleid.apple.com",
              authorize_url: "/auth/authorize",
-             token_url: "/auth/token"
+             token_url: "/auth/token",
+             auth_scheme: :request_body
 
       option :authorize_params, response_mode: "form_post", scope: "email name"
 

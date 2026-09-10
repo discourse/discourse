@@ -87,16 +87,14 @@ module Voice
             Rails.logger.debug("[voice-livekit] DeleteRoom no-op for room #{room.id}: already gone")
             true
           else
-            Rails.logger.warn(
+            Voice.warn(
               "[voice-livekit] #{method} failed for room #{room.id}: " \
-                "HTTP #{response.status} #{response.body.to_s.truncate(200)}",
+                "HTTP #{response.status}",
             )
             false
           end
         rescue StandardError => e
-          Rails.logger.warn(
-            "[voice-livekit] #{method} failed for room #{room.id}: #{e.class} #{e.message}",
-          )
+          Voice.warn("[voice-livekit] #{method} failed for room #{room.id}: #{e.class}")
           false
         end
 
@@ -110,11 +108,9 @@ module Voice
           if response.status == 200
             { ok: true, latency_ms:, data: JSON.parse(response.body) }
           else
-            # The upstream body goes to the log for the operator; the result
-            # shown to admins only carries the status code.
-            Rails.logger.warn(
+            Voice.warn(
               "[voice-livekit] #{method} probe failed: " \
-                "HTTP #{response.status} #{response.body.to_s.truncate(200)}",
+                "HTTP #{response.status}",
             )
             { ok: false, latency_ms:, error: "HTTP #{response.status}" }
           end

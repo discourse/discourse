@@ -433,7 +433,7 @@ export default class InstallThemeModal extends Component {
                   />
                 </div>
                 <DButton
-                  class="btn-small advanced-repo"
+                  class="btn-default btn-small advanced-repo"
                   @action={{this.toggleAdvanced}}
                   @label="admin.customize.theme.import_web_advanced"
                 />

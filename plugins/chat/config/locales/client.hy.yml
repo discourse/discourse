@@ -121,6 +121,11 @@ hy:
         sort:
           relevance: "Համապատասխանության"
           latest: "Վերջինը"
+      channel_list:
+        options:
+          filter: "Ֆիլտրել"
+        filter:
+          mentions: "Հիշատակումներ"
       incoming_webhooks:
         back: "Ետ"
         description: "Նկարագրությունը"

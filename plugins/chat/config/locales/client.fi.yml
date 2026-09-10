@@ -116,7 +116,7 @@ fi:
         process_started: "Kanavan poistoprosessi on alkanut. Tämä modaalinen ikkuna sulkeutuu pian, etkä näe enää poistettua kanavaa missään."
       channels_list_popup:
         browse: "Selaa kanavia"
-        create: "Uusi kanava"
+        create: "Uusi kanava..."
       close: "Sulje"
       remove: "Poista"
       collapse: "Tiivistä chat-laatikko"
@@ -131,8 +131,6 @@ fi:
       muted: "vaimennettu"
       joined: "liittyi"
       empty_state:
-        direct_message_cta: "Aloita henkilökohtainen chat"
-        direct_message: "Voit myös aloittaa henkilökohtaisen chatin yhden tai useamman käyttäjän kanssa."
         title: "Kanavia ei löytynyt"
         my_threads: "Sinulla ei ole vielä ketjuja. Ketjut, joihin osallistut, näytetään täällä."
       email_frequency:
@@ -457,14 +455,20 @@ fi:
       direct_messages:
         title: "Yksityisviestit"
         aria_label: "Vaihda yksityisviesteihin"
-        new: "Luo yksityis-chat"
         create: "Siirry"
-        leave: "Poistu tästä henkilökohtaisesta chatista"
-        close: "Sulje tämä henkilökohtainen chat"
+        leave: "Poistu kanavalta"
+        close: "Sulje kanava"
         cannot_create: "Valitettavasti et voi lähettää yksityisviestejä."
       channel_list:
         title: "Kanavat"
         aria_label: "Vaihda kanavaluetteloon"
+        options:
+          filter: "Suodatin"
+        filter:
+          all: "Kaikki kanavat"
+          mentions: "Maininnat"
+        sort:
+          priority: "Prioriteetti"
       incoming_webhooks:
         back: "Takaisin"
         channel_placeholder: "Valitse kanava"
@@ -614,11 +618,6 @@ fi:
           direct_html: '<span>%{username}</span> <span>mainitsi sinut kanavalla "%{channel}"</span>'
           other_plain: 'mainitsi kohteen %{identifier} kanavalla "%{channel}"'
           other_html: '<span>%{username}</span> <span>mainitsi kohteen %{identifier} kanavalla "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "mainitsi sinut henkilökohtaisessa chatissa"
-          direct_html: "<span>%{username}</span> <span>mainitsi sinut henkilökohtaisessa chatissa</span>"
-          other_plain: "mainitsi kohteen %{identifier} henkilökohtaisessa chatissa"
-          other_html: "<span>%{username}</span> <span>mainitsi kohteen %{identifier} henkilökohtaisessa chatissa</span>"
         chat_message: "Uusi chat-viesti"
         chat_quoted: "%{username} lainasi chat-viestiäsi"
       titles:
@@ -687,8 +686,6 @@ fi:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        title: Luo yksityis-chat
       panels:
         chat:
           label: "Chat"

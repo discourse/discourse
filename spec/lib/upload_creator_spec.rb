@@ -1,29 +1,12 @@
 # frozen_string_literal: true
 
-require "chunky_png"
 require "file_store/s3_store"
-require "vips"
 
 RSpec.describe UploadCreator do
   fab!(:user)
   fab!(:admin)
 
   describe "#create_for" do
-    [false, true].each do |enable_vips|
-      it "preserves animated uploads when FastImage is inconclusive with libvips #{enable_vips ? "enabled" : "disabled"}" do
-        global_setting :enable_vips_image_processing, enable_vips
-        FastImage.stubs(:animated?).returns(nil)
-        file = file_from_fixtures("tiny_animated.gif")
-        original = File.binread(file.path)
-
-        upload = described_class.new(file, "tiny_animated.gif").create_for(user.id)
-
-        expect(upload).to be_persisted
-        expect(upload.animated).to eq(true)
-        expect(File.binread(Discourse.store.path_for(upload))).to eq(original)
-      end
-    end
-
     context "when the upload is an SVG" do
       before { SiteSetting.authorized_extensions = "svg" }
 
@@ -278,35 +261,32 @@ RSpec.describe UploadCreator do
         }
       end
 
-      [false, true].each do |enable_vips|
-        it "honors every EXIF orientation with libvips #{enable_vips ? "enabled" : "disabled"}" do
-          global_setting :enable_vips_image_processing, enable_vips
-          expected_color_grids.each do |orientation, expected_color_grid|
-            with_jpeg_orientation(
-              source_path: source_path,
-              orientation: orientation,
-            ) do |oriented_file|
-              upload =
-                described_class.new(
-                  oriented_file,
-                  "oriented-#{orientation}.jpg",
-                  force_optimize: true,
-                ).create_for(user.id)
-              actual_color_grid =
-                stored_color_grid(
-                  upload: upload,
-                  rows: expected_color_grid.length,
-                  columns: expected_color_grid.first.length,
-                  palette: palette,
-                )
-
-              expect(upload).to be_persisted
-              expect(upload).to have_attributes(
-                width: expected_color_grid.first.length * 20,
-                height: expected_color_grid.length * 20,
+      it "honors every EXIF orientation when storing JPEG uploads" do
+        expected_color_grids.each do |orientation, expected_color_grid|
+          with_jpeg_orientation(
+            source_path: source_path,
+            orientation: orientation,
+          ) do |oriented_file|
+            upload =
+              described_class.new(
+                oriented_file,
+                "oriented-#{orientation}.jpg",
+                force_optimize: true,
+              ).create_for(user.id)
+            actual_color_grid =
+              stored_color_grid(
+                upload: upload,
+                rows: expected_color_grid.length,
+                columns: expected_color_grid.first.length,
+                palette: palette,
               )
-              expect(actual_color_grid).to eq(expected_color_grid)
-            end
+
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(
+              width: expected_color_grid.first.length * 20,
+              height: expected_color_grid.length * 20,
+            )
+            expect(actual_color_grid).to eq(expected_color_grid)
           end
         end
       end
@@ -351,395 +331,191 @@ RSpec.describe UploadCreator do
       end
     end
 
-    [false, true].each do |enable_vips|
-      describe "converting to jpeg with libvips #{enable_vips ? "enabled" : "disabled"}" do
-        def image_quality(path)
-          local_path = File.join(Rails.root, "public", path)
-          Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
-        end
+    describe "converting to jpeg" do
+      def image_quality(path)
+        local_path = File.join(Rails.root, "public", path)
+        Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
+      end
 
-        let(:filename) { "should_be_jpeg.png" }
-        let(:file) { file_from_fixtures(filename) }
+      let(:filename) { "should_be_jpeg.png" }
+      let(:file) { file_from_fixtures(filename) }
 
-        let(:small_filename) { "logo.png" }
-        let(:small_file) { file_from_fixtures(small_filename) }
+      let(:small_filename) { "logo.png" }
+      let(:small_file) { file_from_fixtures(small_filename) }
 
-        let(:large_filename) { "large_and_unoptimized.png" }
-        let(:large_file) { file_from_fixtures(large_filename) }
+      let(:large_filename) { "large_and_unoptimized.png" }
+      let(:large_file) { file_from_fixtures(large_filename) }
 
-        let(:animated_filename) { "animated.gif" }
-        let(:animated_file) { file_from_fixtures(animated_filename) }
+      let(:animated_filename) { "animated.gif" }
+      let(:animated_file) { file_from_fixtures(animated_filename) }
 
-        let(:animated_webp_filename) { "animated.webp" }
-        let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
+      let(:animated_webp_filename) { "animated.webp" }
+      let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
 
+      before { SiteSetting.png_to_jpg_quality = 1 }
+
+      it "does not store a JPEG when the absolute byte savings are insufficient" do
+        # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
+        # the absolute savings required of 25_000 bytes, if you save less than that
+        # skip this
+
+        expect do
+          UploadCreator.new(
+            small_file,
+            small_filename,
+            pasted: true,
+            force_optimize: true,
+          ).create_for(user.id)
+        end.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.extension).to eq("png")
+        expect(File.extname(upload.url)).to eq(".png")
+        expect(upload.original_filename).to eq("logo.png")
+      end
+
+      it "stores the upload with the expected extension" do
+        expect do
+          UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(user.id)
+        end.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.extension).to eq("jpeg")
+        expect(File.extname(upload.url)).to eq(".jpeg")
+        expect(upload.original_filename).to eq("should_be_jpeg.jpg")
+        expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:jpeg)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([303, 231])
+      end
+
+      it "does not convert site-setting images to JPEG" do
+        upload =
+          UploadCreator.new(
+            large_file,
+            large_filename,
+            for_site_setting: true,
+            force_optimize: true,
+          ).create_for(admin.id)
+
+        expect(upload.extension).to eq("png")
+        expect(File.extname(upload.url)).to eq(".png")
+        expect(upload.original_filename).to eq("large_and_unoptimized.png")
+      end
+
+      it "does not convert admin asset uploads to JPEG" do
+        upload =
+          UploadCreator.new(
+            large_file,
+            large_filename,
+            type: "branding",
+            force_optimize: true,
+          ).create_for(admin.id)
+
+        expect(upload.extension).to eq("png")
+        expect(File.extname(upload.url)).to eq(".png")
+        expect(upload.original_filename).to eq("large_and_unoptimized.png")
+      end
+
+      context "with jpeg image quality settings" do
         before do
-          global_setting :enable_vips_image_processing, enable_vips
-          SiteSetting.png_to_jpg_quality = 1
+          SiteSetting.png_to_jpg_quality = 75
+          SiteSetting.recompress_original_jpg_quality = 40
+          SiteSetting.image_preview_jpg_quality = 10
         end
 
-        it "does not store a JPEG when the absolute byte savings are insufficient" do
-          # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
-          # the absolute savings required of 25_000 bytes, if you save less than that
-          # skip this
+        it "alters the image quality" do
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
 
-          expect do
-            UploadCreator.new(
-              small_file,
-              small_filename,
-              pasted: true,
-              force_optimize: true,
-            ).create_for(user.id)
-          end.to change { Upload.count }.by(1)
+          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
 
-          upload = Upload.last
+          upload.create_thumbnail!(100, 100)
+          upload.reload
 
-          expect(upload.extension).to eq("png")
-          expect(File.extname(upload.url)).to eq(".png")
-          expect(upload.original_filename).to eq("logo.png")
+          expect(image_quality(upload.optimized_images.first.url)).to eq(
+            SiteSetting.image_preview_jpg_quality,
+          )
         end
 
-        it "stores the upload with the expected extension" do
+        it "does not convert animated images" do
           expect do
-            UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(
+            UploadCreator.new(animated_file, animated_filename, force_optimize: true).create_for(
               user.id,
             )
           end.to change { Upload.count }.by(1)
 
           upload = Upload.last
 
-          expect(upload.extension).to eq("jpeg")
-          expect(File.extname(upload.url)).to eq(".jpeg")
-          expect(upload.original_filename).to eq("should_be_jpeg.jpg")
-          expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:jpeg)
-          expect(FastImage.size(Discourse.store.path_for(upload))).to eq([303, 231])
+          expect(upload.extension).to eq("gif")
+          expect(File.extname(upload.url)).to eq(".gif")
+          expect(upload.original_filename).to eq("animated.gif")
         end
 
-        it "preserves a static GIF color profile when metadata stripping is disabled" do
-          SiteSetting.composer_media_optimization_image_enabled = false
-          SiteSetting.strip_image_metadata = false
-          profile = Rails.root.join("vendor/data/RT_sRGB.icm").to_s
-          Dir.mktmpdir do |directory|
-            input_path = File.join(directory, "profile.gif")
-            source = File.join(directory, "source.png")
-            random = Random.new(17)
-            image = ChunkyPNG::Image.new(400, 400)
-            400.times do |row|
-              400.times do |column|
-                value = random.rand(256)
-                image[column, row] = ChunkyPNG::Color.rgb(value, value * 37 % 256, value * 71 % 256)
-              end
-            end
-            image.save(source)
-            ImageMagick.magick(
-              source,
-              "-strip",
-              input_path,
-              operation: :upload_format_conversion,
-              read: [source],
-              write: [directory],
-            )
-            gif = File.binread(input_path)
-            offset = 13 + ((gif.getbyte(10) & 128).zero? ? 0 : 3 * (2 << (gif.getbyte(10) & 7)))
-            extension = "\x21\xff\x0bICCRGBG1012".b
-            original_profile = File.binread(profile)
-            original_profile
-              .bytes
-              .each_slice(255) { |bytes| extension << bytes.length.chr << bytes.pack("C*") }
-            extension << "\0".b
-            File.binwrite(
-              input_path,
-              gif.byteslice(0, offset) + extension + gif.byteslice(offset..),
-            )
-            expect(
-              ImageMagick.identify(
-                "-format",
-                "%[profiles]",
-                input_path,
-                operation: :upload_format_conversion,
-                read: [input_path],
-              ),
-            ).to include("icc")
-
-            File.open(input_path) do |file|
-              upload =
-                UploadCreator.new(file, "profile.gif", force_optimize: true).create_for(user.id)
-
-              expect(upload).to be_persisted
-              expect(upload.animated).to eq(false)
-              output_path = Discourse.store.path_for(upload)
-              expect(FastImage.type(output_path)).to eq(:jpeg)
-              expect(Vips::Image.jpegload(output_path).get("icc-profile-data")).to eq(
-                original_profile,
-              )
-            end
-          end
-        end
-
-        it "does not convert site-setting images to JPEG" do
-          upload =
-            UploadCreator.new(
-              large_file,
-              large_filename,
-              for_site_setting: true,
-              force_optimize: true,
-            ).create_for(admin.id)
-
-          expect(upload.extension).to eq("png")
-          expect(File.extname(upload.url)).to eq(".png")
-          expect(upload.original_filename).to eq("large_and_unoptimized.png")
-        end
-
-        it "does not convert admin asset uploads to JPEG" do
-          upload =
-            UploadCreator.new(
-              large_file,
-              large_filename,
-              type: "branding",
-              force_optimize: true,
-            ).create_for(admin.id)
-
-          expect(upload.extension).to eq("png")
-          expect(File.extname(upload.url)).to eq(".png")
-          expect(upload.original_filename).to eq("large_and_unoptimized.png")
-        end
-
-        context "with jpeg image quality settings" do
+        context "with png image quality settings" do
           before do
-            SiteSetting.png_to_jpg_quality = 75
-            SiteSetting.recompress_original_jpg_quality = 40
+            SiteSetting.png_to_jpg_quality = 100
+            SiteSetting.recompress_original_jpg_quality = 90
             SiteSetting.image_preview_jpg_quality = 10
           end
 
-          it "alters the image quality" do
-            upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
-
-            output_path = Discourse.store.path_for(upload)
-            expect(FastImage.type(output_path)).to eq(:jpeg)
-            expect(FastImage.size(output_path)).to eq([303, 231])
-
-            if enable_vips
-              SiteSetting.recompress_original_jpg_quality = 70
-              higher_quality_upload =
-                UploadCreator.new(
-                  file_from_fixtures(filename),
-                  filename,
-                  force_optimize: true,
-                ).create_for(user.id)
-
-              expect(higher_quality_upload).to be_persisted
-              expect(FastImage.type(Discourse.store.path_for(higher_quality_upload))).to eq(:jpeg)
-              expect(upload.filesize).to be < higher_quality_upload.filesize
-            else
-              expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
-            end
-
-            upload.create_thumbnail!(100, 100)
-            upload.reload
-
-            if enable_vips
-              preview = upload.optimized_images.first
-              lower_quality_filesize = preview.filesize
-              preview.destroy!
-              SiteSetting.image_preview_jpg_quality = 90
-
-              upload.create_thumbnail!(100, 100)
-              upload.reload
-
-              expect(upload.optimized_images.first.filesize).to be > lower_quality_filesize
-            else
-              expect(image_quality(upload.optimized_images.first.url)).to eq(
-                SiteSetting.image_preview_jpg_quality,
-              )
-            end
-          end
-
-          it "does not convert animated images" do
-            expect do
-              UploadCreator.new(animated_file, animated_filename, force_optimize: true).create_for(
+          it "does not convert to JPEG when png_to_jpg_quality is 100" do
+            upload =
+              UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
                 user.id,
               )
-            end.to change { Upload.count }.by(1)
 
-            upload = Upload.last
-
-            expect(upload.extension).to eq("gif")
-            expect(File.extname(upload.url)).to eq(".gif")
-            expect(upload.original_filename).to eq("animated.gif")
+            expect(upload.extension).to eq("png")
+            expect(File.extname(upload.url)).to eq(".png")
+            expect(upload.original_filename).to eq("large_and_unoptimized.png")
           end
 
-          context "with png image quality settings" do
-            before do
-              SiteSetting.png_to_jpg_quality = 100
-              SiteSetting.recompress_original_jpg_quality = 90
-              SiteSetting.image_preview_jpg_quality = 10
-            end
-
-            it "does not convert to JPEG when png_to_jpg_quality is 100" do
-              upload =
-                UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
-                  user.id,
-                )
-
-              expect(upload.extension).to eq("png")
-              expect(File.extname(upload.url)).to eq(".png")
-              expect(upload.original_filename).to eq("large_and_unoptimized.png")
-            end
-
-            it "does not convert pasted images when png_to_jpg_quality is 100" do
-              upload =
-                UploadCreator.new(
-                  large_file,
-                  large_filename,
-                  pasted: true,
-                  force_optimize: true,
-                ).create_for(user.id)
-
-              expect(upload.extension).to eq("png")
-              expect(File.extname(upload.url)).to eq(".png")
-              expect(upload.original_filename).to eq("large_and_unoptimized.png")
-            end
-          end
-
-          it "does not convert animated WebP images" do
-            expect do
+          it "does not convert pasted images when png_to_jpg_quality is 100" do
+            upload =
               UploadCreator.new(
-                animated_webp_file,
-                animated_webp_filename,
+                large_file,
+                large_filename,
+                pasted: true,
                 force_optimize: true,
               ).create_for(user.id)
-            end.to change { Upload.count }.by(1)
 
-            upload = Upload.last
-
-            expect(upload.extension).to eq("webp")
-            expect(File.extname(upload.url)).to eq(".webp")
-            expect(upload.original_filename).to eq("animated.webp")
+            expect(upload.extension).to eq("png")
+            expect(File.extname(upload.url)).to eq(".png")
+            expect(upload.original_filename).to eq("large_and_unoptimized.png")
           end
+        end
+
+        it "does not convert animated WebP images" do
+          expect do
+            UploadCreator.new(
+              animated_webp_file,
+              animated_webp_filename,
+              force_optimize: true,
+            ).create_for(user.id)
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq("webp")
+          expect(File.extname(upload.url)).to eq(".webp")
+          expect(upload.original_filename).to eq("animated.webp")
         end
       end
     end
 
     describe "converting HEIF to jpeg" do
-      include ImageOrientationHelpers
-
       let(:filename) { "should_be_jpeg.heic" }
       let(:file) { file_from_fixtures(filename, "images") }
-      let(:palette) do
-        {
-          red: [255, 0, 0],
-          green: [0, 255, 0],
-          blue: [0, 0, 255],
-          cyan: [0, 255, 255],
-          magenta: [255, 0, 255],
-          yellow: [255, 255, 0],
-          white: [255, 255, 255],
-          pale_green: [128, 255, 128],
-        }
-      end
 
-      [false, true].each do |vips_enabled|
-        it "stores a JPEG with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+      it "stores the upload with the expected extension" do
+        expect do
+          UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+        end.to change { Upload.count }.by(1)
 
-          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
-          stored_path = Discourse.store.path_for(upload)
+        upload = Upload.last
 
-          expect(upload).to be_persisted
-          expect(upload).to have_attributes(
-            extension: "jpeg",
-            original_filename: "should_be_jpeg.jpg",
-            width: 846,
-            height: 1129,
-          )
-          expect(File.extname(upload.url)).to eq(".jpeg")
-          expect(FastImage.type(stored_path)).to eq(:jpeg)
-          expect(FastImage.size(stored_path)).to eq([846, 1129])
-        end
-
-        it "removes conversion tempfiles after an invalid HEIF with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-          source_file = file_from_fixtures("heif-truncated-payload.heic")
-          error_class = vips_enabled ? DiscourseVips::InvalidImage : Discourse::Utils::CommandError
-
-          Dir.mktmpdir do |directory|
-            Dir.stubs(:tmpdir).returns(directory)
-
-            expect {
-              described_class.new(source_file, "invalid.heic", force_optimize: true).create_for(
-                user.id,
-              )
-            }.to raise_error(error_class)
-
-            expect(Dir.children(directory)).to eq([])
-            expect(source_file).to be_closed
-          end
-        end
-
-        {
-          "heif-color-grid-rotated.heic" => [
-            40,
-            60,
-            [%i[blue yellow], %i[green magenta], %i[red cyan]],
-          ],
-          "heif-color-grid-mirrored.heic" => [
-            60,
-            40,
-            [%i[cyan magenta yellow], %i[red green blue]],
-          ],
-        }.each do |grid_filename, (width, height, expected_colors)|
-          it "applies the container transform of #{grid_filename} once with vips #{vips_enabled ? "enabled" : "disabled"}" do
-            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
-            upload =
-              described_class.new(
-                file_from_fixtures(grid_filename),
-                grid_filename,
-                force_optimize: true,
-              ).create_for(user.id)
-            stored_path = Discourse.store.path_for(upload)
-
-            expect(upload).to be_persisted
-            expect(upload).to have_attributes(extension: "jpeg", width:, height:)
-            expect(
-              stored_color_grid(
-                upload:,
-                rows: expected_colors.length,
-                columns: expected_colors.first.length,
-                palette:,
-              ),
-            ).to eq(expected_colors)
-            expect(
-              ImageMagick.identify(
-                "-format",
-                "%[orientation]",
-                stored_path,
-                operation: :upload_quality_probe,
-                read: [stored_path],
-              ).strip,
-            ).to be_in(%w[Undefined TopLeft])
-          end
-        end
-
-        {
-          "heif-color-grid-8bit.heic" => [%i[red green blue], %i[cyan magenta yellow]],
-          "heif-color-grid-alpha-8bit.heic" => [%i[white pale_green blue], %i[cyan magenta yellow]],
-        }.each do |grid_filename, expected_colors|
-          it "preserves the colors of #{grid_filename} with vips #{vips_enabled ? "enabled" : "disabled"}" do
-            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
-            upload =
-              UploadCreator.new(
-                file_from_fixtures(grid_filename),
-                grid_filename,
-                force_optimize: true,
-              ).create_for(user.id)
-
-            expect(upload).to be_persisted
-            expect(upload).to have_attributes(extension: "jpeg", width: 60, height: 40)
-            expect(stored_color_grid(upload:, rows: 2, columns: 3, palette:)).to eq(expected_colors)
-          end
-        end
+        expect(upload.extension).to eq("jpeg")
+        expect(File.extname(upload.url)).to eq(".jpeg")
+        expect(upload.original_filename).to eq("should_be_jpeg.jpg")
       end
     end
 
@@ -1056,204 +832,71 @@ RSpec.describe UploadCreator do
     context "when the upload is an ICO favicon" do
       let(:filename) { "smallest.ico" }
       let(:file) { file_from_fixtures(filename, "images") }
-      let(:colors) do
-        {
-          red: ChunkyPNG::Color.rgba(255, 0, 0, 255),
-          green: ChunkyPNG::Color.rgba(0, 255, 0, 255),
-          blue: ChunkyPNG::Color.rgba(0, 0, 255, 255),
-          cyan: ChunkyPNG::Color.rgba(0, 255, 255, 255),
-          magenta: ChunkyPNG::Color.rgba(255, 0, 255, 255),
-          yellow: ChunkyPNG::Color.rgba(255, 255, 0, 255),
-          transparent_red: ChunkyPNG::Color.rgba(255, 0, 0, 0),
-          translucent_green: ChunkyPNG::Color.rgba(0, 255, 0, 128),
-        }
-      end
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      [false, true].each do |vips_enabled|
-        it "removes conversion tempfiles after an invalid ICO with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-          source_file = file_from_fixtures("ico-truncated-bitmap.ico")
-          error_class = vips_enabled ? DiscourseVips::InvalidImage : Discourse::Utils::CommandError
+      it "stores it as a PNG" do
+        upload = described_class.new(file, filename).create_for(user.id)
+        stored_path = Discourse.store.path_for(upload)
 
-          Dir.mktmpdir do |directory|
-            Dir.stubs(:tmpdir).returns(directory)
-
-            expect {
-              described_class.new(source_file, "invalid.ico").create_for(user.id)
-            }.to raise_error(error_class)
-
-            expect(Dir.children(directory)).to eq([])
-            expect(source_file).to be_closed
-          end
-        end
-
-        it "preserves odd-width bitmap colors and transparency masks with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-          expected_pixels = [
-            colors[:transparent_red],
-            colors[:blue],
-            colors[:red],
-            colors[:blue],
-            colors[:red],
-            colors[:blue],
-            colors[:transparent_red],
-            colors[:blue],
-            colors[:red],
-            colors[:blue],
-            colors[:red],
-            colors[:blue],
-            colors[:transparent_red],
-            colors[:blue],
-            colors[:red],
-          ]
-
-          [1, 4, 8, 24].each do |depth|
-            filename = "ico-odd-mask-#{depth}bit.ico"
-
-            upload = described_class.new(file_from_fixtures(filename), filename).create_for(user.id)
-            image = ChunkyPNG::Image.from_file(Discourse.store.path_for(upload))
-
-            aggregate_failures(filename) do
-              expect(upload).to be_persisted
-              expect([image.width, image.height]).to eq([5, 3])
-              expect(image.pixels).to eq(expected_pixels)
-            end
-          end
-        end
-
-        it "stores it as a PNG with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
-          upload = described_class.new(file, filename).create_for(user.id)
-          stored_path = Discourse.store.path_for(upload)
-
-          expect(upload).to be_persisted
-          expect(upload.extension).to eq("png")
-          expect(upload.original_filename).to eq("smallest.png")
-          expect(FastImage.type(stored_path)).to eq(:png)
-          expect(FastImage.size(stored_path)).to eq([1, 1])
-          expect(ChunkyPNG::Image.from_file(stored_path)[0, 0]).to eq(
-            ChunkyPNG::Color.rgba(255, 0, 0, 255),
-          )
-        end
-
-        {
-          "ico-bmp-1bit.ico" => [60, 40, %i[red blue red blue red blue]],
-          "ico-bmp-4bit.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
-          "ico-bmp-8bit.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
-          "ico-bmp-24bit.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
-          "ico-bmp-32bit.ico" => [
-            60,
-            40,
-            %i[transparent_red translucent_green blue cyan magenta yellow],
-          ],
-          "ico-png-alpha.ico" => [
-            30,
-            20,
-            %i[transparent_red translucent_green blue cyan magenta yellow],
-          ],
-          "ico-last-bmp.ico" => [60, 40, %i[red green blue cyan magenta yellow]],
-          "ico-last-png.ico" => [
-            30,
-            20,
-            %i[transparent_red translucent_green blue cyan magenta yellow],
-          ],
-        }.each do |grid_filename, (width, height, expected_colors)|
-          it "preserves the last image of #{grid_filename} with vips #{vips_enabled ? "enabled" : "disabled"}" do
-            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
-            upload =
-              described_class.new(file_from_fixtures(grid_filename), grid_filename).create_for(
-                user.id,
-              )
-            image = ChunkyPNG::Image.from_file(Discourse.store.path_for(upload))
-
-            expect(upload).to be_persisted
-            expect(upload).to have_attributes(extension: "png", width:, height:)
-            expect([image.width, image.height]).to eq([width, height])
-            expected_colors.each_with_index do |color, index|
-              x = (index % 3 * 2 + 1) * width / 6
-              y = (index / 3 * 2 + 1) * height / 4
-
-              expect(image[x, y]).to eq(colors.fetch(color))
-            end
-          end
-        end
+        expect(upload).to be_persisted
+        expect(upload.extension).to eq("png")
+        expect(upload.original_filename).to eq("smallest.png")
+        expect(FastImage.type(stored_path)).to eq(:png)
+        expect(FastImage.size(stored_path)).to eq([1, 1])
       end
     end
+  end
 
-    [false, true].each do |enable_vips|
-      context "with SVG dimensions and libvips #{enable_vips ? "enabled" : "disabled"}" do
-        before { global_setting :enable_vips_image_processing, enable_vips }
+  describe "svg sizes expressed in units other than pixels" do
+    let(:tiny_svg_filename) { "tiny.svg" }
+    let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
 
-        let(:tiny_svg_filename) { "tiny.svg" }
-        let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
+    let(:massive_svg_filename) { "massive.svg" }
+    let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
 
-        let(:massive_svg_filename) { "massive.svg" }
-        let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+    let(:zero_sized_svg_filename) { "zero_sized.svg" }
+    let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
 
-        let(:zero_sized_svg_filename) { "zero_sized.svg" }
-        let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+    it "remains viewable when a dimension is fractional" do
+      upload =
+        UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
+          user.id,
+        )
 
-        it "remains viewable when a dimension is fractional" do
-          upload =
-            UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
-              user.id,
-            )
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
 
-          expect(upload.width).to be > 50
-          expect(upload.height).to be > 50
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+    end
 
-          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-        end
+    it "does not exceed the maximum thumbnail size" do
+      upload =
+        UploadCreator.new(massive_svg_file, massive_svg_filename, force_optimize: true).create_for(
+          user.id,
+        )
 
-        it "does not exceed the maximum thumbnail size" do
-          upload =
-            UploadCreator.new(
-              massive_svg_file,
-              massive_svg_filename,
-              force_optimize: true,
-            ).create_for(user.id)
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
 
-          expect(upload.width).to be > 50
-          expect(upload.height).to be > 50
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+    end
 
-          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-        end
+    it "handles files with a zero dimension" do
+      upload =
+        UploadCreator.new(
+          zero_sized_svg_file,
+          zero_sized_svg_filename,
+          force_optimize: true,
+        ).create_for(user.id)
 
-        it "handles files with a zero dimension" do
-          upload =
-            UploadCreator.new(
-              zero_sized_svg_file,
-              zero_sized_svg_filename,
-              force_optimize: true,
-            ).create_for(user.id)
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
 
-          expect(upload.width).to be > 50
-          expect(upload.height).to be > 50
-
-          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-        end
-
-        it "stores zero dimensions when the SVG has no usable dimensions" do
-          file =
-            file_from_contents(
-              '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"/>',
-              "zero.svg",
-            )
-
-          upload = described_class.new(file, "zero.svg").create_for(user.id)
-
-          expect(upload).to be_persisted
-          expect([upload.width, upload.height]).to eq([0, 0])
-          expect([upload.thumbnail_width, upload.thumbnail_height]).to eq([0, 0])
-        end
-      end
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
     end
   end
 

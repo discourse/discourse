@@ -2413,7 +2413,21 @@ RSpec.describe UsersController do
       get "/u/random-username.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+      username = response.parsed_body["username"]
+      expect(username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
+      expect(response.parsed_body["avatar_template"]).to eq(User.default_template(username))
+    end
+
+    it "keeps an uploaded avatar when generating a username" do
+      user = Fabricate(:user)
+      upload = Fabricate(:upload, user:)
+      user.update!(uploaded_avatar_id: upload.id)
+      sign_in(user)
+
+      get "/u/random-username.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["avatar_template"]).to eq(user.avatar_template)
     end
 
     it "rate limits requests per IP" do

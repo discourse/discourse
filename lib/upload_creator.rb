@@ -196,25 +196,18 @@ class UploadCreator
           # consistently whether it's running from our docker container or not
           begin
             w, h =
-              if GlobalSetting.enable_vips_image_processing
-                DiscourseVips.svg_dimensions(
-                  input_path: @file.path,
+              ImageMagick
+                .identify(
+                  "-ping",
+                  "-format",
+                  "%w %h",
+                  "MSVG:#{@file.path}",
+                  operation: :upload_svg_dimensions,
+                  read: [@file.path],
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
-              else
-                ImageMagick
-                  .identify(
-                    "-ping",
-                    "-format",
-                    "%w %h",
-                    "MSVG:#{@file.path}",
-                    operation: :upload_svg_dimensions,
-                    read: [@file.path],
-                    timeout: Upload::MAX_IDENTIFY_SECONDS,
-                  )
-                  .split(" ")
-                  .map(&:to_i)
-              end
+                .split(" ")
+                .map(&:to_i)
           rescue StandardError
             # use default 0, 0
           end
@@ -361,26 +354,16 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(png_tempfile.path)]
 
-    if GlobalSetting.enable_vips_image_processing
-      DiscourseVips.ico_to_png(
-        input_path: @file.path,
-        output_path: png_tempfile.path,
-        timeout: MAX_CONVERT_FORMAT_SECONDS,
-      )
-    else
-      begin
-        execute_convert(from, to, opts, read:, write:)
-      rescue StandardError
-        # retry with debugging enabled
-        execute_convert(from, to, opts.merge(debug: true), read:, write:)
-      end
+    begin
+      execute_convert(from, to, opts, read:, write:)
+    rescue StandardError
+      # retry with debugging enabled
+      execute_convert(from, to, opts.merge(debug: true), read:, write:)
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = png_tempfile
     extract_image_info!
-  ensure
-    png_tempfile&.close! if png_tempfile != @file
   end
 
   def convert_to_jpeg!
@@ -411,21 +394,11 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
 
-    if GlobalSetting.enable_vips_image_processing
-      DiscourseVips.convert_to_jpeg(
-        input_path: @file.path,
-        output_path: jpeg_tempfile.path,
-        input_format: @image_info.type.to_s,
-        quality: target_quality || 92,
-        timeout: MAX_CONVERT_FORMAT_SECONDS,
-      )
-    else
-      begin
-        execute_convert(from, to, opts, read:, write:)
-      rescue StandardError
-        # retry with debugging enabled
-        execute_convert(from, to, opts.merge(debug: true), read:, write:)
-      end
+    begin
+      execute_convert(from, to, opts, read:, write:)
+    rescue StandardError
+      # retry with debugging enabled
+      execute_convert(from, to, opts.merge(debug: true), read:, write:)
     end
 
     new_size = File.size(jpeg_tempfile.path)
@@ -437,9 +410,9 @@ class UploadCreator
       @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = jpeg_tempfile
       extract_image_info!
+    else
+      jpeg_tempfile.close!
     end
-  ensure
-    jpeg_tempfile&.close! unless @file.equal?(jpeg_tempfile)
   end
 
   def convert_heif!
@@ -451,26 +424,16 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
 
-    if GlobalSetting.enable_vips_image_processing
-      DiscourseVips.heif_to_jpeg(
-        input_path: from,
-        output_path: to,
-        timeout: MAX_CONVERT_FORMAT_SECONDS,
-      )
-    else
-      begin
-        execute_convert(from, to, {}, read:, write:)
-      rescue StandardError
-        # retry with debugging enabled
-        execute_convert(from, to, { debug: true }, read:, write:)
-      end
+    begin
+      execute_convert(from, to, {}, read:, write:)
+    rescue StandardError
+      # retry with debugging enabled
+      execute_convert(from, to, { debug: true }, read:, write:)
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = jpeg_tempfile
     extract_image_info!
-  ensure
-    jpeg_tempfile&.close! if jpeg_tempfile != @file
   end
 
   MAX_CONVERT_FORMAT_SECONDS = 20
@@ -592,33 +555,15 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    if GlobalSetting.enable_vips_image_processing
-      source_quality =
-        ImageMagick.image_quality(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
-      oriented_file = Tempfile.new(%w[oriented .jpg])
-      begin
-        DiscourseVips.auto_orient(
-          input_path: @file.path,
-          output_path: oriented_file.path,
-          source_quality:,
-          timeout: MAX_FIX_ORIENTATION_TIME,
-        )
-        @file.respond_to?(:close!) ? @file.close! : @file.close
-        @file = oriented_file
-      ensure
-        oriented_file.close! unless @file.equal?(oriented_file)
-      end
-    else
-      ImageMagick.magick(
-        path,
-        "-auto-orient",
-        path,
-        operation: :upload_auto_orient,
-        read: [@file.path],
-        write: [@file.path, File.dirname(@file.path)],
-        timeout: MAX_FIX_ORIENTATION_TIME,
-      )
-    end
+    ImageMagick.magick(
+      path,
+      "-auto-orient",
+      path,
+      operation: :upload_auto_orient,
+      read: [@file.path],
+      write: [@file.path, File.dirname(@file.path)],
+      timeout: MAX_FIX_ORIENTATION_TIME,
+    )
 
     extract_image_info!
   end
@@ -751,10 +696,8 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          begin
-            if GlobalSetting.enable_vips_image_processing
-              DiscourseVips.animated?(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
-            else
+          frames =
+            begin
               ImageMagick.identify(
                 "-ping",
                 "-format",
@@ -763,11 +706,12 @@ class UploadCreator
                 operation: :upload_animation_probe,
                 read: [@file.path],
                 timeout: Upload::MAX_IDENTIFY_SECONDS,
-              ).to_i > 1
+              ).to_i
+            rescue StandardError
+              1
             end
-          rescue StandardError
-            false
-          end
+
+          frames > 1
         else
           false
         end

@@ -17,6 +17,14 @@ module PageObjects
           find(context).find(SELECTOR)
         end
 
+        def show_all_channels
+          component.find(".empty-state__cta .btn").click
+        end
+
+        def toggle_channel_filter
+          component.find(".chat-channel-list-filter-toggle").click
+        end
+
         def open_browse
           open_channel_list_options.option('[data-menu-option-id="browseChannels"]').click
         end

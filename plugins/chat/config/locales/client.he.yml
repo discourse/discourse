@@ -130,7 +130,6 @@ he:
         process_started: "תהליך מחיקת הערוץ החל. חלונית צצה זו תיסגר בקרוב, הערוץ שנמחק לא יופיעו עוד בשום מקום."
       channels_list_popup:
         browse: "עיון בערוצים"
-        create: "ערוץ חדש"
       close: "סגירה"
       remove: "הסרה"
       collapse: "צמצום מגירת צ׳אט"
@@ -146,8 +145,6 @@ he:
       muted: "מושתק"
       joined: "הצטרפו"
       empty_state:
-        direct_message_cta: "התחלת צ׳אט אישי"
-        direct_message: "אפשר לפתוח בצ׳אט אישי עם משתמש אחד או יותר."
         title: "לא נמצאו ערוצים"
         my_threads: "עוד אין לך שרשורים. שרשורים בהם השתתפת יופיעו כאן."
       email_frequency:
@@ -548,14 +545,17 @@ he:
       direct_messages:
         title: "הודעות ישירות"
         aria_label: "מעבר להודעות ישירות"
-        new: "יצירת צ׳אט אישי"
         create: "קדימה"
-        leave: "יציאה מהצ׳אט האישי הזה"
-        close: "סגירת הצ׳אט האישי הזה"
         cannot_create: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
       channel_list:
         title: "ערוצים"
         aria_label: "מעבר לרשימת ערוצים"
+        options:
+          filter: "מסנן"
+        filter:
+          mentions: "אזכורים"
+        sort:
+          priority: "עדיפות"
       incoming_webhooks:
         back: "חזרה"
         channel_placeholder: "בחירת ערוץ"
@@ -713,11 +713,6 @@ he:
           direct_html: '<span>אוזכרת בערוץ „%{channel}” על ידי</span> <span>%{username}</span>'
           other_plain: 'נוסף אזכור של %{identifier} בערוץ „%{channel}”'
           other_html: '<span>נוסף אזכור של %{identifier} בערוץ „%{channel}” על ידי</span> <span>%{username}</span>'
-        direct_message_chat_mention:
-          direct: "אוזכרת בצ׳אט אישי"
-          direct_html: "<span>אוזכרת בצ׳אט אישי על ידי</span> <span>%{username}</span>"
-          other_plain: "נוסף אזכור של %{identifier} בצ׳אט אישי"
-          other_html: "<span>נוסף אזכור של ‎%{identifier} בצ׳אט אישי על ידי</span> <span>%{username}</span>"
         chat_message: "הודעת צ׳אט חדשה"
         chat_quoted: "הודעת הצ׳אט שלך צוטטה על ידי %{username}"
       titles:
@@ -787,9 +782,6 @@ he:
         chat:
           title: צ׳אט
     sidebar:
-      start_new_dm:
-        text: התחלת הודעה פרטית חדשה
-        title: יצירת צ׳אט אישי
       panels:
         chat:
           label: "צ׳אט"

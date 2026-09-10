@@ -11,6 +11,10 @@ te:
         kind:
           component: "భాగం"
       sections:
+        context_menu:
+          actions:
+            duplicate: "నకిలీ చేయండి"
+            delete: "తొలగించండి"
         colors:
           title: "రంగులు"
         categories:

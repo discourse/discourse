@@ -10,6 +10,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -85,7 +86,7 @@ export default class ChatRouteChannelInfoMembers extends Component {
     if (this.filter?.length) {
       params.username = this.filter;
     }
-    this.updatedAt;
+    manuallyTrack(this.updatedAt);
 
     return this.chatApi.listChannelMemberships(this.args.channel.id, params);
   }

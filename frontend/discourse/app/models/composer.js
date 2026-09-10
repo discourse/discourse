@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -6,7 +5,7 @@ import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isHTMLSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { observes, on } from "@ember-decorators/object";
+import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
@@ -233,6 +232,36 @@ export default class Composer extends RestModel {
   @tracked _archetypesOverride;
 
   @tracked _user;
+
+  @tracked _composeState;
+
+  @tracked _archetypeId;
+
+  @dependentKeyCompat
+  get composeState() {
+    return this._composeState;
+  }
+
+  set composeState(value) {
+    if (value === this._composeState) {
+      return;
+    }
+    this._composeState = value;
+    this.composeStateChanged();
+  }
+
+  @dependentKeyCompat
+  get archetypeId() {
+    return this._archetypeId;
+  }
+
+  set archetypeId(value) {
+    if (value === this._archetypeId) {
+      return;
+    }
+    this._archetypeId = value;
+    this.set("metaData", EmberObject.create());
+  }
 
   @dependentKeyCompat
   get user() {
@@ -856,7 +885,6 @@ export default class Composer extends RestModel {
     return true;
   }
 
-  @observes("composeState")
   composeStateChanged() {
     const oldOpen = this.composerOpened;
     const elem = document.documentElement;
@@ -878,11 +906,6 @@ export default class Composer extends RestModel {
       this.set("composerOpened", null);
       elem.classList.remove("composer-open");
     }
-  }
-
-  @observes("archetype")
-  archetypeChanged() {
-    return this.set("metaData", EmberObject.create());
   }
 
   // called whenever the user types to update the typing time

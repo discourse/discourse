@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ru:
+  mcp:
+    oauth:
+      deny: "Отказать"
+      approve: "Разрешить"
   llms_txt:
     sections:
       optional: "Опционально"
@@ -5052,6 +5056,12 @@ ru:
   performance_report:
     initial_post_raw: Эта тема содержит ежедневные отчёты активности форума.
     initial_topic_title: Отчёты активности форума
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записью."
+      few: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
+      many: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
+      other: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
   tags:
     title: "Теги"
     groups:

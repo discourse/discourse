@@ -286,6 +286,12 @@ RSpec.describe ReviewableUser, type: :model do
 
         expect(reviewable.actions_for(Guardian.new(moderator)).has?(:remove_avatar)).to eq(false)
       end
+
+      it "is set apart from the approve and reject answers" do
+        secondary_bundles = reviewable.actions_for(moderator.guardian).bundles.select(&:secondary)
+
+        expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["remove_avatar"])
+      end
     end
 
     context "when approving" do
