@@ -95,7 +95,12 @@ jobs:
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
+          system_test_cores=$(nproc)
+          system_test_workers=$((system_test_cores / 2 + 2))
+          if [ "$system_test_cores" -eq 16 ] && { [ "${{ matrix.target }}" = "core" ] || [ "${{ matrix.target }}" = "core-plugins" ]; }; then
+            system_test_workers=15
+          fi
+          echo "PARALLEL_TEST_PROCESSORS=$system_test_workers" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
@@ -187,6 +192,10 @@ jobs:
             if: env.USES_PARALLEL_DATABASES == 'true'
             run: bin/rake parallel:create parallel:migrate
 
+          - name: Ember Build
+            if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
+            run: script/assemble_ember_build.rb
+
           - name: Check Annotations
             if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
             env:
@@ -259,10 +268,6 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
 
-      - name: Ember Build
-        if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        run: script/assemble_ember_build.rb
-
       - name: Prepare Chrome environment for QUnit
         if: matrix.build_type == 'frontend'
         run: |
@@ -307,6 +312,8 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
+          DISCOURSE_SYSTEM_BROWSER_CACHE: "1"
+          DISCOURSE_TURBO_RSPEC_DYNAMIC_SCHEDULING: "1"
           CHECKOUT_TIMEOUT: 10
         run: |
           report_system_test_cpu() {
@@ -326,6 +333,8 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
+          DISCOURSE_SYSTEM_BROWSER_CACHE: "1"
+          DISCOURSE_TURBO_RSPEC_DYNAMIC_SCHEDULING: "1"
           CHECKOUT_TIMEOUT: 10
         run: |
           report_system_test_cpu() {

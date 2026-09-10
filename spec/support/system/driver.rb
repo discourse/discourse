@@ -35,6 +35,7 @@ module SystemDrivers
     driver = [:playwright]
     driver << :mobile if example.metadata[:mobile]
     driver << :chrome
+    driver << :cached if browser_cache_enabled?
 
     hosts = allow_network_hosts(example)
     driver << "net#{Digest::SHA1.hexdigest(hosts.join(","))[0, 10]}" if hosts.any?
@@ -63,13 +64,19 @@ module SystemDrivers
       base_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
     end
 
+    suffix = browser_cache_enabled? ? "_cached" : ""
     register_chrome(
-      :playwright_mobile_chrome,
+      :"playwright_mobile_chrome#{suffix}",
       **base_options,
       args: apply_base_chrome_args,
       mobile: true,
     )
-    register_chrome(:playwright_chrome, **base_options, args: apply_base_chrome_args, mobile: false)
+    register_chrome(
+      :"playwright_chrome#{suffix}",
+      **base_options,
+      args: apply_base_chrome_args,
+      mobile: false,
+    )
 
     # Specs that need a specific external host register their own browser, with
     # those hosts excluded from the request block (see apply_base_chrome_args).
@@ -83,7 +90,7 @@ module SystemDrivers
       )
     end
 
-    Capybara.default_driver = :playwright_chrome
+    Capybara.default_driver = :"playwright_chrome#{suffix}"
   end
 
   def self.register_chrome(name, mobile:, **options)
@@ -101,9 +108,13 @@ module SystemDrivers
         { viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 } }
       end
 
-    Capybara.register_driver(name) do |app|
-      Capybara::Playwright::Driver.new(app, **options, **mobile_options)
-    end
+    driver_class = browser_cache_enabled? ? SystemPersistentDriver : Capybara::Playwright::Driver
+    Capybara.register_driver(name) { |app| driver_class.new(app, **options, **mobile_options) }
+  end
+
+  def self.browser_cache_enabled?
+    ENV["DISCOURSE_SYSTEM_BROWSER_CACHE"] == "1" && ENV["CAPYBARA_REMOTE_DRIVER_URL"].blank? &&
+      ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].blank?
   end
 
   def self.apply_base_chrome_args(args = [], allow_network: [])
@@ -170,7 +181,10 @@ module SystemDrivers
 
     base_args + args
   end
-  private_class_method :apply_base_chrome_args, :register_chrome, :allow_network_hosts
+  private_class_method :apply_base_chrome_args,
+                       :register_chrome,
+                       :allow_network_hosts,
+                       :browser_cache_enabled?
 end
 
 RSpec.configure do |config|

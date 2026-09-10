@@ -207,12 +207,18 @@ module PlaywrightSoftReset
     end
 
     def soft_reset!
+      if @playwright_browser.is_a?(SystemPersistentBrowser)
+        return false unless @playwright_browser.reusable_context?
+      end
       contexts = @playwright_browser.contexts
       return false unless contexts.size == 1
       return false if @context_downloaded
 
       context = contexts.first
       context.pages.each(&:close)
+      if @playwright_browser.is_a?(SystemPersistentBrowser)
+        return false unless @playwright_browser.reusable_context?
+      end
       new_page = create_page(context)
       return false if fake_clock_installed?(new_page)
 
@@ -229,7 +235,15 @@ module PlaywrightSoftReset
     end
 
     def clear_storage(pw_page)
-      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp =
+        if @playwright_browser.is_a?(SystemPersistentBrowser)
+          Playwright::BrowserContext.instance_method(:new_cdp_session).bind_call(
+            pw_page.context,
+            pw_page,
+          )
+        else
+          pw_page.context.new_cdp_session(pw_page)
+        end
       cdp.send_message(
         "Storage.clearDataForOrigin",
         params: {
