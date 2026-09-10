@@ -39,9 +39,10 @@ module ReviewableActionBuilder
     client_action: nil,
     confirm: false,
     require_reject_reason: false,
+    secondary: false,
     source: nil
   )
-    actions.add(id, bundle: bundle) do |action|
+    actions.add(id, bundle:, secondary:) do |action|
       source ||= type_source
       if source == "core"
         prefix = "reviewables.actions.#{id}"

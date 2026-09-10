@@ -1,3 +1,4 @@
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import { voiceAssetAppUrl, voiceAssetUrl } from "./voice-assets";
 
 // Stable filenames in the discourse_voice_assets gem's stt/ directory.
@@ -407,8 +408,8 @@ export default class SubtitlesManager {
       }
       case "job-error":
         // A single bad utterance isn't fatal; keep going but surface it.
-        // eslint-disable-next-line no-console
-        console.warn("[voice] subtitles transcription error", message);
+
+        voiceLog.warn("[voice] subtitles transcription error");
         break;
     }
   }

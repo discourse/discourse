@@ -1658,6 +1658,16 @@ hr:
       tracked_topics_link: "Pokaži"
       automatically_unpin_topics: "Automatski otkvači teme kada dođem do dna"
       apps: "Aplikacije"
+      mcp_authorizations:
+        endpoint: "Resurs"
+        scopes: "Opsezi"
+        details: "Detalji"
+        last_used: "Zadnje korišteno"
+        never: "nikada"
+        status: "Statust"
+        statuses:
+          active: "Aktivno"
+          revoked: "Opoziv"
       revoke_access: "Opoziv pristupa"
       undo_revoke_access: "Poništi opozivanje pristupa"
       api_approved: "Odobrio:"
@@ -5524,6 +5534,67 @@ hr:
           header_description: "Ovdje navedite informacije o ovoj stranici i svom timu kako bi ljudi mogli saznati o čemu se radi u vašoj zajednici, tko stoji iza nje i kako vas kontaktirati u slučaju problema. Prikazano na stranici <a href='%{basePath}/about'>O nama</a>vaše stranice."
         developer:
           title: "Programer"
+        mcp:
+          tabs:
+            access: "Pristup"
+            activity: "Aktivnosti"
+          overview:
+            status: "Statust"
+          access:
+            title: "Pristup"
+            group: "Grupa"
+            groups: "Grupe"
+            actions: "Akcije"
+            edit: "Uredi"
+            delete: "Izbriši"
+          primitives:
+            group_by_options:
+              scope: "Opsezi"
+              provider: "Pružatelj usluga"
+              kind: "Tip"
+            provider: "Pružatelj usluga"
+            kind: "Tip"
+            scope: "Opsezi"
+            scopes: "Opsezi"
+          clients:
+            actions: "Akcije"
+            block: "Blokiraj"
+            presets:
+              custom: "Posebna"
+          authorizations:
+            user: "Korisnik"
+            last_used: "Zadnje korišteno"
+            status: "Statust"
+            actions: "Akcije"
+          activity:
+            time: "Vrijeme"
+            user: "Korisnik"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Onemogućeno"
+            client_trust:
+              approved: "Odobrio/la"
+            authorization_status:
+              active: "Aktivno"
+              revoked: "Opoziv"
+            activity_outcome:
+              success: "Uspjeh"
+              error: "Greška"
+            primitive_state:
+              enabled: "Omogućeno"
+              disabled: "Onemogućeno"
+            primitive_kind:
+              all: "Svi tipovi"
+              resource: "Resurs"
+            primitive_risk:
+              read: "Samo za čitanje"
+              moderation: "Moderiranje"
+            filter:
+              all: "Sve"
+          never: "nikada"
+          actions:
+            revoke: "Povuci"
         experimental:
           title: "Eksperimentalno"
           header_description: "Uključite ili isključite eksperimentalne značajke za svoju web stranicu, većinu njih možete kontrolirati na grupnoj osnovi"

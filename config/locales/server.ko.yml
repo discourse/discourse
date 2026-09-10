@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ko:
+  mcp:
+    oauth:
+      deny: "거부"
+      approve: "인증하기"
   llms_txt:
     sections:
       optional: "선택 사항"
@@ -3516,6 +3520,9 @@ ko:
   performance_report:
     initial_post_raw: 이 주제에는 사이트에 대한 일일 퍼포먼스 리포트가 포함되어 있습니다.
     initial_topic_title: 웹사이트 퍼포먼스 리포트
+  watched_words:
+    upload_too_many_csv_entries:
+      other: "CSV 파일에 항목이 너무 많습니다. 항목이 %{count}개 이하인 CSV 파일을 제공하십시오."
   tags:
     title: "태그"
     restricted_tag_disallowed: '''%{tag}'' 태그를 적용할 수 없습니다.'

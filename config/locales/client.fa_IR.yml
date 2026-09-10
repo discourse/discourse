@@ -1443,6 +1443,16 @@ fa_IR:
       tracked_topics_link: "نمایش"
       automatically_unpin_topics: "برداشتن پین موضوعات وقتی به پایین صفحه رسیدم"
       apps: "برنامه‌ها"
+      mcp_authorizations:
+        endpoint: "منبع"
+        scopes: "دامنه‌ها"
+        details: "جزئیات"
+        last_used: "آخرین استفاده"
+        never: "هرگز"
+        status: "وضعیت"
+        statuses:
+          active: "فعال"
+          revoked: "ابطال شد"
       revoke_access: "لغو دسترسی"
       undo_revoke_access: "بازنشانی لغو دسترسی"
       api_approved: "تایید شده:"
@@ -4931,6 +4941,70 @@ fa_IR:
           header_description: "در اینجا اطلاعاتی در مورد این سایت و تیم خود ارائه دهید تا مردم بدانند که انجمن شما در مورد چیست، چه کسانی پشت آن هستند و در صورت بروز مشکل چگونه با شما تماس بگیرند. در قسمت <a href='%{basePath}/about'>درباره سایت شما</a> نمایش داده می شود."
         developer:
           title: "توسعه دهنده"
+        mcp:
+          tabs:
+            access: "دسترسی"
+            activity: "فعالیت"
+          overview:
+            status: "وضعیت"
+          access:
+            title: "دسترسی"
+            group: "گروه"
+            groups: "گروه‌ها"
+            actions: "عملیات"
+            edit: "ویرایش"
+            delete: "حذف"
+          primitives:
+            group_by_options:
+              scope: "دامنه"
+              provider: "ارائه‌دهنده"
+              kind: "نوع"
+            provider: "ارائه‌دهنده"
+            kind: "نوع"
+            scope: "دامنه"
+            state: "ایالت"
+            scopes: "دامنه‌ها"
+          clients:
+            actions: "عملیات"
+            block: "بستن"
+            presets:
+              custom: "سفارشی"
+          authorizations:
+            user: "کاربر"
+            last_used: "آخرین استفاده"
+            status: "وضعیت"
+            actions: "عملیات"
+          activity:
+            rate_limits: "میزان محدودیت‌ها"
+            time: "زمان"
+            user: "کاربر"
+            duration: "مدت زمان"
+          values:
+            server_status:
+              disabled: "غیرفعال"
+            client_trust:
+              approved: "پذیرفته شده"
+            authorization_status:
+              active: "فعال"
+              revoked: "ابطال شد"
+            activity_outcome:
+              success: "موفقیت"
+              error: "خطا"
+            primitive_state:
+              enabled: "فعال شده"
+              disabled: "غیرفعال"
+            primitive_kind:
+              all: "همه نوع‌ها"
+              tool: "ابزار"
+              resource: "منبع"
+            primitive_risk:
+              read: "فقط خواندنی"
+              moderation: "نظارت"
+            filter:
+              all: "همه"
+          never: "هرگز"
+          actions:
+            revoke: "ابطال"
         experimental:
           title: "آزمایشی"
           header_description: "ویژگی‌های آزمایشی را برای سایت خود روشن یا خاموش کنید، اکثر این موارد را می‌توان به صورت گروهی کنترل کرد"

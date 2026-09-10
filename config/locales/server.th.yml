@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 th:
+  mcp:
+    oauth:
+      deny: "ปฏิเสธ"
   llms_txt:
     sections:
       optional: "ทางเลือก"

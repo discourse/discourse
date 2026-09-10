@@ -1799,6 +1799,16 @@ zh_CN:
       tracked_topics_link: "显示"
       automatically_unpin_topics: "当我到达底部时自动取消置顶话题"
       apps: "应用"
+      mcp_authorizations:
+        endpoint: "资源"
+        scopes: "范围"
+        details: "详细信息"
+        last_used: "最后使用："
+        never: "永不"
+        status: "状态"
+        statuses:
+          active: "有效"
+          revoked: "已撤销"
       revoke_access: "撤消访问权限"
       undo_revoke_access: "撤消访问权限撤消操作"
       api_approved: "已批准："
@@ -3402,6 +3412,12 @@ zh_CN:
       preview_node:
         show_source: "显示来源"
         show_preview: "显示预览"
+      table:
+        add_column: "添加列"
+        delete_column: "删除列"
+        alignment_left: "左"
+        alignment_center: "居中"
+        alignment_right: "右"
       unsupported_token: "富文本编辑器不支持此帖子中使用的所有功能；会将您切换到 Markdown 编辑器。"
     notifications:
       tooltip:
@@ -5251,6 +5267,7 @@ zh_CN:
       image_load_error: '<a href="%url%">图片</a>无法加载。'
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
     invalid_video_url: 此视频无法播放，因为 URL 无效或不可用。
+    play_video: 播放视频
     keyboard_shortcuts_help:
       search_label: "搜索快捷方式"
       search_placeholder: "通过描述或按键组合搜索快捷方式"
@@ -6153,6 +6170,80 @@ zh_CN:
         developer:
           title: "开发者"
           header_description: "开发者设置用于控制安全模式和其他高级功能"
+        mcp:
+          title: "MCP 服务器"
+          tabs:
+            access: "访问权限"
+            activity: "活动"
+          overview:
+            status: "状态"
+            tools: "工具"
+          access:
+            title: "访问权限"
+            group: "群组"
+            groups: "群组"
+            actions: "操作"
+            edit: "编辑"
+            delete: "删除"
+          primitives:
+            group_by: "分组依据"
+            group_by_options:
+              scope: "作用域"
+              provider: "提供商"
+              kind: "类型"
+            provider: "提供商"
+            kind: "类型"
+            scope: "作用域"
+            state: "州"
+            scopes: "范围"
+          clients:
+            actions: "操作"
+            block: "禁止"
+            use_preset: "设置"
+            presets:
+              custom: "自定义"
+          authorizations:
+            user: "用户"
+            scopes: "授予的作用域"
+            last_used: "最后使用："
+            status: "状态"
+            actions: "操作"
+          activity:
+            tool_calls: "工具调用"
+            errors: "错误"
+            rate_limits: "速率限值"
+            outcome: "成果"
+            time: "时间"
+            user: "用户"
+            duration: "持续时间"
+          values:
+            server_status:
+              available: "可用"
+              disabled: "已禁用"
+            client_trust:
+              approved: "已批准"
+            authorization_status:
+              active: "有效"
+              revoked: "已撤销"
+            activity_outcome:
+              success: "成功"
+              error: "错误"
+            primitive_state:
+              enabled: "已启用"
+              disabled: "已禁用"
+              unavailable: "不可用"
+            primitive_kind:
+              tool: "工具"
+              resource: "资源"
+              prompt: "提示"
+            primitive_risk:
+              read: "只读"
+              moderation: "审核"
+            filter:
+              all: "所有"
+          never: "永不"
+          actions:
+            revoke: "撤销"
         experimental:
           title: "实验性"
           header_description: "切换网站的实验性功能，其中大部分功能可按组进行控制"

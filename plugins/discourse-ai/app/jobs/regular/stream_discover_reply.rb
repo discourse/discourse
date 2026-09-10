@@ -362,7 +362,7 @@ module Jobs
       return fallback if DiscourseAi::Discoveries::Retrieval.explicit_filters?(query)
 
       agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_query_rewriter_agent)
-      return fallback if agent.nil? || !agent.enabled?
+      return fallback if agent.nil?
       return fallback if !user.in_any_groups?(agent.allowed_group_ids.to_a)
 
       llm_model_id = agent.default_llm_id.presence || SiteSetting.ai_default_llm_model

@@ -1572,6 +1572,16 @@ fi:
       tracked_topics_link: "Näytä"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun"
       apps: "Sovellukset"
+      mcp_authorizations:
+        endpoint: "Resurssi"
+        scopes: "Näkyvyysalueet"
+        details: "Tiedot"
+        last_used: "Viimeksi käytetty"
+        never: "Ei koskaan"
+        status: "Tila"
+        statuses:
+          active: "Aktiivinen"
+          revoked: "Peruttu"
       revoke_access: "Peru käyttöoikeus"
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
       api_approved: "Sallittu:"
@@ -5267,6 +5277,74 @@ fi:
           header_description: "Anna tässä tietoja tästä sivustosta ja tiimistäsi, jotta ihmiset voivat oppia, mistä yhteisöstäsi on kyse, kuka sen takana on ja miten sinuun voi ottaa yhteyttä ongelmatilanteissa. Näytetään sivustosi <a href='%{basePath}/about'>Tietoa-sivulla</a>."
         developer:
           title: "Kehittäjä"
+        mcp:
+          tabs:
+            access: "Käyttöoikeudet"
+            activity: "Toiminta"
+          overview:
+            status: "Tila"
+            tools: "Työkalut"
+          access:
+            title: "Käyttöoikeudet"
+            group: "Ryhmä"
+            groups: "Ryhmät"
+            actions: "Toiminnot"
+            edit: "Muokkaa"
+            delete: "Poista"
+          primitives:
+            group_by: "Ryhmittely"
+            group_by_options:
+              scope: "Soveltamisala"
+              provider: "Palveluntarjoaja"
+              kind: "Tyyppi"
+            provider: "Palveluntarjoaja"
+            kind: "Tyyppi"
+            scope: "Soveltamisala"
+            state: "Osavaltio"
+            scopes: "Näkyvyysalueet"
+          clients:
+            actions: "Toiminnot"
+            block: "Estä"
+            use_preset: "Määritä"
+            presets:
+              custom: "Mukautettu"
+          authorizations:
+            user: "Käyttäjä"
+            last_used: "Viimeksi käytetty"
+            status: "Tila"
+            actions: "Toiminnot"
+          activity:
+            rate_limits: "Rajat"
+            outcome: "Tulos"
+            time: "Aika"
+            user: "Käyttäjä"
+            duration: "Kesto"
+          values:
+            server_status:
+              disabled: "Pois käytöstä"
+            client_trust:
+              approved: "Hyväksytty"
+            authorization_status:
+              active: "Aktiivinen"
+              revoked: "Peruttu"
+            activity_outcome:
+              success: "Onnistui"
+              error: "Virhe"
+            primitive_state:
+              enabled: "Käytössä"
+              disabled: "Pois käytöstä"
+            primitive_kind:
+              all: "Kaikki tyypit"
+              tool: "Työkalu"
+              resource: "Resurssi"
+            primitive_risk:
+              read: "Vain luku"
+              moderation: "Valvonta"
+            filter:
+              all: "Kaikki"
+          never: "Ei koskaan"
+          actions:
+            revoke: "Peru"
         experimental:
           title: "Kokeellinen"
           header_description: "Ota sivustosi kokeellisia ominaisuukssia käyttöön tai poista niitä käytöstä. Useimpia niistä voi hallita ryhmäkohtaisesti."

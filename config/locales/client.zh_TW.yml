@@ -1789,6 +1789,16 @@ zh_TW:
       tracked_topics_link: "顯示"
       automatically_unpin_topics: "當我完整閲讀了話題時自動解除置頂。"
       apps: "應用"
+      mcp_authorizations:
+        endpoint: "資源"
+        scopes: "範圍"
+        details: "詳細資訊"
+        last_used: "最後使用："
+        never: "永不"
+        status: "狀態"
+        statuses:
+          active: "啟用"
+          revoked: "已撤消"
       revoke_access: "撤銷許可"
       undo_revoke_access: "解除撤銷許可"
       api_approved: "已通過審核："
@@ -3383,6 +3393,9 @@ zh_TW:
         visit: "開啟連結"
         remove_preview: "移除預覽"
         link_copied: "連結已複製！"
+      table:
+        alignment_left: "左側"
+        alignment_right: "右側"
       unsupported_token: "富文字編輯器不支援此貼文使用的所有功能；系統將為你切換至 Markdown 編輯器。"
     notifications:
       tooltip:
@@ -6128,6 +6141,80 @@ zh_TW:
         developer:
           title: "開發人員"
           header_description: "用於控制安全模式及其他進階功能的開發人員設定"
+        mcp:
+          title: "MCP 服務器"
+          tabs:
+            access: "訪問"
+            activity: "活動"
+          overview:
+            status: "狀態"
+            tools: "工具"
+          access:
+            title: "訪問"
+            group: "群組"
+            groups: "群組"
+            actions: "動作"
+            edit: "編輯"
+            delete: "刪除"
+          primitives:
+            group_by: "分組依據"
+            group_by_options:
+              scope: "範圍"
+              provider: "服務提供者"
+              kind: "類型"
+            provider: "服務提供者"
+            kind: "類型"
+            scope: "範圍"
+            state: "州"
+            scopes: "範圍"
+          clients:
+            actions: "動作"
+            block: "封鎖"
+            use_preset: "設置"
+            presets:
+              custom: "客製"
+          authorizations:
+            user: "使用者"
+            scopes: "授予的作用域"
+            last_used: "最後使用："
+            status: "狀態"
+            actions: "動作"
+          activity:
+            tool_calls: "工具呼叫"
+            errors: "錯誤"
+            rate_limits: "速率限制"
+            outcome: "結果"
+            time: "時間"
+            user: "使用者"
+            duration: "持續時間"
+          values:
+            server_status:
+              available: "可用"
+              disabled: "已停用"
+            client_trust:
+              approved: "已批準"
+            authorization_status:
+              active: "啟用"
+              revoked: "已撤消"
+            activity_outcome:
+              success: "成功"
+              error: "錯誤"
+            primitive_state:
+              enabled: "已啟用"
+              disabled: "已停用"
+              unavailable: "無法使用"
+            primitive_kind:
+              tool: "工具"
+              resource: "資源"
+              prompt: "提示詞"
+            primitive_risk:
+              read: "唯讀"
+              moderation: "管理"
+            filter:
+              all: "所有"
+          never: "永不"
+          actions:
+            revoke: "撤回"
         experimental:
           title: "實驗性"
           header_description: "切換網站的實驗性功能，其中大部分功能可按組進行控制"

@@ -24,6 +24,15 @@ describe DiscourseDataExplorer::QueryController do
 
     before { sign_in(admin) }
 
+    def run_query(id, params = {}, explain = false)
+      params = params.transform_values(&:to_s)
+      post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
+           params: {
+             params: params.to_json,
+             explain: explain,
+           }
+    end
+
     describe "when disabled" do
       before { SiteSetting.data_explorer_enabled = false }
 
@@ -206,15 +215,6 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#run" do
-      def run_query(id, params = {}, explain = false)
-        params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
-             params: {
-               params: params.to_json,
-               explain: explain,
-             }
-      end
-
       it "can run queries" do
         query = make_query("SELECT 23 as my_value")
         run_query query.id
@@ -610,21 +610,13 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "result caching" do
-      def run_query(id, params = {})
-        params = Hash[params.map { |a| [a[0], a[1].to_s] }]
-        post "/admin/plugins/discourse-data-explorer/queries/#{id}/run.json",
-             params: {
-               params: params.to_json,
-             }
-      end
-
       it "caches results after running a query" do
         query = make_query("SELECT 23 as my_value")
 
         run_query query.id
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_present
         expect(cached[:rows]).to eq([[23]])
       end
@@ -638,6 +630,15 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["query"]["cached_result"]).to be_present
         expect(response_json["query"]["cached_result"]["rows"]).to eq([[23]])
         expect(response_json["query"]["cached_result"]["cached_at"]).to be_present
+      end
+
+      it "does not return results cached for another user" do
+        query = make_query("SELECT 23 as my_value")
+        DiscourseDataExplorer::QueryRunner.run(query, nil, current_user: Fabricate(:user))
+
+        get "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json"
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["cached_result"]).to be_nil
       end
 
       it "returns no cached_result on cache miss" do
@@ -674,7 +675,7 @@ describe DiscourseDataExplorer::QueryController do
              }
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_nil
       end
 
@@ -684,7 +685,7 @@ describe DiscourseDataExplorer::QueryController do
         run_query query.id
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_nil
       end
 
@@ -692,7 +693,9 @@ describe DiscourseDataExplorer::QueryController do
         query = make_query("SELECT 1 as old_value")
         run_query query.id
 
-        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+        expect(
+          DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin),
+        ).to be_present
 
         put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
             params: {
@@ -704,7 +707,9 @@ describe DiscourseDataExplorer::QueryController do
             }
         expect(response.status).to eq(200)
 
-        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_nil
+        expect(
+          DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin),
+        ).to be_nil
       end
 
       it "does not invalidate cache when only name changes" do
@@ -721,7 +726,9 @@ describe DiscourseDataExplorer::QueryController do
             }
         expect(response.status).to eq(200)
 
-        expect(DiscourseDataExplorer::QueryRunner.cached_result(query, nil)).to be_present
+        expect(
+          DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin),
+        ).to be_present
       end
 
       it "returns cached result on reload when run with no explicit params" do
@@ -742,7 +749,7 @@ describe DiscourseDataExplorer::QueryController do
              }
         expect(response.status).to eq(200)
 
-        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil)
+        cached = DiscourseDataExplorer::QueryRunner.cached_result(query, nil, current_user: admin)
         expect(cached).to be_nil
       end
 

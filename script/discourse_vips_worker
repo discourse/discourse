@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "rubygems"
 require "landlock"
 require "msgpack"
-require "nokogiri"
 require "socket"
 require "tmpdir"
 require "vips"
@@ -48,25 +46,6 @@ class DiscourseVipsWorker
         letter_avatar(*arguments)
       when "dominant-color"
         dominant_color(*arguments)
-      when "ico-to-png"
-        ico_to_png(input_path: arguments[0], output_path: arguments[1])
-      when "convert-to-jpeg"
-        convert_to_jpeg(
-          input_path: arguments[0],
-          output_path: arguments[1],
-          input_format: arguments[2],
-          quality: arguments[3],
-        )
-      when "animated"
-        animated(*arguments)
-      when "svg-dimensions"
-        svg_dimensions(*arguments)
-      when "svg-to-png"
-        svg_to_png(input_path: arguments[0], output_path: arguments[1])
-      when "heif-to-jpeg"
-        heif_to_jpeg(input_path: arguments[0], output_path: arguments[1])
-      when "topic-og-render"
-        topic_og_render(input_path: arguments[0], output_path: arguments[1])
       when "auto-orient"
         auto_orient(
           input_path: arguments[0],
@@ -161,239 +140,22 @@ class DiscourseVipsWorker
     end
     private_class_method :dominant_color
 
-    def self.animated(input_path)
-      new(read_paths: [input_path]) do
-        block_loaders(allowed: %w[VipsForeignLoadNsgif VipsForeignLoadWebp VipsForeignLoadHeif])
-
-        begin
-          image = Vips::Image.new_from_file(input_path, access: :sequential)
-          image.get_typeof("n-pages") != 0 && image.get("n-pages") > 1
-        rescue Vips::Error => error
-          raise InvalidImage, error.message
-        end
-      end
-    end
-    private_class_method :animated
-
-    def self.svg_dimensions(input_path)
-      new(read_paths: [input_path]) do
-        raise ArgumentError, "invalid SVG dimensions arguments" if !input_path
-
-        block_loaders(allowed: %w[VipsForeignLoadSvg])
-        begin
-          image = load_svg(input_path)
-          [image.width, image.height]
-        rescue Vips::Error, Nokogiri::XML::SyntaxError => error
-          raise InvalidImage, error.message
-        end
-      end
-    end
-    private_class_method :svg_dimensions
-
-    def self.svg_to_png(input_path:, output_path:)
-      new(
-        read_paths: [input_path, "/etc/fonts", "/var/cache/fontconfig"],
-        write_paths: [File.dirname(output_path)],
-      ) do
-        if File.exist?(output_path) && File.identical?(input_path, output_path)
-          raise ArgumentError, "SVG input and PNG output must be different files"
-        end
-
-        block_loaders(allowed: %w[VipsForeignLoadSvg])
-        begin
-          load_svg(input_path).flatten(background: [255, 255, 255]).pngsave(output_path)
-        rescue Vips::Error, Nokogiri::XML::SyntaxError => error
-          raise InvalidImage, error.message
-        end
-        nil
-      end
-    end
-    private_class_method :svg_to_png
-
-    def self.topic_og_render(input_path:, output_path:)
-      new(
-        read_paths: [File.dirname(input_path), "/etc/fonts", "/var/cache/fontconfig"],
-        write_paths: [File.dirname(output_path)],
-      ) do
-        if File.exist?(output_path) && File.identical?(input_path, output_path)
-          raise ArgumentError, "SVG input and PNG output must be different files"
-        end
-
-        block_loaders(allowed: %w[VipsForeignLoadSvg])
-        begin
-          stylesheet = topic_og_stylesheet(input_path)
-          Vips::Image.svgload(input_path, dpi: 96, scale: 0.75, stylesheet:).pngsave(
-            output_path,
-            bitdepth: 8,
-            compression: 9,
-          )
-        rescue Vips::Error, Nokogiri::XML::SyntaxError => error
-          raise InvalidImage, error.message
-        end
-        nil
-      end
-    end
-    private_class_method :topic_og_render
-
-    def self.topic_og_stylesheet(input_path)
-      document = Nokogiri.XML(File.read(input_path)) { |config| config.strict.nonet }
-      rules = []
-      titles = document.css("text.topic-og-title")
-      if titles.any?
-        font_size = titles.first["font-size"].to_i
-        available_width = document.root["width"].to_i - 2 * titles.first["x"].to_i - 8
-        widest_title = titles.map { |title| topic_og_text_width(title) }.max
-        if widest_title > available_width
-          fitted_size = (font_size * available_width.to_f / widest_title).floor
-          rules << ".topic-og-title { font-size: #{fitted_size}px !important; }"
-        end
-      end
-
-      category = document.at_css("text.topic-og__category-name")
-      background = document.at_css("rect.topic-og__category-background")
-      if category && background
-        padding = category["x"].to_i - background["x"].to_i
-        max_width = document.root["width"].to_i - 2 * background["x"].to_i
-        text_width = topic_og_text_width(category)
-        available_width = max_width - 2 * padding - 8
-        if text_width > available_width
-          fitted_size = (category["font-size"].to_i * available_width.to_f / text_width).floor
-          rules << ".topic-og__category-name { font-size: #{fitted_size}px !important; }"
-        end
-        width = [text_width + 2 * padding + 8, max_width].min
-        rules << ".topic-og__category-background { width: #{width}px; }"
-      end
-      rules.join("\n")
-    end
-    private_class_method :topic_og_stylesheet
-
-    def self.topic_og_text_width(element)
-      text =
-        Vips::Image.text(
-          %(<span weight="#{element["font-weight"]}">#{element.inner_html}</span>),
-          font: "#{element["font-family"]} #{element["font-size"]}",
-          dpi: 72,
-        )
-      text.width + text.xoffset
-    end
-    private_class_method :topic_og_text_width
-
-    def self.load_svg(input_path)
-      Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)
-    rescue Vips::Error => error
-      document = Nokogiri.XML(File.read(input_path)) { |config| config.strict.nonet }
-      root = document.root
-      raise error if root&.name != "svg" || !root["viewBox"]
-
-      viewbox = root["viewBox"].strip.split(/[\s,]+/).map { |value| Float(value, exception: false) }
-      if viewbox.length != 4 || !viewbox.all? { |value| value&.finite? } || !viewbox[2].positive? ||
-           !viewbox[3].positive?
-        raise error
-      end
-
-      zero_dimensions =
-        %w[width height].filter do |dimension|
-          root[dimension]&.strip&.match?(
-            /\A[+-]?(?:0+(?:\.0*)?|\.0+)(?:e[+-]?\d+)?(?:px|in|cm|mm|pt|pc|em|ex|%)?\z/i,
-          )
-        end
-      raise error if zero_dimensions.empty?
-
-      zero_dimensions.each do |dimension|
-        root[dimension] = viewbox[dimension == "width" ? 2 : 3].to_s
-      end
-      Vips::Image.svgload_buffer(document.to_xml, dpi: 96, scale: 0.75)
-    end
-    private_class_method :load_svg
-
-    def self.heif_to_jpeg(input_path:, output_path:)
-      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
-        if File.identical?(input_path, output_path)
-          raise ArgumentError, "input and output must be different files"
-        end
-
-        block_loaders(allowed: %w[VipsForeignLoadHeif])
-
-        begin
-          image = Vips::Image.heifload(input_path, access: :sequential)
-          if image.has_alpha?
-            white = image.interpretation == :rgb16 ? 65_535 : 255
-            image = image.flatten(background: [white, white, white])
-          end
-          image.jpegsave(output_path, Q: 92, interlace: false)
-        rescue Vips::Error => error
-          raise InvalidImage, error.message
-        end
-
-        nil
-      end
-    end
-    private_class_method :heif_to_jpeg
-
-    def self.ico_to_png(input_path:, output_path:)
-      require "discourse_vips/ico_image"
-
-      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
-        if File.identical?(input_path, output_path)
-          raise ArgumentError, "input and output must be different files"
-        end
-
-        block_loaders(allowed: %w[VipsForeignLoadPng])
-        begin
-          DiscourseVips::IcoImage.load(input_path).autorot.pngsave(output_path)
-        rescue Vips::Error, ArgumentError => error
-          raise InvalidImage, error.message
-        end
-
-        nil
-      end
-    end
-    private_class_method :ico_to_png
-
-    def self.convert_to_jpeg(input_path:, output_path:, input_format:, quality:)
+    def self.auto_orient(input_path:, output_path:, source_quality:)
       new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
         if File.expand_path(input_path) == File.expand_path(output_path) ||
              (File.exist?(output_path) && File.identical?(input_path, output_path))
-          raise ArgumentError, "JPEG conversion requires separate input and output files"
+          raise ArgumentError, "JPEG orientation requires separate input and output files"
         end
 
-        block_loaders(
-          allowed: %w[
-            VipsForeignLoadJpeg
-            VipsForeignLoadPng
-            VipsForeignLoadNsgif
-            VipsForeignLoadWebp
-            VipsForeignLoadHeif
-          ],
-        )
+        quality = Integer(source_quality)
+        raise ArgumentError, "invalid JPEG quality" unless (1..100).cover?(quality)
 
+        block_loaders(allowed: %w[VipsForeignLoadJpeg])
         begin
-          image =
-            case input_format
-            when "jpeg", "jpg"
-              load_image_for_orientation(input_path:, loader: :jpegload)
-            when "png"
-              load_image_for_orientation(input_path:, loader: :pngload)
-            when "gif"
-              gif = Vips::Image.gifload(input_path, access: :sequential, n: 1)
-              profile = gif_icc_profile(input_path)
-              gif.set_type(Vips::BLOB_TYPE, "icc-profile-data", profile) if profile
-              gif
-            when "webp"
-              load_image_for_orientation(input_path:, loader: :webpload, n: 1)
-            when "avif"
-              load_image_for_orientation(input_path:, loader: :heifload, n: 1)
-            else
-              raise ArgumentError, "unsupported JPEG conversion input format"
-            end
-          image = image.autorot
-          if image.has_alpha?
-            white = image.format == :ushort ? 65_535 : 255
-            image = image.flatten(background: Array.new(image.bands - 1, white))
-          end
-          image.jpegsave(
+          image = load_image_for_orientation(input_path:, loader: :jpegload)
+          image.autorot.jpegsave(
             output_path,
-            Q: Integer(quality),
+            Q: quality,
             interlace: false,
             subsample_mode: jpeg_subsample_mode(image:, input_path:),
           )
@@ -403,7 +165,7 @@ class DiscourseVipsWorker
         end
       end
     end
-    private_class_method :convert_to_jpeg
+    private_class_method :auto_orient
 
     def self.jpeg_subsample_mode(image:, input_path:)
       return :auto if image.get_typeof("jpeg-chroma-subsample") == 0
@@ -466,64 +228,6 @@ class DiscourseVipsWorker
     end
     private_class_method :jpeg_sampling_factors
 
-    def self.gif_icc_profile(input_path)
-      File.open(input_path, "rb") do |file|
-        header = read_gif_bytes(file: file, length: 13)
-        unless header.start_with?("GIF87a", "GIF89a")
-          raise InvalidImage, "invalid GIF header"
-        end
-        packed = header.getbyte(10)
-        read_gif_bytes(file: file, length: 3 * (2 << (packed & 7))) if packed & 128 != 0
-        profile = nil
-
-        loop do
-          case file.getbyte
-          when 0x3b
-            return profile
-          when 0x21
-            label = file.getbyte
-            if label == 0xff
-              length = file.getbyte
-              raise InvalidImage, "truncated GIF extension" unless length
-              identifier = read_gif_bytes(file: file, length: length)
-              data = gif_subblocks(file: file, collect: identifier == "ICCRGBG1012")
-              profile = data if identifier == "ICCRGBG1012"
-            else
-              gif_subblocks(file: file, collect: false)
-            end
-          when 0x2c
-            descriptor = read_gif_bytes(file: file, length: 9)
-            packed = descriptor.getbyte(8)
-            read_gif_bytes(file: file, length: 3 * (2 << (packed & 7))) if packed & 128 != 0
-            read_gif_bytes(file: file, length: 1)
-            gif_subblocks(file: file, collect: false)
-          else
-            raise InvalidImage, "invalid GIF block"
-          end
-        end
-      end
-    end
-    private_class_method :gif_icc_profile
-
-    def self.gif_subblocks(file:, collect:)
-      data = +"".b if collect
-      loop do
-        length = file.getbyte
-        raise InvalidImage, "truncated GIF subblock" unless length
-        return data if length.zero?
-        block = read_gif_bytes(file: file, length: length)
-        data << block if collect
-      end
-    end
-    private_class_method :gif_subblocks
-
-    def self.read_gif_bytes(file:, length:)
-      bytes = file.read(length)
-      raise InvalidImage, "truncated GIF data" unless bytes&.bytesize == length
-      bytes
-    end
-    private_class_method :read_gif_bytes
-
     def self.load_image_for_orientation(input_path:, loader:, **options)
       image = Vips::Image.public_send(loader, input_path, access: :sequential, **options)
       if image.get_typeof("orientation") != 0 && image.get("orientation") > 2
@@ -532,33 +236,6 @@ class DiscourseVipsWorker
       image
     end
     private_class_method :load_image_for_orientation
-
-    def self.auto_orient(input_path:, output_path:, source_quality:)
-      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
-        if File.expand_path(input_path) == File.expand_path(output_path) ||
-             (File.exist?(output_path) && File.identical?(input_path, output_path))
-          raise ArgumentError, "JPEG orientation requires separate input and output files"
-        end
-
-        quality = Integer(source_quality)
-        raise ArgumentError, "invalid JPEG quality" unless (1..100).cover?(quality)
-
-        block_loaders(allowed: %w[VipsForeignLoadJpeg])
-        begin
-          image = load_image_for_orientation(input_path:, loader: :jpegload)
-          image.autorot.jpegsave(
-            output_path,
-            Q: quality,
-            interlace: false,
-            subsample_mode: jpeg_subsample_mode(image:, input_path:),
-          )
-          nil
-        rescue Vips::Error => error
-          raise InvalidImage, error.message
-        end
-      end
-    end
-    private_class_method :auto_orient
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)

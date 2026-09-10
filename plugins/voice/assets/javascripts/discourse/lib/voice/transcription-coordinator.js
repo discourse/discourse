@@ -1,8 +1,10 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import SubtitlesManager from "./subtitles";
 import TranscriptDraftSync from "./transcript-draft-sync";
 import { transcriptToMarkdown } from "./transcript-markdown";
@@ -100,7 +102,7 @@ export default class TranscriptionCoordinator {
           this.progress = Math.min(100, Math.round((loaded / total) * 100));
         }
       },
-      onError: (error) => this.#handleError(error),
+      onError: () => this.#handleError(),
     });
 
     this.enabled = this.available && this.#subtitles.isPreferred();
@@ -121,27 +123,27 @@ export default class TranscriptionCoordinator {
   }
 
   get recording() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.recording;
   }
 
   get roomId() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.roomId;
   }
 
   get entries() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.entries;
   }
 
   get entriesRoomId() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.entriesRoomId;
   }
 
   get startedAt() {
-    this.revision;
+    manuallyTrack(this.revision);
     return this.#transcript.startedAt;
   }
 
@@ -393,9 +395,8 @@ export default class TranscriptionCoordinator {
 
   // Model or runtime failures turn the toggles back off (mirroring the noise
   // suppression contract) so the UI never shows an enabled-but-dead state.
-  #handleError(error) {
-    // eslint-disable-next-line no-console
-    console.warn("[voice] subtitles failed", error);
+  #handleError() {
+    voiceLog.warn("[voice] subtitles failed");
 
     if (!this.enabled && !this.recording) {
       return;

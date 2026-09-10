@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 he:
+  mcp:
+    oauth:
+      deny: "דחייה"
+      approve: "אישור"
   llms_txt:
     sections:
       optional: "רשות"
@@ -4745,6 +4749,11 @@ he:
   performance_report:
     initial_post_raw: נושא זה כולל דוחות פעילות יומיים עבור האתר שלך.
     initial_topic_title: דוחות פעילות לאתר
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מרשומה."
+      two: "יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות."
+      other: "יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות."
   tags:
     title: "תגיות"
     restricted_tag_disallowed: 'לא ניתן להחיל את התגית „%{tag}”.'

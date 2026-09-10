@@ -223,13 +223,14 @@ module Helpers
   end
 
   def stub_const(target, const, value)
-    old = target.const_get(const)
-    target.send(:remove_const, const)
+    previously_defined = target.const_defined?(const, false)
+    old = target.const_get(const, false) if previously_defined
+    target.send(:remove_const, const) if previously_defined
     target.const_set(const, value)
     yield
   ensure
     target.send(:remove_const, const)
-    target.const_set(const, old)
+    target.const_set(const, old) if previously_defined
   end
 
   def track_sql_queries

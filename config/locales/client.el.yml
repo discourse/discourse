@@ -1745,6 +1745,16 @@ el:
       tracked_topics_link: "Δείξε"
       automatically_unpin_topics: "Τα θέματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος"
       apps: "Εφαρμογές"
+      mcp_authorizations:
+        endpoint: "Πόρος"
+        scopes: "Πεδία εφαρμογής"
+        details: "Λεπτομέρειες"
+        last_used: "Τελευταία χρήση"
+        never: "Ποτέ"
+        status: "Κατάσταση"
+        statuses:
+          active: "Ενεργό"
+          revoked: "Ανακλήθηκε"
       revoke_access: "Ανάκληση Πρόσβασης"
       undo_revoke_access: "Απενεργοποίηση Ανάκλησης Πρόσβασης"
       api_approved: "Εγκεκριμένο:"
@@ -5878,6 +5888,70 @@ el:
           title: "Σχετικά με τον ιστότοπο σας"
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Πρόσβαση"
+            activity: "Δραστηριότητα"
+          overview:
+            status: "Κατάσταση"
+          access:
+            title: "Πρόσβαση"
+            group: "Ομάδα"
+            groups: "Ομάδες"
+            actions: "Ενέργειες"
+            edit: "Επεξεργασία"
+            delete: "Σβήσιμο"
+          primitives:
+            group_by: "Ομαδοποίηση κατά"
+            group_by_options:
+              scope: "Πεδίο εφαρμογής"
+              provider: "Πάροχος"
+              kind: "Τύπος"
+            provider: "Πάροχος"
+            kind: "Τύπος"
+            scope: "Πεδίο εφαρμογής"
+            state: "Πολιτεία"
+            scopes: "Πεδία εφαρμογής"
+          clients:
+            actions: "Ενέργειες"
+            block: "Αποκλεισμός"
+            presets:
+              custom: "Προσαρμοσμένο"
+          authorizations:
+            user: "Χρήστης"
+            last_used: "Τελευταία χρήση"
+            status: "Κατάσταση"
+            actions: "Ενέργειες"
+          activity:
+            outcome: "Αποτέλεσμα"
+            time: "Ώρα"
+            user: "Χρήστης"
+            duration: "Διάρκεια"
+          values:
+            server_status:
+              disabled: "Απενεργοποιημένος"
+            client_trust:
+              approved: "Εγκρίθηκε "
+            authorization_status:
+              active: "Ενεργό"
+              revoked: "Ανακλήθηκε"
+            activity_outcome:
+              success: "Επιτυχία"
+              error: "Σφάλμα"
+            primitive_state:
+              enabled: "Ενεργοποιημένη"
+              disabled: "Απενεργοποιημένος"
+            primitive_kind:
+              all: "Όλοι οι τύποι"
+              resource: "Πόρος"
+            primitive_risk:
+              read: "Μόνο για ανάγνωση"
+              moderation: "Συντονισμός"
+            filter:
+              all: "Όλα"
+          never: "Ποτέ"
+          actions:
+            revoke: "Ανακάλεσε"
         experimental:
           title: "Πειραματικό"
         emojis:

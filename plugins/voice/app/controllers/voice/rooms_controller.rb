@@ -734,9 +734,7 @@ module Voice
       token = Voice::Livekit.mint_token(user: current_user, room: @room, guardian: guardian)
       { url: SiteSetting.voice_livekit_url, token: token }
     rescue StandardError => e
-      Rails.logger.error(
-        "[voice-livekit] token mint failed for room #{@room.id}: #{e.class} #{e.message}",
-      )
+      Rails.logger.error("[voice-livekit] token mint failed for room #{@room.id}: #{e.class}")
       nil
     end
 

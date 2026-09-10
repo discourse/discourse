@@ -14,6 +14,33 @@ en:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Ask AI"
+        ask_ai:
+          title: "Ask AI"
+          questions: "Questions asked"
+          askers: "Users asking"
+          latency: "Answer latency"
+          latency_tooltip: "Average time from when the server accepts a query until it sends the first answer update, including queue time. This excludes network delivery time to the user."
+          seconds: "%{seconds} s"
+          not_available: "—"
+          activity: "Asks over time"
+          date: "Date"
+          percentage: "%{value}%"
+          outcomes_title: "Ask outcomes"
+          outcomes:
+            answered: "Answer provided"
+            no_answer: "No answer provided"
+            failed: "Failed"
+            cancelled: "Cancelled"
+            pending: "Not completed"
+          outcome_note: "An answer being provided does not tell us whether it helped. User success is not yet measured."
+          summary:
+            one: "%{count} question asked in this period"
+            other: "%{count} questions asked in this period"
+          empty: "No asks were logged in this period."
+          fetch_error: "Ask AI metrics could not be loaded."
         emotion:
           title: "Emotion"
           description: "The table lists a count of posts classified with a determined emotion. Depending on the selected emotion classification method, posts are classified with either the configured emotion classification model ('SamLowe/roberta-base-go_emotions') or the configured emotion classification agent."

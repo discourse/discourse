@@ -129,7 +129,7 @@ cs:
         process_started: "Proces smazání kanálu byl zahájen. Tento dialog se brzy uzavře, smazaný kanál již nikde neuvidíte."
       channels_list_popup:
         browse: "Procházet kanály"
-        create: "Nový kanál"
+        create: "Nový kanál..."
       close: "Zavřít"
       remove: "Smazat"
       collapse: "Sbalit panel chatu"
@@ -146,8 +146,6 @@ cs:
       muted: "ztišení"
       joined: "účet vytvořen"
       empty_state:
-        direct_message_cta: "Zahájení soukromého chatu"
-        direct_message: "Můžete také zahájit soukromou konverzaci s jedním nebo více uživateli."
         title: "Nebyly nalezeny žádné kanály"
         my_threads: "Zatím nemáte žádná vlákna. Zde se zobrazí vlákna, kterých se účastníte."
       email_frequency:
@@ -583,14 +581,18 @@ cs:
       direct_messages:
         title: "Soukromé zprávy"
         aria_label: "Přepnutí na přímé zprávy"
-        new: "Vytvořit osobní chat"
         create: "Přejít"
-        leave: "Opustit tento osobní chat"
-        close: "Zavřít tento osobní chat"
+        leave: "Opustit kanál"
+        close: "Zavřít kanál"
         cannot_create: "Je nám líto, ale přímé zprávy nelze odesílat."
       channel_list:
         title: "Kanály"
         aria_label: "Přepnout na seznam kanálů"
+        options:
+          filter: "Filtr"
+        filter:
+          all: "Všechny kanály"
+          mentions: "Zmínky"
       incoming_webhooks:
         back: "Zpět"
         channel_placeholder: "Vyberte kanál"
@@ -763,11 +765,6 @@ cs:
           direct_html: '<span>%{username}</span> <span>vás zmínil v "%{channel}"</span>'
           other_plain: 'zmínil %{identifier} v "%{channel}"'
           other_html: '<span>%{username}</span> <span>zmínil %{identifier} v "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "vás zmínil/a v osobním chatu"
-          direct_html: "<span>%{username}</span> <span>vás zmínil/a v osobním chatu</span>"
-          other_plain: "zmínil/a %{identifier} v osobním chatu"
-          other_html: "<span>%{username}</span> <span>zmínil/a %{identifier} v soukromém chatu</span>"
         chat_message: "Nová zpráva chatu"
         chat_quoted: "%{username} citoval vaši zprávu v chatu"
       titles:
@@ -839,9 +836,6 @@ cs:
         chat:
           title: Chat
     sidebar:
-      start_new_dm:
-        text: Začít novou SZ
-        title: Vytvořit osobní chat
       panels:
         chat:
           label: "Chat"

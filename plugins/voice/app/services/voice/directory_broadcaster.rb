@@ -33,7 +33,11 @@ module Voice
         Voice.room_index_channel,
         {
           type: action,
-          room: Voice::RoomSerializer.new(room, scope: Guardian.new(nil), root: false).as_json,
+          room:
+            Voice::RoomSerializer
+              .new(room, scope: Guardian.new(nil), root: false)
+              .as_json
+              .except(:can_manage, :can_invite, :membership),
         },
         **targets,
       )
