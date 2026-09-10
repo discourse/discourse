@@ -25,6 +25,25 @@ RSpec.describe BasicGroupSerializer do
     end
   end
 
+  describe "#bio_cooked" do
+    describe "core automatic group" do
+      let(:group) { Group.find(Group::AUTO_GROUPS[:admins]) }
+
+      it "uses the default description" do
+        expect(serializer.as_json[:bio_cooked]).to eq(I18n.t("groups.default_descriptions.admins"))
+      end
+    end
+
+    describe "automatic group not created by core" do
+      fab!(:group) { Fabricate(:group, automatic: true, bio_raw: "Bot accounts") }
+
+      it "uses the group's own bio" do
+        expect(serializer.as_json[:bio_cooked]).to eq(group.bio_cooked)
+        expect(serializer.as_json[:bio_excerpt]).to eq("Bot accounts")
+      end
+    end
+  end
+
   describe "#bio_raw" do
     subject(:serializer) do
       described_class.new(group, scope: guardian, root: false, owner_group_ids: [group.id])
