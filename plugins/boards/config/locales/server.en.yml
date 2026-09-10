@@ -33,6 +33,7 @@ en:
       cannot_reorder_recency_column: "Cards in recency-sorted columns cannot be reordered."
       invalid_column_sort: "Invalid column sort: %{sort}"
     onebox:
+      archived: "Archived board"
       inline_to_card: "Card '%{card_name}' on board '%{board_name}'"
       inline_to_board: "Board '%{board_name}'"
       created_by: "Created by %{username}"

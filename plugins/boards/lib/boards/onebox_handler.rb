@@ -37,6 +37,8 @@ module Boards
       args = {
         board_url: card.board.url,
         board_name: card.board.unicode_name,
+        board_archived: card.board.archived?,
+        archived_label: I18n.t("boards.onebox.archived"),
         card_url: url,
         card_name: card.unicode_resolved_title,
         card_tags: tag_html,
@@ -90,6 +92,8 @@ module Boards
       args = {
         board_url: url,
         board_name: board.unicode_name,
+        board_archived: board.archived?,
+        archived_label: I18n.t("boards.onebox.archived"),
         board_tags: tag_html,
         board_categories: category_html,
         board_columns:

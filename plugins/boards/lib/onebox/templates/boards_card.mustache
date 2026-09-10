@@ -19,7 +19,18 @@
             xmlns="http://www.w3.org/2000/svg"
           >
             <use href="#table-columns"></use>
-          </svg>{{board_name}}</a>
+          </svg>{{#board_archived}}
+        <svg
+          class="fa d-icon d-icon-box-archive svg-icon svg-string"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="{{archived_label}}"
+        >
+          <title>{{archived_label}}</title>
+          <use href="#box-archive"></use>
+        </svg>
+      {{/board_archived}}
+      {{board_name}}</a>
               <span class="discourse-boards-column-pill">
       {{#card_column_icon}}
         <svg

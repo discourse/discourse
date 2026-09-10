@@ -93,6 +93,7 @@ export default class BoardsCardDetail extends Component {
       class="discourse-boards-card-detail-modal"
       @closeModal={{@closeModal}}
       @hideHeader={{true}}
+      @inline={{@inline}}
       @submitOnEnter={{false}}
       {{didInsert this.viewCard}}
     >
@@ -145,9 +146,12 @@ export default class BoardsCardDetail extends Component {
               >
                 <field.Control>
                   <EmailGroupUserChooser
-                    @disabled={{not @model.board.canWrite}}
                     @onChange={{fn this.onAssignedChanged field}}
-                    @options={{hash maximum=1 excludeCurrentUser=false}}
+                    @options={{hash
+                      disabled=(not @model.board.canWrite)
+                      maximum=1
+                      excludeCurrentUser=false
+                    }}
                     @value={{data.assigned_to}}
                   />
                 </field.Control>
