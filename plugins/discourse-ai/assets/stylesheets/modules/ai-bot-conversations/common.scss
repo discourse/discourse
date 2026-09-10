@@ -504,3 +504,9 @@ body.has-ai-conversations-sidebar {
     display: block;
   }
 }
+
+.user-navigation .user-nav__messages-ai-bot-chats {
+  .d-icon.d-icon-discobot {
+    font-size: var(--font-0);
+  }
+}

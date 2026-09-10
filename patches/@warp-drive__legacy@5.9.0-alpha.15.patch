@@ -1,0 +1,25 @@
+diff --git a/dist/index.js b/dist/index.js
+index 566dc18edcce674cb20c1c07f60ff9d4f783eb35..8fc5700da577050452329140a01754fa3347b900 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -9,7 +9,7 @@ import '@ember/debug';
+ import '@warp-drive/utilities/string';
+ import { macroCondition, getGlobalConfig } from '@embroider/macros';
+ import '@warp-drive/core/store/-private';
+-import "./errors-Cz5KrzBk.js";
++import { L as LEGACY_SUPPORT } from "./errors-Cz5KrzBk.js";
+ import "./schema-provider-DJCV_6AF.js";
+ import { i as instantiateRecord, t as teardownRecord, m as modelFor } from "./hooks-D6diaM34.js";
+ import { registerDerivations as registerDerivations$1, DelegatingSchemaService } from './model/migration-support.js';
+@@ -109,6 +109,11 @@ function useLegacyStore(options, StoreKlass = Store) {
+       if (this.schema.isDelegated(key)) {
+         return teardownRecord.call(this, record);
+       }
++      const support = LEGACY_SUPPORT.get(key);
++      if (support) {
++        support.destroy();
++        LEGACY_SUPPORT.delete(key);
++      }
+       return teardownRecord$1(record);
+     }
+     modelFor(type) {

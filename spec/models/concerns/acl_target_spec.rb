@@ -13,6 +13,10 @@ RSpec.describe AclTarget do
     end
   end
 
+  around do |example|
+    stub_const(target_class, :ACL_PERMISSIONS, Acl::Permissions.new(:view, :edit)) { example.run }
+  end
+
   it "adds mandatory acl class methods" do
     expect(target_class).to respond_to(:has_mandatory_acl?, :acl_is_mandatory?)
   end

@@ -7,9 +7,8 @@ RSpec.describe UploadCreator do
   fab!(:admin)
 
   describe "#create_for" do
-    [false, true].each do |enable_vips|
-      it "preserves animated uploads when FastImage is inconclusive with libvips #{enable_vips ? "enabled" : "disabled"}" do
-        global_setting :enable_vips_image_processing, enable_vips
+    shared_examples "animated upload preservation" do
+      it "preserves animated uploads when FastImage is inconclusive" do
         FastImage.stubs(:animated?).returns(nil)
         file = file_from_fixtures("tiny_animated.gif")
         original = File.binread(file.path)
@@ -20,6 +19,18 @@ RSpec.describe UploadCreator do
         expect(upload.animated).to eq(true)
         expect(File.binread(Discourse.store.path_for(upload))).to eq(original)
       end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "animated upload preservation"
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "animated upload preservation"
     end
 
     context "when the upload is an SVG" do

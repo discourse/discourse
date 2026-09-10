@@ -129,7 +129,7 @@ en:
       create_first_workflow: "Create your first workflow"
       empty_title: "%{username}, let's set up a workflow"
       empty_description: "Workflows automate tasks by connecting triggers, conditions, and actions into a visual flow"
-      search_placeholder: "Filter by name"
+      search_placeholder: "Filter by name or username"
       no_workflows_found: "No workflows match your filters"
       tags:
         manage: "Manage tags"

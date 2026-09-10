@@ -18,10 +18,7 @@ module Jobs
       result = ::Voice::Livekit::HealthCheck.connectivity_check
       ::Voice::Livekit::HealthCheck.store_probe!(result)
 
-      if !result[:ok]
-        errors = [result.dig(:token, :error), result.dig(:server, :error)].compact.join("; ")
-        Rails.logger.warn("[voice-livekit] connectivity probe failed: #{errors}")
-      end
+      ::Voice.warn("[voice-livekit] connectivity probe failed") if !result[:ok]
     end
   end
 end

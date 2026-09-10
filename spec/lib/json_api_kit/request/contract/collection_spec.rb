@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
-  subject(:contract) do
-    described_class.new(
-      **params,
-      options: {
-        resource:,
-        raw_parameters: params.with_indifferent_access,
-      },
-    )
-  end
+  subject(:contract) { described_class.for(params, resource:, glossary:) }
 
   let(:params) { {} }
+  let(:glossary) { JsonApiKit::Glossary.kit }
   let(:cursor) { JsonApiKit::Pagination::Cursor.new([resource.order.digest, 0, 12]).to_s }
   let(:related) do
     Class.new(JsonApiKit::Resource) do
@@ -35,11 +28,38 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     end
   end
 
+  describe ".for" do
+    let(:params) { { "sort" => { "created_at" => :desc } } }
+
+    it "returns a contract over the declared parameters" do
+      expect(contract.sort).to eq("created_at" => :desc)
+    end
+
+    it "checks the parameters against the resource" do
+      expect(contract).to be_valid
+    end
+  end
+
+  describe "#refusals" do
+    subject(:refusals) { contract.refusals }
+
+    let(:params) { { "sort" => { "posted_at" => :asc } } }
+
+    before { contract.invalid? }
+
+    it "returns the errors of the contract with the names the client sent" do
+      expect(refusals.sole).to have_attributes(
+        title: "No such sort",
+        detail: "There is no sort named postedAt.",
+      )
+    end
+  end
+
   describe "Unknown parameters" do
     context "when a parameter is unknown" do
       let(:params) { { sorts: { created_at: :asc } } }
 
-      it "refuses the parameter" do
+      it "adds an error on the parameter" do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:sorts)
       end
@@ -48,7 +68,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     context "when a page parameter is unknown" do
       let(:params) { { page: { sise: 2 } } }
 
-      it "refuses it under the parameter it came in" do
+      it "adds an error under the parameter it came in" do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:"page.sise")
       end
@@ -58,8 +78,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
   describe "Sorting" do
     it { is_expected.to allow_value(nil, {}, { created_at: :asc }).for(:sort) }
     it { is_expected.to allow_value({ created_at: :desc, title: :asc }).for(:sort) }
-    it { is_expected.to allow_value("", "created_at", "-created_at").for(:sort) }
-    it { is_expected.to allow_value("created_at,-title").for(:sort) }
+    it { is_expected.not_to allow_value("", "created_at", "created_at,-title").for(:sort) }
     it { is_expected.not_to allow_value({ secrets: :asc }).for(:sort) }
 
     it do
@@ -69,35 +88,31 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     it { is_expected.not_to allow_value("secrets", "created_at,secrets").for(:sort) }
     it { is_expected.not_to allow_value(%w[created_at], 5).for(:sort) }
 
-    context "when sort is a string" do
-      let(:params) { { sort: "-created_at,title" } }
+    context "when a sort is unknown" do
+      let(:params) { { sort: { posted_at: :asc } } }
 
-      it "converts it as a hash" do
-        expect(contract.sort).to eq("created_at" => :desc, "title" => :asc)
+      before { contract.valid? }
+
+      it "adds an error with the sort name of the resource" do
+        expect(contract.errors.where(:sort, :no_such_name).sole.options[:name]).to eq(
+          JsonApiKit::Name::Sort.new(value: "posted_at", type: "topics"),
+        )
       end
+    end
 
-      context "when there’s a hyphen in the sort name" do
-        let(:params) { { sort: "last-posted-at" } }
+    context "when a cursor comes with the sort" do
+      let(:params) { { sort: { title: :asc }, page: { after: cursor } } }
 
-        it "converts it as a hash" do
-          expect(contract.sort).to eq("last-posted-at" => :asc)
-        end
-      end
-
-      context "when there’s also a cursor" do
-        let(:params) { { sort: "title", page: { after: cursor } } }
-
-        it "checks the cursor against that sort" do
-          expect(contract).to be_invalid
-          expect(contract.errors).to be_of_kind(:"page.after", :unreadable_cursor)
-        end
+      it "checks the cursor against that sort" do
+        expect(contract).to be_invalid
+        expect(contract.errors).to be_of_kind(:"page.after", :unreadable_cursor)
       end
     end
 
     context "when sort is a hash" do
       let(:params) { { sort: { created_at: :desc } } }
 
-      it "returns it as a hash" do
+      it "returns it with string keys" do
         expect(contract.sort).to eq("created_at" => :desc)
       end
     end
@@ -127,26 +142,13 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
 
   describe "Fieldsets" do
     it { is_expected.to allow_value(nil, {}, { topics: %w[title created_at] }).for(:fields) }
-    it { is_expected.to allow_value({ topics: "title" }, { topics: "" }).for(:fields) }
-    it { is_expected.not_to allow_value("title", [1], { topics: 42 }).for(:fields) }
+    it { is_expected.to allow_value({ topics: [] }).for(:fields) }
 
-    context "when fieldset is a string" do
-      let(:params) { { fields: { topics: "title,created_at" } } }
-
-      it "converts it as a list of fields" do
-        expect(contract.fields).to eq("topics" => %w[title created_at])
-      end
+    it do
+      is_expected.not_to allow_value("title", [1], { topics: 42 }, { topics: "title" }).for(:fields)
     end
 
-    context "when fieldset is empty" do
-      let(:params) { { fields: { topics: "" } } }
-
-      it "converts it as an empty list" do
-        expect(contract.fields).to eq("topics" => [])
-      end
-    end
-
-    context "when  fieldset is a list of symbols" do
+    context "when fieldset is a list of symbols" do
       let(:params) { { fields: { topics: %i[title] } } }
 
       it "converts it as a list of fields" do
@@ -167,6 +169,19 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     it { is_expected.not_to allow_value({}, { id: 12, title: "a topic" }).for(:anchor) }
     it { is_expected.not_to allow_value({ id: { a: 1 } }, { id: %w[a b] }).for(:anchor) }
     it { is_expected.not_to allow_value({ secrets: 12 }, :guesswork).for(:anchor) }
+    it { is_expected.not_to allow_value({ id: nil }).for(:anchor) }
+    it { is_expected.to allow_value({ first_unread: nil }).for(:anchor) }
+
+    context "when the anchor is not the sort" do
+      let(:params) { { sort: { created_at: :asc }, page: { anchor: { title: "A" } } } }
+
+      it "adds an error with the anchor name and the sort name of the resource" do
+        expect(contract.errors.where(:"page.anchor", :not_the_sort).sole.options).to include(
+          name: JsonApiKit::Name::Anchor.new(value: "title", type: "topics"),
+          key: JsonApiKit::Name::Sort.new(value: "created_at", type: "topics"),
+        )
+      end
+    end
 
     context "when the anchor name matches the sort" do
       let(:params) { { sort: { title: :asc }, page: {} } }
@@ -292,7 +307,7 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     it { is_expected.not_to allow_value("").for(:before_size) }
     it { is_expected.not_to allow_value("").for(:after_size) }
 
-    context "when both `page[before_size]` and `page[after_size]` are provided" do
+    context "when the page holds both sizes" do
       let(:params) { { page: { anchor: { id: 12 }, before_size: 25 } } }
 
       it { is_expected.to allow_value(20).for(:after_size).against(:window_size) }

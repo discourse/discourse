@@ -560,6 +560,31 @@ RSpec.describe Admin::BadgesController do
         expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
       end
 
+      it "awards the badge using a list of usernames saved with a UTF-8 BOM" do
+        Jobs.run_immediately!
+
+        file = file_from_fixtures("usernames_with_bom.csv", "csv")
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(response.status).to eq(200)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+      end
+
+      it "awards the badge when an entry spans a quoted newline" do
+        Jobs.run_immediately!
+
+        file = file_from_contents(%Q{"multi\nline"\n#{user.username}\n}, "usernames.csv")
+
+        post "/admin/badges/award/#{badge.id}.json",
+             params: {
+               file: Rack::Test::UploadedFile.new(file),
+             }
+
+        expect(response.status).to eq(200)
+        expect(UserBadge.where(user: user, badge: badge).count).to eq(1)
+      end
+
       it "works with a CSV containing nil values" do
         Jobs.run_immediately!
 

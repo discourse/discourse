@@ -1,31 +1,15 @@
-import Component from "@glimmer/component";
-import { trustHTML } from "@ember/template";
-import { isEmpty } from "@ember/utils";
-import { convertIconClass, iconHTML } from "discourse/lib/icon-library";
+import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 
-export default class Badge extends Component {
-  get iconOrImageReplacement() {
-    if (isEmpty(this.args.ctx.badge.icon)) {
-      return "";
-    }
+const Badge = <template>
+  <a
+    class="user-badge {{@ctx.badge.badgeTypeClassName}}"
+    data-badge-name={{@ctx.badge.name}}
+    href="{{@ctx.baseuri}}/badges/{{@ctx.badge.id}}/{{@ctx.badge.name}}"
+    title={{@ctx.badge.display_name}}
+  >
+    {{dIconOrImage @ctx.badge}}
+    <span class="badge-display-name">{{@ctx.badge.display_name}}</span>
+  </a>
+</template>;
 
-    if (this.args.ctx.badge.icon.indexOf("fa-") > -1) {
-      const icon = iconHTML(convertIconClass(this.args.ctx.badge.icon));
-      return trustHTML(icon);
-    } else {
-      return trustHTML("<img src='" + this.args.ctx.badge.icon + "'>");
-    }
-  }
-
-  <template>
-    <a
-      class="user-badge {{@ctx.badge.badgeTypeClassName}}"
-      data-badge-name={{@ctx.badge.name}}
-      href="{{@ctx.baseuri}}/badges/{{@ctx.badge.id}}/{{@ctx.badge.name}}"
-      title={{@ctx.badge.display_name}}
-    >
-      {{this.iconOrImageReplacement}}
-      <span class="badge-display-name">{{@ctx.badge.display_name}}</span>
-    </a>
-  </template>
-}
+export default Badge;

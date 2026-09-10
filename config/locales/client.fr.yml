@@ -1804,6 +1804,16 @@ fr:
       tracked_topics_link: "Afficher"
       automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'atteins la fin de la liste"
       apps: "Applications"
+      mcp_authorizations:
+        endpoint: "Ressource"
+        scopes: "Permissions"
+        details: "Détails"
+        last_used: "Dernière utilisation"
+        never: "Jamais"
+        status: "Statut"
+        statuses:
+          active: "Actif"
+          revoked: "Révoquée"
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
@@ -6301,6 +6311,80 @@ fr:
         developer:
           title: "Développeur"
           header_description: "Paramètres des développeurs permettant de contrôler le mode sans échec et d'autres fonctionnalités avancées"
+        mcp:
+          title: "Serveur MCP"
+          tabs:
+            access: "Accès"
+            activity: "Activité"
+          overview:
+            status: "Statut"
+            tools: "Outils"
+          access:
+            title: "Accès"
+            group: "Groupe"
+            groups: "Groupes"
+            actions: "Actions"
+            edit: "Modifier"
+            delete: "Supprimer"
+          primitives:
+            group_by: "Grouper par"
+            group_by_options:
+              scope: "Portée"
+              provider: "Fournisseur"
+              kind: "Type"
+            provider: "Fournisseur"
+            kind: "Type"
+            scope: "Portée"
+            state: "État"
+            scopes: "Permissions"
+          clients:
+            actions: "Actions"
+            block: "Bloquer"
+            use_preset: "Configurer"
+            presets:
+              custom: "Personnalisé"
+          authorizations:
+            user: "Utilisateur"
+            scopes: "Portées accordées"
+            last_used: "Dernière utilisation"
+            status: "Statut"
+            actions: "Actions"
+          activity:
+            errors: "Erreurs"
+            rate_limits: "Limites d'utilisation"
+            outcome: "Résultat"
+            time: "Heure"
+            user: "Utilisateur"
+            duration: "Durée "
+          values:
+            server_status:
+              available: "Disponible"
+              disabled: "Désactivées"
+            client_trust:
+              approved: "Approuvé"
+            authorization_status:
+              active: "Actif"
+              revoked: "Révoquée"
+            activity_outcome:
+              success: "Succès"
+              error: "Erreur"
+            primitive_state:
+              enabled: "Activées"
+              disabled: "Désactivées"
+              unavailable: "Indisponible"
+            primitive_kind:
+              all: "Tous les types"
+              tool: "Outil"
+              resource: "Ressource"
+              prompt: "Instruction"
+            primitive_risk:
+              read: "Lecture seule"
+              moderation: "Modération"
+            filter:
+              all: "Tout"
+          never: "Jamais"
+          actions:
+            revoke: "Révoquer"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."

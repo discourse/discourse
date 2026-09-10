@@ -117,7 +117,7 @@ ug:
         process_started: "قانالنى ئۆچۈرۈش جەريانى باشلاندى. بۇ كۆزنەك تېزلا تاقىلىدۇ، ئۆچۈرۈلگەن قانالنى ئەمدى كۆرەلمەيسىز."
       channels_list_popup:
         browse: "قانالغا كۆز يۈگۈرت"
-        create: "يېڭى قانال"
+        create: "يېڭى قانال..."
       close: "تاقا"
       remove: "چىقىرىۋەت"
       collapse: "سۆھبەت تارتمىسىنى يىغ"
@@ -132,8 +132,6 @@ ug:
       muted: "ئۈنسىزلەندى"
       joined: "قوشۇلدى"
       empty_state:
-        direct_message_cta: "شەخسىي سۆھبەت باشلايدۇ"
-        direct_message: "سىزمۇ بىر ياكى بىر قانچە ئىشلەتكۈچى بىلەن شەخسىي سۆھبەت باشلىيالايسىز."
         title: "ھېچقانداق قانال تېپىلمىدى"
         my_threads: "ھازىرچە ھېچقانداق تېما يوق. سىز قاتناشقان تېما بۇ يەردە كۆرسىتىلىدۇ."
       email_frequency:
@@ -513,14 +511,18 @@ ug:
       direct_messages:
         title: "بىۋاسىتە ئۇچۇر"
         aria_label: "بىۋاسىتە ئۇچۇرغا ئالماشتۇر"
-        new: "شەخسىي سۆھبەت قۇر"
         create: "باشلا"
-        leave: "بۇ شەخسىي سۆھبەتتىن ئايرىل"
-        close: "بۇ شەخسىي سۆھبەتنى تاقا"
+        leave: "قانالدىن ئايرىل"
+        close: "قانالنى تاقا"
         cannot_create: "كەچۈرۈڭ، بىۋاسىتە ئۇچۇر يوللىيالمايسىز."
       channel_list:
         title: "قانال"
         aria_label: "قانال تىزىمىغا ئالماش"
+        options:
+          filter: "سۈزگۈچ"
+        filter:
+          all: "بارلىق قانالل"
+          mentions: "ئاتاش"
       incoming_webhooks:
         back: "كەينى"
         channel_placeholder: "قانال تاللىنىدۇ"
@@ -670,11 +672,6 @@ ug:
           direct_html: '<span>%{username}</span> <span>«%{channel}» دا سىزنى ئاتىدى</span>'
           other_plain: '«%{channel}» دا «%{identifier}» ئاتالدى'
           other_html: '<span>%{username}</span> <span>«%{channel}» دا %{identifier} ئاتالدى</span>'
-        direct_message_chat_mention:
-          direct: "شەخسىي سۆھبەتتە ئاتالدىڭىز"
-          direct_html: "<span>%{username}</span> <span>شەخسىي سۆھبەتتە سىزنى ئاتىدى</span>"
-          other_plain: "شەخسىي سۆھبەتتە %{identifier} ئاتالدى"
-          other_html: "<span>%{username}</span> <span>شەخسىي سۆھبەتتە %{identifier} ئاتالدى</span>"
         chat_message: "يېڭى سۆھبەت ئۇچۇرى"
         chat_quoted: "سۆھبەت ئۇچۇرىڭىزنى %{username} نەقىل ئالدى"
       titles:
@@ -743,9 +740,6 @@ ug:
         chat:
           title: سۆھبەت
     sidebar:
-      start_new_dm:
-        text: يېڭى بىۋاسىتە ئۇچۇر باشلا
-        title: شەخسىي سۆھبەت قۇر
       panels:
         chat:
           label: "سۆھبەت"

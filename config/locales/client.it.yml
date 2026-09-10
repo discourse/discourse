@@ -1572,6 +1572,16 @@ it:
       tracked_topics_link: "Mostra"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo"
       apps: "App"
+      mcp_authorizations:
+        endpoint: "Risorsa"
+        scopes: "Ambiti"
+        details: "Dettagli"
+        last_used: "Ultimo utilizzo"
+        never: "Mai"
+        status: "Stato"
+        statuses:
+          active: "Attivi"
+          revoked: "Revocata"
       revoke_access: "Revoca Accesso"
       undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
@@ -5264,6 +5274,74 @@ it:
           header_description: "Fornisci qui informazioni su questo sito e sul tuo team in modo che le persone possano scoprire di cosa si occupa la tua community, chi c'è dietro e come contattarti in caso di problemi. I dati verranno visualizzati sulla pagina <a href='%{basePath}/about'>Informazioni</a> del tuo sito."
         developer:
           title: "Sviluppatore"
+        mcp:
+          tabs:
+            access: "Accesso"
+            activity: "Attività"
+          overview:
+            status: "Stato"
+            tools: "Strumenti"
+          access:
+            title: "Accesso"
+            group: "Gruppo"
+            groups: "Gruppi"
+            actions: "Azioni"
+            edit: "Modifica"
+            delete: "Elimina"
+          primitives:
+            group_by: "Raggruppa per"
+            group_by_options:
+              scope: "Ambito"
+              provider: "Fornitore"
+              kind: "Tipo"
+            provider: "Fornitore"
+            kind: "Tipo"
+            scope: "Ambito"
+            state: "Stato"
+            scopes: "Ambiti"
+          clients:
+            actions: "Azioni"
+            block: "Blocca"
+            use_preset: "Configura"
+            presets:
+              custom: "Personalizzato"
+          authorizations:
+            user: "Utente"
+            last_used: "Ultimo utilizzo"
+            status: "Stato"
+            actions: "Azioni"
+          activity:
+            rate_limits: "Limiti di frequenza"
+            outcome: "Esito"
+            time: "Ora"
+            user: "Utente"
+            duration: "Durata"
+          values:
+            server_status:
+              disabled: "Disabilitati"
+            client_trust:
+              approved: "Approvato"
+            authorization_status:
+              active: "Attivi"
+              revoked: "Revocata"
+            activity_outcome:
+              success: "Operazione riuscita"
+              error: "Errore"
+            primitive_state:
+              enabled: "Abilitato"
+              disabled: "Disabilitati"
+            primitive_kind:
+              all: "Tutti i tipi"
+              tool: "Strumento"
+              resource: "Risorsa"
+            primitive_risk:
+              read: "Sola lettura"
+              moderation: "Moderazione"
+            filter:
+              all: "Tutte"
+          never: "Mai"
+          actions:
+            revoke: "Revoca"
         experimental:
           title: "Sperimentale"
           header_description: "Attiva o disattiva le funzionalità sperimentali per il tuo sito: la maggior parte di queste può essere controllata a livello di gruppo"

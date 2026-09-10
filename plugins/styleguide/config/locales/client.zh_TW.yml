@@ -38,6 +38,10 @@ zh_TW:
           title: "日期／時間輸入欄位"
         menus:
           title: "選單"
+        context_menu:
+          actions:
+            duplicate: "複製"
+            delete: "刪除"
         multi_select:
           title: "多重選取"
         toasts:

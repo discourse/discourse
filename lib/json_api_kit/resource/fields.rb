@@ -42,6 +42,7 @@ module JsonApiKit
             attributes: declared_attributes,
             relationships: declared_relationships,
             schema:,
+            type:,
           )
         end
 

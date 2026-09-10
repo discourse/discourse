@@ -186,7 +186,6 @@ module("Integration | Component | Nested | Post", function (hooks) {
     });
     let registered = false;
     const register = (post) => {
-      post.topic;
       post.topic = updatedTopic;
       registered = true;
     };

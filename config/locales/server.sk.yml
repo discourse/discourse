@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 sk:
+  mcp:
+    oauth:
+      deny: "Odmietnuť"
+      approve: "Autorizovať"
   llms_txt:
     sections:
       optional: "Voliteľné"
@@ -4715,6 +4719,12 @@ sk:
   performance_report:
     initial_post_raw: Táto téma obsahuje denné reporty rýchlosti Vašich stránok.
     initial_topic_title: Reporty rýchlosti stránok
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamom."
+      few: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamami."
+      many: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamami."
+      other: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamami."
   tags:
     title: "Štítky"
     restricted_tag_disallowed: 'Nemôžete použiť značku "%{tag}".'

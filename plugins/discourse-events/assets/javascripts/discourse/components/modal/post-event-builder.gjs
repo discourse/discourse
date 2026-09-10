@@ -9,6 +9,7 @@ import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { extractError } from "discourse/lib/ajax-error";
+import { adjustedRangeEnd } from "discourse/lib/time-utils";
 import Group from "discourse/models/group";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import UserChooser from "discourse/select-kit/components/user-chooser";
@@ -22,6 +23,7 @@ import { i18n } from "discourse-i18n";
 import { MAX_HOSTS } from "../../lib/constants";
 import { recurrenceContext } from "../../lib/event-recurrence";
 import {
+  allDayTransition,
   attendanceTransition,
   buildEventBlock,
   buildParams,
@@ -288,7 +290,7 @@ export default class PostEventBuilder extends Component {
       return;
     }
     if (value > 0) {
-      this.#applyUpToValue(value);
+      this.setAttendanceMode("upTo", value);
       return;
     }
     // just clear the data
@@ -440,39 +442,18 @@ export default class PostEventBuilder extends Component {
     const prev = this.#captureConfig();
     this.allDay = allDay;
     this.event.allDay = allDay;
-    if (allDay) {
-      const tz = this.event.timezone || "UTC";
-      const snapped = (this.startsAt ?? moment.tz(tz)).clone().startOf("day");
-      this.startsAt = snapped;
-      this.event.startsAt = snapped;
 
-      const existingEnd = this.endsAt;
-      let newEnd = null;
-      if (existingEnd) {
-        const startDate = snapped.format("YYYY-MM-DD");
-        const endDate = existingEnd.format("YYYY-MM-DD");
-        if (endDate !== startDate) {
-          newEnd = existingEnd.clone().startOf("day");
-        }
-      }
-      this.endsAt = newEnd;
-      this.event.endsAt = newEnd;
-    } else if (this.startsAt) {
-      const tz = this.event.timezone || "UTC";
-      const nowTime = moment.tz(tz);
-      const newStart = this.startsAt
-        .clone()
-        .hour(nowTime.hour())
-        .minute(nowTime.minute())
-        .second(0)
-        .millisecond(0);
-      this.startsAt = newStart;
-      this.event.startsAt = newStart;
+    const { startsAt, endsAt } = allDayTransition({
+      startsAt: this.startsAt,
+      endsAt: this.endsAt,
+      timezone: this.event.timezone || "UTC",
+      allDay,
+    });
+    this.startsAt = startsAt;
+    this.event.startsAt = startsAt;
+    this.endsAt = endsAt;
+    this.event.endsAt = endsAt;
 
-      const newEnd = newStart.clone().add(1, "hour");
-      this.endsAt = newEnd;
-      this.event.endsAt = newEnd;
-    }
     this.#reconcileReminder(prev);
   }
 
@@ -502,26 +483,22 @@ export default class PostEventBuilder extends Component {
 
   @action
   onChangeStartsAt(set, value) {
-    const to =
-      value && this.endsAt && value.isAfter(this.endsAt)
-        ? value.clone().add(1, "hour")
-        : this.endsAt;
+    const to = adjustedRangeEnd(value, this.endsAt, { dateOnly: this.allDay });
     this.onChangeDates({ from: value, to });
     set(value);
   }
 
   @action
   onChangeEndsAt(set, value) {
-    const to =
-      value && this.startsAt && value.isBefore(this.startsAt)
-        ? this.startsAt.clone().add(1, "hour")
-        : value;
+    const to = adjustedRangeEnd(this.startsAt, value, {
+      dateOnly: this.allDay,
+    });
     this.onChangeDates({ from: this.startsAt, to });
     set(to);
   }
 
   @action
-  setAttendanceMode(mode) {
+  setAttendanceMode(mode, value) {
     this.attendanceMode = mode;
     const next = attendanceTransition({
       mode,
@@ -530,6 +507,7 @@ export default class PostEventBuilder extends Component {
       reminders: this.event.reminders,
       previousRsvpStatus: this.previousRsvpStatus,
       previousMaxAttendees: this.previousMaxAttendees,
+      value,
     });
     this.event.status = next.status;
     this.event.maxAttendees = next.maxAttendees;
@@ -719,24 +697,6 @@ export default class PostEventBuilder extends Component {
       set("livestream", false);
       this.event.livestream = false;
     }
-  }
-
-  #applyUpToValue(value) {
-    if (this.event.status === "standalone") {
-      this.event.status = this.previousRsvpStatus || "public";
-      this.event.reminders = (this.event.reminders || []).map((r) =>
-        r.type === "bumpTopic" ? { ...r, type: "notification" } : r
-      );
-      this.#syncRemindersToForm();
-    }
-    this.attendanceMode = "upTo";
-    this.event.maxAttendees = value;
-    this.previousMaxAttendees = value;
-    this.formApi?.setProperties({
-      attendanceMode: "upTo",
-      maxAttendees: value,
-      eventType: this.event.status,
-    });
   }
 
   #syncRemindersToForm() {

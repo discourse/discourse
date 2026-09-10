@@ -24,9 +24,11 @@ export default class PostLoadMoreAccessible extends Component {
 
   get label() {
     if (this.loading) {
-      this.direction === "above"
-        ? "post.loading_more_posts_above"
-        : "post.loading_more_posts_below";
+      return i18n(
+        this.direction === "above"
+          ? "post.loading_more_posts_above"
+          : "post.loading_more_posts_below"
+      );
     }
 
     return i18n(
