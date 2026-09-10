@@ -24,7 +24,7 @@
     "decorator-transforms": "^2.4.0",
     "discourse": "workspace:0.0.0",
     "ember-cli-htmlbars": "^7.0.1",
-    "ember-source": "~6.10.0",
+    "ember-source": "~7.2.0",
     "ember-this-fallback": "^0.4.0",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
     "magic-string": "^1.2.3",
