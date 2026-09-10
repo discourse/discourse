@@ -48,10 +48,17 @@ RSpec.describe "Site archived" do
   describe "admin" do
     before { sign_in(admin) }
 
-    it "lets an admin update site settings (so archive can be toggled off)" do
+    it "lets an admin toggle site_archived back off" do
       put "/admin/site_settings/site_archived.json", params: { site_archived: false }
       expect(response.status).to eq(200).or eq(204)
       expect(SiteSetting.site_archived).to eq(false)
+    end
+
+    it "blocks admin updates to any other site setting while archived" do
+      put "/admin/site_settings/title.json", params: { title: "New Title" }
+      expect(response.status).to eq(503)
+      expect(response.parsed_body["errors"]).to include(I18n.t("site_archived_error"))
+      expect(SiteSetting.title).not_to eq("New Title")
     end
 
     it "blocks other admin writes (categories, users, etc.) while archived" do
