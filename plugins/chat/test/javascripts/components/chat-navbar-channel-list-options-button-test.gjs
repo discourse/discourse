@@ -31,6 +31,9 @@ module(
 
     test("opens the section's shared options menu on mobile", async function (assert) {
       forceMobile();
+      this.owner.lookup(
+        "service:chat-channel-list-preferences"
+      ).channelsFilter = "unread";
 
       await render(
         <template>
@@ -40,6 +43,13 @@ module(
         </template>
       );
 
+      assert
+        .dom(".chat-channel-list-filter-toggle .d-icon-eye")
+        .exists("mobile offers the temporary override");
+      await click(".chat-channel-list-filter-toggle");
+      assert
+        .dom(".chat-channel-list-filter-toggle .d-icon-eye-slash")
+        .exists("mobile can reapply filters");
       await click(".chat-channel-list-options-button");
 
       assert

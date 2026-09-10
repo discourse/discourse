@@ -130,6 +130,32 @@ RSpec.describe "List channels | Drawer" do
         end
       end
 
+      it "temporarily shows all channels from the empty state and reapplies filters from the header" do
+        drawer_page.visit_index
+        drawer_page.channels_index.set_channel_filter("mentions")
+        expect(drawer_page).to have_no_channel(channel_1)
+        expect(drawer_page).to have_selector(
+          ".empty-state__title",
+          text: I18n.t("js.chat.channel_list.empty.filtered"),
+        )
+
+        drawer_page.channels_index.show_all_channels
+        expect(drawer_page).to have_channel(channel_1)
+        expect(drawer_page).to have_selector(".chat-channel-list-filter-toggle .d-icon-eye-slash")
+
+        drawer_page.channels_index.toggle_channel_filter
+        expect(drawer_page).to have_no_channel(channel_1)
+        expect(drawer_page).to have_selector(
+          ".empty-state__title",
+          text: I18n.t("js.chat.channel_list.empty.filtered"),
+        )
+
+        drawer_page.channels_index.toggle_channel_filter
+        expect(drawer_page).to have_channel(channel_1)
+        page.refresh
+        expect(drawer_page).to have_no_channel(channel_1)
+      end
+
       it "filters the channel list from the shared options menu" do
         unread_channel = Fabricate(:category_channel, name: "unread channel")
         unread_channel.add(current_user)
