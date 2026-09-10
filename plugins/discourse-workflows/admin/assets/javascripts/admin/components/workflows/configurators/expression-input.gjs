@@ -134,6 +134,7 @@ export default class ExpressionInput extends Component {
       ancestorNodes,
       siteSettings: this.siteSettings,
       workflowVars: this.workflowsNodeTypes.workflowVars,
+      workflowSettingFields: session?.settingFields,
       nodes: graph.nodes,
       itemPrefix,
       workflowId: session?.workflowId,

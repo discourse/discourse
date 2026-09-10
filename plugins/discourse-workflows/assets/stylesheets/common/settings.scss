@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  margin-top: var(--space-6);
   padding: var(--space-4) 0;
 
   &__section {
@@ -27,7 +28,34 @@
     margin: 0 0 var(--space-3) 0;
   }
 
+  &__field-values {
+    margin-top: var(--space-6);
+
+    > .setting:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  &__fields-manage {
+    margin-top: var(--space-6);
+  }
+
   .form-kit__field-custom {
     width: 100% !important;
   }
+}
+
+.workflows-setting-field-form {
+  --form-kit-large-input: 32em;
+  margin-top: var(--space-4);
+}
+
+.workflows-setting-field-key {
+  display: inline-block;
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+}
+
+.workflows-setting-fields-table {
+  margin-bottom: var(--space-4);
 }

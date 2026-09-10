@@ -6,6 +6,10 @@ en:
           attributes:
             error_workflow_id:
               cannot_be_self: "cannot be set to the workflow itself"
+        discourse_workflows/workflow_setting_field:
+          attributes:
+            type_options:
+              enum_choices_required: "must include at least one choice for an enum field"
   discourse_workflows:
     ai:
       default_code_node_name: "Code"
@@ -43,6 +47,9 @@ en:
       too_many_tags: "A workflow can have at most %{max} tags."
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."
+      setting_field:
+        invalid_value: "is not valid for this field's type"
+        incompatible_value_for_new_type: "has a current value that is not valid for the new type. Update or clear the value first."
       approval_timed_out: "Approval timed out"
       step_execution:
         not_executable: "This node cannot be executed as a single step."

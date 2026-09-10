@@ -41,6 +41,10 @@ module DiscourseWorkflows
              class_name: "DiscourseWorkflows::WorkflowTagMapping",
              foreign_key: "workflow_id",
              dependent: :delete_all
+    has_many :setting_fields,
+             class_name: "DiscourseWorkflows::WorkflowSettingField",
+             foreign_key: "workflow_id",
+             dependent: :delete_all
     has_many :tags,
              -> { order(:name) },
              class_name: "DiscourseWorkflows::WorkflowTag",
@@ -150,6 +154,7 @@ module DiscourseWorkflows
         nodes: nodes,
         connections: connections,
         settings: settings || {},
+        setting_schema: setting_fields_schema,
         autosaved: autosaved,
         authors: authors,
         created_by: user,
@@ -165,6 +170,7 @@ module DiscourseWorkflows
         nodes: nodes,
         connections: connections,
         settings: settings || {},
+        setting_schema: setting_fields_schema,
         autosaved: false,
         authors: authors,
         created_by: user,
@@ -202,14 +208,17 @@ module DiscourseWorkflows
     end
 
     def restore_from_version!(version, user:)
-      update!(
-        name: version.name,
-        nodes: version.nodes || [],
-        connections: version.connections || {},
-        settings: version.settings || {},
-        version_id: version.version_id,
-        updated_by: user,
-      )
+      transaction do
+        update!(
+          name: version.name,
+          nodes: version.nodes || [],
+          connections: version.connections || {},
+          settings: version.settings || {},
+          version_id: version.version_id,
+          updated_by: user,
+        )
+        restore_setting_fields_from!(version.setting_schema)
+      end
     end
 
     def published?
@@ -231,8 +240,13 @@ module DiscourseWorkflows
           nodes: nodes || [],
           connections: connections || {},
           settings: settings || {},
+          setting_schema: setting_fields_schema,
         }.to_json,
       )
+    end
+
+    def setting_fields_schema
+      setting_fields.order(:id).map(&:to_version_entry)
     end
 
     def find_node_in(node_collection, node_id)
@@ -383,6 +397,25 @@ module DiscourseWorkflows
         error_workflow_id: nil,
         updated_at: Time.current,
       )
+    end
+
+    def restore_setting_fields_from!(schema)
+      desired_by_key = Array(schema).index_by { |field| field["key"] }
+      existing_by_key = setting_fields.index_by(&:key)
+
+      keys_to_remove = existing_by_key.keys - desired_by_key.keys
+      setting_fields.where(key: keys_to_remove).delete_all if keys_to_remove.any?
+
+      desired_by_key.each do |key, field|
+        record = existing_by_key[key] || setting_fields.new(key: key)
+        record.update!(
+          label: field["label"],
+          description: field["description"],
+          field_type: field["type"],
+          type_options: field["type_options"] || {},
+          value: field["value"],
+        )
+      end
     end
   end
 end

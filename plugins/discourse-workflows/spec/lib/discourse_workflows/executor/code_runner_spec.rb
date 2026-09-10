@@ -10,6 +10,8 @@ RSpec.describe DiscourseWorkflows::Executor::CodeRunner do
       resolver_context: resolver_context,
       user: nil,
       vars: nil,
+      workflow_settings: {
+      },
       flow_context: {
       },
       runtime_state: runtime_state,

@@ -14,6 +14,7 @@ module DiscourseWorkflows
     attribute :nodes, default: -> { [] }
     attribute :connections, default: -> { {} }
     attribute :settings, default: -> { {} }
+    attribute :setting_schema, default: -> { [] }
 
     validates :version_id, presence: true, length: { maximum: 36 }
     validates :workflow_id, :version_number, :name, :created_by_id, presence: true
@@ -49,6 +50,7 @@ end
 #  connections    :jsonb            not null
 #  name           :string(100)      not null
 #  nodes          :jsonb            not null
+#  setting_schema :jsonb            not null
 #  settings       :jsonb            not null
 #  version_number :integer          not null
 #  created_at     :datetime         not null

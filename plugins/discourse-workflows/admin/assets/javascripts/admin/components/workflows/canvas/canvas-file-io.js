@@ -40,6 +40,35 @@ function importedStaticData(data) {
   return structuredClone(staticData);
 }
 
+function importedSettingFields(data) {
+  if (!Object.hasOwn(data, "settingFields")) {
+    return undefined;
+  }
+
+  const settingFields = data.settingFields;
+  if (!Array.isArray(settingFields)) {
+    return { error: "invalid" };
+  }
+
+  return settingFields
+    .filter(
+      (field) =>
+        field && typeof field === "object" && typeof field.key === "string"
+    )
+    .map((field) => ({
+      key: field.key,
+      label: typeof field.label === "string" ? field.label : field.key,
+      description:
+        typeof field.description === "string" ? field.description : null,
+      field_type:
+        typeof field.field_type === "string" ? field.field_type : "string",
+      type_options:
+        field.type_options && typeof field.type_options === "object"
+          ? field.type_options
+          : {},
+    }));
+}
+
 function directSettingsFromImportedNode(node) {
   const settings = {};
 
@@ -91,6 +120,13 @@ export function buildWorkflowExportPayload(
       ...(stickyNotes || []),
     ]),
     settings: cloneObject(workflowMetadata.settings),
+    settingFields: (workflowMetadata.settingFields || []).map((field) => ({
+      key: field.key,
+      label: field.label,
+      description: field.description,
+      field_type: field.field_type,
+      type_options: field.type_options,
+    })),
     staticData: cloneObject(workflowMetadata.staticData),
     pinData: cloneObject(workflowMetadata.pinData),
     versionId: workflowMetadata.versionId || null,
@@ -150,6 +186,11 @@ export function parseWorkflowImport(text) {
     return staticData;
   }
 
+  const settingFields = importedSettingFields(data);
+  if (settingFields?.error) {
+    return settingFields;
+  }
+
   const allImportedNodes = data.nodes.map((n) =>
     WorkflowNode.create({
       clientId: crypto.randomUUID(),
@@ -195,6 +236,10 @@ export function parseWorkflowImport(text) {
 
   if (staticData !== undefined) {
     result.staticData = staticData;
+  }
+
+  if (settingFields !== undefined) {
+    result.settingFields = settingFields;
   }
 
   return result;

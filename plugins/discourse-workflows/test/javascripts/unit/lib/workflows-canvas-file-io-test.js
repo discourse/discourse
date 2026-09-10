@@ -32,6 +32,17 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
       id: 42,
       name: "Imported workflow",
       settings: { executionOrder: "v1" },
+      settingFields: [
+        {
+          id: 7,
+          key: "notify_categories",
+          label: "Notify categories",
+          description: "Categories to notify",
+          field_type: "category_list",
+          type_options: {},
+          value: "2|24",
+        },
+      ],
       staticData: { "node:Send request": { count: 1 } },
       pinData: { "node-1": [{ json: { ok: true } }] },
       versionId: "version-1",
@@ -57,6 +68,23 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
     assert.true(payload.nodes[0].alwaysOutputData);
     assert.false("settings" in payload.nodes[0]);
     assert.false("credentials" in payload.nodes[0].parameters);
+    assert.deepEqual(payload.settingFields, [
+      {
+        key: "notify_categories",
+        label: "Notify categories",
+        description: "Categories to notify",
+        field_type: "category_list",
+        type_options: {},
+      },
+    ]);
+    assert.false(
+      "id" in payload.settingFields[0],
+      "export never includes a field's database id"
+    );
+    assert.false(
+      "value" in payload.settingFields[0],
+      "export never includes a field's site-specific value"
+    );
   });
 
   test("buildWorkflowExportPayload serializes multi-output connections without null holes", function (assert) {
@@ -311,6 +339,87 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
         { error: "invalid" }
       );
     }
+  });
+
+  test("parseWorkflowImport preserves imported setting fields", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        settingFields: [
+          {
+            key: "notify_categories",
+            label: "Notify categories",
+            description: "Categories to notify",
+            field_type: "category_list",
+            type_options: {},
+          },
+        ],
+      })
+    );
+
+    assert.deepEqual(result.settingFields, [
+      {
+        key: "notify_categories",
+        label: "Notify categories",
+        description: "Categories to notify",
+        field_type: "category_list",
+        type_options: {},
+      },
+    ]);
+  });
+
+  test("parseWorkflowImport fills in defaults for a malformed setting field", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        settingFields: [{ key: "priority" }, { label: "No key, dropped" }],
+      })
+    );
+
+    assert.deepEqual(result.settingFields, [
+      {
+        key: "priority",
+        label: "priority",
+        description: null,
+        field_type: "string",
+        type_options: {},
+      },
+    ]);
+  });
+
+  test("parseWorkflowImport rejects a non-array settingFields", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        settingFields: "not-an-array",
+      })
+    );
+
+    assert.deepEqual(result, { error: "invalid" });
   });
 
   test("parseWorkflowImport rejects non-object workflow JSON", function (assert) {

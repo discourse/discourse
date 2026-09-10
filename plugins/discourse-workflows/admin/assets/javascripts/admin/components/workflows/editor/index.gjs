@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
@@ -164,6 +165,7 @@ export default class WorkflowsEditor extends Component {
     workflowId: this.args.workflow?.id,
     lastExecutionRunData: this.args.workflow?.lastExecutionRunData || null,
     pinData: this.args.workflow?.pinData || {},
+    settingFields: this.args.workflow?.settingFields || [],
   });
 
   formData = {
@@ -810,7 +812,13 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  importNodes(newNodes, newConnections, newStickyNotes, staticData) {
+  importNodes(
+    newNodes,
+    newConnections,
+    newStickyNotes,
+    staticData,
+    settingFields
+  ) {
     const existingNodes = this.formApi.get("nodes");
     if (!this.#canAddNodes(newNodes.length, existingNodes)) {
       return;
@@ -848,7 +856,7 @@ export default class WorkflowsEditor extends Component {
       );
     }
 
-    this.handleSubmit(saveOptions);
+    this.#saveThenImportSettingFields(saveOptions, settingFields);
   }
 
   @action
@@ -1088,6 +1096,7 @@ export default class WorkflowsEditor extends Component {
       versionCounter: workflow.version_counter,
       hasUnpublishedChanges: workflow.has_unpublished_changes,
       settings: workflow.settings || {},
+      settingFields: workflow.setting_fields || [],
       timezone: workflow.timezone,
       staticData: workflow.static_data || {},
       pinData: workflow.pin_data || {},
@@ -1438,6 +1447,45 @@ export default class WorkflowsEditor extends Component {
         n.clientId === clientId ? { ...n, ...updates } : n
       )
     );
+  }
+
+  async #saveThenImportSettingFields(saveOptions, settingFields) {
+    try {
+      await this.handleSubmit({ ...saveOptions, throwOnError: true });
+    } catch {
+      return;
+    }
+
+    if (settingFields?.length) {
+      await this.#importSettingFields(settingFields);
+    }
+  }
+
+  async #importSettingFields(settingFields) {
+    try {
+      const response = await ajax(
+        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}/setting-fields/import.json`,
+        { type: "POST", data: { setting_fields: settingFields } }
+      );
+      this.replaceWorkflow(response.workflow);
+
+      if (response.skipped_keys?.length) {
+        this.toasts.warning({
+          duration: "long",
+          data: {
+            message: i18n(
+              "discourse_workflows.canvas.import_setting_fields_skipped",
+              {
+                count: response.skipped_keys.length,
+                keys: response.skipped_keys.join(", "),
+              }
+            ),
+          },
+        });
+      }
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   async #saveWorkflow(options = {}) {

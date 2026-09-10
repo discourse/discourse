@@ -97,6 +97,16 @@ Fabricator(
   end
 end
 
+Fabricator(
+  :discourse_workflows_workflow_setting_field,
+  class_name: "DiscourseWorkflows::WorkflowSettingField",
+) do
+  workflow { Fabricate(:discourse_workflows_workflow) }
+  key { sequence(:key) { |n| "setting_field_#{n}" } }
+  label { sequence(:label) { |n| "Setting field #{n}" } }
+  field_type "string"
+end
+
 Fabricator(:discourse_workflows_variable, class_name: "DiscourseWorkflows::Variable") do
   key { sequence(:key) { |n| "variable_#{n}" } }
   value "test_value"

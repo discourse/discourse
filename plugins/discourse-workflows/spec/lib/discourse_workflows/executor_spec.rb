@@ -943,5 +943,97 @@ RSpec.describe DiscourseWorkflows::Executor do
         end
       end
     end
+
+    context "with $settings" do
+      def build_settings_workflow
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "code-1",
+                   "action:code",
+                   configuration: {
+                     "code" => "return { json: { priority: $settings.priority } };",
+                   }
+            g.chain "trigger-1", "code-1"
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+      end
+
+      def resolved_priority(execution)
+        execution.execution_data.find_step(node_id: "code-1")["output"].first.dig(
+          "json",
+          "priority",
+        )
+      end
+
+      it "resolves $settings.<key> to the field's live value" do
+        workflow = build_settings_workflow
+        Fabricate(
+          :discourse_workflows_workflow_setting_field,
+          workflow: workflow,
+          key: "priority",
+          field_type: "string",
+          value: "urgent",
+        )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+      end
+
+      it "resolves $settings.<key> to the published version's embedded value even after the live field is deleted" do
+        workflow = build_settings_workflow
+        setting_field =
+          Fabricate(
+            :discourse_workflows_workflow_setting_field,
+            workflow: workflow,
+            key: "priority",
+            field_type: "string",
+            value: "urgent",
+          )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+        setting_field.destroy!
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+      end
+
+      it "resolves $settings.<key> after a wait/resume cycle" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
+            g.node "code-1",
+                   "action:code",
+                   configuration: {
+                     "code" => "return { json: { priority: $settings.priority } };",
+                   }
+            g.chain "trigger-1", "wait-1", "code-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+        Fabricate(
+          :discourse_workflows_workflow_setting_field,
+          workflow: workflow,
+          key: "priority",
+          field_type: "string",
+          value: "urgent",
+        )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+        expect(execution.status).to eq("waiting")
+
+        claimed = DiscourseWorkflows::Execution.claim_for_resume(execution.reload)
+        resumed = DiscourseWorkflows::Executor.resume(claimed, [{ "json" => {} }])
+
+        expect(resolved_priority(resumed)).to eq("urgent")
+      end
+    end
   end
 end
