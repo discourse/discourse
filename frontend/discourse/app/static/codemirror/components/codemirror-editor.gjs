@@ -248,8 +248,8 @@ export default class CodemirrorEditor extends Component {
       return;
     }
 
-    // Options are read as the language resolves rather than watched, so a
-    // caller passing them inline doesn't reconfigure on every render.
+    // Options are watched by identity, so a schema that arrives after mount is
+    // picked up while an inline hash still costs a rebuild per render.
     // A shortcut brings the shared palette with it; consumers that build their
     // own extensions style them however they like.
     this.view.dispatch({
@@ -345,6 +345,7 @@ export default class CodemirrorEditor extends Component {
       {{didInsert this.setup}}
       {{didUpdate this.updateValue @value}}
       {{didUpdate this.updateLanguage @language}}
+      {{didUpdate this.updateLanguage @languageOptions}}
       {{didUpdate this.updateReadOnly @readOnly}}
       {{didUpdate this.updatePlaceholder @placeholder}}
       {{didUpdate this.updateCompletions @completions}}

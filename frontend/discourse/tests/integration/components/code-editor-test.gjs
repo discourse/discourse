@@ -189,6 +189,40 @@ module("Integration | Component | code-editor", function (hooks) {
     );
   });
 
+  test("picks up language options that change after the editor is built", async function (assert) {
+    let view;
+    const onSetup = (editorView) => (view = editorView);
+    const state = new (class {
+      @tracked languageOptions = { schema: {} };
+    })();
+
+    await render(
+      <template>
+        <CodeEditor
+          @language="sql"
+          @languageOptions={{state.languageOptions}}
+          @onSetup={{onSetup}}
+          @value="SELECT badges."
+        />
+      </template>
+    );
+    await waitFor(".cm-content span[class]");
+
+    state.languageOptions = { schema: { badges: ["allow_title"] } };
+    await settled();
+
+    view.dispatch({ selection: { anchor: view.state.doc.length } });
+    startCompletion(view);
+    await waitUntil(() =>
+      document.querySelector(".cm-tooltip-autocomplete li")
+    );
+
+    assert.true(
+      completionLabels().includes("allow_title"),
+      "a schema that arrived later is offered"
+    );
+  });
+
   test("offers the completions a caller lists, with no language set", async function (assert) {
     let view;
     const onSetup = (editorView) => (view = editorView);

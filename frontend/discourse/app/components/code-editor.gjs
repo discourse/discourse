@@ -15,7 +15,7 @@ import { i18n } from "discourse-i18n";
  * CodeMirror. All three are optional: with none, this is a plain text editor.
  *
  * @param {string} [language] a name from `discourse/lib/codemirror-languages`
- * @param {object} [languageOptions] configuration for that language, read when it resolves
+ * @param {object} [languageOptions] configuration for that language; watched by identity, so pass a stable reference
  * @param {Array<string|import("@codemirror/autocomplete").Completion>|import("@codemirror/autocomplete").CompletionSource} [completions]
  *   words to offer, or a source deciding what to offer at the cursor
  * @param {import("discourse/lib/codemirror-languages").CodemirrorExtensionBuilder} [extensions]
