@@ -1139,6 +1139,20 @@ RSpec.describe UploadsController do
     context "when the store is not external" do
       before { sign_in(user) }
 
+      it "returns 404 even when direct S3 uploads are enabled" do
+        SiteSetting.enable_s3_uploads = false
+        SiteSetting.enable_direct_s3_uploads = true
+
+        post "/uploads/generate-presigned-put.json",
+             params: {
+               file_name: "test.png",
+               type: "card_background",
+               file_size: 1024,
+             }
+
+        expect(response.status).to eq(404)
+      end
+
       it "returns 404" do
         post "/uploads/generate-presigned-put.json",
              params: {

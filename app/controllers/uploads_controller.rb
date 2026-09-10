@@ -18,7 +18,8 @@ class UploadsController < ApplicationController
   before_action :is_asset_path,
                 :apply_cdn_headers,
                 only: %i[show show_short _show_secure_deprecated show_secure]
-  before_action :external_store_check, only: %i[_show_secure_deprecated show_secure]
+  # A symbol callback would overwrite the external upload actions' store check.
+  before_action(only: %i[_show_secure_deprecated show_secure]) { external_store_check }
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
