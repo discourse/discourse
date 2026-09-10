@@ -231,8 +231,6 @@ class OptimizedImage < ActiveRecord::Base
 
     instructions = ["#{from}[0]"]
 
-    instructions << "-colors" << opts[:colors].to_s if opts[:colors]
-
     instructions << "-quality" << opts[:quality].to_s if opts[:quality]
 
     # NOTE: ORDER is important!
@@ -334,21 +332,61 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
-    convert_with(instructions, from, to, opts, operation:)
+    if GlobalSetting.enable_vips_image_processing && operation == :optimized_image_resize
+      convert_with(instructions, from, to, opts, operation:) do
+        input_format = instructions.first.split(":", 2).first.downcase
+        output_format = instructions.last.split(":", 2).first.downcase
+        width, height = dimensions.split("x")
+        quality =
+          vips_quality(input_path: from, input_format:, output_format:, quality: opts[:quality])
+        DiscourseVips.resize(
+          input_path: from,
+          output_path: to,
+          input_format:,
+          output_format:,
+          width:,
+          height:,
+          quality:,
+          strip_metadata: SiteSetting.strip_image_metadata,
+          timeout: MAX_CONVERT_SECONDS,
+        )
+      end
+    else
+      convert_with(instructions, from, to, opts, operation:)
+    end
   end
+
+  def self.vips_quality(input_path:, input_format:, output_format:, quality: nil)
+    return quality if quality
+    return 50 if output_format == "avif"
+    return if %w[jpg jpeg webp].exclude?(output_format)
+
+    if %w[jpg jpeg webp].include?(input_format)
+      source_quality = ImageMagick.image_quality(input_path:, timeout: Upload::MAX_IDENTIFY_SECONDS)
+      return source_quality if input_format != "webp"
+      return 100 if source_quality.to_s.start_with?("100")
+    end
+
+    output_format == "webp" ? 75 : 92
+  end
+  private_class_method :vips_quality
 
   MAX_PNGQUANT_SIZE = 500_000
   MAX_CONVERT_SECONDS = 20
 
   def self.convert_with(instructions, from, to, opts = {}, operation:)
-    ImageMagick.magick(
-      *instructions,
-      operation:,
-      read: [from],
-      write: [File.dirname(to)],
-      nice: 10,
-      timeout: MAX_CONVERT_SECONDS,
-    )
+    if block_given?
+      yield
+    else
+      ImageMagick.magick(
+        *instructions,
+        operation:,
+        read: [from],
+        write: [File.dirname(to)],
+        nice: 10,
+        timeout: MAX_CONVERT_SECONDS,
+      )
+    end
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
