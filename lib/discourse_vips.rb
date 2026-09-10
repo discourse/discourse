@@ -23,6 +23,14 @@ module DiscourseVips
     )
   end
 
+  def self.image_quality(input_path:, input_format:, timeout:)
+    Client.call(
+      ["image-quality", input_path, input_format],
+      operation: :upload_quality_probe,
+      timeout:,
+    ).to_i
+  end
+
   def self.before_fork
     Client.before_fork
   end
