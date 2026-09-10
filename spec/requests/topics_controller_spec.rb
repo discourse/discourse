@@ -625,39 +625,28 @@ RSpec.describe TopicsController do
       end
 
       it "moves the posts" do
-        io = StringIO.new
-
         post "/t/#{topic.id}/move-posts.json",
              params: {
                post_ids: [p2.id],
                destination_topic_id: dest_topic.id,
-             },
-             env: {
-               "rack.hijack" => -> { io },
              }
 
-        headers, body = io.string.split("\r\n\r\n", 2)
-        expect(headers).to start_with("HTTP/1.1 200 OK\r\n")
-        expect(JSON.parse(body)).to eq("success" => true, "url" => dest_topic.relative_url)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => true, "url" => dest_topic.relative_url)
         expect(p2.reload.topic_id).to eq(dest_topic.id)
       end
 
       it "does not allow posts to be moved to a private category" do
         dest_topic.update!(category: staff_category)
-        io = StringIO.new
 
         post "/t/#{topic.id}/move-posts.json",
              params: {
                post_ids: [p2.id],
                destination_topic_id: dest_topic.id,
-             },
-             env: {
-               "rack.hijack" => -> { io },
              }
 
-        headers, body = io.string.split("\r\n\r\n", 2)
-        expect(headers).to start_with("HTTP/1.1 403 Forbidden\r\n")
-        expect(JSON.parse(body)["errors"]).to be_present
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
         expect(p2.reload.topic_id).to eq(topic.id)
         expect(topic.reload.deleted_at).to be_nil
       end
@@ -962,37 +951,20 @@ RSpec.describe TopicsController do
       end
 
       it "moves the posts" do
-        io = StringIO.new
+        post "/t/#{topic.id}/merge-topic.json", params: { destination_topic_id: dest_topic.id }
 
-        post "/t/#{topic.id}/merge-topic.json",
-             params: {
-               destination_topic_id: dest_topic.id,
-             },
-             env: {
-               "rack.hijack" => -> { io },
-             }
-
-        headers, body = io.string.split("\r\n\r\n", 2)
-        expect(headers).to start_with("HTTP/1.1 200 OK\r\n")
-        expect(JSON.parse(body)).to eq("success" => true, "url" => dest_topic.relative_url)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("success" => true, "url" => dest_topic.relative_url)
         expect(p2.reload.topic_id).to eq(dest_topic.id)
       end
 
       it "does not allow posts to be moved to a private category" do
         dest_topic.update!(category: staff_category)
-        io = StringIO.new
 
-        post "/t/#{topic.id}/merge-topic.json",
-             params: {
-               destination_topic_id: dest_topic.id,
-             },
-             env: {
-               "rack.hijack" => -> { io },
-             }
+        post "/t/#{topic.id}/merge-topic.json", params: { destination_topic_id: dest_topic.id }
 
-        headers, body = io.string.split("\r\n\r\n", 2)
-        expect(headers).to start_with("HTTP/1.1 403 Forbidden\r\n")
-        expect(JSON.parse(body)["errors"]).to be_present
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
         expect(p2.reload.topic_id).to eq(topic.id)
         expect(topic.reload.deleted_at).to be_nil
       end
