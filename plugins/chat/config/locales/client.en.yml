@@ -637,7 +637,8 @@ en:
       direct_messages:
         title: "DMs"
         aria_label: "Switch to direct messages"
-        new: "New direct message or group chat..."
+        new: "New direct message"
+        new_group: "New group chat"
         create: "Go"
         leave: "Leave channel"
         close: "Close channel"

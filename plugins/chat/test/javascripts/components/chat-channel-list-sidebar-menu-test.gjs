@@ -158,7 +158,8 @@ module(
         .exists("the sort option is shown behind a fly-out submenu");
     });
 
-    test("shows the new message, filter, and sort options for the direct messages header", async function (assert) {
+    test("shows the new message, group chat, filter, and sort options for the direct messages header", async function (assert) {
+      this.siteSettings.chat_max_direct_message_users = 20;
       sinon
         .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
         .value(true);
@@ -179,6 +180,12 @@ module(
         .hasText(
           i18n("chat.direct_messages.new"),
           "the new message action is shown"
+        );
+      assert
+        .dom('[data-menu-option-id="startGroupChat"]')
+        .hasText(
+          i18n("chat.direct_messages.new_group"),
+          "the new group chat action is shown"
         );
       assert
         .dom('[data-menu-option-id="browseChannels"]')
@@ -204,35 +211,51 @@ module(
         .exists({ count: 1 }, "exactly one sort choice is checked");
     });
 
-    test("starts a personal chat from the direct messages header menu", async function (assert) {
-      sinon
-        .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
-        .value(true);
+    for (const [option, mode] of [
+      ["startDm", "search"],
+      ["startGroupChat", "new-group"],
+    ]) {
+      test(`opens ${mode} from the direct messages header menu`, async function (assert) {
+        this.siteSettings.chat_max_direct_message_users = 20;
+        sinon
+          .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
+          .value(true);
 
-      await render(
-        <template>
-          <button class="menu-trigger" type="button">Open</button>
-          <DMenus />
-          <ModalContainer />
-        </template>
-      );
-      const menu = getOwner(this).lookup("service:menu");
-      await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListSidebarMenu,
-        contentRole: "menu",
-        identifier: "chat-channel-list-options-menu",
-        data: DMS_DATA,
+        await render(
+          <template>
+            <button class="menu-trigger" type="button">Open</button>
+            <DMenus />
+            <ModalContainer />
+          </template>
+        );
+        const menu = getOwner(this).lookup("service:menu");
+        await menu.show(find(".menu-trigger"), {
+          component: ChatChannelListSidebarMenu,
+          contentRole: "menu",
+          identifier: "chat-channel-list-options-menu",
+          data: DMS_DATA,
+        });
+
+        await click(`[data-menu-option-id="${option}"]`);
+
+        assert
+          .dom(".chat-modal-new-message")
+          .exists("the new message modal opens");
+        assert
+          .dom(`.chat-message-creator__${mode}`)
+          .exists("the requested mode is shown immediately");
+        assert
+          .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
+          .doesNotExist("the menu closes");
+        if (mode === "new-group") {
+          await click(".chat-message-creator__add-members__close-btn");
+
+          assert
+            .dom(".chat-message-creator__search")
+            .exists("canceling group creation returns to search");
+        }
       });
-
-      await click('[data-menu-option-id="startDm"]');
-
-      assert
-        .dom(".chat-modal-new-message")
-        .exists("the new message modal opens");
-      assert
-        .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
-        .doesNotExist("the menu closes");
-    });
+    }
 
     test("hides the new message option when the user cannot send direct messages", async function (assert) {
       await render(
@@ -246,6 +269,9 @@ module(
         .dom('[data-menu-option-id="startDm"]')
         .doesNotExist("the new message action is hidden without permission");
       assert
+        .dom('[data-menu-option-id="startGroupChat"]')
+        .doesNotExist("the group chat action is hidden without permission");
+      assert
         .dom(".dropdown-menu__divider")
         .doesNotExist(
           "the top-level divider is dropped with no actions above it"
@@ -253,6 +279,24 @@ module(
       assert
         .dom('[data-menu-option-id="filterChannels"]')
         .exists("the filter option is still shown");
+    });
+
+    test("hides group chat when only one recipient is allowed", async function (assert) {
+      this.siteSettings.chat_max_direct_message_users = 1;
+      sinon
+        .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
+        .value(true);
+
+      await render(
+        <template><ChatChannelListSidebarMenu @data={{DMS_DATA}} /></template>
+      );
+
+      assert
+        .dom('[data-menu-option-id="startDm"]')
+        .exists("direct messages are available");
+      assert
+        .dom('[data-menu-option-id="startGroupChat"]')
+        .doesNotExist("group chat is unavailable");
     });
 
     test("hides the create channel option for non-staff", async function (assert) {
