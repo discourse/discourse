@@ -16,6 +16,7 @@ import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import ChatChannelListFilterMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-filter-menu";
+import ChatChannelListFilterToggle from "discourse/plugins/chat/discourse/components/chat-channel-list-filter-toggle";
 import ChatChannelListOptionsButton from "discourse/plugins/chat/discourse/components/chat-channel-list-options-button";
 import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelListSortMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sort-menu";
@@ -642,113 +643,74 @@ module(
       sidebarState.filter = "missing";
 
       await render(
-        <template>
-          <ul>
-            <ChatSidebarChannelListFilterEmptyState />
-          </ul>
-        </template>
+        <template><ChatSidebarChannelListFilterEmptyState /></template>
       );
 
       assert
-        .dom(".chat-sidebar-channels-filter-empty-state")
+        .dom(".empty-state")
         .doesNotExist("the channel-filter reset is hidden during text search");
     });
 
-    test("resets the channels filter by default", async function (assert) {
-      const preferences = getOwner(this).lookup(
-        "service:chat-channel-list-preferences"
-      );
-      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
-
-      await render(
-        <template>
-          <ul>
-            <ChatSidebarChannelListFilterEmptyState />
-          </ul>
-        </template>
-      );
-
-      assert
-        .dom(".chat-sidebar-channels-filter-empty-state")
-        .hasTagName("li", "the state is valid section-list content")
-        .includesText(
-          i18n("chat.channel_list.empty.filtered"),
-          "the empty state explains the filter"
+    for (const section of ["channels", "dms", "starred"]) {
+      test(`temporarily shows all ${section} and updates the header toggle`, async function (assert) {
+        const preferences = this.owner.lookup(
+          "service:chat-channel-list-preferences"
         );
-
-      await click(".chat-sidebar-channels-filter-empty-state__reset");
-
-      assert.true(
-        setFilter.calledWith("channels", "all"),
-        "the channels filter is reset"
-      );
-    });
-
-    test("resets the filter of the section it is rendered for", async function (assert) {
-      const preferences = getOwner(this).lookup(
-        "service:chat-channel-list-preferences"
-      );
-      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
-
-      await render(
-        <template>
-          <ul>
-            <ChatSidebarChannelListFilterEmptyState @section="starred" />
-            <ChatSidebarChannelListFilterEmptyState @section="dms" />
-          </ul>
-        </template>
-      );
-
-      await click(".chat-sidebar-channels-filter-empty-state__reset");
-
-      assert.true(
-        setFilter.calledWith("starred", "all"),
-        "the starred filter is reset"
-      );
-
-      const resets = document.querySelectorAll(
-        ".chat-sidebar-channels-filter-empty-state__reset"
-      );
-      await click(resets[1]);
-
-      assert.true(
-        setFilter.calledWith("dms", "all"),
-        "the dms filter is reset"
-      );
-    });
-
-    test("renders an illustrated state matching the no-channels layout", async function (assert) {
-      const preferences = getOwner(this).lookup(
-        "service:chat-channel-list-preferences"
-      );
-      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
-
-      await render(
-        <template>
-          <ChatSidebarChannelListFilterEmptyState
-            @layout="empty-state"
-            @section="dms"
-          />
-        </template>
-      );
-
-      assert
-        .dom(".empty-state__image")
-        .exists("the same illustration as the no-channels state is shown");
-      assert
-        .dom(".empty-state__title")
-        .hasText(
-          i18n("chat.channel_list.empty.filtered"),
-          "the title explains the filter"
+        preferences[`${section}Filter`] = "unread";
+        this.section = section;
+        await render(
+          <template>
+            <ChatChannelListFilterToggle @section={{this.section}} />
+            <ChatSidebarChannelListFilterEmptyState @section={{this.section}} />
+          </template>
         );
-
-      await click(".empty-state__cta .btn");
-
-      assert.true(
-        setFilter.calledWith("dms", "all"),
-        "the show all action resets the dms filter"
-      );
-    });
+        assert
+          .dom(".empty-state__image")
+          .exists("the illustrated state is retained");
+        assert
+          .dom(".empty-state__title")
+          .hasText(
+            i18n("chat.channel_list.empty.filtered"),
+            "the filter explanation is retained"
+          );
+        assert
+          .dom(".chat-channel-list-filter-toggle .d-icon-filter-circle-xmark")
+          .exists("the header offers to show all");
+        await click(".empty-state__cta .btn");
+        assert.strictEqual(
+          preferences.filterFor(section),
+          "unread",
+          "the preference is retained"
+        );
+        assert.strictEqual(
+          preferences.effectiveFilterFor(section),
+          "all",
+          "the empty state bypasses the filter"
+        );
+        assert
+          .dom(".chat-channel-list-filter-toggle")
+          .hasAttribute(
+            "title",
+            i18n("chat.channel_list.apply_filters"),
+            "the header offers to reapply filters"
+          );
+        assert
+          .dom(".chat-channel-list-filter-toggle .d-icon-filter")
+          .exists("the icon changes");
+        await click(".chat-channel-list-filter-toggle");
+        assert.strictEqual(
+          preferences.effectiveFilterFor(section),
+          "unread",
+          "the header reapplies the filter"
+        );
+        await click(".chat-channel-list-filter-toggle");
+        assert.strictEqual(
+          preferences.effectiveFilterFor(section),
+          "all",
+          "the header can also bypass the filter"
+        );
+      });
+    }
   }
 );
 

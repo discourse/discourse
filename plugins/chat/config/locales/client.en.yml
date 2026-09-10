@@ -644,6 +644,7 @@ en:
         cannot_create: "Sorry, you cannot send direct messages."
 
       channel_list:
+        apply_filters: "Apply filters to channels"
         title: "Channels"
         aria_label: "Switch to channels list"
         options:
