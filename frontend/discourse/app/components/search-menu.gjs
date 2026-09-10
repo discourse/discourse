@@ -371,17 +371,20 @@ export default class SearchMenu extends Component {
       this.loading = true;
       this.invalidTerm = false;
 
+      const searchContext = this.searchContext;
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
         typeFilter: this.typeFilter,
         fullSearchUrl: this.fullSearchUrl,
-        searchContext: this.searchContext,
+        searchContext,
       });
 
       this._activeSearch
         .then((results) => {
-          // we ensure the current search term is the one used
-          // when starting the query
-          if (results) {
+          if (
+            results &&
+            searchContext?.type === this.searchContext?.type &&
+            searchContext?.id === this.searchContext?.id
+          ) {
             this.search.noResults = results.resultTypes.length === 0;
             this.search.results = results;
           }
