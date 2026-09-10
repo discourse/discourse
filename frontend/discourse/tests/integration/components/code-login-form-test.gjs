@@ -372,17 +372,24 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       })
     );
     pretender.get("/u/random-username.json", () =>
-      response({ username: "QuietFalcon" })
+      response({
+        username: "QuietFalcon",
+        avatar_template: "/letter/q.png",
+      })
     );
 
     await goToCodeStep();
     await fillIn(".d-otp-input", "123456");
 
     assert.dom("#code-login-username").hasValue("jane");
+    assert.dom(".code-login-form__avatar img").hasAttribute("src", /letter\/j/);
 
     await click(".code-login-form__username-regen");
 
     assert.dom("#code-login-username").hasValue("QuietFalcon");
+    assert
+      .dom(".code-login-form__avatar img")
+      .hasAttribute("src", /letter\/q/, "the avatar follows the new username");
     assert.dom(".code-login-form__continue-to-site").isEnabled();
   });
 
@@ -399,7 +406,7 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     // The default pretender handler reports the username "taken" as
     // unavailable with the suggestion "nottaken".
     pretender.get("/u/random-username.json", () =>
-      response({ username: "taken" })
+      response({ username: "taken", avatar_template: "/letter/t.png" })
     );
 
     await goToCodeStep();
