@@ -4,7 +4,7 @@ RSpec.describe GroupResource do
   fab!(:group) { Fabricate(:group, name: "a_group") }
 
   let(:guardian) { Guardian.new }
-  let(:glossary) { JsonApiKit::Glossary.resource }
+  let(:glossary) { JsonApiKit::Glossary.kit }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/groups")
   end

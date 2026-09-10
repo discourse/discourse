@@ -69,6 +69,18 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     it { is_expected.not_to allow_value("secrets", "created_at,secrets").for(:sort) }
     it { is_expected.not_to allow_value(%w[created_at], 5).for(:sort) }
 
+    context "when a sort is unknown" do
+      let(:params) { { sort: { posted_at: :asc } } }
+
+      before { contract.valid? }
+
+      it "adds an error with the sort name of the resource" do
+        expect(contract.errors.where(:sort, :no_such_name).sole.options[:name]).to eq(
+          JsonApiKit::Name::Sort.new(value: "posted_at", type: "topics"),
+        )
+      end
+    end
+
     context "when sort is a string" do
       let(:params) { { sort: "-created_at,title" } }
 
@@ -161,6 +173,17 @@ RSpec.describe JsonApiKit::Request::Contract::Collection, type: :model do
     let(:params) { { page: {} } }
 
     before { contract.valid? }
+
+    context "when the anchor is not the sort" do
+      let(:params) { { sort: { created_at: :asc }, page: { anchor: { title: "A" } } } }
+
+      it "adds an error with the anchor name and the sort name of the resource" do
+        expect(contract.errors.where(:"page.anchor", :not_the_sort).sole.options).to include(
+          name: JsonApiKit::Name::Anchor.new(value: "title", type: "topics"),
+          key: JsonApiKit::Name::Sort.new(value: "created_at", type: "topics"),
+        )
+      end
+    end
 
     it { is_expected.to validate_length_of(:anchor).as_array.is_equal_to(1).allow_nil }
     it { is_expected.to allow_value({ id: 12 }, :first_unread).for(:anchor) }

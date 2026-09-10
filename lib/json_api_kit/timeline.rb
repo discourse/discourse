@@ -10,7 +10,7 @@ module JsonApiKit
 
       private
 
-      def core = @core ||= new([FIRST_RELEASE])
+      def core = new([FIRST_RELEASE, *VersionChange.all.map(&:version)].uniq)
     end
 
     def initialize(versions)

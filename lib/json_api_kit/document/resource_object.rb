@@ -18,11 +18,17 @@ module JsonApiKit
 
       attr_reader :record, :urls, :glossary, :meta
 
-      def attributes = record.attributes.transform_keys { glossary.member_name(it) }
+      def field(value) = Name::Field.new(value:, type:)
+
+      def relationship(value) = Name::Relationship.new(value:, type:)
+
+      def member_value(name) = glossary.member_name(name).value
+
+      def attributes = record.attributes.transform_keys { member_value(field(it)) }
 
       def relationships
         record.relationships.to_h do |name, linkage|
-          member = glossary.member_name(name)
+          member = member_value(relationship(name))
           [member, RelationshipObject.new(linkage, urls:, owner: record, name: member).to_h]
         end
       end
