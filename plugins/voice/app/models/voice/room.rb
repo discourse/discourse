@@ -18,6 +18,10 @@ module Voice
     has_many :room_memberships, class_name: "Voice::RoomMembership", dependent: :destroy
     has_many :members, through: :room_memberships, source: :user
     has_many :recordings, class_name: "Voice::Recording", dependent: :delete_all
+    has_many :agent_integration_rooms,
+             class_name: "Voice::AgentIntegrationRoom",
+             dependent: :delete_all
+    has_many :agent_exclusions, class_name: "Voice::AgentExclusion", dependent: :delete_all
 
     validates :name, presence: true, length: { maximum: 80 }
     validates :slug, presence: true, uniqueness: true

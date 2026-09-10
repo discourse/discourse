@@ -156,6 +156,25 @@ RSpec.describe Voice::RoomsController do
       expect(Voice::ParticipantTracker.pinned_transport(room.id)).to eq("livekit")
     end
 
+    it "cleans up an agent-only call before falling back to mesh" do
+      configure_livekit!
+      SiteSetting.voice_livekit_mesh_fallback = true
+      integration = Fabricate(:voice_agent_integration, rooms: [room])
+      bot_id = integration.bot_user_id
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, bot_id)
+      Voice::Livekit.stubs(:mint_token).raises(Voice::Livekit::MintError.new("boom"))
+      Voice::Livekit::RoomServiceClient.expects(:remove_participant).with(room, bot_id)
+      Voice::Livekit::RoomServiceClient.expects(:delete_room).with(room)
+
+      post "/voice/rooms/#{room.id}/join.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["transport"]).to eq("mesh")
+      expect(Voice::ParticipantTracker.user_ids(room.id)).to contain_exactly(user.id)
+      expect(Voice::ParticipantTracker.pinned_transport(room.id)).to eq("mesh")
+    end
+
     it "fails a livekit-pinned join when the config was half-deleted" do
       configure_livekit!
       Voice::ParticipantTracker.pin_transport!(room.id, "livekit")

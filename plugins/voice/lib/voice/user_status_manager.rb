@@ -18,6 +18,8 @@ module Voice
     # the tooltip shows no "until" line. Leave/kick clear them directly;
     # crashed or lapsed clients are reaped by clear_stale_statuses.
     def self.set_voice_status(user, room)
+      return if user.bot?
+
       return unless SiteSetting.enable_user_status
       return unless SiteSetting.voice_auto_status_enabled
       return if user_has_non_voice_status?(user)
@@ -26,6 +28,8 @@ module Voice
     end
 
     def self.set_afk_status(user, room)
+      return if user.bot?
+
       return unless SiteSetting.enable_user_status
       return unless voice_status_active?(user)
 

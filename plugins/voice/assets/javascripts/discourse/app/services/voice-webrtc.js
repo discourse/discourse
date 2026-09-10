@@ -329,8 +329,13 @@ export default class VoiceWebrtcService extends Service {
         camera: this.effectiveCameraQuality(roomId),
         screen: this.effectiveScreenQuality(roomId),
       }),
-      onTrack: (roomId, userId, track, streams) =>
-        this.#remoteStreamRegistry.register(roomId, userId, track, streams),
+      onTrack: (roomId, userId, track, streams) => {
+        const room = this.voiceRooms.roomById(roomId);
+        if (userId < 0 && (!room || !participantCanSpeak(room, userId))) {
+          return;
+        }
+        this.#remoteStreamRegistry.register(roomId, userId, track, streams);
+      },
       removeRemoteStream: (roomId, userId) =>
         this.#removeRemoteStream(roomId, userId),
       getRemoteUserIds: (roomId) =>

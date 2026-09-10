@@ -311,6 +311,25 @@ export default class LivekitRoomSession {
     });
   }
 
+  restoreParticipant(userId) {
+    const participant = this.#room?.remoteParticipants?.get(String(userId));
+    participant?.trackPublications?.forEach((publication) => {
+      this.#applyDesiredSubscription(publication);
+      if (
+        !publication.track ||
+        (this.#isWatchGatedSource(publication.source) && !this.#watchingVideo)
+      ) {
+        return;
+      }
+      const track = publication.track;
+      const streams =
+        publication.source === this.#sdk.Track.Source.ScreenShareAudio
+          ? []
+          : [track.mediaStream ?? new MediaStream()];
+      this.#onTrack(this.#roomId, userId, track.mediaStreamTrack, streams);
+    });
+  }
+
   // Terminal-disconnect recovery: up to three attempts, each awaiting a
   // freshly minted token (the old one is likely past its 10-minute TTL).
   // Resolves "reconnected", "gone" (server says the room instance ended),
@@ -521,8 +540,9 @@ export default class LivekitRoomSession {
   #userIdFrom(participant) {
     // LiveKit identity is String(user.id); registry keys must be numeric so
     // remoteStreamFor(roomId, userId) matches roster participant ids.
-    const userId = Number(participant?.identity);
-    if (!Number.isFinite(userId) || userId <= 0) {
+    const identity = String(participant?.identity ?? "");
+    const userId = Number(identity);
+    if (!/^-?[1-9]\d*$/.test(identity) || !Number.isSafeInteger(userId)) {
       return null;
     }
     return userId === this.#currentUserId ? null : userId;

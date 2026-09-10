@@ -23,6 +23,11 @@ export default {
           route: "adminPlugins.show.voice-rooms",
         },
         {
+          label: "voice.admin.agent_integrations.title",
+          route: "adminPlugins.show.voice-agent-integrations",
+          description: "voice.admin.agent_integrations.description",
+        },
+        {
           label: "voice.admin.recordings_title",
           route: "adminPlugins.show.voice-recordings",
         },

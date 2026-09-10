@@ -32,12 +32,12 @@ module Jobs
           # Backstop for the pin-clear on last leave: a room that emptied
           # without one (crashed clients, missed leave) must not hold its
           # transport for the next call.
-          if ::Voice::ParticipantTracker.user_ids(room.id).empty?
+          if ::Voice::ParticipantTracker.human_user_ids(room.id).empty?
             # No-op once the pin is gone, so an emptied room is deleted from
             # the SFU at most once, on the sweep that clears its pin.
-            ::Voice::Livekit::RoomServiceClient.delete_room(room)
-            ::Voice::ParticipantTracker.clear_transport_pin(room.id)
+            ::Voice::AgentManager.evict_agents_in_room!(room)
           end
+          ::Voice::AgentManager.reconcile(room)
           ::Voice::RoomBroadcaster.publish_participants(room)
         end
     end

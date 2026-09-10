@@ -180,8 +180,8 @@ module Voice
           # empty — an occupied LiveKit room must never be split, and silent
           # degradation hides outages from ops.
           if SiteSetting.voice_livekit_mesh_fallback &&
-               Voice::ParticipantTracker.user_ids(@room.id).empty?
-            Voice::ParticipantTracker.clear_transport_pin(@room.id)
+               Voice::ParticipantTracker.human_user_ids(@room.id).empty?
+            Voice::AgentManager.evict_agents_in_room!(@room)
             transport = "mesh"
           else
             return(render_json_error(I18n.t("voice.errors.livekit_unavailable"), status: 503))
@@ -365,9 +365,8 @@ module Voice
       session = close_session_for(@room.id, current_user.id)
       Voice::ParticipantTracker.mark_left(@room.id, current_user.id)
       Voice::ParticipantTracker.remove(@room.id, current_user.id)
-      if Voice::ParticipantTracker.user_ids(@room.id).empty?
-        Voice::Livekit::RoomServiceClient.delete_room(@room)
-        Voice::ParticipantTracker.clear_transport_pin(@room.id)
+      if Voice::ParticipantTracker.human_user_ids(@room.id).empty?
+        Voice::AgentManager.evict_agents_in_room!(@room)
       end
       Voice::UserStatusManager.clear_voice_status(current_user)
       Voice::RoomBroadcaster.publish_participants(@room)
@@ -498,6 +497,10 @@ module Voice
         raise Discourse::InvalidParameters.new(I18n.t("voice.errors.cannot_kick_creator"))
       end
 
+      if user_id.negative?
+        Voice::AgentManager.exclude!(room: @room, user_id: user_id, duration: params[:duration])
+      end
+
       session = close_session_for(@room.id, user_id)
       Voice::ParticipantTracker.mark_left(@room.id, user_id)
       Voice::ParticipantTracker.remove(@room.id, user_id)
@@ -512,6 +515,12 @@ module Voice
       # The client-side kicked handler already forces a clean leave; this
       # additionally evicts the media session from the SFU.
       Voice::Livekit::RoomServiceClient.remove_participant(@room, user_id)
+
+      if Voice::ParticipantTracker.human_user_ids(@room.id).empty? &&
+           Voice::AgentIntegrationRoom.exists?(room_id: @room.id)
+        Voice::AgentManager.evict_agents_in_room!(@room)
+        Voice::RoomBroadcaster.publish_participants(@room)
+      end
 
       head :no_content
     end

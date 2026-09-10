@@ -8,6 +8,7 @@ module Voice
     end
 
     TOKEN_TTL = 10.minutes
+    AGENT_TOKEN_TTL = 2.minutes
     LAST_WEBHOOK_KEY = "voice:livekit:last_webhook_at"
     LAST_WEBHOOK_TTL = 7.days
 
@@ -71,20 +72,20 @@ module Voice
       sources
     end
 
-    # Least-privilege HS256 JWT: a leaked token can only join this one room,
-    # as this one user, for TOKEN_TTL. Guardian remains the sole authority —
-    # callers only mint for users who passed `ensure_can_join_voice_room!`.
-    def self.mint_token(user:, room:, guardian:)
+    # Callers must authorize the human through Guardian or the bot through
+    # AgentManager before minting credentials.
+    def self.mint_token(user:, room:, guardian: nil, role: nil, metadata: nil)
       raise MintError, "LiveKit is not fully configured" unless configured?
 
-      can_publish = guardian.can_speak_in_voice_room?(room)
+      can_publish = role ? role == "speaker" : guardian.can_speak_in_voice_room?(room)
       sources = publish_sources(room, can_publish)
 
       payload = {
         iss: SiteSetting.voice_livekit_api_key,
         sub: user.id.to_s,
         name: user.username,
-        exp: TOKEN_TTL.from_now.to_i,
+        metadata: metadata,
+        exp: (user.bot? ? AGENT_TOKEN_TTL : TOKEN_TTL).from_now.to_i,
         video: {
           room: room_name(room),
           roomJoin: true,

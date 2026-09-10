@@ -176,6 +176,29 @@
   }
 }
 
+.voice-agent-integrations {
+  display: grid;
+  gap: 1.5em;
+  margin-top: 1.5em;
+
+  &__credential {
+    margin-top: 1em;
+    padding: 1em;
+    border: 1px solid var(--tertiary-low);
+    background: var(--tertiary-low);
+
+    p {
+      margin: 0 0 0.5em;
+    }
+
+    code {
+      display: block;
+      overflow-wrap: anywhere;
+      user-select: all;
+    }
+  }
+}
+
 .voice-livekit-status__webhook-config {
   margin: 0.5em 0 1em;
 

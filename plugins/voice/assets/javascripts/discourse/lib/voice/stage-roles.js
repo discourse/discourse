@@ -1,7 +1,5 @@
-// Stage rooms gate speaking on the participant's role; every other room type
-// lets anyone speak.
 export function participantCanSpeak(room, userId) {
-  if (room.room_type !== "stage") {
+  if (room.room_type !== "stage" && Number(userId) > 0) {
     return true;
   }
 

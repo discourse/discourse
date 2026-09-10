@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 module Voice
-  # Receives LiveKit server webhooks. Strictly a reconcile-only backstop:
-  # events may early-expire presence LiveKit knows is gone, or clear the
-  # transport pin of a finished room — but they never create presence and
-  # never touch Session rows. Heartbeats and CloseOrphanedSessions remain the
-  # source of truth on both transports, so undelivered webhooks cost nothing
-  # but reaction time.
+  # Human events only reconcile existing presence; agents require an authorized
+  # session verified against the current provider connection.
   class LivekitWebhooksController < ApplicationController
     skip_before_action :ensure_logged_in,
                        :verify_authenticity_token,
@@ -35,7 +31,7 @@ module Voice
 
       case event["event"]
       when "participant_joined"
-        record_participant_sid(event)
+        record_participant_join(event)
       when "participant_left", "participant_connection_aborted"
         expire_participant(event)
       when "room_finished"
@@ -56,25 +52,28 @@ module Voice
       nil
     end
 
-    # Not presence — only which media session (SID) is the user's current one,
-    # so a superseded session's late departure can be told apart from the live
-    # session's.
-    def record_participant_sid(event)
+    def record_participant_join(event)
       room = event_room(event)
       return if room.nil?
 
-      user_id = event.dig("participant", "identity").to_i
-      return if user_id <= 0
+      identity = event.dig("participant", "identity").to_s
+      return unless /\A-?[1-9]\d*\z/.match?(identity)
 
-      Voice::ParticipantTracker.set_livekit_sid(room.id, user_id, event.dig("participant", "sid"))
+      user_id = identity.to_i
+      return AgentManager.reconcile(room) if user_id.negative?
+
+      ParticipantTracker.set_livekit_sid(room.id, user_id, event.dig("participant", "sid"))
     end
 
     def expire_participant(event)
       room = event_room(event)
       return if room.nil?
 
-      user_id = event.dig("participant", "identity").to_i
-      return if user_id <= 0
+      identity = event.dig("participant", "identity").to_s
+      return unless /\A-?[1-9]\d*\z/.match?(identity)
+
+      user_id = identity.to_i
+      return AgentManager.reconcile(room) if user_id.negative?
 
       # A quick disconnect/rejoin can deliver the old session's departure
       # after the new session is up; `gone_at` can't distinguish them (the
@@ -90,14 +89,20 @@ module Voice
           user_id,
           gone_at: event_created_at(event),
         )
-      Voice::RoomBroadcaster.publish_participants_if_changed(room) if expired
+      if expired
+        if ParticipantTracker.human_user_ids(room.id).empty? &&
+             AgentIntegrationRoom.exists?(room_id: room.id)
+          AgentManager.evict_agents_in_room!(room)
+        end
+        RoomBroadcaster.publish_participants_if_changed(room)
+      end
     end
 
     def finish_room(event)
       room = event_room(event)
       return if room.nil?
 
-      Voice::ParticipantTracker.clear_transport_pin(room.id)
+      AgentManager.evict_agents_in_room!(room, delete_room: false)
       Voice::ParticipantTracker.clear_livekit_sids(room.id)
     end
 

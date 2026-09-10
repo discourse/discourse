@@ -10,7 +10,7 @@ Sites that need bigger calls can deploy their own [LiveKit](https://livekit.io)
 server and point the plugin at it. Rooms routed through LiveKit publish each
 track **once** to the SFU, which fans it out to subscribers — publisher
 upstream stays constant no matter how many people are in the room. Everything
-else (presence, sessions, badges, admin stats, the roster UI, mute/deafen,
+else for human participants (presence, sessions, badges, admin stats, the roster UI, mute/deafen,
 push-to-talk, noise suppression, background blur) works identically on both
 transports.
 
@@ -154,11 +154,17 @@ webhook deliveries at `POST /voice/livekit/webhook` and uses them as a
 - `room_finished` clears the room's transport pin, so the next call
   re-resolves against current settings right away.
 
-Webhooks never *create* presence and never touch session analytics — those
-ride Discourse heartbeats on both transports. If webhooks are undelivered
+For human participants, webhooks never *create* presence and never touch session
+analytics — those ride Discourse heartbeats on both transports. If webhooks are undelivered
 (firewall, misconfigured URL), nothing breaks; the built-in TTLs just take a
 little longer to converge, so treat a stale delivery marker as a warning,
 never an outage.
+
+Authorized external agents have a separate lifecycle: provider connection events
+and reconciliation maintain their presence, while Discourse controls admission,
+roles, and exclusions. They do not create human session analytics. See
+[External agent participation](./roadmap/agent-participation.md) for the contract
+and its implementation checklist.
 
 Deliveries are authenticated by the `Authorization` JWT LiveKit signs with the
 API secret, which includes a hash of the request body — no extra shared
@@ -212,6 +218,53 @@ SDK never calls `getUserMedia`).
 
 The [local fake participants harness](./local-fake-participants.md) works
 against LiveKit-routed rooms unchanged, for the same reason.
+
+## External agents
+
+In the Voice admin configuration, open **External agents**, select an existing
+bot account, choose allowed rooms and a listener or speaker role, and save. Copy
+the credential shown after creation; only its digest is stored. Rotation replaces
+the credential, and revocation prevents further admission. Bot accounts have
+negative user IDs; staged accounts with positive IDs are not eligible. Creating
+bot accounts is outside this interface.
+
+Once a human has joined an allowed room using the SFU transport, the customer's
+worker exchanges that credential for connection details:
+
+```bash
+curl --request POST "$DISCOURSE_URL/voice/agent-token" \
+  --header "Authorization: Bearer $VOICE_AGENT_CREDENTIAL" \
+  --header 'Content-Type: application/json' \
+  --data '{"room_id": 123}'
+```
+
+The JSON response contains `url`, `token`, `identity`, and
+`participant_session_id`. Connect the worker's RTC client to `url` with `token`;
+the token already contains the assigned identity and session metadata. Do not
+replace the metadata or mint a separate token. Keep the integration credential
+on the worker's server. Deployment, dispatch and the worker's own application
+endpoints remain the customer's responsibility.
+
+A listener can subscribe to media; a speaker can also publish the sources allowed
+by the room. These tokens do not grant data-message publishing or access to other
+Discourse APIs. Moderators may demote speakers or exclude an agent for a duration
+or indefinitely. Administrators can restore an exclusion. Agents do not count
+toward human capacity or participation statistics and are disconnected when the
+last human leaves.
+
+Each exchange supersedes the bot's previous authorized session in that room.
+Connect within the token's two-minute validity period. Signed webhooks trigger a
+current participant snapshot; the periodic one-minute reconciliation also handles
+missed events. Confirmed agent presence expires after three minutes without a
+successful refresh. Keep webhooks and scheduled jobs operational.
+
+Removal from a self-hosted media server does not invalidate an already issued JWT.
+An excluded agent may briefly reconnect with that token before reconciliation
+disconnects it again. Discourse removes roster/media access immediately on its
+side, but this is not a guarantee of immediate transport-level revocation.
+
+See the [implementation decisions](./roadmap/agent-participation.md) for scope,
+historical rationale, and the review checklist.
 
 ## Manual browser checklist
 

@@ -12638,6 +12638,106 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: voice_agent_exclusions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_agent_exclusions (
+    id bigint NOT NULL,
+    agent_integration_id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    expires_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_agent_exclusions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_agent_exclusions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_agent_exclusions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_agent_exclusions_id_seq OWNED BY public.voice_agent_exclusions.id;
+
+
+--
+-- Name: voice_agent_integration_rooms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_agent_integration_rooms (
+    id bigint NOT NULL,
+    agent_integration_id bigint NOT NULL,
+    room_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_agent_integration_rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_agent_integration_rooms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_agent_integration_rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_agent_integration_rooms_id_seq OWNED BY public.voice_agent_integration_rooms.id;
+
+
+--
+-- Name: voice_agent_integrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.voice_agent_integrations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    bot_user_id bigint NOT NULL,
+    credential_digest character varying NOT NULL,
+    role integer DEFAULT 0 NOT NULL,
+    revoked_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: voice_agent_integrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.voice_agent_integrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: voice_agent_integrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.voice_agent_integrations_id_seq OWNED BY public.voice_agent_integrations.id;
+
+
+--
 -- Name: voice_co_presences; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15378,6 +15478,27 @@ ALTER TABLE ONLY public.user_warnings ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: voice_agent_exclusions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_agent_exclusions ALTER COLUMN id SET DEFAULT nextval('public.voice_agent_exclusions_id_seq'::regclass);
+
+
+--
+-- Name: voice_agent_integration_rooms id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_agent_integration_rooms ALTER COLUMN id SET DEFAULT nextval('public.voice_agent_integration_rooms_id_seq'::regclass);
+
+
+--
+-- Name: voice_agent_integrations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_agent_integrations ALTER COLUMN id SET DEFAULT nextval('public.voice_agent_integrations_id_seq'::regclass);
 
 
 --
@@ -18144,6 +18265,30 @@ ALTER TABLE ONLY public.user_search_data
 
 
 --
+-- Name: voice_agent_exclusions voice_agent_exclusions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_agent_exclusions
+    ADD CONSTRAINT voice_agent_exclusions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_agent_integration_rooms voice_agent_integration_rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_agent_integration_rooms
+    ADD CONSTRAINT voice_agent_integration_rooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: voice_agent_integrations voice_agent_integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.voice_agent_integrations
+    ADD CONSTRAINT voice_agent_integrations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: voice_co_presences voice_co_presences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19302,6 +19447,20 @@ CREATE INDEX idx_users_ip_address ON public.users USING btree (ip_address);
 --
 
 CREATE INDEX idx_users_moderator ON public.users USING btree (id) WHERE moderator;
+
+
+--
+-- Name: idx_voice_agent_exclusions_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_voice_agent_exclusions_unique ON public.voice_agent_exclusions USING btree (agent_integration_id, room_id);
+
+
+--
+-- Name: idx_voice_agent_integration_rooms_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_voice_agent_integration_rooms_unique ON public.voice_agent_integration_rooms USING btree (agent_integration_id, room_id);
 
 
 --
@@ -23778,6 +23937,34 @@ CREATE UNIQUE INDEX index_users_on_username_lower ON public.users USING btree (u
 
 
 --
+-- Name: index_voice_agent_exclusions_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_agent_exclusions_on_expires_at ON public.voice_agent_exclusions USING btree (expires_at);
+
+
+--
+-- Name: index_voice_agent_integration_rooms_on_room_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_voice_agent_integration_rooms_on_room_id ON public.voice_agent_integration_rooms USING btree (room_id);
+
+
+--
+-- Name: index_voice_agent_integrations_on_bot_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_agent_integrations_on_bot_user_id ON public.voice_agent_integrations USING btree (bot_user_id);
+
+
+--
+-- Name: index_voice_agent_integrations_on_credential_digest; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_voice_agent_integrations_on_credential_digest ON public.voice_agent_integrations USING btree (credential_digest);
+
+
+--
 -- Name: index_voice_co_presences_on_user_id_1_and_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24408,6 +24595,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260910085119'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260903195501'),

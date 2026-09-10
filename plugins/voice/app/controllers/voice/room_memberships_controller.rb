@@ -13,6 +13,7 @@ module Voice
       guardian.ensure_can_manage_voice_room!(@room)
       user = fetch_user
       role = Voice::RoomMembership.role_value(params[:role])
+      ensure_agent_role_allowed!(user, role)
       membership = @room.room_memberships.find_or_initialize_by(user: user)
       membership.role = role
       membership.save!
@@ -34,7 +35,9 @@ module Voice
       guardian.ensure_can_manage_voice_room!(@room)
       membership = @room.room_memberships.find(params[:id])
       new_role = params.require(:role)
-      membership.update!(role: Voice::RoomMembership.role_value(new_role))
+      role = Voice::RoomMembership.role_value(new_role)
+      ensure_agent_role_allowed!(membership.user, role)
+      membership.update!(role: role)
 
       if Voice::ParticipantTracker.user_ids(@room.id).include?(membership.user_id)
         metadata = Voice::ParticipantTracker.get_metadata(@room.id, membership.user_id)
@@ -55,7 +58,11 @@ module Voice
       guardian.ensure_can_manage_voice_room!(@room)
       membership = @room.room_memberships.find(params[:id])
       user_id = membership.user_id
-      membership.destroy!
+      if Voice::AgentIntegration.exists?(bot_user_id: user_id)
+        membership.update!(role: Voice::RoomMembership::ROLE_PARTICIPANT)
+      else
+        membership.destroy!
+      end
 
       if Voice::ParticipantTracker.user_ids(@room.id).include?(user_id)
         metadata = Voice::ParticipantTracker.get_metadata(@room.id, user_id)
@@ -72,6 +79,15 @@ module Voice
     end
 
     private
+
+    def ensure_agent_role_allowed!(user, role)
+      integration = Voice::AgentIntegration.find_by(bot_user_id: user.id)
+      return unless integration
+      return if role == Voice::RoomMembership::ROLE_PARTICIPANT
+      return if role == Voice::RoomMembership::ROLE_SPEAKER && integration.role_name == "speaker"
+
+      raise Discourse::InvalidParameters.new(:role)
+    end
 
     def fetch_user
       if params[:user_id]

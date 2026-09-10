@@ -63,7 +63,7 @@ module Voice
       ttl = SiteSetting.voice_ephemeral_room_ttl_minutes.minutes
 
       Voice::Room.ephemeral.find_each do |room|
-        if Voice::ParticipantTracker.user_ids(room.id).any?
+        if Voice::ParticipantTracker.human_user_ids(room.id).any?
           room.update_column(:last_occupied_at, Time.current)
         elsif (room.last_occupied_at || room.created_at) < ttl.ago
           destroy!(room)

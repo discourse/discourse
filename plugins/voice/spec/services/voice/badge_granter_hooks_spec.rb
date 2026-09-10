@@ -131,6 +131,17 @@ RSpec.describe Voice::BadgeGranterHooks do
   end
 
   describe ".on_join" do
+    it "ignores agents when evaluating room capacity and new companions" do
+      bot = Fabricate(:user, id: -1400)
+      room.update!(max_participants: 2)
+
+      described_class.on_join(user, room, User.where(id: [user.id, bot.id]))
+      described_class.on_join(bot, room, User.where(id: [user.id, bot.id]))
+
+      expect(user.badges).to be_empty
+      expect(bot.badges).to be_empty
+    end
+
     describe "Packed House" do
       it "grants when room reaches max capacity" do
         other1 = Fabricate(:user)

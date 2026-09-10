@@ -71,6 +71,21 @@ RSpec.describe Jobs::Voice::CloseOrphanedSessions do
     expect(Voice::ParticipantTracker.get_metadata(room.id, user1.id)).to eq({})
   end
 
+  it "ends agent participation when the final human session expires" do
+    integration = Fabricate(:voice_agent_integration, rooms: [room])
+    session =
+      Fabricate(:voice_session, user: user1, room: room, joined_at: 50.minutes.ago, left_at: nil)
+    set_stale_participant(room, user1, last_heartbeat: 2.minutes.ago)
+    Voice::ParticipantTracker.add(room.id, integration.bot_user_id)
+    Voice::ParticipantTracker.pin_transport!(room.id, "mesh")
+
+    job.execute({})
+
+    expect(session.reload.left_at).to be_present
+    expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
+    expect(Voice::ParticipantTracker.pinned_transport(room.id)).to be_nil
+  end
+
   it "closes stale user sessions while keeping active users untouched" do
     stale_session =
       Fabricate(:voice_session, user: user1, room: room, joined_at: 50.minutes.ago, left_at: nil)
