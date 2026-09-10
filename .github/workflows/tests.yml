@@ -339,6 +339,30 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
+      - name: Report system test file runtimes
+        if: success() && matrix.build_type == 'system'
+        run: |
+          ruby -rjson -rset <<'RUBY'
+          path = "tmp/turbo_rspec_runtime.log"
+          exit unless File.file?(path)
+
+          tracked_files = IO.popen(%w[git ls-files -z -- spec/system plugins themes], &:read).split("\0").to_set
+          totals = Hash.new(0.0)
+          File.foreach(path) do |line|
+            file, separator, duration = line.strip.rpartition(":")
+            next if separator.empty? || !tracked_files.include?(file)
+            next unless file.match?(%r{\A(?:spec/system|plugins/[^/]+/spec/system|themes/[^/]+/spec/system)/[A-Za-z0-9_/.-]+_spec\.rb\z})
+
+            seconds = Float(duration, exception: false)
+            next unless seconds&.finite? && seconds >= 0
+
+            totals[file] += seconds
+          end
+          totals.sort.each do |file, seconds|
+            puts "SYSTEM_FILE_TIMING #{JSON.generate(file: file, seconds: seconds)}"
+          end
+          RUBY
+
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
         if: always() && matrix.build_type == 'system'
