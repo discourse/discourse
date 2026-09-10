@@ -23,7 +23,11 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadSiteSetting do
   it "returns the current value for an administrator" do
     SiteSetting.min_post_length = 42
 
-    expect(tool("min_post_length").invoke).to eq(setting_name: "min_post_length", value: 42)
+    expect(tool("min_post_length").invoke).to eq(
+      setting_name: "min_post_length",
+      value: 42,
+      url: "#{Discourse.base_url}/admin/site_settings/category/all_settings?filter=min_post_length",
+    )
   end
 
   it "returns an error when the acting user is not an administrator" do

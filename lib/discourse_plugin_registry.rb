@@ -146,6 +146,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :homepage_options
 
+  define_filtered_register :navigation_destinations
+
   define_filtered_register :custom_filter_mappings
 
   define_filtered_register :acl_target_classes

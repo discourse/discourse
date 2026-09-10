@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../navigation_destination"
+
 require "digest/sha1"
 require "fileutils"
 require "plugin/metadata"
@@ -427,6 +429,21 @@ class Plugin::Instance
 
   def register_problem_check(klass)
     DiscoursePluginRegistry.register_problem_check(klass, self)
+  end
+
+  # Title and description are server translation keys. Paths omit the installation
+  # base path; availability is evaluated for the requesting Guardian on each lookup.
+  def register_navigation_destination(id, path:, title:, description:, keywords: [], &available)
+    destination =
+      NavigationDestination.new(
+        id: "#{name}:#{id}",
+        path: path,
+        title: title,
+        description: description,
+        keywords: keywords,
+        &available
+      )
+    DiscoursePluginRegistry.register_navigation_destination(destination, self)
   end
 
   def register_upcoming_change_conditional_display(setting_name, &block)

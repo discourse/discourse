@@ -128,6 +128,7 @@ module DiscourseAi
             Tools::AddReviewableNote,
             Tools::DbSchema,
             Tools::SearchSettings,
+            Tools::SearchDiscourseNavigation,
             Tools::SettingContext,
             Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
