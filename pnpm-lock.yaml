@@ -99,7 +99,7 @@ importers:
     devDependencies:
       '@discourse/lint-configs':
         specifier: ^3.3.0
-        version: 3.3.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))
+        version: 3.7.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -1840,13 +1840,6 @@ packages:
 
   '@discourse/jxl@1.3.0':
     resolution: {integrity: sha512-Veu75DEDC7uKsCCsD94UIjFwvHE73+AATBQbBWb83QyJV34wmyxl2Ji+fiiM234mlNn4cpo3DUl0QFrXgRTcfA==}
-
-  '@discourse/lint-configs@3.3.0':
-    resolution: {integrity: sha512-BrC17IVjBacD72sdfEz1kJpqCeDp54aTIXXHYjm4uxQuK9VsftZFHfwn2ntg2NwhCk3LqrprAS/11QMxzAk27w==}
-    peerDependencies:
-      eslint: 10.6.0
-      prettier: 3.8.1
-      stylelint: 17.5.0
 
   '@discourse/lint-configs@3.7.0':
     resolution: {integrity: sha512-neUanixZ9MfPscEElger0BNx05/wAw3BZXlBmGfUHscZ+iKBVygko6nDiZZHDBPGZYeZ53JxQXysknSunQpDQQ==}
@@ -4492,12 +4485,6 @@ packages:
     resolution: {integrity: sha512-McAc+/Nlvcg4byY/CABGH8kqnefWBj8s3JA2okEtz8ixbECQgU46p0HkTUKa4YS7wvgGceimlc34p1nXqbWqtA==}
     peerDependencies:
       eslint: '>=5.0.0'
-
-  eslint-plugin-sort-class-members@1.22.1:
-    resolution: {integrity: sha512-TC76+m06fjpiAYPrEcyyvvWzp1aMHNBVGROLu9ijQuPDZPWJjhNTheha4f6f7eUTWabloczLZagoZ+mb6Cv0ZQ==}
-    engines: {node: '>=4.0.0'}
-    peerDependencies:
-      eslint: '>=0.8.0'
 
   eslint-plugin-tsdoc@0.5.2:
     resolution: {integrity: sha512-BlvqjWZdBJDIPO/YU3zcPCF23CvjYT3gyu63yo6b609NNV3D1b6zceAREy2xnweuBoDpZcLNuPyAUq9cvx6bbQ==}
@@ -9210,34 +9197,6 @@ snapshots:
     dependencies:
       wasm-feature-detect: 1.8.0
 
-  '@discourse/lint-configs@3.3.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))':
-    dependencies:
-      '@babel/core': 8.0.1
-      '@babel/eslint-parser': 8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0))
-      '@babel/plugin-proposal-decorators': 8.0.2(@babel/core@8.0.1)
-      '@eslint/js': 10.0.1(eslint@10.6.0(jiti@2.7.0))
-      ember-eslint-parser: 0.14.3(@babel/eslint-parser@8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0)))(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(typescript@6.0.3)
-      eslint: 10.6.0(jiti@2.7.0)
-      eslint-plugin-decorator-position: 6.1.1(@babel/eslint-parser@8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0)))(eslint@10.6.0(jiti@2.7.0))
-      eslint-plugin-ember: 13.4.1(@babel/eslint-parser@8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0)))(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)
-      eslint-plugin-qunit: 8.2.6(eslint@10.6.0(jiti@2.7.0))
-      eslint-plugin-simple-import-sort: 13.0.0(eslint@10.6.0(jiti@2.7.0))
-      eslint-plugin-sort-class-members: 1.22.1(eslint@10.6.0(jiti@2.7.0))
-      eslint-plugin-tsdoc: 0.5.2(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)
-      globals: 17.7.0
-      prettier: 3.8.1
-      prettier-plugin-ember-template-tag: 2.1.7(prettier@3.8.1)
-      stylelint: 17.5.0(typescript@6.0.3)
-      stylelint-config-standard: 40.0.0(stylelint@17.5.0(typescript@6.0.3))
-      stylelint-config-standard-scss: 17.0.0(postcss@8.5.26)(stylelint@17.5.0(typescript@6.0.3))
-      stylelint-scss: 7.2.0(stylelint@17.5.0(typescript@6.0.3))
-      typescript: 6.0.3
-      typescript-eslint: 8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)
-    transitivePeerDependencies:
-      - '@typescript-eslint/parser'
-      - postcss
-      - supports-color
-
   '@discourse/lint-configs@3.7.0(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))(postcss@8.5.26)(prettier@3.8.1)(stylelint@17.5.0(typescript@6.0.3))':
     dependencies:
       '@babel/core': 8.0.1
@@ -12607,10 +12566,6 @@ snapshots:
       requireindex: 1.2.0
 
   eslint-plugin-simple-import-sort@13.0.0(eslint@10.6.0(jiti@2.7.0)):
-    dependencies:
-      eslint: 10.6.0(jiti@2.7.0)
-
-  eslint-plugin-sort-class-members@1.22.1(eslint@10.6.0(jiti@2.7.0)):
     dependencies:
       eslint: 10.6.0(jiti@2.7.0)
 
