@@ -30,7 +30,6 @@ export default class Site extends RestModel {
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
     siteAttributes["isStaffWritesOnly"] = PreloadStore.get("isStaffWritesOnly");
-    siteAttributes["isArchived"] = PreloadStore.get("isArchived");
     return store.createRecord("site", siteAttributes);
   }
 

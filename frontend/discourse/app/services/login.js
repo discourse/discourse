@@ -32,8 +32,8 @@ export default class LoginService extends Service {
     if (this.site.isStaffWritesOnly) {
       return i18n("staff_writes_only_mode.signup_disabled");
     }
-    if (this.site.isArchived) {
-      return i18n("archive_mode.signup_disabled");
+    if (this.siteSettings.site_archived) {
+      return i18n("site_archived.signup_disabled");
     }
     return i18n("read_only_mode.signup_disabled");
   }

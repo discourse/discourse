@@ -125,7 +125,6 @@ class ApplicationLayoutPreloader
     @preloaded["customEmoji"] = custom_emoji
     @preloaded["isReadOnly"] = @readonly_mode.to_json
     @preloaded["isStaffWritesOnly"] = @staff_writes_only_mode.to_json
-    @preloaded["isArchived"] = @archive_mode.to_json
     @preloaded["activatedThemes"] = activated_themes_json
   end
 

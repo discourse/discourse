@@ -17,7 +17,10 @@ class SessionController < ApplicationController
 
   allow_in_readonly_mode :email_login
   allow_in_staff_writes_only_mode :create, :forgot_password, :create_login_code, :verify_login_code
-  allow_in_archive_mode :destroy
+
+  # Every SessionController action is part of auth. An archived site permits
+  # all of them so users can log in, log out, and reset passwords.
+  skip_before_action :block_if_archived
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6

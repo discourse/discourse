@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Admin::SiteSettingsController < Admin::AdminController
+  # Site setting updates are the escape hatch on an archived site — admins
+  # must be able to toggle `site_archived` back off. Everything else on admin
+  # controllers is frozen while archived.
+  allow_when_archived :update
+
   rescue_from Discourse::InvalidParameters do |e|
     render_json_error e.message, status: 422
   end

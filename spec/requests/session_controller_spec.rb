@@ -1580,6 +1580,24 @@ RSpec.describe SessionController do
       end
     end
 
+    context "when the site is archived" do
+      before { SiteSetting.site_archived = true }
+
+      it "allows a non-staff user to log in via DiscourseConnect" do
+        sso = get_sso("/a/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Bob Bobson"
+        sso.username = "bob"
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        expect(response.status).not_to eq(503)
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user).not_to eq(nil)
+      end
+    end
+
     it "does not create superfluous auth tokens when already logged in" do
       user = Fabricate(:user)
       sign_in(user)

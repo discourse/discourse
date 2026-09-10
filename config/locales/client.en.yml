@@ -2944,10 +2944,10 @@ en:
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
       signup_disabled: "Signing up is disabled while the site is in read only mode."
-    archive_mode:
-      enabled: "This site is in archive mode. Please continue to browse, but replying, likes, and other actions are disabled."
-      enabled_anonymous: "This site is in archive mode. Please continue to browse or log in, but replying, likes, and other actions are disabled."
-      signup_disabled: "Signing up is disabled while the site is in archive mode."
+    site_archived:
+      enabled: "This site is archived. Please continue to browse, but replying, likes, and other actions are disabled."
+      enabled_anonymous: "This site is archived. Please continue to browse or log in, but replying, likes, and other actions are disabled."
+      signup_disabled: "Signing up is disabled on an archived site."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
       enabled_anonymous: "This site is in staff only mode. Please continue to browse, but signing up is unavailable and only staff members can log in."
@@ -8942,14 +8942,14 @@ en:
           disable:
             title: "Disable read-only mode"
             label: "Disable read-only"
-        archive_mode:
+        site_archived:
           enable:
-            title: "Enable archive mode"
-            label: "Enable archive"
-            confirm: "Are you sure you want to enable archive mode? Users will still be able to log in and browse, but all write actions will be disabled."
+            title: "Archive site"
+            label: "Archive site"
+            confirm: "Are you sure you want to archive this site? Users will still be able to log in and browse, but all write actions will be disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
           disable:
-            title: "Disable archive mode"
-            label: "Disable archive"
+            title: "Unarchive site"
+            label: "Unarchive site"
         logs:
           none: "No logs yet…"
         columns:

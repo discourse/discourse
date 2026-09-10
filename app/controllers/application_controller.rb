@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyMixin
+  include ArchivedSiteMixin
   include ThemeResolver
   include VaryHeader
 
@@ -41,6 +42,7 @@ class ApplicationController < ActionController::Base
   before_action :clear_notifications
   around_action :with_resolved_locale
   before_action :block_if_readonly_mode
+  before_action :block_if_archived
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
@@ -259,16 +261,27 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::ReadOnly do
     unless response_body
-      key = Discourse.archive_mode_active? ? "archive_mode_enabled" : "read_only_mode_enabled"
       respond_to do |format|
-        format.json { render_json_error I18n.t(key), type: :read_only, status: 503 }
+        format.json do
+          render_json_error I18n.t("read_only_mode_enabled"), type: :read_only, status: 503
+        end
+        format.html do
+          render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+        end
+      end
+    end
+  end
+
+  rescue_from Discourse::SiteArchived do
+    unless response_body
+      respond_to do |format|
+        format.json do
+          render_json_error I18n.t("site_archived_error"), type: :site_archived, status: 503
+        end
         format.html do
           render status: :service_unavailable,
                  layout: "no_ember",
-                 template: "exceptions/read_only",
-                 locals: {
-                   message_key: key,
-                 }
+                 template: "exceptions/site_archived"
         end
       end
     end

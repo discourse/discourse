@@ -716,26 +716,6 @@ RSpec.describe StaffActionLogger do
     end
   end
 
-  describe "#log_change_archive_mode" do
-    it "creates a new record" do
-      expect { logger.log_change_archive_mode(true) }.to change { UserHistory.count }.by(1)
-
-      user_history = UserHistory.last
-
-      expect(user_history.action).to eq(UserHistory.actions[:change_archive_mode])
-      expect(user_history.new_value).to eq("t")
-      expect(user_history.previous_value).to eq("f")
-
-      expect { logger.log_change_archive_mode(false) }.to change { UserHistory.count }.by(1)
-
-      user_history = UserHistory.last
-
-      expect(user_history.action).to eq(UserHistory.actions[:change_archive_mode])
-      expect(user_history.new_value).to eq("f")
-      expect(user_history.previous_value).to eq("t")
-    end
-  end
-
   describe "log_check_personal_message" do
     subject(:log_check_personal_message) do
       described_class.new(admin).log_check_personal_message(personal_message)

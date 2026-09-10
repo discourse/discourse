@@ -1,38 +1,22 @@
 # frozen_string_literal: true
 
-RSpec.describe "Archive mode" do
+RSpec.describe "Site archived" do
   fab!(:user)
-  fab!(:category)
+  fab!(:admin)
 
-  before { Discourse.enable_readonly_mode(Discourse::ARCHIVE_MODE_KEY) }
+  before { SiteSetting.site_archived = true }
 
-  after do
-    Discourse.disable_readonly_mode(Discourse::ARCHIVE_MODE_KEY)
-    Discourse.disable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
-    Discourse.disable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
-  end
-
-  it "reports the site as read-only" do
-    expect(Discourse.readonly_mode?).to eq(true)
-    expect(Discourse.archive_mode_active?).to eq(true)
-  end
-
-  it "preloads isArchived so the frontend can swap the banner" do
-    get "/latest.json"
-    expect(response.status).to eq(200)
-    # `check_readonly_mode` runs via the ReadOnlyMixin before_action; the
-    # preloader reads @archive_mode when serving anonymous data.
-    preloaded = JSON.parse(response.body)
-    expect(preloaded).to be_present
+  it "does not toggle Discourse.readonly_mode?" do
+    expect(Discourse.readonly_mode?).to eq(false)
   end
 
   describe "write endpoints" do
     before { sign_in(user) }
 
-    it "blocks a non-allowlisted POST with the archive error message" do
+    it "blocks a non-allowlisted POST with the site-archived error message" do
       post "/drafts.json", params: { draft_key: "new_topic", sequence: 0, data: "{}" }
       expect(response.status).to eq(503)
-      expect(response.parsed_body["errors"]).to include(I18n.t("archive_mode_enabled"))
+      expect(response.parsed_body["errors"]).to include(I18n.t("site_archived_error"))
     end
   end
 
@@ -55,23 +39,34 @@ RSpec.describe "Archive mode" do
   describe "logout" do
     before { sign_in(user) }
 
-    it "allows logout (does not raise Discourse::ReadOnly)" do
+    it "allows logout" do
       delete "/session/#{user.username}.json"
       expect(response.status).not_to eq(503)
     end
   end
 
-  context "when another readonly reason is also active" do
-    before { Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY) }
+  describe "admin" do
+    before { sign_in(admin) }
 
-    it "reports archive mode as no longer the effective mode" do
-      expect(Discourse.archive_mode_active?).to eq(false)
+    it "lets an admin update site settings (so archive can be toggled off)" do
+      put "/admin/site_settings/site_archived.json", params: { site_archived: false }
+      expect(response.status).to eq(200).or eq(204)
+      expect(SiteSetting.site_archived).to eq(false)
     end
 
-    it "blocks login (the archive carve-out disappears)" do
-      token = Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
-      SiteSetting.enable_local_logins_via_email = true
-      post "/session/email-login/#{token.token}.json"
+    it "blocks other admin writes (categories, users, etc.) while archived" do
+      post "/categories.json", params: { name: "Frozen", color: "AB9364", text_color: "FFFFFF" }
+      expect(response.status).to eq(503)
+      expect(response.parsed_body["errors"]).to include(I18n.t("site_archived_error"))
+    end
+  end
+
+  context "when an operational readonly reason is also active" do
+    before { Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY) }
+    after { Discourse.disable_readonly_mode(Discourse::USER_READONLY_MODE_KEY) }
+
+    it "blocks a non-allowlisted login attempt with the read-only error (readonly takes precedence)" do
+      post "/session.json", params: { login: user.username, password: "password" }
       expect(response.status).to eq(503)
       expect(response.parsed_body["errors"]).to include(I18n.t("read_only_mode_enabled"))
     end

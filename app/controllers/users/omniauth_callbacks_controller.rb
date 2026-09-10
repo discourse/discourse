@@ -14,6 +14,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   # These are usually GET requests but some providers use POST requests
   allow_in_staff_writes_only_mode :complete
+  allow_when_archived :complete
 
   def confirm_request
     self.class.find_authenticator(params[:provider])
@@ -21,7 +22,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def complete
-    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode && !@archive_mode
+    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode
     raise Discourse::NotFound unless auth = request.env["omniauth.auth"]
 
     auth[:session] = session

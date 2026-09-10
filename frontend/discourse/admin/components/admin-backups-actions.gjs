@@ -9,6 +9,7 @@ import { i18n } from "discourse-i18n";
 export default class AdminBackupsActions extends Component {
   @service currentUser;
   @service site;
+  @service siteSettings;
   @service dialog;
 
   get rollbackDisabled() {
@@ -39,14 +40,14 @@ export default class AdminBackupsActions extends Component {
   }
 
   @action
-  toggleArchiveMode() {
-    if (!this.site.isArchived) {
+  toggleSiteArchived() {
+    if (!this.siteSettings.site_archived) {
       this.dialog.yesNoConfirm({
-        message: i18n("admin.backups.archive_mode.enable.confirm"),
-        didConfirm: () => this.#toggleArchiveMode(true),
+        message: i18n("admin.backups.site_archived.enable.confirm"),
+        didConfirm: () => this.#setSiteArchived(true),
       });
     } else {
-      this.#toggleArchiveMode(false);
+      this.#setSiteArchived(false);
     }
   }
 
@@ -62,14 +63,13 @@ export default class AdminBackupsActions extends Component {
     }
   }
 
-  async #toggleArchiveMode(enable) {
+  async #setSiteArchived(enable) {
     try {
-      await ajax("/admin/site/archive", {
+      await ajax("/admin/site_settings/site_archived", {
         type: "PUT",
-        data: { enable },
+        data: { site_archived: enable },
       });
-      this.site.set("isArchived", enable);
-      this.site.set("isReadOnly", enable);
+      this.siteSettings.site_archived = enable;
     } catch (err) {
       popupAjaxError(err);
     }
@@ -123,19 +123,19 @@ export default class AdminBackupsActions extends Component {
     />
 
     <@actions.Default
-      class="admin-backups__toggle-archive"
-      @action={{this.toggleArchiveMode}}
+      class="admin-backups__toggle-site-archived"
+      @action={{this.toggleSiteArchived}}
       @disabled={{@backups.isOperationRunning}}
-      @icon={{if this.site.isArchived "box-open" "box-archive"}}
+      @icon="box-archive"
       @label={{if
-        this.site.isArchived
-        "admin.backups.archive_mode.disable.label"
-        "admin.backups.archive_mode.enable.label"
+        this.siteSettings.site_archived
+        "admin.backups.site_archived.disable.label"
+        "admin.backups.site_archived.enable.label"
       }}
       @title={{if
-        this.site.isArchived
-        "admin.backups.archive_mode.disable.title"
-        "admin.backups.archive_mode.enable.title"
+        this.siteSettings.site_archived
+        "admin.backups.site_archived.disable.title"
+        "admin.backups.site_archived.enable.title"
       }}
     />
   </template>

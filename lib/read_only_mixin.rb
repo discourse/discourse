@@ -10,20 +10,12 @@ module ReadOnlyMixin
       @actions_allowed_in_staff_writes_only_mode ||= []
     end
 
-    def actions_allowed_in_archive_mode
-      @actions_allowed_in_archive_mode ||= []
-    end
-
     def allow_in_readonly_mode(*actions)
       actions_allowed_in_readonly_mode.concat(actions.map(&:to_sym))
     end
 
     def allow_in_staff_writes_only_mode(*actions)
       actions_allowed_in_staff_writes_only_mode.concat(actions.map(&:to_sym))
-    end
-
-    def allow_in_archive_mode(*actions)
-      actions_allowed_in_archive_mode.concat(actions.map(&:to_sym))
     end
 
     def allowed_in_readonly_mode?(action)
@@ -33,29 +25,18 @@ module ReadOnlyMixin
     def allowed_in_staff_writes_only_mode?(action)
       actions_allowed_in_staff_writes_only_mode.include?(action.to_sym)
     end
-
-    # Archive mode allows the same auth-related actions as staff-writes-only
-    # (login, password reset, oauth callback) plus any archive-specific extras.
-    def allowed_in_archive_mode?(action)
-      action = action.to_sym
-      actions_allowed_in_staff_writes_only_mode.include?(action) ||
-        actions_allowed_in_archive_mode.include?(action)
-    end
   end
 
   def check_readonly_mode
     if Discourse.readonly_mode?
       @readonly_mode = true
       @staff_writes_only_mode = false
-      @archive_mode = Discourse.archive_mode_active?
     elsif Discourse.staff_writes_only_mode?
       @readonly_mode = true
       @staff_writes_only_mode = true
-      @archive_mode = false
     else
       @readonly_mode = false
       @staff_writes_only_mode = false
-      @archive_mode = false
     end
   end
 
@@ -71,16 +52,11 @@ module ReadOnlyMixin
     self.class.allowed_in_staff_writes_only_mode?(action_name)
   end
 
-  def allowed_in_archive_mode?
-    self.class.allowed_in_archive_mode?(action_name)
-  end
-
   def block_if_readonly_mode
     return if request.get? || request.head?
     if @staff_writes_only_mode && (allowed_in_staff_writes_only_mode? || current_user&.staff?)
       return
     end
-    return if @archive_mode && allowed_in_archive_mode?
     return if !@readonly_mode || allowed_in_readonly_mode?
     raise Discourse::ReadOnly
   end

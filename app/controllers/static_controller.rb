@@ -9,8 +9,9 @@ class StaticController < ApplicationController
 
   before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]
 
-  # `enter` is the post-login redirect helper; it performs no writes.
-  allow_in_readonly_mode :enter
+  # `enter` is the post-login redirect helper; it performs no writes and must
+  # work on archived sites so login can complete.
+  allow_when_archived :enter
 
   PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup]
   MODAL_PAGES = %w[password_reset signup]
