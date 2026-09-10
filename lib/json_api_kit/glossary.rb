@@ -36,20 +36,24 @@ module JsonApiKit
 
     def initialize(rules)
       @rules = rules
+      @declared_names = {}
+      @member_names = {}
     end
 
     def declared_name(name)
-      rules.reduce(name) { |result, rule| rule.declared_name(result) }
+      declared_names[name] ||= rules.reduce(name) { |result, rule| rule.declared_name(result) }
     rescue Correction => correction
       raise NotAMemberName.new(name, member_name(correction.name))
     end
 
     def member_name(name)
-      rules.reverse_each.reduce(name) { |member, rule| rule.member_name(member) }
+      member_names[name] ||= rules
+        .reverse_each
+        .reduce(name) { |result, rule| rule.member_name(result) }
     end
 
     private
 
-    attr_reader :rules
+    attr_reader :rules, :declared_names, :member_names
   end
 end
