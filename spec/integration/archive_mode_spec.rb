@@ -30,6 +30,11 @@ RSpec.describe "Site archived" do
       expect(session[:current_user_id]).to eq(user.id)
     end
 
+    it "allows requesting an email login link (POST /u/email-login)" do
+      post "/u/email-login.json", params: { login: user.username }
+      expect(response.status).not_to eq(503)
+    end
+
     it "allows the post-login /login redirect helper" do
       post "/login", params: { redirect: "/" }
       expect(response).to redirect_to("/")
