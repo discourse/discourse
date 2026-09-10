@@ -8,6 +8,7 @@ class CiProcessProfile
     @proc_root = proc_root
     @clock_ticks = clock_ticks
     @cpu_ticks = { ruby: 0, chromium: 0, node: 0, postgres: 0, other: 0 }
+    @chromium_ticks = { browser: 0, renderer: 0, gpu: 0, utility: 0, zygote: 0, other: 0 }
     @last_ticks = {}
     @active = {}
     @counts = {
@@ -19,6 +20,7 @@ class CiProcessProfile
       missed_process_observations: 0,
       vanished_processes: 0,
       errors: 0,
+      classification_read_errors: 0,
     }
     @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     @initial_sample = true
@@ -53,8 +55,26 @@ class CiProcessProfile
       raise ArgumentError if before[:pid] != pid
       identities[pid] = [pid, before[:start_ticks]]
       next if File.binread(File.join(directory, "cgroup")) != @cgroup
+      process_bucket = bucket(before[:comm])
+      if process_bucket == :other
+        begin
+          executable = File.basename(File.readlink(File.join(directory, "exe")))
+          process_bucket = :ruby if bucket(executable) == :ruby
+        rescue SystemCallError
+          @counts[:classification_read_errors] += 1
+        end
+      end
+      chromium_type = :other
+      if process_bucket == :chromium && before[:comm] != "chrome_crashpad"
+        begin
+          chromium_type = chromium_bucket(File.binread(File.join(directory, "cmdline")))
+        rescue SystemCallError
+          @counts[:classification_read_errors] += 1
+        end
+      end
       current = parse_stat(File.binread(File.join(directory, "stat")))
-      if current[:pid] != pid || current[:start_ticks] != before[:start_ticks]
+      if current[:pid] != pid || current[:start_ticks] != before[:start_ticks] ||
+           current[:comm] != before[:comm]
         @counts[:missed_process_observations] += 1
         next
       end
@@ -62,9 +82,10 @@ class CiProcessProfile
       identity = [pid, current[:start_ticks]]
       @counts[:matched_process_observations] += 1
       previous_ticks = @last_ticks[identity]
+      delta_ticks = 0
       if previous_ticks
         if current[:cpu_ticks] >= previous_ticks
-          @cpu_ticks[bucket(current[:comm])] += current[:cpu_ticks] - previous_ticks
+          delta_ticks = current[:cpu_ticks] - previous_ticks
         else
           @counts[:errors] += 1
         end
@@ -73,8 +94,10 @@ class CiProcessProfile
         @counts[:late_baseline_processes] += 1 if !@initial_sample
       else
         @counts[:new_processes] += 1
-        @cpu_ticks[bucket(current[:comm])] += current[:cpu_ticks]
+        delta_ticks = current[:cpu_ticks]
       end
+      @cpu_ticks[process_bucket] += delta_ticks
+      @chromium_ticks[chromium_type] += delta_ticks if process_bucket == :chromium
       @last_ticks[identity] = [previous_ticks || 0, current[:cpu_ticks]].max
       @active[identity] = pid
     rescue Errno::ENOENT, Errno::ESRCH
@@ -98,6 +121,8 @@ class CiProcessProfile
       elapsed_seconds: Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at,
       cpu_seconds:
         @cpu_ticks.transform_values { |ticks| @available ? ticks.fdiv(@clock_ticks) : nil },
+      chromium_cpu_seconds:
+        @chromium_ticks.transform_values { |ticks| @available ? ticks.fdiv(@clock_ticks) : nil },
       **@counts,
       short_lived_processes_may_be_unobserved: true,
     }
@@ -133,6 +158,20 @@ class CiProcessProfile
     else
       :other
     end
+  end
+
+  def chromium_bucket(cmdline)
+    arguments = cmdline.split("\0")
+    return :other if arguments.empty?
+    types = arguments.drop(1).select { |argument| argument.start_with?("--type=") }
+    return :browser if types.empty?
+    return :other if types.length != 1
+    {
+      "--type=renderer" => :renderer,
+      "--type=gpu-process" => :gpu,
+      "--type=utility" => :utility,
+      "--type=zygote" => :zygote,
+    }.fetch(types.first, :other)
   end
 end
 

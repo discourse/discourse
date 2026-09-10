@@ -58,6 +58,10 @@ module SystemDrivers
       colorScheme: example.metadata[:color_scheme],
     }
 
+    if ENV["PLAYWRIGHT_USE_DEV_SHM"] == "1"
+      base_options[:ignoreDefaultArgs] = ["--disable-dev-shm-usage"]
+    end
+
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
       base_options[:browser] = :remote
       base_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
@@ -115,6 +119,7 @@ module SystemDrivers
       --remote-allow-origins=*
       --disable-smooth-scrolling
     ]
+    base_args.delete("--disable-dev-shm-usage") if ENV["PLAYWRIGHT_USE_DEV_SHM"] == "1"
 
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
       base_args << "--auto-open-devtools-for-tabs"
