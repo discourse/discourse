@@ -1,0 +1,179 @@
+# frozen_string_literal: true
+
+RSpec.describe Migrations::Converters::MarkdownEngine::Context do
+  subject(:context) { described_class.new(bundle:, config:) }
+
+  let(:bundle) { Migrations::Converters::MarkdownEngine::Bundle.load_or_build }
+  let(:config) do
+    Migrations::Converters::MarkdownEngine::Config.new(
+      category_slugs: %w[support],
+      tag_names: %w[bug],
+      custom_emoji_names: %w[partyparrot],
+    )
+  end
+
+  after { context.close }
+
+  def scan_one(raw)
+    context.scan([{ id: 1, raw: }]).first
+  end
+
+  it "rebuilds lazily after a reset" do
+    expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
+
+    context.reset!
+    # The engine failure that triggered the reset cost its body; the next
+    # body gets a fresh context transparently.
+    expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
+  end
+
+  it "widens the isolate's ceiling when a scan asks for more time" do
+    expect(scan_one("hi @sam").dig("blocks", 0, "mentions")).to eq(["@sam"])
+
+    result = context.scan([{ id: 1, raw: "hi @sam" }], timeout_ms: 30_000).first
+    expect(result.dig("blocks", 0, "mentions")).to eq(["@sam"])
+  end
+
+  # A caller counting a per-body deadline down lowers the ceiling on every
+  # call, so a lower ceiling must not cost an isolate: MiniRacer fixes its
+  # timeout at construction, and rebuilding evaluates the whole bundle again.
+  it "keeps one isolate while the ceiling counts down" do
+    context.scan([{ id: 1, raw: "warm up" }], timeout_ms: 5_000)
+
+    allow(MiniRacer::Context).to receive(:new).and_call_original
+
+    [2_000, 1_000, 500].each do |timeout_ms|
+      result = context.scan([{ id: 1, raw: "hi @sam" }], timeout_ms:).first
+      expect(result.dig("blocks", 0, "mentions")).to eq(["@sam"])
+    end
+
+    expect(MiniRacer::Context).not_to have_received(:new)
+  end
+
+  it "terminates a body that outruns a ceiling below the isolate's" do
+    context.scan([{ id: 1, raw: "warm up" }], timeout_ms: 5_000)
+
+    # No post is guaranteed to parse forever, so the scan entry point is
+    # replaced with one that does — the isolate's own ceiling is five seconds
+    # here, and only the enforced 200 ms can end this call sooner.
+    context.instance_variable_get(:@context).eval("__scanPosts = () => { while (true) {} };")
+
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    expect { context.scan([{ id: 1, raw: "x" }], timeout_ms: 200) }.to raise_error(
+      MiniRacer::ScriptTerminatedError,
+    )
+    expect(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).to be < 2
+  end
+
+  # Empty-destination links once looped the label-hit counter forever
+  # (indexOf with an empty needle never advances), burning the full parse
+  # timeout on bodies as small as four bytes.
+  it "scans empty-destination and empty-label links in ordinary time" do
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    ["[]()", "[a]()", "[](https://)", "[Uploading: t.jpg...]()", "sure i will ;[]())"].each do |raw|
+      expect { scan_one(raw) }.not_to raise_error
+    end
+    expect(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).to be < 2
+  end
+
+  it "resolves hashtags across Unicode composition forms, but not compat forms" do
+    composed = "café"
+    decomposed = "café"
+    unicode_context =
+      described_class.new(
+        bundle:,
+        config: Migrations::Converters::MarkdownEngine::Config.new(tag_names: [composed, "fix"]),
+      )
+
+    begin
+      # NFC + downcase on both sides (Ruby's NameNormalizer, the JS lookup):
+      # either composition form in a post denotes the same configured name.
+      [composed, decomposed, "CafÉ"].each do |spelling|
+        result = unicode_context.scan([{ id: 1, raw: "tagged ##{spelling}" }]).first
+        expect(result.dig("blocks", 0, "hashtags", 0, "type")).to eq("tag"),
+        "##{spelling.inspect} did not resolve"
+      end
+
+      # NFC deliberately keeps compatibility characters distinct (NameNormalizer
+      # is NFC, not NFKC): the `ﬁ` ligature does not denote the `fix` tag.
+      result = unicode_context.scan([{ id: 1, raw: "tagged #ﬁx" }]).first
+      expect(result.dig("blocks", 0, "hashtags").to_a).to be_empty
+    ensure
+      unicode_context.close
+    end
+  end
+
+  it "extracts mentions with the block's line map" do
+    result = scan_one("a paragraph\n\nwith @sam here")
+    expect(result["blocks"]).to contain_exactly(
+      a_hash_including("mentions" => ["@sam"], "map" => [2, 3]),
+    )
+  end
+
+  it "shields code spans and code blocks the way core does" do
+    result = scan_one("`@code` and @prose\n\n```\n@fence\n```")
+    expect(result["blocks"].map { |block| block["mentions"] }).to eq([["@prose"]])
+    expect(result["blocks"].first["code"]).to eq(1)
+    expect(result["blockTokens"]).to include(a_hash_including("type" => "fence", "map" => [2, 5]))
+  end
+
+  it "resolves hashtags against the source name sets only" do
+    result = scan_one("#support #bug #unknown")
+    expect(result["blocks"].first["hashtags"]).to contain_exactly(
+      { "type" => "category", "slug" => "support" },
+      { "type" => "tag", "slug" => "bug" },
+    )
+  end
+
+  it "keeps unresolved short upload URLs as the construct value" do
+    result = scan_one("![pic|100x100](upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.png)")
+    expect(result["blocks"].first["images"]).to eq(%w[upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.png])
+  end
+
+  it "collects linkified bare domains and explicit links" do
+    result = scan_one("see meta.example.com/t/topic/123 and [x](https://example.com/page)")
+    expect(result["blocks"].first["links"]).to eq(
+      [
+        # A linkified bare domain is its own label but exists once in the raw,
+        # so it contributes no label occurrences.
+        { "href" => "http://meta.example.com/t/topic/123", "labelHits" => 0 },
+        { "href" => "https://example.com/page", "labelHits" => 0 },
+      ],
+    )
+  end
+
+  it "counts a self-link's destination appearing in its label" do
+    result = scan_one("[https://example.com/page](https://example.com/page)")
+    expect(result["blocks"].first["links"]).to eq(
+      [{ "href" => "https://example.com/page", "labelHits" => 1 }],
+    )
+  end
+
+  it "records quote extents from the mapped bbcode token" do
+    result = scan_one(%{[quote="sam, post:1, topic:2"]\nquoted @sam\n[/quote]})
+    expect(result["blockTokens"]).to include(
+      a_hash_including("type" => "bbcode_open", "tag" => "blockquote", "map" => [0, 2]),
+    )
+    expect(result["blocks"].first).to include("mentions" => ["@sam"], "map" => [1, 2])
+  end
+
+  it "recognizes standard, unicode, and source custom emoji" do
+    result = scan_one(":smile: :partyparrot: 😀 :not_an_emoji:")
+    expect(result["blocks"].first["emojis"]).to eq(%w[smile partyparrot grinning_face])
+  end
+
+  it "scrubs invalid encoding instead of raising" do
+    raw = "hi @sam \xC3".b
+    expect(scan_one(raw)["blocks"].first["mentions"]).to eq(["@sam"])
+  end
+
+  it "returns post ids with their results" do
+    results = context.scan([{ id: 7, raw: "@sam" }, { id: 9, raw: "plain" }])
+    expect(results.map { |result| result["id"] }).to eq([7, 9])
+  end
+
+  it "refuses to scan after being discarded" do
+    context.discard!
+    expect { context.scan([{ id: 1, raw: "x" }]) }.to raise_error(described_class::DiscardedError)
+  end
+end

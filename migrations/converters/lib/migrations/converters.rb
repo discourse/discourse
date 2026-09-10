@@ -6,7 +6,7 @@ module Migrations
   module Converters
     # Directories under the gem's converters root that are framework
     # infrastructure rather than converter implementations.
-    NON_CONVERTER_DIRS = %w[adapter cli].freeze
+    NON_CONVERTER_DIRS = %w[adapter cli markdown_engine].freeze
 
     def self.root_path
       @root_path ||= File.expand_path("../..", __dir__)
@@ -80,9 +80,16 @@ module Migrations
           # `Migrations::Converters::Discourse::Users`. This is required by
           # `Migrations::Conversion::Base#steps`, which discovers steps via the
           # converter module's constants.
+          #
+          # A directory with a same-named `.rb` sibling is an explicit namespace
+          # (e.g. `discourse/markdown_scanner/` + `markdown_scanner.rb`) and keeps
+          # its nesting, so a converter can group a larger component into files.
           all.each_value do |converter_path|
             Dir[File.join(converter_path, "**", "*")].each do |subdir|
-              loader.collapse(subdir) if File.directory?(subdir)
+              next unless File.directory?(subdir)
+              next if File.exist?("#{subdir}.rb")
+
+              loader.collapse(subdir)
             end
           end
 

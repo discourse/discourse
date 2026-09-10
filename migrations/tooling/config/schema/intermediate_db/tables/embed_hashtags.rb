@@ -28,6 +28,9 @@ Migrations::Tooling::Schema.table :embed_hashtags do
   add_column :hashtag_type, :integer, enum: :hashtag_type
   add_column :target_id, :numeric
   add_column :name, :text, required: true
+  # The verbatim source snippet, restored unchanged when the importer cannot
+  # map the embed to a destination record (the round-trip fallback).
+  add_column :original_markdown, :text
 
   index :owner_type, :owner_id
 end

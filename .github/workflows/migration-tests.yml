@@ -36,6 +36,12 @@ jobs:
         with:
           fetch-depth: 1
 
+      # The markdown engine specs build the parser bundle, which needs the
+      # checkout's frontend dependencies (vendored libraries, the
+      # pretty-text-processor build) - node, not Rails.
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
       - name: RSpec (isolated, no Rails)
         # Each gem uses its own Gemfile (not the app's), so Rails is not on the
         # load path. This proves the gems work standalone.

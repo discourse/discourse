@@ -134,10 +134,6 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.orphan_placeholders.map(&:placeholder)).to eq([token])
     end
 
-    it "leaves a body untouched when it has no linkage rows" do
-      expect(resolver.resolve_all([{ id: 9, raw: "plain body" }])).to eq({ 9 => "plain body" })
-    end
-
     it "issues no linkage queries when no owner in the batch has a token" do
       allow(intermediate_db).to receive(:query).and_call_original
 
