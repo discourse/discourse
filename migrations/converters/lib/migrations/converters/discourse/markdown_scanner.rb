@@ -37,10 +37,11 @@ module Migrations
       #     `&commat;bob` yields a token whose bytes appear nowhere;
       #   * names are counted folded, at least as coarsely as the engine folds
       #     them ({FoldedText}). Both sides fold through
-      #     `NameNormalizer.normalize`, which also merges the two lowercase
+      #     `FoldedText.fold`, which also merges the two lowercase
       #     sigmas: JavaScript's `toLowerCase` and Ruby's `downcase` disagree on
       #     a word-final `Σ`, and a fold coarser than the engine's is what the
-      #     argument above needs.
+      #     argument above needs. This comparison only locates occurrences;
+      #     identity lookups and embed recording preserve the distinction.
       #
       # Two byte-level exclusions drop URL hits anyway, because no live link
       # can spell them:

@@ -32,6 +32,13 @@ RSpec.describe Migrations::Converters::Discourse::MentionClassifier do
   describe "group mentions" do
     subject(:classifier) { described_class.new(group_names: %w[Admins Moderators]) }
 
+    it "keeps a user distinct from a group with the other lowercase sigma" do
+      classifier = described_class.new(group_names: %w[κοσμος])
+
+      expect(classifier.call("κοσμος")).to eq(enums::MentionType::GROUP)
+      expect(classifier.call("κοσμοσ")).to eq(enums::MentionType::USER)
+    end
+
     it "recognizes a source group name, case-insensitively" do
       expect(classifier.call("admins")).to eq(enums::MentionType::GROUP)
       expect(classifier.call("Moderators")).to eq(enums::MentionType::GROUP)

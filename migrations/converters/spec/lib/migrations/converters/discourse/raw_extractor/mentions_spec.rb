@@ -14,11 +14,10 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     context "with a name ending in a capital sigma" do
-      # JavaScript folds a word-final Σ to ς and Ruby to σ; the engine reports
-      # the mention verbatim, but the gate and the counter fold it and must not
-      # miss the spelling the engine's own fold produces.
+      # Core resolves the verbatim mention with Ruby's downcase, which maps Σ
+      # to σ even at the end of a word.
       let(:mention_names) do
-        Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("Οδυσσευς")])
+        Migrations::CompactStringSet.new([Migrations::NameNormalizer.normalize("Οδυσσευσ")])
       end
 
       it "extracts the mention whatever case the author wrote it in" do

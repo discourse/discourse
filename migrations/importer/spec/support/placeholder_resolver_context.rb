@@ -22,6 +22,7 @@ class FakePlaceholderMaps
     category_slug_path
     category_id
     tag_name
+    tag_id
     badge
     emoji_name
   ].each { |name| define_method(name) { |key| (@lookups[name] || {})[key] } }

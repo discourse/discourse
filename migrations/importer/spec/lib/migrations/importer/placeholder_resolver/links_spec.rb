@@ -120,11 +120,11 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
 
     it "renders a tag target, honoring an import-time rename" do
-      maps = FakePlaceholderMaps.new(tag_name: { 3 => "shipped" })
+      maps = FakePlaceholderMaps.new(tag_name: { 3 => "shipped" }, tag_id: { 3 => 30 })
 
       resolved = render({ url: "/tag/release", target_type: link_target::TAG, target_id: 3 }, maps:)
 
-      expect(resolved).to eq("x https://dest.example.com/tag/shipped y")
+      expect(resolved).to eq("x https://dest.example.com/tag/shipped/30 y")
     end
 
     it "renders a category target as its slug path plus the destination id" do
@@ -141,6 +141,53 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = render({ url: "/c/x/2", target_type: link_target::CATEGORY, target_id: 2 }, maps:)
 
       expect(resolved).to eq("x https://dest.example.com/c/support/billing/20 y")
+    end
+
+    it "remaps a canonical tag link by id even when its old slug names another tag" do
+      create_tag(3, "release")
+      create_tag(42, "support")
+      maps =
+        FakePlaceholderMaps.new(
+          tag_name: {
+            3 => "release",
+            42 => "support-renamed",
+          },
+          tag_id: {
+            3 => 30,
+            42 => 420,
+          },
+        )
+      token =
+        create_embed(
+          :link,
+          url: "/tag/release/42/l/latest",
+          target_type: link_target::TAG,
+          target_id: 42,
+          target_suffix: "/l/latest",
+          original_markdown: '[Support](/tag/release/42/l/latest "title")',
+          url_offset: 10,
+        )
+
+      expect(resolve(token, maps:)).to eq(
+        '[Support](https://dest.example.com/tag/support-renamed/420/l/latest "title")',
+      )
+    end
+
+    it "restores a canonical tag link when the destination id is unavailable" do
+      maps = FakePlaceholderMaps.new(tag_name: { 42 => "support-renamed" })
+      token =
+        create_embed(
+          :link,
+          url: "/tag/support/42",
+          target_type: link_target::TAG,
+          target_id: 42,
+          original_markdown: "[Support](/tag/support/42)",
+          url_offset: 10,
+        )
+      resolver = described_class.new(intermediate_db, maps, owner_type:)
+
+      expect(resolver.resolve_all([{ id: 1, raw: token }])[1]).to eq("[Support](/tag/support/42)")
+      expect(resolver.unresolved_embeds.map(&:entity_id)).to eq([42])
     end
 
     it "reattaches a category's filter tail after the destination id" do
@@ -512,7 +559,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       create_tag(3, "release")
       create_tag(4, "releases")
       Migrations::Database::IntermediateDB::TagSynonym.create(synonym_tag_id: 4, target_tag_id: 3)
-      maps = FakePlaceholderMaps.new(tag_name: { 3 => "shipped" })
+      maps = FakePlaceholderMaps.new(tag_name: { 3 => "shipped" }, tag_id: { 3 => 30 })
 
       resolved =
         render(
@@ -520,7 +567,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
           maps:,
         )
 
-      expect(resolved).to eq("x https://dest.example.com/tag/shipped y")
+      expect(resolved).to eq("x https://dest.example.com/tag/shipped/30 y")
     end
 
     # Reporting: an internal link that can't be resolved falls back to the source URL

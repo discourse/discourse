@@ -111,16 +111,10 @@ module Migrations
               CATEGORY_SLUG_SEGMENT = %r{(?!#{CATEGORY_TAIL})/#{SEGMENT}}
               private_constant :CATEGORY_SLUG_SEGMENT
 
-              # `/c/<slug-path>/<id>`, or `/c/<id>` with no slug. Anchored on
-              # the id, so a category's filter tail (`/l/latest`) stays in the
-              # suffix instead of reading as more slug. The slug path is lazy,
-              # so the id is the first numeric segment ending a path component:
-              # greedy, `/c/support/6/l/latest` would fold the tail into the
-              # slug, and `/c/2015/6` would read slug `2015` rather than id 6.
-              # Being unable to run past the tail also keeps an intersection
-              # URL's tag id out of the category.
+              # Core takes the final segment before a filter tail as the id;
+              # earlier numeric segments can be category slugs.
               CATEGORY_ID =
-                %r{\A/(?:c|category)/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*?)/)?(?<id>#{Base::ID_PATTERN})#{ID_END}}
+                %r{\A/(?:c|category)/(?:(?<path>#{SEGMENT}#{CATEGORY_SLUG_SEGMENT}*)/)?(?<id>#{Base::ID_PATTERN})(?=(?:#{FORMAT})?(?:#{CATEGORY_TAIL}|/?(?:[?#]|\z)))}
               private_constant :CATEGORY_ID
 
               # The legacy id-less form, whose segments join with `:` into a
@@ -141,6 +135,12 @@ module Migrations
               # that name.
               TAG = %r{\A/tags?/(?!(?:c|intersection)/)(?<name>#{SEGMENT})}
               private_constant :TAG
+
+              # The slug is decorative in canonical tag routes; the id wins
+              # even when the slug names a different source tag.
+              TAG_ID =
+                %r{\A/(?:tag/|tags/(?!(?:c|intersection)/))(?:#{SEGMENT}/)?(?<id>#{Base::ID_PATTERN})#{ID_END}}
+              private_constant :TAG_ID
 
               # Where a category+tag route may continue after the tag name.
               # Anything else — most importantly a trailing numeric segment,
@@ -262,6 +262,10 @@ module Migrations
                 end
 
                 def tag(rest)
+                  if (match = TAG_ID.match(rest))
+                    return target(match, :tag, target_id: match[:id].to_i)
+                  end
+
                   match = TAG.match(rest)
                   return nil unless match
 

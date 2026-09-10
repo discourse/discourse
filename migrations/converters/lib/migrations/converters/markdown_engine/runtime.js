@@ -31,10 +31,12 @@ __Ruby = {
     return null;
   },
   hashtag_lookup(slug, cookingUserId, typesInPriorityOrder) {
-    // The counterpart of Ruby's NameNormalizer, which the injected name sets
-    // went through: NFC, downcase, and both lowercase sigmas as one (see that
-    // module for why the sigma matters).
-    const ref = slug.normalize("NFC").toLowerCase().replace(/\u03c2/g, "\u03c3");
+    // Ruby lowercases Σ to σ regardless of position. Map the capital first
+    // to avoid JavaScript's contextual mapping, preserving literal ς.
+    const ref = slug
+      .normalize("NFC")
+      .replace(/\u03a3/g, "\u03c3")
+      .toLowerCase();
     // `#slug::type` forces one type; `#parent:child` addresses a category by
     // its child slug; `ref` keeps the typed form, like the host lookup service.
     // Only slug, type and ref shape the tokens a scan reads.
@@ -46,7 +48,11 @@ __Ruby = {
         // Ruby's split(":") drops trailing empty segments, so core resolves a
         // dangling `#general:` to the `general` category; JS split keeps the
         // empty tail, hence the filter.
-        const slugPart = name.split(":").filter((part) => part !== "").pop() || "";
+        const slugPart =
+          name
+            .split(":")
+            .filter((part) => part !== "")
+            .pop() || "";
         if (slugPart !== "" && __scanConfig.categorySlugs[slugPart]) {
           // `text` becomes the rendered label, which no scan reads.
           return {

@@ -4,6 +4,31 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
   include_context "with placeholder resolver"
 
   describe "resolving recorded names to source original_ids" do
+    it "resolves distinct sigma usernames to their own users" do
+      create_user(10, "κοσμος")
+      create_user(20, "κοσμοσ")
+      maps =
+        FakePlaceholderMaps.new(user: { 10 => { username: "first" }, 20 => { username: "second" } })
+      tokens =
+        %w[κοσμος κοσμοσ ΚΟΣΜΟΣ].map do |name|
+          create_embed(:mention, mention_type: mention_type::USER, name:)
+        end
+      quote = create_embed(:quote, quoted_username: "κοσμος")
+      link = create_embed(:link, target_type: link_target::USER, target_name: "κοσμοσ")
+
+      expect(resolve([*tokens, quote, link].join(" "), maps:)).to eq(
+        '@first @second @second [quote="first"] https://dest.example.com/u/second',
+      )
+    end
+
+    it "leaves a mention unresolved when only the other sigma username exists" do
+      create_user(20, "κοσμοσ")
+      maps = FakePlaceholderMaps.new(user: { 20 => { username: "second" } })
+      token = create_embed(:mention, mention_type: mention_type::USER, name: "κοσμος")
+
+      expect(resolve(token, maps:)).to eq("@κοσμος")
+    end
+
     it "maps a quoted username to the user's original_id, honoring an import-time rename" do
       Migrations::Database::IntermediateDB::User.create(
         original_id: 5,

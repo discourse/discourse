@@ -9,6 +9,12 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::FoldedText do
   end
 
   describe ".fold" do
+    it "compares sigma spellings broadly only for locating raw occurrences" do
+      expect(%w[ΚΟΣΜΟΣ κοσμος κοσμοσ].map { |name| described_class.fold(name) }).to eq(
+        %w[κοσμοσ κοσμοσ κοσμοσ],
+      )
+    end
+
     it "downcases" do
       expect(described_class.fold("@Bob")).to eq("@bob")
       expect(described_class.fold(":MYEMOJI:")).to eq(":myemoji:")

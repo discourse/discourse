@@ -21,7 +21,11 @@ module Migrations
           # @return [String] the folded spelling
           def self.fold(text)
             # NFC leaves ASCII alone, and most bodies are ASCII.
-            text.ascii_only? ? text.downcase : Migrations::NameNormalizer.normalize(text)
+            if text.ascii_only?
+              text.downcase
+            else
+              Migrations::NameNormalizer.normalize(text).tr("ς", "σ")
+            end
           end
 
           # @param raw [String] the post body

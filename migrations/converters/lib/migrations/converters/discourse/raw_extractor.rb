@@ -113,6 +113,8 @@ module Migrations
           on_slow_parse: nil
         )
           @embeds = embeds
+          @mention_names = mention_names
+          @hashtag_names = hashtag_names
           @mention_classifier = mention_classifier
           @markdown_engine = markdown_engine
           @internal_link_hosts = internal_link_hosts
@@ -317,6 +319,10 @@ module Migrations
               external_host: ownership,
             )
           when Markbridge::AST::Mention
+            unless @mention_names.include?(Migrations::NameNormalizer.normalize(node.name))
+              return nil
+            end
+
             @embeds.mention(
               mention_type: @mention_classifier.call(node.name),
               name: node.name,
@@ -338,6 +344,10 @@ module Migrations
               label_url_offset: node.label_url_offset,
             )
           when MarkdownScanner::HashtagReference
+            unless @hashtag_names.include?(Migrations::NameNormalizer.normalize(node.name))
+              return nil
+            end
+
             @embeds.hashtag(
               hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type],
               name: node.name,

@@ -7,13 +7,10 @@ module Migrations
   # converter and the importer, so the two sides can't disagree on what counts
   # as the same name.
   module NameNormalizer
-    # JavaScript's `toLowerCase` writes a word-final capital sigma as `ς`,
-    # Ruby's `downcase` as `σ`. The markdown engine folds names in JavaScript
-    # and the counting that positions its tokens folds in Ruby, so both sigmas
-    # collapse to one here (and in the engine's lookup shim) or the two
-    # spellings would never meet.
+    # Lowercase final and medial sigmas are distinct identity keys in core.
+    # Broader comparisons for locating markdown tokens belong in the scanner.
     def self.normalize(name)
-      name.unicode_normalize.downcase.tr("ς", "σ")
+      name.unicode_normalize.downcase
     end
   end
 end

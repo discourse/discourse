@@ -5,8 +5,9 @@ RSpec.describe Migrations::NameNormalizer do
     expect(described_class.normalize("Café")).to eq("café")
   end
 
-  it "folds a word-final capital sigma the same way as the lowercase medial one" do
-    # JavaScript lowercases the final Σ to ς, Ruby to σ; both sides must meet.
-    expect(described_class.normalize("ΟΔΥΣΣΕΥΣ")).to eq(described_class.normalize("οδυσσευς"))
+  it "preserves the distinct sigma identity keys used by core" do
+    expect(%w[ΚΟΣΜΟΣ κοσμος κοσμοσ].map { |name| described_class.normalize(name) }).to eq(
+      %w[κοσμοσ κοσμος κοσμοσ],
+    )
   end
 end

@@ -44,6 +44,15 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
   end
 
   describe "real candidates" do
+    it "preserves sigma identity distinctions when probing known names" do
+      names = Migrations::CompactStringSet.new(%w[κοσμος])
+      gate = described_class.new(constructs: [scanner::Constructs::Mention.new(names:)])
+
+      expect(gate.classify("@κοσμος")).to eq(:engine)
+      expect(gate.classify("@κοσμοσ")).to eq(:none)
+      expect(gate.classify("@ΚΟΣΜΟΣ")).to eq(:none)
+    end
+
     it "routes only metadata-bearing quote openers to :engine" do
       # A plain [quote] block holds no user/post/topic fields — nothing any
       # extraction path defers (shown in the engine-scanner spec) — while an

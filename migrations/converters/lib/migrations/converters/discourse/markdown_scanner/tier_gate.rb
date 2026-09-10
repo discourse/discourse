@@ -270,8 +270,8 @@ module Migrations
 
           # Whether some prefix of the text after a trigger folds to one of the
           # construct's names. An ASCII window folds by downcasing it whole; a
-          # multibyte one grows its prefixes by grapheme cluster, as
-          # {FoldedText} defines folding.
+          # multibyte one grows its prefixes by grapheme cluster, preserving
+          # the distinctions in the source's identity keys.
           def tracked_prefix?(raw, from, probe)
             max_bytes = probe.names.max_byte_length
             return false if max_bytes == 0
@@ -300,7 +300,7 @@ module Migrations
             folded = +""
             offset = from
             window.each_grapheme_cluster do |cluster|
-              folded << FoldedText.fold(cluster)
+              folded << Migrations::NameNormalizer.normalize(cluster)
               offset += cluster.bytesize
               break if folded.bytesize > max_bytes
               next unless probe.names.include?(folded)

@@ -260,6 +260,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(target_id: 6, target_name: nil)
     end
 
+    it "reads the trailing category id after a numeric subcategory slug" do
+      link, = link_for("[x](/c/parent/123/456/l/latest)")
+
+      expect(link).to include(target_id: 456, target_name: nil, target_suffix: "/l/latest")
+    end
+
     it "keeps a category link's query string in the suffix" do
       link, = link_for("[x](/c/support/6?ascending=false)")
 
@@ -344,6 +350,17 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link_for("[x](/tags/release)").first).to include(
         target_type: enums::LinkTarget::TAG,
         target_name: "release",
+      )
+    end
+
+    it "defers a canonical tag link by id, keeping only the filter tail as its suffix" do
+      link, = link_for("[x](/tag/release/42/l/latest)")
+
+      expect(link).to include(
+        target_type: enums::LinkTarget::TAG,
+        target_id: 42,
+        target_name: nil,
+        target_suffix: "/l/latest",
       )
     end
 

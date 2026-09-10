@@ -32,7 +32,7 @@ module Migrations
     #     post_number: }`, `badge(id)` => `{ id:, slug: }`
     #   * `upload(id)` => `{ short_url:, url: }`, the destination upload's
     #     `upload://` spelling and its absolute URL
-    #   * `group_name(id)`, `tag_name(id)`, `topic_id(id)`, `category_id(id)`,
+    #   * `group_name(id)`, `tag_name(id)`, `tag_id(id)`, `topic_id(id)`, `category_id(id)`,
     #     `category_slug_path(id)` (`"slug"` or `"parent:child"`)
     #   * `upload_markdown(id)`, `poll_markdown(id)`, `event_markdown(id)`
     #   * `emoji_name(name)`, keyed {NameNormalizer}-folded because a conflict
@@ -373,7 +373,9 @@ module Migrations
         when Enums::LinkTarget::GROUP
           (name = @maps.group_name(target_id)) && "#{@maps.base_url}/g/#{name}"
         when Enums::LinkTarget::TAG
-          (name = @maps.tag_name(target_id)) && "#{@maps.base_url}/tag/#{name}"
+          name = @maps.tag_name(target_id)
+          id = @maps.tag_id(target_id)
+          name && id && "#{@maps.base_url}/tag/#{name}/#{id}"
         when Enums::LinkTarget::CATEGORY
           category_link_url(target_id)
         when Enums::LinkTarget::BADGE
