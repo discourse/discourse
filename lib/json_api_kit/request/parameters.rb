@@ -24,6 +24,8 @@ module JsonApiKit
         end
       end
 
+      def fieldsets = Fieldsets.parse(raw["fields"])
+
       private
 
       attr_reader :raw, :glossary, :resource

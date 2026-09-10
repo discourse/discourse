@@ -22,12 +22,14 @@ module JsonApiKit
         end
 
         def declared_anchor(value, path)
-          glossary.declared_attributes(value.transform_keys { anchor_name(it) }).transform_keys(
-            &:value
-          )
+          glossary.declared_attributes(anchor_attributes(value)).transform_keys(&:value)
         rescue Glossary::NotAMemberName => error
           raise error.at(ParameterName.new(*path, error.raw.value).to_s)
+        rescue Glossary::BadValue => error
+          raise error.at(ParameterName.new(*path).to_s)
         end
+
+        def anchor_attributes(value) = value.transform_keys { anchor_name(it) }
 
         def anchor_name(value) = Name::Anchor.new(value:, type:)
       end

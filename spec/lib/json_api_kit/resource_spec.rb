@@ -25,6 +25,8 @@ module SpecBlog
   end
 end
 
+RSpec::Matchers.alias_matcher :accept_anchor, :be_anchor_accepts
+
 RSpec.describe JsonApiKit::Resource do
   subject(:resource) { SpecBlog::PostResource }
 
@@ -530,6 +532,20 @@ RSpec.describe JsonApiKit::Resource do
     end
   end
 
+  describe ".anchor_accepts?" do
+    subject(:resource) do
+      Class.new(topic_resource) do
+        anchor :created_at
+        anchor(:mine) { |topics, _guardian| topics }
+      end
+    end
+
+    it { is_expected.to accept_anchor(JsonApiKit::Anchoring.for(created_at: "2026-08-01")) }
+    it { is_expected.not_to accept_anchor(JsonApiKit::Anchoring.for(created_at: nil)) }
+    it { is_expected.to accept_anchor(JsonApiKit::Anchoring.for(:mine)) }
+    it { is_expected.not_to accept_anchor(JsonApiKit::Anchoring.for(:secrets)) }
+  end
+
   describe ".scope_for" do
     subject(:exposed_scope) { topic_resource.scope_for(guardian) }
 
@@ -569,7 +585,6 @@ RSpec.describe JsonApiKit::Resource do
 
   describe ".paged_from?" do
     fab!(:topic) { Fabricate(:topic, title: "A page read from a cursor") }
-
     let(:ordering) { { "created_at" => :asc } }
     let(:cursor) { topic_resource.order(ordering).first.position_of(topic).to_cursor }
 

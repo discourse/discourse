@@ -3,7 +3,6 @@
 module JsonApiKit
   class Request
     class Family
-      LIST = ","
       LIST_ITEM = /\A(?<direction>-?)(?<name>.*)\z/m
 
       def initialize(glossary:, type:)
@@ -17,8 +16,6 @@ module JsonApiKit
 
       def names(value, path, &name_for)
         case value
-        when Hash
-          value.transform_keys { declared_name(name_for.call(it), path + [it]) }
         when Array
           value.map { names(it, path, &name_for) }
         when String, Symbol

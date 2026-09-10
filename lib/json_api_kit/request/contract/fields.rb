@@ -13,16 +13,7 @@ module JsonApiKit
 
           private
 
-          def fields(value)
-            case value
-            when String
-              value.split(",")
-            when Array
-              value.map(&:to_s)
-            else
-              value
-            end
-          end
+          def fields(value) = value.is_a?(Array) ? value.map(&:to_s) : value
         end
 
         included do

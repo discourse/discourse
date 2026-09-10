@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::Collection do
-  subject(:document) { described_class.new(listing, urls:, glossary:) }
-
-  let(:glossary) { JsonApiKit::Glossary.kit }
+  subject(:document) { described_class.new(listing, urls:, glossary:, fieldsets:) }
 
   fab!(:first_topic) do
     Fabricate(:topic, title: "Segments of a listing", created_at: Time.utc(2026, 8, 1))
@@ -11,7 +9,8 @@ RSpec.describe JsonApiKit::Document::Collection do
   fab!(:second_topic) do
     Fabricate(:topic, title: "Cursors and their values", created_at: Time.utc(2026, 8, 2))
   end
-
+  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
       model Topic
@@ -45,6 +44,7 @@ RSpec.describe JsonApiKit::Document::Collection do
         first_record,
         urls:,
         glossary:,
+        fieldsets:,
         meta: {
         },
       )
@@ -52,6 +52,7 @@ RSpec.describe JsonApiKit::Document::Collection do
         second_record,
         urls:,
         glossary:,
+        fieldsets:,
         meta: {
         },
       )
@@ -67,6 +68,7 @@ RSpec.describe JsonApiKit::Document::Collection do
           first_record,
           urls:,
           glossary:,
+          fieldsets:,
           meta: {
             page: {
               cursor: first_record.cursor.to_s,
@@ -77,6 +79,7 @@ RSpec.describe JsonApiKit::Document::Collection do
           second_record,
           urls:,
           glossary:,
+          fieldsets:,
           meta: {
             page: {
               cursor: second_record.cursor.to_s,
@@ -86,7 +89,7 @@ RSpec.describe JsonApiKit::Document::Collection do
       end
     end
 
-    context "when the listing reads no row" do
+    context "when the listing has no row" do
       let(:listing) { resource.all({}, guardian:, scoped_to: Topic.where(id: -1)) }
 
       it "renders an empty document" do

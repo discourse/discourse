@@ -6,9 +6,9 @@ module JsonApiKit
       Data.define(:from, :to, :up, :down) do
         def current = to
 
-        def current_pairs(value) = [[to, up.call(value)]]
+        def current_pairs(attributes) = [[to, up.call(attributes[from])]]
 
-        def previous = from
+        def previous_names = [from]
 
         def previous_pairs(value) = [[from, down.call(value)]]
       end

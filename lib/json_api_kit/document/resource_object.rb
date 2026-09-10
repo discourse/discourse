@@ -5,10 +5,11 @@ module JsonApiKit
     class ResourceObject
       delegate :type, :id, to: :record, private: true
 
-      def initialize(record, urls:, glossary:, meta: {})
+      def initialize(record, urls:, glossary:, fieldsets:, meta: {})
         @record = record
         @urls = urls
         @glossary = glossary
+        @fieldsets = fieldsets
         @meta = meta
       end
 
@@ -16,13 +17,15 @@ module JsonApiKit
 
       private
 
-      attr_reader :record, :urls, :glossary, :meta
+      attr_reader :record, :urls, :glossary, :fieldsets, :meta
 
       def relationship(value) = Name::Relationship.new(value:, type:)
 
       def member_value(name) = glossary.member_name(name).value
 
-      def attributes = glossary.member_attributes(record.attributes).transform_keys(&:value)
+      def attributes
+        fieldsets.keep(type, glossary.member_attributes(record.attributes).transform_keys(&:value))
+      end
 
       def relationships
         record.relationships.to_h do |name, linkage|

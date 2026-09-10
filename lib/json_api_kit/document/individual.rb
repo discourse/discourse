@@ -15,7 +15,7 @@ module JsonApiKit
 
       def primary_records = [query.record]
 
-      def data = ResourceObject.new(contents.primary.sole, urls:, glossary:).to_h
+      def data = ResourceObject.new(contents.primary.sole, urls:, glossary:, fieldsets:).to_h
     end
   end
 end

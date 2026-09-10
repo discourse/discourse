@@ -3,8 +3,8 @@
 RSpec.describe JsonApiKit::VersionChange::Rename do
   subject(:rename) { described_class.new(from: old_name, to: new_name, up:, down:) }
 
-  let(:up) { JsonApiKit::VersionChange::Declarations::NO_CONVERSION }
-  let(:down) { JsonApiKit::VersionChange::Declarations::NO_CONVERSION }
+  let(:up) { JsonApiKit::VersionChange::Declaration::RenamedAttribute::NO_CONVERSION }
+  let(:down) { JsonApiKit::VersionChange::Declaration::RenamedAttribute::NO_CONVERSION }
   let(:old_name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "topics") }
   let(:new_name) { JsonApiKit::Name::Field.new(value: "created_at", type: "topics") }
 
@@ -15,7 +15,7 @@ RSpec.describe JsonApiKit::VersionChange::Rename do
   end
 
   describe "#current_pairs" do
-    subject(:current_pairs) { rename.current_pairs(value) }
+    subject(:current_pairs) { rename.current_pairs(old_name => value) }
 
     let(:value) { "2026/08/01" }
 
@@ -41,9 +41,9 @@ RSpec.describe JsonApiKit::VersionChange::Rename do
     end
   end
 
-  describe "#previous" do
+  describe "#previous_names" do
     it "returns the old name" do
-      expect(rename.previous).to eq(old_name)
+      expect(rename.previous_names).to eq([old_name])
     end
   end
 

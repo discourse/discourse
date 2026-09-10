@@ -18,6 +18,18 @@ module JsonApiKitSpec
     end
   end
 
+  class ParametersMergeChange < JsonApiKit::VersionChange
+    version "2026-09-15"
+    description "The `posted_date` and `posted_time` attributes of the topics resource become `posted_at`."
+
+    resource :topics do
+      merged_attributes from: %i[posted_date posted_time],
+                        to: :posted_at,
+                        up: ->(date, time) { "#{date} #{time}" },
+                        down: ->(posted_at) { posted_at.to_s.split(" ") }
+    end
+  end
+
   class ParametersShapeChange < JsonApiKit::VersionChange
     version "2026-09-15"
     description "The `words` attribute of the topics resource becomes `title`, one string."
@@ -32,15 +44,40 @@ module JsonApiKitSpec
 end
 
 RSpec.describe JsonApiKit::Request::Parameters do
-  subject(:declared_parameters) do
-    described_class.new(parameters, glossary:, resource: JsonApiKitSpec::ParametersResource).to_h
-  end
+  subject(:declared_parameters) { request_parameters.to_h }
 
+  let(:request_parameters) do
+    described_class.new(parameters, glossary:, resource: JsonApiKitSpec::ParametersResource)
+  end
   let(:glossary) { JsonApiKit::Glossary.kit }
   let(:parameters) { { "sort" => "-createdAt" } }
 
-  it "converts the sort names" do
-    expect(declared_parameters).to eq("sort" => "-created_at")
+  it "converts the sort into declared names and directions" do
+    expect(declared_parameters).to eq("sort" => { "created_at" => :desc })
+  end
+
+  context "when the sort holds several names" do
+    let(:parameters) { { "sort" => "-createdAt,title" } }
+
+    it "converts every one of them" do
+      expect(declared_parameters).to eq("sort" => { "created_at" => :desc, "title" => :asc })
+    end
+  end
+
+  context "when a sort name has a hyphen" do
+    let(:parameters) { { "sort" => "last-posted-at" } }
+
+    it "keeps the hyphen" do
+      expect(declared_parameters).to eq("sort" => { "last-posted-at" => :asc })
+    end
+  end
+
+  context "when the sort is an array" do
+    let(:parameters) { { "sort" => %w[createdAt] } }
+
+    it "leaves it to the contract" do
+      expect(declared_parameters).to eq("sort" => %w[createdAt])
+    end
   end
 
   context "when the sort is a hash" do
@@ -62,8 +99,32 @@ RSpec.describe JsonApiKit::Request::Parameters do
   context "when the parameters have a fieldset" do
     let(:parameters) { { "fields" => { "solved-statuses" => "answeredAt" } } }
 
-    it "converts the field names only" do
-      expect(declared_parameters).to eq("fields" => { "solved-statuses" => "answered_at" })
+    it "converts the fieldset into its declared names" do
+      expect(declared_parameters).to eq("fields" => { "solved-statuses" => %w[answered_at] })
+    end
+
+    context "when the fieldset is empty" do
+      let(:parameters) { { "fields" => { "solved-statuses" => "" } } }
+
+      it "returns no name for it" do
+        expect(declared_parameters).to eq("fields" => { "solved-statuses" => [] })
+      end
+    end
+
+    context "when the fieldset is an array" do
+      let(:parameters) { { "fields" => { "solved-statuses" => %w[answeredAt] } } }
+
+      it "converts every name" do
+        expect(declared_parameters).to eq("fields" => { "solved-statuses" => %w[answered_at] })
+      end
+    end
+
+    context "when the fieldset is neither a list nor an array" do
+      let(:parameters) { { "fields" => { "solved-statuses" => 42 } } }
+
+      it "leaves it to the contract" do
+        expect(declared_parameters).to eq("fields" => { "solved-statuses" => 42 })
+      end
     end
   end
 
@@ -115,7 +176,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
       let(:parameters) { { "fields" => { "topics" => "postedAt" } } }
 
       it "converts the field to its current name" do
-        expect(declared_parameters).to eq("fields" => { "topics" => "created_at" })
+        expect(declared_parameters).to eq("fields" => { "topics" => %w[created_at] })
       end
     end
 
@@ -123,7 +184,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
       let(:parameters) { { "fields" => { "users" => "handle" } } }
 
       it "converts the field with the names of that type" do
-        expect(declared_parameters).to eq("fields" => { "users" => "username" })
+        expect(declared_parameters).to eq("fields" => { "users" => %w[username] })
       end
     end
 
@@ -131,7 +192,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
       let(:parameters) { { "sort" => "-postedAt" } }
 
       it "converts the field to its current name" do
-        expect(declared_parameters).to eq("sort" => "-created_at")
+        expect(declared_parameters).to eq("sort" => { "created_at" => :desc })
       end
     end
 
@@ -139,7 +200,36 @@ RSpec.describe JsonApiKit::Request::Parameters do
       let(:parameters) { { "sort" => "-postedAt,title" } }
 
       it "converts every field" do
-        expect(declared_parameters).to eq("sort" => "-created_at,title")
+        expect(declared_parameters).to eq("sort" => { "created_at" => :desc, "title" => :asc })
+      end
+    end
+
+    context "when the sort has two fields that merge into one" do
+      let(:change) { JsonApiKitSpec::ParametersMergeChange.new(__FILE__) }
+      let(:parameters) { { "sort" => "postedDate,postedTime" } }
+
+      it "converts both to the one field" do
+        expect(declared_parameters).to eq("sort" => { "posted_at" => :asc })
+      end
+
+      context "when their directions differ" do
+        let(:parameters) { { "sort" => "postedDate,-postedTime" } }
+
+        it "raises with the parameter that holds them" do
+          expect { declared_parameters }.to raise_error(
+            having_attributes(source: { parameter: "sort" }),
+          )
+        end
+      end
+
+      context "when the sort is a hash and their directions differ" do
+        let(:parameters) { { "sort" => { "postedDate" => "asc", "postedTime" => "desc" } } }
+
+        it "raises with the parameter that holds them" do
+          expect { declared_parameters }.to raise_error(
+            having_attributes(source: { parameter: "sort" }),
+          )
+        end
       end
     end
 
@@ -147,7 +237,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
       let(:parameters) { { "fields" => { "topics" => "title,postedAt" } } }
 
       it "converts every field" do
-        expect(declared_parameters).to eq("fields" => { "topics" => "title,created_at" })
+        expect(declared_parameters).to eq("fields" => { "topics" => %w[title created_at] })
       end
     end
 
@@ -193,7 +283,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
     let(:parameters) { { "sort" => "createdAt\n" } }
 
     it "converts the case and keeps the newline for the contract" do
-      expect(declared_parameters).to eq("sort" => "created_at\n")
+      expect(declared_parameters).to eq("sort" => { "created_at\n" => :asc })
     end
   end
 
@@ -226,6 +316,18 @@ RSpec.describe JsonApiKit::Request::Parameters do
 
     it "converts the anchor name" do
       expect(declared_parameters).to eq("page" => { "anchor" => "without_replies" })
+    end
+  end
+
+  describe "#fieldsets" do
+    subject(:fieldsets) { request_parameters.fieldsets }
+
+    let(:parameters) { { "fields" => { "topics" => "postedDate" } } }
+
+    it "returns the fieldsets under the names the client sent" do
+      expect(fieldsets.keep("topics", "postedDate" => "2026-08-01", "title" => "A")).to eq(
+        "postedDate" => "2026-08-01",
+      )
     end
   end
 end
