@@ -1,12 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
+import { getOwner } from "@ember/owner";
 import { trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
-  customPanels as panels,
+  getSidebarPanels,
 } from "discourse/lib/sidebar/custom-sections";
 import { getCollapsedSidebarSectionKey } from "discourse/lib/sidebar/helpers";
 import {
@@ -27,7 +28,7 @@ export default class SidebarState extends Service {
   @tracked isForcingSidebar = false;
   @tracked forcingSidebarPanel = null;
 
-  panels = panels;
+  panels = getSidebarPanels(getOwner(this));
   activeExpandedSections = trackedSet();
   collapsedSections = trackedSet();
   previousState = {};

@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { registerDestructor } from "@ember/destroyable";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { setLogoffCallback } from "discourse/lib/ajax";
@@ -9,8 +10,23 @@ import logout from "discourse/lib/logout";
 import { i18n } from "discourse-i18n";
 
 let pluginCounterFunctions = [];
-export function addPluginDocumentTitleCounter(counterFunction) {
-  pluginCounterFunctions.push(counterFunction);
+export function addPluginDocumentTitleCounter(counterFunction, { owner } = {}) {
+  const callbacks = pluginCounterFunctions;
+  const callback = owner
+    ? function (...args) {
+        return counterFunction.apply(this, args);
+      }
+    : counterFunction;
+  callbacks.push(callback);
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      const index = callbacks.indexOf(callback);
+      if (index !== -1) {
+        callbacks.splice(index, 1);
+      }
+    });
+  }
 }
 
 export function clearPluginDocumentTitleCounters() {

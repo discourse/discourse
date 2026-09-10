@@ -1,3 +1,4 @@
+import { registerDestructor } from "@ember/destroyable";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -83,11 +84,26 @@ export default class UserMenuTab {
 }
 
 export const CUSTOM_TABS_CLASSES = [];
+const tabRegistrations = [];
 
-export function registerUserMenuTab(func) {
-  CUSTOM_TABS_CLASSES.push(func(UserMenuTab));
+export function registerUserMenuTab(func, { owner } = {}) {
+  const tabClass = func(UserMenuTab);
+  const registration = {};
+  tabRegistrations.push(registration);
+  CUSTOM_TABS_CLASSES.push(tabClass);
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      const index = tabRegistrations.indexOf(registration);
+      if (index !== -1) {
+        tabRegistrations.splice(index, 1);
+        CUSTOM_TABS_CLASSES.splice(index, 1);
+      }
+    });
+  }
 }
 
 export function resetUserMenuTabs() {
   CUSTOM_TABS_CLASSES.length = 0;
+  tabRegistrations.length = 0;
 }

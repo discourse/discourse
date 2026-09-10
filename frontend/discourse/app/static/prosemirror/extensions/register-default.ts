@@ -73,7 +73,9 @@ const defaultExtensions: RichEditorExtension[] = [
   previewToolbar,
 ];
 
-defaultExtensions.forEach(registerRichEditorExtension);
+defaultExtensions.forEach((extension) =>
+  registerRichEditorExtension(extension)
+);
 markDefaultExtensionsRegistered();
 
 export default defaultExtensions;

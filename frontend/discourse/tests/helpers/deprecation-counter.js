@@ -12,6 +12,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
  * @type {Set<string>}
  */
 const skipCountIds = new Set();
+let railsDeprecationCounter;
 
 /**
  * Marks a deprecation ID to be skipped when counting deprecations during tests.
@@ -146,13 +147,21 @@ function reportDeprecationToTestem(id, origin) {
 }
 
 export function setupDeprecationCounter({ QUnit, origin } = {}) {
-  const deprecationCounter = new DeprecationCounter();
-
   // for system specs
   if (isRailsTesting()) {
-    deprecationCounter.start(origin);
+    if (railsDeprecationCounter) {
+      for (const id of railsDeprecationCounter.counts.keys()) {
+        window.console.countReset(`deprecation_id:${id}`);
+      }
+      railsDeprecationCounter.counts.clear();
+    } else {
+      railsDeprecationCounter = new DeprecationCounter();
+      railsDeprecationCounter.start(origin);
+    }
     return;
   }
+
+  const deprecationCounter = new DeprecationCounter();
 
   if (QUnit) {
     // for QUnit tests

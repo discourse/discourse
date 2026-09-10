@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
+import { registerDestructor } from "@ember/destroyable";
 import EmberObject, {
   action,
   computed,
@@ -81,12 +82,25 @@ export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
 }
 
-export function registerCustomPostMessageCallback(type, callback) {
+export function registerCustomPostMessageCallback(
+  type,
+  callback,
+  { owner } = {}
+) {
   if (customPostMessageCallbacks[type]) {
     throw new Error(`Error ${type} is an already registered post message!`);
   }
 
   customPostMessageCallbacks[type] = callback;
+
+  if (owner) {
+    const callbacks = customPostMessageCallbacks;
+    registerDestructor(owner, () => {
+      if (callbacks[type] === callback) {
+        delete callbacks[type];
+      }
+    });
+  }
 }
 
 export default class TopicController extends Controller {

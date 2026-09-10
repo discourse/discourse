@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
@@ -15,6 +16,8 @@ import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
+
+const navItemRegistrations = [];
 
 export default class NavItem extends EmberObject {
   static extraArgsCallbacks = [];
@@ -362,8 +365,21 @@ export function clearNavItems() {
   NavItem.customNavItemHrefs.length = 0;
   NavItem.extraArgsCallbacks.length = 0;
   NavItem.extraNavItemDescriptors.length = 0;
+  navItemRegistrations.length = 0;
 }
 
-export function addNavItem(item) {
+export function addNavItem(item, { owner } = {}) {
+  const registration = {};
+  navItemRegistrations.push(registration);
   NavItem.extraNavItemDescriptors.push(item);
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      const index = navItemRegistrations.indexOf(registration);
+      if (index !== -1) {
+        navItemRegistrations.splice(index, 1);
+        NavItem.extraNavItemDescriptors.splice(index, 1);
+      }
+    });
+  }
 }

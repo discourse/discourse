@@ -1,3 +1,4 @@
+import { registerDestructor } from "@ember/destroyable";
 import renderTag from "discourse/lib/render-tag";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -5,7 +6,7 @@ import { i18n } from "discourse-i18n";
 let callbacks = null;
 let priorities = null;
 
-export function addTagsHtmlCallback(callback, options) {
+export function addTagsHtmlCallback(callback, options, { owner } = {}) {
   callbacks = callbacks || [];
   priorities = priorities || [];
   const priority = (options && options.priority) || 0;
@@ -16,7 +17,24 @@ export function addTagsHtmlCallback(callback, options) {
   }
 
   priorities.splice(i, 0, priority);
-  callbacks.splice(i, 0, callback);
+  const registeredCallback = owner
+    ? function (...args) {
+        return callback.apply(this, args);
+      }
+    : callback;
+  callbacks.splice(i, 0, registeredCallback);
+
+  if (owner) {
+    const registeredCallbacks = callbacks;
+    const registeredPriorities = priorities;
+    registerDestructor(owner, () => {
+      const index = registeredCallbacks.indexOf(registeredCallback);
+      if (index !== -1) {
+        registeredCallbacks.splice(index, 1);
+        registeredPriorities.splice(index, 1);
+      }
+    });
+  }
 }
 
 export function clearTagsHtmlCallbacks() {

@@ -1,4 +1,5 @@
 import { DEBUG } from "@glimmer/env";
+import { registerDestructor } from "@ember/destroyable";
 import { capitalize } from "@ember/string";
 import { isTesting } from "discourse/lib/environment";
 import {
@@ -162,7 +163,8 @@ export function _addTransformerName(name, transformerType) {
 export function _registerTransformer(
   transformerName,
   transformerType,
-  callback
+  callback,
+  { owner } = {}
 ) {
   if (!transformerTypes[transformerType]) {
     throw new Error(`Invalid transformer type: ${transformerType}`);
@@ -203,9 +205,23 @@ export function _registerTransformer(
   const existingTransformers =
     transformersRegistry.get(normalizedTransformerName) || [];
 
-  existingTransformers.push(callback);
+  const registeredCallback = owner
+    ? function (...args) {
+        return callback.apply(this, args);
+      }
+    : callback;
+  existingTransformers.push(registeredCallback);
 
   transformersRegistry.set(normalizedTransformerName, existingTransformers);
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      const index = existingTransformers.indexOf(registeredCallback);
+      if (index !== -1) {
+        existingTransformers.splice(index, 1);
+      }
+    });
+  }
 
   return true;
 }

@@ -12,7 +12,9 @@ module("Unit | Utility | quote-state", function (hooks) {
 
   hooks.beforeEach(function () {
     if (!getExtensions().length) {
-      defaultExtensions.forEach(registerRichEditorExtension);
+      defaultExtensions.forEach((extension) =>
+        registerRichEditorExtension(extension)
+      );
     }
   });
 

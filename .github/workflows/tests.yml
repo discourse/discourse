@@ -96,6 +96,9 @@ jobs:
         if: matrix.build_type == 'system'
         run: |
           processors=$(($(nproc) / 2 + 2))
+          if [ "$(nproc)" = 16 ] && { [ "${{ matrix.target }}" = core ] || [ "${{ matrix.target }}" = core-plugins ]; }; then
+            processors=14
+          fi
           echo "PARALLEL_TEST_PROCESSORS=$processors" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
@@ -308,18 +311,42 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
-          DISCOURSE_CI_BROWSER_PROFILE: "1"
+          SYSTEM_TEST_REUSE_APPLICATION: "1"
+          CAPYBARA_PLAYWRIGHT_SOFT_RESET: "0"
           CHECKOUT_TIMEOUT: 10
         run: |
+          report_system_test_cpu() {
+            system_test_exit_status=$?
+            system_test_cpu_end=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+            printf 'CI_SYSTEM_CPU_END {"usage_usec":%s,"elapsed_seconds":%s,"exit_status":%s}\n' \
+              "${system_test_cpu_end:-null}" "$((SECONDS - system_test_started_seconds))" "$system_test_exit_status"
+            exit "$system_test_exit_status"
+          }
+          system_test_cpu_start=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+          printf 'CI_SYSTEM_CPU_START {"usage_usec":%s}\n' "${system_test_cpu_start:-null}"
+          system_test_started_seconds=$SECONDS
+          trap report_system_test_cpu EXIT
           LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
-          DISCOURSE_CI_BROWSER_PROFILE: "1"
+          SYSTEM_TEST_REUSE_APPLICATION: "1"
+          CAPYBARA_PLAYWRIGHT_SOFT_RESET: "0"
           CHECKOUT_TIMEOUT: 10
         run: |
+          report_system_test_cpu() {
+            system_test_exit_status=$?
+            system_test_cpu_end=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+            printf 'CI_SYSTEM_CPU_END {"usage_usec":%s,"elapsed_seconds":%s,"exit_status":%s}\n' \
+              "${system_test_cpu_end:-null}" "$((SECONDS - system_test_started_seconds))" "$system_test_exit_status"
+            exit "$system_test_exit_status"
+          }
+          system_test_cpu_start=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+          printf 'CI_SYSTEM_CPU_START {"usage_usec":%s}\n' "${system_test_cpu_start:-null}"
+          system_test_started_seconds=$SECONDS
+          trap report_system_test_cpu EXIT
           LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system
 
       - name: Official Plugins System Tests

@@ -13,7 +13,9 @@ module("Unit | Utility | to-markdown", function (hooks) {
 
   hooks.beforeEach(function () {
     if (!getExtensions().length) {
-      defaultExtensions.forEach(registerRichEditorExtension);
+      defaultExtensions.forEach((extension) =>
+        registerRichEditorExtension(extension)
+      );
     }
   });
 

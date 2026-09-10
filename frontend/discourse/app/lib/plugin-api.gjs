@@ -226,6 +226,12 @@ class _PluginApi {
     return this.#source;
   }
 
+  get #owner() {
+    return this.container && "owner" in this.container
+      ? this.container.owner
+      : this.container;
+  }
+
   /**
    * Allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
    *
@@ -490,7 +496,8 @@ class _PluginApi {
     return _registerTransformer(
       transformerName,
       transformerTypes.BEHAVIOR,
-      behaviorCallback
+      behaviorCallback,
+      { owner: this.#owner }
     );
   }
 
@@ -558,7 +565,8 @@ class _PluginApi {
     return _registerTransformer(
       transformerName,
       transformerTypes.VALUE,
-      valueCallback
+      valueCallback,
+      { owner: this.#owner }
     );
   }
 
@@ -672,7 +680,8 @@ class _PluginApi {
 
     registerHtmlDecorator(
       callback,
-      opts.onlyStream ? STREAM_HTML_DECORATOR : NON_STREAM_HTML_DECORATOR
+      opts.onlyStream ? STREAM_HTML_DECORATOR : NON_STREAM_HTML_DECORATOR,
+      { owner: this.#owner }
     );
 
     // for backwards compatibility with plugins/themes decorating cooked elements
@@ -1119,7 +1128,7 @@ class _PluginApi {
    * });
    **/
   onToolbarCreate(callback) {
-    addToolbarCallback(callback);
+    addToolbarCallback(callback, { owner: this.#owner });
   }
 
   /**
@@ -1169,7 +1178,7 @@ class _PluginApi {
    * });
    **/
   addComposerToolbarPopupMenuOption(opts) {
-    addPopupMenuOption(opts);
+    addPopupMenuOption(opts, { owner: this.#owner });
   }
 
   addToolbarPopupMenuOptionsCallback(opts) {
@@ -1289,7 +1298,9 @@ class _PluginApi {
    * });
    */
   registerCustomPostMessageCallback(type, callback) {
-    registerCustomPostMessageCallback1(type, callback);
+    registerCustomPostMessageCallback1(type, callback, {
+      owner: this.#owner,
+    });
   }
 
   /**
@@ -1505,7 +1516,7 @@ class _PluginApi {
    * ```
    **/
   registerDesktopNotificationHandler(handler) {
-    registerDesktopNotificationHandler(handler);
+    registerDesktopNotificationHandler(handler, { owner: this.#owner });
   }
 
   /**
@@ -1579,7 +1590,7 @@ class _PluginApi {
    *
    **/
   addTagsHtmlCallback(callback, options) {
-    addTagsHtmlCallback(callback, options);
+    addTagsHtmlCallback(callback, options, { owner: this.#owner });
   }
 
   /**
@@ -1733,7 +1744,7 @@ class _PluginApi {
         };
       }
 
-      addNavItem(item);
+      addNavItem(item, { owner: this.#owner });
     }
   }
 
@@ -1813,7 +1824,7 @@ class _PluginApi {
    * })
    */
   addComposerUploadHandler(extensions, method) {
-    addComposerUploadHandler(extensions, method);
+    addComposerUploadHandler(extensions, method, { owner: this.#owner });
   }
 
   /**
@@ -1846,7 +1857,9 @@ class _PluginApi {
    *                                     browser, and isMobileDevice.
    */
   addComposerUploadPreProcessor(pluginClass, optionsResolverFn) {
-    addComposerUploadPreProcessor(pluginClass, optionsResolverFn);
+    addComposerUploadPreProcessor(pluginClass, optionsResolverFn, {
+      owner: this.#owner,
+    });
   }
 
   /**
@@ -1859,7 +1872,7 @@ class _PluginApi {
    * })
    */
   addComposerUploadMarkdownResolver(resolver) {
-    addComposerUploadMarkdownResolver(resolver);
+    addComposerUploadMarkdownResolver(resolver, { owner: this.#owner });
   }
 
   /**
@@ -2099,7 +2112,7 @@ class _PluginApi {
    * })
    **/
   addDocumentTitleCounter(counterFunction) {
-    addPluginDocumentTitleCounter(counterFunction);
+    addPluginDocumentTitleCounter(counterFunction, { owner: this.#owner });
   }
 
   /**
@@ -2222,7 +2235,8 @@ class _PluginApi {
     _registerTransformer(
       "home-logo-href",
       transformerTypes.VALUE,
-      ({ value }) => callback(value)
+      ({ value }) => callback(value),
+      { owner: this.#owner }
     );
   }
 
@@ -2267,7 +2281,7 @@ class _PluginApi {
    *
    **/
   addAdvancedSearchOptions(options) {
-    addAdvancedSearchOptions(options);
+    addAdvancedSearchOptions(options, { owner: this.#owner });
   }
 
   /**
@@ -2570,7 +2584,7 @@ class _PluginApi {
    *
    */
   addSearchMenuAssistantSelectCallback(fn) {
-    addSearchMenuAssistantSelectCallback(fn);
+    addSearchMenuAssistantSelectCallback(fn, { owner: this.#owner });
   }
 
   /**
@@ -2624,7 +2638,7 @@ class _PluginApi {
    *
    */
   addSearchMenuOnKeyDownCallback(fn) {
-    addOnKeyUpCallback(fn);
+    addOnKeyUpCallback(fn, { owner: this.#owner });
   }
 
   /**
@@ -2643,7 +2657,7 @@ class _PluginApi {
    *
    */
   addQuickSearchRandomTip(tip) {
-    addQuickSearchRandomTip(tip);
+    addQuickSearchRandomTip(tip, { owner: this.#owner });
   }
 
   /**
@@ -2960,7 +2974,7 @@ class _PluginApi {
    * ```
    */
   addSidebarPanel(func) {
-    addSidebarPanel(func);
+    addSidebarPanel(func, { owner: this.#owner });
   }
 
   /**
@@ -3160,7 +3174,7 @@ class _PluginApi {
    * ```
    */
   addSidebarSection(func, panelKey = "main") {
-    addSidebarSection(func, panelKey);
+    addSidebarSection(func, panelKey, { owner: this.#owner });
   }
 
   /**
@@ -3282,7 +3296,7 @@ class _PluginApi {
    * @param {customTabRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
    */
   registerUserMenuTab(func) {
-    registerUserMenuTab(func);
+    registerUserMenuTab(func, { owner: this.#owner });
   }
 
   /**
@@ -3639,7 +3653,7 @@ class _PluginApi {
    * @param {RichEditorExtension} extension
    */
   registerRichEditorExtension(extension) {
-    registerRichEditorExtension(extension);
+    registerRichEditorExtension(extension, { owner: this.#owner });
   }
 
   /**

@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
+import { registerDestructor } from "@ember/destroyable";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
@@ -43,6 +44,7 @@ const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
 const IN_OPTIONS_MAPPING = { images: "with" };
 
 let _extraOptions = [];
+const optionRegistrations = [];
 
 function buildFilterOptions(keys, extraOptionsKey) {
   return keys
@@ -114,8 +116,20 @@ function postTimeOptions() {
   ].concat(..._extraOptions.map((eo) => eo.postTimeOptions).filter(Boolean));
 }
 
-export function addAdvancedSearchOptions(options) {
+export function addAdvancedSearchOptions(options, { owner } = {}) {
+  const registration = {};
+  optionRegistrations.push(registration);
   _extraOptions.push(options);
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      const index = optionRegistrations.indexOf(registration);
+      if (index !== -1) {
+        optionRegistrations.splice(index, 1);
+        _extraOptions.splice(index, 1);
+      }
+    });
+  }
 }
 
 @tagName("")

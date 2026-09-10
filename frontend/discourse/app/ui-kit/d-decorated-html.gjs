@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { untrack } from "@glimmer/validator";
+import { registerDestructor } from "@ember/destroyable";
 import { trackedArray } from "@ember/reactive/collections";
 import { cancel, next } from "@ember/runloop";
 import { isHTMLSafe, trustHTML } from "@ember/template";
@@ -61,8 +62,23 @@ function getHtmlDecoratorsForType(type) {
  *   return () => element.classList.remove('decorated'); // Cleanup function
  * });
  */
-export function registerHtmlDecorator(decorator, type) {
-  getHtmlDecoratorsForType(type).push(decorator);
+export function registerHtmlDecorator(decorator, type, { owner } = {}) {
+  const decorators = getHtmlDecoratorsForType(type);
+  const registeredDecorator = owner
+    ? function (...args) {
+        return decorator.apply(this, args);
+      }
+    : decorator;
+  decorators.push(registeredDecorator);
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      const index = decorators.indexOf(registeredDecorator);
+      if (index !== -1) {
+        decorators.splice(index, 1);
+      }
+    });
+  }
 }
 
 /**

@@ -1,9 +1,12 @@
+import { DEBUG } from "@glimmer/env";
 import { ajax } from "discourse/lib/ajax";
+import { isRailsTesting } from "discourse/lib/environment";
 import { SVG_NAMESPACE } from "discourse/lib/icon-library";
 import loadScript from "discourse/lib/load-script";
 
 const SVG_CONTAINER_ID = "svg-sprites";
 const EXTRA_SPRITE_NAME = "extra-icons";
+const spriteSources = new Map();
 
 function spriteContainerElement() {
   let spriteContainer = document.getElementById(SVG_CONTAINER_ID);
@@ -122,8 +125,18 @@ export function loadSprites(spritePath, spriteName) {
   }
 
   return loadScript(spritePath).then(() => {
-    sprites.innerHTML = window.__svg_sprite;
-    // we got to clean up here... this is one giant string
+    let source = window.__svg_sprite;
+    if (DEBUG && isRailsTesting()) {
+      if (typeof source === "string") {
+        spriteSources.set(spritePath, source);
+      } else {
+        source = spriteSources.get(spritePath);
+      }
+      if (source === undefined) {
+        throw new Error("SVG sprite source is unavailable");
+      }
+    }
+    sprites.innerHTML = source;
     delete window.__svg_sprite;
   });
 }

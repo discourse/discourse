@@ -135,7 +135,15 @@ export default class DMenuInstance extends FloatKitInstance {
 
     await animateClosing(this.content);
 
+    if (isDestroying(getOwner(this)!)) {
+      return;
+    }
+
     await this.menu.close(this);
+
+    if (isDestroying(getOwner(this)!)) {
+      return;
+    }
 
     // A caller that closes without asking for the trigger to be refocused (a click outside,
     // say) still must not lose focus altogether. Recheck rather than trusting `ownedFocus`:
@@ -154,6 +162,9 @@ export default class DMenuInstance extends FloatKitInstance {
   @action
   async show() {
     await super.show();
+    if (isDestroying(getOwner(this)!)) {
+      return;
+    }
     await this.menu.show(this);
   }
 

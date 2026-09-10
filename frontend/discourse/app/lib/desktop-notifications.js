@@ -1,3 +1,8 @@
+import {
+  isDestroying,
+  registerDestructor,
+  unregisterDestructor,
+} from "@ember/destroyable";
 import { Promise } from "rsvp";
 import KeyValueStore from "discourse/lib/key-value-store";
 import discourseLater from "discourse/lib/later";
@@ -17,17 +22,42 @@ const context = "discourse_desktop_notifications_";
 const keyValueStore = new KeyValueStore(context);
 
 let desktopNotificationHandlers = [];
-export function registerDesktopNotificationHandler(handler) {
-  desktopNotificationHandlers.push(handler);
+export function registerDesktopNotificationHandler(handler, { owner } = {}) {
+  const callbacks = desktopNotificationHandlers;
+  const callback = owner
+    ? function (...args) {
+        return handler.apply(this, args);
+      }
+    : handler;
+  callbacks.push(callback);
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      const index = callbacks.indexOf(callback);
+      if (index !== -1) {
+        callbacks.splice(index, 1);
+      }
+    });
+  }
 }
 export function clearDesktopNotificationHandlers() {
   desktopNotificationHandlers = [];
 }
 
 // Called from an initializer
-function init(messageBus) {
+function init(messageBus, { owner } = {}) {
   liveEnabled = false;
+  primaryTab = false;
+  havePermission = null;
   mbClientId = messageBus.clientId;
+
+  if (owner) {
+    registerDestructor(owner, () => {
+      liveEnabled = false;
+      primaryTab = false;
+      havePermission = null;
+    });
+  }
 
   if (!User.current()) {
     return;
@@ -68,7 +98,7 @@ function init(messageBus) {
   liveEnabled = true;
   try {
     // Preliminary checks passed, continue with setup
-    setupNotifications();
+    setupNotifications(owner);
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
@@ -97,22 +127,35 @@ function confirmNotification(siteSettings) {
 }
 
 // This function is only called if permission was granted
-function setupNotifications() {
-  window.addEventListener("storage", function (e) {
-    // note: This event only fires when other tabs setItem()
-    const key = e.key;
-    if (key !== `${context}${focusTrackerKey}`) {
-      return true;
-    }
-    primaryTab = false;
-  });
+function setupNotifications(owner) {
+  const controller = new AbortController();
+  if (owner) {
+    registerDestructor(owner, () => controller.abort());
+  }
+  const options = { signal: controller.signal };
+  window.addEventListener(
+    "storage",
+    function (e) {
+      // note: This event only fires when other tabs setItem()
+      const key = e.key;
+      if (key !== `${context}${focusTrackerKey}`) {
+        return true;
+      }
+      primaryTab = false;
+    },
+    options
+  );
 
-  window.addEventListener("focus", function () {
-    if (!primaryTab) {
-      primaryTab = true;
-      keyValueStore.setItem(focusTrackerKey, mbClientId);
-    }
-  });
+  window.addEventListener(
+    "focus",
+    function () {
+      if (!primaryTab) {
+        primaryTab = true;
+        keyValueStore.setItem(focusTrackerKey, mbClientId);
+      }
+    },
+    options
+  );
 
   if (
     document &&
@@ -143,7 +186,16 @@ function canUserReceiveNotifications(user) {
 }
 
 // Call-in point from message bus
-async function onNotification(data, siteSettings, user, appEvents) {
+async function onNotification(
+  data,
+  siteSettings,
+  user,
+  appEvents,
+  { owner } = {}
+) {
+  if (owner && isDestroying(owner)) {
+    return;
+  }
   const showNotifications = canUserReceiveNotifications(user) && liveEnabled;
 
   if (showNotifications) {
@@ -164,7 +216,18 @@ async function onNotification(data, siteSettings, user, appEvents) {
       "-" +
       (data.topic_id || 0);
 
-    await requestPermission();
+    try {
+      await requestPermission();
+    } catch (error) {
+      if (owner && isDestroying(owner)) {
+        return;
+      }
+      throw error;
+    }
+
+    if (owner && isDestroying(owner)) {
+      return;
+    }
 
     const notification = new Notification(notificationTitle, {
       body: data.excerpt,
@@ -172,9 +235,27 @@ async function onNotification(data, siteSettings, user, appEvents) {
       tag: notificationTag,
     });
 
+    if (owner) {
+      const closeNotification = () => notification.close();
+      registerDestructor(owner, closeNotification);
+      notification.addEventListener(
+        "close",
+        () => {
+          if (!isDestroying(owner)) {
+            unregisterDestructor(owner, closeNotification);
+          }
+        },
+        { once: true }
+      );
+    }
+
     notification.addEventListener(
       "click",
       () => {
+        if (owner && isDestroying(owner)) {
+          notification.close();
+          return;
+        }
         DiscourseURL.routeTo(data.post_url);
         appEvents.trigger("desktop-notification-opened", {
           url: data.post_url,
