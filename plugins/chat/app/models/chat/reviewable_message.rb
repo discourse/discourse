@@ -109,7 +109,7 @@ module Chat
       return if !chat_message_creator&.silenced?
       return if !guardian.can_unsilence_user?(chat_message_creator)
 
-      build_action(actions, :unsilence_user, icon: "microphone-slash")
+      build_action(actions, :unsilence_user, icon: "microphone-slash", secondary: true)
     end
 
     def penalty_effect_for(action_id)

@@ -177,6 +177,31 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
     assert.dom(".review-item__aside-title").hasText("Moderator actions");
   });
 
+  test("lists secondary actions below the answers to the context question", async function (assert) {
+    const pending = userReviewable(this, {
+      bundled_actions: [
+        actionBundle("approve_user", "Yes"),
+        { ...actionBundle("remove_avatar", "Remove avatar"), secondary: true },
+        actionBundle("delete_user", "No"),
+      ],
+    });
+
+    await render(
+      <template><ReviewableItem @reviewable={{pending}} /></template>
+    );
+
+    const answers = [
+      ...document.querySelectorAll(
+        ".review-item__moderator-actions > .reviewable-action"
+      ),
+    ].map((button) => button.textContent.trim());
+
+    assert.deepEqual(answers, ["Yes", "No"], "the answers stay together");
+    assert
+      .dom(".review-item__secondary-actions .reviewable-action")
+      .hasText("Remove avatar", "the secondary action is set apart");
+  });
+
   test("does not render help resources when not required", async function (assert) {
     await render(
       <template><ReviewableItem @reviewable={{reviewable}} /></template>

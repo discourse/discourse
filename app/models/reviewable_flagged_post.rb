@@ -168,7 +168,7 @@ class ReviewableFlaggedPost < Reviewable
     return if !author_silenced?
     return if !guardian.can_unsilence_user?(target_created_by)
 
-    build_action(actions, :unsilence_user, icon: "microphone-slash")
+    build_action(actions, :unsilence_user, icon: "microphone-slash", secondary: true)
   end
 
   def perform_ignore(performed_by, args)
