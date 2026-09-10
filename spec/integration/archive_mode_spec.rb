@@ -71,6 +71,11 @@ RSpec.describe "Site archived" do
       expect(response.status).to eq(503)
       expect(response.parsed_body["errors"]).to include(I18n.t("site_archived_error"))
     end
+
+    it "allows backup operations (ops, not content)" do
+      post "/admin/backups.json"
+      expect(response.status).not_to eq(503)
+    end
   end
 
   context "when an operational readonly reason is also active" do
