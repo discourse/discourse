@@ -407,7 +407,7 @@ RSpec.describe "a document with related records" do
 
     def next_page_of(row, post)
       "#{base}/topics/#{row.id}/relationships/posts?" +
-        { page: { after: cursor_of_record(post, of: JsonApiKitSpec::PostResource) } }.to_query
+        query_of(page: { after: cursor_of_record(post, of: JsonApiKitSpec::PostResource) })
     end
 
     it "renders one page of them and links to the next" do

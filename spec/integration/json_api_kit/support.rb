@@ -205,13 +205,17 @@ RSpec.shared_context "with a listing of topics" do
   def profile_link(name) = "https://jsonapi.org/profiles/ethanresnick/cursor-pagination/#{name}"
 
   def self_link
-    href = query.blank? ? current : "#{current}?#{query.to_query}"
+    href = query.blank? ? current : "#{current}?#{query_of(query)}"
     { href:, type: JsonApiKit::Pagination::Profile::MEDIA_TYPE }
   end
 
+  def query_of(hash) = Rack::Utils.build_nested_query(hash)
+
   def links_of(**pages) = { self: self_link, **{ prev: nil, next: nil }.merge(pages) }
 
-  def page_url(**page) = "#{current}?#{query.except("page").merge(page:).to_query}"
+  def page_url(**page)
+    "#{current}?#{query_of(query.merge("page" => page))}"
+  end
 
   def cursor_at(index, rendered = document) = cursor_of(rendered[:data][index])
 
@@ -223,7 +227,7 @@ RSpec.shared_context "with a listing of topics" do
   end
 
   def relationship_page_url(type, row, name, **page)
-    "#{base}/#{type}/#{row.id}/#{name}?#{{ page: page }.to_query}"
+    "#{base}/#{type}/#{row.id}/#{name}?#{query_of(page: page)}"
   end
 
   def listed_ids(rendered = document) = rendered[:data].map { it[:id] }
