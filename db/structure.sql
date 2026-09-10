@@ -12555,11 +12555,11 @@ CREATE TABLE public.user_options (
     ai_ask_ai_default boolean DEFAULT true NOT NULL,
     chat_channel_list_filter integer DEFAULT 0 NOT NULL,
     chat_channel_list_sort integer DEFAULT 0 NOT NULL,
+    bulk_permanent_topic_deletion boolean DEFAULT false NOT NULL,
     chat_channel_list_sort_starred integer DEFAULT 0 NOT NULL,
     chat_channel_list_sort_dms integer DEFAULT 2 NOT NULL,
     chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
-    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL,
-    bulk_permanent_topic_deletion boolean DEFAULT false NOT NULL
+    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL
 );
 
 
