@@ -7,11 +7,13 @@ Preserve the complete test matrix, test selection, assertions, retries, and
 failure reporting. Keep the existing job count and test groups; do not split
 tests into additional jobs. A skipped test suite is not a successful optimization.
 
-Use this draft PR as the measurement environment. Keep the base revision fixed
-at 0708de39bcebe79c8469dfd88cd568c8e71b42c7 during the experiment. Record external
-plugin/theme revisions and cache behavior when assessing noisy results.
-Controlled measurements use a temporary PR-head checkout to prevent updates to
-main from changing tested sources. Restore normal merge checkout for final validation.
+Use this draft PR as the measurement environment. Controlled measurements used
+base revision 0708de39bcebe79c8469dfd88cd568c8e71b42c7 and a temporary PR-head
+checkout. Subsequent measurements use normal PR merge checkout, including current
+main. Record the actual tested revision and distinguish source changes from
+optimization effects. Record external plugin/theme revisions and cache behavior
+when assessing noisy results. Detailed profilers have been removed; retain job
+memory and CPU totals for the resource comparison.
 
 ## Procedure
 
