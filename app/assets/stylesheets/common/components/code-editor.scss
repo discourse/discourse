@@ -121,10 +121,6 @@
     border-left-color: var(--highlight-medium);
   }
 
-  .cm-diagnostic-error {
-    border-left-color: var(--danger);
-  }
-
   &[data-disabled="true"] {
     opacity: 0.5;
 
