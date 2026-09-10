@@ -10,6 +10,7 @@ module JsonApiKit
       end
 
       DERIVED_FROM_AN_ATTRIBUTE = [Name::Field, Name::Sort, Name::Anchor].freeze
+      NO_CONVERSION = ->(value) { value }
 
       def initialize(type, from:, to:, up:, down:)
         @type = type.to_s
@@ -21,7 +22,7 @@ module JsonApiKit
 
       def transformations
         verify!
-        DERIVED_FROM_AN_ATTRIBUTE.map { transformation(it) }
+        kinds.map { transformation(it) }
       end
 
       private
@@ -29,6 +30,8 @@ module JsonApiKit
       attr_reader :type, :from, :to, :up, :down
 
       def verify! = nil
+
+      def kinds = raise NotImplementedError, "#{self.class} must implement kinds"
 
       def transformation(_kind)
         raise NotImplementedError, "#{self.class} must implement transformation(kind)"
