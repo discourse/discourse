@@ -315,8 +315,8 @@ module DiscourseDataExplorer
 
       WITH query_period as (
           SELECT
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' as period_start,
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
       )
 
       SELECT
@@ -336,8 +336,8 @@ module DiscourseDataExplorer
       -- int :months_ago = 1
 
       WITH query_period AS
-      (SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,
-                                                          date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)
+      (SELECT date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' AS period_start,
+                                                          date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)
       SELECT t.id AS topic_id,
           t.category_id,
           COUNT(p.id) AS reply_count
@@ -358,8 +358,8 @@ module DiscourseDataExplorer
 
       WITH query_period AS (
           SELECT
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' as period_start,
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
               )
 
           SELECT
@@ -754,7 +754,7 @@ module DiscourseDataExplorer
           COALESCE(SUM(tvs.anonymous_views + tvs.logged_in_views), 0) AS total_views
       FROM topics t
       JOIN topic_view_stats tvs ON tvs.topic_id = t.id
-          AND tvs.viewed_at >= CURRENT_DATE - :days_ago
+          AND tvs.viewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       WHERE t.deleted_at IS NULL
           AND t.archetype = 'regular'
       GROUP BY t.id, t.category_id
@@ -771,7 +771,7 @@ module DiscourseDataExplorer
           COUNT(*) AS searches,
           COUNT(DISTINCT user_id) AS distinct_users
       FROM search_logs
-      WHERE created_at >= CURRENT_DATE - :days_ago
+      WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY term
       ORDER BY distinct_users DESC, searches DESC
       LIMIT 200
@@ -785,7 +785,7 @@ module DiscourseDataExplorer
       -- gapless day series, so days with zero activity still show up as rows
       WITH day_series AS (
           SELECT generate_series(
-              CURRENT_DATE - :days_ago,
+              CURRENT_DATE - CAST(:days_ago AS integer),
               CURRENT_DATE,
               '1 day'::interval
           )::date AS day
@@ -797,7 +797,7 @@ module DiscourseDataExplorer
           FROM topic_link_clicks tlc
           JOIN topic_links tl ON tl.id = tlc.topic_link_id
           WHERE tl.topic_id = :topic_id
-              AND tlc.created_at >= CURRENT_DATE - :days_ago
+              AND tlc.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           GROUP BY tlc.created_at::date
       ),
       daily_views AS (
@@ -807,7 +807,7 @@ module DiscourseDataExplorer
               COALESCE(SUM(logged_in_views), 0) AS logged_in_views
           FROM topic_view_stats
           WHERE topic_id = :topic_id
-              AND viewed_at >= CURRENT_DATE - :days_ago
+              AND viewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           GROUP BY viewed_at
       )
       SELECT
@@ -947,10 +947,10 @@ module DiscourseDataExplorer
           LEFT JOIN (
               SELECT DISTINCT target_user_id
               FROM user_histories
-              WHERE created_at >= CURRENT_DATE - :days_ago
+              WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
                   AND action IN (2, 15) -- change_trust_level, auto_trust_level_change
           ) tlc ON u.id = tlc.target_user_id
-          WHERE u.created_at >= CURRENT_DATE - :days_ago
+          WHERE u.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
               AND tlc.target_user_id IS NULL
       ),
       trust_level_changes AS (
@@ -959,7 +959,7 @@ module DiscourseDataExplorer
               COUNT(DISTINCT uh.target_user_id) AS users_gained
           FROM user_histories uh
           JOIN users u ON uh.target_user_id = u.id
-          WHERE uh.created_at >= CURRENT_DATE - :days_ago
+          WHERE uh.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
               AND uh.action IN (2, 15) -- change_trust_level, auto_trust_level_change
               AND uh.new_value IN ('1', '2', '3', '4')
           GROUP BY uh.new_value
@@ -999,9 +999,9 @@ module DiscourseDataExplorer
                   AND p.post_type = 1
               WHERE t.archetype = 'regular'
                   AND t.deleted_at IS NULL
-                  AND t.created_at >= CURRENT_DATE - :days_ago
+                  AND t.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
                   AND (
-                      :category_id IS NULL
+                      CAST(:category_id AS integer) IS NULL
                       OR t.category_id = :category_id
                       OR (:include_subcategories AND t.category_id IN (
                           SELECT id FROM categories WHERE parent_category_id = :category_id
@@ -1317,7 +1317,7 @@ module DiscourseDataExplorer
           w.topic_id,
           w.created_at
       FROM user_warnings w
-      WHERE w.created_at >= CURRENT_DATE - :days_ago
+      WHERE w.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       ORDER BY w.created_at DESC
       SQL
 
@@ -1413,7 +1413,7 @@ module DiscourseDataExplorer
           COUNT(*) AS total
       FROM reviewable_scores rs
       LEFT JOIN flags f ON f.id = rs.reviewable_score_type
-      WHERE rs.created_at >= CURRENT_DATE - :days_ago
+      WHERE rs.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY 1
       ORDER BY total DESC
       SQL
@@ -1428,7 +1428,7 @@ module DiscourseDataExplorer
       FROM reviewable_scores rs
       JOIN users u ON u.id = rs.reviewed_by_id
       WHERE (u.admin OR u.moderator)
-          AND rs.reviewed_at >= CURRENT_DATE - :days_ago
+          AND rs.reviewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY rs.reviewed_by_id
       ORDER BY flags_handled DESC
       LIMIT 100
@@ -1483,7 +1483,7 @@ module DiscourseDataExplorer
       WHERE t.locale IS NOT NULL
           AND t.locale <> ''
           AND split_part(t.locale, '_', 1) <> split_part(:primary_locale, '_', 1)
-          AND t.created_at >= CURRENT_DATE - :days_ago
+          AND t.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           AND t.deleted_at IS NULL
       ORDER BY t.created_at DESC
       SQL
@@ -1503,7 +1503,7 @@ module DiscourseDataExplorer
       WHERE p.locale IS NOT NULL
           AND p.locale <> ''
           AND split_part(p.locale, '_', 1) <> split_part(:primary_locale, '_', 1)
-          AND p.created_at >= CURRENT_DATE - :days_ago
+          AND p.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           AND p.deleted_at IS NULL
       ORDER BY p.created_at DESC
       SQL
@@ -1600,7 +1600,7 @@ module DiscourseDataExplorer
           MAX(created_at) AS last_seen,
           (array_agg(user_agent ORDER BY created_at DESC))[1] AS sample_user_agent
       FROM browser_pageview_events
-      WHERE created_at >= CURRENT_DATE - :days_ago
+      WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       GROUP BY ip_address, asn, country_code
       ORDER BY asn_total_pageviews DESC, pageviews DESC

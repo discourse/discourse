@@ -38,6 +38,10 @@ uk:
           title: "Введення дати / часу"
         menus:
           title: "Меню"
+        context_menu:
+          actions:
+            duplicate: "Дублювати"
+            delete: "Видалити"
         multi_select:
           title: "Множинний вибір"
         toasts:

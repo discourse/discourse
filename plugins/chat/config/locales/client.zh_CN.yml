@@ -137,7 +137,7 @@ zh_CN:
         process_started: "删除频道的过程已经开始。此模态框将很快关闭，您将无法再查看被删除的频道。"
       channels_list_popup:
         browse: "浏览频道"
-        create: "新建频道"
+        create: "新建频道..."
       close: "关闭"
       remove: "移除"
       collapse: "收起聊天抽屉"
@@ -151,8 +151,6 @@ zh_CN:
       muted: "已设为免打扰"
       joined: "已加入"
       empty_state:
-        direct_message_cta: "开始个人聊天"
-        direct_message: "您还可以与一位或多位用户开始个人聊天。"
         title: "找不到频道"
         my_threads: "您还没有任何消息串。您参与的消息串将在此处显示。"
       email_frequency:
@@ -574,14 +572,20 @@ zh_CN:
       direct_messages:
         title: "直接消息"
         aria_label: "切换到直接消息"
-        new: "创建个人聊天"
         create: "开始"
-        leave: "离开此个人聊天"
-        close: "关闭此个人聊天"
+        leave: "离开频道"
+        close: "关闭频道"
         cannot_create: "抱歉，您无法发送直接消息。"
       channel_list:
         title: "频道"
         aria_label: "切换到频道列表"
+        options:
+          filter: "筛选"
+        filter:
+          all: "所有频道"
+          mentions: "提及"
+        sort:
+          priority: "优先级"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "选择一个频道"
@@ -727,11 +731,6 @@ zh_CN:
           direct_html: '<span>%{username}</span> <span>在“%{channel}”中提及您</span>'
           other_plain: '在“%{channel}”中提及“%{identifier}”'
           other_html: '<span>%{username}</span> <span>在“%{channel}”中提及“%{identifier}”</span>'
-        direct_message_chat_mention:
-          direct: "在个人聊天中提及您"
-          direct_html: "<span>%{username}</span> <span>在个人聊天中提及您</span>"
-          other_plain: "在个人聊天中提及“%{identifier}”"
-          other_html: "<span>%{username}</span> <span>在个人聊天中提及“%{identifier}”</span>"
         chat_message: "新的聊天消息"
         chat_quoted: "%{username} 引用了您的聊天消息"
       titles:
@@ -800,9 +799,6 @@ zh_CN:
         chat:
           title: 聊天
     sidebar:
-      start_new_dm:
-        text: 开始新的 DM
-        title: 创建个人聊天
       panels:
         chat:
           label: "聊天"

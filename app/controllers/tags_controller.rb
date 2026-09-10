@@ -4,6 +4,8 @@ class TagsController < ::ApplicationController
   include TopicListResponder
   include TopicQueryParams
 
+  MAX_CSV_ROWS = 5_000
+
   before_action :ensure_tags_enabled
 
   def self.show_methods
@@ -304,8 +306,18 @@ class TagsController < ::ApplicationController
     file = params[:file] || params[:files].first
 
     hijack do
+      rows = 0
+
       Tag.transaction do
         CSV.foreach(file.tempfile) do |row|
+          rows += 1
+
+          if rows > MAX_CSV_ROWS
+            raise Discourse::InvalidParameters.new(
+                    I18n.t("tags.upload_too_many_rows", count: MAX_CSV_ROWS),
+                  )
+          end
+
           if row.length > 2
             raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
           end

@@ -32,6 +32,7 @@ import optionalService from "discourse/lib/optional-service";
 import { showAlert } from "discourse/lib/post-action-feedback";
 import { survivingPenalty } from "discourse/lib/reviewable-penalty";
 import { resolveReviewableComponent } from "discourse/lib/reviewable-registry";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -127,7 +128,7 @@ export default class ReviewableItem extends Component {
   @cached
   get state() {
     // reading the argument is what ties this cache to a single reviewable
-    this.args.reviewable;
+    manuallyTrack(this.args.reviewable);
 
     return trackedObject({
       activeTab: "timeline",

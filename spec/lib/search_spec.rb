@@ -2250,6 +2250,44 @@ RSpec.describe Search do
       expect(Search.execute("test after:jan").posts).to contain_exactly(post_1, post_2)
     end
 
+    it "returns no posts when a before or after date is invalid" do
+      post = Fabricate(:post, raw: "A searchable post")
+
+      expect(Search.execute("searchable", type_filter: "topic").posts).to contain_exactly(post)
+
+      %w[before after].each do |filter|
+        ["0346-04-07", "invalid", "2001-13-01", ""].each do |date|
+          expect(
+            Search.execute("searchable #{filter}:#{date}", type_filter: "topic").posts,
+          ).to be_empty
+        end
+      end
+    end
+
+    it "returns no posts when only one date bound is valid" do
+      Fabricate(:post, created_at: Time.zone.parse("2001-05-20"))
+
+      expect(
+        Search.execute("after:0346-04-07 before:2030-01-01", type_filter: "topic").posts,
+      ).to be_empty
+      expect(
+        Search.execute("after:2000-01-01 before:0346-05-07", type_filter: "topic").posts,
+      ).to be_empty
+    end
+
+    it "returns no posts for a search containing only invalid date bounds" do
+      post = Fabricate(:post)
+      SiteSetting.search_recent_regular_posts_offset_post_id = post.id
+
+      expect(
+        Search.execute(
+          "after:0346-04-07 before:0346-05-07",
+          type_filter: "topic",
+          search_type: :full_page,
+        ).posts,
+      ).to be_empty
+    end
+
     it "supports before/after filters and is not affected by the `search_recent_regular_posts_offset_post_id` site setting" do
       post_1 = Fabricate(:post, created_at: Time.zone.parse("2000-06-24"), like_count: 15)
       post_2 = Fabricate(:post, created_at: Time.zone.parse("2000-06-26"), like_count: 5)

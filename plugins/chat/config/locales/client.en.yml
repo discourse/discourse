@@ -136,7 +136,7 @@ en:
         process_started: "The process to delete the channel has started. This modal will close shortly, you will no longer see the deleted channel anywhere."
       channels_list_popup:
         browse: "Browse channels"
-        create: "New channel"
+        create: "New channel..."
 
       close: "Close"
       remove: "Remove"
@@ -153,8 +153,8 @@ en:
       muted: "muted"
       joined: "joined"
       empty_state:
-        direct_message_cta: "Start a personal Chat"
-        direct_message: "You can also start a personal chat with one or more users."
+        direct_message_cta: "Start a direct message or group chat"
+        direct_message: "You can also start a direct message or group chat with one or more users."
         title: "No channels found"
         my_threads: "You don't have any threads yet. Threads you participate in will be displayed here."
       email_frequency:
@@ -637,15 +637,37 @@ en:
       direct_messages:
         title: "DMs"
         aria_label: "Switch to direct messages"
-        new: "Create a personal chat"
+        new: "New direct message or group chat..."
         create: "Go"
-        leave: "Leave this personal chat"
-        close: "Close this personal chat"
+        leave: "Leave channel"
+        close: "Close channel"
         cannot_create: "Sorry, you cannot send direct messages."
 
       channel_list:
         title: "Channels"
         aria_label: "Switch to channels list"
+        options:
+          title: "Channel list options"
+          filter: "Filter"
+          sort: "Sort"
+          current_filter: "Filter: %{filter}"
+          current_sort: "Sort: %{sort}"
+        filter:
+          title: "Filter channels by:"
+          all: "All channels"
+          active: "Active only"
+          active_description: "New activity in last %{days} days"
+          unread: "Unreads"
+          mentions: "Mentions"
+        sort:
+          title: "Sort channels by:"
+          alphabetical: "Alphabetically"
+          recent_activity: "Recent activity"
+          priority: "Priority"
+          priority_description: "Mentions, then unreads, then recent activity"
+        empty:
+          filtered: "No channels match this filter."
+          show_all: "Show all channels"
 
       incoming_webhooks:
         back: "Back"
@@ -812,11 +834,11 @@ en:
           # %{identifier} is either @here or @all
           other_html: '<span>%{username}</span> <span>mentioned %{identifier} in "%{channel}"</span>'
         direct_message_chat_mention:
-          direct: "mentioned you in personal chat"
-          direct_html: "<span>%{username}</span> <span>mentioned you in personal chat</span>"
-          other_plain: "mentioned %{identifier} in personal chat"
+          direct: "mentioned you in a direct message"
+          direct_html: "<span>%{username}</span> <span>mentioned you in a direct message</span>"
+          other_plain: "mentioned %{identifier} in a direct message"
           # %{identifier} is either @here or @all
-          other_html: "<span>%{username}</span> <span>mentioned %{identifier} in personal chat</span>"
+          other_html: "<span>%{username}</span> <span>mentioned %{identifier} in a direct message</span>"
         chat_message: "New chat message"
         chat_quoted: "%{username} quoted your chat message"
 
@@ -892,8 +914,8 @@ en:
 
     sidebar:
       start_new_dm:
-        text: Start new DM
-        title: Create a personal chat
+        text: Start DM or group chat
+        title: New direct message or group chat
       panels:
         chat:
           label: "Chat"

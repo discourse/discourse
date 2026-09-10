@@ -6,7 +6,9 @@ module SvgSprite
         a
         address-book
         address-card
+        align-center
         align-left
+        align-right
         anchor
         angle-down
         angle-left

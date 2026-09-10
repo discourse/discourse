@@ -6089,6 +6089,7 @@ pl_PL:
       image_load_error: '<a href="%url%">Obraz</a> nie może zostać wczytany.'
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     invalid_video_url: Nie można odtworzyć tego filmu, ponieważ adres URL jest nieprawidłowy lub niedostępny.
+    play_video: Odtwórz wideo
     keyboard_shortcuts_help:
       search_label: "Skróty wyszukiwania"
       search_placeholder: "Wyszukaj skrót według opisu lub kombinacji klawiszy"

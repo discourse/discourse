@@ -53,7 +53,8 @@ RSpec.describe "Drawer - starred channels" do
       dm_channel_2.membership_for(current_user).update!(starred: true)
     end
 
-    it "sorts by activity: unread public, unread DMs, read public, read DMs" do
+    it "sorts by priority with unread channels before read ones" do
+      current_user.user_option.update!(chat_channel_list_sort_starred: "priority")
       Fabricate(:chat_message, chat_channel: channel_2, user: user_1)
       Fabricate(:chat_message, chat_channel: dm_channel_1, user: user_1)
       channel_2.membership_for(current_user).update!(last_viewed_at: 1.minute.ago)
@@ -63,10 +64,10 @@ RSpec.describe "Drawer - starred channels" do
       chat_page.open_from_header
       drawer_page.click_starred_channels
 
-      channels = page.all(".chat-channel-row")
-      expect(channels.map { |c| c["data-chat-channel-id"] }).to eq(
-        [channel_2.id, dm_channel_1.id, channel_1.id, dm_channel_2.id].map(&:to_s),
-      )
+      channels = page.all(".chat-channel-row").map { |c| c["data-chat-channel-id"] }
+
+      expect(channels.first(2).sort).to eq([channel_2.id, dm_channel_1.id].map(&:to_s).sort)
+      expect(channels.last(2).sort).to eq([channel_1.id, dm_channel_2.id].map(&:to_s).sort)
     end
   end
 

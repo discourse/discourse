@@ -586,13 +586,6 @@ after_initialize do
   require_relative "jobs/scheduled/delete_expired_event_posts"
   require_relative "jobs/scheduled/monitor_event_dates"
   require_relative "jobs/scheduled/update_holiday_usernames"
-  require_relative "lib/discourse_events/calendar/extractor"
-  require_relative "lib/discourse_events/calendar/validator"
-  require_relative "lib/discourse_events/calendar/event_validator"
-  require_relative "lib/discourse_events/group_timezones/extractor"
-  require_relative "lib/discourse_events/holidays/finder"
-  require_relative "lib/discourse_events/holidays/status"
-  require_relative "lib/discourse_events/holidays/users_on_holiday"
 
   register_post_custom_field_type(DiscourseEvents::CALENDAR_CUSTOM_FIELD, :string)
   register_post_custom_field_type(DiscourseEvents::GROUP_TIMEZONES_CUSTOM_FIELD, :json)
@@ -1068,4 +1061,33 @@ after_initialize do
 
     DiscourseEvents::Livestream.publish_livestream_chat_status(membership, user: user) if membership
   end
+end
+
+after_initialize do
+  require_relative "lib/discourse_events/mcp_tools"
+  register_mcp_tool(
+    "discourse_calendar_event_list",
+    title: "List events",
+    description: "Lists upcoming events whose posts are visible to the authenticated user.",
+    implementation: DiscourseEvents::McpTools::ListEvents,
+    input_schema: {
+      type: "object",
+      properties: {
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+        },
+      },
+      additionalProperties: false,
+    },
+    required_scopes: %w[discourse-calendar:read],
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+    },
+    availability: -> do
+      SiteSetting.discourse_events_enabled && SiteSetting.discourse_post_event_enabled
+    end,
+  )
 end

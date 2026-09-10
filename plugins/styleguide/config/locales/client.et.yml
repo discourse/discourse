@@ -13,6 +13,9 @@ et:
       sections:
         typography:
           example: "Tere tulemast Discourse'i"
+        context_menu:
+          actions:
+            delete: "Kustuta"
         colors:
           title: "Värvid"
         icons:

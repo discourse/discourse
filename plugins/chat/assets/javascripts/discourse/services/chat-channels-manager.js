@@ -1,10 +1,15 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { trackedObject } from "@ember/reactive/collections";
+import { trackedObject, trackedSet } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { debounce } from "discourse/lib/decorators";
+import {
+  CHAT_CHANNEL_LIST_ACTIVE_DAYS,
+  CHAT_CHANNEL_LIST_FILTERS,
+  CHAT_CHANNEL_LIST_SORTS,
+} from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -17,7 +22,9 @@ const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;
 */
 
 export default class ChatChannelsManager extends Service {
+  @service chat;
   @service chatApi;
+  @service chatChannelListPreferences;
   @service chatSubscriptionsManager;
   @service chatStateManager;
   @service currentUser;
@@ -25,6 +32,7 @@ export default class ChatChannelsManager extends Service {
   @service siteSettings;
 
   @tracked userHasThreads = false;
+  #pendingStarredUpdates = trackedSet();
   @tracked _cached = trackedObject();
 
   @cached
@@ -85,15 +93,17 @@ export default class ChatChannelsManager extends Service {
   }
 
   /**
-   * Returns all public message channels sorted by activity (unreads first).
-   * Used in mobile/drawer mode where starred channels appear in both tabs.
+   * Returns all public message channels filtered and sorted by the user's
+   * channel list preferences. Used in mobile/drawer mode where starred
+   * channels also appear in the channels tab.
    *
-   * @returns {ChatChannel[]} Array of public channels sorted by activity
+   * @returns {ChatChannel[]} Array of public channels sorted by preference
    */
-  get allPublicChannelsByActivity() {
-    return this.#sortChannelsByActivityUnreadsFirst([
-      ...this.publicMessageChannels,
-    ]);
+  get publicMessageChannelsByPreference() {
+    return this.#filterAndSortSidebarChannels(
+      this.publicMessageChannels,
+      "channels"
+    );
   }
 
   /**
@@ -134,22 +144,26 @@ export default class ChatChannelsManager extends Service {
   }
 
   /**
-   * Returns all direct message channels sorted by activity (unreads first).
-   * Used in mobile/drawer mode where starred channels appear in both tabs.
+   * Returns all direct message channels filtered and sorted by the user's
+   * channel list preferences. Used in mobile/drawer mode where starred
+   * channels also appear in the DM tab.
    *
-   * @returns {ChatChannel[]} Array of DM channels sorted by activity
+   * @returns {ChatChannel[]} Array of DM channels sorted by preference
    */
-  get directMessageChannelsByActivity() {
-    return this.#sortDirectMessageChannelsByActivity(
+  get directMessageChannelsByPreference() {
+    // Not `directMessageChannels`: its comparator dereferences `lastMessage.id`
+    // unguarded, so a channel with no messages throws before this re-sorts.
+    return this.#filterAndSortSidebarChannels(
       this.channels.filter((channel) => {
         const membership = channel.currentUserMembership;
         return channel.isDirectMessageChannel && membership?.following;
-      })
+      }),
+      "dms"
     );
   }
 
-  get truncatedDirectMessageChannelsByActivity() {
-    return this.directMessageChannelsByActivity.slice(
+  get truncatedDirectMessageChannelsByPreference() {
+    return this.directMessageChannelsByPreference.slice(
       0,
       DIRECT_MESSAGE_CHANNELS_LIMIT
     );
@@ -193,64 +207,6 @@ export default class ChatChannelsManager extends Service {
   }
 
   /**
-   * Returns all starred channels sorted by activity (unreads first).
-   * Prioritizes unread status over channel type:
-   * 1. Unread public channels (sorted by activity)
-   * 2. Unread DMs/Groups (sorted by activity)
-   * 3. Read public channels (sorted by activity)
-   * 4. Read DMs/Groups (sorted by activity)
-   *
-   * @returns {ChatChannel[]} Array of starred channels sorted by activity
-   */
-  get starredChannelsByActivity() {
-    const starredChannels = this.channels.filter(
-      (channel) =>
-        channel.currentUserMembership?.following &&
-        channel.currentUserMembership?.starred
-    );
-
-    return starredChannels.sort((a, b) => {
-      const aUrgent = this.#getChannelUrgentCount(a);
-      const bUrgent = this.#getChannelUrgentCount(b);
-      const aUnread = this.#getChannelUnreadCount(a);
-      const bUnread = this.#getChannelUnreadCount(b);
-
-      const aHasActivity = aUrgent > 0 || aUnread > 0;
-      const bHasActivity = bUrgent > 0 || bUnread > 0;
-
-      // First: prioritize channels with activity over those without
-      if (aHasActivity !== bHasActivity) {
-        return aHasActivity ? -1 : 1;
-      }
-
-      // Within the same activity state, sort by channel type (public first)
-      if (a.isDirectMessageChannel !== b.isDirectMessageChannel) {
-        return a.isDirectMessageChannel ? 1 : -1;
-      }
-
-      // Within the same channel type and activity state:
-      // If both have activity, prioritize by urgent then unread
-      if (aHasActivity && bHasActivity) {
-        if (aUrgent > 0 && bUrgent > 0) {
-          return this.#compareByLastActivity(a, b);
-        }
-        if (aUrgent > 0 || bUrgent > 0) {
-          return aUrgent > bUrgent ? -1 : 1;
-        }
-        if (aUnread > 0 && bUnread > 0) {
-          return this.#compareByLastActivity(a, b);
-        }
-        if (aUnread > 0 || bUnread > 0) {
-          return aUnread > bUnread ? -1 : 1;
-        }
-      }
-
-      // Sort remaining by last activity
-      return this.#compareByLastActivity(a, b);
-    });
-  }
-
-  /**
    * Returns public message channels that are not starred.
    * Falls back to all public channels if starring is disabled.
    * Channels are sorted with starred channels first, then by slug.
@@ -270,6 +226,48 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
+  get sidebarPublicMessageChannels() {
+    return this.#filterAndSortSidebarChannels(
+      this.unstarredPublicMessageChannels,
+      "channels"
+    );
+  }
+
+  get sidebarDirectMessageChannels() {
+    return this.#limitSidebarChannels(
+      this.#filterAndSortSidebarChannels(
+        this.unstarredDirectMessageChannels,
+        "dms"
+      ),
+      DIRECT_MESSAGE_CHANNELS_LIMIT
+    );
+  }
+
+  /**
+   * Returns all starred channels filtered and sorted by the user's channel
+   * list preferences. Alphabetical sorting keeps the public-then-DM grouping
+   * of `starredChannels`; other sorts order across both types.
+   *
+   * @returns {ChatChannel[]} Array of starred channels sorted by preference
+   */
+  get starredChannelsByPreference() {
+    const channels = this.#filterSidebarChannels(
+      this.starredChannels,
+      "starred"
+    );
+
+    if (
+      this.chatChannelListPreferences.sortFor("starred") ===
+      CHAT_CHANNEL_LIST_SORTS.ALPHABETICAL
+    ) {
+      return channels;
+    }
+
+    return channels.sort((channelA, channelB) => {
+      return this.#compareSidebarChannels(channelA, channelB, "starred");
+    });
+  }
+
   /**
    * Returns direct message channels that are not starred.
    * Falls back to all DM channels if starring is disabled.
@@ -287,13 +285,6 @@ export default class ChatChannelsManager extends Service {
           !membership?.starred
         );
       })
-    );
-  }
-
-  get truncatedUnstarredDirectMessageChannels() {
-    return this.unstarredDirectMessageChannels.slice(
-      0,
-      DIRECT_MESSAGE_CHANNELS_LIMIT
     );
   }
 
@@ -380,6 +371,39 @@ export default class ChatChannelsManager extends Service {
     }
   }
 
+  isUpdatingStarred(channel) {
+    return this.#pendingStarredUpdates.has(channel.currentUserMembership);
+  }
+
+  async toggleStarred(channel, { beforeUpdate } = {}) {
+    const membership = channel.currentUserMembership;
+
+    if (!membership || this.#pendingStarredUpdates.has(membership)) {
+      return;
+    }
+
+    this.#pendingStarredUpdates.add(membership);
+    const previousValue = membership.starred;
+    let updated = false;
+
+    try {
+      await beforeUpdate?.();
+      membership.starred = !previousValue;
+      updated = true;
+
+      await this.chatApi.updateCurrentUserChannelMembership(channel.id, {
+        starred: membership.starred,
+      });
+    } catch (error) {
+      if (updated) {
+        membership.starred = previousValue;
+      }
+      popupAjaxError(error);
+    } finally {
+      this.#pendingStarredUpdates.delete(membership);
+    }
+  }
+
   async unfollow(model) {
     try {
       this.chatSubscriptionsManager.stopChannelSubscription(model);
@@ -442,25 +466,6 @@ export default class ChatChannelsManager extends Service {
     });
   }
 
-  #getChannelUrgentCount(channel) {
-    if (channel.isDirectMessageChannel) {
-      return (
-        channel.tracking.unreadCount +
-        channel.tracking.mentionCount +
-        channel.tracking.watchedThreadsUnreadCount
-      );
-    }
-    return (
-      channel.tracking.mentionCount + channel.tracking.watchedThreadsUnreadCount
-    );
-  }
-
-  #getChannelUnreadCount(channel) {
-    return (
-      channel.tracking.unreadCount + channel.unreadThreadsCountSinceLastViewed
-    );
-  }
-
   #compareByLastActivity(a, b) {
     const aDate = a.lastMessage?.createdAt
       ? new Date(a.lastMessage.createdAt)
@@ -478,6 +483,156 @@ export default class ChatChannelsManager extends Service {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  #channelMatchesSidebarFilter(channel, filter, activeCutoff) {
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.ALL) {
+      return true;
+    }
+
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.ACTIVE) {
+      if (!channel.lastMessage?.id || !channel.lastMessage.createdAt) {
+        return false;
+      }
+
+      return new Date(channel.lastMessage.createdAt).getTime() >= activeCutoff;
+    }
+
+    if (channel.currentUserMembership?.muted) {
+      return false;
+    }
+
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.UNREAD) {
+      return this.#sidebarUnreadCount(channel) > 0;
+    }
+
+    if (filter === CHAT_CHANNEL_LIST_FILTERS.MENTIONS) {
+      return this.#sidebarUrgentCount(channel) > 0;
+    }
+
+    return true;
+  }
+
+  #filterAndSortSidebarChannels(channels, section) {
+    return this.#filterSidebarChannels(channels, section).sort(
+      (channelA, channelB) => {
+        return this.#compareSidebarChannels(channelA, channelB, section);
+      }
+    );
+  }
+
+  #filterSidebarChannels(channels, section) {
+    const filter = this.chatChannelListPreferences.filterFor(section);
+    const activeCutoff =
+      filter === CHAT_CHANNEL_LIST_FILTERS.ACTIVE
+        ? Date.now() - CHAT_CHANNEL_LIST_ACTIVE_DAYS * 24 * 60 * 60 * 1000
+        : undefined;
+
+    return channels.filter((channel) => {
+      return (
+        this.#channelMatchesSidebarFilter(channel, filter, activeCutoff) ||
+        this.#isActiveSidebarChannel(channel)
+      );
+    });
+  }
+
+  #limitSidebarChannels(channels, limit) {
+    const limitedChannels = channels.slice(0, limit);
+    const activeChannel = channels.find((channel) => {
+      return this.#isActiveSidebarChannel(channel);
+    });
+
+    if (!activeChannel || limitedChannels.includes(activeChannel)) {
+      return limitedChannels;
+    }
+
+    return [...limitedChannels.slice(0, -1), activeChannel];
+  }
+
+  #compareChannelsAlphabetically(channelA, channelB) {
+    const channelAName = channelA.isDirectMessageChannel
+      ? channelA.title
+      : channelA.slug;
+    const channelBName = channelB.isDirectMessageChannel
+      ? channelB.title
+      : channelB.slug;
+    const alphabetical = (channelAName || "").localeCompare(channelBName || "");
+    return alphabetical || channelA.id - channelB.id;
+  }
+
+  #compareSidebarChannels(channelA, channelB, section) {
+    const sort = this.chatChannelListPreferences.sortFor(section);
+
+    if (sort === CHAT_CHANNEL_LIST_SORTS.ALPHABETICAL) {
+      return this.#compareChannelsAlphabetically(channelA, channelB);
+    }
+
+    if (sort === CHAT_CHANNEL_LIST_SORTS.PRIORITY) {
+      const priority =
+        this.#sidebarChannelPriority(channelA) -
+        this.#sidebarChannelPriority(channelB);
+      if (priority) {
+        return priority;
+      }
+    }
+
+    return (
+      this.#compareChannelsByRecency(channelA, channelB) ||
+      this.#compareChannelsAlphabetically(channelA, channelB)
+    );
+  }
+
+  #compareChannelsByRecency(channelA, channelB) {
+    const channelAHasActivity =
+      channelA.lastMessage?.id && channelA.lastMessage.createdAt;
+    const channelBHasActivity =
+      channelB.lastMessage?.id && channelB.lastMessage.createdAt;
+
+    if (!!channelAHasActivity !== !!channelBHasActivity) {
+      return channelAHasActivity ? -1 : 1;
+    }
+
+    if (!channelAHasActivity) {
+      return 0;
+    }
+
+    return this.#compareByLastActivity(channelA, channelB);
+  }
+
+  #isActiveSidebarChannel(channel) {
+    return (
+      channel.id === this.chat.activeChannel?.id &&
+      (this.chatStateManager.isDrawerExpanded ||
+        this.chatStateManager.isFullPageActive)
+    );
+  }
+
+  #sidebarChannelPriority(channel) {
+    if (channel.currentUserMembership?.muted) {
+      return 2;
+    }
+
+    if (this.#sidebarUrgentCount(channel) > 0) {
+      return 0;
+    }
+
+    return this.#sidebarUnreadCount(channel) > 0 ? 1 : 2;
+  }
+
+  #sidebarUnreadCount(channel) {
+    return (
+      (channel.tracking?.unreadCount ?? 0) +
+      (channel.tracking?.mentionCount ?? 0) +
+      (channel.tracking?.watchedThreadsUnreadCount ?? 0) +
+      (channel.unreadThreadsCountSinceLastViewed ?? 0)
+    );
+  }
+
+  #sidebarUrgentCount(channel) {
+    return (
+      (channel.tracking?.mentionCount ?? 0) +
+      (channel.tracking?.watchedThreadsUnreadCount ?? 0)
+    );
   }
 
   #cache(channel) {
@@ -548,16 +703,6 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
-  /**
-   * Sorts public channels by activity without starred priority.
-   * Unreads come first regardless of starred status.
-   */
-  #sortChannelsByActivityUnreadsFirst(channels) {
-    return channels.sort((a, b) => {
-      return this.#compareChannelsByActivity(a, b);
-    });
-  }
-
   #compareChannelsByActivity(a, b) {
     const stats = {
       a: {
@@ -607,16 +752,6 @@ export default class ChatChannelsManager extends Service {
         return this.#compareDirectMessageChannelsByActivity(a, b);
       })
     );
-  }
-
-  /**
-   * Sorts DM channels by activity without starred priority.
-   * Unreads come first regardless of starred status.
-   */
-  #sortDirectMessageChannelsByActivity(channels) {
-    return channels.sort((a, b) => {
-      return this.#compareDirectMessageChannelsByActivity(a, b);
-    });
   }
 
   #compareDirectMessageChannelsByActivity(a, b) {

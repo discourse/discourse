@@ -146,7 +146,7 @@ uk:
         process_started: "Процес видалення каналу розпочався. Це спливаюче вікно закриється найближчим часом, ви більше не побачите видалений канал."
       channels_list_popup:
         browse: "Перегляд каналів"
-        create: "Новий канал"
+        create: "Новий канал..."
       close: "Закрити"
       remove: "Вилучити"
       collapse: "Згорнути вікно чату"
@@ -163,8 +163,6 @@ uk:
       muted: "ігноровані"
       joined: "приєднався(лась)"
       empty_state:
-        direct_message_cta: "Розпочати особистий чат"
-        direct_message: "Ви також можете розпочати особистий чат з одним або кількома користувачами."
         title: "Канали не знайдено"
         my_threads: "У вас ще немає тем. Теми, в яких ви берете участь, відображатимуться тут."
       email_frequency:
@@ -697,14 +695,20 @@ uk:
       direct_messages:
         title: "DMs"
         aria_label: "Перейти на прямі повідомлення"
-        new: "Створити особистий чат"
         create: "Створити"
-        leave: "Залишити цей особистий чат"
-        close: "Закрити цей особистий чат"
+        leave: "Вийти з каналу"
+        close: "Закрити канал"
         cannot_create: "На жаль, ви не можете надсилати прямі повідомлення."
       channel_list:
         title: "Канали"
         aria_label: "Перемикнутися на список каналів"
+        options:
+          filter: "Filter"
+        filter:
+          all: "Всі канали"
+          mentions: "Згадки"
+        sort:
+          priority: "Пріоритет"
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Виберіть канал"
@@ -877,11 +881,6 @@ uk:
           direct_html: '<span>%{username}</span> <span>згадав вас у «%{channel}»</span>'
           other_plain: 'згадав(-ла) %{identifier} у каналі «%{channel}»'
           other_html: '<span>%{username}</span> <span>згадано %{identifier} у «%{channel}»</span>'
-        direct_message_chat_mention:
-          direct: "згадав вас в особистому чаті"
-          direct_html: "<span>%{username}</span> <span>згадав вас в особистому чаті</span>"
-          other_plain: "згадав(-ла) %{identifier} в особистому чаті"
-          other_html: "<span>%{username}</span> <span>згадали %{identifier} в особистому чаті</span>"
         chat_message: "Нове повідомлення в чаті"
         chat_quoted: "%{username} процитував ваше повідомлення в чаті"
       titles:
@@ -953,9 +952,6 @@ uk:
         chat:
           title: Чат
     sidebar:
-      start_new_dm:
-        text: Почати нове особисте повідомлення
-        title: Створити особистий чат
       panels:
         chat:
           label: "Чат"

@@ -1,4 +1,4 @@
-import { fillIn, render } from "@ember/test-helpers";
+import { fillIn, findAll, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import CompactEventEditor from "discourse/plugins/discourse-events/discourse/components/compact-event-editor";
@@ -171,5 +171,34 @@ module("Integration | Component | CompactEventEditor", function (hooks) {
         "Add location",
         "location stops advertising URLs once url is a separate row"
       );
+  });
+
+  test("defaults the end date to the day after the start date", async function (assert) {
+    const initialState = stateWith({
+      allDay: true,
+      startsAt: moment("2027-07-14T00:00:00Z"),
+      endsAt: null,
+    });
+    let lastState = null;
+    await renderEditor(initialState, (state) => (lastState = state));
+
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasAttribute("min", "2027-07-14");
+
+    const endDateInput = findAll(".composer-event__date-input")[1];
+    endDateInput.showPicker = () => {};
+    await triggerEvent(endDateInput, "focus");
+
+    assert.strictEqual(lastState.endsAt.format("YYYY-MM-DD"), "2027-07-15");
+    assert.dom(endDateInput).hasValue("2027-07-15");
+
+    const startDateInput = findAll(".composer-event__date-input")[0];
+    startDateInput.value = "2027-08-20";
+    await triggerEvent(startDateInput, "change");
+
+    assert
+      .dom(findAll(".composer-event__date-input")[1])
+      .hasAttribute("min", "2027-08-20");
   });
 });

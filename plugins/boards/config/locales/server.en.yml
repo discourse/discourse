@@ -21,6 +21,7 @@ en:
   boards:
     board:
       errors:
+        acl_update_failed: "Failed to update board permissions."
         acl_create_failed: "Failed to create board permissions."
     errors:
       board_not_found: "Board not found"
