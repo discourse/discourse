@@ -9,6 +9,8 @@ class CiProcessProfile
     @clock_ticks = clock_ticks
     @cpu_ticks = { ruby: 0, chromium: 0, node: 0, postgres: 0, other: 0 }
     @chromium_ticks = { browser: 0, renderer: 0, gpu: 0, utility: 0, zygote: 0, other: 0 }
+    @main_thread_ticks = @chromium_ticks.transform_values { nil }
+    @main_thread_last_ticks = {}
     @last_ticks = {}
     @active = {}
     @counts = {
@@ -21,6 +23,8 @@ class CiProcessProfile
       vanished_processes: 0,
       errors: 0,
       classification_read_errors: 0,
+      main_thread_read_errors: 0,
+      main_thread_missed_observations: 0,
     }
     @started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     @initial_sample = true
@@ -72,11 +76,31 @@ class CiProcessProfile
           @counts[:classification_read_errors] += 1
         end
       end
+      main_thread = nil
+      if process_bucket == :chromium
+        begin
+          main_thread = parse_stat(File.binread(File.join(directory, "task", pid, "stat")))
+        rescue Errno::ENOENT, Errno::ESRCH
+          @counts[:main_thread_missed_observations] += 1
+        rescue SystemCallError, ArgumentError
+          @counts[:main_thread_read_errors] += 1
+        end
+      end
       current = parse_stat(File.binread(File.join(directory, "stat")))
       if current[:pid] != pid || current[:start_ticks] != before[:start_ticks] ||
            current[:comm] != before[:comm]
         @counts[:missed_process_observations] += 1
+        @counts[:main_thread_missed_observations] += 1 if main_thread
         next
+      end
+
+      if main_thread
+        if main_thread.values_at(:pid, :start_ticks, :comm) ==
+             current.values_at(:pid, :start_ticks, :comm)
+          record_main_thread(current: main_thread, chromium_type: chromium_type)
+        else
+          @counts[:main_thread_missed_observations] += 1
+        end
       end
 
       identity = [pid, current[:start_ticks]]
@@ -123,12 +147,33 @@ class CiProcessProfile
         @cpu_ticks.transform_values { |ticks| @available ? ticks.fdiv(@clock_ticks) : nil },
       chromium_cpu_seconds:
         @chromium_ticks.transform_values { |ticks| @available ? ticks.fdiv(@clock_ticks) : nil },
+      chromium_main_thread_cpu_seconds:
+        @main_thread_ticks.transform_values do |ticks|
+          @available && ticks ? ticks.fdiv(@clock_ticks) : nil
+        end,
       **@counts,
       short_lived_processes_may_be_unobserved: true,
     }
   end
 
   private
+
+  def record_main_thread(current:, chromium_type:)
+    identity = [current[:pid], current[:start_ticks]]
+    previous_ticks = @main_thread_last_ticks[identity]
+    delta_ticks = 0
+    if previous_ticks
+      if current[:cpu_ticks] >= previous_ticks
+        delta_ticks = current[:cpu_ticks] - previous_ticks
+      else
+        @counts[:main_thread_read_errors] += 1
+      end
+    elsif !@initial_sample && current[:start_ticks] > @baseline_ticks
+      delta_ticks = current[:cpu_ticks]
+    end
+    @main_thread_ticks[chromium_type] = (@main_thread_ticks[chromium_type] || 0) + delta_ticks
+    @main_thread_last_ticks[identity] = [previous_ticks || 0, current[:cpu_ticks]].max
+  end
 
   def parse_stat(text)
     match = /\A([1-9][0-9]*) \((.*)\) (.*)\z/m.match(text)

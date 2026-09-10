@@ -61,7 +61,6 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
-      PLAYWRIGHT_SINGLE_RASTER_THREAD: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
 
     strategy:
       fail-fast: false
@@ -312,6 +311,7 @@ jobs:
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
+          DISCOURSE_LATE_SYSTEM_YJIT: "1"
           CHECKOUT_TIMEOUT: 10
           DISCOURSE_CI_SETUP_TIMING: "1"
           DISCOURSE_CI_BROWSER_PROFILE: "1"
@@ -324,6 +324,7 @@ jobs:
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
+          DISCOURSE_LATE_SYSTEM_YJIT: "1"
           CHECKOUT_TIMEOUT: 10
         run: |
           LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system

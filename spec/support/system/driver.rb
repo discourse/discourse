@@ -116,8 +116,6 @@ module SystemDrivers
       --disable-smooth-scrolling
     ]
 
-    base_args << "--num-raster-threads=1" if ENV["PLAYWRIGHT_SINGLE_RASTER_THREAD"] == "1"
-
     if ENV["PLAYWRIGHT_DEVTOOLS"].presence == "1" || ENV["SELENIUM_DEVTOOLS"].presence == "1"
       base_args << "--auto-open-devtools-for-tabs"
     end

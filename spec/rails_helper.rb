@@ -213,6 +213,14 @@ RSpec.configure do |config|
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
+
+    if ENV["DISCOURSE_LATE_SYSTEM_YJIT"] == "1" && system_specs_requested
+      yjit_enabled_before = RubyVM::YJIT.enabled?
+      RubyVM::YJIT.enable
+      yjit_enabled_after = RubyVM::YJIT.enabled?
+      raise "Late system YJIT activation failed" unless yjit_enabled_after
+      puts "LATE_SYSTEM_YJIT #{JSON.generate(before: yjit_enabled_before, after: yjit_enabled_after)}"
+    end
   end
 
   config.after(:suite) { Downloads.clear } if system_specs_requested
