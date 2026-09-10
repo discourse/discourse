@@ -40,7 +40,6 @@ en:
       group_no_assignments_title: "No assignments"
       group_no_assignments_body: "There are currently no active assignments for this group."
       group_everyone: "Everyone"
-      assigned_to: "Assigned to"
       assigned_topic_to: "Assigned topic to <a href='%{path}'>%{username}</a>"
       assign_post_to: "Assigned #%{post_number} to %{username}"
       # assign_post_to_multiple used in list form, example: "Assigned topic to username0, [#2 to username1], [#10 to username2]"
