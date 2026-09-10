@@ -68,6 +68,7 @@ RSpec.describe "JSON:API type renames", type: :request do
     ].map { it.new(__FILE__) }
   end
   let(:version) { JsonApiKit::Timeline::FIRST_RELEASE.to_s }
+  let(:version_changes) { JsonApiKit::VersionChanges.new(changes) }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:primary) { parsed_body.fetch("data").first }
   let(:attributes) { primary.fetch("attributes") }
@@ -89,7 +90,7 @@ RSpec.describe "JSON:API type renames", type: :request do
     middle.update_columns(last_posted_at: Time.utc(2026, 8, 1))
     newest.update_columns(last_posted_at: Time.utc(2026, 8, 2))
     freeze_time(Date.new(2026, 9, 5))
-    allow(JsonApiKit::VersionChange).to receive(:all).and_return(changes)
+    allow(JsonApiKit::VersionChanges).to receive(:core).and_return(version_changes)
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
       get "/api/topics" => "json_api_kit_spec/renamed_types#index"

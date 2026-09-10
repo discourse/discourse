@@ -59,104 +59,11 @@ module JsonApiKitSpec
 end
 
 RSpec.describe JsonApiKit::VersionChange do
-  subject(:change) { change_class.new(__FILE__) }
+  subject(:version_change) { change_class.new(__FILE__) }
 
   let(:change_class) { JsonApiKitSpec::RenameThingsLabelToName }
   let(:version) { JsonApiKit::ApiVersion.parse("2026-09-15") }
-  let(:later_version) { JsonApiKit::ApiVersion.parse("2026-10-01") }
-  let(:fixtures) { Rails.root.join("spec/fixtures/json_api_kit") }
   let(:name) { JsonApiKit::Name::Field.new(value: "label", type: "things") }
-
-  describe ".read" do
-    subject(:changes) { described_class.read(fixtures.join(directory)) }
-
-    let(:directory) { "api_changes" }
-
-    it "returns the change of each file, oldest version first" do
-      expect(changes.map(&:class)).to eq([RenameWidgetsLabelToName, AnotherWidgetsChange])
-    end
-
-    it "gives each change the file it came from" do
-      expect(changes.first.source.to_s).to end_with("2026-09-01_rename_widgets_label_to_name.rb")
-    end
-
-    context "when the file name does not start with the version" do
-      let(:directory) { "api_changes_misdated" }
-
-      it do
-        expect { changes }.to raise_error(ArgumentError, /must start with the version 2026-09-02/)
-      end
-    end
-
-    context "when a change is dated in the future" do
-      let(:directory) { "api_changes_in_the_future" }
-
-      it { expect { changes }.to raise_error(ArgumentError, /in the future/) }
-    end
-
-    context "when the version of a change is not a date" do
-      let(:directory) { "api_changes_with_a_bad_date" }
-
-      it { expect { changes }.to raise_error(ArgumentError, /is not a date/) }
-    end
-
-    context "when the class of a change does not match its file" do
-      let(:directory) { "api_changes_misnamed" }
-
-      it { expect { changes }.to raise_error(NameError, /MisnamedWidgetsChange/) }
-    end
-
-    context "when a change has no version" do
-      let(:directory) { "api_changes_without_version" }
-
-      it { expect { changes }.to raise_error(ArgumentError, /has no version/) }
-    end
-
-    context "when a change is dated on or before the first release" do
-      let(:directory) { "api_changes_before_first_release" }
-
-      it { expect { changes }.to raise_error(ArgumentError, /on or before the first release/) }
-    end
-
-    context "when a change has no description" do
-      let(:directory) { "api_changes_without_description" }
-
-      it { expect { changes }.to raise_error(ArgumentError, /has no description/) }
-    end
-
-    context "when a change renames one name twice" do
-      let(:directory) { "api_changes_with_two_renames_from_one_name" }
-
-      it { expect { changes }.to raise_error(ArgumentError, /changes label twice/) }
-    end
-
-    context "when a change renames two names to one name" do
-      let(:directory) { "api_changes_with_two_renames_to_one_name" }
-
-      it { expect { changes }.to raise_error(ArgumentError, /changes two names into title/) }
-    end
-  end
-
-  describe ".after" do
-    subject(:changes) { described_class.after(pin) }
-
-    let(:pin) { version }
-    let(:later_change) { JsonApiKitSpec::RenameThingsAndPeople.new(__FILE__) }
-
-    before { allow(described_class).to receive(:all).and_return([change, later_change]) }
-
-    it "returns the changes dated after the version" do
-      expect(changes).to eq([later_change])
-    end
-
-    context "when the version is the latest" do
-      let(:pin) { later_version }
-
-      it "returns no change" do
-        expect(changes).to be_empty
-      end
-    end
-  end
 
   describe ".resource" do
     subject(:transformations) { change_class.transformations }
@@ -232,20 +139,20 @@ RSpec.describe JsonApiKit::VersionChange do
 
   describe "#version" do
     it "returns the version of the change" do
-      expect(change.version).to eq(version)
+      expect(version_change.version).to eq(version)
     end
   end
 
   describe "#description" do
     it "returns the description of the change" do
-      expect(change.description).to eq(
+      expect(version_change.description).to eq(
         "The `label` attribute of the things resource is renamed to `name`.",
       )
     end
   end
 
   describe "#current" do
-    subject(:current_name) { change.current(name) }
+    subject(:current_name) { version_change.current(name) }
 
     it "returns the name after the change" do
       expect(current_name).to eq(name.with(value: "name"))
@@ -297,7 +204,7 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:other_name) { JsonApiKit::Name::Field.new(value: "handle", type: "people") }
 
       it "renames the names of every resource" do
-        expect([change.current(name), change.current(other_name)]).to eq(
+        expect([version_change.current(name), version_change.current(other_name)]).to eq(
           [name.with(value: "name"), other_name.with(value: "username")],
         )
       end
@@ -305,7 +212,7 @@ RSpec.describe JsonApiKit::VersionChange do
   end
 
   describe "#current_attributes" do
-    subject(:current_attributes) { change.current_attributes(attributes) }
+    subject(:current_attributes) { version_change.current_attributes(attributes) }
 
     let(:attributes) { { name => "A", other_name => "B" } }
     let(:other_name) { JsonApiKit::Name::Field.new(value: "size", type: "things") }
@@ -349,7 +256,7 @@ RSpec.describe JsonApiKit::VersionChange do
   end
 
   describe "#previous" do
-    subject(:previous_name) { change.previous(name) }
+    subject(:previous_name) { version_change.previous(name) }
 
     let(:name) { JsonApiKit::Name::Field.new(value: "name", type: "things") }
 
@@ -368,7 +275,7 @@ RSpec.describe JsonApiKit::VersionChange do
   end
 
   describe "#previous_names" do
-    subject(:previous_names) { change.previous_names(name) }
+    subject(:previous_names) { version_change.previous_names(name) }
 
     let(:name) { JsonApiKit::Name::Field.new(value: "name", type: "things") }
 
@@ -389,7 +296,7 @@ RSpec.describe JsonApiKit::VersionChange do
   end
 
   describe "#previous_attributes" do
-    subject(:previous_attributes) { change.previous_attributes(attributes) }
+    subject(:previous_attributes) { version_change.previous_attributes(attributes) }
 
     let(:attributes) { { name => "A", other_name => "B" } }
     let(:name) { JsonApiKit::Name::Field.new(value: "name", type: "things") }

@@ -60,7 +60,9 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
   let(:name) { JsonApiKit::Name::Field.new(value:, type: "topics") }
   let(:value) { "posted_at" }
 
-  before { allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return(changes) }
+  before do
+    allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(changes)
+  end
 
   describe "#declared_attributes" do
     subject(:declared_attributes) { rule.declared_attributes(attributes) }
