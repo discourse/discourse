@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::Collection do
-  subject(:document) { described_class.new(listing, urls:, glossary:, fieldsets:) }
+  subject(:document) { described_class.new(listing, client:, fieldsets:) }
 
   fab!(:first_topic) do
     Fabricate(:topic, title: "Segments of a listing", created_at: Time.utc(2026, 8, 1))
@@ -10,6 +10,7 @@ RSpec.describe JsonApiKit::Document::Collection do
     Fabricate(:topic, title: "Cursors and their values", created_at: Time.utc(2026, 8, 2))
   end
   let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
   let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do
@@ -42,16 +43,14 @@ RSpec.describe JsonApiKit::Document::Collection do
 
       expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
         first_record,
-        urls:,
-        glossary:,
+        client:,
         fieldsets:,
         meta: {
         },
       )
       expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
         second_record,
-        urls:,
-        glossary:,
+        client:,
         fieldsets:,
         meta: {
         },
@@ -66,8 +65,7 @@ RSpec.describe JsonApiKit::Document::Collection do
 
         expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
           first_record,
-          urls:,
-          glossary:,
+          client:,
           fieldsets:,
           meta: {
             page: {
@@ -77,8 +75,7 @@ RSpec.describe JsonApiKit::Document::Collection do
         )
         expect(JsonApiKit::Document::ResourceObject).to have_received(:new).with(
           second_record,
-          urls:,
-          glossary:,
+          client:,
           fieldsets:,
           meta: {
             page: {

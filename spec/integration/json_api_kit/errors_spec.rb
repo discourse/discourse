@@ -56,15 +56,7 @@ RSpec.describe "a refused request" do
       end
 
       it "answers the status 400" do
-        expect(
-          JsonApiKit::Document::Collection.for(
-            params,
-            resource:,
-            guardian:,
-            urls:,
-            glossary:,
-          ).status,
-        ).to eq("400")
+        expect(JsonApiKit::Document::Collection.for(params, resource:, client:).status).to eq("400")
       end
     end
 

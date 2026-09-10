@@ -8,31 +8,18 @@ module JsonApiKit
       ROOT = "/api"
 
       def index
-        render_document(
-          Document::Collection.for(
-            request.query_parameters,
-            resource:,
-            guardian:,
-            urls:,
-            glossary:,
-          ),
-        )
+        render_document(Document::Collection.for(request.query_parameters, resource:, client:))
       end
 
       def show
         render_document(
-          Document::Individual.for(
-            params[:id],
-            request.query_parameters,
-            resource:,
-            guardian:,
-            urls:,
-            glossary:,
-          ),
+          Document::Individual.for(params[:id], request.query_parameters, resource:, client:),
         )
       end
 
       private
+
+      def client = Client.new(guardian:, glossary:, urls:)
 
       def urls
         Urls.new(

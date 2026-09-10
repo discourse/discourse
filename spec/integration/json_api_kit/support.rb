@@ -100,37 +100,21 @@ RSpec.shared_context "with a listing of topics" do
   let(:scoped_to) { nil }
   let(:glossary) { JsonApiKit::Glossary.kit }
   let(:urls) { JsonApiKit::Urls.new(base:, current:, parameters: query) }
-
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
   let(:document) do
-    JsonApiKit::Document::Collection.for(
-      params,
-      resource:,
-      guardian:,
-      urls:,
-      glossary:,
-      scoped_to:,
-    ).to_h
+    JsonApiKit::Document::Collection.for(params, resource:, client:, scoped_to:).to_h
   end
 
   def one_document(id, **options)
-    JsonApiKit::Document::Individual.for(
-      id,
-      params,
-      resource:,
-      guardian:,
-      urls:,
-      glossary:,
-      **options,
-    ).to_h
+    JsonApiKit::Document::Individual.for(id, params, resource:, client:, **options).to_h
   end
 
   def listing_of(parameters)
     JsonApiKit::Document::Collection.for(
       parameters,
       resource:,
-      guardian:,
-      urls: JsonApiKit::Urls.new(base:, current:),
-      glossary:,
+      client:
+        JsonApiKit::Client.new(guardian:, glossary:, urls: JsonApiKit::Urls.new(base:, current:)),
       scoped_to:,
     ).to_h
   end

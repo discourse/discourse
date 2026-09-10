@@ -2,21 +2,14 @@
 
 RSpec.describe GroupResource do
   fab!(:group) { Fabricate(:group, name: "a_group") }
-
   let(:guardian) { Guardian.new }
   let(:glossary) { JsonApiKit::Glossary.kit }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/groups")
   end
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
   let(:document) do
-    JsonApiKit::Document::Individual.for(
-      group.id,
-      {},
-      resource: described_class,
-      guardian:,
-      urls:,
-      glossary:,
-    )
+    JsonApiKit::Document::Individual.for(group.id, {}, resource: described_class, client:)
   end
 
   it "shows the name and nothing else" do

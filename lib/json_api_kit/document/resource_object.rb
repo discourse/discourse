@@ -4,11 +4,11 @@ module JsonApiKit
   class Document
     class ResourceObject
       delegate :type, :id, to: :record, private: true
+      delegate :glossary, :urls, to: :client, private: true
 
-      def initialize(record, urls:, glossary:, fieldsets:, meta: {})
+      def initialize(record, client:, fieldsets:, meta: {})
         @record = record
-        @urls = urls
-        @glossary = glossary
+        @client = client
         @fieldsets = fieldsets
         @meta = meta
       end
@@ -17,7 +17,7 @@ module JsonApiKit
 
       private
 
-      attr_reader :record, :urls, :glossary, :fieldsets, :meta
+      attr_reader :record, :client, :fieldsets, :meta
 
       def relationship(value) = Name::Relationship.new(value:, type:)
 

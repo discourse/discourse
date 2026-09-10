@@ -22,18 +22,12 @@ RSpec.describe JsonApiKit::Document do
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
   let(:parameters) { {} }
 
   describe "Collection.for" do
     subject(:document) do
-      JsonApiKit::Document::Collection.for(
-        parameters,
-        resource:,
-        guardian:,
-        urls:,
-        glossary:,
-        scoped_to:,
-      )
+      JsonApiKit::Document::Collection.for(parameters, resource:, client:, scoped_to:)
     end
 
     let(:scoped_to) { nil }
@@ -67,9 +61,7 @@ RSpec.describe JsonApiKit::Document do
   end
 
   describe "Individual.for" do
-    subject(:document) do
-      JsonApiKit::Document::Individual.for(id, parameters, resource:, guardian:, urls:, glossary:)
-    end
+    subject(:document) { JsonApiKit::Document::Individual.for(id, parameters, resource:, client:) }
 
     let(:id) { topic.id }
 
