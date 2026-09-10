@@ -134,6 +134,7 @@ module OmniAuth
           discover! if options[:discovery]
 
           oauth2_callback_phase = super
+          raise env["omniauth.error"] if env["omniauth.error"].is_a?(Faraday::Error)
           return oauth2_callback_phase if env["omniauth.error"]
 
           oauth2_callback_phase

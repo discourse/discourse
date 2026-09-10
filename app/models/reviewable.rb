@@ -433,18 +433,19 @@ class Reviewable < ActiveRecord::Base
       result.affected_reviewable_ids |= resolved_reviewable_ids(affected_candidate_ids)
     end
 
-    unless status == :pending
-      if update_count || result.remove_reviewable_ids.present?
-        Jobs.enqueue(
-          :notify_reviewable,
-          reviewable_id: id,
-          performing_username: performed_by.username,
-          updated_reviewable_ids: result.remove_reviewable_ids,
-        )
-      end
+    # An action that leaves the reviewable pending didn't resolve it, so it stays in the queue.
+    result.remove_reviewable_ids -= [id] if pending?
 
-      notify_users(result, guardian)
+    if update_count || result.remove_reviewable_ids.present?
+      Jobs.enqueue(
+        :notify_reviewable,
+        reviewable_id: id,
+        performing_username: performed_by.username,
+        updated_reviewable_ids: result.remove_reviewable_ids,
+      )
     end
+
+    notify_users(result, guardian)
 
     result
   end

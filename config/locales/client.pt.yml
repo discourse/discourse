@@ -1572,6 +1572,15 @@ pt:
       tracked_topics_link: "Exibir"
       automatically_unpin_topics: "Desafixar tópicos automaticamente quando eu chegar ao final"
       apps: "Aplicações"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Escopos"
+        details: "Detalhes"
+        never: "Nunca"
+        status: "Estado"
+        statuses:
+          active: "Ativo"
+          revoked: "Revogado"
       revoke_access: "Rescindir Acesso"
       undo_revoke_access: "Cancelar Rescissão de Acesso"
       api_approved: "Aprovado:"
@@ -4649,6 +4658,63 @@ pt:
           title: "Sobre o seu ''site''"
         developer:
           title: "Desenvolvedor"
+        mcp:
+          tabs:
+            access: "Acesso"
+            activity: "Actividade"
+          overview:
+            status: "Estado"
+          access:
+            title: "Acesso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Ações"
+            edit: "Editar"
+            delete: "Eliminar"
+          primitives:
+            group_by: "Agrupar por"
+            group_by_options:
+              provider: "Provedor"
+              kind: "Tipo"
+            provider: "Provedor"
+            kind: "Tipo"
+            scopes: "Escopos"
+          clients:
+            actions: "Ações"
+            block: "Bloquear"
+            presets:
+              custom: "Personalizar"
+          authorizations:
+            user: "Utilizador"
+            status: "Estado"
+            actions: "Ações"
+          activity:
+            time: "Hora"
+            user: "Utilizador"
+            duration: "Duração"
+          values:
+            server_status:
+              disabled: "Desativado"
+            client_trust:
+              approved: "Aprovado"
+            authorization_status:
+              active: "Ativo"
+              revoked: "Revogado"
+            activity_outcome:
+              error: "Erro"
+            primitive_state:
+              enabled: "Ativado"
+              disabled: "Desativado"
+            primitive_kind:
+              all: "Todos os tipos"
+              resource: "Recurso"
+            primitive_risk:
+              moderation: "Moderação"
+            filter:
+              all: "Todos"
+          never: "Nunca"
+          actions:
+            revoke: "Revogar"
         experimental:
           title: "Experimental"
         emojis:

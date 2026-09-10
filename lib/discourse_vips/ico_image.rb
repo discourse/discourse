@@ -29,7 +29,7 @@ module DiscourseVips
     end
     private_constant :Native
 
-    def self.load(input_path)
+    def self.load(input_path:, page: -1)
       File.open(input_path, "rb") do |file|
         header = file.read(6)
         raise ArgumentError, "invalid ICO header" if header&.bytesize != 6
@@ -39,7 +39,10 @@ module DiscourseVips
           raise ArgumentError, "invalid ICO directory"
         end
 
-        file.seek(6 + (count - 1) * 16)
+        page = count - 1 if page == -1
+        raise ArgumentError, "invalid ICO page" if !page.between?(0, count - 1)
+
+        file.seek(6 + page * 16)
         entry = file.read(16)
         size_bytes, offset_bytes = entry.byteslice(8, 8).unpack("V2")
         if size_bytes.zero? || offset_bytes < 6 + count * 16 ||

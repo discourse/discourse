@@ -1363,6 +1363,12 @@ sq:
       tracked_topics_link: "Shfaq"
       automatically_unpin_topics: "Çngjiti temat automatikisht kur arrij fundin e faqes"
       apps: "Aplikimet"
+      mcp_authorizations:
+        details: "Detaje"
+        never: "Asnjëherë"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
       revoke_access: "Hiqi aksesin"
       undo_revoke_access: "Anullo heqjen e aksesit"
       api_approved: "Aprovuar më:"
@@ -4059,6 +4065,55 @@ sq:
       config:
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Lejimi"
+            activity: "Aktiviteti"
+          overview:
+            status: "Status"
+          access:
+            title: "Lejimi"
+            group: "Grupi"
+            groups: "Grupet"
+            actions: "Veprimet"
+            edit: "Redaktoni"
+            delete: "Fshij"
+          primitives:
+            group_by_options:
+              kind: "Lloji"
+            kind: "Lloji"
+          clients:
+            actions: "Veprimet"
+            block: "Blloko"
+            presets:
+              custom: "Grupet e krijuara"
+          authorizations:
+            user: "User"
+            status: "Status"
+            actions: "Veprimet"
+          activity:
+            time: "Koha"
+            user: "User"
+            duration: "Kohëzgjatja"
+          values:
+            server_status:
+              disabled: "E çaktivizuar"
+            client_trust:
+              approved: "Aprovuar"
+            authorization_status:
+              active: "Aktiv"
+            activity_outcome:
+              error: "Gabim"
+            primitive_state:
+              enabled: "Aktivizuar"
+              disabled: "E çaktivizuar"
+            primitive_kind:
+              all: "Të gjitha llojet"
+            filter:
+              all: "Të gjitha"
+          never: "Asnjëherë"
+          actions:
+            revoke: "Revoko"
         emojis:
           title: "Emoji"
         files:

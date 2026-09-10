@@ -16,6 +16,10 @@ ur:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          date: "تاریخ"
+          outcomes:
+            failed: "ناکامی"
         emotion:
           title: "جذبات"
         reports:

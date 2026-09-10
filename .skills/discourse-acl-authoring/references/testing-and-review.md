@@ -7,6 +7,7 @@ Use this reference when adding specs or reviewing ACL-backed features.
 For target models:
 
 - Include `AclTarget`.
+- Define or inherit `ACL_PERMISSIONS` using `Acl::Permissions`; use named readers in mandatory, banned, and loss-warning declarations.
 - Cover `mandatory_acl` if the target defines one.
 - Cover `loss_warning_permissions` when the target requires confirmation before the current actor loses a permission.
 - Cover domain helper methods such as `anonymous_can_read?` or `can_write?` that wrap `permission_acl`.
@@ -30,6 +31,9 @@ For Guardian methods:
 
 For services using `AccessControlListManager`:
 
+- A missing `ACL_PERMISSIONS` declaration raises `NameError`; inherited declarations are accepted.
+- Supported permission IDs succeed. Unknown, blank, or missing IDs fail `has_valid_permissions`, including invalid injected mandatory entries, before any ACL rows are destroyed or inserted.
+- Create/update request specs submit an explicit invalid permission such as `bogus` and assert rejection without partial resource creation or loss of existing ACLs. Test the write endpoints: `/access-control/evaluate.json` previews permission loss and does not enforce the manager's permission vocabulary.
 - Creation with omitted `acl` persists mandatory ACLs.
 - Creation with `acl: []` persists mandatory ACLs or fails closed when no mandatory ACL exists.
 - Update with explicit `acl: []` replaces existing ACLs with mandatory ACLs.
@@ -68,6 +72,7 @@ For migration specs:
 For `DAccessControl` consumers:
 
 - Rendered permissions match target-specific labels/descriptions.
+- Every option added by `transformPermissionOptions(options)` has an ID in the target's server-side `ACL_PERMISSIONS.values`; the UI-only remove action is not a permission declaration.
 - Mandatory ACL from `site.access_control.mandatory_acl[targetKey]` appears and is locked.
 - Banned ACL from `site.access_control.banned_acl[targetKey]` removes matching permission options for the matching grantee.
 - Existing rows with the same group as a mandatory row are not duplicated.
@@ -90,6 +95,7 @@ Use `.skills/discourse-writing-js-tests` for QUnit patterns.
 Ask these questions during code review:
 
 - Is every ACL write routed through `AccessControlListManager`?
+- Does the target define or inherit `ACL_PERMISSIONS`, and do frontend permission option IDs match it?
 - Does the caller authorize the actor before the manager can replace ACL rows?
 - Does the service distinguish omitted ACL params from explicit empty ACL params when that matters?
 - Are mandatory ACLs enforced in both backend writes and frontend display?
@@ -107,8 +113,7 @@ Ask these questions during code review:
 ## Known Sharp Edges
 
 - `AccessControlListManager` currently assumes caller-side authorization.
-- Backend user ACL support is partial: expansion, flattening, preloading, lookup helpers, matching scopes, and cleanup jobs handle `allowed_user_ids`, but shared UI authoring is not complete.
-- `DAccessControl` remains group-first and does not provide complete user ACL editing yet.
+- Backend storage/lookups and the frontend search picker support user grants; mandatory user ACL display still needs explicit UI support.
 - `DAccessControl` injects mandatory rows for display but does not notify the parent on render.
 - `DAccessControl` filters banned permission options for UX, but hidden options are not authorization. The manager policy is the enforcement point.
 - `DAccessControlField` cancellation leaves the proposed ACL in draft state. `preventSubmit` is not a rollback API.

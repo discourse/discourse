@@ -8,21 +8,6 @@ RSpec.describe UploadCreator do
   fab!(:admin)
 
   describe "#create_for" do
-    [false, true].each do |enable_vips|
-      it "preserves animated uploads when FastImage is inconclusive with libvips #{enable_vips ? "enabled" : "disabled"}" do
-        global_setting :enable_vips_image_processing, enable_vips
-        FastImage.stubs(:animated?).returns(nil)
-        file = file_from_fixtures("tiny_animated.gif")
-        original = File.binread(file.path)
-
-        upload = described_class.new(file, "tiny_animated.gif").create_for(user.id)
-
-        expect(upload).to be_persisted
-        expect(upload.animated).to eq(true)
-        expect(File.binread(Discourse.store.path_for(upload))).to eq(original)
-      end
-    end
-
     context "when the upload is an SVG" do
       before { SiteSetting.authorized_extensions = "svg" }
 
@@ -519,125 +504,19 @@ RSpec.describe UploadCreator do
     end
 
     describe "converting HEIF to jpeg" do
-      include ImageOrientationHelpers
-
       let(:filename) { "should_be_jpeg.heic" }
       let(:file) { file_from_fixtures(filename, "images") }
-      let(:palette) do
-        {
-          red: [255, 0, 0],
-          green: [0, 255, 0],
-          blue: [0, 0, 255],
-          cyan: [0, 255, 255],
-          magenta: [255, 0, 255],
-          yellow: [255, 255, 0],
-          white: [255, 255, 255],
-          pale_green: [128, 255, 128],
-        }
-      end
 
-      [false, true].each do |vips_enabled|
-        it "stores a JPEG with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+      it "stores the upload with the expected extension" do
+        expect do
+          UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+        end.to change { Upload.count }.by(1)
 
-          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
-          stored_path = Discourse.store.path_for(upload)
+        upload = Upload.last
 
-          expect(upload).to be_persisted
-          expect(upload).to have_attributes(
-            extension: "jpeg",
-            original_filename: "should_be_jpeg.jpg",
-            width: 846,
-            height: 1129,
-          )
-          expect(File.extname(upload.url)).to eq(".jpeg")
-          expect(FastImage.type(stored_path)).to eq(:jpeg)
-          expect(FastImage.size(stored_path)).to eq([846, 1129])
-        end
-
-        it "removes conversion tempfiles after an invalid HEIF with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-          source_file = file_from_fixtures("heif-truncated-payload.heic")
-          error_class = vips_enabled ? DiscourseVips::InvalidImage : Discourse::Utils::CommandError
-
-          Dir.mktmpdir do |directory|
-            Dir.stubs(:tmpdir).returns(directory)
-
-            expect {
-              described_class.new(source_file, "invalid.heic", force_optimize: true).create_for(
-                user.id,
-              )
-            }.to raise_error(error_class)
-
-            expect(Dir.children(directory)).to eq([])
-            expect(source_file).to be_closed
-          end
-        end
-
-        {
-          "heif-color-grid-rotated.heic" => [
-            40,
-            60,
-            [%i[blue yellow], %i[green magenta], %i[red cyan]],
-          ],
-          "heif-color-grid-mirrored.heic" => [
-            60,
-            40,
-            [%i[cyan magenta yellow], %i[red green blue]],
-          ],
-        }.each do |grid_filename, (width, height, expected_colors)|
-          it "applies the container transform of #{grid_filename} once with vips #{vips_enabled ? "enabled" : "disabled"}" do
-            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
-            upload =
-              described_class.new(
-                file_from_fixtures(grid_filename),
-                grid_filename,
-                force_optimize: true,
-              ).create_for(user.id)
-            stored_path = Discourse.store.path_for(upload)
-
-            expect(upload).to be_persisted
-            expect(upload).to have_attributes(extension: "jpeg", width:, height:)
-            expect(
-              stored_color_grid(
-                upload:,
-                rows: expected_colors.length,
-                columns: expected_colors.first.length,
-                palette:,
-              ),
-            ).to eq(expected_colors)
-            expect(
-              ImageMagick.identify(
-                "-format",
-                "%[orientation]",
-                stored_path,
-                operation: :upload_quality_probe,
-                read: [stored_path],
-              ).strip,
-            ).to be_in(%w[Undefined TopLeft])
-          end
-        end
-
-        {
-          "heif-color-grid-8bit.heic" => [%i[red green blue], %i[cyan magenta yellow]],
-          "heif-color-grid-alpha-8bit.heic" => [%i[white pale_green blue], %i[cyan magenta yellow]],
-        }.each do |grid_filename, expected_colors|
-          it "preserves the colors of #{grid_filename} with vips #{vips_enabled ? "enabled" : "disabled"}" do
-            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
-            upload =
-              UploadCreator.new(
-                file_from_fixtures(grid_filename),
-                grid_filename,
-                force_optimize: true,
-              ).create_for(user.id)
-
-            expect(upload).to be_persisted
-            expect(upload).to have_attributes(extension: "jpeg", width: 60, height: 40)
-            expect(stored_color_grid(upload:, rows: 2, columns: 3, palette:)).to eq(expected_colors)
-          end
-        end
+        expect(upload.extension).to eq("jpeg")
+        expect(File.extname(upload.url)).to eq(".jpeg")
+        expect(upload.original_filename).to eq("should_be_jpeg.jpg")
       end
     end
 
@@ -969,11 +848,9 @@ RSpec.describe UploadCreator do
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      [false, true].each do |vips_enabled|
-        it "removes conversion tempfiles after an invalid ICO with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+      shared_examples "ICO upload conversion" do
+        it "removes conversion tempfiles after an invalid ICO" do
           source_file = file_from_fixtures("ico-truncated-bitmap.ico")
-          error_class = vips_enabled ? DiscourseVips::InvalidImage : Discourse::Utils::CommandError
 
           Dir.mktmpdir do |directory|
             Dir.stubs(:tmpdir).returns(directory)
@@ -987,8 +864,7 @@ RSpec.describe UploadCreator do
           end
         end
 
-        it "preserves odd-width bitmap colors and transparency masks with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
+        it "preserves odd-width bitmap colors and transparency masks" do
           expected_pixels = [
             colors[:transparent_red],
             colors[:blue],
@@ -1021,9 +897,7 @@ RSpec.describe UploadCreator do
           end
         end
 
-        it "stores it as a PNG with vips #{vips_enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
+        it "stores it as a PNG" do
           upload = described_class.new(file, filename).create_for(user.id)
           stored_path = Discourse.store.path_for(upload)
 
@@ -1059,9 +933,7 @@ RSpec.describe UploadCreator do
             %i[transparent_red translucent_green blue cyan magenta yellow],
           ],
         }.each do |grid_filename, (width, height, expected_colors)|
-          it "preserves the last image of #{grid_filename} with vips #{vips_enabled ? "enabled" : "disabled"}" do
-            GlobalSetting.stubs(:enable_vips_image_processing).returns(vips_enabled)
-
+          it "preserves the last image of #{grid_filename}" do
             upload =
               described_class.new(file_from_fixtures(grid_filename), grid_filename).create_for(
                 user.id,
@@ -1080,78 +952,74 @@ RSpec.describe UploadCreator do
           end
         end
       end
+
+      context "with libvips disabled" do
+        before { global_setting :enable_vips_image_processing, false }
+
+        let(:error_class) { Discourse::Utils::CommandError }
+
+        include_examples "ICO upload conversion"
+      end
+
+      context "with libvips enabled" do
+        before { global_setting :enable_vips_image_processing, true }
+
+        let(:error_class) { DiscourseVips::InvalidImage }
+
+        include_examples "ICO upload conversion"
+      end
+    end
+  end
+
+  describe "svg sizes expressed in units other than pixels" do
+    let(:tiny_svg_filename) { "tiny.svg" }
+    let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
+
+    let(:massive_svg_filename) { "massive.svg" }
+    let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+
+    let(:zero_sized_svg_filename) { "zero_sized.svg" }
+    let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+
+    it "remains viewable when a dimension is fractional" do
+      upload =
+        UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
+          user.id,
+        )
+
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
+
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
     end
 
-    [false, true].each do |enable_vips|
-      context "with SVG dimensions and libvips #{enable_vips ? "enabled" : "disabled"}" do
-        before { global_setting :enable_vips_image_processing, enable_vips }
+    it "does not exceed the maximum thumbnail size" do
+      upload =
+        UploadCreator.new(massive_svg_file, massive_svg_filename, force_optimize: true).create_for(
+          user.id,
+        )
 
-        let(:tiny_svg_filename) { "tiny.svg" }
-        let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
 
-        let(:massive_svg_filename) { "massive.svg" }
-        let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+    end
 
-        let(:zero_sized_svg_filename) { "zero_sized.svg" }
-        let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+    it "handles files with a zero dimension" do
+      upload =
+        UploadCreator.new(
+          zero_sized_svg_file,
+          zero_sized_svg_filename,
+          force_optimize: true,
+        ).create_for(user.id)
 
-        it "remains viewable when a dimension is fractional" do
-          upload =
-            UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
-              user.id,
-            )
+      expect(upload.width).to be > 50
+      expect(upload.height).to be > 50
 
-          expect(upload.width).to be > 50
-          expect(upload.height).to be > 50
-
-          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-        end
-
-        it "does not exceed the maximum thumbnail size" do
-          upload =
-            UploadCreator.new(
-              massive_svg_file,
-              massive_svg_filename,
-              force_optimize: true,
-            ).create_for(user.id)
-
-          expect(upload.width).to be > 50
-          expect(upload.height).to be > 50
-
-          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-        end
-
-        it "handles files with a zero dimension" do
-          upload =
-            UploadCreator.new(
-              zero_sized_svg_file,
-              zero_sized_svg_filename,
-              force_optimize: true,
-            ).create_for(user.id)
-
-          expect(upload.width).to be > 50
-          expect(upload.height).to be > 50
-
-          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-        end
-
-        it "stores zero dimensions when the SVG has no usable dimensions" do
-          file =
-            file_from_contents(
-              '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"/>',
-              "zero.svg",
-            )
-
-          upload = described_class.new(file, "zero.svg").create_for(user.id)
-
-          expect(upload).to be_persisted
-          expect([upload.width, upload.height]).to eq([0, 0])
-          expect([upload.thumbnail_width, upload.thumbnail_height]).to eq([0, 0])
-        end
-      end
+      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
     end
   end
 

@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Request::Contract::Individual, type: :model do
-  subject(:contract) do
-    described_class.new(
-      **params,
-      options: {
-        resource:,
-        raw_parameters: params.with_indifferent_access,
-      },
-    )
-  end
+  subject(:contract) { described_class.for(params, resource:, glossary:) }
 
   let(:params) { {} }
+  let(:glossary) { JsonApiKit::Glossary.kit }
   let(:related) do
     Class.new(JsonApiKit::Resource) do
       model User
@@ -34,7 +27,7 @@ RSpec.describe JsonApiKit::Request::Contract::Individual, type: :model do
     context "when a parameter is unknown" do
       let(:params) { { fieldsets: { topics: %w[title] } } }
 
-      it "refuses the parameter" do
+      it "adds an error on the parameter" do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:fieldsets)
       end
@@ -58,7 +51,7 @@ RSpec.describe JsonApiKit::Request::Contract::Individual, type: :model do
         }
       end
 
-      it "refuses each of them, though the resource declares them" do
+      it "adds an error for each of them, though the resource declares them" do
         expect(contract).to be_invalid
         expect(contract.errors).to include(:sort, :filter, :page)
       end
@@ -73,7 +66,10 @@ RSpec.describe JsonApiKit::Request::Contract::Individual, type: :model do
 
   describe "Fieldsets" do
     it { is_expected.to allow_value(nil, {}, { topics: %w[title created_at] }).for(:fields) }
-    it { is_expected.to allow_value({ topics: "title" }, { topics: "" }).for(:fields) }
-    it { is_expected.not_to allow_value("title", [1], { topics: 42 }).for(:fields) }
+    it { is_expected.to allow_value({ topics: [] }).for(:fields) }
+
+    it do
+      is_expected.not_to allow_value("title", [1], { topics: 42 }, { topics: "title" }).for(:fields)
+    end
   end
 end

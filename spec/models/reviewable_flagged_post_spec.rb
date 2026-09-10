@@ -560,6 +560,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(reviewable.reload.actions_for(guardian).has?(:unsilence_user)).to eq(true)
     end
 
+    it "is set apart from the actions that resolve the reviewable" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      secondary_bundles = reviewable.reload.actions_for(guardian).bundles.select(&:secondary)
+
+      expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["unsilence_user"])
+    end
+
     it "is offered even when the silence is not linked to this post" do
       other_post = Fabricate(:post, user: author)
       UserSilencer.silence(author, moderator, post_id: other_post.id)

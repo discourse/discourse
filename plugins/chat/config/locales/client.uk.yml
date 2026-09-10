@@ -146,7 +146,7 @@ uk:
         process_started: "Процес видалення каналу розпочався. Це спливаюче вікно закриється найближчим часом, ви більше не побачите видалений канал."
       channels_list_popup:
         browse: "Перегляд каналів"
-        create: "Новий канал"
+        create: "Новий канал..."
       close: "Закрити"
       remove: "Вилучити"
       collapse: "Згорнути вікно чату"
@@ -163,8 +163,8 @@ uk:
       muted: "ігноровані"
       joined: "приєднався(лась)"
       empty_state:
-        direct_message_cta: "Розпочати особистий чат"
-        direct_message: "Ви також можете розпочати особистий чат з одним або кількома користувачами."
+        direct_message_cta: "Почніть пряме повідомлення або груповий чат"
+        direct_message: "Ви також можете розпочати пряме повідомлення або груповий чат з одним або кількома користувачами."
         title: "Канали не знайдено"
         my_threads: "У вас ще немає тем. Теми, в яких ви берете участь, відображатимуться тут."
       email_frequency:
@@ -697,14 +697,36 @@ uk:
       direct_messages:
         title: "DMs"
         aria_label: "Перейти на прямі повідомлення"
-        new: "Створити особистий чат"
+        new: "Нове пряме повідомлення або груповий чат..."
         create: "Створити"
-        leave: "Залишити цей особистий чат"
-        close: "Закрити цей особистий чат"
+        leave: "Вийти з каналу"
+        close: "Закрити канал"
         cannot_create: "На жаль, ви не можете надсилати прямі повідомлення."
       channel_list:
         title: "Канали"
         aria_label: "Перемикнутися на список каналів"
+        options:
+          title: "Параметри списку каналів"
+          filter: "Filter"
+          sort: "Сортувати"
+          current_filter: "Фільтр: %{filter}"
+          current_sort: "Сортування: %{sort}"
+        filter:
+          title: "Фільтрувати канали за:"
+          all: "Всі канали"
+          active: "Тільки активні"
+          active_description: "Нова активність за останні %{days} днів"
+          unread: "Непрочитані"
+          mentions: "Згадки"
+        sort:
+          title: "Сортувати канали за:"
+          alphabetical: "В алфавітному порядку"
+          recent_activity: "Нещодавня активність"
+          priority: "Пріоритет"
+          priority_description: "Згадки, потім непрочитані, а потім нещодавня активність"
+        empty:
+          filtered: "Жоден канал не відповідає цьому фільтру."
+          show_all: "Показати всі канали"
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Виберіть канал"
@@ -878,10 +900,10 @@ uk:
           other_plain: 'згадав(-ла) %{identifier} у каналі «%{channel}»'
           other_html: '<span>%{username}</span> <span>згадано %{identifier} у «%{channel}»</span>'
         direct_message_chat_mention:
-          direct: "згадав вас в особистому чаті"
-          direct_html: "<span>%{username}</span> <span>згадав вас в особистому чаті</span>"
-          other_plain: "згадав(-ла) %{identifier} в особистому чаті"
-          other_html: "<span>%{username}</span> <span>згадали %{identifier} в особистому чаті</span>"
+          direct: "згадав вас у прямому повідомленні"
+          direct_html: "<span>%{username}</span> <span>згадав вас у особистому повідомленні</span>"
+          other_plain: "згадується %{identifier} у прямому повідомленні"
+          other_html: "<span>%{username}</span> <span>згадав %{identifier} у прямому повідомленні</span>"
         chat_message: "Нове повідомлення в чаті"
         chat_quoted: "%{username} процитував ваше повідомлення в чаті"
       titles:
@@ -954,8 +976,8 @@ uk:
           title: Чат
     sidebar:
       start_new_dm:
-        text: Почати нове особисте повідомлення
-        title: Створити особистий чат
+        text: Почати особисті повідомлення або груповий чат
+        title: Нове пряме повідомлення або груповий чат
       panels:
         chat:
           label: "Чат"

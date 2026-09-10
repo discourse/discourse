@@ -195,10 +195,6 @@ export default class EditCategoryTabsController extends Controller {
   initFormData() {
     const data = getProperties(this.model, ...SIMPLIFIED_FIELD_LIST);
 
-    if (this.siteSettings.content_localization_enabled && !data.locale) {
-      data.locale = this.siteSettings.default_locale;
-    }
-
     if (!this.model.styleType) {
       data.style_type = "icon";
     }

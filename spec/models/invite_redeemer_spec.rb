@@ -300,6 +300,46 @@ RSpec.describe InviteRedeemer do
       InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
     end
 
+    it "rejects an unverified supplied email when the user's primary email does not match the invite" do
+      invite = Fabricate(:invite, email: "invited@example.com")
+      user = Fabricate(:user, email: "other@example.com")
+      redeemer = described_class.new(invite:, email: invite.email, redeeming_user: user)
+
+      expect { redeemer.redeem }.to raise_error(
+        ActiveRecord::RecordNotSaved,
+        I18n.t("invite.not_matching_email"),
+      )
+      expect(invite.reload).not_to be_redeemed
+    end
+
+    it "rejects an unverified supplied email when the user's primary email is outside the invite domain" do
+      invite = Fabricate(:invite, email: nil, domain: "allowed.example")
+      user = Fabricate(:user, email: "person@blocked.example")
+      redeemer = described_class.new(invite:, email: "person@allowed.example", redeeming_user: user)
+
+      expect { redeemer.redeem }.to raise_error(
+        ActiveRecord::RecordNotSaved,
+        I18n.t("invite.domain_not_allowed"),
+      )
+      expect(invite.reload).not_to be_redeemed
+    end
+
+    it "redeems an invite for an existing user's verified secondary email" do
+      invite = Fabricate(:invite, email: "invited@example.com")
+      user = Fabricate(:user, email: "other@example.com")
+      Fabricate(:secondary_email, user:, email: invite.email)
+      redeemer =
+        described_class.new(
+          invite:,
+          email: invite.email,
+          email_verified: true,
+          redeeming_user: user,
+        )
+
+      expect(redeemer.redeem).to eq(user)
+      expect(invite.reload).to be_redeemed
+    end
+
     context "with email" do
       fab!(:invite) { Fabricate(:invite, email: "foobar@example.com") }
       context "when must_approve_users setting is enabled" do

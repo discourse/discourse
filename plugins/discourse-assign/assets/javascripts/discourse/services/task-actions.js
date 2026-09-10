@@ -3,6 +3,7 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import AssignUser from "../components/modal/assign-user";
 import assignmentPayload from "../lib/assignment-payload";
 
@@ -28,7 +29,7 @@ export default class TaskActions extends Service {
   }
 
   suggestionsFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
+    manuallyTrack(this.suggestionsRevision);
     this.#ensureSuggestions(targetId, targetType);
 
     return (
@@ -39,7 +40,7 @@ export default class TaskActions extends Service {
   }
 
   allowedGroupsFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
+    manuallyTrack(this.suggestionsRevision);
     this.#ensureSuggestions(targetId, targetType);
 
     return (
@@ -50,7 +51,7 @@ export default class TaskActions extends Service {
   }
 
   allowedGroupsForAssignmentFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
+    manuallyTrack(this.suggestionsRevision);
     this.#ensureSuggestions(targetId, targetType);
 
     return (

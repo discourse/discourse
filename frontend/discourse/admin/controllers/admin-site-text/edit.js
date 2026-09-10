@@ -3,9 +3,9 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
-import BufferedProxy from "ember-buffered-proxy/proxy";
 import { interpolationKeysWithStatus as computeInterpolationKeysWithStatus } from "discourse/admin/lib/interpolation-keys";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import BufferedProxy from "discourse/lib/buffered-proxy";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSiteTextEdit extends Controller {

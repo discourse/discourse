@@ -3,6 +3,51 @@
 RSpec.describe DiscourseWorkflows::Workflow do
   fab!(:user)
 
+  describe ".filtered" do
+    fab!(:author) { Fabricate(:user, username: "Workflow_Author") }
+    fab!(:editor) { Fabricate(:user, username: "Workflow_Editor") }
+    fab!(:workflow) do
+      Fabricate(
+        :discourse_workflows_workflow,
+        name: "Deploy updates",
+        created_by: author,
+        updated_by: editor,
+        tags: %w[ops],
+      )
+    end
+    fab!(:other_workflow) do
+      Fabricate(:discourse_workflows_workflow, name: "Send notification", created_by: user)
+    end
+
+    it "matches partial names and creator or last editor usernames case insensitively" do
+      %w[DEPLOY AUTHOR EDITOR].each do |filter|
+        expect(described_class.filtered(filter:)).to contain_exactly(workflow)
+      end
+    end
+
+    it "returns a workflow only once when both usernames match" do
+      expect(described_class.filtered(filter: "Workflow_")).to contain_exactly(workflow)
+    end
+
+    it "matches names and creators when there is no last editor" do
+      workflow.update!(updated_by: nil)
+
+      %w[deploy author].each do |filter|
+        expect(described_class.filtered(filter:)).to contain_exactly(workflow)
+      end
+    end
+
+    it "treats SQL wildcard characters literally" do
+      %w[% Workflow_Auth_r].each { |filter| expect(described_class.filtered(filter:)).to be_empty }
+    end
+
+    it "combines username matching with tag and exclusion filters" do
+      expect(described_class.filtered(filter: "editor", tags: ["ops"])).to contain_exactly(workflow)
+      expect(described_class.filtered(filter: "editor", tags: ["missing"])).to be_empty
+      expect(described_class.filtered(filter: "author", exclude_id: workflow.id)).to be_empty
+    end
+  end
+
   describe "defaults" do
     it "uses a connection map by default" do
       expect(described_class.new.connections).to eq({})

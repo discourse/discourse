@@ -127,6 +127,42 @@ RSpec.describe Chat::Action::FetchThreads do
     end
   end
 
+  context "when no-membership threads are mixed with fully-read participated threads" do
+    fab!(:thread_4) { Fabricate(:chat_thread, channel:) }
+
+    before do
+      thread_4.update!(replies_count: 2)
+      # thread_4 has no membership and an older last message than thread_1/2/3
+      thread_4.original_message.update!(created_at: 4.weeks.ago)
+      # mark all participated threads as fully read so none are unread
+      [thread_1, thread_2, thread_3].each { |t| t.membership_for(current_user).mark_read! }
+    end
+
+    it "sorts by date rather than treating no-membership as unread" do
+      expect(threads.map(&:id)).to eq([thread_1.id, thread_2.id, thread_3.id, thread_4.id])
+    end
+  end
+
+  context "when unread participated threads are mixed with no-membership threads" do
+    fab!(:thread_4) { Fabricate(:chat_thread, channel:) }
+
+    before do
+      thread_4.update!(replies_count: 2)
+      # thread_4 has no membership but the newest last message
+      thread_4.original_message.update!(created_at: 1.second.ago)
+      # thread_1 retains its unread membership (last_read IS NULL); threads 2 and 3 are read
+      [thread_2, thread_3].each { |t| t.membership_for(current_user).mark_read! }
+    end
+
+    it "sorts unread member threads first, then remaining threads by date" do
+      # thread_1: member + unread → first (unread priority)
+      # thread_4: no membership, newest → second (by date)
+      # thread_2: member, read, 2 weeks old → third (by date)
+      # thread_3: member, read, 3 weeks old → fourth (by date)
+      expect(threads.map(&:id)).to eq([thread_1.id, thread_4.id, thread_2.id, thread_3.id])
+    end
+  end
+
   context "when there are muted threads" do
     let(:thread) { Fabricate(:chat_thread, channel:) }
 

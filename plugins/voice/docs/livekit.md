@@ -100,6 +100,51 @@ With `per_room` policy, room creators/managers get a "Use media server (SFU)"
 checkbox in the room form. Toggling it affects the room's next call, never a
 live one.
 
+## Recording to S3 with LiveKit Cloud
+
+LiveKit Cloud runs the recorder, but each recording request must specify
+where to store the file. Voice supports a dedicated S3 bucket using the
+settings below. These settings are independent of Discourse's upload and
+backup storage configuration.
+
+1. Create an S3 bucket for recordings and credentials with permission to
+   write objects under the recording prefix. Keep the bucket private unless
+   you intentionally want anyone with a recording URL to be able to read it.
+2. Configure `voice_livekit_url` with the project's `wss://` URL and set its
+   API key and secret.
+3. In Discourse site settings, configure these values, saving the bucket
+   last:
+
+   | Setting | Value |
+   | --- | --- |
+   | `voice_livekit_recording_s3_region` | The recording bucket's AWS region |
+   | `voice_livekit_recording_s3_access_key_id` | Dedicated recording access key |
+   | `voice_livekit_recording_s3_secret_access_key` | Dedicated recording secret key |
+   | `voice_livekit_recording_s3_endpoint` | Leave empty for AWS S3; an HTTPS origin for S3-compatible storage |
+   | `voice_livekit_recording_s3_bucket` | Bucket name only, without a folder prefix |
+   | `voice_livekit_recording_filepath` | Object key template, default `voice/{room_name}-{utc}` |
+
+4. Enable `voice_livekit_recording_enabled` and start a recording in a
+   LiveKit-routed room. Egress adds the file extension and Voice adds a random
+   suffix to the object key.
+
+The recording credentials are sent to the configured LiveKit server over
+HTTPS with each start request. No S3 credentials are sent to participants.
+The endpoint option uses path-style addressing for S3-compatible providers.
+
+When recording finishes, Voice sends the requester a PM with the location
+returned by LiveKit. **This is not a signed download URL.** For private
+buckets, an operator must retrieve the file using authenticated S3 access;
+the PM link alone does not grant access. Discourse secure-upload rules do
+not apply to these external recordings.
+
+An empty recording bucket preserves self-hosted Egress storage configuration.
+On LiveKit Cloud, a filepath without a storage destination can fail with
+`request has missing or invalid field: output`. Configure the dedicated S3
+settings to resolve this error; changing the filepath alone does not help.
+
+See [LiveKit's output and storage documentation](https://docs.livekit.io/transport/media/ingress-egress/egress/outputs/).
+
 ## Verifying a deployment
 
 1. Join a LiveKit-routed room from two different networks and confirm you can
