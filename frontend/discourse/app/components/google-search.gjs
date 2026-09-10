@@ -1,25 +1,18 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed, set } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class GoogleSearch extends Component {
-  @computed("siteSettings.login_required")
+  @service siteSettings;
+
   get hidden() {
-    return this.siteSettings?.login_required;
+    return this.siteSettings.login_required;
   }
 
-  set hidden(value) {
-    set(this, "siteSettings.login_required", value);
-  }
-
-  @computed
   get siteUrl() {
     return `${location.protocol}//${location.host}${getURL("/")}`;
   }
@@ -32,7 +25,7 @@ export default class GoogleSearch extends Component {
       <PluginOutlet
         @defaultGlimmer={{true}}
         @name="google-search"
-        @outletArgs={{lazyHash searchTerm=this.searchTerm siteUrl=this.siteUrl}}
+        @outletArgs={{lazyHash searchTerm=@searchTerm siteUrl=this.siteUrl}}
       >
         <form
           action="//google.com/search"
@@ -45,7 +38,7 @@ export default class GoogleSearch extends Component {
             type="text"
             value={{@searchTerm}}
           />
-          <input name="as_sitesearch" type="hidden" value={{@siteUrl}} />
+          <input name="as_sitesearch" type="hidden" value={{this.siteUrl}} />
           <button class="btn btn-primary" type="submit">{{i18n
               "search.search_google_button"
             }}</button>

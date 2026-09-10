@@ -1,13 +1,12 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
-import Component from "@ember/component";
-
-export default class ReviewableField extends Component {
-  <template>
-    {{#if this.value}}
-      <div class={{this.classes}}>
-        <div class="name">{{this.name}}</div>
-        <div class="value">{{this.value}}</div>
+const ReviewableField = <template>
+  <div ...attributes>
+    {{#if @value}}
+      <div class={{@classes}}>
+        <div class="name">{{@name}}</div>
+        <div class="value">{{@value}}</div>
       </div>
     {{/if}}
-  </template>
-}
+  </div>
+</template>;
+
+export default ReviewableField;
