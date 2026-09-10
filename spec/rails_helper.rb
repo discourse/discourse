@@ -86,8 +86,6 @@ Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 if system_specs_requested
   require "capybara-playwright-driver"
   system_support_files.each { |f| require f }
-  require_relative "ci_setup_timing"
-  require_relative "ci_browser_profile"
   Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
   Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
   Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require f }

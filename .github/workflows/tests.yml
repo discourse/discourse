@@ -310,12 +310,7 @@ jobs:
         env:
           DISCOURSE_LATE_SYSTEM_YJIT: "1"
           CHECKOUT_TIMEOUT: 10
-          DISCOURSE_CI_SETUP_TIMING: "1"
-          DISCOURSE_CI_BROWSER_PROFILE: "1"
         run: |
-          ruby spec/ci_process_profile.rb &
-          ci_profile_pid=$!
-          trap 'ci_profile_status=$?; kill -TERM "$ci_profile_pid" 2>/dev/null || true; wait "$ci_profile_pid" || true; exit "$ci_profile_status"' EXIT
           LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
