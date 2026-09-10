@@ -19,6 +19,7 @@ import { i18n } from "discourse-i18n";
 export default class InvitesShowController extends Controller {
   @tracked accountPassword;
   @tracked accountUsername;
+  @tracked codeInviteStep = "email";
   @tracked isDeveloper;
   @autoTrackedArray rejectedEmails = [];
 
@@ -193,9 +194,29 @@ export default class InvitesShowController extends Controller {
     return !this.existingUserId;
   }
 
+  @computed("codeInviteStep", "showCodeInviteForm")
+  get showInviteIntroduction() {
+    return !this.showCodeInviteForm || this.codeInviteStep === "email";
+  }
+
   @computed("externalAuthsOnly", "discourseConnectEnabled")
   get showSignupProgressBar() {
     return !(this.externalAuthsOnly || this.discourseConnectEnabled);
+  }
+
+  @computed("codeInviteStep", "showCodeInviteForm", "successMessage")
+  get progressBarStep() {
+    if (this.showCodeInviteForm) {
+      if (this.codeInviteStep === "complete") {
+        return "login";
+      }
+
+      if (this.codeInviteStep !== "email") {
+        return "activate";
+      }
+    }
+
+    return this.successMessage ? "activate" : "signup";
   }
 
   @computed(
@@ -248,6 +269,15 @@ export default class InvitesShowController extends Controller {
           !this.emailValidation?.failed)) &&
       !this.siteSettings.enable_discourse_connect &&
       !this.existingUserRedeeming
+    );
+  }
+
+  get showCodeInviteForm() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.siteSettings.enable_local_logins &&
+      !this.authOptions
     );
   }
 
@@ -358,6 +388,11 @@ export default class InvitesShowController extends Controller {
       associate_link: this.authOptions?.associate_url,
       provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
     });
+  }
+
+  @action
+  updateCodeInviteStep(step) {
+    this.codeInviteStep = step;
   }
 
   @action

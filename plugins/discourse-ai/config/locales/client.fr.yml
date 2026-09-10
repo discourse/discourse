@@ -19,6 +19,14 @@ fr:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Demander à l'IA"
+        ask_ai:
+          title: "Demander à l'IA"
+          date: "Date"
+          outcomes:
+            failed: "Échec"
         emotion:
           title: "Émotion"
           description: "Le tableau indique le nombre de publications classées selon une émotion donnée. Selon la méthode de classification des émotions sélectionnée, les publications sont classées soit avec le modèle de classification configuré (« SamLowe/roberta-base-go_emotions »), soit avec l'agent de classification des émotions configuré."

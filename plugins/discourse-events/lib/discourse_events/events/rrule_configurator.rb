@@ -3,6 +3,15 @@
 module DiscourseEvents
   module Events
     class RRuleConfigurator
+      RECURRENCES = %w[
+        every_month
+        every_week
+        every_two_weeks
+        every_four_weeks
+        every_day
+        every_weekday
+      ]
+
       def self.rule(recurrence:, starts_at:, recurrence_until: nil)
         rule =
           case recurrence

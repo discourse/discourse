@@ -5,7 +5,7 @@ require_relative "../../lib/omniauth_apple"
 pem = ::OpenSSL::PKey::EC.generate("prime256v1").to_pem
 
 describe "sign in with apple" do
-  let(:jwk) { ::JWT::JWK.new(OpenSSL::PKey::RSA.generate(1024)) }
+  let(:jwk) { ::JWT::JWK.new(OpenSSL::PKey::RSA.generate(2048)) }
 
   before do
     Discourse.cache.delete("sign-in-with-apple-jwks")

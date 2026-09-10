@@ -8,6 +8,9 @@ sl:
   js:
     styleguide:
       sections:
+        context_menu:
+          actions:
+            delete: "Izbriši"
         colors:
           title: "Barve"
         categories:

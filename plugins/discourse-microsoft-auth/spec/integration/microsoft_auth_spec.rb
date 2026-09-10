@@ -14,10 +14,11 @@ describe "Microsoft OAuth2" do
     SiteSetting.microsoft_auth_client_secret = client_secret
 
     stub_request(:post, "https://login.microsoftonline.com/common/oauth2/v2.0/token").with(
+      headers: {
+        "Authorization" => "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}",
+      },
       body:
         hash_including(
-          "client_id" => client_id,
-          "client_secret" => client_secret,
           "code" => temp_code,
           "grant_type" => "authorization_code",
           "redirect_uri" => "http://test.localhost/auth/microsoft_office365/callback",

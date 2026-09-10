@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 es:
+  mcp:
+    oauth:
+      resource: "Servidor MCP"
+      deny: "Denegar"
+      approve: "Autorizar"
   llms_txt:
     sections:
       optional: "Opcional"
@@ -4754,6 +4759,10 @@ es:
   performance_report:
     initial_post_raw: Este tema contiene informes diarios sobre el rendimiento de tu sito.
     initial_topic_title: Informe sobre el rendimiento del sitio
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "El archivo CSV tiene demasiadas líneas. Incluye un archivo CSV con no más de %{count} línea."
+      other: "El archivo CSV tiene demasiadas líneas. Incluye un archivo CSV con no más de %{count} líneas."
   tags:
     title: "Etiquetas"
     restricted_tag_disallowed: 'No puedes aplicar la etiqueta "%{tag}".'

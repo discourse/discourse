@@ -41,6 +41,7 @@ class TagSettingsUpdater
 
   def update_basic_attributes(params)
     @tag.name = DiscourseTagging.clean_tag(params[:name]) if params[:name].present?
+    @tag.locale = params[:locale].presence if params.key?(:locale)
     @tag.slug = params[:slug] if params.key?(:slug)
     @tag.description = params[:description] if params.key?(:description)
   end

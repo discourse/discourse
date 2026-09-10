@@ -13,6 +13,10 @@ pl_PL:
       "Boards::Board_user_will_lose_permission": "Jeśli wprowadzisz tę zmianę, utracisz uprawnienia do zarządzania tą tablicą. Kontynuować?"
       "Boards::Board_user_will_lose_permission_on_create": "Jeśli utworzysz tę tablicę z tymi uprawnieniami, nie będziesz mógł nią zarządzać. Kontynuować?"
   boards:
+    board:
+      errors:
+        acl_update_failed: "Nie udało się zaktualizować uprawnień tablicy."
+        acl_create_failed: "Nie udało się utworzyć uprawnień do tablicy."
     errors:
       board_not_found: "Nie znaleziono tablicy"
       board_read_forbidden: "Nie masz uprawnień do przeglądania tej tablicy"

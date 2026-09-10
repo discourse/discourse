@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  mcp:
+    oauth:
+      resource: "MCP 服务器"
+      deny: "拒绝"
+      approve: "授权"
   llms_txt:
     human_community_policy: "这是一个供人类讨论交流的社区。请勿冒充他人或擅自创建账号。只有当人类明确要求您执行特定操作时，才能发布内容、编辑文章或进行其他任何形式的写作操作。"
     crawler_policy: "仅抓取用户特定请求所需的页面。请勿系统性地抓取或批量下载此社区。请遵守 `robots.txt` 文件、网站条款及其爬虫控制设置。如果服务器返回 HTTP 429 错误，请停止并等待 `Retry-After` 间隔后再重试。"
@@ -2053,7 +2058,6 @@ zh_CN:
     discourse_connect_allowed_redirect_domains: "对于 DiscourseConnect 提供的返回路径，限制为这些网域（返回路径默认必须在当前网站）。使用 * 可以允许任何域作为返回路径。不允许使用子域通配符 (`*.foobar.com`)。"
     enable_local_logins: "启用基于本地用户名和密码登录的帐户。警告：如果禁用，并且您之前没有配置至少一种备用登录方法，您可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
-    enable_local_logins_via_code: "允许成员使用一次性电子邮件验证码 (OTP) 更快地注册和登录。"
     enable_random_usernames: '使用一次性电子邮件验证码创建的帐户会生成随机用户名，格式为“形容词+名词+两个随机数字”（例如：QuietFalcon34）。新会员可以在注册过程中更改用户名。'
     random_username_adjectives: '用作随机生成用户名前半部分的单词。单词组合时，首字母大写。'
     random_username_nouns: '用作随机生成用户名后半部分的单词。单词组合时，首字母大写。'
@@ -5123,6 +5127,9 @@ zh_CN:
   performance_report:
     initial_post_raw: 此话题包括您网站的每日表现报告。
     initial_topic_title: 网站表现报告
+  watched_words:
+    upload_too_many_csv_entries:
+      other: "CSV 文件中的条目过多。请提供包含不超过 %{count} 个条目的 CSV 文件。"
   tags:
     title: "标签"
     groups:
