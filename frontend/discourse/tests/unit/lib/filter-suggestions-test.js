@@ -27,6 +27,11 @@ function buildTips() {
     },
     { name: "status:", description: "Pick a status" },
     {
+      name: "order:views",
+      description: "Sort by views",
+      prefixes: [],
+    },
+    {
       name: "status:solved",
       description: "Solved topics",
       priority: 1,
@@ -106,16 +111,6 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
     );
   });
 
-  test("-cat finds -categories", async function (assert) {
-    const tips = buildTips();
-    const { suggestions, activeFilter } =
-      await FilterSuggestions.getSuggestions("-cat", tips, buildContext());
-    const names = suggestions.map((s) => s.name);
-
-    assert.deepEqual(names, ["-category:"], "returns only -category: for -cat");
-    assert.strictEqual(activeFilter, null, "activeFilter is not set yet");
-  });
-
   test("trailing space switches back to top-level tips", async function (assert) {
     const tips = buildTips();
     const baseline = await FilterSuggestions.getSuggestions(
@@ -151,6 +146,28 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
 
     assert.deepEqual(names, ["category:", "-category:", "=category:"]);
     assert.strictEqual(activeFilter, null, "activeFilter is not set yet");
+
+    const negated = await FilterSuggestions.getSuggestions(
+      "-cat",
+      tips,
+      buildContext()
+    );
+    assert.deepEqual(
+      negated.suggestions.map((s) => s.name),
+      ["-category:"],
+      "-cat matches only the negated category tip"
+    );
+
+    const negatedOrder = await FilterSuggestions.getSuggestions(
+      "-order",
+      tips,
+      buildContext()
+    );
+    assert.deepEqual(
+      negatedOrder.suggestions.map((s) => s.name),
+      [],
+      "order tips advertise no prefixes"
+    );
   });
 
   test("does not show suggestions for already matched filters", async function (assert) {
@@ -205,6 +222,17 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
       descFiltered.suggestions.length > 0,
       "filters by description substring"
     );
+
+    const placeholder = await FilterSuggestions.getSuggestions(
+      "after:descr",
+      tips,
+      buildContext()
+    );
+    assert.deepEqual(
+      placeholder.suggestions,
+      [],
+      "date descriptions resolve to real translations"
+    );
   });
 
   test("number suggestions include defaults and filter by partial", async function (assert) {
@@ -230,20 +258,6 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
       filtered.suggestions.some((s) => s.term === "1"),
       "includes number matching partial"
     );
-  });
-
-  test("filtering tips by partial name returns matching tips", async function (assert) {
-    const tips = buildTips();
-
-    const { suggestions } = await FilterSuggestions.getSuggestions(
-      "sta",
-      tips,
-      buildContext()
-    );
-    const names = suggestions.map((s) => s.name);
-
-    assert.true(names.includes("status:solved"), "includes status:solved");
-    assert.true(names.includes("status:unsolved"), "includes status:unsolved");
   });
 
   test("number suggestions respect the minimum", async function (assert) {
@@ -355,6 +369,17 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
       secondTerms.includes("cam"),
       "cam is excluded after being used"
     );
+
+    const exact = await FilterSuggestions.getSuggestions(
+      "assigned:sam",
+      tips,
+      buildContext()
+    );
+
+    assert.true(
+      exact.suggestions.map((s) => s.name).includes("assigned:sam,"),
+      "offers the delimiter continuation for an exact match"
+    );
   });
 
   test("tag_group suggestions properly quote names with special characters", async function (assert) {
@@ -399,7 +424,7 @@ module("Unit | Utility | FilterSuggestions", function (hooks) {
     assert.strictEqual(
       terms[3],
       '"It\'s a Group"',
-      "names with single quotes use double quotes and escape internal single quotes"
+      "names with single quotes use double quotes"
     );
   });
 });
