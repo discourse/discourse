@@ -345,11 +345,22 @@ module DiscourseWorkflows
             )
           topic_list = topic_query.list_filter
 
-          topics = topic_list.topics.slice(offset, limit) || []
-          posts = topics.map(&:first_post).compact
-          if posts.any?
-            ActiveRecord::Associations::Preloader.new(records: posts, associations: :user).call
+          if topic_query.invalid_filters.present?
+            raise_node_error!(
+              I18n.t(
+                "discourse_workflows.errors.topic.invalid_filter",
+                fragments: topic_query.invalid_filters.join(" "),
+              ),
+            )
           end
+
+          topics = topic_list.topics.slice(offset, limit) || []
+          ActiveRecord::Associations::Preloader.new(
+            records: topics,
+            associations: {
+              first_post: :user,
+            },
+          ).call
 
           custom_field_names = config["custom_field_names"]
           ::Topic.preload_custom_fields(topics, custom_field_names) if custom_field_names.present?
