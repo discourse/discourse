@@ -1,0 +1,88 @@
+import Component from "@glimmer/component";
+import { block } from "discourse/blocks";
+import { URL_PATTERN } from "discourse/lib/blocks";
+import { i18n } from "discourse-i18n";
+
+/**
+ * An image argument value: a resolved upload with intrinsic dimensions and an
+ * optional dark-scheme variant of the same shape.
+ */
+interface BlockImageValue {
+  url?: string;
+  width?: number;
+  height?: number;
+  dark?: BlockImageValue;
+}
+
+interface VideoSignature {
+  Args: {
+    source?: string;
+    poster?: BlockImageValue;
+    autoplay?: boolean;
+    loop?: boolean;
+    muted?: boolean;
+    controls?: boolean;
+  };
+}
+
+/**
+ * A video player for a direct video file URL, with an optional poster image.
+ * Complements `embed`: reach for `embed` to drop in a link a provider
+ * oneboxes (YouTube, etc.); reach for `video` to play a hosted file with
+ * native controls.
+ */
+@block("video", {
+  paletteHidden: true,
+  thumbnail: () => import("discourse/blocks/thumbnails/video"),
+  displayName: "Video",
+  icon: "video",
+  category: "media",
+  description: "Plays a video file, with an optional poster image.",
+  args: {
+    source: {
+      type: "string",
+      pattern: URL_PATTERN,
+      ui: { control: "url", label: i18n("blocks.builtin.video.source") },
+    },
+    poster: {
+      type: "image",
+      allowResize: false,
+      ui: { label: i18n("blocks.builtin.video.poster") },
+    },
+    autoplay: {
+      type: "boolean",
+      default: false,
+      ui: { control: "toggle", label: i18n("blocks.builtin.video.autoplay") },
+    },
+    loop: {
+      type: "boolean",
+      default: false,
+      ui: { control: "toggle", label: i18n("blocks.builtin.video.loop") },
+    },
+    muted: {
+      type: "boolean",
+      default: false,
+      ui: { control: "toggle", label: i18n("blocks.builtin.video.muted") },
+    },
+    controls: {
+      type: "boolean",
+      default: true,
+      ui: { control: "toggle", label: i18n("blocks.builtin.video.controls") },
+    },
+  },
+})
+export default class Video extends Component<VideoSignature> {
+  <template>
+    <video
+      autoplay={{@autoplay}}
+      class="d-block-video"
+      controls={{@controls}}
+      data-block-arg="source"
+      loop={{@loop}}
+      muted={{@muted}}
+      playsinline
+      poster={{@poster.url}}
+      src={{@source}}
+    ></video>
+  </template>
+}

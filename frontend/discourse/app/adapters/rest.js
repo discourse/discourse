@@ -80,12 +80,16 @@ export default class RestAdapter extends EmberObject {
     return type;
   }
 
-  findAll(store, type, findArgs) {
-    return ajax(this.pathFor(store, type, findArgs)).catch(rethrow);
+  findAll(store, type, findArgs, opts) {
+    return ajax(this.pathFor(store, type, findArgs), {
+      ignoreUnsent: opts?.ignoreUnsent,
+    }).catch(rethrow);
   }
 
-  find(store, type, findArgs) {
-    return ajax(this.pathFor(store, type, findArgs)).catch(rethrow);
+  find(store, type, findArgs, opts) {
+    return ajax(this.pathFor(store, type, findArgs), {
+      ignoreUnsent: opts?.ignoreUnsent,
+    }).catch(rethrow);
   }
 
   findStale(store, type, findArgs, options) {

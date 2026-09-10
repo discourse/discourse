@@ -53,6 +53,14 @@ export const FAILURE_TYPE = Object.freeze({
   NO_VISIBLE_CHILDREN: "no-visible-children",
   /** Block reference uses `?` suffix but isn't registered. */
   OPTIONAL_MISSING: "optional-missing",
+  /**
+   * Block reference doesn't resolve to a registered block — most often a
+   * typo in a saved layout (`hero-banner` → `hero-bannr`). Without the
+   * `?` suffix opt-in, these are normally a hard error in production;
+   * in a permissive context they can be surfaced as labelled placeholders
+   * so the author can swap or remove them.
+   */
+  UNKNOWN_BLOCK: "unknown-block",
 });
 
 /**

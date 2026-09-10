@@ -3,8 +3,10 @@ export { BlockCondition } from "./condition";
 export type {
   ConditionContext,
   ConditionResolvedValue,
+  ConditionSimulation,
   ConditionSourceType,
   ConditionValidateFn,
+  ViewportCapabilities,
 } from "./condition";
 export { blockCondition } from "./decorator";
 export type { BlockConditionConfig } from "./decorator";

@@ -41,6 +41,12 @@ describe ListableTopicSerializer do
       expect(json[:listable_topic][:excerpt]).to eq("This is excerrrpt-ional")
     end
 
+    it "returns the topic's excerpt when the serializer is asked to include excerpts" do
+      json = ListableTopicSerializer.new(topic, scope: Guardian.new, include_excerpts: true).as_json
+
+      expect(json[:listable_topic][:excerpt]).to eq("This is excerrrpt-ional")
+    end
+
     it "returns the localized excerpt when setting is enabled" do
       I18n.locale = "ja"
       topic.update!(locale: "en")

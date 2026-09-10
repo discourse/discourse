@@ -50,7 +50,7 @@ export type DropTargetEvent = DropTargetKernelEvent<DropTargetSource>;
  * The drop target's named args, shared by the `dDragAndDropTarget` modifier
  * and {@link registerDragAndDropTarget}.
  */
-export interface DragAndDropTargetArgs extends DropTargetKernelArgs<DropTargetSource> {
+export type DragAndDropTargetArgs = DropTargetKernelArgs<DropTargetSource> & {
   /**
    * The dragged source's `type` must be in this list for the target to engage.
    * Omit to accept any registered source, unless `adopts` is set; then omission
@@ -83,7 +83,7 @@ export interface DragAndDropTargetArgs extends DropTargetKernelArgs<DropTargetSo
    * onto itself, so excluding it is opt-in.
    */
   acceptsSelf?: boolean;
-}
+};
 
 interface DDragAndDropTargetSignature {
   /** The element to register as a drop target. */

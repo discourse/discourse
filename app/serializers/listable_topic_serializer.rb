@@ -142,7 +142,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   alias include_unread_posts? has_user_data
 
   def include_excerpt?
-    pinned || SiteSetting.always_include_topic_excerpts ||
+    pinned || SiteSetting.always_include_topic_excerpts || @options[:include_excerpts] ||
       theme_modifier_helper.serialize_topic_excerpts
   end
 

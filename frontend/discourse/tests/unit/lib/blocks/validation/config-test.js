@@ -70,4 +70,46 @@ module("Unit | Blocks | validation/layout", function (hooks) {
       );
     });
   });
+
+  module("overrides in entry", function () {
+    test("overrides is a valid entry key", function (assert) {
+      assert.true(
+        VALID_ENTRY_KEYS.includes("overrides"),
+        "overrides is in VALID_ENTRY_KEYS"
+      );
+    });
+
+    test("validateEntryKeys accepts overrides", function (assert) {
+      const entry = {
+        block: "test-block",
+        overrides: { title: { text: "Hello" } },
+      };
+
+      // Should not throw
+      validateEntryKeys(entry);
+      assert.true(true, "overrides accepted as valid entry key");
+    });
+
+    test("validateEntryTypes accepts overrides as object", function (assert) {
+      const entry = {
+        overrides: { title: { text: "Hello" } },
+      };
+
+      // Should not throw
+      validateEntryTypes(entry);
+      assert.true(true, "overrides as object accepted");
+    });
+
+    test("validateEntryTypes rejects overrides as array", function (assert) {
+      const entry = {
+        overrides: ["invalid"],
+      };
+
+      assert.throws(
+        () => validateEntryTypes(entry),
+        /"overrides" must be an object, got array/,
+        "overrides as array rejected"
+      );
+    });
+  });
 });
