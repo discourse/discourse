@@ -61,6 +61,7 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
+      PLAYWRIGHT_SINGLE_RASTER_THREAD: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins') && '1' || '' }}
 
     strategy:
       fail-fast: false

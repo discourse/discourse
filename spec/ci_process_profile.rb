@@ -163,8 +163,8 @@ class CiProcessProfile
   def chromium_bucket(cmdline)
     arguments = cmdline.split("\0")
     return :other if arguments.empty?
+    arguments = arguments.first.split(/\s+/) if arguments.length == 1
     types = arguments.drop(1).select { |argument| argument.start_with?("--type=") }
-    return :browser if types.empty?
     return :other if types.length != 1
     {
       "--type=renderer" => :renderer,
