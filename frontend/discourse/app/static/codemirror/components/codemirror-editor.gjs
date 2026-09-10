@@ -16,6 +16,8 @@ import { setDiagnostics } from "@codemirror/lint";
 import { Compartment, EditorState, Transaction } from "@codemirror/state";
 import {
   EditorView,
+  highlightActiveLine,
+  highlightActiveLineGutter,
   keymap,
   lineNumbers,
   placeholder,
@@ -153,6 +155,10 @@ export default class CodemirrorEditor extends Component {
 
     if (this.args.lineWrapping) {
       extensions.push(EditorView.lineWrapping);
+    }
+
+    if (this.args.highlightActiveLine) {
+      extensions.push(highlightActiveLine(), highlightActiveLineGutter());
     }
 
     if (this.args.singleLine) {

@@ -44,7 +44,6 @@ export default class CodeEditor extends Component {
     return !this.Editor;
   }
 
-  /** A gutter matches what these editors have always shown; opt out with false. */
   get lineNumbers() {
     return this.args.lineNumbers ?? true;
   }
@@ -87,6 +86,7 @@ export default class CodeEditor extends Component {
             @extensions={{@extensions}}
             @focusIn={{@onFocusIn}}
             @focusOut={{@onFocusOut}}
+            @highlightActiveLine={{true}}
             @htmlPlaceholder={{@htmlPlaceholder}}
             @language={{@language}}
             @languageOptions={{@languageOptions}}

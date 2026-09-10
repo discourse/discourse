@@ -191,6 +191,13 @@ module("Integration | Component | code-editor", function (hooks) {
     );
   });
 
+  test("highlights the active line", async function (assert) {
+    await render(<template><CodeEditor @value="one" /></template>);
+
+    assert.dom(".cm-activeLine").exists();
+    assert.dom(".cm-activeLineGutter").exists();
+  });
+
   test("a value replaced from outside cannot be undone into the old document", async function (assert) {
     let view;
     const onSetup = (editorView) => (view = editorView);
