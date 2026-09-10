@@ -26,4 +26,12 @@ module DiscourseVips
   def self.before_fork
     Client.before_fork
   end
+
+  def self.ico_to_png(input_path:, output_path:, timeout:)
+    Client.call(
+      ["ico-to-png", input_path, output_path],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
 end

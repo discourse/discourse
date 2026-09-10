@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe DiscourseVips do
   describe ".version" do
     it "returns the libvips version" do
@@ -30,6 +32,116 @@ RSpec.describe DiscourseVips do
 
     it "normalizes floating-point grayscale JXL color values" do
       expect(dominant_color("dominant-color-float.jxl")).to eq("808080")
+    end
+  end
+
+  describe ".ico_to_png" do
+    it "rejects a truncated bitmap without creating an output" do
+      input_path = file_from_fixtures("ico-truncated-bitmap.ico").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.png")
+
+        expect {
+          described_class.ico_to_png(input_path:, output_path:, timeout: 20)
+        }.to raise_error(DiscourseVips::InvalidImage)
+
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "decodes a 16-bit RGB555 bitmap" do
+      input_path = file_from_fixtures("ico-bmp-16bit.ico").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.png")
+
+        described_class.ico_to_png(input_path:, output_path:, timeout: 20)
+        image = ChunkyPNG::Image.from_file(output_path)
+
+        expect([image.width, image.height]).to eq([60, 40])
+        expect(image[10, 10]).to eq(ChunkyPNG::Color.rgba(255, 0, 0, 255))
+        expect(image[30, 10]).to eq(ChunkyPNG::Color.rgba(0, 255, 0, 255))
+        expect(image[50, 10]).to eq(ChunkyPNG::Color.rgba(0, 0, 255, 255))
+      end
+    end
+
+    it "preserves the bitmap colors without modifying the source" do
+      input_path = file_from_fixtures("smallest.ico").path
+      original_content = File.binread(input_path)
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.png")
+
+        described_class.ico_to_png(input_path:, output_path:, timeout: 20)
+        image = ChunkyPNG::Image.from_file(output_path)
+
+        expect([image.width, image.height]).to eq([1, 1])
+        expect(image[0, 0]).to eq(ChunkyPNG::Color.rgba(255, 0, 0, 255))
+        expect(File.binread(input_path)).to eq(original_content)
+      end
+    end
+
+    it "rejects overwriting the source image" do
+      original_content = File.binread(file_from_fixtures("smallest.ico").path)
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.ico")
+        File.binwrite(input_path, original_content)
+
+        expect {
+          described_class.ico_to_png(input_path:, output_path: input_path, timeout: 20)
+        }.to raise_error(DiscourseVips::Error, "input and output must be different files")
+
+        expect(File.binread(input_path)).to eq(original_content)
+      end
+    end
+
+    it "rejects a truncated ICO directory without creating an output" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "truncated.ico")
+        output_path = File.join(directory, "converted.png")
+        File.binwrite(input_path, [0, 1, 1].pack("v3"))
+
+        expect {
+          described_class.ico_to_png(input_path:, output_path:, timeout: 20)
+        }.to raise_error(DiscourseVips::InvalidImage, "invalid ICO directory")
+
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "rejects an image offset outside the input without creating an output" do
+      content = File.binread(file_from_fixtures("smallest.ico").path)
+      content[18, 4] = [content.bytesize + 1].pack("V")
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "invalid-offset.ico")
+        output_path = File.join(directory, "converted.png")
+        File.binwrite(input_path, content)
+
+        expect {
+          described_class.ico_to_png(input_path:, output_path:, timeout: 20)
+        }.to raise_error(DiscourseVips::InvalidImage, "invalid ICO image offset")
+
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "stops when reading the source exceeds the timeout" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "blocked.ico")
+        output_path = File.join(directory, "converted.png")
+        File.mkfifo(input_path)
+
+        File.open(input_path, File::RDWR) do
+          expect {
+            described_class.ico_to_png(input_path:, output_path:, timeout: 0.05)
+          }.to raise_error(DiscourseVips::OperationTimeout)
+        end
+
+        expect(File.exist?(output_path)).to eq(false)
+      end
     end
   end
 

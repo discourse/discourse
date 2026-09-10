@@ -46,6 +46,8 @@ class DiscourseVipsWorker
         letter_avatar(*arguments)
       when "dominant-color"
         dominant_color(*arguments)
+      when "ico-to-png"
+        ico_to_png(input_path: arguments[0], output_path: arguments[1])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -133,6 +135,26 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :dominant_color
+
+    def self.ico_to_png(input_path:, output_path:)
+      require "discourse_vips/ico_image"
+
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        if File.identical?(input_path, output_path)
+          raise ArgumentError, "input and output must be different files"
+        end
+
+        block_loaders(allowed: %w[VipsForeignLoadPng])
+        begin
+          DiscourseVips::IcoImage.load(input_path:).autorot.pngsave(output_path)
+        rescue Vips::Error, ArgumentError => error
+          raise InvalidImage, error.message
+        end
+
+        nil
+      end
+    end
+    private_class_method :ico_to_png
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
