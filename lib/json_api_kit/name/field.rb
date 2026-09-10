@@ -2,6 +2,6 @@
 
 module JsonApiKit
   module Name
-    Field = Data.define(:value, :type) { include Name }
+    Field = Data.define(:value, :type) { include Name::ResourceScope }
   end
 end

@@ -37,6 +37,15 @@ module JsonApiKit
 
       def transformations = @transformations ||= []
 
+      def renamed_type(from:, to:)
+        type_renames << TypeRename.new(
+          from: Name::Type.new(value: from.to_s),
+          to: Name::Type.new(value: to.to_s),
+        )
+      end
+
+      def type_renames = @type_renames ||= []
+
       private
 
       def change_in(source)
@@ -47,14 +56,16 @@ module JsonApiKit
       end
     end
 
-    delegate :version, :description, :transformations, to: :class
+    delegate :version, :description, :transformations, :type_renames, to: :class
 
     attr_reader :source
 
     def initialize(source)
       @source = source
-      @upward = index_by(&:previous_names)
-      @downward = index_by { [it.current] }
+      @upward = index_by(transformations, &:previous_names)
+      @downward = index_by(transformations) { [it.current] }
+      @type_upward = index_by(type_renames, &:previous_names)
+      @type_downward = index_by(type_renames) { [it.current] }
     end
 
     def verify!
@@ -72,25 +83,42 @@ module JsonApiKit
       raise ArgumentError, "The file name must start with the version #{version}: #{source}."
     end
 
-    def current(name) = upward[name].current
+    def current(name) = upward[current_type(name)].current
 
     def current_attributes(attributes)
-      attributes.keys.map { upward[it] }.uniq.flat_map { it.current_pairs(attributes) }.to_h
+      current_values(attributes.transform_keys { current_type(it) })
+    rescue Converter::Failure => failure
+      raise failure.convert_names { previous_type(it) }
     end
 
-    def previous(name) = downward[name].previous_names.first
+    def previous(name) = previous_names(name).first
 
-    def previous_names(name) = downward[name].previous_names
+    def previous_names(name) = downward[name].previous_names.map { previous_type(it) }
 
     def previous_attributes(attributes)
-      attributes.flat_map { |name, value| downward[name].previous_pairs(value) }.to_h
+      attributes
+        .flat_map { |name, value| downward[name].previous_pairs(value) }
+        .to_h
+        .transform_keys { previous_type(it) }
     end
 
     private
 
-    attr_reader :upward, :downward
+    attr_reader :upward, :downward, :type_upward, :type_downward
 
-    def index_by(&names)
+    def current_type(name)
+      name.convert_type { type_upward[Name::Type.new(value: it)].current.value }
+    end
+
+    def previous_type(name)
+      name.convert_type { type_downward[Name::Type.new(value: it)].previous_names.first.value }
+    end
+
+    def current_values(attributes)
+      attributes.keys.map { upward[it] }.uniq.flat_map { it.current_pairs(attributes) }.to_h
+    end
+
+    def index_by(transformations, &names)
       transformations
         .flat_map { |transformation| names.call(transformation).map { [it, transformation] } }
         .to_h
@@ -98,7 +126,7 @@ module JsonApiKit
     end
 
     def duplicate_name(&)
-      transformations.flat_map(&).tally.detect { |_name, count| count > 1 }&.first
+      (transformations + type_renames).flat_map(&).tally.detect { |_name, count| count > 1 }&.first
     end
   end
 end

@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::RelationshipObject do
-  subject(:relationship_object) { described_class.new(linkage, urls:, owner:, name: "posts") }
+  subject(:relationship_object) { described_class.new(linkage, client:, owner:, name: "posts") }
 
   fab!(:author, :user)
   fab!(:topic)
 
   let(:guardian) { Guardian.new }
+  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end
@@ -44,6 +46,26 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
   let(:related_url) { "https://example.com/api/topics/#{topic.id}/posts" }
 
   describe "#to_h" do
+    context "when the type has a historical name" do
+      let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) { renamed_type from: :topic_authors, to: :users }
+          .new(__FILE__)
+      end
+
+      before { allow(JsonApiKit::VersionChange).to receive(:after).and_return([version_change]) }
+
+      it "translates the linkage type" do
+        expect(relationship_object.to_h[:data]).to eq(type: "topicAuthors", id: author.id.to_s)
+      end
+
+      it "keeps the record identity in the current vocabulary" do
+        relationship_object.to_h
+        expect(record.identity.to_h).to eq(type: "users", id: author.id.to_s)
+      end
+    end
+
     it "renders the record it links to" do
       expect(relationship_object.to_h[:data]).to eq(type: "users", id: author.id.to_s)
     end

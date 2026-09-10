@@ -3,7 +3,7 @@
 RSpec.shared_examples "a name" do
   describe "#convert" do
     it "returns the name with the converted value" do
-      expect(name.convert(&:upcase)).to eq(name.with(value: name.value.upcase))
+      expect(name.convert(&:upcase).value).to eq(name.value.upcase)
     end
   end
 
