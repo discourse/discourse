@@ -101,7 +101,7 @@ module DiscourseWorkflows
         path_params: {
         },
         query_params: is_resume ? query.except("signature") : query,
-        raw_body: request.raw_post,
+        raw_body: request.raw_post.to_s,
         remote_ip: request.remote_ip,
         ips: request.respond_to?(:ips) ? request.ips : [],
         raw_authorization: request.headers["Authorization"],

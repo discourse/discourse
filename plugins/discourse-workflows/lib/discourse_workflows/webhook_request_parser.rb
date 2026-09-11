@@ -23,7 +23,7 @@ module DiscourseWorkflows
       if @request.content_type&.include?("application/json")
         parse_json_body
       else
-        if @request.raw_post.bytesize > MAX_BODY_SIZE
+        if @request.raw_post.to_s.bytesize > MAX_BODY_SIZE
           raise Discourse::InvalidParameters, BODY_TOO_LARGE_ERROR
         end
         @params.except(:path, :listener_id, :controller, :action, :format).to_unsafe_h
