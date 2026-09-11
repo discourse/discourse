@@ -59,6 +59,63 @@ RSpec.describe AiAgent do
     expect(AiAgent.agent_users(user: user).map { |candidate| candidate[:id] }).to include(agent.id)
   end
 
+  describe "#update!" do
+    fab!(:spam_agent, :ai_agent)
+    fab!(:spam_settings) do
+      AiModerationSetting.create!(
+        setting_type: :spam,
+        ai_agent: spam_agent,
+        llm_model: seeded_llm_model,
+      )
+    end
+
+    it "updates the spam model when the configured agent's default model changes" do
+      spam_agent.update!(default_llm_id: llm_model.id)
+
+      expect(spam_settings.reload.llm_model_id).to eq(llm_model.id)
+    end
+
+    it "preserves the spam model when another agent's default model changes" do
+      other_agent = Fabricate(:ai_agent, default_llm_id: seeded_llm_model.id)
+
+      other_agent.update!(default_llm_id: llm_model.id)
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "preserves an explicit spam model when saving unrelated agent changes" do
+      spam_agent.update!(default_llm_id: llm_model.id)
+      spam_settings.update!(llm_model_id: seeded_llm_model.id)
+
+      spam_agent.update!(description: "Updated spam detector")
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "preserves an explicit spam model when clearing the agent's default" do
+      spam_agent.update!(default_llm_id: llm_model.id)
+      spam_settings.update!(llm_model_id: seeded_llm_model.id)
+
+      spam_agent.update!(default_llm_id: nil)
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "preserves the spam model when the agent update fails validation" do
+      expect(spam_agent.update(default_llm_id: llm_model.id, description: nil)).to eq(false)
+
+      expect(spam_settings.reload.llm_model_id).to eq(seeded_llm_model.id)
+    end
+
+    it "does not configure spam detection when updating an agent without spam settings" do
+      spam_settings.destroy!
+
+      spam_agent.update!(default_llm_id: llm_model.id)
+
+      expect(AiModerationSetting.spam).to be_nil
+    end
+  end
+
   it "defaults subagent_ids to an empty array and exposes them on class instances" do
     agent = Fabricate(:ai_agent)
 
