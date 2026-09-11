@@ -8,6 +8,7 @@ import AnonymousTopicFooterButtons from "discourse/components/anonymous-topic-fo
 import DiscourseBanner from "discourse/components/discourse-banner";
 import DiscourseTopic from "discourse/components/discourse-topic";
 import EmbedModeComposer from "discourse/components/embed-mode-composer";
+import EmbedTopicActions from "discourse/components/embed-topic-actions";
 import EmbedTopicFooter from "discourse/components/embed-topic-footer";
 import MoreTopics from "discourse/components/more-topics";
 import Nested from "discourse/components/nested";
@@ -479,6 +480,8 @@ export default <template>
                       @outletArgs={{lazyHash model=@controller.model}}
                     />
                   </span>
+
+                  <EmbedTopicActions @topic={{@controller.model}} />
 
                   {{#if @controller.model.postStream.firstPostNotLoaded}}
                     {{hideScrollableContent "above"}}
