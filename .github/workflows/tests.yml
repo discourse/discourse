@@ -335,12 +335,22 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
+      - name: Prepare JS deprecation reports
+        if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
+        run: |
+          # Replace stale results even when a rerun produces no report files.
+          if ! compgen -G 'tmp/deprecation-reports/*.json' > /dev/null; then
+            mkdir -p tmp/deprecation-reports
+            printf '%s\n' '{"format":1,"files":[],"unresolved":[]}' > "tmp/deprecation-reports/${DEPRECATION_REPORT_GROUP}-empty.json"
+          fi
+
       - name: Upload JS deprecation reports
         uses: actions/upload-artifact@v7
         if: always() && (matrix.build_type == 'frontend' || matrix.build_type == 'system')
         with:
           name: deprecation-reports-${{ matrix.build_type }}-${{ matrix.target }}
-          if-no-files-found: ignore
+          overwrite: true
+          if-no-files-found: error
           path: tmp/deprecation-reports/*.json
 
       - name: Upload failed system test artifacts
@@ -381,7 +391,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      actions: write
+      actions: read
       contents: read
     steps:
       - name: Check for JS deprecation reports
@@ -416,17 +426,7 @@ jobs:
         with:
           name: js-deprecation-report
           path: tmp/js-deprecation-report.json
-
-      - name: Delete intermediate JS deprecation reports
-        if: steps.check-artifacts.outputs.exists == 'true'
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          artifact_ids=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" --jq '.artifacts[] | select(.name | startswith("deprecation-reports-")) | .id')
-          for artifact_id in $artifact_ids; do
-            gh api --method DELETE "repos/${{ github.repository }}/actions/artifacts/$artifact_id"
-          done
+          overwrite: true
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
