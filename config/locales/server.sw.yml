@@ -6,6 +6,8 @@
 
 sw:
   mcp:
+    errors:
+      topic_not_found: "Mada haijapatikana"
     oauth:
       approve: "Idhini"
   llms_txt:

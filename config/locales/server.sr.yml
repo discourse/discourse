@@ -6,6 +6,8 @@
 
 sr:
   mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
     oauth:
       deny: "Odbij"
   llms_txt:

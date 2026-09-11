@@ -597,6 +597,7 @@ fr:
       direct_messages:
         title: "DM"
         aria_label: "Passer aux messages directs"
+        new_group: "Nouveau groupe de discussion"
         create: "Valider"
         leave: "Quitter le canal"
         close: "Fermer le canal"

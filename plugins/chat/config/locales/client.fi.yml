@@ -455,6 +455,7 @@ fi:
       direct_messages:
         title: "Yksityisviestit"
         aria_label: "Vaihda yksityisviesteihin"
+        new_group: "Uusi ryhmäkeskustelu"
         create: "Siirry"
         leave: "Poistu kanavalta"
         close: "Sulje kanava"

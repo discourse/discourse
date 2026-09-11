@@ -94,10 +94,8 @@ fi:
           raw_invitees_length: "Tapahtuma on rajoitettu %{count} käyttäjään/ryhmään."
           raw_invitees:
             only_group: "Tapahtuma hyväksyy vain ryhmien nimiä."
-          ends_at_before_starts_at: "Tapahtuma ei voi päättyä ennen kuin se alkaa."
           start_must_be_present_and_a_valid_date: "Tapahtuma vaatii kelvollisen alkamispäivän."
           end_must_be_a_valid_date: "Päättymispäivän täytyy olla kelvollinen päivämäärä."
-          invalid_recurrence: "Toistuvuuden on oltava jokin seuraavista: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Aikavyöhykettä ei tunnisteta."
           acting_user_not_allowed_to_create_event: "Nykyinen käyttäjä ei saa luoda tapahtumia."
           acting_user_not_allowed_to_act_on_this_event: "Nykyinen käyttäjä ei saa tehdä toimia tässä tapahtumassa."

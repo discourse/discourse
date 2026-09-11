@@ -140,11 +140,9 @@ de:
           raw_invitees_length: "Ein Ereignis ist auf %{count} Benutzer/Gruppen beschränkt."
           raw_invitees:
             only_group: "Ein Ereignis akzeptiert nur Gruppennamen."
-          ends_at_before_starts_at: "Ein Ereignis kann nicht enden, bevor es beginnt."
           max_attendees_reached: "Dieses Ereignis ist ausgebucht."
           start_must_be_present_and_a_valid_date: "Ein Ereignis erfordert ein gültiges Startdatum."
           end_must_be_a_valid_date: "Das Enddatum muss ein gültiges Datum sein."
-          invalid_recurrence: "Die Wiederholung muss einer der folgenden Werte sein: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Zeitzone nicht erkannt."
           acting_user_not_allowed_to_create_event: "Der aktuelle Benutzer darf keine Ereignisse erstellen."
           acting_user_not_allowed_to_act_on_this_event: "Der aktuelle Benutzer darf nicht auf dieses Ereignis reagieren."

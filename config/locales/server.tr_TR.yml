@@ -6,6 +6,11 @@
 
 tr_TR:
   mcp:
+    errors:
+      draft_too_long: "Taslak fazla uzun"
+      post_not_found: "Gönderi bulunamadı"
+      topic_not_found: "Konu bulunamadı."
+      user_not_found: "Kullanıcı bulunamadı"
     oauth:
       resource: "MCP sunucusu"
       deny: "Reddet"

@@ -6,6 +6,8 @@
 
 bg:
   mcp:
+    errors:
+      topic_not_found: "Темата не е намерена"
     oauth:
       deny: "Отказ"
   llms_txt:

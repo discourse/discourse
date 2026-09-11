@@ -6,6 +6,8 @@
 
 vi:
   mcp:
+    errors:
+      topic_not_found: "Không tìm thấy chủ đề"
     oauth:
       deny: "Từ chối"
   llms_txt:

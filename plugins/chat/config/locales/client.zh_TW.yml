@@ -585,6 +585,7 @@ zh_TW:
       direct_messages:
         title: "直接消息"
         aria_label: "切換到直接消息"
+        new_group: "新建群組聊天"
         create: "開始"
         leave: "離開頻道"
         close: "關閉頻道"

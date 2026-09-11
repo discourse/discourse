@@ -6,6 +6,8 @@
 
 th:
   mcp:
+    errors:
+      topic_not_found: "ไม่พบกระทู้"
     oauth:
       deny: "ปฏิเสธ"
   llms_txt:

@@ -6,6 +6,8 @@
 
 ca:
   mcp:
+    errors:
+      topic_not_found: "Tema no trobat"
     oauth:
       deny: "Denega"
       approve: "Autoritza"

@@ -64,7 +64,6 @@ el:
           raw_invitees_length: "Μια εκδήλωση περιορίζεται σε %{count} χρήστες/ομάδες."
           raw_invitees:
             only_group: "Μια εκδήλωση δέχεται μόνο ονόματα ομάδων."
-          ends_at_before_starts_at: "Μια εκδήλωση δεν μπορεί να τελειώσει πριν ξεκινήσει."
           max_attendees_reached: "Αυτή η εκδήλωση είναι πλήρης."
           start_must_be_present_and_a_valid_date: "Μια εκδήλωση απαιτεί έγκυρη ημερομηνία έναρξης."
           end_must_be_a_valid_date: "Η ημερομηνία λήξης πρέπει να είναι έγκυρη ημερομηνία."

@@ -6,6 +6,9 @@
 
 it:
   mcp:
+    errors:
+      draft_too_long: "La bozza è troppo lunga"
+      topic_not_found: "Argomento non trovato"
     oauth:
       deny: "Nega"
       approve: "Autorizza"

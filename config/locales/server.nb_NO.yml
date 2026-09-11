@@ -6,6 +6,8 @@
 
 nb_NO:
   mcp:
+    errors:
+      topic_not_found: "Fant ikke emnet"
     oauth:
       deny: "Avslå"
       approve: "Autoriser"

@@ -6,6 +6,9 @@
 
 sq:
   mcp:
+    errors:
+      draft_too_long: "Mesazhi shembull është shumë i gjatë"
+      topic_not_found: "Tema nuk u gjet"
     oauth:
       deny: "Mohoni"
       approve: "Autorizo"

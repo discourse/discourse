@@ -551,6 +551,7 @@ nl:
       direct_messages:
         title: "Directe berichten"
         aria_label: "Wisselen naar privéberichten"
+        new_group: "Nieuwe groepschat"
         create: "Gaan"
         leave: "Kanaal verlaten"
         close: "Kanaal sluiten"

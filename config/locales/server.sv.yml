@@ -6,6 +6,9 @@
 
 sv:
   mcp:
+    errors:
+      draft_too_long: "Utkastet är för långt"
+      topic_not_found: "Ämnet hittades inte"
     oauth:
       deny: "Neka"
       approve: "Godkänn"

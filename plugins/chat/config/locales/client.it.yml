@@ -508,6 +508,7 @@ it:
       direct_messages:
         title: "DM"
         aria_label: "Passa ai messaggi diretti"
+        new_group: "Nuova chat di gruppo"
         create: "Vai"
         leave: "Lascia il canale"
         close: "Chiudi canale"
