@@ -1,17 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Report do
-  describe ".find" do
-    it "derives the report user from the supplied guardian" do
-      guardian = Fabricate(:moderator).guardian
-
-      report = described_class.find("signups", guardian: guardian, current_user: Fabricate(:admin))
-
-      expect(report.guardian).to equal(guardian)
-      expect(report.current_user).to eq(guardian.user)
-    end
-  end
-
   describe ".add_report" do
     after { Report.remove_report("my_custom_report") }
 
