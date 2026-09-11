@@ -456,6 +456,40 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      search_discourse_navigation:
+        not_allowed: "You are not allowed to search administration destinations."
+        invalid_query: "Enter a search query between 1 and %{max} characters."
+      navigation:
+        settings:
+          title: "Site settings"
+          description: "Search and change all site configuration settings."
+        users:
+          title: "Users"
+          description: "Find and manage member accounts and user permissions."
+        groups:
+          title: "Groups"
+          description: "Manage groups and group membership."
+        review:
+          title: "Review queue"
+          description: "Moderate flagged posts and approve pending users and content."
+        invites:
+          title: "Create an invite"
+          description: "Invite people to join this community."
+        categories:
+          title: "Categories"
+          description: "Browse, create, and manage discussion categories."
+        tags:
+          title: "Tags"
+          description: "Browse and manage topic tags."
+        themes:
+          title: "Themes"
+          description: "Install and customize themes to change the site's appearance and design."
+        authentication:
+          title: "Login and authentication"
+          description: "Configure login, signup, authentication, and single sign-on."
+        backups:
+          title: "Backups"
+          description: "Create, download, and restore site backups."
       ai_users: "AI users"
       ai_users_bio: "Automatic group of AI bot accounts"
       errors:
@@ -769,6 +803,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        search_discourse_navigation: "Searching site navigation"
         read_site_setting: "Read site setting"
         change_site_setting: "Change site setting"
         dall_e: "Generate image"
@@ -830,6 +865,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        search_discourse_navigation: "Find verified links to available pages on this site"
         read_site_setting: "Read the current value of a site setting"
         change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
@@ -912,6 +948,9 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        search_discourse_navigation:
+          one: "Found %{count} destination"
+          other: "Found %{count} destinations"
         read_site_setting: "Reading site setting %{setting_name}"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
