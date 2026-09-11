@@ -30,9 +30,9 @@ unless defined?(Rails.application)
   require "discourse_vips"
 end
 
-source_head = "75f13f26c4e5f706407eb07d983c376e4348217f"
+source_head = "a7d4feb9ff58f3bffaf25a8336ccbd6cb9c76304"
 worker_sha256 = Digest::SHA256.file(Rails.root.join("script/discourse_vips_worker")).hexdigest
-raise "Worker does not match #{source_head}" unless worker_sha256 == "11e214a27740e3ae2aba7b058727a96bb5cb2ca32f0606c60d023f44003f2641"
+raise "Worker does not match #{source_head}" unless worker_sha256 == "3ed1c8482d87b2e8796424fd6faf3a41438dec3390183fda792083f1f2a66a79"
 
 memory_counter = "/sys/fs/cgroup/memory.current"
 raise "Run in a dedicated Linux cgroup v2 container" unless File.readable?(memory_counter)

@@ -5,7 +5,7 @@
   },
   {
     "path": "lib/discourse_vips.rb",
-    "sha256": "aa61a1f973089277f833eef041a9ff8cf6c30013b801dffe56712c6421e5f4de"
+    "sha256": "69e64de06f4f076b5b0f0de37a5b644cec9b979c1851ea503d12823c2fa6f08e"
   },
   {
     "path": "lib/discourse/safe_exec.rb",
@@ -25,6 +25,6 @@
   },
   {
     "path": "script/discourse_vips_worker",
-    "sha256": "11e214a27740e3ae2aba7b058727a96bb5cb2ca32f0606c60d023f44003f2641"
+    "sha256": "3ed1c8482d87b2e8796424fd6faf3a41438dec3390183fda792083f1f2a66a79"
   }
 ]
