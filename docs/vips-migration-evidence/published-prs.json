@@ -6,8 +6,8 @@
     "head": "738595634abb404612426b82c18cfd62d364bc39",
     "branch": "tgxworld/vips-review-01-animation",
     "worktree": "/tmp/discourse-vips-review-01-animation-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:52:26.836236Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:03:53.650991Z",
     "ci_head": "738595634abb404612426b82c18cfd62d364bc39",
     "url": "https://github.com/discourse/discourse/pull/43453",
     "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-retry-43453.jsonl"
@@ -32,8 +32,8 @@
     "head": "6e284700b188974b2248acde22c610a38a6b5996",
     "branch": "tgxworld/vips-review-03-svg-assets",
     "worktree": "/tmp/discourse-vips-review-03-svg-assets-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:51:52.097267Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:04:58.457995Z",
     "ci_head": "6e284700b188974b2248acde22c610a38a6b5996",
     "url": "https://github.com/discourse/discourse/pull/43455",
     "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-retry-43455.jsonl"
@@ -45,8 +45,8 @@
     "head": "3a8e7058a3e05a37a2fa20728c4ac958288d4c9f",
     "branch": "tgxworld/vips-review-04-og",
     "worktree": "/tmp/discourse-vips-review-04-og-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:52:40.150446Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:09:30.673945Z",
     "ci_head": "3a8e7058a3e05a37a2fa20728c4ac958288d4c9f",
     "url": "https://github.com/discourse/discourse/pull/43456",
     "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-import-43456.jsonl"
@@ -58,8 +58,8 @@
     "head": "f397f9246271b7a0cee5b76d7394b73630a72fe7",
     "branch": "tgxworld/vips-review-05-heif",
     "worktree": "/tmp/discourse-vips-review-05-heif-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:52:40.025317Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:09:27.255025Z",
     "ci_head": "f397f9246271b7a0cee5b76d7394b73630a72fe7",
     "url": "https://github.com/discourse/discourse/pull/43457",
     "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-import-43457.jsonl"
@@ -71,8 +71,8 @@
     "head": "bafb4e7e8073dfd230c39372eae7fe07bfce9202",
     "branch": "tgxworld/vips-review-06-ico",
     "worktree": "/tmp/discourse-vips-review-06-ico-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:52:40.202284Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:10:46.507748Z",
     "ci_head": "bafb4e7e8073dfd230c39372eae7fe07bfce9202",
     "url": "https://github.com/discourse/discourse/pull/43462",
     "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-import-43462.jsonl"
@@ -84,8 +84,8 @@
     "head": "4d4c93120e3ee9cf273abaed095d10cad3ae0a19",
     "branch": "tgxworld/vips-review-07-jpeg",
     "worktree": "/tmp/discourse-vips-review-07-jpeg-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:51:52.782960Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-10T23:52:55.366032Z",
     "ci_head": "4d4c93120e3ee9cf273abaed095d10cad3ae0a19",
     "url": "https://github.com/discourse/discourse/pull/43463",
     "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-main-43463.jsonl"
@@ -97,8 +97,8 @@
     "head": "192f40ea2dd45482f0d74968e74b16bae0d442e2",
     "branch": "tgxworld/vips-review-08-orientation",
     "worktree": "/tmp/discourse-vips-review-08-orientation-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:52:40.508251Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:10:46.357444Z",
     "ci_head": "192f40ea2dd45482f0d74968e74b16bae0d442e2",
     "url": "https://github.com/discourse/discourse/pull/43464",
     "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-import-43464.jsonl"
@@ -110,11 +110,11 @@
     "head": "fb20bdf1edf94d96688c10199df529700e493885",
     "branch": "tgxworld/vips-review-09-downsize",
     "worktree": "/tmp/discourse-vips-review-09-downsize-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:51:53.542377Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:09:30.707826Z",
     "ci_head": "fb20bdf1edf94d96688c10199df529700e493885",
     "url": "https://github.com/discourse/discourse/pull/43465",
-    "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-main-43465.jsonl"
+    "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-retry-43465.jsonl"
   },
   {
     "number": 43466,
@@ -136,11 +136,11 @@
     "head": "5bf3c3f60e96ac28802b5f35d42deabc5d27ee3d",
     "branch": "tgxworld/vips-review-11-crop",
     "worktree": "/tmp/discourse-vips-review-11-crop-01a0846e",
-    "ci_verdict": "PENDING",
-    "ci_observed_at": "2026-09-10T23:51:52.623330Z",
+    "ci_verdict": "GREEN",
+    "ci_observed_at": "2026-09-11T00:09:31.857998Z",
     "ci_head": "5bf3c3f60e96ac28802b5f35d42deabc5d27ee3d",
     "url": "https://github.com/discourse/discourse/pull/43467",
-    "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-main-43467.jsonl"
+    "ci_log": "/tmp/discourse-vips-migration-01a0846e/public/discourse-task/independent-prs/ci-retry-43467.jsonl"
   },
   {
     "number": 43478,

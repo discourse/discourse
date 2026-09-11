@@ -31,7 +31,9 @@ Final coordinator commands included `tgx-dv test --name vips-migration-01a0846e 
 
 Production timings ran through the supplied SSH host with Landlock in `discourse/base:2.0.20260812-0036`, digest `sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5`, as the unprivileged `discourse` user. This is the official launcher default; a custom deployed-image override was not independently confirmed. Font availability and renderer-specific output differences are disclosed in each report. Some small operations are slower with libvips; no universal speedup is claimed.
 
-The current CI head map is retained in `published-prs.json`. Fresh full test workflows are running for the independent heads. The frontend global-coordinate failure on #43453 and theme-setup failure on #43455 are being retried; missing PNG decoder imports in four extracted specs were fixed and pushed. Earlier triage-only GREEN observations after retargeting are not treated as test coverage.
+All twelve independent PR heads have passing full CI; the exact head map and observation times are retained in `published-prs.json`. Missing PNG decoder imports in four extracted specs were fixed and pushed. The frontend failure on #43453, theme-setup failure on #43455, and plugin system timeouts on #43465 and #43467 passed on retry. Earlier triage-only observations and a watcher verdict that contradicted failed timeout checks are not counted as passing coverage. The final check output was verified to contain no failed or pending jobs.
+
+Animation detection retains FastImage as the first check. With the global setting enabled, libvips replaces only the existing ImageMagick fallback; no direct animation routing or APNG parser was added.
 
 The independent-PR follow-up passed 155 focused examples and lint. Each extracted worker passed calls through its actual client and Landlock sandbox; results are in `independent-worker-checks.json`. The broader 258-example run had two failures in unchanged dominant-color backfill examples, also reproduced in isolation and recorded for investigation. The focused run covers all modified shared examples.
 
