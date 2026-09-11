@@ -1045,6 +1045,17 @@ RSpec.describe Email::Receiver do
       expect(reviewable.reviewable_scores.first.reason).to eq("contains_media")
     end
 
+    it "does not queue an email with media from a staged stranger when logged-in users skip media review" do
+      SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:logged_in_users]
+
+      expect { process(:new_user_with_media) }
+        .to change(Topic, :count).by(1)
+        .and not_change(ReviewableQueuedPost, :count)
+
+      user = User.find_by_email("discourse@bar.com")
+      expect(user).to be_staged
+    end
+
     it "raises an UserNotFoundError if enable_staged_users is false " do
       SiteSetting.enable_staged_users = false
       expect { process(:new_user) }.to raise_error(Email::Receiver::UserNotFoundError)
