@@ -129,6 +129,94 @@ test("builds an actionable compact report from browser stacks", () => {
   expect(JSON.stringify(report)).not.toContain("stack");
 });
 
+test.each([1, 2])(
+  "keeps a deprecation unresolved when an unmapped frame precedes its source at stack position %i",
+  (position) => {
+    temporaryDirectory = fs.mkdtempSync(
+      path.join(os.tmpdir(), "discourse-deprecation-report-")
+    );
+    const sourceMap = new SourceMapGenerator({ file: "bundle.js" });
+    addSource(
+      sourceMap,
+      1,
+      path.resolve(import.meta.dirname, "../discourse/app/lib/deprecated.js"),
+      10,
+      "deprecated(message, options);"
+    );
+    addSource(
+      sourceMap,
+      2,
+      path.resolve(import.meta.dirname, "../discourse/app/models/user.js"),
+      427,
+      "get groups() {}"
+    );
+    addSource(
+      sourceMap,
+      3,
+      path.resolve(
+        import.meta.dirname,
+        "../discourse/app/components/example.gjs"
+      ),
+      20,
+      "pluginCallback();"
+    );
+    addSource(
+      sourceMap,
+      4,
+      path.resolve(
+        import.meta.dirname,
+        "../discourse/tests/integration/components/example-test.gjs"
+      ),
+      12,
+      'test("renders the component");'
+    );
+    fs.writeFileSync(
+      path.join(temporaryDirectory, "bundle.js.map"),
+      sourceMap.toString()
+    );
+    const frames = [
+      "    at deprecated (http://localhost/bundle.js:1:1)",
+      "    at get groups (http://localhost/bundle.js:2:1)",
+      "    at Example.render (http://localhost/bundle.js:3:1)",
+      "    at test (http://localhost/bundle.js:4:1)",
+    ];
+    frames.splice(
+      position,
+      0,
+      "    at pluginCallback (http://localhost/plugin.js:1:1)"
+    );
+
+    const report = buildReport({
+      group: "frontend-plugins",
+      entries: [
+        {
+          id: "discourse.user.groups",
+          origin: "example-plugin",
+          count: 3,
+          stack: frames.join("\n"),
+        },
+      ],
+      resolver: new DeprecationStackResolver({
+        mapRoots: [temporaryDirectory],
+      }),
+    });
+
+    expect(report.files).toEqual([]);
+    expect(report.unresolved).toEqual([
+      {
+        id: "discourse.user.groups",
+        count: 3,
+        origins: { "example-plugin": 3 },
+        groups: ["frontend-plugins"],
+        specCount: 1,
+        specs: [
+          "frontend/discourse/tests/integration/components/example-test.gjs:12",
+        ],
+      },
+    ]);
+  }
+);
+
 test("merges compact reports and renders the shared summary", () => {
   const first = {
     format: 1,

@@ -117,6 +117,29 @@ class SourceMapIndex {
     this.#mapRoots = mapRoots;
   }
 
+  forScript(scriptBasename) {
+    if (this.#cache.has(scriptBasename)) {
+      return this.#cache.get(scriptBasename);
+    }
+
+    const mapPath = this.#index().get(`${scriptBasename}.map`);
+    let sourceMap = null;
+
+    if (mapPath) {
+      try {
+        sourceMap = new SourceMap(
+          JSON.parse(fs.readFileSync(mapPath, "utf8")),
+          mapPath
+        );
+      } catch {
+        sourceMap = null;
+      }
+    }
+
+    this.#cache.set(scriptBasename, sourceMap);
+    return sourceMap;
+  }
+
   #index() {
     if (this.#byBasename) {
       return this.#byBasename;
@@ -149,29 +172,6 @@ class SourceMapIndex {
         this.#byBasename.set(entry.name, fullPath);
       }
     }
-  }
-
-  forScript(scriptBasename) {
-    if (this.#cache.has(scriptBasename)) {
-      return this.#cache.get(scriptBasename);
-    }
-
-    const mapPath = this.#index().get(`${scriptBasename}.map`);
-    let sourceMap = null;
-
-    if (mapPath) {
-      try {
-        sourceMap = new SourceMap(
-          JSON.parse(fs.readFileSync(mapPath, "utf8")),
-          mapPath
-        );
-      } catch {
-        sourceMap = null;
-      }
-    }
-
-    this.#cache.set(scriptBasename, sourceMap);
-    return sourceMap;
   }
 }
 
@@ -273,7 +273,16 @@ class DeprecationStackResolver {
       (frame) => frame.resolved && DEPRECATION_WRAPPER_PATTERN.test(frame.file)
     );
     const callers = viaWrapper ? owned.slice(1) : owned;
-    const site = callers[0] || null;
+    const candidate = callers[0];
+    // An unmapped frame may be the actual caller, so don't attribute its
+    // deprecation to a later frame just because that frame has a source map.
+    const site =
+      candidate &&
+      frames
+        .slice(0, frames.indexOf(candidate))
+        .every((frame) => frame.resolved)
+        ? candidate
+        : null;
     const stackTestFrame = callers.find((frame) =>
       TEST_FILE_PATTERN.test(`/${frame.file}`)
     );
