@@ -111,6 +111,9 @@ gem "highline", require: false
 
 gem "rack"
 
+# `prometheus_exporter`, pulled in by discourse-prometheus, lists it as a runtime dependency.
+gem "webrick", require: false
+
 gem "rack-protection" # security
 gem "cbor", require: false
 gem "cose", require: false
