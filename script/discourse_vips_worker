@@ -3,6 +3,7 @@
 
 require "landlock"
 require "msgpack"
+require "securerandom"
 require "socket"
 require "tmpdir"
 require "vips"
@@ -27,6 +28,13 @@ class DiscourseVipsWorker
     WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
     private_constant :WARM_OPERATIONS
 
+    SVG_RLIMITS = {
+      cpu_seconds: 1,
+      memory_bytes: 1024 * 1024 * 1024,
+      file_size_bytes: 1024 * 1024,
+    }.freeze
+    private_constant :SVG_RLIMITS
+
     def self.warm
       WARM_OPERATIONS.each do |name|
         operation = Vips.vips_operation_new(name)
@@ -48,14 +56,23 @@ class DiscourseVipsWorker
         dominant_color(*arguments)
       when "animated"
         animated(*arguments)
+      when "svg-to-png"
+        svg_to_png(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          max_width: Integer(arguments[2]),
+          max_height: Integer(arguments[3]),
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
     end
 
-    def initialize(read_paths: [], write_paths: [], &action)
+    def initialize(read_paths: [], write_paths: [], rlimits: {}, cleanup_paths: [], &action)
       @read_paths = read_paths
       @write_paths = write_paths
+      @rlimits = rlimits
+      @cleanup_paths = cleanup_paths
       @action = action
     end
 
@@ -68,6 +85,14 @@ class DiscourseVipsWorker
         "read" => existing_paths([*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *@read_paths]),
         "write" => existing_paths([scratch, *@write_paths]),
       }
+    end
+
+    def sandbox_rlimits(defaults:)
+      defaults.merge(@rlimits)
+    end
+
+    def cleanup
+      @cleanup_paths.each { |path| File.unlink(path) if File.exist?(path) }
     end
 
     def self.version
@@ -149,6 +174,39 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :animated
+
+    def self.svg_to_png(input_path:, output_path:, max_width:, max_height:)
+      temporary_output_path =
+        File.join(File.dirname(output_path), ".discourse-vips-svg-#{SecureRandom.hex(16)}.png")
+
+      new(
+        read_paths: [input_path, "/etc/fonts", "/var/cache/fontconfig"],
+        write_paths: [File.dirname(output_path)],
+        rlimits: SVG_RLIMITS,
+        cleanup_paths: [temporary_output_path],
+      ) do
+        if !max_width.positive? || !max_height.positive?
+          raise ArgumentError, "SVG output dimensions must be positive"
+        end
+        if File.exist?(output_path) && File.identical?(input_path, output_path)
+          raise ArgumentError, "SVG input and PNG output must be different files"
+        end
+
+        block_loaders(allowed: %w[VipsForeignLoadSvg])
+        begin
+          Vips.concurrency_set(1)
+          image = Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)
+          scale = [max_width.fdiv(image.width), max_height.fdiv(image.height), 1].min
+          image = Vips::Image.svgload(input_path, dpi: 96, scale: 0.75 * scale) if scale < 1
+          image.flatten(background: [255, 255, 255]).pngsave(temporary_output_path)
+          File.rename(temporary_output_path, output_path)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+        nil
+      end
+    end
+    private_class_method :svg_to_png
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
@@ -278,7 +336,7 @@ class DiscourseVipsWorker
           timeout: Float(request.fetch("timeout")),
           env: child_environment(scratch),
           unsetenv_others: true,
-          rlimits: RLIMITS,
+          rlimits: operation.sandbox_rlimits(defaults: RLIMITS),
           seccomp_deny_network: LINUX_PLATFORM,
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
@@ -294,6 +352,8 @@ class DiscourseVipsWorker
         { "status" => "error", "message" => "libvips operation failed" }
       end
     end
+  ensure
+    operation.cleanup
   end
 
   def remove_socket_directory
