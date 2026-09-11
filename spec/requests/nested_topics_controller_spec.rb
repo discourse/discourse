@@ -227,6 +227,8 @@ RSpec.describe NestedTopicsController, type: :request do
       get show_url(topic, sort: "hot")
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["sort"]).to eq("hot")
+      expect(response.parsed_body["effective_sort"]).to eq("hot")
       deleted_root_json = response.parsed_body["roots"].first
       expect(deleted_root_json["id"]).to eq(deleted_root.id)
       expect(deleted_root_json["deleted_post_placeholder"]).to eq(true)
@@ -587,25 +589,31 @@ RSpec.describe NestedTopicsController, type: :request do
       end
     end
 
-    it "paginates with has_more_roots" do
-      NestedReplies::TreeLoader::ROOTS_PER_PAGE.times do
-        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+    it "paginates eligible roots after filtering interleaved deleted leaves" do
+      eligible_roots = []
+      deleted_leaves = []
+      23.times do |index|
+        eligible_roots << Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+        next if (index % 3).nonzero?
+
+        deleted_leaf = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+        deleted_leaf.update!(deleted_at: Time.current)
+        deleted_leaves << deleted_leaf
       end
       sign_in(user)
 
-      get show_url(topic, page: 0)
-      json = response.parsed_body
-      expect(json["has_more_roots"]).to eq(true)
-      expect(json["roots"].length).to eq(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
-    end
+      get show_url(topic, page: 0, sort: "old")
+      first_page = response.parsed_body
+      get show_url(topic, page: 1, sort: "old")
+      final_page = response.parsed_body
 
-    it "returns has_more_roots false on last page" do
-      5.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
-      sign_in(user)
-
-      get show_url(topic, page: 0)
-      json = response.parsed_body
-      expect(json["has_more_roots"]).to eq(false)
+      expect(first_page).to include("page" => 0, "has_more_roots" => true)
+      expect(final_page).to include("page" => 1, "has_more_roots" => false)
+      expect(first_page["roots"].length).to eq(NestedReplies::TreeLoader::ROOTS_PER_PAGE)
+      returned_ids = (first_page["roots"] + final_page["roots"]).map { |root| root["id"] }
+      expect(returned_ids).to eq(eligible_roots.map(&:id))
+      expect(returned_ids.uniq).to eq(returned_ids)
+      expect(returned_ids).not_to include(*deleted_leaves.map(&:id))
     end
 
     it "validates sort parameter and falls back to default" do
@@ -731,20 +739,34 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(root_json["direct_reply_count"]).to eq(1)
     end
 
+    it "keeps the non-nested topic endpoint on the flat post stream behavior" do
+      live_reply = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      deleted_reply = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      deleted_reply.update!(deleted_at: Time.current)
+
+      expect(topic.reload.nested_view?).to eq(false)
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      json = response.parsed_body
+      expect(response.status).to eq(200)
+      expect(json).to have_key("post_stream")
+      expect(json).not_to have_key("roots")
+      expect(json.dig("post_stream", "posts").map { |post| post["id"] }).to eq([op.id, live_reply.id])
+    end
+
     describe "deleted post placeholders" do
-      it "shows deleted root as placeholder for non-staff" do
+      it "hides a deleted root leaf while preserving topic and OP metadata for non-staff" do
         root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
         root.update!(deleted_at: Time.current)
-        sign_in(user)
 
         get show_url(topic)
+
         json = response.parsed_body
-        root_json = json["roots"].find { |r| r["id"] == root.id }
-        expect(root_json).to be_present
-        expect(root_json["deleted_post_placeholder"]).to eq(true)
-        expect(root_json["cooked"]).to eq("")
-        expect(root_json["raw"]).to be_nil
-        expect(root_json["actions_summary"]).to eq([])
+        expect(response.status).to eq(200)
+        expect(json["roots"].map { |json_root| json_root["id"] }).not_to include(root.id)
+        expect(json["topic"]["id"]).to eq(topic.id)
+        expect(json["op_post"]["id"]).to eq(op.id)
       end
 
       it "preserves children under deleted root for non-staff" do
@@ -754,11 +776,41 @@ RSpec.describe NestedTopicsController, type: :request do
         sign_in(user)
 
         get show_url(topic)
-        json = response.parsed_body
-        root_json = json["roots"].find { |r| r["id"] == root.id }
-        expect(root_json["children"]).to be_an(Array)
-        expect(root_json["children"].length).to eq(1)
-        expect(root_json["children"].first["id"]).to eq(child.id)
+        root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+        expect(root_json).to include(
+          "id" => root.id,
+          "deleted_post_placeholder" => true,
+          "cooked" => "",
+          "raw" => nil,
+          "actions_summary" => [],
+        )
+        expect(root_json["children"].map { |json_child| json_child["id"] }).to eq([child.id])
+      end
+
+      it "preserves a deleted root when its direct child is also deleted" do
+        root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: 1)
+        child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        root.update!(deleted_at: Time.current)
+        child.update!(deleted_at: Time.current)
+        sign_in(user)
+
+        get show_url(topic)
+
+        root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+        expect(root_json).to include(
+          "id" => root.id,
+          "deleted_post_placeholder" => true,
+          "cooked" => "",
+          "raw" => nil,
+          "actions_summary" => [],
+        )
+        expect(root_json["children"].first).to include(
+          "id" => child.id,
+          "deleted_post_placeholder" => true,
+          "cooked" => "",
+          "raw" => nil,
+          "actions_summary" => [],
+        )
       end
 
       it "shows deleted root as placeholder for staff but preserves content" do
@@ -847,7 +899,7 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_ids.first).to eq(low_post.id)
       end
 
-      it "does not promote a deleted post to pinned position" do
+      it "does not promote a deleted leaf to pinned position for non-staff" do
         low_post.update!(deleted_at: Time.current)
         pin_posts(low_post)
         sign_in(user)
@@ -855,8 +907,32 @@ RSpec.describe NestedTopicsController, type: :request do
         get show_url(topic, sort: "top")
 
         json = response.parsed_body
-        root_ids = json["roots"].map { |r| r["id"] }
-        expect(root_ids.first).not_to eq(low_post.id)
+        expect(json["roots"].map { |root| root["id"] }).not_to include(low_post.id)
+      end
+
+      it "promotes a deleted pinned root with a visible child for non-staff" do
+        child =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: low_post.post_number)
+        low_post.update!(deleted_at: Time.current)
+        pin_posts(low_post)
+        sign_in(user)
+
+        get show_url(topic, sort: "top")
+
+        pinned_root = response.parsed_body["roots"].first
+        expect(pinned_root).to include("id" => low_post.id, "deleted_post_placeholder" => true)
+        expect(pinned_root["children"].map { |post| post["id"] }).to eq([child.id])
+      end
+
+      it "keeps deleted pins excluded for staff even when they have children" do
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: low_post.post_number)
+        low_post.update!(deleted_at: Time.current)
+        pin_posts(low_post)
+        sign_in(admin)
+
+        get show_url(topic, sort: "top")
+
+        expect(response.parsed_body["roots"].map { |root| root["id"] }).not_to include(low_post.id)
       end
 
       it "ignores a pinned post_id that does not exist" do
@@ -1479,6 +1555,22 @@ RSpec.describe NestedTopicsController, type: :request do
       sign_in(user)
       get context_url(topic, 99_999)
       expect(response.status).to eq(404)
+    end
+
+    it "retains direct context access to a deleted root leaf hidden from the root list" do
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      root.update!(deleted_at: Time.current)
+      sign_in(user)
+
+      get show_url(topic)
+      expect(response.parsed_body["roots"]).to be_empty
+
+      get context_url(topic, root.post_number)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["target_post"]).to include(
+        "id" => root.id,
+        "deleted_post_placeholder" => true,
+      )
     end
 
     it "returns 404 when plugin disabled" do
