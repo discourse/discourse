@@ -47,4 +47,68 @@ RSpec.describe DiscourseWorkflows::WorkflowSnapshot do
       end
     end
   end
+
+  describe "#setting_schema" do
+    it "defaults to an empty array when the source data has none" do
+      expect(described_class.new({}).setting_schema).to eq([])
+    end
+
+    it "reads settingSchema from the source data" do
+      schema = [{ "key" => "priority", "type" => "string", "value" => "urgent" }]
+
+      expect(described_class.new("settingSchema" => schema).setting_schema).to eq(schema)
+    end
+
+    it "round-trips through #to_h" do
+      schema = [{ "key" => "priority", "type" => "string", "value" => "urgent" }]
+      snapshot = described_class.new("settingSchema" => schema)
+
+      expect(described_class.new(snapshot.to_h).setting_schema).to eq(schema)
+    end
+  end
+
+  describe ".from_workflow" do
+    fab!(:workflow, :discourse_workflows_workflow)
+    fab!(:setting_field) do
+      Fabricate(:discourse_workflows_workflow_setting_field, workflow:, value: "urgent")
+    end
+
+    context "when published: false" do
+      it "uses the workflow's live setting fields schema" do
+        snapshot = described_class.from_workflow(workflow, published: false)
+
+        expect(snapshot.setting_schema).to eq(workflow.reload.setting_fields_schema)
+        expect(snapshot.setting_schema.first["value"]).to eq("urgent")
+      end
+    end
+
+    context "when published: true" do
+      before do
+        version = workflow.snapshot!(user: workflow.created_by)
+        workflow.update_columns(active_version_id: version.version_id)
+      end
+
+      it "uses the active version's setting schema" do
+        snapshot = described_class.from_workflow(workflow.reload, published: true)
+
+        expect(snapshot.setting_schema).to eq(workflow.active_version.setting_schema)
+      end
+    end
+  end
+
+  describe ".from_version" do
+    fab!(:workflow, :discourse_workflows_workflow)
+    fab!(:setting_field) do
+      Fabricate(:discourse_workflows_workflow_setting_field, workflow:, value: "urgent")
+    end
+
+    it "uses the given version's setting schema" do
+      version = workflow.snapshot!(user: workflow.created_by)
+
+      snapshot = described_class.from_version(workflow, version)
+
+      expect(snapshot.setting_schema).to eq(version.setting_schema)
+      expect(snapshot.setting_schema.first["value"]).to eq("urgent")
+    end
+  end
 end

@@ -18,10 +18,18 @@ module DiscourseWorkflows
     class PayloadTooLargeError < StandardError
     end
 
-    def initialize(workflow_context, user: nil, vars: nil, capture_logs: false, budget_tracker: nil)
+    def initialize(
+      workflow_context,
+      user: nil,
+      vars: nil,
+      settings: nil,
+      capture_logs: false,
+      budget_tracker: nil
+    )
       @workflow_context = workflow_context
       @user = user
       @vars = vars || DiscourseWorkflows::Variable.pluck(:key, :value).to_h
+      @settings = settings || {}
       @budget_tracker = budget_tracker
       @site_setting_store = SiteSettingStore.new
       @js_context = create_js_context
@@ -121,12 +129,16 @@ module DiscourseWorkflows
 
       execution = @workflow_context.fetch("__execution") { {} }
       declare_json("__vars", @vars)
+      declare_json("__settings", @settings)
       declare_json("__executionData", execution)
       declare_json("__currentUser", build_current_user)
 
       eval(<<~JS)
         Object.defineProperty(this, '$vars', {
           value: Object.freeze(__vars)
+        });
+        Object.defineProperty(this, '$settings', {
+          value: Object.freeze(__settings)
         });
         Object.defineProperty(this, '$execution', {
           value: Object.freeze(__executionData)

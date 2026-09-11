@@ -103,5 +103,26 @@ RSpec.describe DiscourseWorkflows::Expression::Evaluate do
         expect(result[:segments].first[:state]).to eq("valid")
       end
     end
+
+    context "with a workflow setting field" do
+      fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
+      fab!(:setting_field) do
+        Fabricate(
+          :discourse_workflows_workflow_setting_field,
+          workflow:,
+          key: "notify_categories",
+          label: "Notify categories",
+          field_type: "category_list",
+          value: "4|9",
+        )
+      end
+
+      let(:params) { { template: "{{ $settings.notify_categories }}", workflow_id: workflow.id } }
+
+      it "resolves the field's current value" do
+        expect(result).to run_successfully
+        expect(result[:segments].first).to include(state: "valid", text: "4, 9")
+      end
+    end
   end
 end
