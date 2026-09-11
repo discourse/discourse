@@ -1319,6 +1319,10 @@ class SessionController < ApplicationController
     ).performed!
 
     if password_reset_via_code?(user)
+      user
+        .email_tokens
+        .where(scope: [nil, EmailToken.scopes[:password_reset]])
+        .update_all(expired: true)
       login_code = EmailLoginCode.generate!(email: user.email, purpose: :password_reset)
       server_session[:password_reset_code] = { login_code_id: login_code.id, user_id: user.id }
       Jobs.enqueue(

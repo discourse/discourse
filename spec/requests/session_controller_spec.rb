@@ -3715,6 +3715,23 @@ RSpec.describe SessionController do
         end
       end
 
+      it "expires existing password reset and unscoped email tokens when sending a code" do
+        reset_token = Fabricate(:email_token, user: user, scope: EmailToken.scopes[:password_reset])
+        unscoped_token = Fabricate(:email_token, user: user)
+        login_token = Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
+        other_user_token = Fabricate(:email_token, scope: EmailToken.scopes[:password_reset])
+        unscoped_token.update_column(:scope, nil)
+
+        post "/session/forgot_password.json", params: { login: user.email }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email_code"]).to eq(true)
+        expect(reset_token.reload).to be_expired
+        expect(unscoped_token.reload).to be_expired
+        expect(login_token.reload).not_to be_expired
+        expect(other_user_token.reload).not_to be_expired
+      end
+
       it "sends a code when a logged-in user resets their own password" do
         sign_in(user)
 
