@@ -4,7 +4,9 @@
   box-sizing: border-box;
   border: 1px solid var(--primary-400);
   border-radius: var(--d-input-border-radius);
-  overflow: hidden;
+
+  // Not clipped: on touch devices the completion popup is positioned inside
+  // the editor and would be cut off.
   background: var(--secondary);
 
   // The editor fills whatever height the box has, so dragging the grippie or
@@ -126,6 +128,11 @@
 
     .cm-scroller {
       cursor: not-allowed;
+    }
+
+    .cm-activeLine,
+    .cm-activeLineGutter {
+      background: transparent;
     }
   }
 
