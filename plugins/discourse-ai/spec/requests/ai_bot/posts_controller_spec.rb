@@ -107,9 +107,14 @@ RSpec.describe PostsController do
       sign_in(user)
 
       prompts = nil
-      DiscourseAi::Completions::Llm.with_prepared_responses(["I can help"]) do |_, _, recorded_prompts|
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["I can help"],
+      ) do |_, _, recorded_prompts|
         post "/posts.json",
-             params: { topic_id: conversation.id, raw: "Please help @#{agent.user.username}" }
+             params: {
+               topic_id: conversation.id,
+               raw: "Please help @#{agent.user.username}",
+             }
         prompts = recorded_prompts
       end
 
@@ -120,6 +125,5 @@ RSpec.describe PostsController do
         { upload_id: secure_upload.id },
       )
     end
-
   end
 end

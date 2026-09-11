@@ -303,9 +303,7 @@ module DiscourseAi
         return content if !content.is_a?(Array)
 
         upload_ids =
-          content.filter_map do |part|
-            part[:upload_id] || part["upload_id"] if part.is_a?(Hash)
-          end
+          content.filter_map { |part| part[:upload_id] || part["upload_id"] if part.is_a?(Hash) }
         allowed_upload_ids =
           filtered_upload_ids_for_prompt(
             upload_ids,
