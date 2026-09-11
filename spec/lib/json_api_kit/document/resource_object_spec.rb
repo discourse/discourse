@@ -102,6 +102,29 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
 
       before { allow(JsonApiKit::Document::RelationshipObject).to receive(:new).and_call_original }
 
+      context "when the relationship has a historical name" do
+        let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+        let(:version_change) do
+          Class
+            .new(JsonApiKit::VersionChange) do
+              resource :topics do
+                renamed_relationship from: :author, to: :user
+              end
+            end
+            .new(__FILE__)
+        end
+
+        before do
+          allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+        end
+
+        it "uses the current name in the relationship's URL" do
+          expect(resource_object.to_h.dig(:relationships, "author", :links, :related)).to eq(
+            "https://example.com/api/topics/#{topic.id}/user",
+          )
+        end
+      end
+
       it "renders the relationship under its own name" do
         expect(resource_object.to_h[:relationships].keys).to eq(["user"])
       end

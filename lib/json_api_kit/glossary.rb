@@ -79,6 +79,18 @@ module JsonApiKit
 
     def member_type(type) = member_name(Name::Type.new(value: type)).value
 
+    def declared_relationship(member:, type:)
+      declared_name(Name::Relationship.new(value: member, type: member_type(type))).value
+    end
+
+    def member_relationship(declared:, type:)
+      member_name(Name::Relationship.new(value: declared, type:)).value
+    end
+
+    def unscoped_member(declared:)
+      member_name(Name::Member.new(value: declared)).value
+    end
+
     def member_attributes(attributes)
       rules.reverse_each.reduce(attributes) { |result, rule| rule.member_attributes(result) }
     end
