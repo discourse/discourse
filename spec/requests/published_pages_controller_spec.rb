@@ -137,6 +137,23 @@ RSpec.describe PublishedPagesController do
           )
         end
 
+        it "omits hidden tags from body classes" do
+          hidden_tag = Fabricate(:tag, name: "admins-only")
+          hidden_tag_group =
+            Fabricate(:tag_group, name: "Admins only", tag_names: [hidden_tag.name])
+          hidden_tag_group.permissions = [
+            [Group::AUTO_GROUPS[:admins], TagGroupPermission.permission_types[:full]],
+          ]
+          hidden_tag_group.save!
+          published_page.topic.tags << hidden_tag
+
+          get published_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include("recipes")
+          expect(response.body).not_to include(hidden_tag.name)
+        end
+
         context "when login is required" do
           before do
             SiteSetting.login_required = true
@@ -166,6 +183,80 @@ RSpec.describe PublishedPagesController do
               end
             end
           end
+        end
+      end
+
+      describe "caching" do
+        # The default published_page fabricator is public: false, so it is
+        # never publicly cacheable. This one exercises the cacheable branch.
+        fab!(:public_page) do
+          Fabricate(
+            :published_page,
+            public: true,
+            slug: "public-cacheable-page",
+            topic: Fabricate(:topic_with_op),
+          )
+        end
+
+        before do
+          global_setting :anon_cache_store_threshold, 1
+          Middleware::AnonymousCache.enable_anon_cache
+          Middleware::AnonymousCache.clear_all_cache!
+        end
+
+        after { Middleware::AnonymousCache.disable_anon_cache }
+
+        it "serves a public page to anonymous visitors from the anonymous cache" do
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("max-age=60, public")
+          expect(response.headers["X-Discourse-Cached"]).to eq("store")
+
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["X-Discourse-Cached"]).to eq("true")
+        end
+
+        it "does not cache for signed-in visitors" do
+          sign_in(user)
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+          expect(response.headers["X-Discourse-Cached"]).to be_nil
+        end
+
+        it "does not cache a non-public page" do
+          get published_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+          expect(response.headers["X-Discourse-Cached"]).to be_nil
+        end
+
+        it "does not cache when the source category is read-restricted" do
+          public_page.topic.update!(
+            category: Fabricate(:private_category, group: Fabricate(:group)),
+          )
+
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+          expect(response.headers["X-Discourse-Cached"]).to be_nil
+        end
+
+        it "does not cache when the site requires login" do
+          SiteSetting.login_required = true
+          SiteSetting.show_published_pages_login_required = true
+
+          get public_page.path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Cache-Control"]).to eq("private, no-store")
+          expect(response.headers["X-Discourse-Cached"]).to be_nil
         end
       end
     end
