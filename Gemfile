@@ -109,8 +109,10 @@ gem "mini_racer"
 
 gem "highline", require: false
 
-# TODO: upgrade to Rack 3 now that Unicorn has been removed
-gem "rack", "< 3"
+gem "rack"
+
+# `prometheus_exporter`, pulled in by discourse-prometheus, lists it as a runtime dependency.
+gem "webrick", require: false
 
 gem "rack-protection" # security
 gem "cbor", require: false

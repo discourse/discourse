@@ -225,7 +225,7 @@ class UserAvatarsController < ApplicationController
 
   # this protects us from a DoS
   def render_blank
-    path = Rails.root + "public/images/avatar.png"
+    path = Rails.public_path.join("images/avatar.png").to_s
     expires_in 10.minutes, public: true
     response.headers["Last-Modified"] = Time.new(1990, 01, 01).httpdate
     response.headers["Content-Length"] = File.size(path).to_s
