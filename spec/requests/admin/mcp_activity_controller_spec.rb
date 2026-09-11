@@ -18,7 +18,7 @@ describe Admin::McpActivityController do
       McpAuditLog.create!(
         occurred_at: Time.zone.now,
         method: "tools/call",
-        tool: "discourse_topic_create",
+        tool: "discourse_create_topic",
         outcome: "error",
         occurrences: 3,
         duration_ms: 100,

@@ -26,7 +26,10 @@ module Chat
           Chat::ListChannelMessages.call(
             params: {
               channel_id: arguments.fetch("channel_id"),
-              page_size: arguments.fetch("limit", 50),
+              page_size: arguments.fetch("page_size", 50),
+              target_message_id: arguments["target_message_id"],
+              direction: arguments["direction"],
+              target_date: arguments["target_date"],
             },
             guardian: request_context.guardian,
           )
@@ -40,10 +43,22 @@ module Chat
               username: message.user&.username,
               message: message.message,
               created_at: message.created_at.iso8601,
+              edited: message.revisions.any?,
               thread_id: message.thread_id,
+              in_reply_to_id: message.in_reply_to_id,
             }
           end
-        DiscourseMcp::ToolHelpers.text_and_structured(messages: messages)
+        metadata = result.metadata || {}
+        DiscourseMcp::ToolHelpers.text_and_structured(
+          channel_id: arguments.fetch("channel_id"),
+          messages:,
+          meta: {
+            returned: messages.length,
+            can_load_more_past: metadata[:can_load_more_past],
+            can_load_more_future: metadata[:can_load_more_future],
+            target_message_id: metadata[:target_message_id] || arguments["target_message_id"],
+          },
+        )
       end
     end
 
