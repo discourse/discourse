@@ -38,75 +38,141 @@ RSpec.describe TopicOgImageGenerator do
     end
   end
 
-  describe "#generate_bytes" do
-    it "renders the topic OG image as a 1200x630 PNG" do
-      png_bytes = described_class.new(topic).generate_bytes
+  describe "#generate_bytes with SVG assets" do
+    shared_examples "SVG assets in topic Open Graph cards" do |zero_sized_asset_omitted|
+      it "renders transparent SVG assets against white on a colored canvas" do
+        scheme =
+          Fabricate(
+            :color_scheme,
+            color_scheme_colors: [
+              Fabricate.build(:color_scheme_color, name: "secondary", hex: "123456"),
+            ],
+          )
+        SiteSetting.default_theme_id = Fabricate(:theme, color_scheme: scheme).id
+        logo_upload = Struct.new(:url, :width, :height).new("/transparent-logo.svg", 200, 100)
+        logo_svg = <<~SVG
+          <svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
+            <rect width="100" height="100" fill="#00ff00"/>
+          </svg>
+        SVG
+        logo_data_uri = "data:image/svg+xml;base64,#{Base64.strict_encode64(logo_svg)}"
+        SiteSetting.stubs(:logo).returns(logo_upload)
+        described_class
+          .any_instance
+          .stubs(:fetch_as_data_uri)
+          .with("/transparent-logo.svg")
+          .returns(logo_data_uri)
 
-      expect(png_bytes).to be_present
-      Tempfile.create(%w[topic-og .png], binmode: true) do |file|
-        file.write(png_bytes)
-        file.flush
+        png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
 
-        expect(FastImage.type(file.path)).to eq(:png)
-        expect(FastImage.size(file.path)).to eq([1200, 630])
+        expect(png[130, 520]).to eq(ChunkyPNG::Color.rgb(0, 255, 0))
+        expect(png[230, 520]).to eq(ChunkyPNG::Color.rgb(255, 255, 255))
+        expect(png[500, 520]).to eq(ChunkyPNG::Color.rgb(18, 52, 86))
+      end
+
+      it "renders the topic OG image as a 1200x630 PNG" do
+        png_bytes = described_class.new(topic).generate_bytes
+
+        expect(png_bytes).to be_present
+        Tempfile.create(%w[topic-og .png], binmode: true) do |file|
+          file.write(png_bytes)
+          file.flush
+
+          expect(FastImage.type(file.path)).to eq(:png)
+          expect(FastImage.size(file.path)).to eq([1200, 630])
+        end
+      end
+
+      it "renders raster and SVG assets in their expected regions" do
+        logo_upload = Struct.new(:url, :width, :height).new("/marked-logo.svg", 200, 100)
+        logo_svg = <<~SVG
+          <svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
+            <rect width="200" height="100" fill="#00ff00"/>
+          </svg>
+        SVG
+        avatar_png = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color.rgb(255, 0, 0)).to_blob
+        logo_data_uri = "data:image/svg+xml;base64,#{Base64.strict_encode64(logo_svg)}"
+        avatar_data_uri = "data:image/png;base64,#{Base64.strict_encode64(avatar_png)}"
+        avatar_url = topic.user.avatar_template_url.gsub("{size}", "120")
+        SiteSetting.stubs(:logo).returns(logo_upload)
+        described_class
+          .any_instance
+          .stubs(:fetch_as_data_uri)
+          .with("/marked-logo.svg")
+          .returns(logo_data_uri)
+        described_class
+          .any_instance
+          .stubs(:fetch_as_data_uri)
+          .with(avatar_url)
+          .returns(avatar_data_uri)
+
+        png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
+
+        avatar_pixel = png[116, 339]
+        logo_pixel = png[180, 520]
+        expect(
+          [
+            [ChunkyPNG::Color.r(avatar_pixel), ChunkyPNG::Color.g(avatar_pixel)],
+            [ChunkyPNG::Color.g(logo_pixel), ChunkyPNG::Color.r(logo_pixel)],
+          ],
+        ).to eq([[255, 0], [255, 0]])
+      end
+
+      it "renders the canvas when an SVG asset has zero dimensions" do
+        logo_upload = Struct.new(:url, :width, :height).new("/zero-logo.svg", 200, 100)
+        logo_svg = <<~SVG
+          <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 200 100">
+            <rect width="200" height="100" fill="#00ff00"/>
+          </svg>
+        SVG
+        logo_data_uri = "data:image/svg+xml;base64,#{Base64.strict_encode64(logo_svg)}"
+        SiteSetting.stubs(:logo).returns(logo_upload)
+        described_class
+          .any_instance
+          .stubs(:fetch_as_data_uri)
+          .with("/zero-logo.svg")
+          .returns(logo_data_uri)
+
+        png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
+
+        expect([png.width, png.height]).to eq([1200, 630])
+        expect(png[180, 520] == png[500, 520]).to eq(zero_sized_asset_omitted)
+      end
+
+      it "omits an unrenderable SVG asset and still renders the canvas" do
+        logo_upload = Struct.new(:url, :width, :height).new("/invalid-logo.svg", 200, 100)
+        invalid_svg_data_uri =
+          "data:image/svg+xml;base64,#{Base64.strict_encode64("<svg><invalid")}"
+        avatar_url = topic.user.avatar_template_url.gsub("{size}", "120")
+        SiteSetting.stubs(:logo).returns(logo_upload)
+        described_class
+          .any_instance
+          .stubs(:fetch_as_data_uri)
+          .with("/invalid-logo.svg")
+          .returns(invalid_svg_data_uri)
+        described_class.any_instance.stubs(:fetch_as_data_uri).with(avatar_url).returns(nil)
+        Discourse.expects(:warn).with(
+          "Failed to materialize topic OG image asset",
+          has_entries(topic_id: topic.id, asset: "logo"),
+        )
+
+        png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
+
+        expect([png.width, png.height]).to eq([1200, 630])
+        expect(png[180, 520]).to eq(png[500, 520])
       end
     end
 
-    it "renders raster and SVG assets in their expected regions" do
-      logo_upload = Struct.new(:url, :width, :height).new("/marked-logo.svg", 200, 100)
-      logo_svg = <<~SVG
-        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
-          <rect width="200" height="100" fill="#00ff00"/>
-        </svg>
-      SVG
-      avatar_png = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color.rgb(255, 0, 0)).to_blob
-      logo_data_uri = "data:image/svg+xml;base64,#{Base64.strict_encode64(logo_svg)}"
-      avatar_data_uri = "data:image/png;base64,#{Base64.strict_encode64(avatar_png)}"
-      avatar_url = topic.user.avatar_template_url.gsub("{size}", "120")
-      SiteSetting.stubs(:logo).returns(logo_upload)
-      described_class
-        .any_instance
-        .stubs(:fetch_as_data_uri)
-        .with("/marked-logo.svg")
-        .returns(logo_data_uri)
-      described_class
-        .any_instance
-        .stubs(:fetch_as_data_uri)
-        .with(avatar_url)
-        .returns(avatar_data_uri)
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
 
-      png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
-
-      avatar_pixel = png[116, 339]
-      logo_pixel = png[180, 520]
-      expect(
-        [
-          [ChunkyPNG::Color.r(avatar_pixel), ChunkyPNG::Color.g(avatar_pixel)],
-          [ChunkyPNG::Color.g(logo_pixel), ChunkyPNG::Color.r(logo_pixel)],
-        ],
-      ).to eq([[255, 0], [255, 0]])
+      include_examples "SVG assets in topic Open Graph cards", false
     end
 
-    it "omits an unrenderable SVG asset and still renders the canvas" do
-      logo_upload = Struct.new(:url, :width, :height).new("/invalid-logo.svg", 200, 100)
-      invalid_svg_data_uri = "data:image/svg+xml;base64,#{Base64.strict_encode64("<svg><invalid")}"
-      avatar_url = topic.user.avatar_template_url.gsub("{size}", "120")
-      SiteSetting.stubs(:logo).returns(logo_upload)
-      described_class
-        .any_instance
-        .stubs(:fetch_as_data_uri)
-        .with("/invalid-logo.svg")
-        .returns(invalid_svg_data_uri)
-      described_class.any_instance.stubs(:fetch_as_data_uri).with(avatar_url).returns(nil)
-      Discourse.expects(:warn).with(
-        "Failed to materialize topic OG image asset",
-        has_entries(topic_id: topic.id, asset: "logo"),
-      )
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
 
-      png = ChunkyPNG::Image.from_blob(described_class.new(topic).generate_bytes)
-
-      expect([png.width, png.height]).to eq([1200, 630])
-      expect(png[180, 520]).to eq(png[500, 520])
+      include_examples "SVG assets in topic Open Graph cards", true
     end
   end
 

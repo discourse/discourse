@@ -29,6 +29,14 @@ module DiscourseVips
     Client.call(["animated", input_path], operation: :upload_animation_probe, timeout:)
   end
 
+  def self.svg_to_png(input_path:, output_path:, max_width:, max_height:, timeout:)
+    Client.call(
+      ["svg-to-png", input_path, output_path, max_width, max_height],
+      operation: :topic_og_asset_render,
+      timeout:,
+    )
+  end
+
   def self.before_fork
     Client.before_fork
   end

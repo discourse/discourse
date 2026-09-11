@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe DiscourseVips do
   describe ".version" do
     it "returns the libvips version" do
@@ -78,6 +80,248 @@ RSpec.describe DiscourseVips do
         expect { described_class.animated?(input_path: file.path, timeout: 5) }.to raise_error(
           DiscourseVips::InvalidImage,
         )
+      end
+    end
+  end
+
+  describe ".svg_to_png" do
+    it "renders transparent pixels against a white background" do
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="4">
+          <rect width="4" height="4" fill="#ff0000"/>
+          <rect x="4" width="4" height="4" fill="#00ff00" fill-opacity="0.5"/>
+        </svg>
+      SVG
+      file = file_from_contents(svg, "transparency.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        described_class.svg_to_png(
+          input_path: file.path,
+          output_path:,
+          max_width: 300,
+          max_height: 100,
+          timeout: 5,
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png.width, png.height]).to eq([12, 4])
+        expect([png[2, 2], png[10, 2]]).to eq(
+          [ChunkyPNG::Color.rgb(255, 0, 0), ChunkyPNG::Color.rgb(255, 255, 255)],
+        )
+        blended_pixel = png[6, 2]
+        expect([ChunkyPNG::Color.r(blended_pixel), ChunkyPNG::Color.b(blended_pixel)]).to all(
+          be_within(1).of(128),
+        )
+        expect([ChunkyPNG::Color.g(blended_pixel), ChunkyPNG::Color.a(blended_pixel)]).to eq(
+          [255, 255],
+        )
+      end
+    end
+
+    it "renders fractional SVG dimensions" do
+      input_path = file_from_fixtures("tiny.svg").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        described_class.svg_to_png(
+          input_path:,
+          output_path:,
+          max_width: 300,
+          max_height: 100,
+          timeout: 5,
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png.width, png.height]).to eq([115, 86])
+      end
+    end
+
+    it "renders SVG filters" do
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+          <defs>
+            <filter id="blur"><feGaussianBlur stdDeviation="1"/></filter>
+          </defs>
+          <rect width="50" height="50" fill="#ff0000" filter="url(#blur)"/>
+        </svg>
+      SVG
+      file = file_from_contents(svg, "filter.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        described_class.svg_to_png(
+          input_path: file.path,
+          output_path:,
+          max_width: 300,
+          max_height: 100,
+          timeout: 3,
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png.width, png.height]).to eq([50, 50])
+      end
+    end
+
+    it "rejects a zero-sized SVG without writing a PNG" do
+      input_path = file_from_fixtures("zero_sized.svg").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        expect {
+          described_class.svg_to_png(
+            input_path:,
+            output_path:,
+            max_width: 300,
+            max_height: 100,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage)
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "rejects malformed SVGs without writing a PNG" do
+      file = file_from_contents('<svg width="100" height="50">', "invalid.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        expect {
+          described_class.svg_to_png(
+            input_path: file.path,
+            output_path:,
+            max_width: 300,
+            max_height: 100,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage)
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "rejects non-SVG images" do
+      Dir.mktmpdir do |directory|
+        expect {
+          described_class.svg_to_png(
+            input_path: file_from_fixtures("cropped.png").path,
+            output_path: File.join(directory, "output.png"),
+            max_width: 300,
+            max_height: 100,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage)
+      end
+    end
+
+    it "preserves the SVG when the output points to the input file" do
+      svg = '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "input.svg")
+        output_path = File.join(directory, "output.png")
+        File.write(input_path, svg)
+        File.link(input_path, output_path)
+
+        expect {
+          described_class.svg_to_png(
+            input_path:,
+            output_path:,
+            max_width: 300,
+            max_height: 100,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::Error, "SVG input and PNG output must be different files")
+        expect(File.read(input_path)).to eq(svg)
+      end
+    end
+
+    it "bounds SVGs with enormous declared dimensions" do
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="1000000" height="1000000">
+          <rect width="1000000" height="1000000" fill="#ff0000"/>
+        </svg>
+      SVG
+      file = file_from_contents(svg, "enormous.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        described_class.svg_to_png(
+          input_path: file.path,
+          output_path:,
+          max_width: 300,
+          max_height: 100,
+          timeout: 5,
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png.width, png.height]).to eq([100, 100])
+      end
+    end
+
+    it "bounds dense SVG filter graphs and keeps the worker available" do
+      filter_primitives =
+        10_000
+          .times
+          .map do |index|
+            input = index.zero? ? "SourceGraphic" : "blur#{index - 1}"
+            %(<feGaussianBlur in="#{input}" result="blur#{index}" stdDeviation="5"/>)
+          end
+          .join
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="100">
+          <defs><filter id="dense">#{filter_primitives}</filter></defs>
+          <rect width="300" height="100" fill="#ff0000" filter="url(#dense)"/>
+        </svg>
+      SVG
+      file = file_from_contents(svg, "dense-filter.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+        expect {
+          described_class.svg_to_png(
+            input_path: file.path,
+            output_path:,
+            max_width: 300,
+            max_height: 100,
+            timeout: 3,
+          )
+        }.to raise_error(DiscourseVips::Error) do |error|
+          expect(error).not_to be_a(DiscourseVips::OperationTimeout)
+        end
+        expect(Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at).to be < 2.5
+        expect(File.exist?(output_path)).to eq(false)
+        expect(Dir.children(directory)).to be_empty
+      end
+
+      expect(described_class.version).to match(/\A\d+\.\d+\.\d+\z/)
+    end
+
+    it "preserves an existing output when SVG rendering fails" do
+      file = file_from_contents('<svg width="100" height="50">', "invalid.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+        File.write(output_path, "existing")
+
+        expect {
+          described_class.svg_to_png(
+            input_path: file.path,
+            output_path:,
+            max_width: 300,
+            max_height: 100,
+            timeout: 3,
+          )
+        }.to raise_error(DiscourseVips::Error)
+        expect(File.read(output_path)).to eq("existing")
+        expect(Dir.children(directory)).to contain_exactly("output.png")
       end
     end
   end
