@@ -70,6 +70,29 @@ RSpec.describe DiscourseWorkflows::DynamicNodeParametersController do
       )
     end
 
+    it "returns filtered site settings for the Site setting node" do
+      post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
+           params: {
+             nodeTypeAndVersion: {
+               name: "action:site_setting",
+               version: "1.0",
+             },
+             path: "name",
+             methodName: "site_settings",
+             currentNodeParameters: {
+             },
+             filter: "site_descr",
+           },
+           as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(
+        "id" => "site_description",
+        "name" => "site_description",
+      )
+      expect(response.parsed_body).not_to include("id" => "title", "name" => "title")
+    end
+
     it "returns 404 for an unknown node type" do
       post "/admin/plugins/discourse-workflows/dynamic-node-parameters/options.json",
            params: {
