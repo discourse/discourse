@@ -184,6 +184,7 @@ export default class PollNodeView extends Component {
         @action={{this.editPoll}}
         @icon="pencil"
         @label="poll.ui_builder.edit"
+        @preventFocus={{true}}
       />
     </div>
   </template>
