@@ -1,0 +1,47 @@
+{
+  "image": "discourse/base:2.0.20260812-0036",
+  "digest": "sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "uid": 1000,
+  "gid": 1000,
+  "cpu_limit": 2,
+  "memory_limit": "2g",
+  "memory_swap_limit": "3g",
+  "script_sha256": "8249dc7b091b7420b1ec96b88baf327faf5e1a4ccbe527f851fa0f080ecfa0cb",
+  "results_sha256": "a8552423b5cd6a97ae9fc46ff7120794a4afb7afcc4a2ffe7cf2479deab5c271",
+  "source": [
+    {
+      "path": "lib/image_magick.rb",
+      "sha256": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86"
+    },
+    {
+      "path": "lib/discourse_vips.rb",
+      "sha256": "1d4da01c87250cf6477432fc954f7e0435a6e8bab255b7f6016505a65a227af2"
+    },
+    {
+      "path": "lib/discourse/safe_exec.rb",
+      "sha256": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f"
+    },
+    {
+      "path": "lib/image_processing/instrumentation.rb",
+      "sha256": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6"
+    },
+    {
+      "path": "lib/discourse_vips/client.rb",
+      "sha256": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376"
+    },
+    {
+      "path": "lib/discourse_vips/worker_process.rb",
+      "sha256": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f"
+    },
+    {
+      "path": "script/discourse_vips_worker",
+      "sha256": "5e544584ef434c7f388d66ec944c17e4873a377baf4104a08940bb15a0f21970"
+    }
+  ],
+  "timing_calls_per_backend_per_input": 101,
+  "memory_calls_per_backend_per_input": 101,
+  "counter_samples_per_call": {
+    "min": 15,
+    "max": 309
+  }
+}
