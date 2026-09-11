@@ -509,6 +509,11 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(history.details).to include(
         "llm_model_id: #{original_model.display_name} → #{llm_model.display_name}",
       )
+    end
+
+    it "does not log a spam model change when clearing the agent's default" do
+      ai_agent.update!(default_llm_id: llm_model.id)
+      AiModerationSetting.create!(setting_type: :spam, ai_agent: ai_agent, llm_model: llm_model)
 
       expect do
         put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
