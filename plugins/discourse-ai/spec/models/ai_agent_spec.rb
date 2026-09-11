@@ -16,6 +16,49 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  describe "#allowed_group_ids" do
+    it "aliases Everyone while granular permissions are enabled without changing stored groups" do
+      group = Fabricate(:group)
+      ids = [group.id, Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]]
+      agent = Fabricate(:ai_agent, allowed_group_ids: ids)
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(agent.allowed_group_ids).to eq(ids)
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+      expect(agent.allowed_group_ids).to eq([group.id, Group::AUTO_GROUPS[:logged_in_users]])
+      agent.update!(description: "Updated description")
+
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+      expect(agent.reload.allowed_group_ids).to eq(ids)
+    end
+  end
+
+  it "refreshes cached agent permissions when granular permissions are toggled" do
+    user = Fabricate(:user)
+    agent =
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:everyone]],
+        user: Fabricate(:user),
+      )
+
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    cached_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+    expect(cached_agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:everyone]])
+    expect(AiAgent.agent_users(user: user).map { |candidate| candidate[:id] }).to include(agent.id)
+
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+    cached_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+    expect(cached_agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:logged_in_users]])
+    expect(AiAgent.agent_users(user: user).map { |candidate| candidate[:id] }).to include(agent.id)
+
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+    cached_agent = AiAgent.all_agents.find { |candidate| candidate.id == agent.id }
+    expect(cached_agent.allowed_group_ids).to eq([Group::AUTO_GROUPS[:everyone]])
+    expect(AiAgent.agent_users(user: user).map { |candidate| candidate[:id] }).to include(agent.id)
+  end
+
   it "defaults subagent_ids to an empty array and exposes them on class instances" do
     agent = Fabricate(:ai_agent)
 
@@ -542,11 +585,12 @@ RSpec.describe AiAgent do
       allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
     )
 
+    SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
     AiAgent.all_agents
 
-    expect(AiAgent.agent_cache[:value].length).to be > 0
+    expect(AiAgent.agent_cache[:value_everyone_allowed].length).to be > 0
     RailsMultisite::ConnectionManagement.stubs(:current_db) { "abc" }
-    expect(AiAgent.agent_cache[:value]).to eq(nil)
+    expect(AiAgent.agent_cache[:value_everyone_allowed]).to eq(nil)
   end
 
   describe ".find_by_id_from_cache" do
