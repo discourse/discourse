@@ -484,6 +484,44 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       end
     end
 
+    it "logs spam model changes made through the configured agent" do
+      original_model = Fabricate(:seeded_model)
+      AiModerationSetting.create!(
+        setting_type: :spam,
+        ai_agent: ai_agent,
+        llm_model: original_model,
+      )
+
+      expect do
+        put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+            params: {
+              ai_agent: {
+                default_llm_id: llm_model.id,
+              },
+            }
+      end.to change { UserHistory.where(custom_type: "update_ai_spam_settings").count }.by(1)
+
+      expect(response).to have_http_status(:ok)
+      expect(AiModerationSetting.spam.llm_model_id).to eq(llm_model.id)
+      history = UserHistory.where(custom_type: "update_ai_spam_settings").last
+      expect(history.acting_user_id).to eq(admin.id)
+      expect(history.subject).to eq(I18n.t("discourse_ai.spam_detection.logging_subject"))
+      expect(history.details).to include(
+        "llm_model_id: #{original_model.display_name} → #{llm_model.display_name}",
+      )
+
+      expect do
+        put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+            params: {
+              ai_agent: {
+                default_llm_id: nil,
+              },
+            }
+      end.not_to change { UserHistory.where(custom_type: "update_ai_spam_settings").count }
+
+      expect(response).to have_http_status(:ok)
+    end
+
     it "creates a missing bot user when forcing the default LLM" do
       agent = Fabricate(:ai_agent, name: "test_bot2", user_id: nil, default_llm_id: llm_model.id)
 
