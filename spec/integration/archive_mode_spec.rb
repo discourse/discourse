@@ -78,6 +78,43 @@ RSpec.describe "Site archived" do
     end
   end
 
+  describe "non-controller write paths" do
+    it "blocks PostCreator (covers email-in, chat, jobs, moderator posts)" do
+      creator =
+        PostCreator.new(user, title: "Frozen topic", raw: "Some body content here for the test.")
+      expect { creator.create! }.to raise_error(Discourse::SiteArchived)
+    end
+
+    it "blocks invite-based account creation (InviteRedeemer)" do
+      invite = Fabricate(:invite, email: "newperson@example.com")
+      expect do
+        InviteRedeemer.create_user_from_invite(
+          email: "newperson@example.com",
+          invite: invite,
+          email_verified: true,
+        )
+      end.to raise_error(Discourse::SiteArchived)
+    end
+
+    it "blocks new-user creation via DiscourseConnect (SSO first-time login)" do
+      sso = DiscourseConnect.new(server_session: {})
+      sso.external_id = "unique_external_id_123"
+      sso.email = "new_sso_user@example.com"
+      sso.username = "new_sso_user"
+      sso.name = "New SSO User"
+      expect { sso.lookup_or_create_user("127.0.0.1") }.to raise_error(Discourse::SiteArchived)
+    end
+
+    it "still lets existing users log in via DiscourseConnect" do
+      existing = Fabricate(:user, email: "existing@example.com")
+      sso = DiscourseConnect.new(server_session: {})
+      sso.external_id = "existing_external_id"
+      sso.email = "existing@example.com"
+      sso.username = existing.username
+      expect { sso.lookup_or_create_user("127.0.0.1") }.not_to raise_error
+    end
+  end
+
   context "when an operational readonly reason is also active" do
     before { Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY) }
     after { Discourse.disable_readonly_mode(Discourse::USER_READONLY_MODE_KEY) }

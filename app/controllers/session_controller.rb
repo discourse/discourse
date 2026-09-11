@@ -19,7 +19,10 @@ class SessionController < ApplicationController
   allow_in_staff_writes_only_mode :create, :forgot_password, :create_login_code, :verify_login_code
 
   # Every SessionController action is part of auth. An archived site permits
-  # all of them so users can log in, log out, and reset passwords.
+  # all of them so existing users can log in, log out, and reset passwords.
+  # New account creation via these actions (SSO first-login, invite login code)
+  # is blocked at the model layer by guards in DiscourseConnect and
+  # InviteRedeemer.
   skip_before_action :block_if_archived
 
   ACTIVATE_USER_KEY = "activate_user"
