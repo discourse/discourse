@@ -194,6 +194,296 @@ function _allDayMoments(date) {
   return { startDate, endDate };
 }
 
+const ICAL_WEEKDAYS = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+
+function _formatIcsUtcOffset(offsetMinutes) {
+  const totalSeconds = Math.round(offsetMinutes * 60);
+  const sign = totalSeconds < 0 ? "-" : "+";
+  const absoluteSeconds = Math.abs(totalSeconds);
+  const hours = Math.floor(absoluteSeconds / 3600);
+  const minutes = Math.floor((absoluteSeconds % 3600) / 60);
+  const seconds = absoluteSeconds % 60;
+
+  return (
+    sign +
+    String(hours).padStart(2, "0") +
+    String(minutes).padStart(2, "0") +
+    (seconds ? String(seconds).padStart(2, "0") : "")
+  );
+}
+
+const SEASONAL_TRANSITION_WINDOW_MS = 370 * 24 * 60 * 60 * 1000;
+
+function _vTimezoneObservanceType(zone, index) {
+  const transitionAt = zone.untils[index];
+  const offsetFrom = -zone.offsets[index];
+  const offsetTo = -zone.offsets[index + 1];
+
+  const isReverseTransition = (candidateIndex) =>
+    -zone.offsets[candidateIndex] === offsetTo &&
+    -zone.offsets[candidateIndex + 1] === offsetFrom;
+
+  // Seasonal offset changes reverse within roughly a year. Requiring the
+  // reverse transition avoids treating a permanent base-offset change as
+  // daylight saving time.
+  for (let i = index - 1; i >= 0; i--) {
+    if (transitionAt - zone.untils[i] > SEASONAL_TRANSITION_WINDOW_MS) {
+      break;
+    }
+
+    if (isReverseTransition(i)) {
+      return offsetTo > offsetFrom ? "DAYLIGHT" : "STANDARD";
+    }
+  }
+
+  for (let i = index + 1; i < zone.untils.length - 1; i++) {
+    const candidateAt = zone.untils[i];
+
+    if (
+      !Number.isFinite(candidateAt) ||
+      candidateAt - transitionAt > SEASONAL_TRANSITION_WINDOW_MS
+    ) {
+      break;
+    }
+
+    if (isReverseTransition(i)) {
+      return offsetTo > offsetFrom ? "DAYLIGHT" : "STANDARD";
+    }
+  }
+
+  return "STANDARD";
+}
+
+function _vTimezoneTransition(zone, index) {
+  const transitionAt = zone.untils[index];
+  const offsetFrom = -zone.offsets[index];
+  const offsetTo = -zone.offsets[index + 1];
+  const localStart = moment.utc(transitionAt).utcOffset(offsetFrom);
+  const day = localStart.date();
+  const ordinal = day + 7 > localStart.daysInMonth() ? -1 : Math.ceil(day / 7);
+
+  return {
+    transitionAt,
+    type: _vTimezoneObservanceType(zone, index),
+    localStart: localStart.format("YYYYMMDDTHHmmss"),
+    year: localStart.year(),
+    month: localStart.month() + 1,
+    byDay: `${ordinal}${ICAL_WEEKDAYS[localStart.day()]}`,
+    time: localStart.format("HHmmss"),
+    offsetFrom,
+    offsetTo,
+    name: zone.abbrs[index + 1],
+  };
+}
+
+function _vTimezonePatternKey(observance) {
+  return JSON.stringify([
+    observance.type,
+    observance.offsetFrom,
+    observance.offsetTo,
+    observance.name,
+    observance.month,
+    observance.byDay,
+    observance.time,
+  ]);
+}
+
+function _vTimezoneBaseKey(observance) {
+  return JSON.stringify([
+    observance.type,
+    observance.offsetFrom,
+    observance.offsetTo,
+    observance.name,
+  ]);
+}
+
+function _renderVTimezoneObservance(first, { rrule, rdates = [] } = {}) {
+  const lines = [`BEGIN:${first.type}`, `DTSTART:${first.localStart}`];
+
+  if (rrule) {
+    lines.push(`RRULE:${rrule}`);
+  }
+
+  if (rdates.length) {
+    lines.push(`RDATE:${rdates.join(",")}`);
+  }
+
+  lines.push(
+    `TZOFFSETFROM:${_formatIcsUtcOffset(first.offsetFrom)}`,
+    `TZOFFSETTO:${_formatIcsUtcOffset(first.offsetTo)}`
+  );
+
+  if (first.name) {
+    lines.push(`TZNAME:${first.name}`);
+  }
+
+  lines.push(`END:${first.type}`);
+
+  return lines.map(_foldLine).join("\r\n") + "\r\n";
+}
+
+function _fixedVTimezone(timezone, referenceMs) {
+  const reference = moment.tz(referenceMs, timezone);
+  const offset = reference.utcOffset();
+  const start = reference
+    .clone()
+    .subtract(1, "year")
+    .startOf("year")
+    .format("YYYYMMDDTHHmmss");
+
+  return (
+    "BEGIN:VTIMEZONE\r\n" +
+    _foldLine(`TZID:${timezone}`) +
+    "\r\n" +
+    "BEGIN:STANDARD\r\n" +
+    `DTSTART:${start}\r\n` +
+    `TZOFFSETFROM:${_formatIcsUtcOffset(offset)}\r\n` +
+    `TZOFFSETTO:${_formatIcsUtcOffset(offset)}\r\n` +
+    _foldLine(`TZNAME:${reference.zoneAbbr()}`) +
+    "\r\n" +
+    "END:STANDARD\r\n" +
+    "END:VTIMEZONE\r\n"
+  );
+}
+
+function _generateVTimezone(timezone, referenceMs) {
+  const zone = moment.tz.zone(timezone);
+
+  if (!zone) {
+    return "";
+  }
+
+  let startIndex = -1;
+
+  for (let i = 0; i < zone.untils.length - 1; i++) {
+    const transitionAt = zone.untils[i];
+
+    if (!Number.isFinite(transitionAt)) {
+      break;
+    }
+
+    if (transitionAt <= referenceMs) {
+      startIndex = i;
+    } else {
+      break;
+    }
+  }
+
+  if (startIndex === -1) {
+    return _fixedVTimezone(timezone, referenceMs);
+  }
+
+  const observances = [];
+
+  for (let i = startIndex; i < zone.untils.length - 1; i++) {
+    if (!Number.isFinite(zone.untils[i])) {
+      break;
+    }
+
+    observances.push(_vTimezoneTransition(zone, i));
+  }
+
+  if (!observances.length) {
+    return _fixedVTimezone(timezone, referenceMs);
+  }
+
+  const maxYear = Math.max(...observances.map((item) => item.year));
+  const patternGroups = new Map();
+
+  for (const observance of observances) {
+    const key = _vTimezonePatternKey(observance);
+    const group = patternGroups.get(key) || [];
+    group.push(observance);
+    patternGroups.set(key, group);
+  }
+
+  const recurringRuns = [];
+  const recurringTransitions = new Set();
+
+  for (const group of patternGroups.values()) {
+    group.sort((a, b) => a.transitionAt - b.transitionAt);
+
+    let run = [group[0]];
+
+    const finishRun = () => {
+      if (run.length >= 2) {
+        recurringRuns.push(run);
+        for (const observance of run) {
+          recurringTransitions.add(observance.transitionAt);
+        }
+      }
+    };
+
+    for (let i = 1; i < group.length; i++) {
+      if (group[i].year === group[i - 1].year + 1) {
+        run.push(group[i]);
+      } else {
+        finishRun();
+        run = [group[i]];
+      }
+    }
+
+    finishRun();
+  }
+
+  const components = recurringRuns.map((run) => {
+    const first = run[0];
+    const last = run[run.length - 1];
+
+    let rrule = `FREQ=YEARLY;BYMONTH=${first.month};BYDAY=${first.byDay}`;
+
+    // A long-running pattern which reaches the end of the bundled tzdb data
+    // is the zone's stable future rule, so allow it to continue indefinitely.
+    if (!(last.year === maxYear && run.length >= 5)) {
+      rrule += `;UNTIL=${moment
+        .utc(last.transitionAt)
+        .format("YYYYMMDDTHHmmss[Z]")}`;
+    }
+
+    return {
+      first,
+      rrule,
+      rdates: [],
+    };
+  });
+
+  const discreteGroups = new Map();
+
+  for (const observance of observances) {
+    if (recurringTransitions.has(observance.transitionAt)) {
+      continue;
+    }
+
+    const key = _vTimezoneBaseKey(observance);
+    const group = discreteGroups.get(key) || [];
+    group.push(observance);
+    discreteGroups.set(key, group);
+  }
+
+  for (const group of discreteGroups.values()) {
+    group.sort((a, b) => a.transitionAt - b.transitionAt);
+
+    components.push({
+      first: group[0],
+      rdates: group.slice(1).map((item) => item.localStart),
+    });
+  }
+
+  components.sort((a, b) => a.first.transitionAt - b.first.transitionAt);
+
+  return (
+    "BEGIN:VTIMEZONE\r\n" +
+    _foldLine(`TZID:${timezone}`) +
+    "\r\n" +
+    components
+      .map((component) =>
+        _renderVTimezoneObservance(component.first, component)
+      )
+      .join("") +
+    "END:VTIMEZONE\r\n"
+  );
+}
+
 /**
  * Generate ICS calendar data for the given dates
  *
@@ -205,6 +495,37 @@ function _allDayMoments(date) {
 export function generateIcsData(title, dates, options = {}) {
   let data = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Discourse//EN\r\n";
   const parsedRrule = _parseRRule(options.rrule);
+
+  const timezoneStarts = new Map();
+
+  for (const date of dates) {
+    if (date.allDay) {
+      continue;
+    }
+
+    const timezone = date.timezone || options.timezone;
+
+    if (!timezone || !moment.tz.zone(timezone)) {
+      continue;
+    }
+
+    const startsAt = moment.tz(date.startsAt, timezone);
+
+    if (!startsAt.isValid()) {
+      continue;
+    }
+
+    const existing = timezoneStarts.get(timezone);
+
+    if (existing === undefined || startsAt.valueOf() < existing) {
+      timezoneStarts.set(timezone, startsAt.valueOf());
+    }
+  }
+
+  for (const [timezone, startsAt] of timezoneStarts) {
+    data += _generateVTimezone(timezone, startsAt);
+  }
+
   dates.forEach((date) => {
     let rrule = parsedRrule;
 
