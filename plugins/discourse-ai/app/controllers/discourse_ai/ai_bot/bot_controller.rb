@@ -92,6 +92,7 @@ module DiscourseAi
           bot_user_id: post.user_id,
           agent_id: agent_id,
           authorization_user_id: authorization_user_id,
+          visibility_user_id: current_user.id,
           reply_post_id: post.id,
         }
 
