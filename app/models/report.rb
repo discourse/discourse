@@ -3,7 +3,7 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 5
+  SCHEMA_VERSION = 6
 
   RELATED_ITEMS_LIMIT = 50
 
@@ -156,6 +156,15 @@ class Report
   include Reports::WebCrawlers
   include Reports::WebHookEventsDailyAggregate
 
+  SHARED_CACHE_REPORT_OWNERS = {
+    "signups" => Reports::Signups::ClassMethods,
+    "dau_by_mau" => Reports::DauByMau::ClassMethods,
+    "new_contributors" => Reports::NewContributors::ClassMethods,
+    "daily_engaged_users" => Reports::DailyEngagedUsers::ClassMethods,
+    "trust_level_pipeline" => Reports::TrustLevelPipeline::ClassMethods,
+  }.freeze
+  private_constant :SHARED_CACHE_REPORT_OWNERS
+
   attr_accessor :type,
                 :data,
                 :total,
@@ -218,8 +227,6 @@ class Report
   end
 
   def self.cache_key(report)
-    guardian = report.guardian || report.current_user&.guardian
-
     [
       "reports",
       report.type,
@@ -229,11 +236,22 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
-      guardian&.user&.id || report.current_user&.id,
-      guardian&.can_see_ip?,
+      I18n.locale,
+      *cache_scope(report),
       CrawlerScorer.enabled?,
     ].compact.map(&:to_s).join(":")
   end
+
+  def self.cache_scope(report)
+    owner = SHARED_CACHE_REPORT_OWNERS[report.type]
+    if !report.include_related_items && owner && method("report_#{report.type}").owner == owner
+      return ["shared"]
+    end
+
+    guardian = report.guardian || report.current_user&.guardian
+    [guardian&.user&.id || report.current_user&.id, guardian&.can_see_ip?]
+  end
+  private_class_method :cache_scope
 
   def add_filter(name, options = {})
     available_filters[name] = options
@@ -329,6 +347,7 @@ class Report
           "web_crawlers",
           start_date: start_date,
           end_date: end_date,
+          guardian: guardian,
         )&.as_json
       end
     end
@@ -379,10 +398,8 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
-    report.guardian = opts[:guardian] if opts[:guardian]
-    report.current_user = opts[:current_user] if opts[:current_user]
-    report.current_user ||= report.guardian&.user
-    report.guardian ||= report.current_user&.guardian
+    report.guardian = opts[:guardian] || opts[:current_user]&.guardian
+    report.current_user = report.guardian&.user
     report.include_related_items =
       opts[:include_related_items] &&
         (report.guardian&.is_admin? || !admin_only_related_items_report_types.include?(report.type))
@@ -393,8 +410,11 @@ class Report
     report
   end
 
-  def self.find_cached(type, opts = nil)
-    report = _get(type, opts)
+  def self.find_cached(type, guardian:, **opts)
+    type = type.to_s
+    return unless allowed?(type, guardian: guardian)
+
+    report = _get(type, opts.merge(guardian: guardian))
     return if report.include_related_items
 
     Discourse.cache.read(cache_key(report))
@@ -407,11 +427,12 @@ class Report
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end
 
-  def self.find(type, opts = nil)
-    opts ||= {}
+  def self.find(type, guardian:, **opts)
+    type = type.to_s
+    return unless allowed?(type, guardian: guardian)
 
     begin
-      report = _get(type, opts)
+      report = _get(type, opts.merge(guardian: guardian))
       report_method = :"report_#{type}"
 
       begin
@@ -450,6 +471,13 @@ class Report
 
     report
   end
+
+  def self.allowed?(type, guardian:)
+    raise ArgumentError, "guardian is required" if guardian.nil?
+
+    guardian.can_see_report?(type)
+  end
+  private_class_method :allowed?
 
   # NOTE: Once use_legacy_pageviews is always false or no longer needed
   # we will no longer support the page_view_anon and page_view_logged_in reports,

@@ -11,14 +11,14 @@ class AdminDashboardEngagement
     new_signups: "signups",
   }.freeze
 
-  def self.build(start_date:, end_date:, current_user: nil)
-    new(start_date: start_date, end_date: end_date, current_user: current_user).build
+  def self.build(start_date:, end_date:, guardian:)
+    new(start_date: start_date, end_date: end_date, guardian: guardian).build
   end
 
-  def initialize(start_date:, end_date:, current_user: nil)
+  def initialize(start_date:, end_date:, guardian:)
     @start_date = parse_date(start_date) || DEFAULT_RANGE_DAYS.days.ago.beginning_of_day
     @end_date = parse_date(end_date)&.end_of_day || Time.zone.now.end_of_day
-    @current_user = current_user
+    @guardian = guardian
   end
 
   def build
@@ -32,7 +32,7 @@ class AdminDashboardEngagement
 
   private
 
-  attr_reader :start_date, :end_date, :current_user
+  attr_reader :start_date, :end_date, :guardian
 
   def parse_date(value)
     return nil if value.blank?
@@ -48,9 +48,9 @@ class AdminDashboardEngagement
   def build_trust_level_pipeline
     args = { start_date: start_date, end_date: end_date }
 
-    report = Report.find_cached("trust_level_pipeline", args)
+    report = Report.find_cached("trust_level_pipeline", guardian: guardian, **args)
     if report.nil?
-      report = Report.find("trust_level_pipeline", args)
+      report = Report.find("trust_level_pipeline", guardian: guardian, **args)
       Report.cache(report) if report && report.error.blank?
     end
 
@@ -64,7 +64,7 @@ class AdminDashboardEngagement
   end
 
   def build_posters
-    args = { start_date: start_date, end_date: end_date, current_user: current_user }
+    args = { start_date: start_date, end_date: end_date, guardian: guardian }
 
     whos_posting_settings =
       AdminDashboardSectionConfiguration.settings_for("engagement")["whos_posting"] || {}
@@ -76,9 +76,9 @@ class AdminDashboardEngagement
     filters[:groups] = selected_groups if selected_groups.present?
     args[:filters] = filters if filters.present?
 
-    report = Report.find_cached("posters_by_member_type", args)
+    report = Report.find_cached("posters_by_member_type", **args)
     if report.nil?
-      report = Report.find("posters_by_member_type", args)
+      report = Report.find("posters_by_member_type", **args)
       Report.cache(report) if report && report.error.blank?
     end
 
@@ -93,7 +93,7 @@ class AdminDashboardEngagement
   end
 
   def build_activity_by_category
-    args = { start_date: start_date, end_date: end_date, current_user: current_user }
+    args = { start_date: start_date, end_date: end_date, guardian: guardian }
 
     selected_category_ids =
       AdminDashboardSectionConfiguration.settings_for("engagement").dig(
@@ -102,9 +102,9 @@ class AdminDashboardEngagement
       )
     args[:filters] = { category_ids: selected_category_ids } if selected_category_ids.present?
 
-    report = Report.find_cached("activity_by_category", args)
+    report = Report.find_cached("activity_by_category", **args)
     if report.nil?
-      report = Report.find("activity_by_category", args)
+      report = Report.find("activity_by_category", **args)
       Report.cache(report) if report && report.error.blank?
     end
 
@@ -120,13 +120,12 @@ class AdminDashboardEngagement
   def visible_category_ids(category_ids)
     return category_ids if category_ids.blank?
 
-    Category.secured(Guardian.new(current_user)).in_order_of(:id, category_ids).pluck(:id)
+    Category.secured(guardian).in_order_of(:id, category_ids).pluck(:id)
   end
 
   def visible_groups(groups)
     return Reports::PostersByMemberType::DEFAULT_GROUPS if groups.blank?
 
-    guardian = Guardian.new(current_user)
     resolved =
       groups.select do |token|
         parsed = Report.parse_group_token(token)

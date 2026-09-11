@@ -30,23 +30,22 @@ module AdminDashboard
 
       def self.fetch_many(identifiers, guardian:, filters: {})
         accessible = accessible_ids(identifiers, guardian: guardian)
-        opts = build_opts(filters, guardian)
+        return {} if accessible.empty?
+
+        opts = build_opts(filters)
 
         identifiers.each_with_object({}) do |identifier, hash|
           key = identifier.to_s
           next if accessible.exclude?(key)
 
-          cached = ::Report.find_cached(key, opts)
-          if cached
-            hash[key] = with_empty_flag(cached)
-            next
+          report = ::Report.find_cached(key, guardian: guardian, **opts)
+          if !report
+            report = ::Report.find(key, guardian: guardian, **opts)
+            ::Report.cache(report) if report
           end
-
-          report = ::Report.find(key, opts)
           next if report.blank?
 
-          ::Report.cache(report)
-          hash[key] = with_empty_flag(report.as_json)
+          hash[key] = with_empty_flag(report.is_a?(::Report) ? report.as_json : report)
         end
       end
 
@@ -80,9 +79,9 @@ module AdminDashboard
       end
       private_class_method :build_resolved
 
-      def self.build_opts(filters, guardian)
+      def self.build_opts(filters)
         filters = filters.symbolize_keys if filters.respond_to?(:symbolize_keys)
-        opts = { current_user: guardian&.user }
+        opts = {}
         opts[:start_date] = parse_date(filters[:start_date])&.beginning_of_day if filters[
           :start_date
         ]

@@ -7,7 +7,12 @@ describe Reports::TrustLevelPipeline do
   let(:end_date) { Time.zone.local(2026, 4, 28).end_of_day }
 
   def build
-    Report.find("trust_level_pipeline", start_date: start_date, end_date: end_date)
+    Report.find(
+      "trust_level_pipeline",
+      start_date: start_date,
+      end_date: end_date,
+      guardian: Discourse.system_user.guardian,
+    )
   end
 
   def row(report, tl)

@@ -23,7 +23,7 @@ RSpec.describe Report do
   end
 
   it "reports users who have not accepted" do
-    report = Report.find("unaccepted-policies")
+    report = Report.find("unaccepted-policies", guardian: Discourse.system_user.guardian)
     topic = policy.post.topic
     expect(report.data).to eq([{ topic_id: topic.id, user_id: user2.id }])
   end

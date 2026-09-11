@@ -6,22 +6,23 @@ describe Reports::PostersByMemberType do
   let(:start_date) { Time.zone.local(2026, 4, 1) }
   let(:end_date) { Time.zone.local(2026, 4, 28).end_of_day }
 
-  def build(filters: {}, current_user: nil)
+  def build(filters: {}, current_user: Discourse.system_user)
     Report.find(
       "posters_by_member_type",
-      { start_date: start_date, end_date: end_date, filters: filters, current_user: current_user },
+      start_date: start_date,
+      end_date: end_date,
+      filters: filters,
+      guardian: current_user.guardian,
     )
   end
 
-  def build_members(group:, filters: {}, current_user: nil)
+  def build_members(group:, filters: {}, current_user: Discourse.system_user)
     Report.find(
       "posters_by_member_type_members",
-      {
-        start_date: start_date,
-        end_date: end_date,
-        filters: filters.merge(group: group),
-        current_user: current_user,
-      },
+      start_date: start_date,
+      end_date: end_date,
+      filters: filters.merge(group: group),
+      guardian: current_user.guardian,
     )
   end
 
@@ -386,17 +387,12 @@ describe Reports::PostersByMemberType do
       expect(report.data.map { |r| r[:type] }).to eq(%w[staff])
     end
 
-    it "drops a group the current user (a non-staff moderator scope) cannot see" do
+    it "drops a group the moderator cannot see" do
       moderator = Fabricate(:moderator)
-      hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+      hidden_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
 
       report =
-        build(
-          filters: {
-            groups: "staff,#{group_token(hidden_group)}",
-          },
-          current_user: Fabricate(:user),
-        )
+        build(filters: { groups: "staff,#{group_token(hidden_group)}" }, current_user: moderator)
 
       expect(report.data.map { |r| r[:type] }).to eq(%w[staff])
     end
@@ -408,7 +404,12 @@ describe Reports::PostersByMemberType do
       Fabricate(:post, user: member, created_at: start_date + 1.day)
 
       report =
-        build(filters: { groups: "staff,#{group_token(group)}" }, current_user: Fabricate(:user))
+        build(
+          filters: {
+            groups: "staff,#{group_token(group)}",
+          },
+          current_user: Fabricate(:moderator),
+        )
 
       expect(report.data.map { |r| r[:type] }).to eq(%w[staff])
     end
@@ -486,7 +487,7 @@ describe Reports::PostersByMemberType do
       Fabricate(:group_user, group: private_group, user: member)
       Fabricate(:post, user: member, created_at: start_date + 1.day)
 
-      report = build_members(group: group_token(private_group), current_user: Fabricate(:user))
+      report = build_members(group: group_token(private_group), current_user: Fabricate(:moderator))
 
       expect(report.error).to eq(:not_found)
     end

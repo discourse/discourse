@@ -22,8 +22,8 @@ class AdminDashboardData
     new.as_json
   end
 
-  def self.reports(source)
-    source.map { |type| Report.find(type).as_json }
+  def self.reports(source, guardian:)
+    source.filter_map { |type| Report.find(type, guardian: guardian)&.as_json }
   end
 
   def self.stats_cache_key

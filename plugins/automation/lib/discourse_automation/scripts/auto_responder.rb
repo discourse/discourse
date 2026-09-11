@@ -66,7 +66,11 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_RESPONDER
       answers
         .to_a
         .map do |answer|
-          utils.apply_placeholders(answer["value"], placeholders.merge(key: answer["key"]))
+          utils.apply_placeholders(
+            answer["value"],
+            placeholders.merge(key: answer["key"]),
+            guardian: answering_user.guardian,
+          )
         end
         .join("\n\n")
 

@@ -15,30 +15,14 @@ class Admin::ReportsController < Admin::StaffController
         raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
 
         args = parse_params(report_params)
-        args[:guardian] = guardian
+        report = find_report(report_type, cache: report_params[:cache], **args)
 
-        report = nil
-        report = Report.find_cached(report_type, args) if report_params[:cache]
-
-        if Report.hidden?(report_type, guardian: guardian)
-          report = Report._get(report_type, args)
+        if report.blank?
+          report = Report._get(report_type, args.merge(guardian: guardian))
           report.error = :not_found
         end
 
-        if report
-          reports << report
-        else
-          report = Report.find(report_type, args)
-
-          Report.cache(report) if report_params[:cache] && report
-
-          if report.blank?
-            report = Report._get(report_type, args)
-            report.error = :not_found
-          end
-
-          reports << report
-        end
+        reports << report
       end
 
       render_json_dump(reports: reports)
@@ -49,28 +33,32 @@ class Admin::ReportsController < Admin::StaffController
     report_type = params[:type]
 
     raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
-    raise Discourse::NotFound if Report.hidden?(report_type, guardian: guardian)
 
     args = parse_params(params)
-    args[:guardian] = guardian
-
-    report = nil
-    report = Report.find_cached(report_type, args) if params[:cache]
-
-    return render_json_dump(report: report) if report
 
     hijack do
-      report = Report.find(report_type, args)
+      report = find_report(report_type, cache: params[:cache], **args)
 
-      raise Discourse::NotFound if report.blank?
-
-      Report.cache(report) if params[:cache]
-
-      render_json_dump(report: report)
+      if report.blank?
+        rescue_discourse_actions(:not_found, 404)
+      else
+        render_json_dump(report: report)
+      end
     end
   end
 
   private
+
+  def find_report(type, cache:, **options)
+    if cache
+      cached = Report.find_cached(type, guardian: guardian, **options)
+      return cached if cached
+    end
+
+    report = Report.find(type, guardian: guardian, **options)
+    Report.cache(report) if cache && report
+    report
+  end
 
   def parse_params(report_params)
     begin

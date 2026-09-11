@@ -40,6 +40,25 @@ RSpec.describe Jobs::ExportCsvFile do
         expect(UserExport.where(user_id: admin.id)).to be_empty
       end
 
+      it "denies a report hidden after the export was requested" do
+        SiteSetting.use_legacy_pageviews = true
+        report_name = "page_view_anon_reqs"
+        expect(admin.guardian.can_export_entity?("report", nil, name: report_name)).to be_truthy
+
+        SiteSetting.use_legacy_pageviews = false
+
+        expect do
+          Jobs::ExportCsvFile.new.execute(
+            user_id: admin.id,
+            entity: "report",
+            args: {
+              name: report_name,
+            },
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+        expect(UserExport.where(user_id: admin.id)).to be_empty
+      end
+
       it "raises an error when a regular user attempts a privileged export" do
         user = Fabricate(:user)
 
@@ -227,7 +246,7 @@ RSpec.describe Jobs::ExportCsvFile do
     end
   end
 
-  describe ".report_export" do
+  describe "#report_export" do
     let(:user) { Fabricate(:admin) }
 
     let(:exporter) do
@@ -264,6 +283,13 @@ RSpec.describe Jobs::ExportCsvFile do
       expect(report.first).to contain_exactly("Day", "Percent")
       expect(report.second).to contain_exactly("2010-01-01", "100.0")
       expect(report.third).to contain_exactly("2010-01-03", "50.0")
+    end
+
+    it "denies admins access to reports hidden by site settings" do
+      SiteSetting.use_legacy_pageviews = false
+      exporter.extra["name"] = "page_view_anon_reqs"
+
+      expect { export_report }.to raise_error(Discourse::NotFound)
     end
 
     it "works with filters" do

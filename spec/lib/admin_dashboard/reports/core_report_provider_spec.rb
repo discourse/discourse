@@ -94,6 +94,51 @@ RSpec.describe AdminDashboard::Reports::CoreReportProvider do
   end
 
   describe ".fetch_many" do
+    context "with a report that uses the reader's permissions" do
+      before do
+        Discourse.cache.clear
+        I18n.backend.store_translations(
+          :en,
+          reports: {
+            reader_permissions: {
+              title: "Reader permissions",
+            },
+          },
+        )
+        Report.add_report("reader_permissions") do |report|
+          report.data = [
+            { user_id: report.current_user.id, can_see_ip: report.guardian.can_see_ip? },
+          ]
+        end
+      end
+
+      after { Report.remove_report("reader_permissions") }
+
+      it "retains the supplied guardian's permissions for fresh and cached data" do
+        restricted_guardian =
+          Class
+            .new(Guardian) do
+              def can_see_ip?
+                false
+              end
+            end
+            .new(admin)
+
+        unrestricted = described_class.fetch_many(%w[reader_permissions], guardian: guardian)
+        restricted =
+          described_class.fetch_many(%w[reader_permissions], guardian: restricted_guardian)
+        cached = described_class.fetch_many(%w[reader_permissions], guardian: restricted_guardian)
+
+        expect(unrestricted["reader_permissions"][:data]).to eq(
+          [{ user_id: admin.id, can_see_ip: true }],
+        )
+        expect(restricted["reader_permissions"][:data]).to eq(
+          [{ user_id: admin.id, can_see_ip: false }],
+        )
+        expect(cached).to eq(restricted)
+      end
+    end
+
     it "returns report payloads keyed by identifier" do
       result = described_class.fetch_many(%w[signups], guardian: guardian, filters: {})
 

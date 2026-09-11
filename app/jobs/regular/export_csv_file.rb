@@ -180,7 +180,14 @@ module Jobs
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?
 
-      report = Report.find(@extra[:name], @extra.merge(guardian: @current_user&.guardian))
+      report =
+        Report.find(
+          @extra[:name],
+          **@extra.symbolize_keys,
+          filters: @extra[:filters],
+          guardian: @current_user.guardian,
+        )
+      raise Discourse::NotFound if report.blank?
 
       header = []
       titles = {}

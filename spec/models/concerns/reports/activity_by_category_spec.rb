@@ -6,12 +6,15 @@ describe Reports::ActivityByCategory do
   let(:start_date) { Time.zone.local(2026, 4, 1) }
   let(:end_date) { Time.zone.local(2026, 4, 28).end_of_day }
 
-  def build(filters: {}, current_user: nil)
+  def build(filters: {}, current_user: Discourse.system_user)
     CategoryActivityDailyRollup.aggregate(start_date: start_date - 60.days, end_date: end_date)
 
     Report.find(
       "activity_by_category",
-      { start_date: start_date, end_date: end_date, filters: filters, current_user: current_user },
+      start_date: start_date,
+      end_date: end_date,
+      filters: filters,
+      guardian: current_user.guardian,
     )
   end
 

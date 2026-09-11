@@ -102,14 +102,8 @@ describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
     )
   end
 
-  it "skips related items when the report has no guardian" do
-    solved_topic_in(Fabricate(:category))
-
-    report = build(guardian: nil)
-
-    expect(report.total).to eq(1)
-    expect(report.related_items).to be_nil
-    expect(report.related_items_totals).to be_nil
+  it "requires a guardian to generate the report" do
+    expect { build(guardian: nil) }.to raise_error(ArgumentError)
   end
 
   it "only includes solved topic details visible to the report guardian" do

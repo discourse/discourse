@@ -86,7 +86,7 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
       end
 
       it "calculate averages using only public posts" do
-        report = Report.find("overall_sentiment")
+        report = Report.find("overall_sentiment", guardian: Discourse.system_user.guardian)
         overall_sentiment = report.data[0][:data][0][:y].to_i
         expect(overall_sentiment).to eq(0)
       end
@@ -94,6 +94,7 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
       it "exports the report without any errors" do
         exporter = Jobs::ExportCsvFile.new
         exporter.entity = "report"
+        exporter.current_user = Discourse.system_user
         exporter.extra = ActiveSupport::HashWithIndifferentAccess.new(name: "overall_sentiment")
         exported_csv = []
         exporter.report_export { |entry| exported_csv << entry }
@@ -188,7 +189,7 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
 
       it "calculate averages using only public posts" do
         threshold = 0.10
-        report = Report.find("emotion_love")
+        report = Report.find("emotion_love", guardian: Discourse.system_user.guardian)
 
         data_point = report.data
 

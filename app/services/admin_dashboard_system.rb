@@ -52,10 +52,10 @@ class AdminDashboardSystem
   end
 
   def storage_stats
-    cached = Report.find_cached(STORAGE_REPORT)
+    cached = Report.find_cached(STORAGE_REPORT, guardian: guardian)
     return cached[:data] if cached.present?
 
-    report = Report.find(STORAGE_REPORT)
+    report = Report.find(STORAGE_REPORT, guardian: guardian)
     return nil if report.nil? || report.error.present?
 
     Report.cache(report)
