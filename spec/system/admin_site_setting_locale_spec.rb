@@ -16,17 +16,12 @@ describe "Admin Site Setting Locales" do
       settings_page.visit
 
       settings_page.type_in_search("default locale")
-      expect(settings_page.enum_setting("default_locale").value).to eq("es")
+      expect(settings_page).to have_enum_value("default_locale", "es")
 
       settings_page.select_enum_value("default_locale", "en")
       settings_page.save_setting("default_locale")
 
-      settings_page.type_in_search("default locale")
-      expect(settings_page.enum_setting("default_locale").value).to eq("en")
-      expect(settings_page.find_setting("default_locale")).to have_css(
-        "option[value='en']",
-        text: "Inglés (English)",
-      )
+      expect(settings_page).to have_enum_value("default_locale", "en", text: "Inglés (English)")
     end
   end
 
