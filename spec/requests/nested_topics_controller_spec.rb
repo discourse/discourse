@@ -752,7 +752,9 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(response.status).to eq(200)
       expect(json).to have_key("post_stream")
       expect(json).not_to have_key("roots")
-      expect(json.dig("post_stream", "posts").map { |post| post["id"] }).to eq([op.id, live_reply.id])
+      expect(json.dig("post_stream", "posts").map { |post| post["id"] }).to eq(
+        [op.id, live_reply.id],
+      )
     end
 
     describe "deleted post placeholders" do

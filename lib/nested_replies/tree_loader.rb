@@ -82,7 +82,9 @@ module NestedReplies
       pinned_post_ids.each do |pid|
         idx = roots.index { |p| p.id == pid }
         if idx
-          pinned_in_page << roots.delete_at(idx) if roots[idx].deleted_at.nil? || !guardian.is_staff?
+          if roots[idx].deleted_at.nil? || !guardian.is_staff?
+            pinned_in_page << roots.delete_at(idx)
+          end
         else
           pinned_missing_ids << pid
         end

@@ -178,10 +178,11 @@ RSpec.describe NestedReplies::TreeLoader do
       delete_post(deleted_pinned_root)
       loader = described_class.new(topic: topic, guardian: Fabricate(:admin).guardian)
 
-      promoted = loader.promote_pinned_roots(
-        [first_root, deleted_pinned_root, last_root],
-        [deleted_pinned_root.id],
-      )
+      promoted =
+        loader.promote_pinned_roots(
+          [first_root, deleted_pinned_root, last_root],
+          [deleted_pinned_root.id],
+        )
 
       expect(promoted.map(&:id)).to eq([first_root.id, deleted_pinned_root.id, last_root.id])
     end
