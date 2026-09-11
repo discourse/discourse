@@ -884,6 +884,33 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to be_nil
     end
 
+    context "when the site is archived" do
+      before { SiteSetting.site_archived = true }
+
+      it "still logs in an existing user with a correct code" do
+        post "/session/login-code/verify.json", params: { email: user.email, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("user", "username")).to eq(user.username)
+        expect(session[:current_user_id]).to eq(user.id)
+        expect(EmailLoginCode.active.for_email(user.email)).to be_empty
+      end
+
+      it "does not create an account for an unknown email" do
+        new_email = "archived-new-user@example.com"
+        new_code = EmailLoginCode.generate!(email: new_email)
+
+        expect do
+          post "/session/login-code/verify.json", params: { email: new_email, code: new_code.code }
+        end.not_to change { User.count }
+
+        expect(response.status).to eq(503)
+        expect(response.parsed_body["errors"]).to include(I18n.t("site_archived_error"))
+        expect(session[:current_user_id]).to be_nil
+        expect(EmailLoginCode.active.for_email(new_email)).not_to be_empty
+      end
+    end
+
     it "logs in an existing user with a correct code" do
       post "/session/login-code/verify.json", params: { email: user.email, code: }
 
@@ -1574,6 +1601,41 @@ RSpec.describe SessionController do
         sso.username = "bob"
 
         get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user).to eq(nil)
+      end
+    end
+
+    context "when the site is archived" do
+      before { SiteSetting.site_archived = true }
+
+      it "allows an existing user to log in via DiscourseConnect" do
+        existing = Fabricate(:user, email: "existing@bob.com")
+        Fabricate(:single_sign_on_record, user: existing, external_id: "existing-external-id")
+
+        sso = get_sso("/a/")
+        sso.external_id = "existing-external-id"
+        sso.email = "existing@bob.com"
+        sso.username = existing.username
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        expect(response.status).not_to eq(503)
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user&.id).to eq(existing.id)
+      end
+
+      it "does not create a new user via DiscourseConnect (archive blocks account creation)" do
+        sso = get_sso("/a/")
+        sso.external_id = "666"
+        sso.email = "bob@bob.com"
+        sso.name = "Bob Bobson"
+        sso.username = "bob"
+
+        expect do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        end.not_to change { User.count }
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         expect(logged_on_user).to eq(nil)
