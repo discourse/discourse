@@ -5,22 +5,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 41.857277043163776,
-      "median_incremental_peak_mib": 4.17578125,
+      "median_ms": 40.21065915003419,
+      "median_incremental_peak_mib": 4.171875,
       "dimensions": [
         240,
         100
       ],
       "output_bytes": 1286,
-      "output_sha256": "2ba787f1c3a1f6186d4af392209fecd9700de5e9b2b7105c498435bd1f3eaf91",
+      "output_sha256": "a5a1bef707e3f01d933d0845981d0865fe26245a4d08e1e11cb1a9593f0df60f",
       "output_path": "outputs/drop-shadow-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 41.72324109822512,
-      "median_incremental_peak_mib": 6.390625,
+      "median_ms": 46.300643123686314,
+      "median_incremental_peak_mib": 6.4140625,
       "dimensions": [
         240,
         100
@@ -36,22 +36,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 1263.7011571787298,
-      "median_incremental_peak_mib": 95.51953125,
+      "median_ms": 1246.0135528817773,
+      "median_incremental_peak_mib": 95.5234375,
       "dimensions": [
         3000,
         1000
       ],
       "output_bytes": 43067,
-      "output_sha256": "d6ba5f892ad144c338c2f3ee83263769ef0f9719cb6cd9b14e4175dfa51737d9",
+      "output_sha256": "3bbdfcf956a7dc32e1e78da9292e5a8c6b86eeba8248754d3f6fd7f8460e140a",
       "output_path": "outputs/large-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 39.28341902792454,
-      "median_incremental_peak_mib": 5.64453125,
+      "median_ms": 39.85879896208644,
+      "median_incremental_peak_mib": 5.66015625,
       "dimensions": [
         300,
         100
@@ -67,22 +67,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.24550297111273,
-      "median_incremental_peak_mib": 3.3828125,
+      "median_ms": 37.90256567299366,
+      "median_incremental_peak_mib": 3.37890625,
       "dimensions": [
         120,
         80
       ],
       "output_bytes": 306,
-      "output_sha256": "3f1b0619bbb6a37fbbdf1833abffd84a0a4d36c8a113466373f15a9ac0ab0552",
+      "output_sha256": "2c6d22b7bc9101baed1ee900e6fa9475b63126d414ad7eb527bd32545331e7f5",
       "output_path": "outputs/fixed-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 35.88723670691252,
-      "median_incremental_peak_mib": 5.16796875,
+      "median_ms": 34.24124093726277,
+      "median_incremental_peak_mib": 5.18359375,
       "dimensions": [
         120,
         80
@@ -98,22 +98,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 342.4700992181897,
-      "median_incremental_peak_mib": 5.09375,
+      "median_ms": 346.7215895652771,
+      "median_incremental_peak_mib": 5.00390625,
       "dimensions": [
         240,
         100
       ],
       "output_bytes": 7131,
-      "output_sha256": "fab8d723def0dc110677ea6d901e28b8e6c4b0f31ef168b6adb20a3f792cdb42",
+      "output_sha256": "3e9e790b17ded0d18ffb786c450091d73724a8b4fe20bb39e331a3ffe4cd1373",
       "output_path": "outputs/gradient-logo-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 307.5541229918599,
-      "median_incremental_peak_mib": 7.06640625,
+      "median_ms": 330.104264896363,
+      "median_incremental_peak_mib": 7.0625,
       "dimensions": [
         240,
         100
@@ -129,22 +129,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 315.81652583554387,
-      "median_incremental_peak_mib": 4.71484375,
+      "median_ms": 345.19288782030344,
+      "median_incremental_peak_mib": 4.71875,
       "dimensions": [
         100,
         50
       ],
       "output_bytes": 304,
-      "output_sha256": "ba66de1a3b19b85f85d76d7e76d88a1393d7d60908331fea7620bd3bf73b20a4",
+      "output_sha256": "8661206328c2eae335a1a60ea31cfc36d09e6cb90854e101a1a24705fb880d95",
       "output_path": "outputs/image-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 308.51496290415525,
-      "median_incremental_peak_mib": 8.328125,
+      "median_ms": 316.7566331103444,
+      "median_incremental_peak_mib": 8.35546875,
       "dimensions": [
         100,
         50
@@ -160,14 +160,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 34.85591197386384,
+      "median_ms": 37.33482398092747,
       "median_incremental_peak_mib": 3.3828125,
       "dimensions": [
         120,
         90
       ],
       "output_bytes": 308,
-      "output_sha256": "6b94d007c183c515891eb1d5c97d843728fd52b8aedded752fcf02b4f9202a7b",
+      "output_sha256": "b69cc58a80bab46d0ef89054b38b66fe744f932bc7398a414efdf8628f78589a",
       "output_path": "outputs/leading-whitespace-viewbox-imagemagick.png"
     },
     "libvips": {
@@ -175,8 +175,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 29.647880233824253,
-      "median_incremental_peak_mib": 5.6640625
+      "median_ms": 28.884973842650652,
+      "median_incremental_peak_mib": 5.671875
     }
   },
   {
@@ -185,22 +185,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 41.78513400256634,
-      "median_incremental_peak_mib": 3.5390625,
+      "median_ms": 44.19149970635772,
+      "median_incremental_peak_mib": 3.4453125,
       "dimensions": [
         115,
         86
       ],
       "output_bytes": 1439,
-      "output_sha256": "dcb1a5b6cbb2c62d5acd471c50320d8735504e3ce9c474859a7a889455100585",
+      "output_sha256": "5dd992d21d7da25850adfca3f62a87827449e6a4c49631ca025bb49e9b4cba1e",
       "output_path": "outputs/tiny-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 39.38777185976505,
-      "median_incremental_peak_mib": 6.37890625,
+      "median_ms": 35.61104601249099,
+      "median_incremental_peak_mib": 6.3828125,
       "dimensions": [
         115,
         86
@@ -216,22 +216,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.775954972952604,
+      "median_ms": 38.21868170052767,
       "median_incremental_peak_mib": 3.08984375,
       "dimensions": [
         12,
         4
       ],
       "output_bytes": 329,
-      "output_sha256": "8a7c554e57590bb5fa72e23e8e7299fea13f07277fd57d5fd1709516705895b5",
+      "output_sha256": "d1225ff48b854c9a21c9d378ac9509740394aa4b8702d1843d5ac9f52e1f6998",
       "output_path": "outputs/transparency-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 38.61294873058796,
-      "median_incremental_peak_mib": 5.64453125,
+      "median_ms": 36.324746906757355,
+      "median_incremental_peak_mib": 5.640625,
       "dimensions": [
         12,
         4
@@ -247,22 +247,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 37.520304787904024,
+      "median_ms": 42.97433001920581,
       "median_incremental_peak_mib": 3.3828125,
       "dimensions": [
         120,
         90
       ],
       "output_bytes": 308,
-      "output_sha256": "6a4bbe1cba4bb40e8f562f68a776930178f602e404835ec544e08ff93e22af52",
+      "output_sha256": "72a6a82c8e5840146ff3f13de60331e43605f5a97b5ec635f587e7484411d125",
       "output_path": "outputs/viewbox-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 38.440211210399866,
-      "median_incremental_peak_mib": 6.12890625,
+      "median_ms": 38.52642886340618,
+      "median_incremental_peak_mib": 6.13671875,
       "dimensions": [
         120,
         90
@@ -278,14 +278,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 32.53466822206974,
+      "median_ms": 38.47542777657509,
       "median_incremental_peak_mib": 3.140625,
       "dimensions": [
         80,
         90
       ],
       "output_bytes": 304,
-      "output_sha256": "f4805460029a5567f59147d629dd7fc0349fbeef30e87eac3aebbbabfeebce35",
+      "output_sha256": "ed21d86cccc17e222c00d18660117b9d258ef5b86bdd889830024cfdf4471762",
       "output_path": "outputs/zero-height-imagemagick.png"
     },
     "libvips": {
@@ -293,8 +293,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 31.254632398486137,
-      "median_incremental_peak_mib": 5.39453125
+      "median_ms": 28.25112035498023,
+      "median_incremental_peak_mib": 5.390625
     }
   },
   {
@@ -303,14 +303,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 31.07517771422863,
-      "median_incremental_peak_mib": 3.13671875,
+      "median_ms": 39.04452081769705,
+      "median_incremental_peak_mib": 3.140625,
       "dimensions": [
         120,
         60
       ],
       "output_bytes": 305,
-      "output_sha256": "05cad99fd90fe7be11f0a5ab0cb735fa8ae9d47b2f792c8209b17ffeb4d4b8a4",
+      "output_sha256": "d1e7577ff7acbea0345e6c75172552a19c49554eeeeb27c6e44a61a9bcff9ef8",
       "output_path": "outputs/zero-width-imagemagick.png"
     },
     "libvips": {
@@ -318,8 +318,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 33.454892225563526,
-      "median_incremental_peak_mib": 6.4296875
+      "median_ms": 29.52841203659773,
+      "median_incremental_peak_mib": 6.421875
     }
   },
   {
@@ -328,14 +328,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 31.562316231429577,
-      "median_incremental_peak_mib": 3.4453125,
+      "median_ms": 40.08975299075246,
+      "median_incremental_peak_mib": 3.44140625,
       "dimensions": [
         120,
         90
       ],
       "output_bytes": 1171,
-      "output_sha256": "0d151e7650e9d566a30b7154fdbefc7d357604fa64cf85a6409d100738c6b3ba",
+      "output_sha256": "30162464741f794f2503495ddb990321db338a44e2f2a3d142e9692ca8946a6e",
       "output_path": "outputs/zero_sized-imagemagick.png"
     },
     "libvips": {
@@ -343,8 +343,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 35.151445772498846,
-      "median_incremental_peak_mib": 5.671875
+      "median_ms": 28.63107668235898,
+      "median_incremental_peak_mib": 5.67578125
     }
   },
   {
@@ -353,22 +353,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 40.09649623185396,
+      "median_ms": 47.253765631467104,
       "median_incremental_peak_mib": 3.9765625,
       "dimensions": [
         192,
         96
       ],
       "output_bytes": 2281,
-      "output_sha256": "7e06572ce223a930e0ebebc2feacc7d604cf1e3291716ef0cfc8ae18007b985f",
+      "output_sha256": "b5f616e6820ded89cb7c56a68a9903d069f7e81107c1d852f08fa7a8f0475e05",
       "output_path": "outputs/physical-units-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 42.200207244604826,
-      "median_incremental_peak_mib": 6.4296875,
+      "median_ms": 35.29477119445801,
+      "median_incremental_peak_mib": 6.609375,
       "dimensions": [
         192,
         96
@@ -385,14 +385,14 @@
         "status": "error",
         "error_class": "Discourse::Utils::CommandError"
       },
-      "median_ms": 30.84010537713766,
+      "median_ms": 36.965928971767426,
       "median_incremental_peak_mib": 2.83984375
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 39.016599766910076,
+      "median_ms": 34.552188124507666,
       "median_incremental_peak_mib": 6.13671875,
       "dimensions": [
         120,
@@ -410,7 +410,7 @@
         "status": "error",
         "error_class": "Discourse::Utils::CommandError"
       },
-      "median_ms": 37.745308596640825,
+      "median_ms": 36.81511804461479,
       "median_incremental_peak_mib": 2.83984375
     },
     "libvips": {
@@ -418,8 +418,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 29.84681073576212,
-      "median_incremental_peak_mib": 4.93359375
+      "median_ms": 28.657014947384596,
+      "median_incremental_peak_mib": 4.9609375
     }
   }
 ]

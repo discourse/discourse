@@ -6,10 +6,10 @@
   "cpu_limit": 2,
   "memory_limit": "2g",
   "memory_swap_limit": "3g",
-  "script_sha256": "9f21f8fba12bc3dc0f5eecdf5e0aaca2aea601986fe4bbaacd9708e475b4dbeb",
-  "results_sha256": "b8bc31921e9b01f403bfd0293be4dd56d6bc060bd82332191d262b1399bd9251",
-  "source_head": "5bae38325ff68d2300fe381fcf1694d72cca7af9",
-  "worker_sha256": "6c5905080b186c1e0e9c2c5adac1c08df504a30fe1febbade31daa51838ca840",
+  "script_sha256": "df4618be2adfba29948aab476ac7eea84c7db6bc503123a215a0e1441cfe6e70",
+  "results_sha256": "64832dd55ce0ff59925ced5a325d11a5e81f421796cced3673cba09810869377",
+  "source_head": "75f13f26c4e5f706407eb07d983c376e4348217f",
+  "worker_sha256": "11e214a27740e3ae2aba7b058727a96bb5cb2ca32f0606c60d023f44003f2641",
   "source": [
     {
       "path": "lib/image_magick.rb",
@@ -37,14 +37,14 @@
     },
     {
       "path": "script/discourse_vips_worker",
-      "sha256": "6c5905080b186c1e0e9c2c5adac1c08df504a30fe1febbade31daa51838ca840"
+      "sha256": "11e214a27740e3ae2aba7b058727a96bb5cb2ca32f0606c60d023f44003f2641"
     }
   ],
   "timing_calls_per_backend_per_input": 101,
   "memory_calls_per_backend_per_input": 101,
   "counter_samples_per_call": {
-    "min": 18,
-    "max": 1258
+    "min": 7,
+    "max": 1239
   },
   "max_width": 300,
   "max_height": 100,
@@ -52,7 +52,7 @@
     "vips_threads": 1,
     "address_space_bytes": 1073741824,
     "output_file_bytes": 1048576,
-    "cpu_seconds": 2,
+    "cpu_seconds": 1,
     "wall_seconds": 3
   }
 }
