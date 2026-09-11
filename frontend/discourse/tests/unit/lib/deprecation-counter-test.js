@@ -20,6 +20,50 @@ module("Unit | Lib | deprecation-counter", function (hooks) {
     this.sandbox.restore();
   });
 
+  test("keeps details from separate counters distinct outside a test", function (assert) {
+    setEnvironment("qunit-testing");
+    const reported = [];
+    window.Testem = {
+      useCustomAdapter(callback) {
+        callback({
+          emit(event, tag, { details }) {
+            reported.push(...details.map((detail) => ({ ...detail })));
+          },
+        });
+      },
+    };
+    const counters = [new DeprecationCounter(), new DeprecationCounter()];
+
+    for (const counter of counters) {
+      for (let i = 0; i < 3; i++) {
+        counter.recordDetail("parallel.deprecation");
+      }
+    }
+
+    assert.strictEqual(
+      reported.length,
+      2,
+      "each counter reports one new entry"
+    );
+    assert.strictEqual(
+      reported[0].stack,
+      reported[1].stack,
+      "both counters capture the same stack"
+    );
+    assert.notStrictEqual(
+      reported[0].key,
+      reported[1].key,
+      "separate counters report distinct keys"
+    );
+    assert.deepEqual(
+      counters.flatMap((counter) =>
+        counter.takeUpdatedCounts().map(({ key, count }) => ({ key, count }))
+      ),
+      reported.map(({ key }) => ({ key, count: 3 })),
+      "count updates retain each counter's original key and include repeats"
+    );
+  });
+
   test("reports system spec details for every occurrence of the same stack", function (assert) {
     const counter = new DeprecationCounter();
 

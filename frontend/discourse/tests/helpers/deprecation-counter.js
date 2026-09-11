@@ -66,6 +66,7 @@ export default class DeprecationCounter {
   #origin = null;
   #qunit = null;
   #countsChanged = new Set();
+  #instanceId = crypto.randomUUID();
 
   get hasDeprecations() {
     return this.counts.size > 0;
@@ -139,6 +140,7 @@ export default class DeprecationCounter {
     const stack = captureStack();
     const currentTest = this.#qunit?.config?.current;
     const key = [
+      this.#instanceId,
       id,
       this.#origin,
       currentTest?.module?.name,
