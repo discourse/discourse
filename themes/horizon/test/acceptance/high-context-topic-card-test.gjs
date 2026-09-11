@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Topic from "discourse/models/topic";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import HighContextTopicCard from "../../discourse/components/card/high-context-topic-card";
+import HighContextTopicCard from "../../discourse/components/card/high-context-topic-card.gjs";
 
 function topicFor(attrs = {}) {
   return Topic.create({

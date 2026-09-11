@@ -12,7 +12,7 @@ import {
 } from "discourse/lib/array-tools";
 import { eq, gte, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AiSecretSelector from "./ai-secret-selector";
+import AiSecretSelector from "discourse/plugins/discourse-ai/discourse/components/ai-secret-selector";
 
 export default class AiDecisionModelEditorForm extends Component {
   @service dialog;
