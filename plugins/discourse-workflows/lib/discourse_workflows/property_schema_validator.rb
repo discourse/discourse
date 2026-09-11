@@ -105,6 +105,7 @@ module DiscourseWorkflows
       filter_query
       group_select
       icon
+      liquid
       multi_combo_box
       multi_input
       notice
