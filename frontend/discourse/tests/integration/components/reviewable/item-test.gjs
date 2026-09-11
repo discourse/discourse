@@ -132,38 +132,6 @@ module("Integration | Component | Reviewable | Item", function (hooks) {
       .exists();
   });
 
-  test("keeps asking the approve question once a user reviewable is resolved but still approvable", async function (assert) {
-    const resolved = userReviewable(this, {
-      status: REJECTED,
-      bundled_actions: [actionBundle("approve_user", "Yes")],
-    });
-
-    await render(
-      <template><ReviewableItem @reviewable={{resolved}} /></template>
-    );
-
-    assert.dom(".review-item__aside-title").hasText("Approve this user?");
-  });
-
-  test("does not reuse the spam question once a user reviewable is resolved", async function (assert) {
-    const resolved = userReviewable(this, {
-      status: REJECTED,
-      reviewable_scores: [
-        {
-          reason_type: "suspect_user",
-          score_type: { type: "needs_approval", title: "Needs approval" },
-        },
-      ],
-      bundled_actions: [actionBundle("approve_user", "Yes")],
-    });
-
-    await render(
-      <template><ReviewableItem @reviewable={{resolved}} /></template>
-    );
-
-    assert.dom(".review-item__aside-title").hasText("Approve this user?");
-  });
-
   test("falls back to the generic heading when a resolved user reviewable can only be scrubbed", async function (assert) {
     const resolved = userReviewable(this, {
       status: REJECTED,

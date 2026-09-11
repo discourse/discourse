@@ -471,6 +471,18 @@ RSpec.describe Admin::UsersController do
         evil_trout.reload
         expect(evil_trout.approved).to eq(true)
       end
+
+      it "approves a user whose previous reviewable was rejected" do
+        evil_trout.update!(active: true)
+        reviewable =
+          Fabricate(:reviewable_user, target: evil_trout, status: Reviewable.statuses[:rejected])
+
+        put "/admin/users/approve-bulk.json", params: { users: [evil_trout.id] }
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(reviewable.reload).to be_approved
+      end
     end
 
     context "when logged in as an admin" do
