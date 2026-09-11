@@ -49,6 +49,17 @@ describe DiscourseDataExplorer::DataExplorer do
       expect(binds.map { |bind| bind[:value] }).to eq(%w[1 2 3])
     end
 
+    it "emits NULL without consuming bind slots and reuses mixed list placeholders" do
+      sql, binds =
+        described_class.rewrite_to_binds(
+          "SELECT :missing, :ids, :name, :ids, :missing",
+          { "missing" => nil, "ids" => [1, nil, 2], "name" => "NULL" },
+        )
+
+      expect(sql).to eq("SELECT NULL, $1, NULL, $2, $3, $1, NULL, $2, NULL")
+      expect(binds.map { |bind| bind[:value] }).to eq(%w[1 2 NULL])
+    end
+
     it "leaves a marker inside a string literal untouched" do
       sql, binds = described_class.rewrite_to_binds("SELECT ':id'", { "id" => 7 })
 
@@ -157,6 +168,84 @@ describe DiscourseDataExplorer::DataExplorer do
 
       expect(result[:error]).to eq(nil)
       expect(result[:pg_result][0]["is_null"]).to eq(false)
+    end
+
+    %w[text date datetime time boolean user_id int_list string_list].each do |type|
+      it "uses an untyped NULL for a missing #{type} parameter" do
+        query = DiscourseDataExplorer::Query.create!(name: "missing parameter", sql: <<~SQL)
+              -- [params]
+              -- null #{type} :value
+              SELECT :value IS NULL AS is_null, COALESCE(:value, 'missing') AS label
+            SQL
+
+        result = described_class.run_query(query)
+
+        expect(result[:error]).to eq(nil)
+        expect(result[:pg_result].to_a).to eq([{ "is_null" => true, "label" => "missing" }])
+      end
+    end
+
+    it "lets each occurrence of a null parameter infer its own type" do
+      query = DiscourseDataExplorer::Query.create!(name: "null inference", sql: <<~SQL)
+            -- [params]
+            -- null int :value
+            SELECT :value IS NULL AS is_null,
+                   COALESCE(:value, 'all') AS label,
+                   round(1.234::numeric, COALESCE(:value, 2)) AS rounded
+          SQL
+
+      result = described_class.run_query(query)
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a).to eq(
+        [{ "is_null" => true, "label" => "all", "rounded" => BigDecimal("1.23") }],
+      )
+    end
+
+    it "preserves numeric precision in a null double parameter's fallback" do
+      query = DiscourseDataExplorer::Query.create!(name: "numeric fallback", sql: <<~SQL)
+            -- [params]
+            -- null double :value
+            SELECT COALESCE(:value, 9007199254740993::numeric) AS value
+          SQL
+
+      result = described_class.run_query(query)
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result][0]["value"]).to eq(BigDecimal("9007199254740993"))
+      expect(result[:pg_result].ftype(0)).to eq(1700)
+    end
+
+    it "preserves null elements in an integer list" do
+      query = DiscourseDataExplorer::Query.create!(name: "nullable list", sql: <<~SQL)
+            -- [params]
+            -- int_list :ids
+            SELECT unnest(ARRAY[:ids]) AS id
+          SQL
+
+      result = described_class.run_query(query, { "ids" => "1,#null,2" })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to eq([1, nil, 2])
+    end
+
+    it "runs optional filters when a null integer is checked before its column comparison" do
+      query = DiscourseDataExplorer::Query.create!(name: "optional filters", sql: <<~SQL)
+            -- [params]
+            -- null text :username
+            -- null text :email
+            -- null int :user_id
+            -- null text :external_id
+            SELECT id FROM users
+            WHERE (:username IS NOT NULL OR :email IS NOT NULL OR :user_id IS NOT NULL OR :external_id IS NOT NULL)
+              AND (username = :username OR :username IS NULL)
+              AND (id = :user_id OR :user_id IS NULL)
+          SQL
+
+      result = described_class.run_query(query, { "username" => topic.user.username })
+
+      expect(result[:error]).to eq(nil)
+      expect(result[:pg_result].to_a.map { |row| row["id"] }).to eq([topic.user_id])
     end
 
     it "still compares a declared date parameter against a timestamp column with no cast" do
