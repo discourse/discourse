@@ -40,6 +40,7 @@ function normalizeFile(file) {
     const [, plugin, rest] = pluginMatch;
     const candidates = [
       `plugins/${plugin}/assets/javascripts/${rest}`,
+      `plugins/${plugin}/admin/assets/javascripts/${rest}`,
       `plugins/${plugin}/test/javascripts/${rest}`,
     ];
 

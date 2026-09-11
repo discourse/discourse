@@ -217,6 +217,40 @@ test.each([1, 2])(
   }
 );
 
+test("resolves plugin admin source maps to the admin JavaScript directory", () => {
+  temporaryDirectory = fs.mkdtempSync(
+    path.join(os.tmpdir(), "discourse-deprecation-report-")
+  );
+  const sourceMap = new SourceMapGenerator({ file: "admin.js" });
+  addSource(
+    sourceMap,
+    1,
+    "discourse/plugins/automation/admin/components/automation-enabled-toggle.gjs",
+    10,
+    "user.groups;"
+  );
+  fs.writeFileSync(
+    path.join(temporaryDirectory, "admin.js.map"),
+    sourceMap.toString()
+  );
+
+  const resolver = new DeprecationStackResolver({
+    mapRoots: [temporaryDirectory],
+  });
+  const frame = resolver.resolveFrame({
+    fn: "toggle",
+    url: "http://localhost/admin.js",
+    line: 1,
+    column: 1,
+  });
+
+  expect(frame).toMatchObject({
+    file: "plugins/automation/admin/assets/javascripts/admin/components/automation-enabled-toggle.gjs",
+    line: 10,
+    resolved: true,
+  });
+});
+
 test("merges compact reports and renders the shared summary", () => {
   const first = {
     format: 1,
