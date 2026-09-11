@@ -334,21 +334,42 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
-    convert_with(instructions, from, to, opts, operation:)
+    if GlobalSetting.enable_vips_image_processing && operation == :optimized_image_downsize
+      input_format = instructions.first.split(":", 2).first.downcase
+      output_format = instructions.last.split(":", 2).first.downcase
+
+      convert_with(instructions, from, to, opts, operation:) do
+        DiscourseVips.downsize(
+          input_path: from,
+          output_path: to,
+          input_format:,
+          output_format:,
+          geometry: dimensions,
+          quality: opts[:quality],
+          timeout: MAX_CONVERT_SECONDS,
+        )
+      end
+    else
+      convert_with(instructions, from, to, opts, operation:)
+    end
   end
 
   MAX_PNGQUANT_SIZE = 500_000
   MAX_CONVERT_SECONDS = 20
 
   def self.convert_with(instructions, from, to, opts = {}, operation:)
-    ImageMagick.magick(
-      *instructions,
-      operation:,
-      read: [from],
-      write: [File.dirname(to)],
-      nice: 10,
-      timeout: MAX_CONVERT_SECONDS,
-    )
+    if block_given?
+      yield
+    else
+      ImageMagick.magick(
+        *instructions,
+        operation:,
+        read: [from],
+        write: [File.dirname(to)],
+        nice: 10,
+        timeout: MAX_CONVERT_SECONDS,
+      )
+    end
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)

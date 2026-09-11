@@ -48,6 +48,15 @@ class DiscourseVipsWorker
         dominant_color(*arguments)
       when "animated"
         animated(*arguments)
+      when "downsize"
+        downsize(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          input_format: arguments[2],
+          output_format: arguments[3],
+          geometry: arguments[4],
+          quality: arguments[5],
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -149,6 +158,97 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :animated
+
+    def self.downsize(input_path:, output_path:, input_format:, output_format:, geometry:, quality:)
+      read_paths = [input_path]
+      read_paths.concat(%w[/etc/fonts /var/cache/fontconfig]) if input_format == "svg"
+
+      new(read_paths:, write_paths: [File.dirname(output_path)]) do
+        raise ArgumentError, "input and output must be different files" if
+          File.identical?(input_path, output_path)
+
+        block_loaders(
+          allowed: %w[
+            VipsForeignLoadJpeg
+            VipsForeignLoadPng
+            VipsForeignLoadNsgif
+            VipsForeignLoadWebp
+            VipsForeignLoadHeif
+            VipsForeignLoadSvg
+          ],
+        )
+        begin
+          image = load_downsize_image(input_path:, input_format:).autorot
+          width, height = downsize_dimensions(width: image.width, height: image.height, geometry:)
+          image = image.resize(width.fdiv(image.width), vscale: height.fdiv(image.height))
+          save_downsize_image(image:, output_path:, output_format:, quality:)
+        rescue Vips::Error, ArgumentError => error
+          raise InvalidImage, error.message
+        end
+        nil
+      end
+    end
+    private_class_method :downsize
+
+    def self.load_downsize_image(input_path:, input_format:)
+      case input_format
+      when "jpg", "jpeg"
+        Vips::Image.jpegload(input_path, access: :sequential)
+      when "png"
+        Vips::Image.pngload(input_path, access: :sequential)
+      when "gif"
+        Vips::Image.gifload(input_path, page: 0, n: 1, access: :sequential)
+      when "webp"
+        Vips::Image.webpload(input_path, page: 0, n: 1, access: :sequential)
+      when "avif"
+        Vips::Image.heifload(input_path, page: 0, n: 1, access: :sequential)
+      when "svg"
+        Vips::Image.svgload(input_path, dpi: 96, scale: 0.75).flatten(
+          background: [255, 255, 255],
+        )
+      else
+        raise ArgumentError, "unsupported input format"
+      end
+    end
+    private_class_method :load_downsize_image
+
+    def self.downsize_dimensions(width:, height:, geometry:)
+      scale =
+        case geometry
+        when /\A(\d+(?:\.\d+)?)%\z/
+          Regexp.last_match(1).to_f / 100
+        when /\A(\d+)x(\d+)>\z/
+          [Regexp.last_match(1).to_f.fdiv(width), Regexp.last_match(2).to_f.fdiv(height), 1].min
+        when /\A(\d+)@\z/
+          Math.sqrt(Regexp.last_match(1).to_f.fdiv(width * height))
+        else
+          raise ArgumentError, "unsupported resize geometry"
+        end
+      raise ArgumentError, "invalid resize geometry" if !scale.finite? || !scale.positive?
+
+      [[(width * scale).round, 1].max, [(height * scale).round, 1].max]
+    end
+    private_class_method :downsize_dimensions
+
+    def self.save_downsize_image(image:, output_path:, output_format:, quality:)
+      quality = Integer(quality, exception: false)
+      case output_format
+      when "jpg", "jpeg"
+        image = image.extract_band(0, n: image.bands - 1) if image.has_alpha?
+        image.jpegsave(output_path, Q: quality || 92, interlace: false)
+      when "png"
+        image.pngsave(output_path, interlace: false)
+      when "gif"
+        image.gifsave(output_path, bitdepth: 8, interlace: false)
+      when "webp"
+        image.webpsave(output_path, Q: quality || 75, effort: 4)
+      when "avif"
+        image.heifsave(output_path, compression: :av1, Q: quality || 50, effort: 3)
+      else
+        raise ArgumentError, "unsupported output format"
+      end
+    end
+    private_class_method :save_downsize_image
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)

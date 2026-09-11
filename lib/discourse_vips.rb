@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "discourse_vips/client"
+require "tempfile"
 
 module DiscourseVips
   def self.version
@@ -27,6 +28,28 @@ module DiscourseVips
   # APNG and timed HEIF/AVIF sequences are unsupported.
   def self.animated?(input_path:, timeout:)
     Client.call(["animated", input_path], operation: :upload_animation_probe, timeout:)
+  end
+
+  def self.downsize(
+    input_path:,
+    output_path:,
+    input_format:,
+    output_format:,
+    geometry:,
+    quality:,
+    timeout:
+  )
+    Tempfile.create(["downsize-", ".#{output_format}"], File.dirname(output_path)) do |output|
+      output.close
+      Client.call(
+        ["downsize", input_path, output.path, input_format, output_format, geometry, quality],
+        operation: :optimized_image_downsize,
+        timeout:,
+        nice: 10,
+      )
+      File.rename(output.path, output_path)
+    end
+    nil
   end
 
   def self.before_fork
