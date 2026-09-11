@@ -102,6 +102,7 @@ export default class BoardsPage extends Component {
       </DPageHeader>
 
       <DFilterControls
+        @additionalFiltersActive={{true}}
         @array={{@boards}}
         @defaultDropdownValue={{hash status="open"}}
         @dropdownFilterQueryParams={{hash status="status"}}
@@ -111,6 +112,7 @@ export default class BoardsPage extends Component {
         @noResultsMessage={{i18n "boards.filter_boards_no_results"}}
         @searchableProps={{array "name"}}
         @showCustomEmptyState={{true}}
+        @showResetButton={{false}}
         @textFilterQueryParam="filter"
       >
         <:content as |filteredBoards|>

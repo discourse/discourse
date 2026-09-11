@@ -71,8 +71,8 @@ RSpec.describe Boards::Archive do
         )
       end
 
-      it "does not publish to the archived board" do
-        expect(messages).to be_empty
+      it "publishes the archive event so viewers reload the board" do
+        expect(messages.map(&:data)).to eq([{ type: "board_archived", client_id: nil }])
       end
     end
 

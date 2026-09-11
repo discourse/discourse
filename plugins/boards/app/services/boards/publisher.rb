@@ -61,7 +61,10 @@ module Boards
     private_class_method :publish_card_event!
 
     def self.publish!(board, data)
-      return if board.archived? && data[:type] != "board_archived"
+      if data[:type] != "board_archived" &&
+           (board.archived? || Boards::Board.where(id: board.id, archived: true).exists?)
+        return
+      end
 
       group_ids = board.permission_acl.group_ids_with_any_permission(%w[view edit manage])
       opts = {}
