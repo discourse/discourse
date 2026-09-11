@@ -4,6 +4,85 @@ RSpec.describe PostMover do
   fab!(:admin)
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
+  describe "#to_topic" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+    fab!(:destination_topic, :topic)
+    fab!(:user)
+
+    it "rejects the move when the user cannot move posts from the source topic" do
+      mover = described_class.new(topic, user, [reply.id])
+
+      expect do
+        expect { mover.to_topic(destination_topic.id) }.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "rejects the move when the destination category is read-only for the user" do
+      mover_user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :readonly)
+      category.save!
+      destination_topic.update!(category: category)
+      mover = described_class.new(topic, mover_user, [reply.id])
+
+      expect do
+        expect { mover.to_topic(destination_topic.id) }.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
+    end
+
+    it "rejects the move when no destination is given" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      expect { mover.to_topic(nil) }.to raise_error(Discourse::InvalidAccess)
+      expect(reply.reload.topic_id).to eq(topic.id)
+    end
+  end
+
+  describe "#to_new_topic" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "does not create a topic when the user cannot move posts from the source topic" do
+      mover = described_class.new(topic, Fabricate(:user), [reply.id])
+
+      expect do
+        expect { mover.to_new_topic("A separate discussion") }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
+    end
+
+    it "does not create a topic when the user can only reply in the destination category" do
+      user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+      mover = described_class.new(topic, user, [reply.id])
+
+      expect do
+        expect { mover.to_new_topic("A separate discussion", category.id) }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      end.not_to change { [Topic.count, Post.count, reply.reload.topic_id] }
+    end
+
+    it "allows an admin to split posts on behalf of a user with reply-only access" do
+      user = Fabricate(:trust_level_4)
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+      mover = described_class.new(topic, user, [reply.id], guardian: admin.guardian)
+
+      destination = mover.to_new_topic("A separate discussion", category.id)
+
+      expect(destination.category_id).to eq(category.id)
+      expect(reply.reload.topic_id).to eq(destination.id)
+    end
+  end
+
   describe "#move_types" do
     context "when verifying enum sequence" do
       it "'new_topic' should be at 1st position" do
@@ -2995,7 +3074,7 @@ RSpec.describe PostMover do
       fab!(:topic_1, :topic)
       fab!(:topic_2, :topic)
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
-      fab!(:user)
+      fab!(:user, :trust_level_4)
 
       before { SiteSetting.delete_merged_stub_topics_after_days = 0 }
 
@@ -3023,7 +3102,7 @@ RSpec.describe PostMover do
       end
 
       it "allows specific user to merge topics" do
-        special_user = Fabricate(:user)
+        special_user = Fabricate(:trust_level_4)
         plugin_instance = Plugin::Instance.new
 
         plugin_instance.register_modifier(:is_allowed_to_delete_after_merge, &modifier_block)
