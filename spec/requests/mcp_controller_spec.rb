@@ -78,12 +78,12 @@ describe "MCP transport" do
     McpPrimitive.create!(kind: "tool", identifier: "discourse_current_user_get", enabled: true)
   end
 
-  it "challenges requests without bearer credentials" do
+  it "directs unauthenticated clients to resource metadata for scope selection" do
     post "/mcp", params: payload.to_json, headers: headers.except("HTTP_AUTHORIZATION")
 
     expect(response.status).to eq(401)
     expect(response.headers["WWW-Authenticate"]).to eq(
-      %(Bearer resource_metadata="#{DiscourseMcp.protected_resource_metadata_url}", scope="mcp:profile:read"),
+      %(Bearer resource_metadata="#{DiscourseMcp.protected_resource_metadata_url}"),
     )
     expect(response.parsed_body.dig("error", "code")).to eq(-32_001)
   end
