@@ -25,7 +25,7 @@ module Middleware
       headers[
         "Cross-Origin-Opener-Policy"
       ] = SiteSetting.cross_origin_opener_policy_header if is_html_response &&
-        headers["Cross-Origin-Opener-Policy"].nil?
+        headers["cross-origin-opener-policy"].nil?
 
       [status, headers, body]
     end
@@ -33,7 +33,7 @@ module Middleware
     private
 
     def html_response?(headers)
-      headers["Content-Type"] && headers["Content-Type"] =~ /html/
+      headers["content-type"] && headers["content-type"] =~ /html/
     end
   end
 end
