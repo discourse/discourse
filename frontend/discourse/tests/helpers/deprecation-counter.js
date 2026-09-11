@@ -205,7 +205,7 @@ export default class DeprecationCounter {
       this.details.get(key)
     );
     this.#countsChanged.clear();
-    return updated.filter(Boolean);
+    return updated.filter(Boolean).map(({ key, count }) => ({ key, count }));
   }
 
   generateTable() {

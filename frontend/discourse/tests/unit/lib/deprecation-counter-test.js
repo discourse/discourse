@@ -95,11 +95,14 @@ module("Unit | Lib | deprecation-counter", function (hooks) {
       "separate counters report distinct keys"
     );
     assert.deepEqual(
-      counters.flatMap((counter) =>
-        counter.takeUpdatedCounts().map(({ key, count }) => ({ key, count }))
-      ),
+      counters.flatMap((counter) => counter.takeUpdatedCounts()),
       reported.map(({ key }) => ({ key, count: 3 })),
-      "count updates retain each counter's original key and include repeats"
+      "updates contain only each counter's original key and cumulative count"
+    );
+    assert.deepEqual(
+      counters.flatMap((counter) => counter.takeUpdatedCounts()),
+      [],
+      "unchanged counts are not sent again"
     );
   });
 

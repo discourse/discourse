@@ -79,8 +79,10 @@ class Reporter extends TapReporter {
       // grows, so the highest count wins.
       for (const detail of metadata.details || []) {
         const existing = this.deprecationDetails.get(detail.key);
-        if (!existing || detail.count > existing.count) {
+        if (!existing) {
           this.deprecationDetails.set(detail.key, detail);
+        } else if (detail.count > existing.count) {
+          existing.count = detail.count;
         }
       }
     } else if (tag === "summary-line") {
