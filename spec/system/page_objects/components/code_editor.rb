@@ -17,8 +17,8 @@ module PageObjects
       # The editor paints a contenteditable, so the document is set through it
       # rather than filled in as a field.
       def set_input(content)
-        page.execute_script(<<~JS, editor, content)
-          const view = arguments[0].querySelector(".codemirror-editor").codemirrorView;
+        page.execute_script(<<~JS, view_element, content)
+          const view = arguments[0].codemirrorView;
           view.dispatch({
             changes: { from: 0, to: view.state.doc.length, insert: arguments[1] },
           });
@@ -31,13 +31,17 @@ module PageObjects
       end
 
       def value
-        page.evaluate_script(<<~JS, editor)
-          arguments[0].querySelector(".codemirror-editor").codemirrorView.state.doc.toString()
-        JS
+        page.evaluate_script("arguments[0].codemirrorView.state.doc.toString()", view_element)
       end
 
       def editor
         @selector.is_a?(String) ? find(@selector) : @selector
+      end
+
+      # The wrapper renders before the editor chunk has loaded; the document
+      # handle exists only once the editor itself is in the DOM.
+      def view_element
+        editor.find(".codemirror-editor:has(.cm-editor)")
       end
 
       def editor_content
