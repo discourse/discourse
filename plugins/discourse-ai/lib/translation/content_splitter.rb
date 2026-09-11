@@ -64,13 +64,16 @@ module DiscourseAi
 
         begin
           doc = Nokogiri::HTML5.fragment(text)
-          max_length_within_target = 0
 
-          doc.children.each do |node|
-            html = node.to_html
-            end_pos = max_length_within_target + html.length
-            return max_length_within_target if max_length_within_target > 0 && end_pos > target_pos
-            max_length_within_target = end_pos
+          line_offsets = [0]
+          text.each_line { |line| line_offsets << line_offsets.last + line.length }
+
+          node_starts = doc.children.map do |node|
+            line_offsets[node.line - 1]
+          end.uniq
+
+          node_starts.each_cons(2) do |current_start, next_start|
+            return current_start if current_start > 0 && next_start > target_pos
           end
           nil
         rescue Nokogiri::SyntaxError
