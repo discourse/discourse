@@ -1,11 +1,11 @@
-import { schemaFieldsForNodeOutput } from "./data-preview";
-import { outputIndexForConnection } from "./expression-paths";
-import { schemaFieldsForItems } from "./schema-fields";
+import { schemaFieldsForNodeOutput } from "./data-preview.js";
+import { outputIndexForConnection } from "./expression-paths.js";
+import { schemaFieldsForItems } from "./schema-fields.js";
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
-} from "./schema-graph";
+} from "./schema-graph.js";
 
 function flattenPaths(fields, prefix = "") {
   const result = [];

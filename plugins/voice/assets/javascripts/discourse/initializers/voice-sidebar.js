@@ -10,9 +10,9 @@ import VoiceCreateRoomModal from "discourse/plugins/voice/discourse/components/m
 import VoiceParticipantSidebarContextMenu from "discourse/plugins/voice/discourse/components/voice-participant-sidebar-context-menu";
 import VoiceParticipantSidebarSuffix from "discourse/plugins/voice/discourse/components/voice-participant-sidebar-suffix";
 import VoiceRoomSidebarContextMenu from "discourse/plugins/voice/discourse/components/voice-room-sidebar-context-menu";
-import buildAnonRoomsSection from "../lib/voice/anon-rooms-section";
-import { humanKeyName } from "../lib/voice/ptt-utils";
-import roomIcon, { roomBadge } from "../lib/voice/room-icon";
+import buildAnonRoomsSection from "../lib/voice/anon-rooms-section.js";
+import { humanKeyName } from "../lib/voice/ptt-utils.js";
+import roomIcon, { roomBadge } from "../lib/voice/room-icon.js";
 
 const LINK_NAME_PREFIX = "voice-room-";
 const CHAT_PANEL = "chat";

@@ -25,8 +25,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import BackButton from "./back-button";
-import Scroller from "./scroller";
+import BackButton from "./back-button.gjs";
+import Scroller from "./scroller.gjs";
 
 export const SCROLLER_HEIGHT = 50;
 const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;

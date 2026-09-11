@@ -1,6 +1,6 @@
 import { i18n } from "discourse-i18n";
 import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
-import { processingConstraints } from "./audio-processing";
+import { processingConstraints } from "./audio-processing.js";
 
 const INPUT_STORAGE_KEY = "voice_audio_input_device";
 const OUTPUT_STORAGE_KEY = "voice_audio_output_device";

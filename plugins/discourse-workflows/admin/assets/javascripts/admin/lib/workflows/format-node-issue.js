@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import { propertyLabel } from "./property-engine";
+import { propertyLabel } from "./property-engine.js";
 
 const KNOWN_MESSAGES = new Set(["required"]);
 

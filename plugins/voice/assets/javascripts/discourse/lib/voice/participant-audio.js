@@ -1,4 +1,4 @@
-import { applyOutputDevice } from "./media-devices";
+import { applyOutputDevice } from "./media-devices.js";
 
 // Per-participant playback state: which media elements a remote user's audio
 // plays through, plus the local volume and mute the listener chose for them.

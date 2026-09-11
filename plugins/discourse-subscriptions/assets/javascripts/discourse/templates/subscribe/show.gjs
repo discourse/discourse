@@ -4,12 +4,12 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
-import LoginRequired from "../../components/login-required";
-import PaymentOptions from "../../components/payment-options";
-import SubscribeCaProvinceSelect from "../../components/subscribe-ca-province-select";
-import SubscribeCard from "../../components/subscribe-card";
-import SubscribeCountrySelect from "../../components/subscribe-country-select";
-import SubscribeUsStateSelect from "../../components/subscribe-us-state-select";
+import LoginRequired from "../../components/login-required.gjs";
+import PaymentOptions from "../../components/payment-options.gjs";
+import SubscribeCaProvinceSelect from "../../components/subscribe-ca-province-select.js";
+import SubscribeCard from "../../components/subscribe-card.gjs";
+import SubscribeCountrySelect from "../../components/subscribe-country-select.js";
+import SubscribeUsStateSelect from "../../components/subscribe-us-state-select.js";
 
 export default <template>
   <div class="discourse-subscriptions-section-columns">

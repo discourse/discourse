@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
-import AiToolEditorForm from "./ai-tool-editor-form";
+import AiToolEditorForm from "./ai-tool-editor-form.gjs";
 
 export default class AiToolEditor extends Component {
   @service store;

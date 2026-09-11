@@ -1,9 +1,9 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import AiPostImageCaptionEditorButton from "../components/ai-post-image-caption-editor-button";
+import AiPostImageCaptionEditorButton from "../components/ai-post-image-caption-editor-button.gjs";
 import {
   ensureImageCaptionTarget,
   imageBase62Sha1,
-} from "../lib/post-image-caption-editor";
+} from "../lib/post-image-caption-editor.js";
 
 function initializeAiPostImageCaptionEditor(api) {
   const editor = api.container.lookup("service:post-image-caption-editor");

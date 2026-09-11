@@ -3,9 +3,9 @@ import { getOwner } from "@ember/owner";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
 import { i18n } from "discourse-i18n";
-import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types";
-import { isScopedSearch } from "../lib/search-discoveries-context";
-import shortcutLabel from "../lib/shortcut-label";
+import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types.js";
+import { isScopedSearch } from "../lib/search-discoveries-context.js";
+import shortcutLabel from "../lib/shortcut-label.js";
 
 export default apiInitializer((api) => {
   const currentUser = api.getCurrentUser();

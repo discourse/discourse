@@ -122,10 +122,10 @@ import { clearToolbarCallbacks } from "discourse/ui-kit/d-editor";
 import { resetDragSourcesForTesting } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import { resetPointerDragForTesting } from "discourse/ui-kit/modifiers/d-pointer-drag";
 import I18n from "discourse-i18n";
-import { setupDNativeSelectAssertions } from "./d-native-select-assertions";
-import { setupFormKitAssertions } from "./form-kit-assertions";
-import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";
-import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
+import { setupDNativeSelectAssertions } from "./d-native-select-assertions.js";
+import { setupFormKitAssertions } from "./form-kit-assertions.js";
+import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions.js";
+import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper.js";
 
 export function currentUser() {
   return User.create(

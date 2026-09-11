@@ -7,7 +7,7 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import UserNote from "../user-note";
+import UserNote from "../user-note.gjs";
 
 export default class UserNotesModal extends Component {
   @service dialog;

@@ -3,8 +3,8 @@ import {
   BlockCondition,
   type ConditionContext,
   type ConditionResolvedValue,
-} from "./condition";
-import { blockCondition } from "./decorator";
+} from "./condition.ts";
+import { blockCondition } from "./decorator.ts";
 
 /**
  * Maximum allowed length for outlet arg paths.

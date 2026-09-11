@@ -8,7 +8,7 @@ import {
   resetLocalCache,
   setFailedCache,
   setLocalCache,
-} from "./oneboxer-cache";
+} from "./oneboxer-cache.js";
 
 let timeout;
 const loadingQueue = [];

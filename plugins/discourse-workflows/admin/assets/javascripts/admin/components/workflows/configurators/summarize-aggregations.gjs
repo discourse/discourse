@@ -6,13 +6,13 @@ import {
   normalizeSchema,
   propertyLabel,
   propertyOptionLabel,
-} from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/property-engine.js";
 import {
   summarizeOutputKey,
   summarizeOutputKeyIsDerived,
-} from "../../../lib/workflows/summarize-output-key";
-import FieldPathControl from "./field-path-control";
-import FixedCollection from "./fixed-collection";
+} from "../../../lib/workflows/summarize-output-key.js";
+import FieldPathControl from "./field-path-control.gjs";
+import FixedCollection from "./fixed-collection.gjs";
 
 function isVisible(field, item) {
   return field ? fieldVisible(field, item) : false;

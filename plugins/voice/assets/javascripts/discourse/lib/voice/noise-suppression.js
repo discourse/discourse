@@ -1,4 +1,4 @@
-import { nsUrl } from "./ns-engines";
+import { nsUrl } from "./ns-engines.js";
 
 // How long setup() waits for the worklet's "ready" handshake. Instantiating
 // the (already fetched) wasm and warming the model up takes well under a

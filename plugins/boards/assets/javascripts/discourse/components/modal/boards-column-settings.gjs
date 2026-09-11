@@ -21,8 +21,8 @@ import {
   PRESET_COLUMN_COLORS,
   STATUS_OPTIONS,
   tagToArray,
-} from "../../lib/boards-column-helpers";
-import BoardsEditableTitle from "../boards-editable-title";
+} from "../../lib/boards-column-helpers.js";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 export default class BoardsColumnSettings extends Component {
   @tracked showAdvanced = false;

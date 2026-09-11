@@ -1,12 +1,12 @@
-import type { DRovingFocusConfig } from "../config";
+import type { DRovingFocusConfig } from "../config.ts";
 import {
   anchorsToSelection,
   fallsBackToFirst,
   findMarked,
   isMarked,
   prefersSelected,
-} from "../entry-policy";
-import ItemScope from "../item-scope";
+} from "../entry-policy.ts";
+import ItemScope from "../item-scope.ts";
 
 /** Maintains the single-tab-stop strategy and focus restoration state. */
 export default class RovingTabindexStrategy {

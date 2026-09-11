@@ -39,7 +39,7 @@ import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import { hasMark, inNode, isNodeActive } from "./plugin-utils";
+import { hasMark, inNode, isNodeActive } from "./plugin-utils.js";
 
 export type EditorCommands = Record<string, (...args: unknown[]) => unknown> & {
   formatCode: (state: EditorState, dispatch: EditorView["dispatch"]) => boolean;

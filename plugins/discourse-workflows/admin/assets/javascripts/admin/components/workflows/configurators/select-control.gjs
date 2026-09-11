@@ -3,8 +3,8 @@ import { i18n } from "discourse-i18n";
 import {
   normalizeOptions,
   propertyOptionLabel,
-} from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+} from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class SelectControl extends Component {
   get noneKey() {

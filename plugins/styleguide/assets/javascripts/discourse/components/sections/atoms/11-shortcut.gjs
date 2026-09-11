@@ -1,15 +1,15 @@
 import { concat } from "@ember/helper";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import BlockExample from "../../examples/atoms/shortcut/block";
+import BlockExample from "../../examples/atoms/shortcut/block.gjs";
 import blockSource from "../../examples/atoms/shortcut/block?source=file";
-import KeyboardGateExample from "../../examples/atoms/shortcut/keyboard-gate";
+import KeyboardGateExample from "../../examples/atoms/shortcut/keyboard-gate.gjs";
 import keyboardGateSource from "../../examples/atoms/shortcut/keyboard-gate?source=file";
-import KeycapsExample from "../../examples/atoms/shortcut/keycaps";
+import KeycapsExample from "../../examples/atoms/shortcut/keycaps.gjs";
 import keycapsSource from "../../examples/atoms/shortcut/keycaps?source=file";
-import SpellingsExample from "../../examples/atoms/shortcut/spellings";
+import SpellingsExample from "../../examples/atoms/shortcut/spellings.gjs";
 import spellingsSource from "../../examples/atoms/shortcut/spellings?source=file";
-import StringFormExample from "../../examples/atoms/shortcut/string-form";
+import StringFormExample from "../../examples/atoms/shortcut/string-form.gjs";
 import stringFormSource from "../../examples/atoms/shortcut/string-form?source=file";
 
 const KEY = "styleguide.sections.shortcut";

@@ -1,4 +1,4 @@
-import { localeKeyPart } from "./property-engine";
+import { localeKeyPart } from "./property-engine.js";
 
 const OPERATORS = {
   equals: {

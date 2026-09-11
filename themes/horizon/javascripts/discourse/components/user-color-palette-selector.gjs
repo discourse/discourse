@@ -14,7 +14,7 @@ import {
 import cookie from "discourse/lib/cookie";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import UserColorPaletteMenuItem from "./user-color-palette-menu-item";
+import UserColorPaletteMenuItem from "./user-color-palette-menu-item.gjs";
 
 const HORIZON_PALETTES = [
   "Horizon",

@@ -19,8 +19,8 @@ import {
 } from "discourse/lib/blocks/-internals/matching/value-matcher";
 import { isValidGlobPattern } from "discourse/lib/glob-utils";
 import type DiscoveryService from "discourse/services/discovery";
-import { BlockCondition, type ConditionContext } from "./condition";
-import { blockCondition } from "./decorator";
+import { BlockCondition, type ConditionContext } from "./condition.ts";
+import { blockCondition } from "./decorator.ts";
 
 /**
  * The `any`/`not` combinator keys of a `params`/`queryParams` spec. Specs are

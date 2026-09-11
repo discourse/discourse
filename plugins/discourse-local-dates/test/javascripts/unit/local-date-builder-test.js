@@ -1,6 +1,6 @@
 import QUnit, { module, test } from "qunit";
 import { i18n } from "discourse-i18n";
-import freezeTime from "../helpers/freeze-time";
+import freezeTime from "../helpers/freeze-time.js";
 import LocalDateBuilder from "../lib/local-date-builder";
 
 const UTC = "Etc/UTC";

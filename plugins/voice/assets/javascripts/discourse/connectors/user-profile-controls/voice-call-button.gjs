@@ -1,4 +1,4 @@
-import VoiceCallButton from "../../components/voice/call-button";
+import VoiceCallButton from "../../components/voice/call-button.gjs";
 
 const VoiceProfileCallButton = <template>
   {{#if @outletArgs.model.voice_can_call}}

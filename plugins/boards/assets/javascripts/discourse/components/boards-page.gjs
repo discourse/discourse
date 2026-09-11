@@ -15,7 +15,7 @@ import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import BoardsBoardSettings from "./modal/boards-board-settings";
+import BoardsBoardSettings from "./modal/boards-board-settings.gjs";
 
 function boardCategories(board) {
   return (board.category_ids || [])

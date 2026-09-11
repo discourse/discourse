@@ -9,8 +9,8 @@ import discourseLater from "discourse/lib/later";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { showShareConversationModal } from "../../lib/ai-bot-helper";
-import copyConversation from "../../lib/copy-conversation";
+import { showShareConversationModal } from "../../lib/ai-bot-helper.js";
+import copyConversation from "../../lib/copy-conversation.js";
 
 export default class ShareModal extends Component {
   @service modal;

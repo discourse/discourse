@@ -1,6 +1,6 @@
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
-import { LOOP_NODE_TYPE } from "./graph-constants";
+import { LOOP_NODE_TYPE } from "./graph-constants.js";
 
 const DEFAULT_COLOR = "var(--primary-medium)";
 const DEFAULT_I18N_PREFIX = "discourse_workflows";

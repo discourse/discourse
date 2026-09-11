@@ -8,7 +8,7 @@ import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import EmbedMode from "discourse/lib/embed-mode";
 import DButton from "discourse/ui-kit/d-button";
-import AiSummaryModal from "../../components/modal/ai-summary-modal";
+import AiSummaryModal from "../../components/modal/ai-summary-modal.gjs";
 
 export default class AiSummaryTrigger extends Component {
   @service aiCredits;

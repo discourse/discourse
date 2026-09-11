@@ -1,4 +1,4 @@
-import { Assignment } from "./assignment";
+import { Assignment } from "./assignment.js";
 
 export function extendTopicModel(api) {
   api.addModelField("topic", "assigned_to_group");

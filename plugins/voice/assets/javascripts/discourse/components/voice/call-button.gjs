@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { unlockAudio } from "../../lib/voice/sound-effects";
+import { unlockAudio } from "../../lib/voice/sound-effects.js";
 
 export default class VoiceCallButton extends Component {
   @service("voice-calls") voiceCalls;

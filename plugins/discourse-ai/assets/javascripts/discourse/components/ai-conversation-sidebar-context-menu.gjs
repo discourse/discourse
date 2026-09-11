@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import { showShareConversationModal } from "../lib/ai-bot-helper";
+import { showShareConversationModal } from "../lib/ai-bot-helper.js";
 
 export default class AiConversationSidebarContextMenu extends Component {
   @service currentUser;

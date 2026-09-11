@@ -1,8 +1,8 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import { sortCardsForColumn } from "../lib/boards-card-ordering";
-import Board from "../models/board";
+import { sortCardsForColumn } from "../lib/boards-card-ordering.js";
+import Board from "../models/board.js";
 
 export default class BoardsBoardRoute extends DiscourseRoute {
   @service router;

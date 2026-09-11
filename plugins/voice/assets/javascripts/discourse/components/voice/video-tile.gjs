@@ -17,12 +17,12 @@ import { i18n } from "discourse-i18n";
 import {
   toggleTileFullscreen,
   trackFullscreen,
-} from "../../lib/voice/fullscreen";
+} from "../../lib/voice/fullscreen.js";
 import {
   DEFAULT_TILE_ASPECT,
   trackVideoAspect,
-} from "../../lib/voice/video-grid-layout";
-import VoiceParticipantSidebarContextMenu from "../voice-participant-sidebar-context-menu";
+} from "../../lib/voice/video-grid-layout.js";
+import VoiceParticipantSidebarContextMenu from "../voice-participant-sidebar-context-menu.gjs";
 
 export default class VoiceVideoTile extends Component {
   @service menu;

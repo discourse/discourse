@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import devToolsState from "../state";
+import devToolsState from "../state.js";
 
 /**
  * Toggle button for the plugin outlet debug mode in the dev-tools toolbar.

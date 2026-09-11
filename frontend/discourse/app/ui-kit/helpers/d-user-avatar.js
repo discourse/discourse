@@ -1,1 +1,1 @@
-export * from "./d-avatar";
+export * from "./d-avatar.js";

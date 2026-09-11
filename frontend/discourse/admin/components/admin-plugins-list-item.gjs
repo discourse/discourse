@@ -12,7 +12,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PluginCommitHash from "./plugin-commit-hash";
+import PluginCommitHash from "./plugin-commit-hash.gjs";
 
 export default class AdminPluginsListItem extends Component {
   @service session;

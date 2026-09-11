@@ -1,5 +1,5 @@
 import BackButton from "discourse/components/back-button";
-import AiLlmEditorForm from "./ai-llm-editor-form";
+import AiLlmEditorForm from "./ai-llm-editor-form.gjs";
 
 const AiLlmEditor = <template>
   <BackButton

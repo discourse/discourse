@@ -7,9 +7,9 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ChannelDetails from "../../../../components/channel-details";
-import InlineChannelForm from "../../../../components/inline-channel-form";
-import { PROVIDER_LEARN_MORE_URLS } from "../../../../lib/utilities";
+import ChannelDetails from "../../../../components/channel-details.gjs";
+import InlineChannelForm from "../../../../components/inline-channel-form.gjs";
+import { PROVIDER_LEARN_MORE_URLS } from "../../../../lib/utilities.js";
 
 export default class extends Component {
   @service router;

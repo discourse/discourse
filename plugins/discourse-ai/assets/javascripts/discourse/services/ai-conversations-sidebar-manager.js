@@ -10,8 +10,8 @@ import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
-import AiConversationSidebarContextMenu from "../components/ai-conversation-sidebar-context-menu";
+import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state.gjs";
+import AiConversationSidebarContextMenu from "../components/ai-conversation-sidebar-context-menu.gjs";
 
 export const AI_CONVERSATIONS_PANEL = "ai-conversations";
 const SCROLL_BUFFER = 100;

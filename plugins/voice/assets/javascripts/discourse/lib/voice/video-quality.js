@@ -4,7 +4,7 @@ import {
   QUALITY_MAXIMUM,
   QUALITY_STANDARD,
   SCREEN_CONTENT_MOTION,
-} from "./quality-preferences";
+} from "./quality-preferences.js";
 
 // Mesh budget: every watcher costs the sender a full encode, so resolution
 // and bitrate scale down as the watcher count grows. Each connection's

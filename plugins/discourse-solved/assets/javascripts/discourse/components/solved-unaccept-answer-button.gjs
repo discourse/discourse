@@ -11,7 +11,7 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import setAcceptedSolutions from "../lib/set-accepted-solutions";
+import setAcceptedSolutions from "../lib/set-accepted-solutions.js";
 
 export default class SolvedUnacceptAnswerButton extends Component {
   @service appEvents;

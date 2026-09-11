@@ -1,5 +1,5 @@
 import DButton from "discourse/ui-kit/d-button";
-import HouseAdsListSetting from "./house-ads-list-setting";
+import HouseAdsListSetting from "./house-ads-list-setting.gjs";
 
 const HouseAdsSettingsPanel = <template>
   <section class="house-ads-settings" ...attributes>

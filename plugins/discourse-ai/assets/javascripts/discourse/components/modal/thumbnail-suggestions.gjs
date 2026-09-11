@@ -11,8 +11,8 @@ import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
   popupAiCreditLimitError,
-} from "../../lib/ai-errors";
-import ThumbnailSuggestionItem from "../thumbnail-suggestion-item";
+} from "../../lib/ai-errors.js";
+import ThumbnailSuggestionItem from "../thumbnail-suggestion-item.gjs";
 
 export default class ThumbnailSuggestions extends Component {
   @tracked loading = false;

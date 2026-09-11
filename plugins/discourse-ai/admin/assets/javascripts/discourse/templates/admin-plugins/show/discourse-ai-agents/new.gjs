@@ -1,4 +1,4 @@
-import AiAgentListEditor from "../../../../components/ai-agent-list-editor";
+import AiAgentListEditor from "../../../../components/ai-agent-list-editor.gjs";
 
 export default <template>
   <AiAgentListEditor

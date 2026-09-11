@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
+import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts.js";
 
 const new_assignee_username = "new_assignee";
 

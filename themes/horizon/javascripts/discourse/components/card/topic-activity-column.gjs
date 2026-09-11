@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
-import { topicWasUpdatedAfterLastPost } from "../../lib/topic-activity";
+import { topicWasUpdatedAfterLastPost } from "../../lib/topic-activity.js";
 
 export default class TopicActivityColumn extends Component {
   get topicUser() {

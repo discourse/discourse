@@ -1,8 +1,8 @@
 import { classNames } from "@ember-decorators/component";
 import ComboBoxComponent from "discourse/select-kit/components/combo-box";
-import FontSelectorRow from "./font-selector/font-selector-row";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
-import SelectedFont from "./selected-font";
+import FontSelectorRow from "./font-selector/font-selector-row.js";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
+import SelectedFont from "./selected-font.gjs";
 
 @classNames("font-selector")
 @pluginApiIdentifiers(["font-selector"])

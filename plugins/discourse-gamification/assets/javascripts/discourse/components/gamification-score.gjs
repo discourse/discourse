@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { LinkTo } from "@ember/routing";
 import { tagName } from "@ember-decorators/component";
-import fullnumber from "../helpers/fullnumber";
+import fullnumber from "../helpers/fullnumber.js";
 
 @tagName("")
 export default class GamificationScore extends Component {

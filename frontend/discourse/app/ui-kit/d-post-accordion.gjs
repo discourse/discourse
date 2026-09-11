@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedSet } from "@ember/reactive/collections";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import DPostAccordionItem from "./d-post-accordion-item";
+import DPostAccordionItem from "./d-post-accordion-item.gjs";
 
 export default class DPostAccordion extends Component {
   expandedIds = trackedSet();

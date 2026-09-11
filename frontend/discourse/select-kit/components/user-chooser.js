@@ -11,7 +11,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import UserRow from "./user-chooser/user-row";
+import UserRow from "./user-chooser/user-row.gjs";
 
 export const CUSTOM_USER_SEARCH_OPTIONS = [];
 

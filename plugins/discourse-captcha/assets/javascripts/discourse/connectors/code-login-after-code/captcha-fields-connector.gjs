@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { eq } from "discourse/truth-helpers";
-import HCaptcha from "../../components/h-captcha";
-import ReCaptcha from "../../components/re-captcha";
+import HCaptcha from "../../components/h-captcha.gjs";
+import ReCaptcha from "../../components/re-captcha.gjs";
 
 export default class CaptchaFieldsConnector extends Component {
   @service siteSettings;

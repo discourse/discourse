@@ -17,7 +17,7 @@ import DAccessControlField from "discourse/ui-kit/d-access-control-field";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import BoardsEditableTitle from "../boards-editable-title";
+import BoardsEditableTitle from "../boards-editable-title.gjs";
 
 const CONSTRAINT_TYPE_OPTIONS = [
   {

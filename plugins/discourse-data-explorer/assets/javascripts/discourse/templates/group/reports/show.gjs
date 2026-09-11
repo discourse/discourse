@@ -2,9 +2,9 @@ import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
-import ParamInputForm from "../../../components/param-input-form";
-import QueryResult from "../../../components/query-result";
-import QueryResultDownloadButtons from "../../../components/query-result-download-buttons";
+import ParamInputForm from "../../../components/param-input-form.gjs";
+import QueryResult from "../../../components/query-result.gjs";
+import QueryResultDownloadButtons from "../../../components/query-result-download-buttons.gjs";
 
 export default <template>
   <section class="user-content">

@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import RestModel from "discourse/models/rest";
-import StickyNote from "./sticky-note";
-import { serializeConnections } from "./workflow-connection";
-import WorkflowNode from "./workflow-node";
+import StickyNote from "./sticky-note.js";
+import { serializeConnections } from "./workflow-connection.js";
+import WorkflowNode from "./workflow-node.js";
 
 export default class DiscourseWorkflowsWorkflow extends RestModel {
   static munge(json) {

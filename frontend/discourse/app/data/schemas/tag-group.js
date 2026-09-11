@@ -1,4 +1,4 @@
-import { attrs, withDefaults } from "./helpers";
+import { attrs, withDefaults } from "./helpers.js";
 
 // TagGroup stays on the legacy `Store` + `RestAdapter` path (admin CRUD via
 // `record.save()` / `record.destroyRecord()`). Schema only powers the

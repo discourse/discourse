@@ -7,21 +7,21 @@ import {
   isSingleValueOperator,
   operatorOptionsForType,
   operatorsForType,
-} from "../../../lib/workflows/condition-operators";
-import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview";
+} from "../../../lib/workflows/condition-operators.js";
+import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview.js";
 import {
   inputFieldPrefixForConnection,
   inputIndexForConnection,
   outputIndexForConnection,
-} from "../../../lib/workflows/expression-paths";
-import { isExpression } from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/expression-paths.js";
+import { isExpression } from "../../../lib/workflows/property-engine.js";
 import {
   inputConnectionsForNode,
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
-} from "../../../lib/workflows/schema-graph";
-import Collection from "./collection";
-import Field from "./field";
+} from "../../../lib/workflows/schema-graph.js";
+import Collection from "./collection.gjs";
+import Field from "./field.gjs";
 
 function flattenFields(fields, prefix = "", labelPrefix = "") {
   const result = [];

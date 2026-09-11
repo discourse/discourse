@@ -1,6 +1,6 @@
 import { Fragment } from "prosemirror-model";
-import { currentCell, selectCell } from "./commands";
-import { cellType, copyCell, isTable, tableGrid } from "./grid";
+import { currentCell, selectCell } from "./commands.js";
+import { cellType, copyCell, isTable, tableGrid } from "./grid.js";
 
 // A table pasted into a cell can't nest, so its cells are written into the grid
 // starting at the target cell, growing the table when the paste overflows it.

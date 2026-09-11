@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import applySpoiler from "discourse/plugins/spoiler-alert/lib/apply-spoiler";
-import richEditorExtension from "../lib/rich-editor-extension";
+import richEditorExtension from "../lib/rich-editor-extension.js";
 
 function spoil(element) {
   element.querySelectorAll(".spoiler").forEach((spoiler) => {

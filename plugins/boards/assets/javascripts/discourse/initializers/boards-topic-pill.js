@@ -2,12 +2,12 @@ import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import BoardsMenu from "../components/boards-menu";
+import BoardsMenu from "../components/boards-menu.gjs";
 import {
   boardsTagsHtml,
   membershipsFor,
   MULTI_BOARD_TRIGGER_SELECTOR,
-} from "../lib/boards-topic-pill";
+} from "../lib/boards-topic-pill.js";
 
 /**
  * Topic pills are rendered as tags, as raw HTML, so there is no component to

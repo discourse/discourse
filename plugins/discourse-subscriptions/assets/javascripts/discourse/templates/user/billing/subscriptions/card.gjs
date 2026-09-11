@@ -1,6 +1,6 @@
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
-import SubscribeCard from "../../../../components/subscribe-card";
+import SubscribeCard from "../../../../components/subscribe-card.gjs";
 
 export default <template>
   <h3>{{i18n

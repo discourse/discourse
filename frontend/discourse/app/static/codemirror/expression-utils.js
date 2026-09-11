@@ -14,14 +14,14 @@ import {
   SECTION_PROPERTIES,
   SECTION_RECOMMENDED,
   STRING_METHODS,
-} from "./completions-data";
-import { expressionLanguage } from "./lang-expression/index";
+} from "./completions-data.js";
+import { expressionLanguage } from "./lang-expression/index.js";
 import {
   analyzePropertyAccess,
   isInsideExpression,
   isInsideExpressionAt,
   resolveNodeValue,
-} from "./tree-utils";
+} from "./tree-utils.js";
 
 function methodsForType(value) {
   if (value === null || value === undefined) {

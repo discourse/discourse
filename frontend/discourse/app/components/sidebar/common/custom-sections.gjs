@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CustomSection from "./custom-section";
+import CustomSection from "./custom-section.gjs";
 
 export default class SidebarCustomSections extends Component {
   @service currentUser;

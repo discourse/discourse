@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
-import AdComponent from "./ad-component";
+import AdComponent from "./ad-component.js";
 
 @tagName("")
 export default class AmazonProductLinks extends AdComponent {

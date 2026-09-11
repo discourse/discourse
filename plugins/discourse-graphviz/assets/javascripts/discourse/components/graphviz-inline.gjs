@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
-import GraphvizDiagram from "./graphviz-diagram";
-import GraphvizFullscreen from "./graphviz-fullscreen";
+import GraphvizDiagram from "./graphviz-diagram.gjs";
+import GraphvizFullscreen from "./graphviz-fullscreen.gjs";
 
 export default class GraphvizInline extends Component {
   @service modal;

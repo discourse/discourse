@@ -5,8 +5,8 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
-import VoiceInviteUsersModal from "./modal/voice-invite-users";
-import VoiceRoomInfoModal from "./modal/voice-room-info";
+import VoiceInviteUsersModal from "./modal/voice-invite-users.gjs";
+import VoiceRoomInfoModal from "./modal/voice-room-info.gjs";
 
 export default class VoiceRoomSidebarContextMenu extends Component {
   @service modal;

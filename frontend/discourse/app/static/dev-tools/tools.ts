@@ -1,10 +1,10 @@
 import type { ComponentLike } from "@glint/template";
-import BlockDebugButton from "./block-debug/button";
-import PluginOutletDebugButton from "./plugin-outlet-debug/button";
-import SafeModeButton from "./safe-mode/button";
-import StyleguideButton from "./styleguide/button";
-import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
-import VerboseLocalizationButton from "./verbose-localization/button";
+import BlockDebugButton from "./block-debug/button.gts";
+import PluginOutletDebugButton from "./plugin-outlet-debug/button.gjs";
+import SafeModeButton from "./safe-mode/button.gjs";
+import StyleguideButton from "./styleguide/button.gts";
+import UpcomingChangesDebugButton from "./upcoming-changes-debug/button.gjs";
+import VerboseLocalizationButton from "./verbose-localization/button.gjs";
 
 interface DevTool {
   id: string;

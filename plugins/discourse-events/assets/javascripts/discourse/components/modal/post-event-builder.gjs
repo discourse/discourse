@@ -20,8 +20,8 @@ import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { MAX_HOSTS } from "../../lib/constants";
-import { recurrenceContext } from "../../lib/event-recurrence";
+import { MAX_HOSTS } from "../../lib/constants.js";
+import { recurrenceContext } from "../../lib/event-recurrence.js";
 import {
   allDayTransition,
   attendanceTransition,
@@ -34,8 +34,8 @@ import {
   isLivestreamUrl,
   livestreamSource,
   reconcileDefaultReminder,
-} from "../../lib/raw-event-helper";
-import CompactEventEditor from "../compact-event-editor";
+} from "../../lib/raw-event-helper.js";
+import CompactEventEditor from "../compact-event-editor.gjs";
 
 export default class PostEventBuilder extends Component {
   @service dialog;

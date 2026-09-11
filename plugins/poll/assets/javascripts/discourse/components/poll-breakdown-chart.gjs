@@ -9,7 +9,7 @@ import loadChartJS, {
 } from "discourse/lib/load-chart-js";
 import I18n from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
-import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder.gjs";
 
 @classNames("poll-breakdown-chart-container")
 export default class PollBreakdownChart extends Component {

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import ExpressionPreviewContent from "./expression-preview-content";
+import ExpressionPreviewContent from "./expression-preview-content.gjs";
 
 export default class ExpressionPreview extends Component {
   @service tooltip;

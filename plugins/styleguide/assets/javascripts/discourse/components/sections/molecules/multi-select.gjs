@@ -1,7 +1,7 @@
-import MultiSelectExample from "../../examples/molecules/multi-select";
+import MultiSelectExample from "../../examples/molecules/multi-select.gjs";
 import multiSelectSource from "../../examples/molecules/multi-select?source=file";
-import StyleguideComponent from "../../styleguide/component";
-import StyleguideExample from "../../styleguide-example";
+import StyleguideComponent from "../../styleguide/component.gjs";
+import StyleguideExample from "../../styleguide-example.gjs";
 
 export default <template>
   <StyleguideExample @code={{multiSelectSource}} @title="<DMultiSelect />">

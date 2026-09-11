@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { showUserNotes, updatePostUserNotesCount } from "../lib/user-notes";
+import { showUserNotes, updatePostUserNotesCount } from "../lib/user-notes.js";
 
 export default class PostMetadataUserNotes extends Component {
   @service siteSettings;

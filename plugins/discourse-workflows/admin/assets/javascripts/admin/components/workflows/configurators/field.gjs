@@ -3,7 +3,7 @@ import { trustHTML } from "@ember/template";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry";
+import FIELD_CONTROL_REGISTRY from "../../../lib/workflows/field-control-registry.js";
 import {
   fieldControl,
   fieldFormat,
@@ -19,7 +19,7 @@ import {
   propertyLabel,
   propertyPlaceholder,
   propertyTooltip,
-} from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/property-engine.js";
 
 const CRON_FIELD_PATTERN =
   /^(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+)(,(\*|\d+(-\d+)?(\/\d+)?|\*\/\d+))*$/;

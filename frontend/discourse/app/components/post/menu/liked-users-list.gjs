@@ -6,7 +6,7 @@ import { isTesting } from "discourse/lib/environment";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PostLikedUsersMenu from "./liked-users-menu";
+import PostLikedUsersMenu from "./liked-users-menu.gjs";
 
 const MENU_IDENTIFIER = "post-liked-users-menu";
 

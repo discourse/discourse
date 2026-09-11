@@ -1,4 +1,4 @@
-import AiUsage from "../../../components/ai-usage";
+import AiUsage from "../../../components/ai-usage.gjs";
 
 export default <template>
   <AiUsage

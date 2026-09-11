@@ -9,7 +9,7 @@ import { changeEmail } from "discourse/lib/user-activation";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import ActivationResent from "./activation-resent";
+import ActivationResent from "./activation-resent.gjs";
 
 export default class ActivationEdit extends Component {
   @service login;

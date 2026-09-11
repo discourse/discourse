@@ -10,11 +10,11 @@ import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/
 import { and, eq, not, or } from "discourse/truth-helpers";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import MoreSectionLink from "../more-section-link";
-import MoreSectionLinks from "../more-section-links";
-import SectionComponent from "../section";
-import SectionLink from "../section-link";
-import SectionLinkButton from "../section-link-button";
+import MoreSectionLink from "../more-section-link.gjs";
+import MoreSectionLinks from "../more-section-links.gjs";
+import SectionComponent from "../section.gjs";
+import SectionLink from "../section-link.gjs";
+import SectionLinkButton from "../section-link-button.gjs";
 
 export default class SidebarCustomSection extends Component {
   @service capabilities;

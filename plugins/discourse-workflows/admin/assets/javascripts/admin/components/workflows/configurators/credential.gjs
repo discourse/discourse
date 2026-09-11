@@ -7,8 +7,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
-import CredentialModal from "../credential/modal";
-import ExpressionWrapper from "./expression-wrapper";
+import CredentialModal from "../credential/modal.gjs";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class Credential extends Component {
   @service modal;

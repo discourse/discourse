@@ -6,7 +6,7 @@ import GroupCardContents from "discourse/components/group-card-contents";
 import UserCardContents from "discourse/components/user-card-contents";
 import routeAction from "discourse/helpers/route-action";
 import DiscourseURL, { groupPath, userPath } from "discourse/lib/url";
-import PluginOutlet from "./plugin-outlet";
+import PluginOutlet from "./plugin-outlet.gjs";
 
 export default class CardContainer extends Component {
   @service site;

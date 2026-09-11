@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/ui-kit/d-button";
-import FilterableList from "../../components/d-templates/filterable-list";
+import FilterableList from "../../components/d-templates/filterable-list.gjs";
 
 const SELECTOR_EDITOR_PREVIEW =
   "#reply-control .d-editor-preview-wrapper > .d-editor-preview";

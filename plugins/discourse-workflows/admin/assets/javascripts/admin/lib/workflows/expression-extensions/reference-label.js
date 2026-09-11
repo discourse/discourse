@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import { NODE_REF_RE, parseNodeReferenceName } from "../expression-context";
+import { NODE_REF_RE, parseNodeReferenceName } from "../expression-context.js";
 
 // Parses a "simple reference" into source + path. Anything more involved
 // (operators, arithmetic, multiple refs, method calls) returns null.

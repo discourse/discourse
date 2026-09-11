@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
-import PollVotersRankedChoice from "./poll-voters-ranked-choice";
+import PollVotersRankedChoice from "./poll-voters-ranked-choice.gjs";
 
 export default class PollVotersComponent extends Component {
   get showMore() {

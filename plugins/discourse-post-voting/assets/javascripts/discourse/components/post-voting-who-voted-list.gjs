@@ -10,7 +10,7 @@ import DSmallUserList, {
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { whoVoted } from "../lib/post-voting-utilities";
+import { whoVoted } from "../lib/post-voting-utilities.js";
 
 export default class PostVotingWhoVotedList extends Component {
   @tracked totalVotersCount = 0;

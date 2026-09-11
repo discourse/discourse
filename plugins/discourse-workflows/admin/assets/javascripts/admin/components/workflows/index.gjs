@@ -23,8 +23,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AdminTable from "./admin-table";
-import EmptyState from "./empty-state";
+import AdminTable from "./admin-table.gjs";
+import EmptyState from "./empty-state.gjs";
 
 export default class WorkflowsIndex extends Component {
   @service currentUser;

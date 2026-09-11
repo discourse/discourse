@@ -28,5 +28,5 @@
  *
  * The initializer automatically picks up any new exports and registers them.
  */
-export { default as BlockHead } from "./block-head";
-export { default as BlockGroup } from "./block-group";
+export { default as BlockHead } from "./block-head.gts";
+export { default as BlockGroup } from "./block-group.gts";

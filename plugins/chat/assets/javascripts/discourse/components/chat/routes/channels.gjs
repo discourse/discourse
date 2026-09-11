@@ -1,7 +1,7 @@
 import { i18n } from "discourse-i18n";
-import ChannelsListPublic from "../../channels-list-public";
-import Navbar from "../navbar";
-import ChannelListOptionsButton from "../navbar/channel-list-options-button";
+import ChannelsListPublic from "../../channels-list-public.gjs";
+import ChannelListOptionsButton from "../navbar/channel-list-options-button.gjs";
+import Navbar from "../navbar/index.gjs";
 
 const ChatRoutesChannels = <template>
   <div class="c-routes --channels">

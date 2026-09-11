@@ -3,8 +3,8 @@ import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
-import ApiSection from "./api-section";
-import PanelHeader from "./panel-header";
+import ApiSection from "./api-section.gjs";
+import PanelHeader from "./panel-header.gjs";
 
 export default class SidebarApiSections extends Component {
   @service router;

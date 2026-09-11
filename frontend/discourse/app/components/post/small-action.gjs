@@ -15,7 +15,7 @@ import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PostA11yHeading from "./a11y-heading";
+import PostA11yHeading from "./a11y-heading.gjs";
 
 export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
 export const customGroupActionCodes = [];

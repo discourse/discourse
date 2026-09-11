@@ -7,10 +7,10 @@ import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import roundTime from "../../lib/round-time";
-import NewDay from "./new-day";
-import TimeTraveller from "./time-traveller";
-import Timezone from "./timezone";
+import roundTime from "../../lib/round-time.js";
+import NewDay from "./new-day.gjs";
+import TimeTraveller from "./time-traveller.gjs";
+import Timezone from "./timezone.gjs";
 
 const nbsp = "\xa0";
 

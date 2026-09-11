@@ -4,7 +4,7 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { arraySortedByProperties } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
-import UserMenuAssignsListEmptyState from "./assigns-list-empty-state";
+import UserMenuAssignsListEmptyState from "./assigns-list-empty-state.gjs";
 
 export default class UserMenuAssignNotificationsList extends UserMenuNotificationsList {
   get dismissTypes() {

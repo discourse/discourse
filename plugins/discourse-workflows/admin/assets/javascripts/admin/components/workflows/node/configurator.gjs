@@ -15,7 +15,7 @@ import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape";
+import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape.js";
 import {
   nodeTypeDescription,
   nodeTypeIcon,
@@ -25,7 +25,7 @@ import {
   nodeTypeStyle,
   resolveNodeTypeVersion,
   typeVersionForNode,
-} from "../../../lib/workflows/node-types";
+} from "../../../lib/workflows/node-types.js";
 import {
   credentialSlotAnchorField,
   credentialSlotVisible,
@@ -33,15 +33,15 @@ import {
   fieldType,
   findNodeType,
   getPropertySchema,
-} from "../../../lib/workflows/property-engine";
-import { runExecuteStep } from "../canvas/canvas-execute-step";
-import { shouldShowExecuteStep } from "../canvas/workflow-node";
-import CredentialControl from "../configurators/credential";
-import PropertyEngineConfigurator from "../configurators/property-engine";
-import InputContext from "../context/input";
-import OutputContext from "../context/output";
-import { takenNodeNames } from "../editor/node-factory";
-import LivePreview from "./live-preview";
+} from "../../../lib/workflows/property-engine.js";
+import { runExecuteStep } from "../canvas/canvas-execute-step.js";
+import { shouldShowExecuteStep } from "../canvas/workflow-node.gjs";
+import CredentialControl from "../configurators/credential.gjs";
+import PropertyEngineConfigurator from "../configurators/property-engine.gjs";
+import InputContext from "../context/input.gjs";
+import OutputContext from "../context/output.gjs";
+import { takenNodeNames } from "../editor/node-factory.js";
+import LivePreview from "./live-preview.gjs";
 
 function credentialSlotLabel(slot) {
   return i18n(slot.label_key || "discourse_workflows.credentials.type");

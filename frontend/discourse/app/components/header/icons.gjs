@@ -9,8 +9,8 @@ import { languageSwitcherEnabled } from "discourse/lib/content-localization";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
-import Dropdown from "./dropdown";
-import UserDropdown from "./user-dropdown";
+import Dropdown from "./dropdown.gjs";
+import UserDropdown from "./user-dropdown.gjs";
 
 let headerIcons;
 resetHeaderIcons();

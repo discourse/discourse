@@ -18,18 +18,18 @@ import round from "discourse/lib/round";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import pollBounds from "discourse/plugins/poll/lib/poll-bounds";
-import PollBreakdownModal from "../components/modal/poll-breakdown";
+import PollBreakdownModal from "../components/modal/poll-breakdown.gjs";
 import {
   MULTIPLE_POLL_TYPE,
   PIE_CHART_TYPE,
   REGULAR_POLL_TYPE,
-} from "../components/modal/poll-ui-builder";
-import PollButtonsDropdown from "../components/poll-buttons-dropdown";
-import PollInfo from "../components/poll-info";
-import PollOptions from "../components/poll-options";
-import PollResultsPie from "../components/poll-results-pie";
-import PollResultsTabs from "../components/poll-results-tabs";
-import PollVotedChoices from "../components/poll-voted-choices";
+} from "../components/modal/poll-ui-builder.gjs";
+import PollButtonsDropdown from "../components/poll-buttons-dropdown.gjs";
+import PollInfo from "../components/poll-info.gjs";
+import PollOptions from "../components/poll-options.gjs";
+import PollResultsPie from "../components/poll-results-pie.gjs";
+import PollResultsTabs from "../components/poll-results-tabs.gjs";
+import PollVotedChoices from "../components/poll-voted-choices.gjs";
 
 const FETCH_VOTERS_COUNT = 25;
 const STAFF_ONLY = "staff_only";

@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
-import GamificationScore from "../../components/gamification-score";
+import GamificationScore from "../../components/gamification-score.gjs";
 
 @tagName("")
 export default class GamificationScoreConnector extends Component {

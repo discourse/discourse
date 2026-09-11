@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import Actions from "./actions";
-import Informative from "./informative";
+import Actions from "./actions.gjs";
+import Informative from "./informative.gjs";
 
 export default class Block extends Component {
   get blockForType() {

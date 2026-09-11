@@ -1,7 +1,7 @@
 import PostList from "discourse/components/post-list";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { i18n } from "discourse-i18n";
-import DiscourseReactionsReactionEmoji from "../../components/discourse-reactions-reaction-emoji";
+import DiscourseReactionsReactionEmoji from "../../components/discourse-reactions-reaction-emoji.gjs";
 
 export default <template>
   {{#if @controller.canLoadMore}}

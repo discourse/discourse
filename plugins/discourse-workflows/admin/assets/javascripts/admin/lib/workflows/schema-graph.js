@@ -1,10 +1,10 @@
 import {
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
-} from "./graph-constants";
-import { outputSchemasFromResolver } from "./node-output-schemas";
-import { resolveNodeTypeVersion, typeVersionForNode } from "./node-types";
-import { fieldDisplayState, fieldVisible } from "./property-engine";
+} from "./graph-constants.js";
+import { outputSchemasFromResolver } from "./node-output-schemas.js";
+import { resolveNodeTypeVersion, typeVersionForNode } from "./node-types.js";
+import { fieldDisplayState, fieldVisible } from "./property-engine.js";
 
 const DRAFT_URI = "https://json-schema.org/draft/2020-12/schema";
 

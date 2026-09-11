@@ -6,7 +6,7 @@ import {
   deriveRoutes,
   parseRouteMap,
   urlTableFor,
-} from "./route-map-parser";
+} from "./route-map-parser.js";
 
 function read(source, opts = {}) {
   return parseRouteMap(parse(source), {

@@ -5,7 +5,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { registerOptimisticPostUpdate } from "discourse/lib/optimistic-post-updates";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import richEditorExtension from "../../lib/rich-editor-extension";
+import richEditorExtension from "../../lib/rich-editor-extension.js";
 
 const SAVE_DEBOUNCE_DURATION = 150;
 const MAX_CONFLICT_RETRIES = 2;

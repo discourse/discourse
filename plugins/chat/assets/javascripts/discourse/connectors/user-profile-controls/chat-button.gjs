@@ -1,5 +1,5 @@
 import { and, not } from "discourse/truth-helpers";
-import ChatDirectMessageButton from "../../components/chat/direct-message-button";
+import ChatDirectMessageButton from "../../components/chat/direct-message-button.gjs";
 
 const ChatButton = <template>
   {{#if

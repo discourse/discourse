@@ -5,11 +5,11 @@ import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argume
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import PluginOutlet from "../plugin-outlet";
-import HeaderSearch from "./header-search";
-import HomeLogo from "./home-logo";
-import SidebarToggle from "./sidebar-toggle";
-import TopicInfo from "./topic/info";
+import PluginOutlet from "../plugin-outlet.gjs";
+import HeaderSearch from "./header-search.gjs";
+import HomeLogo from "./home-logo.gjs";
+import SidebarToggle from "./sidebar-toggle.gjs";
+import TopicInfo from "./topic/info.gjs";
 
 export default class Contents extends Component {
   @service site;

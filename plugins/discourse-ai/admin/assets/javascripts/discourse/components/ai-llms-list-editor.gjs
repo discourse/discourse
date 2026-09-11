@@ -12,8 +12,8 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 import AiCreditBar from "./ai-credit-bar";
-import AiDefaultLlmSelector from "./ai-default-llm-selector";
-import AiLlmEditor from "./ai-llm-editor";
+import AiDefaultLlmSelector from "./ai-default-llm-selector.gjs";
+import AiLlmEditor from "./ai-llm-editor.gjs";
 
 function isPreseeded(llm) {
   if (llm.id < 0) {

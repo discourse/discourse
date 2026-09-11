@@ -1,4 +1,4 @@
-import ChatDirectMessageButton from "../../components/chat/direct-message-button";
+import ChatDirectMessageButton from "../../components/chat/direct-message-button.gjs";
 
 const ChatButton = <template>
   {{#if @outletArgs.user.can_chat_user}}

@@ -6,8 +6,8 @@ import type {
   BlockEntry,
 } from "discourse/lib/blocks/-internals/types";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import ArgsTable from "../shared/args-table";
-import ConditionsTree from "./conditions-tree";
+import ArgsTable from "../shared/args-table.gjs";
+import ConditionsTree from "./conditions-tree.gts";
 
 interface BlockInfoSignature {
   Args: {

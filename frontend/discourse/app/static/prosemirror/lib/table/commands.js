@@ -8,7 +8,7 @@ import {
   findTable,
   rowRange,
   tableGrid,
-} from "./grid";
+} from "./grid.js";
 
 export function runCommand(view, command) {
   if (!view.editable) {

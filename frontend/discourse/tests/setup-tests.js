@@ -1,7 +1,7 @@
 /* eslint-disable simple-import-sort/imports */
 import { noteKeyboardEvidence } from "discourse/services/capabilities";
 import Application from "discourse/app";
-import "./loader-shims";
+import "./loader-shims.js";
 import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 

@@ -10,12 +10,12 @@ import {
   caretOffsetFromPoint,
   resolveVariableId,
   WORKFLOW_VARIABLE_MIME,
-} from "../../../lib/workflows/expression-context";
+} from "../../../lib/workflows/expression-context.js";
 import {
   fieldType,
   isExpression,
-} from "../../../lib/workflows/property-engine";
-import ExpressionInput from "./expression-input";
+} from "../../../lib/workflows/property-engine.js";
+import ExpressionInput from "./expression-input.gjs";
 
 const MODE_ITEMS = [
   {

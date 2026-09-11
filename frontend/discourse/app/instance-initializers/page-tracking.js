@@ -11,7 +11,7 @@ import {
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { sendDeferredPageview } from "./message-bus";
+import { sendDeferredPageview } from "./message-bus.js";
 
 let _preNavigationUrl = null;
 

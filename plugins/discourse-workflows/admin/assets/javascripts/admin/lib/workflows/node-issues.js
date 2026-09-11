@@ -4,7 +4,7 @@ import {
   fixedCollectionGroups,
   fixedCollectionRows,
   normalizePropertyOptions,
-} from "./property-engine";
+} from "./property-engine.js";
 
 function isBlank(value) {
   if (value === undefined || value === null) {

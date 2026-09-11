@@ -8,7 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import NotificationFixture from "../fixtures/notifications-fixtures";
+import NotificationFixture from "../fixtures/notifications-fixtures.js";
 
 function assignCurrentUserToTopic(needs) {
   needs.pretender((server, helper) => {

@@ -1,5 +1,5 @@
 import DButton from "discourse/ui-kit/d-button";
-import LivestreamRsvp from "../../lib/livestream-rsvp";
+import LivestreamRsvp from "../../lib/livestream-rsvp.js";
 
 export default class LivestreamRsvpCard extends LivestreamRsvp {
   get showRsvpButton() {

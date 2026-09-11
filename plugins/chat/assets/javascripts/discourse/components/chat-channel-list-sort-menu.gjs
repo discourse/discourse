@@ -2,7 +2,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 import ChatChannelListSortChoice, {
   SORT_OPTIONS,
-} from "./chat-channel-list-sort-choice";
+} from "./chat-channel-list-sort-choice.gjs";
 
 export default <template>
   <DDropdownMenu

@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { eq } from "discourse/truth-helpers";
-import HCaptcha from "../../components/h-captcha";
-import ReCaptcha from "../../components/re-captcha";
+import HCaptcha from "../../components/h-captcha.gjs";
+import ReCaptcha from "../../components/re-captcha.gjs";
 
 @tagName("")
 export default class CaptchaFieldsConnector extends Component {

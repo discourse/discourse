@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
-import SidebarCustomSections from "../common/custom-sections";
+import SidebarCustomSections from "../common/custom-sections.gjs";
 
 export default class SidebarUserCustomSections extends SidebarCustomSections {
   @service messageBus;

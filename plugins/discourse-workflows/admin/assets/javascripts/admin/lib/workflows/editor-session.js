@@ -3,13 +3,13 @@ import { ajax } from "discourse/lib/ajax";
 import {
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
-} from "./graph-constants";
+} from "./graph-constants.js";
 import {
   inputForRun,
   latestRunWithInput,
   latestRunWithOutput,
   outputForRun,
-} from "./run-data";
+} from "./run-data.js";
 
 function compactObject(object) {
   return Object.fromEntries(

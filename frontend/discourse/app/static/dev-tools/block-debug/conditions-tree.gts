@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { TrustedHTML, trustHTML } from "@ember/template";
 import type { BlockEntry } from "discourse/lib/blocks/-internals/types";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import { formatValue } from "../lib/value-formatter";
+import { formatValue } from "../lib/value-formatter.js";
 
 /**
  * A single node in the hierarchical condition tree produced by

@@ -1,4 +1,4 @@
-import type { Orientation } from "./types";
+import type { Orientation } from "./types.ts";
 
 /**
  * The result of one navigation step. A row edge consumes the key without leaving the group;

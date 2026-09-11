@@ -1,7 +1,7 @@
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
-import { formatEventName } from "../helpers/format-event-name";
-import { isNotFullDayEvent } from "./guess-best-date-format";
+import { formatEventName } from "../helpers/format-event-name.js";
+import { isNotFullDayEvent } from "./guess-best-date-format.js";
 
 function resolveBackgroundColor(event, tagsColorsMap) {
   const { post, categoryId } = event;

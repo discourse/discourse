@@ -1,5 +1,5 @@
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import UserNotesModal from "../components/modal/user-notes";
+import UserNotesModal from "../components/modal/user-notes.gjs";
 
 export async function showUserNotes(store, userId, callback, opts = {}) {
   const modal = getOwnerWithFallback(this).lookup("service:modal");

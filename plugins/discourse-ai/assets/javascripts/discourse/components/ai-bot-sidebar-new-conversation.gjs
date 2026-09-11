@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import BackToForum from "discourse/components/sidebar/back-to-forum";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
-import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
+import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager.js";
 
 const TEXTAREA_ID = "ai-bot-conversations-input";
 

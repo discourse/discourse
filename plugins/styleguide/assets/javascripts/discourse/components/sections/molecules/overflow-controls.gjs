@@ -1,11 +1,11 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import OverflowControlsHorizontalExample from "../../examples/molecules/overflow-controls/horizontal";
+import OverflowControlsHorizontalExample from "../../examples/molecules/overflow-controls/horizontal.gjs";
 import overflowControlsHorizontalSource from "../../examples/molecules/overflow-controls/horizontal?source=file";
-import OverflowControlsOwnedExample from "../../examples/molecules/overflow-controls/owned";
+import OverflowControlsOwnedExample from "../../examples/molecules/overflow-controls/owned.gjs";
 import overflowControlsOwnedSource from "../../examples/molecules/overflow-controls/owned?source=file";
-import OverflowControlsRevealExample from "../../examples/molecules/overflow-controls/reveal";
+import OverflowControlsRevealExample from "../../examples/molecules/overflow-controls/reveal.gjs";
 import overflowControlsRevealSource from "../../examples/molecules/overflow-controls/reveal?source=file";
-import OverflowControlsVerticalExample from "../../examples/molecules/overflow-controls/vertical";
+import OverflowControlsVerticalExample from "../../examples/molecules/overflow-controls/vertical.gjs";
 import overflowControlsVerticalSource from "../../examples/molecules/overflow-controls/vertical?source=file";
 
 export default <template>

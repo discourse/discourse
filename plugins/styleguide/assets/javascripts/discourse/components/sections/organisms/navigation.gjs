@@ -1,5 +1,5 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import NavigationExample from "../../examples/organisms/navigation";
+import NavigationExample from "../../examples/organisms/navigation.gjs";
 import navigationSource from "../../examples/organisms/navigation?source=file";
 
 export default <template>

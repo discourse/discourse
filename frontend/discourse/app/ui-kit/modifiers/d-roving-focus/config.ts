@@ -5,7 +5,7 @@ import type {
   DRovingFocusStrategy,
   DRovingFocusTabStopAnchor,
   Orientation,
-} from "./types";
+} from "./types.ts";
 
 /**
  * {@link DRovingFocusArgs} with every default resolved, so no consumer of a configuration has to

@@ -1,6 +1,6 @@
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
-import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
+import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create.gjs";
 
 const DATE_NODE_TYPES = ["local_date", "local_date_range"];
 const EDIT_BUTTON_CLASS = "composer-local-date__edit-button";

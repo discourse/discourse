@@ -13,13 +13,13 @@ import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-
 import { and, not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import Post from "./post";
-import PostGap from "./post/gap";
-import PostLoadMoreAccessible from "./post/load-more-accessible";
-import PostPlaceholder from "./post/placeholder";
-import PostSmallAction from "./post/small-action";
-import PostTimeGap from "./post/time-gap";
-import PostVisitedLine from "./post/visited-line";
+import Post from "./post.gjs";
+import PostGap from "./post/gap.gjs";
+import PostLoadMoreAccessible from "./post/load-more-accessible.gjs";
+import PostPlaceholder from "./post/placeholder.gjs";
+import PostSmallAction from "./post/small-action.gjs";
+import PostTimeGap from "./post/time-gap.gjs";
+import PostVisitedLine from "./post/visited-line.gjs";
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 

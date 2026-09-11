@@ -2,7 +2,7 @@ import type {
   DRovingFocusApi,
   DRovingFocusAxis,
   DRovingFocusStepResult,
-} from "./types";
+} from "./types.ts";
 
 /** Internal operations used to bind the stable public cursor API to its owner. */
 export interface RovingFocusApiPort {

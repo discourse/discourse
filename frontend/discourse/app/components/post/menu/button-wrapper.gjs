@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { or } from "discourse/truth-helpers";
-import { showAlert } from "../../../lib/post-action-feedback";
+import { showAlert } from "../../../lib/post-action-feedback.js";
 
 export default class PostMenuButtonWrapper extends Component {
   #element;

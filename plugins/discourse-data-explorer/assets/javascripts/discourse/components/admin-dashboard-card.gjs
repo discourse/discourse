@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { i18n } from "discourse-i18n";
-import { chartability, chartDatasets, hasDates } from "../lib/chart-helpers";
-import DataExplorerChart from "./data-explorer-chart";
+import { chartability, chartDatasets, hasDates } from "../lib/chart-helpers.js";
+import DataExplorerChart from "./data-explorer-chart.gjs";
 
 export default class DataExplorerAdminDashboardCard extends Component {
   get rows() {

@@ -4,8 +4,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import ChatChannelChooserHeader from "./chat-channel-chooser-header";
-import ChatChannelChooserRow from "./chat-channel-chooser-row";
+import ChatChannelChooserHeader from "./chat-channel-chooser-header.gjs";
+import ChatChannelChooserRow from "./chat-channel-chooser-row.gjs";
 
 @classNames("chat-channel-chooser")
 @selectKitOptions({

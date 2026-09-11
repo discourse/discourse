@@ -7,7 +7,7 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import AiEmbeddingEditor from "./ai-embedding-editor";
+import AiEmbeddingEditor from "./ai-embedding-editor.gjs";
 
 export default class AiEmbeddingsListEditor extends Component {
   @service adminPluginNavManager;

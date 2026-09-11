@@ -6,7 +6,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import AssignedTopics from "../fixtures/assigned-topics-fixtures";
+import AssignedTopics from "../fixtures/assigned-topics-fixtures.js";
 
 acceptance("User Private Messages", function (needs) {
   needs.user({

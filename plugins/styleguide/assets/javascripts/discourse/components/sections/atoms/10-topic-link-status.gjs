@@ -1,7 +1,7 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import NoStatusExample from "../../examples/atoms/topic-link-status/no-status";
+import NoStatusExample from "../../examples/atoms/topic-link-status/no-status.gjs";
 import noStatusSource from "../../examples/atoms/topic-link-status/no-status?source=file";
-import WithStatusExample from "../../examples/atoms/topic-link-status/with-status";
+import WithStatusExample from "../../examples/atoms/topic-link-status/with-status.gjs";
 import withStatusSource from "../../examples/atoms/topic-link-status/with-status?source=file";
 
 export default <template>

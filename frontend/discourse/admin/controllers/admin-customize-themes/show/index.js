@@ -15,7 +15,7 @@ import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import getURL from "discourse/lib/get-url";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import ThemeUploadAddModal from "../../../components/theme-upload-add";
+import ThemeUploadAddModal from "../../../components/theme-upload-add.gjs";
 
 const THEME_UPLOAD_VAR = 2;
 

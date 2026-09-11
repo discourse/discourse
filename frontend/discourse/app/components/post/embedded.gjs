@@ -1,8 +1,8 @@
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PostAvatar from "./avatar";
-import PostCookedHtml from "./cooked-html";
-import PostMetaDataPosterName from "./meta-data/poster-name";
+import PostAvatar from "./avatar.gjs";
+import PostCookedHtml from "./cooked-html.gjs";
+import PostMetaDataPosterName from "./meta-data/poster-name.gjs";
 
 const PostEmbedded = <template>
   <div ...attributes class="reply" data-post-id={{@post.id}}>

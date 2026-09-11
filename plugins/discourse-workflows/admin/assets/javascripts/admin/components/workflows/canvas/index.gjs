@@ -17,7 +17,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import BuildWithAiModal from "../build-with-ai-modal";
+import BuildWithAiModal from "../build-with-ai-modal.gjs";
 import {
   buildCanvasClipboardPayload,
   isSerializedCanvasClipboardPayload,
@@ -25,25 +25,25 @@ import {
   payloadForCanvasClipboardPaste,
   positionCanvasClipboardPayload,
   serializeCanvasClipboardPayload,
-} from "./canvas-clipboard";
+} from "./canvas-clipboard.js";
 import CanvasContextMenu, {
   CANVAS_CONTEXT_MENU_IDENTIFIER,
   decideCanvasContextMenu,
-} from "./canvas-context-menu";
-import { runExecuteStep } from "./canvas-execute-step";
-import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io";
-import { setupCanvasKeyboard } from "./canvas-keyboard";
-import { runManualTrigger } from "./canvas-manual-trigger";
+} from "./canvas-context-menu.gjs";
+import { runExecuteStep } from "./canvas-execute-step.js";
+import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io.js";
+import { setupCanvasKeyboard } from "./canvas-keyboard.js";
+import { runManualTrigger } from "./canvas-manual-trigger.js";
 import {
   buildStickyNoteTranslateHandler,
   computeStickyNoteRects,
-} from "./canvas-sticky-notes";
-import ConnectionEntry from "./connection-entry";
-import Controls from "./controls";
-import LoopBackConnection from "./loop-back-connection";
-import { createReteEditor } from "./rete-editor";
-import StickyNoteComponent from "./sticky-note";
-import WorkflowNode from "./workflow-node";
+} from "./canvas-sticky-notes.js";
+import ConnectionEntry from "./connection-entry.gjs";
+import Controls from "./controls.gjs";
+import LoopBackConnection from "./loop-back-connection.gjs";
+import { createReteEditor } from "./rete-editor.js";
+import StickyNoteComponent from "./sticky-note.gjs";
+import WorkflowNode from "./workflow-node.gjs";
 
 export default class WorkflowCanvas extends Component {
   @service keyboardShortcuts;

@@ -1,7 +1,7 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import VirtualListExample from "../../examples/molecules/virtual-list";
+import VirtualListExample from "../../examples/molecules/virtual-list.gjs";
 import virtualListSource from "../../examples/molecules/virtual-list?source=file";
-import VirtualListVariableExample from "../../examples/molecules/virtual-list-variable";
+import VirtualListVariableExample from "../../examples/molecules/virtual-list-variable.gjs";
 import virtualListVariableSource from "../../examples/molecules/virtual-list-variable?source=file";
 
 export default <template>

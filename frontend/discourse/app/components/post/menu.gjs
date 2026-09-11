@@ -24,21 +24,21 @@ import DSmallUserList, {
 } from "discourse/ui-kit/d-small-user-list";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import PostMenuButtonConfig from "./menu/button-config";
-import PostMenuButtonWrapper from "./menu/button-wrapper";
-import PostMenuAddTranslationButton from "./menu/buttons/add-translation";
-import PostMenuAdminButton from "./menu/buttons/admin";
-import PostMenuBookmarkButton from "./menu/buttons/bookmark";
-import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
-import PostMenuDeleteButton from "./menu/buttons/delete";
-import PostMenuEditButton from "./menu/buttons/edit";
-import PostMenuFlagButton from "./menu/buttons/flag";
-import PostMenuLikeButton from "./menu/buttons/like";
-import PostMenuReadButton from "./menu/buttons/read";
-import PostMenuRepliesButton from "./menu/buttons/replies";
-import PostMenuReplyButton from "./menu/buttons/reply";
-import PostMenuShareButton from "./menu/buttons/share";
-import PostMenuShowMoreButton from "./menu/buttons/show-more";
+import PostMenuButtonConfig from "./menu/button-config.gjs";
+import PostMenuButtonWrapper from "./menu/button-wrapper.gjs";
+import PostMenuAddTranslationButton from "./menu/buttons/add-translation.gjs";
+import PostMenuAdminButton from "./menu/buttons/admin.gjs";
+import PostMenuBookmarkButton from "./menu/buttons/bookmark.gjs";
+import PostMenuCopyLinkButton from "./menu/buttons/copy-link.gjs";
+import PostMenuDeleteButton from "./menu/buttons/delete.gjs";
+import PostMenuEditButton from "./menu/buttons/edit.gjs";
+import PostMenuFlagButton from "./menu/buttons/flag.gjs";
+import PostMenuLikeButton from "./menu/buttons/like.gjs";
+import PostMenuReadButton from "./menu/buttons/read.gjs";
+import PostMenuRepliesButton from "./menu/buttons/replies.gjs";
+import PostMenuReplyButton from "./menu/buttons/reply.gjs";
+import PostMenuShareButton from "./menu/buttons/share.gjs";
+import PostMenuShowMoreButton from "./menu/buttons/show-more.gjs";
 
 const VIBRATE_DURATION = 5;
 

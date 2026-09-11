@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-import guessDateFormat from "../lib/guess-best-date-format";
+import guessDateFormat from "../lib/guess-best-date-format.js";
 
 export default class EventDate extends Component {
   @service siteSettings;

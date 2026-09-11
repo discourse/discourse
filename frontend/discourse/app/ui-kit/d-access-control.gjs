@@ -17,7 +17,7 @@ import { i18n } from "discourse-i18n";
 import DAccessControlGranteeChooser, {
   granteeValue,
   groupGranteeResult,
-} from "./d-access-control-grantee-chooser";
+} from "./d-access-control-grantee-chooser.gjs";
 
 const EDIT_PERMISSION = "edit";
 const READ_ONLY_PERMISSION = "view";

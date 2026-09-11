@@ -5,7 +5,7 @@ import EmailGroupUserChooser from "discourse/select-kit/components/email-group-u
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import pretender, { response } from "../../../helpers/create-pretender";
+import pretender, { response } from "../../../helpers/create-pretender.js";
 
 module(
   "Integration | Component | SelectKit | EmailGroupUserChooser",

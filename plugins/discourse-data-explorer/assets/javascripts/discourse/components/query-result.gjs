@@ -14,24 +14,24 @@ import {
   chartDatasets,
   defaultView,
   hasDates,
-} from "../lib/chart-helpers";
-import { dataExplorerStore } from "../lib/data-explorer-store";
-import DataExplorerChart from "./data-explorer-chart";
-import QueryChartEmptyState from "./query-chart-empty-state";
-import QueryResultDownloadButtons from "./query-result-download-buttons";
-import QueryRowContent from "./query-row-content";
-import BadgeViewComponent from "./result-types/badge";
-import CategoryViewComponent from "./result-types/category";
-import GroupViewComponent from "./result-types/group";
-import HtmlViewComponent from "./result-types/html";
-import JsonViewComponent from "./result-types/json";
-import PostViewComponent from "./result-types/post";
-import ReltimeViewComponent from "./result-types/reltime";
-import TagGroupViewComponent from "./result-types/tag-group";
-import TextViewComponent from "./result-types/text";
-import TopicViewComponent from "./result-types/topic";
-import UrlViewComponent from "./result-types/url";
-import UserViewComponent from "./result-types/user";
+} from "../lib/chart-helpers.js";
+import { dataExplorerStore } from "../lib/data-explorer-store.js";
+import DataExplorerChart from "./data-explorer-chart.gjs";
+import QueryChartEmptyState from "./query-chart-empty-state.gjs";
+import QueryResultDownloadButtons from "./query-result-download-buttons.gjs";
+import QueryRowContent from "./query-row-content.gjs";
+import BadgeViewComponent from "./result-types/badge.gjs";
+import CategoryViewComponent from "./result-types/category.gjs";
+import GroupViewComponent from "./result-types/group.gjs";
+import HtmlViewComponent from "./result-types/html.gjs";
+import JsonViewComponent from "./result-types/json.gjs";
+import PostViewComponent from "./result-types/post.gjs";
+import ReltimeViewComponent from "./result-types/reltime.gjs";
+import TagGroupViewComponent from "./result-types/tag-group.gjs";
+import TextViewComponent from "./result-types/text.gjs";
+import TopicViewComponent from "./result-types/topic.gjs";
+import UrlViewComponent from "./result-types/url.gjs";
+import UserViewComponent from "./result-types/user.gjs";
 
 const VIEW_COMPONENTS = {
   topic: TopicViewComponent,

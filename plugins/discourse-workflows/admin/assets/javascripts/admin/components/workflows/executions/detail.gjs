@@ -17,11 +17,11 @@ import {
   isLive,
   isPending,
   isRunning,
-} from "../../../lib/workflows/execution-progress";
+} from "../../../lib/workflows/execution-progress.js";
 import {
   localeKeyPart,
   propertyOptionLabel,
-} from "../../../lib/workflows/property-engine";
+} from "../../../lib/workflows/property-engine.js";
 
 function formatJson(data) {
   if (Array.isArray(data) && data.length === 0) {

@@ -1,5 +1,5 @@
 import { Fragment } from "prosemirror-model";
-import { cellType, isTable, tableGrid } from "./grid";
+import { cellType, isTable, tableGrid } from "./grid.js";
 
 /** Repairs malformed table structures within a document range. */
 export function fixTables(state, tr, from = 0, to = state.doc.content.size) {

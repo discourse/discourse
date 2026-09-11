@@ -9,8 +9,8 @@ import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { nodeTypeColor, nodeTypeIcon } from "../../lib/workflows/node-types";
-import { workflowFromTemplate } from "../../lib/workflows/template-workflow";
+import { nodeTypeColor, nodeTypeIcon } from "../../lib/workflows/node-types.js";
+import { workflowFromTemplate } from "../../lib/workflows/template-workflow.js";
 
 const MAX_VISIBLE_ICONS = 3;
 

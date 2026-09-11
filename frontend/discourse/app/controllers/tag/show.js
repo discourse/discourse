@@ -1,1 +1,1 @@
-export { default } from "../discovery/list";
+export { default } from "../discovery/list.js";

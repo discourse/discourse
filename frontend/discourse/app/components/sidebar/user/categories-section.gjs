@@ -7,11 +7,11 @@ import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
 import Category from "discourse/models/category";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AllCategoriesSectionLink from "../common/all-categories-section-link";
-import CommonCategoriesSection from "../common/categories-section";
-import EditNavigationMenuCategoriesModal from "../edit-navigation-menu/categories-modal";
-import Section from "../section";
-import SectionLink from "../section-link";
+import AllCategoriesSectionLink from "../common/all-categories-section-link.gjs";
+import CommonCategoriesSection from "../common/categories-section.gjs";
+import EditNavigationMenuCategoriesModal from "../edit-navigation-menu/categories-modal.gjs";
+import Section from "../section.gjs";
+import SectionLink from "../section-link.gjs";
 
 export const REFRESH_COUNTS_APP_EVENT_NAME =
   "sidebar:refresh-categories-section-counts";

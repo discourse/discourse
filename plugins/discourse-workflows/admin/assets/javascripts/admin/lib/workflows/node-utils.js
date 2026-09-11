@@ -2,8 +2,8 @@ import {
   nodeTypeLabel,
   nodeTypeOutputKeys,
   nodeTypePortLabel,
-} from "./node-types";
-import { propertyOptionLabel } from "./property-engine";
+} from "./node-types.js";
+import { propertyOptionLabel } from "./property-engine.js";
 
 const NODE_WIDTH = 130;
 const NODE_HEIGHT_BASE = 90;

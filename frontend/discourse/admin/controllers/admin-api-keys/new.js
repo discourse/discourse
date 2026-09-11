@@ -7,7 +7,7 @@ import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import ApiKeyUrlsModal from "../../components/modal/api-key-urls";
+import ApiKeyUrlsModal from "../../components/modal/api-key-urls.gjs";
 
 export default class AdminApiKeysNewController extends Controller {
   @service router;

@@ -1,5 +1,5 @@
 import { array } from "@ember/helper";
-import ChatChannel from "./chat-channel";
+import ChatChannel from "./chat-channel.gjs";
 
 const FullPageChat = <template>
   {{#each (array @channel) as |channel|}}

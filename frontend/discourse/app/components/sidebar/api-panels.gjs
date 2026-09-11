@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import ApiSections from "./api-sections";
+import ApiSections from "./api-sections.gjs";
 
 export default class SidebarApiPanels extends Component {
   @service sidebarState;
