@@ -204,9 +204,12 @@ module Jobs
       ) if @extra[:include_subcategories].present?
 
       report =
-        Reports::Access.new(guardian: @current_user.guardian, purpose: :export).find(
-          type: @extra[:name],
-          options: @extra,
+        Report.find(
+          @extra[:name],
+          **@extra.symbolize_keys,
+          filters: @extra[:filters],
+          guardian: @current_user.guardian,
+          purpose: :export,
         )
       raise Discourse::NotFound if report.blank?
 

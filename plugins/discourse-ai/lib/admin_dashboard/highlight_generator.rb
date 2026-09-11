@@ -55,7 +55,12 @@ module DiscourseAi
       end
 
       def generate_highlight
-        facts = AdminDashboardFacts.compute(start_date: start_date, end_date: end_date)
+        facts =
+          AdminDashboardFacts.compute(
+            start_date: start_date,
+            end_date: end_date,
+            guardian: Discourse.system_user.guardian,
+          )
         return "" if facts[:metrics].blank?
 
         agent_instance = admin_dashboard_agent_instance

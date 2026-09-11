@@ -9,7 +9,14 @@ describe "currently_away report" do
 
   context "when users_on_holiday is not set" do
     it "does not generate report with data" do
-      report = Report.find("currently_away", filters: { group: group_1.id })
+      report =
+        Report.find(
+          "currently_away",
+          guardian: Discourse.system_user.guardian,
+          filters: {
+            group: group_1.id,
+          },
+        )
 
       expect(report.data).to eq([])
       expect(report.total).to eq(0)
@@ -20,7 +27,14 @@ describe "currently_away report" do
     before { DiscourseEvents.users_on_holiday = [user_1.username] }
 
     it "generates a correct report" do
-      report = Report.find("currently_away", filters: { group: group_1.id })
+      report =
+        Report.find(
+          "currently_away",
+          guardian: Discourse.system_user.guardian,
+          filters: {
+            group: group_1.id,
+          },
+        )
 
       expect(report.data).to contain_exactly({ username: user_1.username })
       expect(report.total).to eq(1)

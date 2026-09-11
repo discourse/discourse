@@ -168,7 +168,9 @@ module DiscourseAutomation
 
     module Utils
       def self.fetch_report(name, args = {})
-        report = Report.find(name, args)
+        args = args.symbolize_keys
+        guardian = args[:guardian] || args[:current_user]&.guardian || Guardian.new
+        report = Report.find(name, guardian: guardian, **args.except(:guardian, :current_user))
 
         return if !report
 
@@ -189,11 +191,11 @@ module DiscourseAutomation
         table
       end
 
-      def self.apply_placeholders(input, map = {})
+      def self.apply_placeholders(input, map = {}, guardian: nil)
         input = input.dup
         map[:site_title] = SiteSetting.title
 
-        input = apply_report_placeholder(input)
+        input = apply_report_placeholder(input, guardian: guardian)
 
         map.each { |key, value| input = input.gsub("%%#{key.upcase}%%", value.to_s) }
 
@@ -201,13 +203,13 @@ module DiscourseAutomation
       end
 
       REPORT_REGEX = /%%REPORT=(.*?)%%/
-      def self.apply_report_placeholder(input = "")
+      def self.apply_report_placeholder(input = "", guardian: nil)
         input.gsub(REPORT_REGEX) do |pattern|
           match = pattern.match(REPORT_REGEX)
           if match
             params = match[1].match(/^(.*?)(?:\s(.*))?$/)
 
-            args = { filters: {} }
+            args = { guardian: guardian, filters: {} }
             if params[2]
               params[2]
                 .split(" ")

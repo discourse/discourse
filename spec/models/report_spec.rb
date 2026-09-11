@@ -79,7 +79,9 @@ RSpec.describe Report do
 
   describe "counting" do
     describe "requests" do
-      subject(:json) { Report.find("http_total_reqs").as_json }
+      subject(:json) do
+        Report.find("http_total_reqs", guardian: Discourse.system_user.guardian).as_json
+      end
 
       before do
         freeze_time_safe
@@ -149,7 +151,7 @@ RSpec.describe Report do
       end
 
       it "counts the correct records" do
-        json = Report.find("topics").as_json
+        json = Report.find("topics", guardian: Discourse.system_user.guardian).as_json
         expect(json[:data].size).to eq(31)
         expect(json[:prev30Days]).to eq(3)
 
@@ -157,6 +159,7 @@ RSpec.describe Report do
         json =
           Report.find(
             "topics",
+            guardian: Discourse.system_user.guardian,
             start_date: 5.days.ago.beginning_of_day,
             end_date: 1.day.ago.end_of_day,
             facets: [:prev_period],
@@ -170,7 +173,7 @@ RSpec.describe Report do
   end
 
   describe "visits report" do
-    let(:report) { Report.find("visits") }
+    let(:report) { Report.find("visits", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -203,7 +206,14 @@ RSpec.describe Report do
         user.user_visits.create!(visited_at: 1.day.ago, mobile: false)
         user_2.user_visits.create!(visited_at: 1.day.ago, mobile: true)
 
-        filtered_report = Report.find("visits", filters: { group: group.id })
+        filtered_report =
+          Report.find(
+            "visits",
+            filters: {
+              group: group.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
 
         desktop_data = filtered_report.data[0][:data]
         mobile_data = filtered_report.data[1][:data]
@@ -215,7 +225,7 @@ RSpec.describe Report do
   end
 
   describe "mobile visits report" do
-    let(:report) { Report.find("mobile_visits") }
+    let(:report) { Report.find("mobile_visits", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -241,7 +251,7 @@ RSpec.describe Report do
     describe "#{arg} report" do
       pluralized = arg.to_s.pluralize
 
-      let(:report) { Report.find(pluralized) }
+      let(:report) { Report.find(pluralized, guardian: Discourse.system_user.guardian) }
 
       context "with no #{pluralized}" do
         it "returns an empty report" do
@@ -304,8 +314,15 @@ RSpec.describe Report do
     page_view_anon
   ].each do |request_type|
     describe "#{request_type} request reports" do
+      before { SiteSetting.use_legacy_pageviews = true }
+
       let(:report) do
-        Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
+        Report.find(
+          "#{request_type}_reqs",
+          start_date: 10.days.ago.to_time,
+          end_date: Time.now,
+          guardian: Discourse.system_user.guardian,
+        )
       end
 
       context "with no #{request_type} records" do
@@ -372,7 +389,9 @@ RSpec.describe Report do
       Theme.clear_default!
     end
 
-    let(:report) { Report.find("page_view_legacy_total_reqs") }
+    let(:report) do
+      Report.find("page_view_legacy_total_reqs", guardian: Discourse.system_user.guardian)
+    end
 
     context "with no data" do
       it "returns no legacy page-view requests" do
@@ -415,7 +434,7 @@ RSpec.describe Report do
       Theme.clear_default!
     end
 
-    let(:report) { Report.find("page_view_total_reqs") }
+    let(:report) { Report.find("page_view_total_reqs", guardian: Discourse.system_user.guardian) }
 
     context "with no data" do
       it "returns no page-view requests" do
@@ -475,14 +494,19 @@ RSpec.describe Report do
   end
 
   describe "user to user private messages with replies" do
-    let(:report) { Report.find("user_to_user_private_messages_with_replies") }
+    let(:report) do
+      Report.find(
+        "user_to_user_private_messages_with_replies",
+        guardian: Discourse.system_user.guardian,
+      )
+    end
     let(:user) { Fabricate(:user) }
     let(:topic) { Fabricate(:topic, created_at: 1.hour.ago, user: user) }
 
     it "topic report).to not include private messages" do
       Fabricate(:private_message_topic, created_at: 1.hour.ago, user: user)
       topic
-      report = Report.find("topics")
+      report = Report.find("topics", guardian: Discourse.system_user.guardian)
       expect(report.data[0][:y]).to eq(1)
       expect(report.total).to eq(1)
     end
@@ -490,7 +514,7 @@ RSpec.describe Report do
     it "post report).to not include private messages" do
       Fabricate(:private_message_post, created_at: 1.hour.ago)
       Fabricate(:post)
-      report = Report.find("posts")
+      report = Report.find("posts", guardian: Discourse.system_user.guardian)
       expect(report.data[0][:y]).to eq 1
       expect(report.total).to eq 1
     end
@@ -550,7 +574,9 @@ RSpec.describe Report do
   end
 
   describe "user to user private messages" do
-    let(:report) { Report.find("user_to_user_private_messages") }
+    let(:report) do
+      Report.find("user_to_user_private_messages", guardian: Discourse.system_user.guardian)
+    end
 
     context "with private message from system user" do
       before do
@@ -565,7 +591,7 @@ RSpec.describe Report do
   end
 
   describe "users by trust level report" do
-    let(:report) { Report.find("users_by_trust_level") }
+    let(:report) { Report.find("users_by_trust_level", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -629,20 +655,19 @@ RSpec.describe Report do
       expect(summary_report.related_items_totals).to eq(users: 2)
     end
 
-    it "skips related items when the report has no guardian" do
+    it "denies access to related items for anonymous users" do
       Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
 
       report =
         Report.find(
           "signups",
+          guardian: Guardian.new,
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           include_related_items: true,
         )
 
-      expect(report.data.sum { |point| point[:y] }).to eq(1)
-      expect(report.related_items).to be_nil
-      expect(report.related_items_totals).to be_nil
+      expect(report).to be_nil
     end
 
     it "skips related items when the guardian is not an admin" do
@@ -681,7 +706,7 @@ RSpec.describe Report do
   end
 
   describe "new contributors report" do
-    let(:report) { Report.find("new_contributors") }
+    let(:report) { Report.find("new_contributors", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -741,7 +766,7 @@ RSpec.describe Report do
       expect(report.related_items_totals).to eq(users: 2)
     end
 
-    it "skips related items when the report has no guardian" do
+    it "denies access to related items for anonymous users" do
       contributor = Fabricate(:user)
       contributor.user_stat.update!(
         new_since: Time.zone.local(2026, 4, 1, 12),
@@ -751,19 +776,18 @@ RSpec.describe Report do
       report =
         Report.find(
           "new_contributors",
+          guardian: Guardian.new,
           start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 2).end_of_day,
           include_related_items: true,
         )
 
-      expect(report.data.sum { |point| point[:y] }).to eq(1)
-      expect(report.related_items).to be_nil
-      expect(report.related_items_totals).to be_nil
+      expect(report).to be_nil
     end
   end
 
   describe "users by types level report" do
-    let(:report) { Report.find("users_by_type") }
+    let(:report) { Report.find("users_by_type", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -788,7 +812,7 @@ RSpec.describe Report do
   end
 
   describe "trending search report" do
-    let(:report) { Report.find("trending_search") }
+    let(:report) { Report.find("trending_search", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -822,7 +846,7 @@ RSpec.describe Report do
   end
 
   describe "Daily engaged users" do
-    let(:report) { Report.find("daily_engaged_users") }
+    let(:report) { Report.find("daily_engaged_users", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -869,6 +893,7 @@ RSpec.describe Report do
       report =
         Report.find(
           "daily_engaged_users",
+          guardian: Discourse.system_user.guardian,
           start_date: Time.zone.local(2026, 4, 22).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 28).end_of_day,
           facets: [:prev_period],
@@ -891,6 +916,7 @@ RSpec.describe Report do
       report =
         Report.find(
           "signups",
+          guardian: Discourse.system_user.guardian,
           start_date: Time.zone.local(2026, 4, 22).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 28).end_of_day,
           facets: %i[prev_period total prev30Days],
@@ -913,14 +939,14 @@ RSpec.describe Report do
       Fabricate(:moderator_post, topic: post.topic)
       Fabricate.build(:post, post_type: Post.types[:whisper], topic: post.topic)
       post.topic.add_small_action(Fabricate(:admin), "invited_group", "coolkids")
-      r = Report.find("posts")
+      r = Report.find("posts", guardian: Discourse.system_user.guardian)
       expect(r.total).to eq(1)
       expect(r.data[0][:y]).to eq(1)
     end
   end
 
   describe "flags_status" do
-    let(:report) { Report.find("flags_status") }
+    let(:report) { Report.find("flags_status", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -974,7 +1000,7 @@ RSpec.describe Report do
   end
 
   describe "post_edits" do
-    let(:report) { Report.find("post_edits") }
+    let(:report) { Report.find("post_edits", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -1025,11 +1051,23 @@ RSpec.describe Report do
       end
 
       let(:report_with_one_edit) do
-        Report.find("post_edits", { filters: { "editor" => editor_with_one_edit.username } })
+        Report.find(
+          "post_edits",
+          guardian: Discourse.system_user.guardian,
+          filters: {
+            "editor" => editor_with_one_edit.username,
+          },
+        )
       end
 
       let(:report_with_two_edits) do
-        Report.find("post_edits", { filters: { "editor" => editor_with_two_edits.username } })
+        Report.find(
+          "post_edits",
+          guardian: Discourse.system_user.guardian,
+          filters: {
+            "editor" => editor_with_two_edits.username,
+          },
+        )
       end
 
       it "returns a report for a given editor" do
@@ -1047,17 +1085,18 @@ RSpec.describe Report do
       before { pm_post.revise(editor, { raw: "updated private message body" }) }
 
       it "excludes PM edits for moderators" do
-        report = Report.find("post_edits", current_user: moderator)
+        report = Report.find("post_edits", guardian: moderator.guardian)
         expect(report.data).to be_empty
       end
 
-      it "excludes PM edits when current_user is nil" do
-        report = Report.find("post_edits")
-        expect(report.data).to be_empty
+      it "denies access to PM edit reports for anonymous users" do
+        report = Report.find("post_edits", guardian: Guardian.new)
+
+        expect(report).to be_nil
       end
 
       it "includes PM edits for admins" do
-        report = Report.find("post_edits", current_user: admin)
+        report = Report.find("post_edits", guardian: admin.guardian)
         expect(report.data.count).to eq(1)
       end
     end
@@ -1079,25 +1118,25 @@ RSpec.describe Report do
       before { secure_post.revise(editor, { raw: "updated secure post body" }) }
 
       it "excludes secure category edits for moderators without access" do
-        report = Report.find("post_edits", current_user: moderator)
+        report = Report.find("post_edits", guardian: moderator.guardian)
         expect(report.data).to be_empty
       end
 
       it "includes secure category edits for admins" do
-        report = Report.find("post_edits", current_user: admin)
+        report = Report.find("post_edits", guardian: admin.guardian)
         expect(report.data.count).to eq(1)
       end
 
       it "includes secure category edits for moderators with group access" do
         group.add(moderator)
-        report = Report.find("post_edits", current_user: moderator)
+        report = Report.find("post_edits", guardian: moderator.guardian)
         expect(report.data.count).to eq(1)
       end
     end
   end
 
   describe "moderator activity" do
-    let(:report) { Report.find("moderators_activity") }
+    let(:report) { Report.find("moderators_activity", guardian: Discourse.system_user.guardian) }
 
     let(:sam) { Fabricate(:user, moderator: true, username: "sam") }
 
@@ -1252,7 +1291,7 @@ RSpec.describe Report do
   end
 
   describe "flags" do
-    let(:report) { Report.find("flags") }
+    let(:report) { Report.find("flags", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -1274,13 +1313,28 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("flags", filters: { category: category_2.id }) }
+        let(:report) do
+          Report.find(
+            "flags",
+            filters: {
+              category: category_2.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
+        end
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("flags", filters: { category: category_1.id, include_subcategories: true })
+            Report.find(
+              "flags",
+              filters: {
+                category: category_1.id,
+                include_subcategories: true,
+              },
+              guardian: Discourse.system_user.guardian,
+            )
           end
 
           include_examples "category filtering on subcategories"
@@ -1290,7 +1344,7 @@ RSpec.describe Report do
   end
 
   describe "topics" do
-    let(:report) { Report.find("topics") }
+    let(:report) { Report.find("topics", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -1306,13 +1360,28 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("topics", filters: { category: category_2.id }) }
+        let(:report) do
+          Report.find(
+            "topics",
+            filters: {
+              category: category_2.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
+        end
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("topics", filters: { category: category_1.id, include_subcategories: true })
+            Report.find(
+              "topics",
+              filters: {
+                category: category_1.id,
+                include_subcategories: true,
+              },
+              guardian: Discourse.system_user.guardian,
+            )
           end
 
           include_examples "category filtering on subcategories"
@@ -1325,7 +1394,12 @@ RSpec.describe Report do
     before(:each) { Report.stubs(:report_exception_test).raises(Exception) }
 
     it "returns a report with an exception error" do
-      report = Report.find("exception_test", wrap_exceptions_in_test: true)
+      report =
+        Report.find(
+          "exception_test",
+          wrap_exceptions_in_test: true,
+          guardian: Discourse.system_user.guardian,
+        )
       expect(report.error).to eq(:exception)
     end
   end
@@ -1334,7 +1408,7 @@ RSpec.describe Report do
     before(:each) { Report.stubs(:report_timeout_test).raises(ActiveRecord::QueryCanceled) }
 
     it "returns a report with a timeout error" do
-      report = Report.find("timeout_test")
+      report = Report.find("timeout_test", guardian: Discourse.system_user.guardian)
       expect(report.error).to eq(:timeout)
     end
   end
@@ -1352,7 +1426,12 @@ RSpec.describe Report do
 
       Report.stubs(:new).raises(ReportInitError.new("x"))
 
-      report = Report.find("signups", wrap_exceptions_in_test: true)
+      report =
+        Report.find(
+          "signups",
+          wrap_exceptions_in_test: true,
+          guardian: Discourse.system_user.guardian,
+        )
 
       expect(report).to be_nil
 
@@ -1361,7 +1440,7 @@ RSpec.describe Report do
   end
 
   describe "posts" do
-    let(:report) { Report.find("posts") }
+    let(:report) { Report.find("posts", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -1379,13 +1458,28 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("posts", filters: { category: category_2.id }) }
+        let(:report) do
+          Report.find(
+            "posts",
+            filters: {
+              category: category_2.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
+        end
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("posts", filters: { category: category_1.id, include_subcategories: true })
+            Report.find(
+              "posts",
+              filters: {
+                category: category_1.id,
+                include_subcategories: true,
+              },
+              guardian: Discourse.system_user.guardian,
+            )
           end
 
           include_examples "category filtering on subcategories"
@@ -1397,7 +1491,9 @@ RSpec.describe Report do
   # TODO: time_to_first_response
 
   describe "topics_with_no_response" do
-    let(:report) { Report.find("topics_with_no_response") }
+    let(:report) do
+      Report.find("topics_with_no_response", guardian: Discourse.system_user.guardian)
+    end
 
     include_examples "no data"
 
@@ -1414,7 +1510,13 @@ RSpec.describe Report do
 
       context "with category filtering" do
         let(:report) do
-          Report.find("topics_with_no_response", filters: { category: category_2.id })
+          Report.find(
+            "topics_with_no_response",
+            filters: {
+              category: category_2.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
         end
 
         include_examples "category filtering"
@@ -1423,6 +1525,7 @@ RSpec.describe Report do
           let(:report) do
             Report.find(
               "topics_with_no_response",
+              guardian: Discourse.system_user.guardian,
               filters: {
                 category: category_1.id,
                 include_subcategories: true,
@@ -1437,7 +1540,7 @@ RSpec.describe Report do
   end
 
   describe "likes" do
-    let(:report) { Report.find("likes") }
+    let(:report) { Report.find("likes", guardian: Discourse.system_user.guardian) }
 
     include_examples "no data"
 
@@ -1461,13 +1564,28 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("likes", filters: { category: category_2.id }) }
+        let(:report) do
+          Report.find(
+            "likes",
+            filters: {
+              category: category_2.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
+        end
 
         include_examples "category filtering"
 
         context "with subcategories" do
           let(:report) do
-            Report.find("likes", filters: { category: category_1.id, include_subcategories: true })
+            Report.find(
+              "likes",
+              filters: {
+                category: category_1.id,
+                include_subcategories: true,
+              },
+              guardian: Discourse.system_user.guardian,
+            )
           end
 
           include_examples "category filtering on subcategories"
@@ -1500,7 +1618,7 @@ RSpec.describe Report do
         result = PostActionCreator.off_topic(robin, post_agreed)
         result.reviewable.perform(moderator, :agree_and_keep)
 
-        report = Report.find("user_flagging_ratio")
+        report = Report.find("user_flagging_ratio", guardian: Discourse.system_user.guardian)
 
         first = report.data[0]
         expect(first[:username]).to eq("joffrey")
@@ -1528,7 +1646,7 @@ RSpec.describe Report do
         UserAuthToken.log(action: "suspicious", user_id: joffrey.id, created_at: 3.hours.ago)
         UserAuthToken.log(action: "suspicious", user_id: robin.id, created_at: 1.hour.ago)
 
-        report = Report.find("suspicious_logins")
+        report = Report.find("suspicious_logins", guardian: Discourse.system_user.guardian)
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("robin")
@@ -1571,7 +1689,7 @@ RSpec.describe Report do
         )
         UserAuthToken.log(action: "generate", user_id: james.id)
 
-        report = Report.find("admin_logins")
+        report = Report.find("admin_logins", guardian: Discourse.system_user.guardian)
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("joffrey")
@@ -1585,7 +1703,7 @@ RSpec.describe Report do
   end
 
   describe "report_top_uploads" do
-    let(:report) { Report.find("top_uploads") }
+    let(:report) { Report.find("top_uploads", guardian: Discourse.system_user.guardian) }
     let(:tarek) { Fabricate(:admin, username: "tarek") }
     let(:khalil) { Fabricate(:admin, username: "khalil") }
 
@@ -1635,7 +1753,7 @@ RSpec.describe Report do
   end
 
   describe "report_top_ignored_users" do
-    let(:report) { Report.find("top_ignored_users") }
+    let(:report) { Report.find("top_ignored_users", guardian: Discourse.system_user.guardian) }
     let(:tarek) { Fabricate(:user, username: "tarek") }
     let(:john) { Fabricate(:user, username: "john") }
     let(:matt) { Fabricate(:user, username: "matt") }
@@ -1684,11 +1802,17 @@ RSpec.describe Report do
 
   describe "consolidated_page_views_browser_detection" do
     before do
+      SiteSetting.use_legacy_pageviews = true
       freeze_time(Time.now.at_midnight)
       Theme.clear_default!
     end
 
-    let(:reports) { Report.find("consolidated_page_views_browser_detection") }
+    let(:reports) do
+      Report.find(
+        "consolidated_page_views_browser_detection",
+        guardian: Discourse.system_user.guardian,
+      )
+    end
 
     context "with no data" do
       it "returns empty browser-detection series" do
@@ -1742,7 +1866,8 @@ RSpec.describe Report do
         CachedCounting.flush
 
         total_consolidated = reports.data.sum { |r| r[:data][0][:y] }
-        total_page_views = Report.find("page_view_total_reqs").data[0][:y]
+        total_page_views =
+          Report.find("page_view_total_reqs", guardian: Discourse.system_user.guardian).data[0][:y]
 
         expect(total_consolidated).to eq(total_page_views)
       end
@@ -1775,6 +1900,7 @@ RSpec.describe Report do
         report_in_range =
           Report.find(
             "consolidated_page_views_browser_detection",
+            guardian: Discourse.system_user.guardian,
             start_date: DateTime.parse("2024-02-10").beginning_of_day,
             end_date: DateTime.parse("2024-04-11").beginning_of_day,
           )
@@ -1800,7 +1926,7 @@ RSpec.describe Report do
       Theme.clear_default!
     end
 
-    let(:reports) { Report.find("site_traffic") }
+    let(:reports) { Report.find("site_traffic", guardian: Discourse.system_user.guardian) }
 
     context "with no data" do
       it "returns empty site-traffic series" do
@@ -1910,7 +2036,9 @@ RSpec.describe Report do
       Theme.clear_default!
     end
 
-    let(:reports) { Report.find("consolidated_page_views") }
+    let(:reports) do
+      Report.find("consolidated_page_views", guardian: Discourse.system_user.guardian)
+    end
 
     context "with no data" do
       it "returns empty page-view series" do
@@ -1960,7 +2088,9 @@ RSpec.describe Report do
       Theme.clear_default!
     end
 
-    let(:reports) { Report.find("consolidated_api_requests") }
+    let(:reports) do
+      Report.find("consolidated_api_requests", guardian: Discourse.system_user.guardian)
+    end
 
     context "with no data" do
       it "returns empty API-request series" do
@@ -2004,7 +2134,7 @@ RSpec.describe Report do
       Theme.clear_default!
     end
 
-    let(:reports) { Report.find("trust_level_growth") }
+    let(:reports) { Report.find("trust_level_growth", guardian: Discourse.system_user.guardian) }
 
     context "with no data" do
       it "returns empty trust-level series" do
@@ -2067,8 +2197,20 @@ RSpec.describe Report do
   end
 
   describe ".cache" do
-    let(:exception_report) { Report.find("exception_test", wrap_exceptions_in_test: true) }
-    let(:valid_report) { Report.find("valid_test", wrap_exceptions_in_test: true) }
+    let(:exception_report) do
+      Report.find(
+        "exception_test",
+        wrap_exceptions_in_test: true,
+        guardian: Discourse.system_user.guardian,
+      )
+    end
+    let(:valid_report) do
+      Report.find(
+        "valid_test",
+        wrap_exceptions_in_test: true,
+        guardian: Discourse.system_user.guardian,
+      )
+    end
 
     before(:each) do
       Report.stubs(:report_exception_test).raises(Exception)
@@ -2106,7 +2248,7 @@ RSpec.describe Report do
 
   describe ".cache_key" do
     it "includes the crawler detection state in the cache key" do
-      report = Report.find("signups")
+      report = Report.find("signups", guardian: Discourse.system_user.guardian)
 
       SiteSetting.improved_crawler_detection = false
       disabled_key = Report.cache_key(report)
@@ -2120,7 +2262,7 @@ RSpec.describe Report do
   describe "top_uploads" do
     context "with no data" do
       it "returns no uploads" do
-        report = Report.find("top_uploads")
+        report = Report.find("top_uploads", guardian: Discourse.system_user.guardian)
 
         expect(report.data).to be_empty
       end
@@ -2131,14 +2273,21 @@ RSpec.describe Report do
       fab!(:png_upload) { Fabricate(:upload, extension: :png) }
 
       it "returns uploads grouped by extension" do
-        report = Report.find("top_uploads")
+        report = Report.find("top_uploads", guardian: Discourse.system_user.guardian)
 
         expect(report.data.length).to eq(2)
         expect(report.data.map { |row| row[:extension] }).to contain_exactly("jpg", "png")
       end
 
       it "works with filters" do
-        report = Report.find("top_uploads", filters: { file_extension: "jpg" })
+        report =
+          Report.find(
+            "top_uploads",
+            filters: {
+              file_extension: "jpg",
+            },
+            guardian: Discourse.system_user.guardian,
+          )
 
         expect(report.data.length).to eq(1)
         expect(report.data[0][:extension]).to eq("jpg")
@@ -2147,7 +2296,9 @@ RSpec.describe Report do
   end
 
   describe "top_users_by_likes_received" do
-    let(:report) { Report.find("top_users_by_likes_received") }
+    let(:report) do
+      Report.find("top_users_by_likes_received", guardian: Discourse.system_user.guardian)
+    end
 
     include_examples "no data"
 
@@ -2163,7 +2314,8 @@ RSpec.describe Report do
       end
 
       it "with category filtering" do
-        report = Report.find("top_users_by_likes_received")
+        report =
+          Report.find("top_users_by_likes_received", guardian: Discourse.system_user.guardian)
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("jake")
@@ -2174,7 +2326,12 @@ RSpec.describe Report do
   end
 
   describe "top_users_by_likes_received_from_a_variety_of_people" do
-    let(:report) { Report.find("top_users_by_likes_received_from_a_variety_of_people") }
+    let(:report) do
+      Report.find(
+        "top_users_by_likes_received_from_a_variety_of_people",
+        guardian: Discourse.system_user.guardian,
+      )
+    end
 
     include_examples "no data"
 
@@ -2219,7 +2376,11 @@ RSpec.describe Report do
       end
 
       it "with category filtering" do
-        report = Report.find("top_users_by_likes_received_from_a_variety_of_people")
+        report =
+          Report.find(
+            "top_users_by_likes_received_from_a_variety_of_people",
+            guardian: Discourse.system_user.guardian,
+          )
 
         expect(report.data.length).to eq(3)
         expect(report.data[0][:username]).to eq("jonah")
@@ -2230,7 +2391,12 @@ RSpec.describe Report do
   end
 
   describe "top_users_by_likes_received_from_inferior_trust_level" do
-    let(:report) { Report.find("top_users_by_likes_received_from_inferior_trust_level") }
+    let(:report) do
+      Report.find(
+        "top_users_by_likes_received_from_inferior_trust_level",
+        guardian: Discourse.system_user.guardian,
+      )
+    end
 
     include_examples "no data"
 
@@ -2275,7 +2441,11 @@ RSpec.describe Report do
       end
 
       it "with category filtering" do
-        report = Report.find("top_users_by_likes_received_from_inferior_trust_level")
+        report =
+          Report.find(
+            "top_users_by_likes_received_from_inferior_trust_level",
+            guardian: Discourse.system_user.guardian,
+          )
 
         expect(report.data.length).to eq(2)
         expect(report.data[0][:username]).to eq("jake")
@@ -2285,7 +2455,7 @@ RSpec.describe Report do
   end
 
   describe "topic_view_stats" do
-    let(:report) { Report.find("topic_view_stats") }
+    let(:report) { Report.find("topic_view_stats", guardian: Discourse.system_user.guardian) }
 
     fab!(:topic_1, :topic)
     fab!(:topic_2, :topic)
@@ -2352,7 +2522,15 @@ RSpec.describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find("topic_view_stats", filters: { category: category_1.id }) }
+        let(:report) do
+          Report.find(
+            "topic_view_stats",
+            filters: {
+              category: category_1.id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
+        end
 
         before { topic_1.update!(category: category_1) }
 

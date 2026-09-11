@@ -9,14 +9,13 @@ class Admin::ReportsController < Admin::StaffController
 
   def bulk
     reports = []
-    access = Reports::Access.new(guardian: guardian)
 
     hijack do
       params[:reports].each do |report_type, report_params|
         raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
 
         args = parse_params(report_params)
-        report = access.find(type: report_type, options: args, cache: report_params[:cache])
+        report = find_report(report_type, cache: report_params[:cache], **args)
 
         if report.blank?
           report = Report._get(report_type, args.merge(guardian: guardian))
@@ -36,18 +35,30 @@ class Admin::ReportsController < Admin::StaffController
     raise Discourse::NotFound unless report_type =~ /\A[a-z0-9\_]+\z/
 
     args = parse_params(params)
-    access = Reports::Access.new(guardian: guardian)
 
     hijack do
-      report = access.find(type: report_type, options: args, cache: params[:cache])
+      report = find_report(report_type, cache: params[:cache], **args)
 
-      raise Discourse::NotFound if report.blank?
-
-      render_json_dump(report: report)
+      if report.blank?
+        rescue_discourse_actions(:not_found, 404)
+      else
+        render_json_dump(report: report)
+      end
     end
   end
 
   private
+
+  def find_report(type, cache:, **options)
+    if cache
+      cached = Report.find_cached(type, guardian: guardian, **options)
+      return cached if cached
+    end
+
+    report = Report.find(type, guardian: guardian, **options)
+    Report.cache(report) if cache && report
+    report
+  end
 
   def parse_params(report_params)
     begin

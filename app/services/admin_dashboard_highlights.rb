@@ -11,8 +11,8 @@ class AdminDashboardHighlights
     new_contributors: "new_contributors",
   }.freeze
 
-  def self.build(start_date:, end_date:)
-    new(start_date: start_date, end_date: end_date).build
+  def self.build(start_date:, end_date:, guardian:)
+    new(start_date: start_date, end_date: end_date, guardian: guardian).build
   end
 
   def self.enabled_kpis
@@ -23,7 +23,8 @@ class AdminDashboardHighlights
     end
   end
 
-  def initialize(start_date:, end_date:)
+  def initialize(start_date:, end_date:, guardian:)
+    @guardian = guardian
     @start_date = parse_date(start_date) || DEFAULT_RANGE_DAYS.days.ago.beginning_of_day
     @end_date = parse_date(end_date)&.end_of_day || Time.zone.now.end_of_day
   end
@@ -34,7 +35,7 @@ class AdminDashboardHighlights
 
   private
 
-  attr_reader :start_date, :end_date
+  attr_reader :start_date, :end_date, :guardian
 
   def parse_date(value)
     return nil if value.blank?

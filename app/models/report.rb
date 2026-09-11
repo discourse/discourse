@@ -183,6 +183,7 @@ class Report
                 :y_axis_title,
                 :current_user,
                 :guardian,
+                :purpose,
                 :include_related_items,
                 :related_items,
                 :related_items_totals
@@ -229,6 +230,7 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
+      report.purpose,
       guardian&.user&.id || report.current_user&.id,
       guardian&.can_see_ip?,
       CrawlerScorer.enabled?,
@@ -330,7 +332,7 @@ class Report
           start_date: start_date,
           end_date: end_date,
           guardian: guardian,
-          current_user: current_user,
+          purpose: purpose,
         )&.as_json
       end
     end
@@ -383,6 +385,7 @@ class Report
     report.filters = opts[:filters] if opts[:filters]
     report.guardian = opts[:guardian] || opts[:current_user]&.guardian
     report.current_user = report.guardian&.user
+    report.purpose = opts[:purpose] || :view
     report.include_related_items =
       opts[:include_related_items] &&
         (report.guardian&.is_admin? || !admin_only_related_items_report_types.include?(report.type))
@@ -393,8 +396,11 @@ class Report
     report
   end
 
-  def self.find_cached(type, opts = nil)
-    report = _get(type, opts)
+  def self.find_cached(type, guardian:, purpose: :view, **opts)
+    type = type.to_s
+    return unless allowed?(type, guardian: guardian, purpose: purpose)
+
+    report = _get(type, opts.merge(guardian: guardian, purpose: purpose))
     return if report.include_related_items
 
     Discourse.cache.read(cache_key(report))
@@ -407,11 +413,12 @@ class Report
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end
 
-  def self.find(type, opts = nil)
-    opts ||= {}
+  def self.find(type, guardian:, purpose: :view, **opts)
+    type = type.to_s
+    return unless allowed?(type, guardian: guardian, purpose: purpose)
 
     begin
-      report = _get(type, opts)
+      report = _get(type, opts.merge(guardian: guardian, purpose: purpose))
       report_method = :"report_#{type}"
 
       begin
@@ -450,6 +457,18 @@ class Report
 
     report
   end
+
+  def self.allowed?(type, guardian:, purpose:)
+    raise ArgumentError, "guardian is required" if guardian.nil?
+    raise ArgumentError, "invalid report purpose" if %i[view export].exclude?(purpose)
+
+    if purpose == :export
+      guardian.can_export_entity?("report", nil, name: type)
+    else
+      guardian.is_staff? && !hidden?(type, guardian: guardian)
+    end
+  end
+  private_class_method :allowed?
 
   # NOTE: Once use_legacy_pageviews is always false or no longer needed
   # we will no longer support the page_view_anon and page_view_logged_in reports,

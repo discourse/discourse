@@ -32,14 +32,17 @@ module AdminDashboard
         accessible = accessible_ids(identifiers, guardian: guardian)
         return {} if accessible.empty?
 
-        access = ::Reports::Access.new(guardian: guardian)
         opts = build_opts(filters)
 
         identifiers.each_with_object({}) do |identifier, hash|
           key = identifier.to_s
           next if accessible.exclude?(key)
 
-          report = access.find(type: key, options: opts, cache: true)
+          report = ::Report.find_cached(key, guardian: guardian, **opts)
+          if !report
+            report = ::Report.find(key, guardian: guardian, **opts)
+            ::Report.cache(report) if report
+          end
           next if report.blank?
 
           hash[key] = with_empty_flag(report.is_a?(::Report) ? report.as_json : report)

@@ -90,7 +90,11 @@ class AdminDashboardSectionLoader
   def section_data(id, user)
     case id
     when "highlights"
-      AdminDashboardHighlights.build(start_date: start_date, end_date: end_date)
+      AdminDashboardHighlights.build(
+        start_date: start_date,
+        end_date: end_date,
+        guardian: user.guardian,
+      )
     when "traffic"
       AdminDashboardSiteTraffic.build(
         start_date: start_date,
@@ -98,7 +102,11 @@ class AdminDashboardSectionLoader
         guardian: user.guardian,
       )
     when "engagement"
-      AdminDashboardEngagement.build(start_date: start_date, end_date: end_date, current_user: user)
+      AdminDashboardEngagement.build(
+        start_date: start_date,
+        end_date: end_date,
+        guardian: user.guardian,
+      )
     when "reports"
       AdminDashboard::Reports::Section.build(guardian: user.guardian)
     when "search"

@@ -72,10 +72,10 @@ class AdminDashboardSiteTraffic
       wrap_exceptions_in_test: true,
     }
 
-    cached = Report.find_cached(type, opts)
+    cached = Report.find_cached(type, **opts)
     return cached_to_payload(cached) if cached
 
-    report = Report.find(type, opts)
+    report = Report.find(type, **opts)
     return { rows: [], error: "exception" } if report.nil?
 
     # Timeouts skip the cache so the next request retries instead of being

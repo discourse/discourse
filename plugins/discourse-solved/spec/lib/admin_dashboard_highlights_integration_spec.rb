@@ -12,7 +12,12 @@ describe AdminDashboardHighlights do
     it "omits the KPI when no category enables accepted answers" do
       Fabricate(:category)
 
-      result = AdminDashboardHighlights.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      result =
+        AdminDashboardHighlights.build(
+          guardian: Discourse.system_user.guardian,
+          start_date: "2026-04-01",
+          end_date: "2026-04-28",
+        )
       expect(result[:kpis].map { |k| k[:type] }).not_to include(:accepted_solutions)
     end
 
@@ -21,7 +26,12 @@ describe AdminDashboardHighlights do
       category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
       category.save!
 
-      result = AdminDashboardHighlights.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      result =
+        AdminDashboardHighlights.build(
+          guardian: Discourse.system_user.guardian,
+          start_date: "2026-04-01",
+          end_date: "2026-04-28",
+        )
       kpi = result[:kpis].find { |k| k[:type] == :accepted_solutions }
 
       expect(kpi).to be_present
@@ -37,7 +47,12 @@ describe AdminDashboardHighlights do
       category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
       category.save!
 
-      result = AdminDashboardHighlights.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      result =
+        AdminDashboardHighlights.build(
+          guardian: Discourse.system_user.guardian,
+          start_date: "2026-04-01",
+          end_date: "2026-04-28",
+        )
       expect(result[:kpis].map { |k| k[:type] }).not_to include(:accepted_solutions)
     end
   end
@@ -61,6 +76,7 @@ describe AdminDashboardHighlights do
       report =
         Report.find(
           "accepted_solutions",
+          guardian: Discourse.system_user.guardian,
           start_date: Time.zone.local(2026, 4, 1),
           end_date: Time.zone.local(2026, 4, 28),
           facets: %i[prev_period],
@@ -84,6 +100,7 @@ describe AdminDashboardHighlights do
       report =
         Report.find(
           "accepted_solutions",
+          guardian: Discourse.system_user.guardian,
           start_date: Time.zone.local(2026, 4, 1),
           end_date: Time.zone.local(2026, 4, 28),
           facets: %i[prev_period],
@@ -108,6 +125,7 @@ describe AdminDashboardHighlights do
       report =
         Report.find(
           "accepted_solutions",
+          guardian: Discourse.system_user.guardian,
           start_date: Time.zone.local(2026, 4, 1),
           end_date: Time.zone.local(2026, 4, 28),
           facets: %i[prev_period],

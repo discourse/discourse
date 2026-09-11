@@ -2,13 +2,17 @@
 
 describe AdminDashboardEngagement do
   describe ".build" do
+    fab!(:admin)
+    let(:guardian) { admin.guardian }
+
     before do
       freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
       Discourse.cache.clear
     end
 
     it "returns a kpis array keyed by report type" do
-      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      result =
+        described_class.build(guardian: guardian, start_date: "2026-04-01", end_date: "2026-04-28")
 
       expect(result[:kpis]).to be_an(Array)
       types = result[:kpis].map { |k| k[:type] }
@@ -20,7 +24,8 @@ describe AdminDashboardEngagement do
       Fabricate(:user, created_at: Time.zone.local(2026, 4, 15))
       Fabricate(:user, created_at: Time.zone.local(2026, 3, 10))
 
-      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      result =
+        described_class.build(guardian: guardian, start_date: "2026-04-01", end_date: "2026-04-28")
       signups = result[:kpis].find { |k| k[:type] == :new_signups }
 
       expect(signups[:value]).to eq(2)
@@ -29,7 +34,8 @@ describe AdminDashboardEngagement do
     end
 
     it "emits report_type and report_query for drill-down" do
-      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      result =
+        described_class.build(guardian: guardian, start_date: "2026-04-01", end_date: "2026-04-28")
       engaged = result[:kpis].find { |k| k[:type] == :daily_engaged_users }
 
       expect(engaged[:report_type]).to eq("daily_engaged_users")
@@ -67,7 +73,8 @@ describe AdminDashboardEngagement do
         )
       end
 
-      result = described_class.build(start_date: "2026-04-22", end_date: "2026-04-28")
+      result =
+        described_class.build(guardian: guardian, start_date: "2026-04-22", end_date: "2026-04-28")
       engaged = result[:kpis].find { |k| k[:type] == :daily_engaged_users }
 
       expect(engaged[:value]).to eq(1.0)
@@ -76,19 +83,20 @@ describe AdminDashboardEngagement do
     end
 
     it "falls back to a default 30-day window when params are blank" do
-      result = described_class.build(start_date: nil, end_date: nil)
+      result = described_class.build(guardian: guardian, start_date: nil, end_date: nil)
       expect(result[:kpis]).to be_an(Array)
       expect(result[:kpis]).not_to be_empty
     end
 
     it "falls back to defaults when params are unparseable" do
-      result = described_class.build(start_date: "garbage", end_date: "also-garbage")
+      result =
+        described_class.build(guardian: guardian, start_date: "garbage", end_date: "also-garbage")
       expect(result[:kpis]).to be_an(Array)
       expect(result[:kpis]).not_to be_empty
     end
 
     it "ignores unicode garbage in date params" do
-      result = described_class.build(start_date: "字字字", end_date: "字字字")
+      result = described_class.build(guardian: guardian, start_date: "字字字", end_date: "字字字")
       expect(result[:kpis]).to be_an(Array)
       expect(result[:kpis]).not_to be_empty
     end
@@ -105,7 +113,8 @@ describe AdminDashboardEngagement do
         end
       end
 
-      result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+      result =
+        described_class.build(guardian: guardian, start_date: "2026-04-01", end_date: "2026-04-28")
       expect(result[:kpis].map { |k| k[:type] }).not_to include(:new_signups)
     ensure
       Report.define_singleton_method(:find, &original)
@@ -113,7 +122,12 @@ describe AdminDashboardEngagement do
 
     describe "posters" do
       it "includes the posters block with rows, total, and the default groups selection" do
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        result =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
         posters = result[:posters]
 
         expect(posters[:rows].map { |r| r[:type] }).to eq(%w[new_members returning staff])
@@ -122,7 +136,7 @@ describe AdminDashboardEngagement do
       end
 
       it "includes a persisted group, and omits it for a viewer who can't see the group" do
-        group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+        group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
 
         AdminDashboardSectionConfiguration.update_setting(
           section_id: "engagement",
@@ -137,17 +151,17 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: Fabricate(:admin),
+            guardian: Fabricate(:admin).guardian,
           )
         expect(admin_result[:posters][:groups]).to eq(["staff", Report.group_token(group.id)])
 
-        regular_user_result =
+        moderator_result =
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: Fabricate(:user),
+            guardian: Fabricate(:moderator).guardian,
           )
-        expect(regular_user_result[:posters][:groups]).to eq(["staff"])
+        expect(moderator_result[:posters][:groups]).to eq(["staff"])
       end
 
       it "omits a persisted group whose members are hidden, even when the group itself is visible" do
@@ -166,14 +180,14 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: Fabricate(:user),
+            guardian: Fabricate(:moderator).guardian,
           )
 
         expect(result[:posters][:groups]).to eq(["staff"])
       end
 
       it "falls back to the default groups when every persisted group becomes invisible" do
-        group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+        group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
 
         AdminDashboardSectionConfiguration.update_setting(
           section_id: "engagement",
@@ -188,13 +202,13 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: Fabricate(:user),
+            guardian: Fabricate(:moderator).guardian,
           )
 
         expect(result[:posters][:groups]).to eq(%w[new_members returning staff])
       end
 
-      it "honours category visibility when current_user is a moderator" do
+      it "honours category visibility for a moderator" do
         moderator = Fabricate(:moderator)
         returning_poster = Fabricate(:user, created_at: Time.zone.local(2026, 3, 1))
         private_group = Fabricate(:group)
@@ -211,7 +225,7 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: moderator,
+            guardian: moderator.guardian,
           )
 
         expect(result[:posters][:total]).to eq(0)
@@ -234,7 +248,7 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: admin,
+            guardian: admin.guardian,
           )
 
         expect(result[:posters][:total]).to eq(1)
@@ -262,7 +276,12 @@ describe AdminDashboardEngagement do
           },
         )
 
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        result =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
 
         expect(result[:posters][:total]).to eq(1)
       end
@@ -285,7 +304,7 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: moderator,
+            guardian: moderator.guardian,
           )
 
         expect(result[:posters][:category_ids]).to contain_exactly(visible.id)
@@ -304,7 +323,12 @@ describe AdminDashboardEngagement do
           },
         )
 
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        result =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
 
         expect(result[:posters][:category_ids]).to eq([third.id, first.id, second.id])
       end
@@ -318,7 +342,12 @@ describe AdminDashboardEngagement do
       end
 
       it "includes the activity_by_category block with rows and total" do
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        result =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
         activity = result[:activity_by_category]
 
         expect(activity).to have_key(:rows)
@@ -338,15 +367,25 @@ describe AdminDashboardEngagement do
           likely_crawler_page_views: 4,
         )
 
-        first = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        first =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
         expect(page_views_for(first, category)).to eq(10)
 
         SiteSetting.improved_crawler_detection = true
-        second = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        second =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
         expect(page_views_for(second, category)).to eq(6)
       end
 
-      it "honours category visibility when current_user is a moderator" do
+      it "honours category visibility for a moderator" do
         moderator = Fabricate(:moderator)
         private_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: private_group, read_restricted: true)
@@ -357,7 +396,7 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: moderator,
+            guardian: moderator.guardian,
           )
 
         ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
@@ -375,7 +414,7 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: admin,
+            guardian: admin.guardian,
           )
 
         ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
@@ -397,7 +436,12 @@ describe AdminDashboardEngagement do
           },
         )
 
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        result =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
 
         ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
         expect(ids).to contain_exactly(selected.id)
@@ -421,7 +465,7 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: moderator,
+            guardian: moderator.guardian,
           )
 
         expect(result[:activity_by_category][:category_ids]).to contain_exactly(visible.id)
@@ -445,7 +489,7 @@ describe AdminDashboardEngagement do
           described_class.build(
             start_date: "2026-04-01",
             end_date: "2026-04-28",
-            current_user: admin,
+            guardian: admin.guardian,
           )
 
         expect(result[:activity_by_category][:category_ids]).to contain_exactly(
@@ -460,7 +504,12 @@ describe AdminDashboardEngagement do
         Fabricate(:user, trust_level: TrustLevel[1])
         Fabricate(:user, trust_level: TrustLevel[2])
 
-        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+        result =
+          described_class.build(
+            guardian: guardian,
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          )
         pipeline = result[:trust_level_pipeline]
 
         expect(pipeline[:rows].length).to eq(5)

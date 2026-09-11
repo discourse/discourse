@@ -23,7 +23,10 @@ describe AdminDashboardSectionLoader do
           .returns({ value: "traffic" })
         AdminDashboardEngagement
           .expects(:build)
-          .with(start_date: "2026-05-01", end_date: "2026-05-07", current_user: admin)
+          .with do |kwargs|
+            kwargs[:start_date] == "2026-05-01" && kwargs[:end_date] == "2026-05-07" &&
+              kwargs[:guardian].user.id == admin.id
+          end
           .returns({ value: "engagement" })
         AdminDashboardSearch
           .expects(:build)
