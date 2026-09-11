@@ -1406,6 +1406,52 @@ module(
       }
     }
 
+    for (const [name, markdown, selector] of [
+      ["paragraphs", "abcd", ".ProseMirror > p"],
+      ["lists", "* abcd", ".ProseMirror li"],
+      ["inline HTML", "<kbd>abcd</kbd>", ".ProseMirror > p"],
+    ]) {
+      test(`Enter outside a table still splits ${name}`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, markdown);
+        const { view } = editor;
+        let pos;
+        view.state.doc.descendants((node, at) => {
+          if (node.isText && node.text === "abcd") {
+            pos = at + 2;
+          }
+        });
+        view.dispatch(
+          view.state.tr.setSelection(TextSelection.create(view.state.doc, pos))
+        );
+        await pressKey(view, "Enter", { keyCode: 13 });
+        const blocks = findAll(selector);
+        assert
+          .dom(blocks[0])
+          .hasText("ab", "the prefix stays in the first block");
+        assert.dom(blocks[1]).hasText("cd", "the suffix moves to a new block");
+        assert
+          .dom(".ProseMirror table")
+          .doesNotExist("no table handling leaks into ordinary text");
+      });
+    }
+
+    test("Enter outside a table keeps a newline inside code", async function (assert) {
+      const [editor] = await setupRichEditor(assert, "```\nabcd\n```");
+      const { view } = editor;
+      view.dispatch(
+        view.state.tr.setSelection(TextSelection.create(view.state.doc, 3))
+      );
+      await pressKey(view, "Enter", { keyCode: 13 });
+      assert.strictEqual(
+        view.state.doc.firstChild.textContent,
+        "ab\ncd",
+        "Enter keeps the code block intact"
+      );
+      assert
+        .dom(".ProseMirror pre")
+        .exists({ count: 1 }, "the code stays in one block");
+    });
+
     test("Enter yields to autocomplete inside a table", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
       const { view } = editor;
@@ -1483,6 +1529,102 @@ module(
         "the column count survives the round trip"
       );
     });
+
+    for (const key of ["Backspace", "Delete"]) {
+      test(`${key} at cell boundaries preserves rows and columns`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, TABLE);
+        const { view } = editor;
+        const original = view.state.doc;
+
+        for (const row of [0, 1, 2]) {
+          for (const col of [0, 1, 2]) {
+            const pos = cellPos(view, row, col) + (key === "Backspace" ? 1 : 3);
+            view.dispatch(
+              view.state.tr.setSelection(
+                TextSelection.create(view.state.doc, pos)
+              )
+            );
+            await pressKey(view, key, {
+              keyCode: key === "Backspace" ? 8 : 46,
+            });
+            assert.true(
+              view.state.doc.eq(original),
+              `the boundary of cell ${row}, ${col} cannot be joined`
+            );
+          }
+        }
+      });
+    }
+
+    for (const key of ["Backspace", "Delete"]) {
+      for (const modifiers of [
+        {},
+        { altKey: true },
+        { ctrlKey: true },
+        { metaKey: true },
+      ]) {
+        test(`${key} ${JSON.stringify(modifiers)} preserves empty cells on repeated presses`, async function (assert) {
+          const [editor] = await setupRichEditor(
+            assert,
+            `| h1 | | h3 |\n| --- | --- | --- |\n| a1 | | a3 |\n| | | |`
+          );
+          const { view } = editor;
+          const original = view.state.doc;
+          for (const [row, col] of [
+            [0, 1],
+            [1, 1],
+            [2, 0],
+            [2, 1],
+            [2, 2],
+          ]) {
+            await selectCell(view, row, col);
+            for (let press = 0; press < 3; press++) {
+              const event = await pressKey(view, key, {
+                keyCode: key === "Backspace" ? 8 : 46,
+                ...modifiers,
+              });
+              assert.true(
+                event.defaultPrevented,
+                "native deletion is blocked at the cell boundary"
+              );
+            }
+            assert.true(
+              view.state.doc.eq(original),
+              `empty cell ${row}, ${col} and its neighbors survive`
+            );
+          }
+        });
+      }
+
+      test(`${key} removes selected text inside a cell and remains undoable`, async function (assert) {
+        const [editor] = await setupRichEditor(assert, TABLE);
+        const { view } = editor;
+        const original = editor.value;
+        const from = cellPos(view, 1, 1) + 1;
+        view.dispatch(
+          view.state.tr.setSelection(
+            TextSelection.create(view.state.doc, from, from + 1)
+          )
+        );
+        await pressKey(view, key, { keyCode: key === "Backspace" ? 8 : 46 });
+        assert.strictEqual(
+          locateTable(view).grid.rows[1].cells[1].node.textContent,
+          "2",
+          "normal selected text deletion still works"
+        );
+        assert.deepEqual(
+          locateTable(view).grid.rows.map((row) => row.cells.length),
+          [3, 3, 3],
+          "deletion preserves the grid"
+        );
+        await apply(view, undo);
+        assert.strictEqual(
+          editor.value,
+          original,
+          "undo restores the cell text"
+        );
+      });
+    }
 
     test("Delete across cells preserves their boundaries", async function (assert) {
       const [editor] = await setupRichEditor(assert, TABLE);
