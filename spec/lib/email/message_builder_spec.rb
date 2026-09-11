@@ -551,20 +551,31 @@ RSpec.describe Email::MessageBuilder do
     let(:templated_builder) { Email::MessageBuilder.new(to_address, template: "mystery") }
     let(:rendered_template) { "rendered template" }
 
-    it "has the body rendered from a template" do
-      I18n
-        .expects(:t)
-        .with(
-          "mystery.text_body_template",
-          templated_builder.template_args.merge(
-            optional_re: "",
-            optional_pm: "",
-            optional_cat: "",
-            optional_tags: "",
-          ),
+    it "renders the body without querying for unused tags" do
+      template = "user_notifications.user_replied"
+      TranslationOverride.upsert!(I18n.locale, "#{template}.text_body_template", "%{message}")
+      builder = described_class.new(to_address, template:, message: body, tag_names: ["bug"])
+
+      expect(builder.body).to eq(body)
+
+      queries = track_sql_queries { builder.body }
+
+      expect(queries).to be_empty
+    end
+
+    it "renders plain tag names when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+      template = "user_notifications.user_replied"
+      TranslationOverride.upsert!(I18n.locale, "#{template}.text_body_template", "%{optional_tags}")
+      builder =
+        described_class.new(
+          to_address,
+          template:,
+          tag_names: %w[bug support],
+          show_tags_in_subject: "bug support",
         )
-        .returns(rendered_template)
-      expect(templated_builder.body).to eq(rendered_template)
+
+      expect(builder.body).to eq("bug support ")
     end
 
     it "has the subject rendered from a template" do
