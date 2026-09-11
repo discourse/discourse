@@ -40,17 +40,17 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::TOPIC) do
       placeholders = placeholders.merge(user_profile_data, user_custom_fields)
     end
 
-    topic_raw = fields.dig("body", "value")
-    topic_raw = utils.apply_placeholders(topic_raw, placeholders)
-
-    title = fields.dig("title", "value")
-    title = utils.apply_placeholders(title, placeholders)
-
     creator = User.find_by(username: creator_username)
     if !creator
       DiscourseAutomation::Logger.warn("creator with username: `#{creator_username}` was not found")
       next
     end
+
+    topic_raw = fields.dig("body", "value")
+    topic_raw = utils.apply_placeholders(topic_raw, placeholders, guardian: creator.guardian)
+
+    title = fields.dig("title", "value")
+    title = utils.apply_placeholders(title, placeholders, guardian: creator.guardian)
 
     category_id = fields.dig("category", "value")
     category = Category.find_by(id: category_id)

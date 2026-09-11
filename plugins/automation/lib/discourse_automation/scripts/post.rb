@@ -55,12 +55,12 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::POST) do
       placeholders = placeholders.merge(user_profile_data, user_custom_fields)
     end
 
-    post_raw = utils.apply_placeholders(post_raw, placeholders)
-
     if !creator
       DiscourseAutomation::Logger.warn("creator with username: `#{creator_username}` was not found")
       next
     end
+
+    post_raw = utils.apply_placeholders(post_raw, placeholders, guardian: creator.guardian)
 
     post_creator = PostCreator.new(creator, topic_id:, raw: post_raw)
     new_post = post_creator.create

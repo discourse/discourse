@@ -22,6 +22,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::SEND_PMS) do
 
   script do |context, fields, automation|
     sender_username = fields.dig("sender", "value") || Discourse.system_user.username
+    sender = User.find_by(username: sender_username)
 
     placeholders = { sender_username: sender_username }.merge(context["placeholders"] || {})
 
@@ -38,8 +39,16 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::SEND_PMS) do
         next if !sendable["title"] || !sendable["raw"]
 
         pm = {}
-        pm["title"] = utils.apply_placeholders(sendable["title"], placeholders)
-        pm["raw"] = utils.apply_placeholders(sendable["raw"], placeholders)
+        pm["title"] = utils.apply_placeholders(
+          sendable["title"],
+          placeholders,
+          guardian: sender&.guardian,
+        )
+        pm["raw"] = utils.apply_placeholders(
+          sendable["raw"],
+          placeholders,
+          guardian: sender&.guardian,
+        )
         pm["target_usernames"] = Array(username)
 
         utils.send_pm(

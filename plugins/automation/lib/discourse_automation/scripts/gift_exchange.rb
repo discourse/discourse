@@ -56,8 +56,18 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::GIFT_EXCHANGE)
           next
         end
 
-        raw = utils.apply_placeholders(giftee_assignment_message["raw"], placeholders)
-        title = utils.apply_placeholders(giftee_assignment_message["title"], placeholders)
+        raw =
+          utils.apply_placeholders(
+            giftee_assignment_message["raw"],
+            placeholders,
+            guardian: Discourse.system_user.guardian,
+          )
+        title =
+          utils.apply_placeholders(
+            giftee_assignment_message["title"],
+            placeholders,
+            guardian: Discourse.system_user.guardian,
+          )
 
         utils.send_pm(
           { target_usernames: Array(gifter), title: title, raw: raw },
