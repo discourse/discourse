@@ -14,6 +14,14 @@ module Boards
 
     private
 
+    def self.cooked_tag_hashtags(tags)
+      return "" if tags.empty?
+
+      hashtags = HashtagAutocompleteService.new(Guardian.new).hashtags_for("tag", tags.map(&:name))
+
+      Nokogiri::HTML5.fragment(PrettyText.cook(hashtags.join("\n"))).css("a").map(&:to_s).join("\n")
+    end
+
     def self.build_card_onebox(url, card_id, board_id, opts)
       card = Boards::Card.find_by(id: card_id, board_id: board_id)
       return "" if !card || !card.board.can_be_oneboxed?
@@ -25,12 +33,7 @@ module Boards
         end
       end
 
-      tag_html = ""
-      if card.tags.any?
-        tag_hashtags = card.tags.map { |tag| "##{tag.name}" }.join("\n")
-        tag_html =
-          Nokogiri::HTML5.fragment(PrettyText.cook(tag_hashtags)).css("a").map(&:to_s).join("\n")
-      end
+      tag_html = cooked_tag_hashtags(card.tags)
 
       updated_at = card.updated_at || card.created_at
 
@@ -69,12 +72,7 @@ module Boards
       board = Boards::Board.find_by(id: board_id)
       return "" if !board || !board.can_be_oneboxed?
 
-      tag_html = ""
-      if board.tags.any?
-        tag_hashtags = board.tags.map { |tag| "##{tag.name}" }.join("\n")
-        tag_html =
-          Nokogiri::HTML5.fragment(PrettyText.cook(tag_hashtags)).css("a").map(&:to_s).join("\n")
-      end
+      tag_html = cooked_tag_hashtags(board.tags)
 
       category_html = ""
       if board.categories.any?
