@@ -16,6 +16,8 @@ const skipCountIds = new Set();
 // Detailed per-occurrence records are deduplicated and capped so a noisy
 // deprecation in a hot code path can't blow up memory or the reporter payload.
 const MAX_DETAIL_ENTRIES = 2000;
+// Repeated stacks consume capture time without filling the detail-entry cap.
+const MAX_STACK_CAPTURES = 10000;
 // Deep enough to get past the runloop and computed-property machinery which sits
 // between a deprecated getter and the code that actually called it.
 const MAX_STACK_FRAMES = 60;
@@ -67,6 +69,7 @@ export default class DeprecationCounter {
   #qunit = null;
   #countsChanged = new Set();
   #instanceId = crypto.randomUUID();
+  #stackCaptures = 0;
 
   get hasDeprecations() {
     return this.counts.size > 0;
@@ -137,6 +140,11 @@ export default class DeprecationCounter {
    * Identical occurrences are collapsed into a single entry with a count.
    */
   recordDetail(id) {
+    if (this.#stackCaptures >= MAX_STACK_CAPTURES) {
+      return;
+    }
+
+    this.#stackCaptures++;
     const stack = captureStack();
     const currentTest = this.#qunit?.config?.current;
     const key = [

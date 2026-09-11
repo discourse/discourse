@@ -20,6 +20,45 @@ module("Unit | Lib | deprecation-counter", function (hooks) {
     this.sandbox.restore();
   });
 
+  test("keeps counting after exhausting the stack capture budget", function (assert) {
+    const counter = new DeprecationCounter();
+    const capture = this.sandbox
+      .stub(window, "Error")
+      .callsFake(() => ({ stack: "repeated stack" }));
+    capture.resetHistory();
+
+    try {
+      for (let i = 0; i < 10005; i++) {
+        counter.incrementCount("repeated.deprecation");
+      }
+      counter.incrementCount("later.deprecation");
+    } finally {
+      capture.restore();
+    }
+
+    assert.strictEqual(capture.callCount, 10000, "stack captures are bounded");
+    assert.strictEqual(
+      this.log.callCount,
+      10000,
+      "details are only emitted within the capture budget"
+    );
+    assert.strictEqual(
+      this.count.callCount,
+      10006,
+      "every occurrence is still reported to system specs"
+    );
+    assert.strictEqual(
+      counter.counts.get("repeated.deprecation"),
+      10005,
+      "repeated warnings continue to be counted"
+    );
+    assert.strictEqual(
+      counter.counts.get("later.deprecation"),
+      1,
+      "new warnings continue to be counted"
+    );
+  });
+
   test("keeps details from separate counters distinct outside a test", function (assert) {
     setEnvironment("qunit-testing");
     const reported = [];
