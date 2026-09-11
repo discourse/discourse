@@ -5871,6 +5871,8 @@ en:
       with_category: "%{filter} %{category} topics"
       filter:
         title: "Filtered results for %{filter}"
+        results_for: "Results for: %{query}"
+        reset: "reset"
         button:
           label: "Filter"
       latest:
