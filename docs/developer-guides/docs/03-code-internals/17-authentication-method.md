@@ -16,7 +16,21 @@ Each authenticator **must** implement a subclass of [Auth::Authenticator](https:
 
 https://github.com/discourse/discourse/blob/main/lib/auth/facebook_authenticator.rb
 
-`name`, `enabled?` and `register_middleware` must be overridden by implementing classes.
+`name` and `register_middleware` must be overridden by implementing classes, along with `enable_setting` — the boolean site setting an admin uses to turn the provider on.
+
+An authenticator **should** also declare `required_settings`: the site settings that must have a value before an authentication can succeed. The base class uses them for `configured?`, and `enabled?` is `enable_setting && configured?`, so a provider with missing credentials is never advertised on the login page and its `/auth/<name>` route stays closed — otherwise clicking the button strands the user on the provider's own error page with no way back. Declaring `required_settings` also lets `AuthProviderCredentialsValidator` refuse to enable the provider in the first place; wire it up with `validator: "AuthProviderCredentialsValidator"` on the enable setting.
+
+```rb
+def enable_setting
+  :enable_google_oauth2_logins
+end
+
+def required_settings
+  %i[google_oauth2_client_id google_oauth2_client_secret]
+end
+```
+
+An authenticator that overrides `enabled?` directly opts out of both gates.
 
 > :information_source: **Aside:** for multisite compatibility, it is important that any site-specific information is supplied to omniauth in a `setup` lambda, rather than being fixed at the time of definition. See all core authenticators for examples of this.
 

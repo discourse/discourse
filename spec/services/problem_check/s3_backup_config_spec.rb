@@ -60,7 +60,7 @@ RSpec.describe ProblemCheck::S3BackupConfig do
 
           it do
             expect(check).to have_a_problem.with_priority("low").with_message(
-              'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.',
+              '{{setting:backup_location}} is set to S3, but {{setting:s3_secret_access_key}} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.',
             )
           end
         end
@@ -72,7 +72,7 @@ RSpec.describe ProblemCheck::S3BackupConfig do
 
           it do
             expect(check).to have_a_problem.with_priority("low").with_message(
-              'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.',
+              '{{setting:backup_location}} is set to S3, but {{setting:s3_backup_bucket}} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.',
             )
           end
         end

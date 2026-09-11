@@ -24,9 +24,9 @@ describe "GitHub Oauth2" do
   end
 
   before do
-    SiteSetting.enable_github_logins = true
     SiteSetting.github_client_id = client_id
     SiteSetting.github_client_secret = client_secret
+    SiteSetting.enable_github_logins = true
 
     stub_request(:post, "https://github.com/login/oauth/access_token").with(
       body:

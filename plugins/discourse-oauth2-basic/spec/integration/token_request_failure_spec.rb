@@ -2,11 +2,11 @@
 
 describe "OAuth2 Basic token request failures" do
   before do
-    SiteSetting.oauth2_enabled = true
     SiteSetting.oauth2_client_id = "client"
     SiteSetting.oauth2_client_secret = "secret"
     SiteSetting.oauth2_authorize_url = "https://id.example.com/authorize"
     SiteSetting.oauth2_token_url = "https://id.example.com/token"
+    SiteSetting.oauth2_enabled = true
     stub_request(:post, "https://id.example.com/token").to_timeout
   end
 
