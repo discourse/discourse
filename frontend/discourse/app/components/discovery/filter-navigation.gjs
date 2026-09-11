@@ -27,8 +27,8 @@ export default class DiscoveryFilterNavigation extends Component {
     return this.args.canBulkSelect && (this.site.mobileView || enableOnDesktop);
   }
 
-  get title() {
-    return this.args.title?.trim();
+  get queryLabel() {
+    return this.args.queryLabel?.trim();
   }
 
   @bind
@@ -51,15 +51,15 @@ export default class DiscoveryFilterNavigation extends Component {
           </div>
         {{/if}}
 
-        {{#if this.title}}
+        {{#if this.queryLabel}}
           <LinkTo
             class="topic-query-filter__query"
-            @query={{hash q="" title=""}}
+            @query={{hash q="" query_label=""}}
             @route="discovery.filter"
           >
             {{dIcon "filter" class="topic-query-filter__icon"}}
             <span class="topic-query-filter__query-text">
-              {{i18n "filters.filter.results_for" query=this.title}}
+              {{i18n "filters.filter.results_for" query=this.queryLabel}}
             </span>
             <span class="topic-query-filter__reset">
               {{i18n "filters.filter.reset"}}

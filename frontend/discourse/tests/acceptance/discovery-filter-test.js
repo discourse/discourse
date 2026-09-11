@@ -17,14 +17,16 @@ acceptance("Discovery filter", function (needs) {
     });
   });
 
-  test("a titled filter can be reset to the normal filter view", async function (assert) {
-    const title = 'Questions about <plants> & "gardens"?';
-    await visit(`/filter?q=topic%3A11557&title=${encodeURIComponent(title)}`);
+  test("a labeled filter can be reset to the normal filter view", async function (assert) {
+    const queryLabel = 'Questions about <plants> & "gardens"?';
+    await visit(
+      `/filter?q=topic%3A11557&query_label=${encodeURIComponent(queryLabel)}`
+    );
 
     assert
       .dom(".topic-query-filter__query-text")
       .hasText(
-        `Results for: ${title}`,
+        `Results for: ${queryLabel}`,
         "the original query is displayed as text"
       );
     assert
@@ -63,7 +65,7 @@ acceptance("Discovery filter", function (needs) {
     );
   });
 
-  test("filters without a title keep the editable input", async function (assert) {
+  test("filters without a query label keep the editable input", async function (assert) {
     await visit("/filter?q=topic%3A11557");
 
     assert
@@ -74,8 +76,8 @@ acceptance("Discovery filter", function (needs) {
       .doesNotExist("ordinary filters have no query label");
   });
 
-  test("a blank title keeps the editable input", async function (assert) {
-    await visit("/filter?q=topic%3A11557&title=%20%20");
+  test("a blank query label keeps the editable input", async function (assert) {
+    await visit("/filter?q=topic%3A11557&query_label=%20%20");
 
     assert
       .dom(".topic-query-filter__filter-term")

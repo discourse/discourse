@@ -8,9 +8,9 @@ export default <template>
       <FilterNavigation
         @bulkSelectHelper={{@controller.bulkSelectHelper}}
         @canBulkSelect={{@controller.canBulkSelect}}
+        @queryLabel={{@controller.query_label}}
         @queryString={{@controller.q}}
         @tips={{@controller.model.topic_list.filter_option_info}}
-        @title={{@controller.title}}
         @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
       />
     </:navigation>

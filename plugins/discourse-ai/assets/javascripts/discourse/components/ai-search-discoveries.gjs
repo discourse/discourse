@@ -205,7 +205,7 @@ export default class AiSearchDiscoveries extends Component {
   get fullSearchUrl() {
     const topicFilter = `topic:${this.candidateTopicIds.join(",")}`;
     return getURL(
-      `/filter?q=${encodeURIComponent(topicFilter)}&title=${encodeURIComponent(this.query)}`
+      `/filter?q=${encodeURIComponent(topicFilter)}&query_label=${encodeURIComponent(this.query)}`
     );
   }
 
