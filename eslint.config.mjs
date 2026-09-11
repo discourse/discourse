@@ -1,9 +1,16 @@
 import DiscourseRecommended from "@discourse/lint-configs/eslint";
+import relativeImportExtensions from "./frontend/discourse/lib/eslint-relative-import-extensions.mjs";
 
 export default [
   ...DiscourseRecommended,
   {
+    plugins: {
+      core: {
+        rules: { "relative-import-extensions": relativeImportExtensions },
+      },
+    },
     rules: {
+      "core/relative-import-extensions": "error",
       "ember/template-no-capital-arguments": "off",
       "ember/template-require-button-type": "off",
     },
