@@ -7,6 +7,32 @@ RSpec.describe UploadCreator do
   fab!(:admin)
 
   describe "#create_for" do
+    shared_examples "animated upload preservation" do
+      it "preserves animated GIF uploads" do
+        FastImage.stubs(:animated?).returns(nil)
+        file = file_from_fixtures("tiny_animated.gif")
+        original = File.binread(file.path)
+
+        upload = described_class.new(file, "tiny_animated.gif").create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload.animated).to eq(true)
+        expect(File.binread(Discourse.store.path_for(upload))).to eq(original)
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "animated upload preservation"
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "animated upload preservation"
+    end
+
     context "when the upload is an SVG" do
       before { SiteSetting.authorized_extensions = "svg" }
 

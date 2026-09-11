@@ -33,6 +33,55 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".animated?" do
+    it "detects animation in a GIF" do
+      input_path = file_from_fixtures("tiny_animated.gif").path
+
+      expect(described_class.animated?(input_path:, timeout: 5)).to eq(true)
+    end
+
+    it "detects animation in a WebP" do
+      input_path = file_from_fixtures("animated.webp").path
+
+      expect(described_class.animated?(input_path:, timeout: 5)).to eq(true)
+    end
+
+    it "detects animation in an AVIF" do
+      input_path = file_from_fixtures("multipage.avif").path
+
+      expect(described_class.animated?(input_path:, timeout: 5)).to eq(true)
+    end
+
+    it "identifies a static GIF" do
+      input_path = file_from_fixtures("static.gif").path
+
+      expect(described_class.animated?(input_path:, timeout: 5)).to eq(false)
+    end
+
+    it "identifies a static WebP" do
+      input_path = file_from_fixtures("static.webp").path
+
+      expect(described_class.animated?(input_path:, timeout: 5)).to eq(false)
+    end
+
+    it "identifies a static AVIF" do
+      input_path = file_from_fixtures("static.avif").path
+
+      expect(described_class.animated?(input_path:, timeout: 5)).to eq(false)
+    end
+
+    it "rejects an unreadable image" do
+      Tempfile.create(%w[unreadable .gif]) do |file|
+        file.write("invalid image")
+        file.flush
+
+        expect { described_class.animated?(input_path: file.path, timeout: 5) }.to raise_error(
+          DiscourseVips::InvalidImage,
+        )
+      end
+    end
+  end
+
   describe "worker lifecycle" do
     it "recovers after the worker exits unexpectedly" do
       described_class.version

@@ -46,6 +46,8 @@ class DiscourseVipsWorker
         letter_avatar(*arguments)
       when "dominant-color"
         dominant_color(*arguments)
+      when "animated"
+        animated(*arguments)
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -133,6 +135,20 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :dominant_color
+
+    def self.animated(input_path)
+      new(read_paths: [input_path]) do
+        block_loaders(allowed: %w[VipsForeignLoadNsgif VipsForeignLoadWebp VipsForeignLoadHeif])
+
+        begin
+          image = Vips::Image.new_from_file(input_path, access: :sequential)
+          image.get_typeof("n-pages") != 0 && image.get("n-pages") > 1
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :animated
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
