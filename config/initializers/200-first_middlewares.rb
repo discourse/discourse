@@ -79,9 +79,9 @@ if Rails.env.test?
       status, headers, body = @app.call(env)
       if headers["Content-Type"]&.match?(/html/) && BlockRequestsMiddleware.current_example_location
         headers["Set-Cookie"] = [
-          headers["Set-Cookie"],
+          *headers["Set-Cookie"],
           "#{RSPEC_CURRENT_EXAMPLE_COOKIE_STRING}=#{BlockRequestsMiddleware.current_example_location}; path=/;",
-        ].compact.join("\n")
+        ]
       end
       [status, headers, body]
     end
