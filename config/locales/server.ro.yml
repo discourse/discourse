@@ -6,6 +6,8 @@
 
 ro:
   mcp:
+    errors:
+      topic_not_found: "Subiectul nu a fost găsit"
     oauth:
       deny: "Respinge"
       approve: "Autorizează"

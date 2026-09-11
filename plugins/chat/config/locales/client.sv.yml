@@ -487,6 +487,7 @@ sv:
       direct_messages:
         title: "DM"
         aria_label: "Byt till direktmeddelanden"
+        new_group: "Ny gruppchatt"
         create: "Kör"
         cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."
       channel_list:

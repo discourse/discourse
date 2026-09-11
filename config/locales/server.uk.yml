@@ -6,6 +6,11 @@
 
 uk:
   mcp:
+    errors:
+      draft_too_long: "Чернетка занадто довга"
+      post_not_found: "Повідомлення не знайдено"
+      topic_not_found: "Тему не знайдено"
+      user_not_found: "Користувача не знайдено"
     oauth:
       authorize_title: "Авторизувати клієнта MCP"
       client_request: "%{client_name} запитує доступ до %{site_name}."

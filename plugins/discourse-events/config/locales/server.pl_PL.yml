@@ -145,11 +145,14 @@ pl_PL:
           raw_invitees_length: "Wydarzenie jest ograniczone do %{count} użytkowników/grup."
           raw_invitees:
             only_group: "Wydarzenie akceptuje tylko nazwy grup."
-          ends_at_before_starts_at: "Wydarzenie nie może zakończyć się zanim się zacznie."
+          ends_at_before_starts_at: "Wydarzenie musi się zakończyć po rozpoczęciu."
           max_attendees_reached: "To wydarzenie jest pełne."
           start_must_be_present_and_a_valid_date: "Wydarzenie wymaga prawidłowej daty rozpoczęcia."
           end_must_be_a_valid_date: "Data zakończenia musi być prawidłową datą."
-          invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          recurrence_until_must_be_a_valid_date: "Data zakończenia powtarzania musi być prawidłową datą."
+          invalid_max_attendees: "Maksymalna liczba uczestników musi być liczbą z przedziału od 1 do %{maximum}."
+          invalid_reminders: "Nieprawidłowe przypomnienia: %{reminders}."
+          invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: %{recurrences}."
           invalid_timezone: "Strefa czasowa nie została rozpoznana."
           invalid_url: "Adres URL musi być prawidłowym adresem internetowym."
           acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
@@ -165,6 +168,12 @@ pl_PL:
           custom_field_is_invalid: "Pole niestandardowe `%{field}` jest niedozwolone."
           name:
             length: "Długość nazwy wydarzenia musi zawierać się w przedziale od %{minimum} do %{maximum} znaków."
+          description:
+            length: "Opis wydarzenia jest ograniczony do %{maximum} znaków."
+          url:
+            length: "Długość adresu URL wydarzenia jest ograniczona do %{maximum} znaków."
+          location:
+            length: "Lokalizacja zdarzenia jest ograniczona do %{maximum} znaków."
   discourse_push_notifications:
     popup:
       event_reminder: "Przypomnienie o wydarzeniu"

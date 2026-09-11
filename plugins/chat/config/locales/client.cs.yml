@@ -581,6 +581,7 @@ cs:
       direct_messages:
         title: "Soukromé zprávy"
         aria_label: "Přepnutí na přímé zprávy"
+        new_group: "Nová skupinová konverzace"
         create: "Přejít"
         leave: "Opustit kanál"
         close: "Zavřít kanál"

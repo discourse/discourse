@@ -6,6 +6,9 @@
 
 et:
   mcp:
+    errors:
+      draft_too_long: "Mustand on liiga pikk"
+      topic_not_found: "Teemat ei leitud"
     oauth:
       approve: "Autoriseeri"
   llms_txt:

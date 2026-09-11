@@ -6,6 +6,11 @@
 
 nl:
   mcp:
+    errors:
+      draft_too_long: "Concept is te lang"
+      post_not_found: "Bericht niet gevonden"
+      topic_not_found: "Topic niet gevonden"
+      user_not_found: "Gebruiker niet gevonden"
     oauth:
       resource: "MCP-server"
       deny: "Weigeren"

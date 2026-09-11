@@ -431,6 +431,7 @@ zh_CN:
       logging_subject: "垃圾信息检测"
     ai_bot:
       ai_users: "AI 用户"
+      ai_users_bio: "自动分组人工智能机器人账户"
       errors:
         invalid_agent_id: "指定的 AI 智能体不存在，或者您没有访问权限。"
         cannot_send_pm_to_agent: "您无法向该 AI 智能体发送个人信息"

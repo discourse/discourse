@@ -6,6 +6,8 @@
 
 ja:
   mcp:
+    errors:
+      topic_not_found: "トピックが見つかりませんでした"
     oauth:
       deny: "拒否"
       approve: "承認"

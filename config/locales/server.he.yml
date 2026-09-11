@@ -6,6 +6,9 @@
 
 he:
   mcp:
+    errors:
+      draft_too_long: "הטיוטה ארוכה מדי"
+      topic_not_found: "הנושא לא נמצא"
     oauth:
       deny: "דחייה"
       approve: "אישור"
