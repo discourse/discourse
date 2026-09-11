@@ -1,12 +1,147 @@
-.category-card-content {
-  &__title {
-    font-size: var(--font-up-5);
+@use "lib/viewport";
+
+// shared card layout lives in user-card.scss
+.category-card {
+  &__avatar {
+    display: flex;
+    flex: 0 0 auto;
+    width: var(--avatar-width);
+    height: var(--avatar-width);
+    margin-top: var(--avatar-margin);
+    border-radius: var(--d-border-radius);
+    overflow: hidden;
+
+    .category-logo.aspect-image {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
   }
 
-  &__type {
-    background-color: var(--mention-background-color);
-    font-size: var(--font-down-2);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--d-border-radius);
+  .first-row .names {
+    // the avatar only renders for uploaded logos
+    &:first-child {
+      padding-left: 0;
+
+      // without the avatar, the zero flex-basis lets the controls share this line and squeeze the name out
+      @include viewport.until(sm) {
+        flex-basis: 100%;
+      }
+    }
+
+    .category-card__link {
+      display: flex;
+      align-items: center;
+      gap: 0.25em;
+    }
+
+    .category-card__parent {
+      font-size: var(--font-down-1);
+
+      .category-card__link {
+        color: var(--primary-high);
+      }
+    }
+
+    .category-card__name {
+      min-width: 0;
+
+      @include ellipsis;
+    }
+
+    .category-card__style {
+      display: flex;
+      flex: 0 0 auto;
+
+      &.--style-square {
+        width: var(--category-badge-size);
+        height: var(--category-badge-size);
+        border-radius: var(--category-badge-border-radius);
+        background: var(--category-badge-color);
+      }
+
+      .d-icon,
+      .emoji {
+        width: var(--category-badge-size);
+        height: var(--category-badge-size);
+        margin: 0;
+        font-size: inherit;
+        color: var(--category-badge-color);
+      }
+    }
+  }
+
+  &__edit-description {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-half);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+
+    .bio + & {
+      margin-top: var(--space-1);
+    }
+  }
+
+  .card-content {
+    .category-card__latest {
+      margin-top: var(--space-3);
+    }
+  }
+
+  &__latest-title {
+    margin-bottom: var(--space-1);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__topics {
+    display: flex;
+    flex-direction: column;
+
+    @include unstyled-list;
+  }
+
+  &__topics .featured-topic {
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+    padding-block: var(--space-1);
+    border-top: 1px solid var(--content-border-color);
+
+    .title {
+      min-width: 0;
+      color: var(--primary);
+
+      @include ellipsis;
+    }
+
+    .topic-statuses {
+      display: flex;
+    }
+
+    button.-trigger {
+      padding: 0;
+      border: none;
+      background: transparent;
+    }
+
+    .last-posted-at {
+      flex: 0 0 auto;
+      margin-inline-start: auto;
+      padding-inline-start: var(--space-2);
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+    }
   }
 }

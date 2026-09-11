@@ -5451,6 +5451,7 @@ en:
       list: "List categories"
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
+      latest_topics: "Latest topics"
       description_updated: "Description updated"
       description_expand: "Show more"
       description_collapse: "Show less"

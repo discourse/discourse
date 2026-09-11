@@ -49,6 +49,7 @@
   }
 }
 
+// shared styles for user, group, and category cards
 .user-card,
 .group-card,
 .category-card {
@@ -99,6 +100,8 @@
 
   // avatar - names - controls
   .first-row {
+    display: flex;
+
     @include viewport.until(sm) {
       flex-wrap: wrap;
     }
@@ -255,8 +258,6 @@
 
   // avatar - names - controls
   .first-row {
-    display: flex;
-
     .avatar-placeholder {
       width: var(--avatar-width);
       height: var(--avatar-width);
@@ -529,8 +530,6 @@
 .group-card {
   // avatar - names and controls
   .first-row {
-    display: flex;
-
     .group-card-avatar {
       margin-top: var(--avatar-margin);
     }
