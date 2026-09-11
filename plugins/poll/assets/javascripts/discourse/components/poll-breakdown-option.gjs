@@ -8,7 +8,7 @@ import loadChartJS from "discourse/lib/load-chart-js";
 import { deepEqual } from "discourse/lib/object";
 import I18n, { i18n } from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
-import decoratePollOption from "../modifiers/decorate-poll-option";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
 
 @tagName("")
 export default class PollBreakdownOption extends Component {

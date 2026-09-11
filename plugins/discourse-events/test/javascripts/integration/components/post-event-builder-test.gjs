@@ -3,8 +3,8 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import PostEventBuilder from "../../discourse/components/modal/post-event-builder";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 function eventWith(attrs = {}) {
   return DiscoursePostEventEvent.create({

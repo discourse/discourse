@@ -5,8 +5,8 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
 import { excerpt } from "discourse/lib/text";
-import { colorToHex, contrastColor, stringToColor } from "../lib/colors";
-import FullCalendar from "./full-calendar";
+import { colorToHex, contrastColor, stringToColor } from "../lib/colors.js";
+import FullCalendar from "./full-calendar.gjs";
 
 export default class PostCalendar extends Component {
   @service siteSettings;

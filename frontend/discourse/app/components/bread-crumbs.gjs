@@ -10,7 +10,7 @@ import CategoryDrop from "discourse/select-kit/components/category-drop";
 import TagDrop from "discourse/select-kit/components/tag-drop";
 import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument";
+import deprecatedOutletArgument from "../helpers/deprecated-outlet-argument.js";
 
 @tagName("")
 export default class BreadCrumbs extends Component {

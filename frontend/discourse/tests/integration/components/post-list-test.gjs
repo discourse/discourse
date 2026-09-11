@@ -4,7 +4,7 @@ import PostList from "discourse/components/post-list";
 import { cloneJSON } from "discourse/lib/object";
 import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import postModel from "../../fixtures/post-list";
+import postModel from "../../fixtures/post-list.js";
 
 module("Integration | Component | PostList | Index", function (hooks) {
   setupRenderingTest(hooks);

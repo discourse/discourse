@@ -1,5 +1,5 @@
-import ChatEmojiAvatar from "../../chat-emoji-avatar";
-import ChatUserAvatar from "../../chat-user-avatar";
+import ChatEmojiAvatar from "../../chat-emoji-avatar.gjs";
+import ChatUserAvatar from "../../chat-user-avatar.gjs";
 
 const Avatar = <template>
   <div class="chat-message-avatar">

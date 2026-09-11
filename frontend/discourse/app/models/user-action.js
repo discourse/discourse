@@ -5,7 +5,7 @@ import { userPath } from "discourse/lib/url";
 import { escapeExpression, postUrl } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import UserActionGroup from "discourse/models/user-action-group";
-import Category from "./category";
+import Category from "./category.js";
 
 const UserActionTypes = {
   likes_given: 1,

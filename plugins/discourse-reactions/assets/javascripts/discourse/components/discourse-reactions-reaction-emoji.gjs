@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
-import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji.js";
 
 export default class DiscourseReactionsReactionEmoji extends Component {
   get reactionValue() {

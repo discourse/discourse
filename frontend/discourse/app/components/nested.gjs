@@ -21,12 +21,12 @@ import DLoadMore from "discourse/ui-kit/d-load-more";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import NestedFloatingActions from "./nested/floating-actions";
-import NestedHeader from "./nested/header";
-import NestedOp from "./nested/op";
-import NestedPost from "./nested/post";
-import NestedSortSelector from "./nested/sort-selector";
-import NestedTopicActions from "./nested/topic-actions";
+import NestedFloatingActions from "./nested/floating-actions.gjs";
+import NestedHeader from "./nested/header.gjs";
+import NestedOp from "./nested/op.gjs";
+import NestedPost from "./nested/post.gjs";
+import NestedSortSelector from "./nested/sort-selector.gjs";
+import NestedTopicActions from "./nested/topic-actions.gjs";
 
 const postExcerpt = helper(([post]) => {
   const element = document.createElement("div");

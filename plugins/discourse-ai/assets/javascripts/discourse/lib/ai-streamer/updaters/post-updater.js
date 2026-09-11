@@ -1,8 +1,8 @@
 import loadMorphlex from "discourse/lib/load-morphlex";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { cook } from "discourse/lib/text";
-import { addProgressDecoration } from "../progress-handlers";
-import StreamUpdater from "./stream-updater";
+import { addProgressDecoration } from "../progress-handlers.js";
+import StreamUpdater from "./stream-updater.js";
 
 export default class PostUpdater extends StreamUpdater {
   morphingOptions = {

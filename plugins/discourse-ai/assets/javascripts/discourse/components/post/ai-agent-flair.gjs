@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { isGPTBot } from "../../lib/ai-bot-helper";
+import { isGPTBot } from "../../lib/ai-bot-helper.js";
 
 export default class AiAgentFlair extends Component {
   static shouldRender(args) {

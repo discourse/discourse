@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import AiBotChatsTab from "../components/ai-bot-chats-tab";
+import AiBotChatsTab from "../components/ai-bot-chats-tab.gjs";
 
 export default apiInitializer((api) => {
   const siteSettings = api.container.lookup("service:site-settings");

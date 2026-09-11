@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import routeAction from "discourse/helpers/route-action";
 import DButton from "discourse/ui-kit/d-button";
-import decoratePollOption from "../modifiers/decorate-poll-option";
-import PollOptionRankedChoiceDropdown from "./poll-option-ranked-choice-dropdown";
+import decoratePollOption from "../modifiers/decorate-poll-option.js";
+import PollOptionRankedChoiceDropdown from "./poll-option-ranked-choice-dropdown.gjs";
 
 export default class PollOptionsComponent extends Component {
   @service currentUser;

@@ -1,7 +1,7 @@
 import { textReplace } from "pretty-text/text-replace";
 import deprecated from "discourse/lib/deprecated";
 import { cloneJSON } from "discourse/lib/object";
-import makeEngine, { cook } from "./engine";
+import makeEngine, { cook } from "./engine.js";
 
 // note, this will mutate options due to the way the API is designed
 // may need a refactor

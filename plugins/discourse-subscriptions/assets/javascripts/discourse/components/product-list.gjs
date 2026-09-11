@@ -4,7 +4,7 @@ import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
-import ProductItem from "./product-item";
+import ProductItem from "./product-item.gjs";
 
 @tagName("")
 export default class ProductList extends Component {

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import ChatNotice from "./chat-notice";
-import ChatRetentionReminder from "./chat-retention-reminder";
+import ChatNotice from "./chat-notice.gjs";
+import ChatRetentionReminder from "./chat-retention-reminder.gjs";
 
 export default class ChatNotices extends Component {
   @service("chat-channel-notices-manager") noticesManager;

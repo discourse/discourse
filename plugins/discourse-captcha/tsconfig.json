@@ -7,9 +7,10 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-captcha/*": ["./assets/javascripts/*"],
-      "discourse/plugins/discourse-captcha/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/discourse-captcha/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts"
       ]
     }
   }

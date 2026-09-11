@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import richEditorExtension from "../lib/rich-editor-extension";
+import richEditorExtension from "../lib/rich-editor-extension.js";
 
 function initializeDetails(api) {
   api.addComposerToolbarPopupMenuOption({

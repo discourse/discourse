@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import optionalService from "discourse/lib/optional-service";
-import { isPastEventTimeframe } from "../models/discourse-post-event-event";
+import { isPastEventTimeframe } from "../models/discourse-post-event-event.js";
 
 export default class EmbeddableChat extends Service {
   @service siteSettings;

@@ -11,8 +11,8 @@ import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import formatNodeIssue from "../../../lib/workflows/format-node-issue";
-import getNodeIssues from "../../../lib/workflows/node-issues";
+import formatNodeIssue from "../../../lib/workflows/format-node-issue.js";
+import getNodeIssues from "../../../lib/workflows/node-issues.js";
 import {
   nodeTypeIcon,
   nodeTypeInputLabel,
@@ -21,9 +21,12 @@ import {
   nodeTypeStyle,
   resolveNodeTypeVersion,
   typeVersionForNode,
-} from "../../../lib/workflows/node-types";
-import { nodeDescription, nodeLabel } from "../../../lib/workflows/node-utils";
-import CanvasHoverToolbar from "./hover-toolbar";
+} from "../../../lib/workflows/node-types.js";
+import {
+  nodeDescription,
+  nodeLabel,
+} from "../../../lib/workflows/node-utils.js";
+import CanvasHoverToolbar from "./hover-toolbar.gjs";
 
 function resolveType(workflowsNodeTypes, node) {
   const nodeType = workflowsNodeTypes.findNodeType(node.type);

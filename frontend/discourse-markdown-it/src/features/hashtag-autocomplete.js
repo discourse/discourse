@@ -4,7 +4,7 @@
 // not provide an accurate lookup for hashtags without a ::type suffix in those
 // cases if there are conflcting types of resources with the same slug.
 
-import { hasAllowedBoundaries } from "./text-post-process";
+import { hasAllowedBoundaries } from "./text-post-process.js";
 
 const MATCHER =
   /(?<!\/)#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-](?:[\u00C0-\u1FFF\u2C00-\uD7FF\w:.-]{0,99}[\u00C0-\u1FFF\u2C00-\uD7FF\w:-])?)/;

@@ -8,9 +8,9 @@ import DButton from "discourse/ui-kit/d-button";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
-import AdminTable from "../admin-table";
-import EmptyState from "../empty-state";
-import PaginatedListManager from "../paginated-list-manager";
+import AdminTable from "../admin-table.gjs";
+import EmptyState from "../empty-state.gjs";
+import PaginatedListManager from "../paginated-list-manager.js";
 
 export default class VersionsManager extends PaginatedListManager {
   @service router;

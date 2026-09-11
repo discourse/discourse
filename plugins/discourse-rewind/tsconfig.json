@@ -7,9 +7,13 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-rewind/*": ["./assets/javascripts/*"],
-      "discourse/plugins/discourse-rewind/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/discourse-rewind/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
       ]
     }
   }

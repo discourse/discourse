@@ -7,9 +7,16 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-user-notes/*": ["./assets/javascripts/*"],
-      "discourse/plugins/discourse-user-notes/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/discourse-user-notes/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./admin/assets/javascripts/*",
+        "./admin/assets/javascripts/*.gjs",
+        "./admin/assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
       ]
     }
   }

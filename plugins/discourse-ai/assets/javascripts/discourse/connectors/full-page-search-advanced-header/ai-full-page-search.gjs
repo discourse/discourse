@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import AiFullPageSearch from "../../components/ai-full-page-search";
+import AiFullPageSearch from "../../components/ai-full-page-search.gjs";
 
 export default class AiFullPageSearchConnector extends Component {
   static shouldRender(args, { siteSettings }) {

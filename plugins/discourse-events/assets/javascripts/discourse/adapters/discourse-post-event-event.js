@@ -1,5 +1,5 @@
 import { underscore } from "@ember/string";
-import DiscoursePostEventAdapter from "./discourse-post-event-adapter";
+import DiscoursePostEventAdapter from "./discourse-post-event-adapter.js";
 
 export default class DiscoursePostEventEvent extends DiscoursePostEventAdapter {
   pathFor(store, type, findArgs) {

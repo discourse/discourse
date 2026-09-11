@@ -7,7 +7,7 @@ import StyleguideComponent from "discourse/plugins/styleguide/discourse/componen
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import CalendarDateTimeInputExample from "../examples/atoms/date-time-inputs/calendar-date-time-input";
+import CalendarDateTimeInputExample from "../examples/atoms/date-time-inputs/calendar-date-time-input.gjs";
 import calendarDateTimeInputSource from "../examples/atoms/date-time-inputs/calendar-date-time-input?source=file";
 
 export default class StyleguideCalendarDateTimeInput extends Component {

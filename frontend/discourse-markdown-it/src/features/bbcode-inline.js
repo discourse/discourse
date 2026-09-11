@@ -1,4 +1,4 @@
-import { parseBBCodeTag } from "./bbcode-block";
+import { parseBBCodeTag } from "./bbcode-block.js";
 
 function tokenizeBBCode(state, silent, ruler) {
   let pos = state.pos;

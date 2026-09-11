@@ -15,9 +15,9 @@ import MultipleCategoriesSelector from "discourse/select-kit/components/multiple
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { supportHeadlineKeys } from "discourse/plugins/discourse-solved/admin/lib/support-headline";
-import SupportResponseTime from "./support/response-time";
-import SupportTopicOutcomes from "./support/topic-outcomes";
-import SupportWhosAnswering from "./support/whos-answering";
+import SupportResponseTime from "./support/response-time.gjs";
+import SupportTopicOutcomes from "./support/topic-outcomes.gjs";
+import SupportWhosAnswering from "./support/whos-answering.gjs";
 
 const MAX_CATEGORIES = 10;
 

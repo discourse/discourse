@@ -1,4 +1,4 @@
-import AdSlot from "../../components/ad-slot";
+import AdSlot from "../../components/ad-slot.gjs";
 
 const DiscourseAdplugin = <template>
   <div class="topic-above-post-stream-outlet discourse-adplugin">

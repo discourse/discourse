@@ -9,7 +9,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import TagChooserRow from "./tag-chooser-row";
+import TagChooserRow from "./tag-chooser-row.gjs";
 
 @classNames("tag-group-chooser", "tag-chooser")
 @selectKitOptions({

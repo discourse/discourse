@@ -7,7 +7,7 @@ import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 function categoryIdsFromValue(value) {
   if (value == null || value === "") {

@@ -4,8 +4,8 @@ import {
   playUserJoinedSound,
   playUserLeftSound,
   stopCallSounds,
-} from "./sound-effects";
-import { participantCanSpeak } from "./stage-roles";
+} from "./sound-effects.js";
+import { participantCanSpeak } from "./stage-roles.js";
 
 // Handles the roster-shaped room messages ("participants", "role_change",
 // "hand_raise"): diffing the roster into mesh peer create/destroy (or the

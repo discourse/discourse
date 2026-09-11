@@ -1,5 +1,5 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import PostExample from "../../examples/organisms/post";
+import PostExample from "../../examples/organisms/post.gjs";
 import postSource from "../../examples/organisms/post?source=file";
 
 export default <template>

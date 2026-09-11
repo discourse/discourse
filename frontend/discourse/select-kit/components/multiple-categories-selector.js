@@ -5,8 +5,8 @@ import Category from "discourse/models/category";
 import CategoryRow from "discourse/select-kit/components/category-row";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
-import SelectedChoiceCategory from "./selected-choice-category";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
+import SelectedChoiceCategory from "./selected-choice-category.gjs";
 
 export const MAX_UNSELECTED_RESULTS = 30;
 export const LIMITED_RESULTS_NOTICE_VALUE =

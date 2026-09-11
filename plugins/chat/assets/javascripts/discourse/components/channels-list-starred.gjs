@@ -3,10 +3,10 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle";
-import ChatChannelListOptionsButton from "./chat-channel-list-options-button";
-import ChatChannelRow from "./chat-channel-row";
-import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state";
+import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle.gjs";
+import ChatChannelListOptionsButton from "./chat-channel-list-options-button.gjs";
+import ChatChannelRow from "./chat-channel-row.gjs";
+import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state.gjs";
 
 export default class ChannelsListStarred extends Component {
   @service chatChannelsManager;

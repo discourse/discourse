@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import AdminHolidaysListItem from "./admin-holidays-list-item";
+import AdminHolidaysListItem from "./admin-holidays-list-item.gjs";
 
 const AdminHolidaysList = <template>
   <table class="d-table admin-holidays-list">

@@ -2,19 +2,19 @@ import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
-import BackgroundBlurManager from "./background-blur";
+import BackgroundBlurManager from "./background-blur.js";
 import {
   cameraConstraints,
   preferredVideoInputDeviceId,
   setPreferredVideoInputDeviceId,
-} from "./media-devices";
-import PeerManager from "./peer-manager";
-import { SCREEN_CONTENT_MOTION } from "./quality-preferences";
+} from "./media-devices.js";
+import PeerManager from "./peer-manager.js";
+import { SCREEN_CONTENT_MOTION } from "./quality-preferences.js";
 import {
   applyScreenAudioQuality,
   applyVideoQuality,
   screenCaptureFramerate,
-} from "./video-quality";
+} from "./video-quality.js";
 
 // Owns the local video pipeline: camera/screen capture, the optional
 // background-blur wrap, device switching, per-peer sender sync and the

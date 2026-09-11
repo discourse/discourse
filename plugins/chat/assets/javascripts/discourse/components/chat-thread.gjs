@@ -31,16 +31,16 @@ import {
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
-import ChatComposerThread from "./chat/composer/thread";
-import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
-import ChatSelectionManager from "./chat/selection-manager";
-import ChatChannelPreviewCard from "./chat-channel-preview-card";
-import Message from "./chat-message";
-import ChatMessagesContainer from "./chat-messages-container";
-import ChatMessagesScroller from "./chat-messages-scroller";
-import ChatSkeleton from "./chat-skeleton";
-import ChatThreadHeading from "./chat-thread-heading";
-import ChatUploadDropZone from "./chat-upload-drop-zone";
+import ChatComposerThread from "./chat/composer/thread.js";
+import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow.gjs";
+import ChatSelectionManager from "./chat/selection-manager.gjs";
+import ChatChannelPreviewCard from "./chat-channel-preview-card.gjs";
+import Message from "./chat-message.gjs";
+import ChatMessagesContainer from "./chat-messages-container.gjs";
+import ChatMessagesScroller from "./chat-messages-scroller.gjs";
+import ChatSkeleton from "./chat-skeleton.gjs";
+import ChatThreadHeading from "./chat-thread-heading.gjs";
+import ChatUploadDropZone from "./chat-upload-drop-zone.gjs";
 
 export default class ChatThread extends Component {
   @service capabilities;

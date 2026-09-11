@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedArray } from "@ember/reactive/collections";
 import Service from "@ember/service";
-import ChatNotice from "../models/chat-notice";
+import ChatNotice from "../models/chat-notice.js";
 
 export default class ChatChannelNoticesManager extends Service {
   @tracked notices = trackedArray();

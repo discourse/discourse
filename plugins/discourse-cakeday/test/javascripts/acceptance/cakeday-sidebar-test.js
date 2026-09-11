@@ -3,8 +3,8 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import anniversariesFixtures from "../fixtures/anniversaries";
-import birthdaysFixtures from "../fixtures/birthdays";
+import anniversariesFixtures from "../fixtures/anniversaries.js";
+import birthdaysFixtures from "../fixtures/birthdays.js";
 
 acceptance("Sidebar with cakeday disabled", function (needs) {
   needs.user();

@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import AiArtifact from "../components/ai-artifact";
+import AiArtifact from "../components/ai-artifact.gjs";
 
 function initializeAiArtifacts(api) {
   api.decorateCookedElement(

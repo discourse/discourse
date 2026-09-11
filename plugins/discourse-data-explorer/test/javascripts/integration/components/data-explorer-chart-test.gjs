@@ -6,7 +6,7 @@ import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import DataExplorerChart from "../../discourse/components/data-explorer-chart";
+import DataExplorerChart from "discourse/plugins/discourse-data-explorer/discourse/components/data-explorer-chart";
 
 const AfterRender = <template>
   <div {{didInsert (fn schedule "afterRender" @run)}}></div>

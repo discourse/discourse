@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import Dates from "./dates";
-import DiscoursePostEventLocation from "./location";
+import Dates from "./dates.gjs";
+import DiscoursePostEventLocation from "./location.gjs";
 
 export default class DiscoursePostEventOneboxPreview extends Component {
   @service discoursePostEventApi;

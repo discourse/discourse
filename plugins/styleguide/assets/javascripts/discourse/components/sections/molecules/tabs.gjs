@@ -1,11 +1,11 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import TabsBasicExample from "../../examples/molecules/tabs/basic";
+import TabsBasicExample from "../../examples/molecules/tabs/basic.gjs";
 import tabsBasicSource from "../../examples/molecules/tabs/basic?source=file";
-import TabsHeaderExample from "../../examples/molecules/tabs/header";
+import TabsHeaderExample from "../../examples/molecules/tabs/header.gjs";
 import tabsHeaderSource from "../../examples/molecules/tabs/header?source=file";
-import TabsOverflowExample from "../../examples/molecules/tabs/overflow";
+import TabsOverflowExample from "../../examples/molecules/tabs/overflow.gjs";
 import tabsOverflowSource from "../../examples/molecules/tabs/overflow?source=file";
-import TabsVerticalExample from "../../examples/molecules/tabs/vertical";
+import TabsVerticalExample from "../../examples/molecules/tabs/vertical.gjs";
 import tabsVerticalSource from "../../examples/molecules/tabs/vertical?source=file";
 
 export default <template>

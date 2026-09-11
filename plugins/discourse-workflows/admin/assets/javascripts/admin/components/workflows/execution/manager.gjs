@@ -13,9 +13,9 @@ import {
   ExecutionProgressStream,
   formatDuration,
   isRunning,
-} from "../../../lib/workflows/execution-progress";
-import AdminTable from "../admin-table";
-import EmptyState from "../empty-state";
+} from "../../../lib/workflows/execution-progress.js";
+import AdminTable from "../admin-table.gjs";
+import EmptyState from "../empty-state.gjs";
 
 const EXECUTIONS_CHANNEL = "/discourse-workflows/executions";
 

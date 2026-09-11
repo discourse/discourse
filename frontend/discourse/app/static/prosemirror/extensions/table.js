@@ -1,6 +1,6 @@
-import { tableChrome } from "../lib/table/chrome";
-import tableEditing from "../lib/table/editing";
-import { buildTableNodeView, TableCellView } from "../lib/table/node-view";
+import { tableChrome } from "../lib/table/chrome.js";
+import tableEditing from "../lib/table/editing.js";
+import { buildTableNodeView, TableCellView } from "../lib/table/node-view.js";
 
 // Markdown Table Example:
 //

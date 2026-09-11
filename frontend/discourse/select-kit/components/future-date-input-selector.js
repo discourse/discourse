@@ -6,8 +6,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
-import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header";
-import FutureDateInputSelectorRow from "./future-date-input-selector/future-date-input-selector-row";
+import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header.gjs";
+import FutureDateInputSelectorRow from "./future-date-input-selector/future-date-input-selector-row.gjs";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 

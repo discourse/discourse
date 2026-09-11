@@ -3,7 +3,7 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
-import AdminSidebarPanel from "./admin-sidebar";
+import AdminSidebarPanel from "./admin-sidebar.js";
 
 class MainSidebarPanel extends BaseCustomSidebarPanel {
   scrollActiveLinkIntoView = true;

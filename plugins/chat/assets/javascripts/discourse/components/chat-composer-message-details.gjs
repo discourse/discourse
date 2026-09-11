@@ -2,7 +2,7 @@ import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import ChatUserAvatar from "./chat-user-avatar";
+import ChatUserAvatar from "./chat-user-avatar.gjs";
 
 const ChatComposerMessageDetails = <template>
   <div

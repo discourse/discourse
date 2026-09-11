@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { i18n } from "discourse-i18n";
-import AdminStaffActionLogComponent from "../../components/modal/staff-action-log-change";
-import StaffActionLogDetailsModal from "../../components/modal/staff-action-log-details";
+import AdminStaffActionLogComponent from "../../components/modal/staff-action-log-change.gjs";
+import StaffActionLogDetailsModal from "../../components/modal/staff-action-log-details.gjs";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
   @service modal;

@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import richEditorExtension from "../../lib/rich-editor-extension";
-import PollUiBuilder from "../components/modal/poll-ui-builder";
+import richEditorExtension from "../../lib/rich-editor-extension.js";
+import PollUiBuilder from "../components/modal/poll-ui-builder.gjs";
 
 function initializePollUIBuilder(api) {
   api.addComposerToolbarPopupMenuOption({

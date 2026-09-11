@@ -1,4 +1,4 @@
-import { attrs, withDefaults } from "./helpers";
+import { attrs, withDefaults } from "./helpers.js";
 
 // `site` is stamped on at runtime by `Site.create` so `isDefault` can compare
 // against `this.site.default_archetype`.

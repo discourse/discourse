@@ -9,8 +9,8 @@ import {
 import User from "discourse/models/user";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import IgnoredUserListItem from "./ignored-user-list-item";
-import IgnoreDurationModal from "./modal/ignore-duration-with-username";
+import IgnoredUserListItem from "./ignored-user-list-item.gjs";
+import IgnoreDurationModal from "./modal/ignore-duration-with-username.gjs";
 
 export default class IgnoredUserList extends Component {
   @service modal;

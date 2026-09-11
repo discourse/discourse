@@ -6,7 +6,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
-import AssignUserForm from "../assign-user-form";
+import AssignUserForm from "../assign-user-form.gjs";
 
 export default class AssignUser extends Component {
   @service taskActions;

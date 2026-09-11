@@ -10,7 +10,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import pretender, { response } from "../helpers/create-pretender";
+import pretender, { response } from "../helpers/create-pretender.js";
 
 acceptance("Composer - Messages", function (needs) {
   needs.user();

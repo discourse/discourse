@@ -15,9 +15,9 @@ import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PluginOutlet from "../../plugin-outlet";
-import FeaturedLink from "./featured-link";
-import Participant from "./participant";
+import PluginOutlet from "../../plugin-outlet.gjs";
+import FeaturedLink from "./featured-link.gjs";
+import Participant from "./participant.gjs";
 
 export default class Info extends Component {
   @service currentUser;

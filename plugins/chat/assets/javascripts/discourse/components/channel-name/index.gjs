@@ -6,7 +6,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
+import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator.gjs";
 
 export default class ChatChannelName extends Component {
   @service currentUser;

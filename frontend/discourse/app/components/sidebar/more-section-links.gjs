@@ -10,9 +10,9 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import { findActiveLink } from "discourse/lib/sidebar/active-link";
 import { and } from "discourse/truth-helpers";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import MoreSectionLink from "./more-section-link";
-import MoreSectionTrigger from "./more-section-trigger";
-import SectionLinkButton from "./section-link-button";
+import MoreSectionLink from "./more-section-link.gjs";
+import MoreSectionTrigger from "./more-section-trigger.gjs";
+import SectionLinkButton from "./section-link-button.gjs";
 
 export default class SidebarMoreSectionLinks extends Component {
   @service router;

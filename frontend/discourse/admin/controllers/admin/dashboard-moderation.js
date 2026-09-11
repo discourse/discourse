@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import AdminDashboardTabController from "../admin-dashboard-tab";
+import AdminDashboardTabController from "../admin-dashboard-tab.js";
 
 export default class AdminDashboardModerationController extends AdminDashboardTabController {
   @computed

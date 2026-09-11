@@ -13,18 +13,18 @@ import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import { activeRingingEntries } from "../../lib/voice/ringing";
+import { activeRingingEntries } from "../../lib/voice/ringing.js";
 import {
   computeWidgetGrid,
   trackGridSize,
-} from "../../lib/voice/video-grid-layout";
-import VoiceInviteUsersModal from "../modal/voice-invite-users";
-import VoiceRoomInfoModal from "../modal/voice-room-info";
-import VoiceCallControls from "./call-controls";
-import VoiceRecordingBadge from "./recording-badge";
-import VoiceRingingTile from "./ringing-tile";
-import VoiceTranscriptBadge from "./transcript-badge";
-import VoiceVideoTile from "./video-tile";
+} from "../../lib/voice/video-grid-layout.js";
+import VoiceInviteUsersModal from "../modal/voice-invite-users.gjs";
+import VoiceRoomInfoModal from "../modal/voice-room-info.gjs";
+import VoiceCallControls from "./call-controls.gjs";
+import VoiceRecordingBadge from "./recording-badge.gjs";
+import VoiceRingingTile from "./ringing-tile.gjs";
+import VoiceTranscriptBadge from "./transcript-badge.gjs";
+import VoiceVideoTile from "./video-tile.gjs";
 
 const WIDGET_VIDEO_TILE_BUDGET = 4;
 const WIDGET_VIEWPORT_MARGIN = 16;

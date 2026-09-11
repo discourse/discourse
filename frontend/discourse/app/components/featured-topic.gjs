@@ -7,7 +7,7 @@ import {
 } from "@ember-decorators/component";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
-import TopicStatus from "./topic-status";
+import TopicStatus from "./topic-status.gjs";
 
 @classNameBindings(":featured-topic")
 @attributeBindings("topic.id:data-topic-id")

@@ -1,9 +1,9 @@
 import { i18n } from "discourse-i18n";
-import ContextMenuDecliningExample from "../../examples/molecules/context-menu/declining";
+import ContextMenuDecliningExample from "../../examples/molecules/context-menu/declining.gjs";
 import contextMenuDecliningSource from "../../examples/molecules/context-menu/declining?source=file";
-import ContextMenuNestingExample from "../../examples/molecules/context-menu/nesting";
+import ContextMenuNestingExample from "../../examples/molecules/context-menu/nesting.gjs";
 import contextMenuNestingSource from "../../examples/molecules/context-menu/nesting?source=file";
-import StyleguideExample from "../../styleguide-example";
+import StyleguideExample from "../../styleguide-example.gjs";
 
 /**
  * Demos for the context-menu modifier: what a right-click opens, and what happens when a

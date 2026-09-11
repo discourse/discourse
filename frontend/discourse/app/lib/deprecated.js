@@ -1,7 +1,7 @@
 import { registerDeprecationHandler as emberRegisterDeprecationHandler } from "@ember/debug";
-import DeprecationWorkflow from "../deprecation-workflow";
-import { isRailsTesting } from "./environment";
-import identifySource, { consolePrefix } from "./source-identifier";
+import DeprecationWorkflow from "../deprecation-workflow.js";
+import { isRailsTesting } from "./environment.js";
+import identifySource, { consolePrefix } from "./source-identifier.js";
 
 const handlers = [];
 // Universal handlers also receive Ember's own deprecations (via the bridge below).

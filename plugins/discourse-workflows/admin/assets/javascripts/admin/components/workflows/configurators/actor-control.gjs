@@ -10,8 +10,8 @@ import {
   actorKindForValue,
   ANONYMOUS_ACTOR,
   SYSTEM_ACTOR,
-} from "../../../lib/workflows/actor";
-import ExpressionWrapper from "./expression-wrapper";
+} from "../../../lib/workflows/actor.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 const KIND_OPTIONS = [
   { id: ACTOR_KIND.system, name: i18n("discourse_workflows.actor.system") },

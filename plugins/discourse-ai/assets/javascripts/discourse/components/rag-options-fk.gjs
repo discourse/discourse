@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { i18n } from "discourse-i18n";
-import AiLlmSelector from "./ai-llm-selector";
+import AiLlmSelector from "./ai-llm-selector.gjs";
 
 export default class RagOptionsFk extends Component {
   @tracked showIndexingOptions = false;

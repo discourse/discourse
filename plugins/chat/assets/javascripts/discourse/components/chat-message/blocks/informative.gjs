@@ -1,4 +1,4 @@
-import Element from "./element";
+import Element from "./element.gjs";
 
 const Informative = <template>
   <div class="block__informative-wrapper">

@@ -2,7 +2,7 @@ import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import Collection from "../lib/collection";
+import Collection from "../lib/collection.js";
 
 /**
  * Chat API service. Provides methods to interact with the chat API.

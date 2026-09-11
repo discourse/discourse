@@ -6,7 +6,7 @@ import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import RequestGroupMembershipForm from "./modal/request-group-membership-form";
+import RequestGroupMembershipForm from "./modal/request-group-membership-form.gjs";
 
 @tagName("")
 export default class GroupMembershipButton extends Component {

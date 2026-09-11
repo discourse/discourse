@@ -1,18 +1,18 @@
 import CalendarDateTimeInput from "discourse/plugins/styleguide/discourse/components/styleguide/calendar-date-time-input";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import DateInputExample from "../../examples/atoms/date-time-inputs/date-input";
+import DateInputExample from "../../examples/atoms/date-time-inputs/date-input.gjs";
 import dateInputSource from "../../examples/atoms/date-time-inputs/date-input?source=file";
-import DatePickerExample from "../../examples/atoms/date-time-inputs/date-picker";
+import DatePickerExample from "../../examples/atoms/date-time-inputs/date-picker.gjs";
 import datePickerSource from "../../examples/atoms/date-time-inputs/date-picker?source=file";
-import DateTimeInputExample from "../../examples/atoms/date-time-inputs/date-time-input";
+import DateTimeInputExample from "../../examples/atoms/date-time-inputs/date-time-input.gjs";
 import dateTimeInputSource from "../../examples/atoms/date-time-inputs/date-time-input?source=file";
-import DateTimeInputRangeExample from "../../examples/atoms/date-time-inputs/date-time-input-range";
+import DateTimeInputRangeExample from "../../examples/atoms/date-time-inputs/date-time-input-range.gjs";
 import dateTimeInputRangeSource from "../../examples/atoms/date-time-inputs/date-time-input-range?source=file";
-import DateTimeInputRangeWithoutTimeExample from "../../examples/atoms/date-time-inputs/date-time-input-range-without-time";
+import DateTimeInputRangeWithoutTimeExample from "../../examples/atoms/date-time-inputs/date-time-input-range-without-time.gjs";
 import dateTimeInputRangeWithoutTimeSource from "../../examples/atoms/date-time-inputs/date-time-input-range-without-time?source=file";
-import FutureDateInputExample from "../../examples/atoms/date-time-inputs/future-date-input";
+import FutureDateInputExample from "../../examples/atoms/date-time-inputs/future-date-input.gjs";
 import futureDateInputSource from "../../examples/atoms/date-time-inputs/future-date-input?source=file";
-import TimeInputExample from "../../examples/atoms/date-time-inputs/time-input";
+import TimeInputExample from "../../examples/atoms/date-time-inputs/time-input.gjs";
 import timeInputSource from "../../examples/atoms/date-time-inputs/time-input?source=file";
 
 export default <template>

@@ -7,7 +7,7 @@ import {
   assertRegistryNotFrozen,
   validateNamePattern,
   validateSourceNamespace,
-} from "./helpers";
+} from "./helpers.ts";
 
 /** Metadata recorded for a custom block outlet. */
 interface CustomOutletMetadata {

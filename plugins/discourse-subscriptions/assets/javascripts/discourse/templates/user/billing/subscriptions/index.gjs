@@ -2,7 +2,7 @@ import routeAction from "discourse/helpers/route-action";
 import DButton from "discourse/ui-kit/d-button";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
-import formatUnixDate from "../../../../helpers/format-unix-date";
+import formatUnixDate from "../../../../helpers/format-unix-date.js";
 
 export default <template>
   {{#if @controller.model}}

@@ -1,7 +1,7 @@
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { i18n } from "discourse-i18n";
-import roomIcon, { roomBadge } from "./room-icon";
+import roomIcon, { roomBadge } from "./room-icon.js";
 
 export default function buildAnonRoomsSection(roomsService) {
   return (BaseSection, BaseLink) => {

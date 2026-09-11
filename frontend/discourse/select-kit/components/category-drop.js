@@ -17,7 +17,7 @@ import {
 } from "discourse/select-kit/components/select-kit";
 import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
-import CategoryDropHeader from "./category-drop/category-drop-header";
+import CategoryDropHeader from "./category-drop/category-drop-header.gjs";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";

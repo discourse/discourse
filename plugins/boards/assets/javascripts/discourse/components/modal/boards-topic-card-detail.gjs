@@ -19,7 +19,7 @@ import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { columnColorVariable } from "../../lib/boards-column-helpers";
+import { columnColorVariable } from "../../lib/boards-column-helpers.js";
 
 export default class BoardsTopicCardDetail extends Component {
   @service currentUser;

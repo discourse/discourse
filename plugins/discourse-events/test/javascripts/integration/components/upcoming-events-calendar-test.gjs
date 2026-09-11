@@ -2,7 +2,7 @@ import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import UpcomingEventsCalendar from "../../discourse/components/upcoming-events-calendar";
+import UpcomingEventsCalendar from "discourse/plugins/discourse-events/discourse/components/upcoming-events-calendar";
 
 module("Integration | Component | UpcomingEventsCalendar", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });

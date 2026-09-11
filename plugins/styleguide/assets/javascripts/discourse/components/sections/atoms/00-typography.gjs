@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import StyleguideExample from "../../styleguide-example";
+import StyleguideExample from "../../styleguide-example.gjs";
 
 export default <template>
   <StyleguideExample @title="h1">

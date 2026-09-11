@@ -5,8 +5,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { gte } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import MembersCount from "./members-count";
-import MembersSelector from "./members-selector";
+import MembersCount from "./members-count.gjs";
+import MembersSelector from "./members-selector.gjs";
 
 export default class AddMembers extends Component {
   @service chatApi;

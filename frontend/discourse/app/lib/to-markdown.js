@@ -2,7 +2,7 @@ import deprecated from "discourse/lib/deprecated";
 import {
   areDefaultExtensionsRegistered,
   getExtensions,
-} from "./composer/rich-editor-extensions";
+} from "./composer/rich-editor-extensions.ts";
 
 async function ensureDefaultExtensions() {
   if (areDefaultExtensionsRegistered()) {

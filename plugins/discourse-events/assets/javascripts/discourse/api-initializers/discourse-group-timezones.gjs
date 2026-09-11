@@ -1,5 +1,5 @@
 import { apiInitializer } from "discourse/lib/api";
-import GroupTimezones from "../components/group-timezones";
+import GroupTimezones from "../components/group-timezones/index.gjs";
 
 const GroupTimezonesShim = <template>
   <GroupTimezones

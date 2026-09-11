@@ -1,8 +1,8 @@
 import { classNames } from "@ember-decorators/component";
 import SingleSelectComponent from "discourse/select-kit/components/single-select";
-import DropdownSelectBoxHeader from "./dropdown-select-box/dropdown-select-box-header";
-import DropdownSelectBoxRow from "./dropdown-select-box/dropdown-select-box-row";
-import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
+import DropdownSelectBoxHeader from "./dropdown-select-box/dropdown-select-box-header.gjs";
+import DropdownSelectBoxRow from "./dropdown-select-box/dropdown-select-box-row.gjs";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit.js";
 
 @classNames("dropdown-select-box")
 @selectKitOptions({

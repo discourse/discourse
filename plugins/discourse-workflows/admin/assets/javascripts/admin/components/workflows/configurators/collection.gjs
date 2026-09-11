@@ -14,9 +14,9 @@ import {
   normalizePropertyOptions,
   propertyDescription,
   propertyLabel,
-} from "../../../lib/workflows/property-engine";
-import WorkflowsEmptyState from "../empty-state";
-import Field from "./field";
+} from "../../../lib/workflows/property-engine.js";
+import WorkflowsEmptyState from "../empty-state.gjs";
+import Field from "./field.gjs";
 
 export default class Collection extends Component {
   get nodeDefinition() {

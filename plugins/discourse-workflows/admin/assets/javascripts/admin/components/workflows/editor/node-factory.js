@@ -1,7 +1,7 @@
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import { STICKY_NOTE_NAME } from "../../../models/sticky-note";
-import WorkflowNode from "../../../models/workflow-node";
+import { STICKY_NOTE_NAME } from "../../../models/sticky-note.js";
+import WorkflowNode from "../../../models/workflow-node.js";
 
 const NODE_DEFAULTS = {
   "trigger:webhook": () => ({

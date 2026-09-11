@@ -6,8 +6,8 @@ import { bind } from "discourse/lib/decorators";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { remToPx } from "discourse/lib/rem-to-px";
 import I18n, { i18n } from "discourse-i18n";
-import { formatChartDateLabel, SERIES_COLORS } from "../lib/chart-helpers";
-import themeColor from "../lib/themeColor";
+import { formatChartDateLabel, SERIES_COLORS } from "../lib/chart-helpers.js";
+import themeColor from "../lib/themeColor.js";
 
 export default class DataExplorerChart extends Component {
   chart;

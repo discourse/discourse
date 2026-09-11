@@ -6,7 +6,7 @@ import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
+import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories.gjs";
 
 export default class SiteSettingChangeTracker extends Service {
   @service dialog;

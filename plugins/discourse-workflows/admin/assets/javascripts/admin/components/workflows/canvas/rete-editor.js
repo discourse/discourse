@@ -11,20 +11,20 @@ import {
   normalizeTargetInput,
   normalizeTargetInputIndex,
   portIndexFromKey,
-} from "../../../lib/workflows/graph-constants";
+} from "../../../lib/workflows/graph-constants.js";
 import {
   nodeTypeInputAcceptsMultipleConnections,
   nodeTypeInputs,
   nodeTypeInputUsesConnectionIndexes,
   nodeTypeOutputKeys,
-} from "../../../lib/workflows/node-types";
+} from "../../../lib/workflows/node-types.js";
 import {
   NODE_WIDTH,
   nodeHeight,
   nodeLabel,
   nodeWidth,
-} from "../../../lib/workflows/node-utils";
-import { createCustomRenderer } from "./custom-renderer";
+} from "../../../lib/workflows/node-utils.js";
+import { createCustomRenderer } from "./custom-renderer.js";
 
 export const DRAG_LENIENCE_PX = 4;
 

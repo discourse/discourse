@@ -5,10 +5,10 @@ import Composer from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
-import SubtitlesManager from "./subtitles";
-import TranscriptDraftSync from "./transcript-draft-sync";
-import { transcriptToMarkdown } from "./transcript-markdown";
-import TranscriptRecorder from "./transcript-recorder";
+import SubtitlesManager from "./subtitles.js";
+import TranscriptDraftSync from "./transcript-draft-sync.js";
+import { transcriptToMarkdown } from "./transcript-markdown.js";
+import TranscriptRecorder from "./transcript-recorder.js";
 
 // Owns the speech-to-text pipeline and both of its consumers: the caption
 // overlay and the transcript recorder (with its composer-draft sync). The

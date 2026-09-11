@@ -1,4 +1,4 @@
-import { RING_SECONDS } from "./call-constants";
+import { RING_SECONDS } from "./call-constants.js";
 
 let sharedCtx = null;
 

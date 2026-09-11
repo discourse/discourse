@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { cancel, later } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import SmoothStreamer from "../lib/smooth-streamer";
+import SmoothStreamer from "../lib/smooth-streamer.gjs";
 
 const DISCOVERY_TIMEOUT_MS = 20000;
 

@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import {
   formatChartDateLabel,
   looksLikeDate,
-} from "../../discourse/lib/chart-helpers";
+} from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
 
 module("Unit | Lib | chart-helpers", function () {
   test("detects compact date labels for chart defaults", function (assert) {

@@ -7,7 +7,7 @@ import {
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
-import NotificationsButtonRow from "./notifications-button/notifications-button-row";
+import NotificationsButtonRow from "./notifications-button/notifications-button-row.js";
 
 @classNames("notifications-button")
 @selectKitOptions({

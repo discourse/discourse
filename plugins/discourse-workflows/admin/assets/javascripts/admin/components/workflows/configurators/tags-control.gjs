@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 function tagValue(value) {
   if (Array.isArray(value)) {

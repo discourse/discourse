@@ -12,8 +12,8 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
-import AddColumnModal from "./add-column-modal";
-import CellEditor from "./cell-editor";
+import AddColumnModal from "./add-column-modal.gjs";
+import CellEditor from "./cell-editor.gjs";
 
 const autofocus = modifier((element) => {
   element.focus();

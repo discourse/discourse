@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import { iconHTML } from "discourse/lib/icon-library";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import HashtagTypeBase from "./base";
+import HashtagTypeBase from "./base.js";
 
 export default class CategoryHashtagType extends HashtagTypeBase {
   @service site;

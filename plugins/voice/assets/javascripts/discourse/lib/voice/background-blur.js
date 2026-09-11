@@ -6,7 +6,7 @@ import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 // cutout in front — then captures the canvas as the outgoing stream.
 // Mirrors the NoiseSuppressionManager contract: setup(raw stream) returns
 // the processed stream; the caller keeps ownership of the raw stream.
-import { voiceAssetUrl } from "./voice-assets";
+import { voiceAssetUrl } from "./voice-assets.js";
 
 const ENABLED_KEY = "voice_video_blur_enabled";
 const AMOUNT_KEY = "voice_video_blur_amount";

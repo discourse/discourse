@@ -1,4 +1,4 @@
-import { RING_SECONDS } from "./call-constants";
+import { RING_SECONDS } from "./call-constants.js";
 
 // People an ephemeral call room is still reaching out to: rung, not yet
 // present, and within the ring window. `nowMs` comes from the caller's

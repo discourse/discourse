@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Column from "./column";
+import Column from "./column.js";
 
 export default class Board {
   static createPayload(data) {

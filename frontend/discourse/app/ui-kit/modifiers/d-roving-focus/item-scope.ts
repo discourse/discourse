@@ -1,4 +1,4 @@
-import type { DRovingFocusDisabledItems } from "./types";
+import type { DRovingFocusDisabledItems } from "./types.ts";
 
 /** Queries an item group and applies its navigation eligibility rules. */
 export default class ItemScope {

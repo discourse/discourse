@@ -11,8 +11,8 @@ import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-s
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import ToggleInvitees from "../../toggle-invitees";
-import User from "./user";
+import ToggleInvitees from "../../toggle-invitees.gjs";
+import User from "./user.gjs";
 
 export default class PostEventInviteesModal extends Component {
   @service discoursePostEventApi;

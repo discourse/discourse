@@ -1,4 +1,4 @@
-import { attrs, withDefaults } from "./helpers";
+import { attrs, withDefaults } from "./helpers.js";
 
 // `user` is opaque — wrapped as a `User` instance in `Bookmark.create` rather
 // than treated as a relationship (User isn't migrated yet).

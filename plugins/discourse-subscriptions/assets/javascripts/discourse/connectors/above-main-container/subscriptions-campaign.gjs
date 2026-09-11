@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import CampaignBanner from "../../components/campaign-banner";
+import CampaignBanner from "../../components/campaign-banner.gjs";
 
 @tagName("")
 export default class SubscriptionsCampaign extends Component {

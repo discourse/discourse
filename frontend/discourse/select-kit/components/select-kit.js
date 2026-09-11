@@ -35,12 +35,12 @@ import {
 } from "discourse/select-kit/lib/plugin-api";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { i18n } from "discourse-i18n";
-import ErrorsCollection from "./select-kit/errors-collection";
-import SelectKitCollection from "./select-kit/select-kit-collection";
-import SelectKitFilter from "./select-kit/select-kit-filter";
-import SelectKitRow from "./select-kit/select-kit-row";
-import SelectedChoice from "./selected-choice";
-import SelectedName from "./selected-name";
+import ErrorsCollection from "./select-kit/errors-collection.gjs";
+import SelectKitCollection from "./select-kit/select-kit-collection.gjs";
+import SelectKitFilter from "./select-kit/select-kit-filter.gjs";
+import SelectKitRow from "./select-kit/select-kit-row.gjs";
+import SelectedChoice from "./selected-choice.gjs";
+import SelectedName from "./selected-name.gjs";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";

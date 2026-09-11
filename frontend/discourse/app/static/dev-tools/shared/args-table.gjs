@@ -6,8 +6,8 @@ import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { logArgToConsole } from "../lib/console-logger";
-import { formatValue, getTypeInfo } from "../lib/value-formatter";
+import { logArgToConsole } from "../lib/console-logger.js";
+import { formatValue, getTypeInfo } from "../lib/value-formatter.js";
 
 /**
  * Shared component for displaying outlet arguments in a formatted table.

@@ -3,7 +3,7 @@ import MathInsertModal from "discourse/plugins/discourse-math/discourse/componen
 import {
   buildDiscourseMathOptions,
   renderMathInElement,
-} from "../lib/math-renderer";
+} from "../lib/math-renderer.js";
 
 function isAtLineStart(pre) {
   if (!pre) {

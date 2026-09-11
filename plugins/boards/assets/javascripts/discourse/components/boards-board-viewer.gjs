@@ -31,21 +31,21 @@ import { i18n } from "discourse-i18n";
 import {
   autoScrollSpeedForPointer,
   dragToScroll,
-} from "../lib/boards-auto-scroll";
+} from "../lib/boards-auto-scroll.js";
 import {
   isRecencyColumn,
   sortCardsForColumn,
-} from "../lib/boards-card-ordering";
-import { boardsBoardConfigureUrl, boardsBoardUrl } from "../lib/boards-urls";
-import Board from "../models/board";
-import Card from "../models/card";
-import Column from "../models/column";
-import BoardsColumn from "./boards-column";
-import BoardsBoardSettings from "./modal/boards-board-settings";
-import BoardsCardDetailModal from "./modal/boards-card-detail";
-import BoardsColumnSettings from "./modal/boards-column-settings";
-import BoardsConstraintFix from "./modal/boards-constraint-fix";
-import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail";
+} from "../lib/boards-card-ordering.js";
+import { boardsBoardConfigureUrl, boardsBoardUrl } from "../lib/boards-urls.js";
+import Board from "../models/board.js";
+import Card from "../models/card.js";
+import Column from "../models/column.js";
+import BoardsColumn from "./boards-column.gjs";
+import BoardsBoardSettings from "./modal/boards-board-settings.gjs";
+import BoardsCardDetailModal from "./modal/boards-card-detail.gjs";
+import BoardsColumnSettings from "./modal/boards-column-settings.gjs";
+import BoardsConstraintFix from "./modal/boards-constraint-fix.gjs";
+import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail.gjs";
 
 const onWindowResize = modifier((element, [callback]) => {
   const wrappedCallback = () => callback(element);

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import UserChooser from "discourse/select-kit/components/user-chooser";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 function usernamesFromValue(value) {
   if (Array.isArray(value)) {

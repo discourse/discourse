@@ -9,11 +9,11 @@ import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { and, eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import { toPlainObject } from "../lib/utilities";
-import AiSecretSelector from "./ai-secret-selector";
-import AiToolTestModal from "./modal/ai-tool-test-modal";
-import RagOptionsFk from "./rag-options-fk";
-import RagUploader from "./rag-uploader";
+import { toPlainObject } from "../lib/utilities.js";
+import AiSecretSelector from "./ai-secret-selector.gjs";
+import AiToolTestModal from "./modal/ai-tool-test-modal.gjs";
+import RagOptionsFk from "./rag-options-fk.gjs";
+import RagUploader from "./rag-uploader.gjs";
 
 export default class AiToolEditorForm extends Component {
   @service modal;

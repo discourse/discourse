@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
-import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
+import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu.gjs";
 
 export default class ChatChannelSidebarContextMenu extends Component {
   @service chatApi;

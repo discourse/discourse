@@ -16,7 +16,7 @@ import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
-import CollapsedInfo from "./user/collapsed-info";
+import CollapsedInfo from "./user/collapsed-info.gjs";
 
 export default <template>
   <PluginOutlet

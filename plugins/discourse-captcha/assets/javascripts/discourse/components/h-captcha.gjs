@@ -1,4 +1,4 @@
-import BaseCaptcha from "./base-captcha";
+import BaseCaptcha from "./base-captcha.gjs";
 
 export default class HCaptcha extends BaseCaptcha {
   get scriptUrl() {

@@ -1,7 +1,7 @@
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
-import TopicFooterButtonsExample from "../../examples/organisms/topic-footer-buttons";
+import TopicFooterButtonsExample from "../../examples/organisms/topic-footer-buttons.gjs";
 import topicFooterButtonsSource from "../../examples/organisms/topic-footer-buttons?source=file";
-import TopicFooterButtonsAnonymousExample from "../../examples/organisms/topic-footer-buttons-anonymous";
+import TopicFooterButtonsAnonymousExample from "../../examples/organisms/topic-footer-buttons-anonymous.gjs";
 import topicFooterButtonsAnonymousSource from "../../examples/organisms/topic-footer-buttons-anonymous?source=file";
 
 export default <template>

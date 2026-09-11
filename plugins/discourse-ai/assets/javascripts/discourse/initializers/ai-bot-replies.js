@@ -1,17 +1,17 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import AiBotDockedComposer from "../components/ai-bot-docked-composer";
-import AiBotHeaderIcon from "../components/ai-bot-header-icon";
-import AiAgentFlair from "../components/post/ai-agent-flair";
-import AiCancelStreaming from "../components/post/meta-data/ai-cancel-streaming";
-import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
-import AiDebugButton from "../components/post-menu/ai-debug-button";
-import AiRetryStreamingButton from "../components/post-menu/ai-retry-streaming-button";
-import AiShareButton from "../components/post-menu/ai-share-button";
-import { isGPTBot } from "../lib/ai-bot-helper";
+import AiBotDockedComposer from "../components/ai-bot-docked-composer.gjs";
+import AiBotHeaderIcon from "../components/ai-bot-header-icon.gjs";
+import AiAgentFlair from "../components/post/ai-agent-flair.gjs";
+import AiCancelStreaming from "../components/post/meta-data/ai-cancel-streaming.gjs";
+import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button.gjs";
+import AiDebugButton from "../components/post-menu/ai-debug-button.gjs";
+import AiRetryStreamingButton from "../components/post-menu/ai-retry-streaming-button.gjs";
+import AiShareButton from "../components/post-menu/ai-share-button.gjs";
+import { isGPTBot } from "../lib/ai-bot-helper.js";
 import {
   cleanupStreamingData,
   streamPostText,
-} from "../lib/ai-streamer/progress-handlers";
+} from "../lib/ai-streamer/progress-handlers.js";
 
 function focusDockedComposer() {
   requestAnimationFrame(() => {

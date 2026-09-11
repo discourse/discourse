@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
-import { isPostFromAiBot } from "../../lib/ai-bot-helper";
-import DebugAiModal from "../modal/debug-ai-modal";
+import { isPostFromAiBot } from "../../lib/ai-bot-helper.js";
+import DebugAiModal from "../modal/debug-ai-modal.gjs";
 
 export default class AiDebugButton extends Component {
   static shouldRender(args) {

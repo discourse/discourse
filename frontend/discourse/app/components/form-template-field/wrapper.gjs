@@ -6,14 +6,14 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import FormTemplate from "discourse/models/form-template";
-import CheckboxField from "./checkbox";
-import ComposerField from "./composer";
-import DropdownField from "./dropdown";
-import InputField from "./input";
-import MultiSelectField from "./multi-select";
-import TagChooserField from "./tag-chooser";
-import TextareaField from "./textarea";
-import UploadField from "./upload";
+import CheckboxField from "./checkbox.gjs";
+import ComposerField from "./composer.gjs";
+import DropdownField from "./dropdown.gjs";
+import InputField from "./input.gjs";
+import MultiSelectField from "./multi-select.gjs";
+import TagChooserField from "./tag-chooser.gjs";
+import TextareaField from "./textarea.gjs";
+import UploadField from "./upload.gjs";
 
 const FormTemplateField = <template>
   <@component

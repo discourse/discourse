@@ -5,8 +5,8 @@ import bodyClass from "discourse/helpers/body-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import LegacyAiSearchDiscoveries from "../../components/legacy-ai-search-discoveries";
-import LegacyAiSearchDiscoveriesTooltip from "../../components/legacy-ai-search-discoveries-tooltip";
+import LegacyAiSearchDiscoveries from "../../components/legacy-ai-search-discoveries.gjs";
+import LegacyAiSearchDiscoveriesTooltip from "../../components/legacy-ai-search-discoveries-tooltip.gjs";
 
 export default class LegacyAiFullPageDiscobotDiscoveries extends Component {
   static shouldRender(args, { siteSettings, currentUser }) {

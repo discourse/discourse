@@ -7,7 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import "../extensions/register-default";
+import "../extensions/register-default.ts";
 import type { ComponentLike } from "@glint/template";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { baseKeymap } from "prosemirror-commands";
@@ -52,21 +52,21 @@ import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
 import { i18n } from "discourse-i18n";
-import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
-import { buildCommands, buildCustomState } from "../core/commands";
-import { buildInputRules } from "../core/inputrules";
-import { buildKeymap } from "../core/keymap";
-import Parser, { UnsupportedTokenError } from "../core/parser";
-import { extractNodeViews, extractPlugins } from "../core/plugin";
-import { createSchema } from "../core/schema";
-import Serializer from "../core/serializer";
-import placeholder from "../extensions/placeholder";
-import type GlimmerNodeView from "../lib/glimmer-node-view";
-import * as utils from "../lib/plugin-utils";
+import { authorizesOneOrMoreExtensions } from "../../../lib/uploads.js";
+import { buildCommands, buildCustomState } from "../core/commands.js";
+import { buildInputRules } from "../core/inputrules.js";
+import { buildKeymap } from "../core/keymap.js";
+import Parser, { UnsupportedTokenError } from "../core/parser.js";
+import { extractNodeViews, extractPlugins } from "../core/plugin.js";
+import { createSchema } from "../core/schema.js";
+import Serializer from "../core/serializer.js";
+import placeholder from "../extensions/placeholder.ts";
+import type GlimmerNodeView from "../lib/glimmer-node-view.js";
+import * as utils from "../lib/plugin-utils.js";
 import TextManipulation, {
   type CustomState,
   type EditorCommands,
-} from "../lib/text-manipulation";
+} from "../lib/text-manipulation.ts";
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 

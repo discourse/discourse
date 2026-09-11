@@ -7,7 +7,7 @@ import EmojiPicker from "discourse/components/emoji-picker";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji";
+import discourseReactionsEmoji from "../helpers/discourse-reactions-emoji.js";
 
 export default class DiscourseReactionsPicker extends Component {
   @service capabilities;

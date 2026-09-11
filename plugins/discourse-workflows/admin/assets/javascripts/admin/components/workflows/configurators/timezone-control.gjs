@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
-import { propertySelectNoneKey } from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+import { propertySelectNoneKey } from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class TimezoneControl extends Component {
   get none() {

@@ -1,4 +1,4 @@
-import { attrs, withDefaults } from "./helpers";
+import { attrs, withDefaults } from "./helpers.js";
 
 // Loaded via `/tag/:id/info.json` (DetailedTagSerializer). Schema covers the
 // fields the legacy model exposed via `@tracked` / `@autoTrackedArray`.

@@ -8,8 +8,8 @@ import discourseDebounce from "discourse/lib/debounce";
 import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { isNumeric } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import MediaNodeView from "../components/media-node-view";
-import { getChangedRanges } from "../lib/plugin-utils";
+import MediaNodeView from "../components/media-node-view.gjs";
+import { getChangedRanges } from "../lib/plugin-utils.js";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
 

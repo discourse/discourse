@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import Field from "./field";
+import Field from "./field.gjs";
 
 function schemaForColumn(column) {
   switch (column.type) {

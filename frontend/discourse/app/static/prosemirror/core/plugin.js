@@ -1,5 +1,5 @@
 import { Plugin } from "prosemirror-state";
-import GlimmerNodeView from "../lib/glimmer-node-view";
+import GlimmerNodeView from "../lib/glimmer-node-view.js";
 
 /*
   There are 3 ways to define a node view:

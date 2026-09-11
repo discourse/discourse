@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import RoomHashtagType from "../lib/hashtag-types/room";
+import RoomHashtagType from "../lib/hashtag-types/room.js";
 
 export default {
   name: "voice-hashtag-type",

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
 import { ajax } from "discourse/lib/ajax";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 const FILTER_OPTIONS_URLS = {
   posts: "/admin/plugins/discourse-workflows/filter-options/posts.json",

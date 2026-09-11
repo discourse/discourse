@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import formatChatDate from "../../../helpers/format-chat-date";
+import formatChatDate from "../../../helpers/format-chat-date.js";
 
 export default class ChatMessageLeftGutter extends Component {
   @service site;

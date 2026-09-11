@@ -26,16 +26,16 @@ import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-templa
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
-import AiAgentMcpToolSelectorModal from "../components/modal/ai-agent-mcp-tool-selector-modal";
-import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
-import { toPlainObject } from "../lib/utilities";
-import AiAgentCollapsableExample from "./ai-agent-example";
-import AiAgentToolOptions from "./ai-agent-tool-options";
-import AiLlmSelector from "./ai-llm-selector";
-import AiToolSelector from "./ai-tool-selector";
-import RagDocumentSources from "./rag-document-sources";
-import RagOptionsFk from "./rag-options-fk";
-import RagUploader from "./rag-uploader";
+import AiAgentCollapsableExample from "discourse/plugins/discourse-ai/discourse/components/ai-agent-example";
+import AiAgentToolOptions from "discourse/plugins/discourse-ai/discourse/components/ai-agent-tool-options";
+import AiLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-llm-selector";
+import AiToolSelector from "discourse/plugins/discourse-ai/discourse/components/ai-tool-selector";
+import AiAgentMcpToolSelectorModal from "discourse/plugins/discourse-ai/discourse/components/modal/ai-agent-mcp-tool-selector-modal";
+import AiAgentResponseFormatEditor from "discourse/plugins/discourse-ai/discourse/components/modal/ai-agent-response-format-editor";
+import RagDocumentSources from "discourse/plugins/discourse-ai/discourse/components/rag-document-sources";
+import RagOptionsFk from "discourse/plugins/discourse-ai/discourse/components/rag-options-fk";
+import RagUploader from "discourse/plugins/discourse-ai/discourse/components/rag-uploader";
+import { toPlainObject } from "discourse/plugins/discourse-ai/discourse/lib/utilities";
 
 const TOOL_TOKEN_LOW_THRESHOLD = 2000;
 const TOOL_TOKEN_HIGH_THRESHOLD = 4000;

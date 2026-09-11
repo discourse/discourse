@@ -1,7 +1,7 @@
 import { InputRule } from "prosemirror-inputrules";
 import { StepMap } from "prosemirror-transform";
 
-export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
+export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it.js";
 
 export { buildBBCodeAttrs } from "discourse/lib/text";
 

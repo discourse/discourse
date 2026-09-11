@@ -1,5 +1,5 @@
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import Logo from "./logo";
+import Logo from "./logo.gjs";
 
 const HomeLogoContents = <template>
   {{#if @minimized}}

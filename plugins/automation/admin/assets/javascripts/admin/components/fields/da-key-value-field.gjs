@@ -4,9 +4,9 @@ import { action } from "@ember/object";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class KeyValueField extends BaseField {
   @tracked showJsonEditorModal = false;

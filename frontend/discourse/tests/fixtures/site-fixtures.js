@@ -1,4 +1,4 @@
-import { NOTIFICATION_TYPES } from "./concerns/notification-types";
+import { NOTIFICATION_TYPES } from "./concerns/notification-types.js";
 
 const siteFixtures = {
   "site.json": {

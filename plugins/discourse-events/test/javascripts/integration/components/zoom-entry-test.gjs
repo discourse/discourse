@@ -4,8 +4,8 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
-import LivestreamZoomEntry from "../../discourse/components/livestream/zoom-entry";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import LivestreamZoomEntry from "discourse/plugins/discourse-events/discourse/components/livestream/zoom-entry";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 const JOIN_BUTTON_SELECTOR =
   ".discourse-calendar-livestream-zoom-entry .discourse-calendar-livestream-zoom-entry__join";

@@ -25,10 +25,10 @@ import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-dr
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import dDragDwell from "discourse/ui-kit/modifiers/d-drag-dwell";
 import { i18n } from "discourse-i18n";
-import ApiSections from "../api-sections";
-import CategoriesSection from "./categories-section";
-import CustomSections from "./custom-sections";
-import TagsSection from "./tags-section";
+import ApiSections from "../api-sections.gjs";
+import CategoriesSection from "./categories-section.gjs";
+import CustomSections from "./custom-sections.gjs";
+import TagsSection from "./tags-section.gjs";
 
 /**
  * How long the revealed drop zone stays inert. Revealing shifts everything

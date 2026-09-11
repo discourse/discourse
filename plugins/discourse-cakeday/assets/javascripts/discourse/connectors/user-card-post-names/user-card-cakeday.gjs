@@ -7,7 +7,7 @@ import {
   cakeday,
   cakedayTitle,
 } from "discourse/plugins/discourse-cakeday/discourse/lib/cakeday";
-import EmojiImages from "../../components/emoji-images";
+import EmojiImages from "../../components/emoji-images.gjs";
 
 @tagName("")
 export default class UserCardCakeday extends Component {

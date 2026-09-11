@@ -18,25 +18,28 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { toggleFullscreen, trackFullscreen } from "../../lib/voice/fullscreen";
-import { activeRingingEntries } from "../../lib/voice/ringing";
-import { speakQueue } from "../../lib/voice/speak-queue";
+import {
+  toggleFullscreen,
+  trackFullscreen,
+} from "../../lib/voice/fullscreen.js";
+import { activeRingingEntries } from "../../lib/voice/ringing.js";
+import { speakQueue } from "../../lib/voice/speak-queue.js";
 import {
   bestRowHeight,
   DEFAULT_TILE_ASPECT,
   trackGridSize,
-} from "../../lib/voice/video-grid-layout";
-import VoiceInviteUsersModal from "../modal/voice-invite-users";
-import VoiceRoomInfoModal from "../modal/voice-room-info";
-import VoiceCallControls from "./call-controls";
-import VoiceCallSubmenu from "./call-submenu";
-import VoiceCaptionOverlay from "./caption-overlay";
-import VoiceChatPanel from "./chat-panel";
-import VoiceRecordingBadge from "./recording-badge";
-import VoiceRingingTile from "./ringing-tile";
-import VoiceSpeakQueue from "./speak-queue";
-import VoiceTranscriptBadge from "./transcript-badge";
-import VoiceVideoTile from "./video-tile";
+} from "../../lib/voice/video-grid-layout.js";
+import VoiceInviteUsersModal from "../modal/voice-invite-users.gjs";
+import VoiceRoomInfoModal from "../modal/voice-room-info.gjs";
+import VoiceCallControls from "./call-controls.gjs";
+import VoiceCallSubmenu from "./call-submenu.gjs";
+import VoiceCaptionOverlay from "./caption-overlay.gjs";
+import VoiceChatPanel from "./chat-panel.gjs";
+import VoiceRecordingBadge from "./recording-badge.gjs";
+import VoiceRingingTile from "./ringing-tile.gjs";
+import VoiceSpeakQueue from "./speak-queue.gjs";
+import VoiceTranscriptBadge from "./transcript-badge.gjs";
+import VoiceVideoTile from "./video-tile.gjs";
 
 const ROOM_MENU = "voice-room-menu";
 const SUBMENU = "voice-call-submenu";

@@ -1,4 +1,4 @@
-import DiscourseReactionsListEmoji from "./discourse-reactions-list-emoji";
+import DiscourseReactionsListEmoji from "./discourse-reactions-list-emoji.gjs";
 
 const DiscourseReactionsList = <template>
   <span class="discourse-reactions-list" ...attributes>

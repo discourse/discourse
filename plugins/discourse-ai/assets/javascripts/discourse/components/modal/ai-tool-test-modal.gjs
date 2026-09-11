@@ -9,7 +9,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import { jsonToHtml } from "../../lib/utilities";
+import { jsonToHtml } from "../../lib/utilities.js";
 
 export default class AiToolTestModal extends Component {
   @tracked testResult;

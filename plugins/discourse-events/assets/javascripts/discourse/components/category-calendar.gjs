@@ -4,9 +4,9 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import Category from "discourse/models/category";
-import formatEventForCalendar from "../lib/format-event-for-calendar";
-import openEventComposer from "../lib/open-event-composer";
-import FullCalendar from "./full-calendar";
+import formatEventForCalendar from "../lib/format-event-for-calendar.js";
+import openEventComposer from "../lib/open-event-composer.js";
+import FullCalendar from "./full-calendar.gjs";
 
 export default class CategoryCalendar extends Component {
   @service composer;

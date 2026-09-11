@@ -4,8 +4,8 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import PostEventInvitees from "../modal/post-event-invitees";
-import Invitee from "./invitee";
+import PostEventInvitees from "../modal/post-event-invitees/index.gjs";
+import Invitee from "./invitee.gjs";
 
 export default class DiscoursePostEventInvitees extends Component {
   @service modal;

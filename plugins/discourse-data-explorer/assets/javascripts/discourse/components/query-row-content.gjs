@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import getURL from "discourse/lib/get-url";
-import HiddenViewComponent from "./result-types/hidden";
-import TextViewComponent from "./result-types/text";
+import HiddenViewComponent from "./result-types/hidden.gjs";
+import TextViewComponent from "./result-types/text.gjs";
 
 const BASE_URI = getURL("");
 

@@ -6,7 +6,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import {
   postStreamWithAcceptedAnswerExcerpt,
   topicWithNoAnswer,
-} from "../helpers/discourse-solved-helpers";
+} from "../helpers/discourse-solved-helpers.js";
 
 acceptance("No Answer Prompt", function (needs) {
   needs.user({ id: 1 });

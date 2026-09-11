@@ -7,9 +7,9 @@ import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class PeriodField extends BaseField {
   @tracked interval = 1;

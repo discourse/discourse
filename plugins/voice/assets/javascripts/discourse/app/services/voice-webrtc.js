@@ -7,26 +7,26 @@ import { manuallyTrack } from "discourse/lib/tracked-tools";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
-import { confirmMeshPrivacy } from "../../components/modal/voice-mesh-privacy-warning";
-import { reportMicAcquisitionFailure } from "../../components/modal/voice-mic-permission";
-import AudioMonitor from "../../lib/voice/audio-monitor";
-import { RING_SECONDS } from "../../lib/voice/call-constants";
-import HeartbeatManager from "../../lib/voice/heartbeat-manager";
-import IdleTracker, { idleThresholds } from "../../lib/voice/idle-tracker";
-import { consumePendingInviteRef } from "../../lib/voice/invite-ref";
-import LivekitCoordinator from "../../lib/voice/livekit-coordinator";
-import LocalAudioPipeline from "../../lib/voice/local-audio-pipeline";
-import LocalVideoManager from "../../lib/voice/local-video-manager";
+import { confirmMeshPrivacy } from "../../components/modal/voice-mesh-privacy-warning.gjs";
+import { reportMicAcquisitionFailure } from "../../components/modal/voice-mic-permission.gjs";
+import AudioMonitor from "../../lib/voice/audio-monitor.js";
+import { RING_SECONDS } from "../../lib/voice/call-constants.js";
+import HeartbeatManager from "../../lib/voice/heartbeat-manager.js";
+import IdleTracker, { idleThresholds } from "../../lib/voice/idle-tracker.js";
+import { consumePendingInviteRef } from "../../lib/voice/invite-ref.js";
+import LivekitCoordinator from "../../lib/voice/livekit-coordinator.js";
+import LocalAudioPipeline from "../../lib/voice/local-audio-pipeline.js";
+import LocalVideoManager from "../../lib/voice/local-video-manager.js";
 import {
   applyOutputDevice,
   preferredOutputDeviceId,
   setPreferredOutputDeviceId,
-} from "../../lib/voice/media-devices";
-import MeshSignalHandler from "../../lib/voice/mesh-signal-handler";
-import ParticipantAudio from "../../lib/voice/participant-audio";
-import PeerManager from "../../lib/voice/peer-manager";
-import PresencePendingPeers from "../../lib/voice/presence-pending-peers";
-import PttManager from "../../lib/voice/ptt-manager";
+} from "../../lib/voice/media-devices.js";
+import MeshSignalHandler from "../../lib/voice/mesh-signal-handler.js";
+import ParticipantAudio from "../../lib/voice/participant-audio.js";
+import PeerManager from "../../lib/voice/peer-manager.js";
+import PresencePendingPeers from "../../lib/voice/presence-pending-peers.js";
+import PttManager from "../../lib/voice/ptt-manager.js";
 import {
   allowedQualityTiers,
   clampQuality,
@@ -39,12 +39,12 @@ import {
   setPreferredScreenContent,
   setPreferredScreenQuality,
   setPreferredVoiceQuality,
-} from "../../lib/voice/quality-preferences";
-import RemoteStreamRegistry from "../../lib/voice/remote-stream-registry";
-import { activeRingingEntries } from "../../lib/voice/ringing";
-import RoomMessageQueue from "../../lib/voice/room-message-queue";
-import RosterHandler from "../../lib/voice/roster-handler";
-import SignalingManager from "../../lib/voice/signaling";
+} from "../../lib/voice/quality-preferences.js";
+import RemoteStreamRegistry from "../../lib/voice/remote-stream-registry.js";
+import { activeRingingEntries } from "../../lib/voice/ringing.js";
+import RoomMessageQueue from "../../lib/voice/room-message-queue.js";
+import RosterHandler from "../../lib/voice/roster-handler.js";
+import SignalingManager from "../../lib/voice/signaling.js";
 import {
   playConnectedSound,
   playDeafenSound,
@@ -55,13 +55,13 @@ import {
   schedulePlaybackResume,
   startWaitingSound,
   stopCallSounds,
-} from "../../lib/voice/sound-effects";
+} from "../../lib/voice/sound-effects.js";
 import {
   participantCanSpeak,
   remoteTrackAllowed,
-} from "../../lib/voice/stage-roles";
-import TranscriptionCoordinator from "../../lib/voice/transcription-coordinator";
-import { applyVoiceQuality } from "../../lib/voice/video-quality";
+} from "../../lib/voice/stage-roles.js";
+import TranscriptionCoordinator from "../../lib/voice/transcription-coordinator.js";
+import { applyVoiceQuality } from "../../lib/voice/video-quality.js";
 
 const CAMERA_ENABLED_KEY_PREFIX = "voice-camera-enabled";
 

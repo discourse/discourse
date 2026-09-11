@@ -16,9 +16,9 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
-import fullnumber from "../helpers/fullnumber";
-import GamificationLeaderboardRow from "./gamification-leaderboard-row";
-import LeaderboardInfo from "./modal/leaderboard-info";
+import fullnumber from "../helpers/fullnumber.js";
+import GamificationLeaderboardRow from "./gamification-leaderboard-row.gjs";
+import LeaderboardInfo from "./modal/leaderboard-info.gjs";
 
 export const LEADERBOARD_PERIODS = [
   "all_time",

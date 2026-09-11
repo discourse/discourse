@@ -8,8 +8,8 @@ import type {
 } from "discourse/lib/blocks/-internals/types";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ArgsTable from "../shared/args-table";
-import ConditionsTree from "./conditions-tree";
+import ArgsTable from "../shared/args-table.gjs";
+import ConditionsTree from "./conditions-tree.gts";
 
 interface GhostBlockSignature {
   Args: {

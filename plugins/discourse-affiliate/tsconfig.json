@@ -7,9 +7,10 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-affiliate/*": ["./assets/javascripts/*"],
-      "discourse/plugins/discourse-affiliate/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/discourse-affiliate/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts"
       ]
     }
   }

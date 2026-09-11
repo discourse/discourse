@@ -6,7 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
-import getTagName from "../lib/utilities";
+import getTagName from "../lib/utilities.js";
 
 export default class RuleRow extends Component {
   @service siteSettings;

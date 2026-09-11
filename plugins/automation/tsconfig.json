@@ -1,9 +1,28 @@
 {
   "extends": "discourse/tsconfig-plugin",
-  "include": ["./assets/javascripts/**/*", "./test/javascripts/**/*"],
+  "include": [
+    "./admin/assets/javascripts/**/*",
+    "./assets/javascripts/**/*",
+    "./test/javascripts/**/*"
+  ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/automation/*": ["./assets/javascripts/*"]
+      "discourse/plugins/automation/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./admin/assets/javascripts/*",
+        "./admin/assets/javascripts/*.gjs",
+        "./admin/assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
+      ],
+      "discourse/plugins/automation/admin/*": [
+        "./admin/assets/javascripts/admin/*",
+        "./admin/assets/javascripts/admin/*.gjs",
+        "./admin/assets/javascripts/admin/*.gts"
+      ]
     }
   }
 }

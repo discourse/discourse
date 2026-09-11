@@ -3,8 +3,8 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
-import ChatEmojiAvatar from "./chat-emoji-avatar";
-import ChatUserAvatar from "./chat-user-avatar";
+import ChatEmojiAvatar from "./chat-emoji-avatar.gjs";
+import ChatUserAvatar from "./chat-user-avatar.gjs";
 
 export default class ChatMessageInReplyToIndicator extends Component {
   get route() {

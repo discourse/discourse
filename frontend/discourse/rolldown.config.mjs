@@ -112,6 +112,26 @@ export function buildConfig({ devMode } = {}) {
       wrapTestModulesPlugin(),
       discourseChunkNamesPlugin(),
       {
+        name: "require-relative-import-extensions",
+        resolveId: {
+          filter: { id: /^\.\.?\// },
+          handler(source, importer) {
+            if (
+              !importer ||
+              importer.includes("/node_modules/") ||
+              source.includes("/node_modules/") ||
+              source.includes("?") ||
+              /\.(m?js|c?js|[mc]?ts|gjs|gts|json|s?css|hbs|wasm)$/.test(source)
+            ) {
+              return null;
+            }
+            this.error(
+              `Relative import "${source}" from ${relative(import.meta.dirname, importer)} must include the file extension.`
+            );
+          },
+        },
+      },
+      {
         name: "forbid-plugin-imports",
         resolveId: {
           filter: { id: /^discourse\/plugins\// },

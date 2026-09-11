@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { get } from "@ember/helper";
-import { applyValueTransformer } from "../lib/transformer";
-import UserFieldConfirm from "./user-fields/confirm";
-import UserFieldDate from "./user-fields/date";
-import UserFieldDropdown from "./user-fields/dropdown";
-import UserFieldMultiselect from "./user-fields/multiselect";
-import UserFieldText from "./user-fields/text";
-import UserFieldTextArea from "./user-fields/textarea";
+import { applyValueTransformer } from "../lib/transformer.js";
+import UserFieldConfirm from "./user-fields/confirm.gjs";
+import UserFieldDate from "./user-fields/date.gjs";
+import UserFieldDropdown from "./user-fields/dropdown.gjs";
+import UserFieldMultiselect from "./user-fields/multiselect.gjs";
+import UserFieldText from "./user-fields/text.gjs";
+import UserFieldTextArea from "./user-fields/textarea.gjs";
 
 export default class UserField extends Component {
   get components() {

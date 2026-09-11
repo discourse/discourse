@@ -23,9 +23,9 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card";
-import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card";
-import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton";
+import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card.gjs";
+import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card.gjs";
+import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton.gjs";
 
 export default class AiTranslations extends Component {
   @service aiCredits;
