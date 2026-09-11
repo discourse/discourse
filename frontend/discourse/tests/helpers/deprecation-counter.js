@@ -150,31 +150,30 @@ export default class DeprecationCounter {
     if (existing) {
       existing.count++;
       this.#countsChanged.add(key);
-      return;
-    }
+    } else {
+      if (this.details.size >= MAX_DETAIL_ENTRIES) {
+        return;
+      }
 
-    if (this.details.size >= MAX_DETAIL_ENTRIES) {
-      return;
-    }
+      const detail = {
+        key,
+        id,
+        origin: this.#origin,
+        module: currentTest?.module?.name,
+        testName: currentTest?.testName,
+        testStack: currentTest?.stack,
+        stack,
+        count: 1,
+      };
 
-    const detail = {
-      key,
-      id,
-      origin: this.#origin,
-      module: currentTest?.module?.name,
-      testName: currentTest?.testName,
-      testStack: currentTest?.stack,
-      stack,
-      count: 1,
-    };
+      this.details.set(key, detail);
 
-    this.details.set(key, detail);
-
-    // Reported straight away rather than batched: a deprecation raised outside a
-    // test is followed by no `testDone`, and an end-of-run flush races the
-    // browser teardown.
-    if (window.Testem) {
-      reportDeprecationDetailsToTestem([detail]);
+      // Reported straight away rather than batched: a deprecation raised outside a
+      // test is followed by no `testDone`, and an end-of-run flush races the
+      // browser teardown.
+      if (window.Testem) {
+        reportDeprecationDetailsToTestem([detail]);
+      }
     }
 
     if (isRailsTesting()) {
