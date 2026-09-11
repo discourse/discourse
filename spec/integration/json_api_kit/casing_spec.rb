@@ -106,8 +106,8 @@ RSpec.describe "JSON:API member names", type: :request do
       expect(relationship).to be_present
     end
 
-    it "sends its links under that name" do
-      expect(relationship["links"]["related"]).to end_with("/orderedPosts")
+    it "sends its links with kebab-case path segments" do
+      expect(relationship["links"]["related"]).to end_with("/ordered-posts")
     end
   end
 

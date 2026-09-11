@@ -20,6 +20,10 @@ module JsonApiKit
         declare(Declaration::RenamedName.new(type, [Name::Filter], from:, to:))
       end
 
+      def renamed_relationship(from:, to:)
+        declare(Declaration::RenamedName.new(type, [Name::Relationship, Name::Field], from:, to:))
+      end
+
       def to_a = transformations
 
       private

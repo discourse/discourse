@@ -35,6 +35,8 @@ module JsonApiKit
 
         def resource_type = glossary.member_type(options[:type])
 
+        def relationship_path = options[:path]
+
         def member_parameter(member = name) = parameter.member(member)
 
         def window_parameters = base.page.window_names.map { page_parameter(it) }
