@@ -164,6 +164,28 @@ module(
           "`hello -- world`",
         ],
       ],
+      // Typed BBCode-shaped text runs like [details="Summary"] must round-trip
+      // without backslash-escaping the brackets — otherwise `\[..\]` would be
+      // picked up as LaTeX display math when discourse-math is enabled.
+      "bbcode-shaped text": [
+        [
+          '[details="Summary"]',
+          '<p>[details="Summary"]</p>',
+          '[details="Summary"]',
+        ],
+        ["[/details]", "<p>[/details]</p>", "[/details]"],
+        ["[spoiler]", "<p>[spoiler]</p>", "[spoiler]"],
+        ["[quote user]", "<p>[quote user]</p>", "[quote user]"],
+      ],
+      // Brackets that don't wrap a single tag-like run are still escaped so
+      // literal `[text](url)` and similar don't turn into unintended links.
+      "brackets in mixed text": [
+        [
+          "text with \\[brackets\\] inside",
+          "<p>text with [brackets] inside</p>",
+          "text with \\[brackets\\] inside",
+        ],
+      ],
     };
 
     Object.entries(testCases).forEach(([name, tests]) => {
