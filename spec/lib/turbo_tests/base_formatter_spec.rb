@@ -43,6 +43,43 @@ RSpec.describe TurboTests::BaseFormatter do
       expect(output.string).to eq("\nDetailed summary\nRSpec summary\n")
     end
 
+    it "keeps the test filename and line together for shared examples and fallback locations" do
+      status = instance_double(Process::Status, success?: true)
+      payload = nil
+      allow(Open3).to receive(:capture3) do |*args, stdin_data:|
+        payload = JSON.parse(stdin_data)
+        ["Detailed summary", "", status]
+      end
+
+      [
+        ["./spec/system/topics_spec.rb:75", "./spec/system/topics_spec.rb", 75],
+        [nil, "./spec/support/shared_examples.rb", 40],
+      ].each do |rerun_location, expected_file, expected_line|
+        example =
+          instance_double(
+            RSpec::Core::Example,
+            full_description: "Topics shared example",
+            location: "./spec/support/shared_examples.rb:40",
+            location_rerun_argument: rerun_location,
+            metadata: {
+              rerun_file_path: Rails.root.join("spec/system/topics_spec.rb").to_s,
+              js_deprecations: {
+                "example.deprecation" => 1,
+              },
+              js_deprecation_details: [{ "id" => "example.deprecation", "stack" => "stack" }],
+            },
+          )
+        allow(notification).to receive(:examples).and_return([example])
+
+        formatter.dump_summary(notification, nil)
+
+        expect(payload.fetch("entries").sole.fetch("test")).to include(
+          "file" => expected_file,
+          "declarationLine" => expected_line,
+        )
+      end
+    end
+
     it "prints the exit status, error and totals when report generation fails" do
       status = instance_double(Process::Status, success?: false, signaled?: false, exitstatus: 1)
       allow(Open3).to receive(:capture3).and_return(["", "Report command failed", status])

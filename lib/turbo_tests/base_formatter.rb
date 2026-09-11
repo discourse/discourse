@@ -62,6 +62,9 @@ module TurboTests
           details = example.metadata[:js_deprecation_details]
           next [] if details.blank?
 
+          location = example.location_rerun_argument.presence || example.location
+          test_file, _, test_line = location.rpartition(":")
+
           details.map do |detail|
             {
               id: detail["id"],
@@ -72,8 +75,8 @@ module TurboTests
               test: {
                 module: nil,
                 name: example.full_description,
-                file: example.metadata[:rerun_file_path],
-                declarationLine: example.location[/:(\d+)\z/, 1]&.to_i,
+                file: test_file,
+                declarationLine: test_line.to_i,
                 callSiteLine: nil,
                 callSiteCode: nil,
               },
