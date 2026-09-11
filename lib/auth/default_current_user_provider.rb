@@ -125,11 +125,11 @@ class Auth::DefaultCurrentUserProvider
     user_api_key = @env[USER_API_KEY]
     api_key = @env[HEADER_API_KEY]
 
-    if @env.present? && request.params[PARAMETER_USER_API_KEY] && api_parameter_allowed?
+    if @env.present? && api_parameter_allowed? && request.params[PARAMETER_USER_API_KEY]
       user_api_key ||= request.params[PARAMETER_USER_API_KEY]
     end
 
-    if @env.present? && request.params[API_KEY] && api_parameter_allowed?
+    if @env.present? && api_parameter_allowed? && request.params[API_KEY]
       api_key ||= request.params[API_KEY]
     end
 
