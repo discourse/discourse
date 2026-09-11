@@ -116,7 +116,7 @@ module DiscourseVips
 
     def worker_command
       load_paths = [Rails.root.join("lib").to_s]
-      %w[ffi landlock msgpack nokogiri racc ruby-vips].each do |gem_name|
+      %w[ffi landlock msgpack ruby-vips].each do |gem_name|
         load_paths.concat(Gem.loaded_specs.fetch(gem_name).full_require_paths)
       end
 
