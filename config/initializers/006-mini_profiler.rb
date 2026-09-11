@@ -91,7 +91,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
 
   Rack::MiniProfiler.config.content_security_policy_nonce =
     Proc.new do |env, headers|
-      if csp = headers["Content-Security-Policy"] || headers["Content-Security-Policy-Report-Only"]
+      if csp = headers["content-security-policy"] || headers["content-security-policy-report-only"]
         csp[/script-src[^;]+'nonce-([^']+)'/, 1]
       end
     end

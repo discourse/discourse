@@ -32,7 +32,7 @@ RSpec.describe Middleware::RequestTracker do
       agent = (+"Evil Googlebot String \xc3\x28").force_encoding("Windows-1252")
 
       middleware =
-        Middleware::RequestTracker.new(->(env) { ["200", { "Content-Type" => "text/html" }, [""]] })
+        Middleware::RequestTracker.new(->(env) { ["200", { "content-type" => "text/html" }, [""]] })
       middleware.call(env("HTTP_USER_AGENT" => agent))
 
       CachedCounting.flush
@@ -46,7 +46,7 @@ RSpec.describe Middleware::RequestTracker do
       expect {
         middleware =
           Middleware::RequestTracker.new(
-            ->(env) { ["200", { "Content-Type" => "text/html" }, [""]] },
+            ->(env) { ["200", { "content-type" => "text/html" }, [""]] },
           )
         middleware.call(env("HTTP_USER_AGENT" => agent))
 
@@ -66,7 +66,7 @@ RSpec.describe Middleware::RequestTracker do
       expect {
         middleware =
           Middleware::RequestTracker.new(
-            ->(env) { ["200", { "Content-Type" => "text/html" }, [""]] },
+            ->(env) { ["200", { "content-type" => "text/html" }, [""]] },
           )
         middleware.call(env("HTTP_USER_AGENT" => agent))
 
@@ -91,7 +91,7 @@ RSpec.describe Middleware::RequestTracker do
       data =
         Middleware::RequestTracker.get_data(
           env("HTTP_DISCOURSE_TRACK_VIEW" => val),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.2,
         )
 
@@ -115,20 +115,20 @@ RSpec.describe Middleware::RequestTracker do
       status, headers = middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1"))
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-TrackView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+      expect(headers["x-discourse-trackview"]).to eq("1")
+      expect(headers["x-discourse-browserpageview"]).to eq("1")
     end
 
     it "adds the appropriate response header based on implicit tracking (HTML requests)" do
       middleware =
         Middleware::RequestTracker.new(
-          lambda { |env| [200, { "Content-Type" => "text/html" }, ["OK"]] },
+          lambda { |env| [200, { "content-type" => "text/html" }, ["OK"]] },
         )
       status, headers = middleware.call(env)
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-TrackView"]).to eq("1")
-      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
+      expect(headers["x-discourse-trackview"]).to eq("1")
+      expect(headers["x-discourse-browserpageview"]).to eq(nil)
     end
 
     it "adds the appropriate response header based on deferred tracking (MiniProfiler piggyback, BPVs)" do
@@ -136,8 +136,8 @@ RSpec.describe Middleware::RequestTracker do
       status, headers = middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1"))
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-TrackView"]).to eq(nil)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+      expect(headers["x-discourse-trackview"]).to eq(nil)
+      expect(headers["x-discourse-browserpageview"]).to eq("1")
     end
 
     it "adds the appropriate response headers for MessageBus requests with deferred tracking" do
@@ -155,7 +155,7 @@ RSpec.describe Middleware::RequestTracker do
         )
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+      expect(headers["x-discourse-browserpageview"]).to eq("1")
     end
 
     it "adds the appropriate response headers for MessageBus requests with regular tracking" do
@@ -171,8 +171,8 @@ RSpec.describe Middleware::RequestTracker do
         middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1", :path => "/message-bus/abcde/poll"))
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
-      expect(headers["X-Discourse-TrackView"]).to eq("1")
+      expect(headers["x-discourse-browserpageview"]).to eq("1")
+      expect(headers["x-discourse-trackview"]).to eq("1")
     end
 
     it "does not add these response headers when skipping the request tracker" do
@@ -194,15 +194,15 @@ RSpec.describe Middleware::RequestTracker do
         )
 
       expect(status).to eq(200)
-      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
-      expect(headers["X-Discourse-TrackView"]).to eq(nil)
+      expect(headers["x-discourse-browserpageview"]).to eq(nil)
+      expect(headers["x-discourse-trackview"]).to eq(nil)
     end
 
     it "can log requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
           env("HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.1,
         )
 
@@ -223,7 +223,7 @@ RSpec.describe Middleware::RequestTracker do
             "HTTP_USER_AGENT" =>
               "Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B410 Safari/600.1.4",
           ),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.1,
         )
 
@@ -233,7 +233,7 @@ RSpec.describe Middleware::RequestTracker do
       data =
         Middleware::RequestTracker.get_data(
           env("HTTP_USER_AGENT" => "kube-probe/1.18", "REQUEST_URI" => "/srv/status"),
-          ["200", { "Content-Type" => "text/plain" }],
+          ["200", { "content-type" => "text/plain" }],
           0.1,
         )
 
@@ -257,7 +257,7 @@ RSpec.describe Middleware::RequestTracker do
       data =
         Middleware::RequestTracker.get_data(
           env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1"),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.1,
         )
       Middleware::RequestTracker.log_request(data)
@@ -273,7 +273,7 @@ RSpec.describe Middleware::RequestTracker do
         data =
           Middleware::RequestTracker.get_data(
             env(path: "/t/topic-slug/1?embed_mode=true"),
-            ["200", { "Content-Type" => "text/html" }],
+            ["200", { "content-type" => "text/html" }],
             0.1,
           )
         Middleware::RequestTracker.log_request(data)
@@ -291,7 +291,7 @@ RSpec.describe Middleware::RequestTracker do
               "HTTP_DISCOURSE_TRACK_VIEW_DEFERRED" => "1",
               "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true",
             ),
-            ["200", { "Content-Type" => "text/html" }],
+            ["200", { "content-type" => "text/html" }],
             0.1,
           )
         Middleware::RequestTracker.log_request(data)
@@ -390,7 +390,7 @@ RSpec.describe Middleware::RequestTracker do
           data =
             Middleware::RequestTracker.get_data(
               env(path: "/?foo=1&foo%5B1%5D=2"),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.1,
             )
         }.not_to raise_error
@@ -404,7 +404,7 @@ RSpec.describe Middleware::RequestTracker do
               :path => "/t/topic-slug/1?embed_mode=true",
               "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)",
             ),
-            ["200", { "Content-Type" => "text/html" }],
+            ["200", { "content-type" => "text/html" }],
             0.1,
           )
         Middleware::RequestTracker.log_request(data)
@@ -419,7 +419,7 @@ RSpec.describe Middleware::RequestTracker do
       data =
         Middleware::RequestTracker.get_data(
           env("_DISCOURSE_API" => "1"),
-          ["200", { "Content-Type" => "text/json" }],
+          ["200", { "content-type" => "text/json" }],
           0.1,
         )
 
@@ -428,7 +428,7 @@ RSpec.describe Middleware::RequestTracker do
       data =
         Middleware::RequestTracker.get_data(
           env("_DISCOURSE_API" => "1"),
-          ["404", { "Content-Type" => "text/json" }],
+          ["404", { "content-type" => "text/json" }],
           0.1,
         )
 
@@ -452,7 +452,7 @@ RSpec.describe Middleware::RequestTracker do
       data =
         Middleware::RequestTracker.get_data(
           env("HTTP_USER_AGENT" => "DiscourseAPI Ruby Gem 0.19.0"),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.1,
         )
 
@@ -467,7 +467,7 @@ RSpec.describe Middleware::RequestTracker do
       data =
         Middleware::RequestTracker.get_data(
           env("HTTP_USER_AGENT" => "Mozilla/5.0 AppleWebKit/605.1.15 Mobile/15E148 DiscourseHub)"),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.1,
         )
 
@@ -513,7 +513,7 @@ RSpec.describe Middleware::RequestTracker do
         data =
           Middleware::RequestTracker.get_data(
             env(path: path, **headers),
-            ["200", { "Content-Type" => "text/html" }],
+            ["200", { "content-type" => "text/html" }],
             0.1,
           )
         Middleware::RequestTracker.log_request(data)
@@ -683,7 +683,7 @@ RSpec.describe Middleware::RequestTracker do
             "HTTP_USER_AGENT" =>
               "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36",
           ),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.1,
         )
       end
@@ -704,7 +704,7 @@ RSpec.describe Middleware::RequestTracker do
               "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36",
             "HTTP_COOKIE" => "_t=#{cookie};",
           ),
-          ["200", { "Content-Type" => "text/html" }],
+          ["200", { "content-type" => "text/html" }],
           0.1,
         )
       end
@@ -760,7 +760,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
                 "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -789,7 +789,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
                 "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -810,7 +810,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_USER_AGENT" => "A" * 5000,
                 "action_dispatch.remote_ip" => "1" * 50,
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -845,7 +845,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
                 "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -865,7 +865,7 @@ RSpec.describe Middleware::RequestTracker do
           data =
             Middleware::RequestTracker.get_data(
               env("HTTP_USER_AGENT" => "Googlebot"),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -887,7 +887,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
                 "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -926,7 +926,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://example.com",
                 "action_dispatch.remote_ip" => "1.2.3.4",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -981,7 +981,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_REFERRER" => "https://www.example.com/path?utm_source=x",
                 "action_dispatch.remote_ip" => "1.2.3.4",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -1006,7 +1006,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
                 "action_dispatch.remote_ip" => "1.2.3.4",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -1028,7 +1028,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
                 "action_dispatch.remote_ip" => "1.2.3.4",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -1052,7 +1052,7 @@ RSpec.describe Middleware::RequestTracker do
                 "HTTP_DISCOURSE_TRACK_VIEW_URL" => "https://discourse.org",
                 "action_dispatch.remote_ip" => "1.2.3.4",
               ),
-              ["200", { "Content-Type" => "text/html" }],
+              ["200", { "content-type" => "text/html" }],
               0.2,
             )
 
@@ -1435,7 +1435,7 @@ RSpec.describe Middleware::RequestTracker do
         Discourse.stubs(:os_hostname).returns("backend-1")
         status, headers = middleware.call(health_check_env("1.2.3.4", subfolder: "/forum"))
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("health_check_10_secs_limit")
       end
 
       it "keeps other paths on a separate rate limit budget" do
@@ -1444,7 +1444,7 @@ RSpec.describe Middleware::RequestTracker do
 
         status, headers = middleware.call(health_check_env("1.2.3.4"))
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("health_check_10_secs_limit")
 
         status, _ = middleware.call(env("REMOTE_ADDR" => "1.2.3.4"))
         expect(status).to eq(200)
@@ -1538,7 +1538,7 @@ RSpec.describe Middleware::RequestTracker do
 
       expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq("10")
+      expect(headers["retry-after"]).to eq("10")
     end
 
     it "does warn if rate limiter is enabled" do
@@ -1568,13 +1568,13 @@ RSpec.describe Middleware::RequestTracker do
       expect(status).to eq(200)
       status, headers = middleware.call(env1)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq("10")
+      expect(headers["retry-after"]).to eq("10")
 
       env2 = env("REMOTE_ADDR" => "1.1.1.1")
 
       status, headers = middleware.call(env2)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq("10")
+      expect(headers["retry-after"]).to eq("10")
     end
 
     it "does block if rate limiter is enabled" do
@@ -1589,7 +1589,7 @@ RSpec.describe Middleware::RequestTracker do
 
       status, headers = middleware.call(env1)
       expect(status).to eq(429)
-      expect(headers["Retry-After"]).to eq("10")
+      expect(headers["retry-after"]).to eq("10")
 
       status, _ = middleware.call(env2)
       expect(status).to eq(200)
@@ -1615,7 +1615,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(called).to eq(1)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("ip_10_secs_limit")
 
         expect(response.first).to eq(<<~MSG)
         Slow down, you're making too many requests.
@@ -1643,7 +1643,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(called).to eq(1)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("ip_60_secs_limit")
 
         expect(response.first).to eq(<<~MSG)
         Slow down, you're making too many requests.
@@ -1672,7 +1672,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(called).to eq(1)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_assets_10_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("ip_assets_10_secs_limit")
 
         expect(response.first).to eq(<<~MSG)
         Slow down, you're making too many requests.
@@ -1717,7 +1717,7 @@ RSpec.describe Middleware::RequestTracker do
         middleware = Middleware::RequestTracker.new(app)
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("user_60_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("user_60_secs_limit")
 
         expect(response.first).to eq(<<~MSG)
         Slow down, you're making too many requests.
@@ -1760,7 +1760,7 @@ RSpec.describe Middleware::RequestTracker do
         middleware = Middleware::RequestTracker.new(app)
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("ip_60_secs_limit")
 
         expect(response.first).to eq(<<~MSG)
         Slow down, you're making too many requests.
@@ -1800,7 +1800,7 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(app)
       status, headers, response = middleware.call(env)
       expect(status).to eq(429)
-      expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+      expect(headers["discourse-rate-limit-error-code"]).to eq("ip_60_secs_limit")
 
       expect(response.first).to eq(<<~MSG)
       Slow down, you're making too many requests.
@@ -1840,7 +1840,7 @@ RSpec.describe Middleware::RequestTracker do
         middleware = Middleware::RequestTracker.new(app)
         status, headers, response = middleware.call(env1)
         expect(status).to eq(429)
-        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("crawlers_60_secs_limit")
+        expect(headers["discourse-rate-limit-error-code"]).to eq("crawlers_60_secs_limit")
 
         expect(response.first).to eq(<<~MSG)
         Slow down, you're making too many requests.
@@ -1941,15 +1941,15 @@ RSpec.describe Middleware::RequestTracker do
       expect(timing[:redis][:duration]).to be > 0
       expect(timing[:redis][:calls]).to eq 2
 
-      expect(headers["X-Queue-Time"]).to eq("60.000000")
+      expect(headers["x-queue-time"]).to eq("60.000000")
 
-      expect(headers["X-Redis-Calls"]).to eq("2")
-      expect(headers["X-Redis-Time"].to_f).to be > 0
+      expect(headers["x-redis-calls"]).to eq("2")
+      expect(headers["x-redis-time"].to_f).to be > 0
 
-      expect(headers["X-Sql-Calls"]).to eq("2")
-      expect(headers["X-Sql-Time"].to_f).to be > 0
+      expect(headers["x-sql-calls"]).to eq("2")
+      expect(headers["x-sql-time"].to_f).to be > 0
 
-      expect(headers["X-Runtime"].to_f).to be > 0
+      expect(headers["x-runtime"].to_f).to be > 0
     end
 
     it "correctly logs GC stats when `instrument_gc_stat_per_request` site setting has been enabled" do

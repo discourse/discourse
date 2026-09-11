@@ -373,7 +373,7 @@ RSpec.describe Middleware::AnonymousCache do
       is_anon = false
       _status, headers, _body = app.call(env.dup)
       expect(is_anon).to eq(true)
-      expect(headers["Set-Cookie"]).to eq("dosp=1; Path=/")
+      expect(headers["set-cookie"]).to eq("dosp=1; Path=/")
 
       # tricky change, a 50ms delay still will trigger protection
       # once it is tripped

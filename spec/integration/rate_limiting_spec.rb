@@ -15,7 +15,7 @@ RSpec.describe "rate limiter integration" do
          }
 
     expect(response.status).to eq(429)
-    expect(response.headers["Retry-After"].to_i).to be > 29
+    expect(response.headers["retry-after"].to_i).to be > 29
   end
 
   it "does not rate-limit valid requests" do
@@ -69,7 +69,7 @@ RSpec.describe "rate limiter integration" do
 
     data = response.parsed_body
 
-    expect(response.headers["Retry-After"]).to eq("60")
+    expect(response.headers["retry-after"]).to eq("60")
     expect(data["extras"]["wait_seconds"]).to eq(60)
   end
 end
