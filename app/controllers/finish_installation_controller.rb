@@ -31,8 +31,6 @@ class FinishInstallationController < ApplicationController
 
       @user.email = email
       @user.username = params[:username]
-      @user.password = params[:password]
-      @user.password_required!
 
       if @user.save
         @user.change_trust_level!(1) if @user.trust_level < 1
@@ -68,7 +66,9 @@ class FinishInstallationController < ApplicationController
     return if @user.active && @user.email_confirmed?
 
     email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
-    EmailToken.enqueue_signup_email(email_token)
+    password_reset_token =
+      @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:password_reset])
+    EmailToken.enqueue_signup_email(email_token, password_reset_token: password_reset_token.token)
   end
 
   def redirect_confirm(email)

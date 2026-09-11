@@ -180,22 +180,13 @@ RSpec.describe "Finish Installation" do
       end
 
       it "shows validation error when username is blank" do
-        finish_installation_page.visit_register.fill_password("supersecurepassword").submit
+        finish_installation_page.visit_register.submit
         expect(finish_installation_page).to have_username_error
       end
 
-      it "shows validation error when password is blank" do
-        finish_installation_page.visit_register.fill_username("newadmin").submit
-        expect(finish_installation_page).to have_password_error
-      end
-
-      it "shows validation error when password is too short" do
-        finish_installation_page
-          .visit_register
-          .fill_username("newadmin")
-          .fill_password("short")
-          .submit
-        expect(finish_installation_page).to have_password_error("too short")
+      it "does not show a password field on the registration form" do
+        finish_installation_page.visit_register
+        expect(finish_installation_page).to have_no_password_field
       end
 
       it "registers admin and redirects to confirm email page" do
@@ -203,7 +194,6 @@ RSpec.describe "Finish Installation" do
           .visit_register
           .select_email("admin@example.com")
           .fill_username("newadmin")
-          .fill_password("supersecurepassword")
           .submit
 
         expect(finish_installation_page).to be_redirected_to_confirm_email
@@ -218,7 +208,6 @@ RSpec.describe "Finish Installation" do
           .visit_register
           .select_email("other@example.com")
           .fill_username("otheradmin")
-          .fill_password("supersecurepassword")
           .submit
 
         expect(finish_installation_page).to be_redirected_to_confirm_email
@@ -233,7 +222,6 @@ RSpec.describe "Finish Installation" do
             .visit_register
             .select_email("admin@example.com")
             .fill_username("differentuser")
-            .fill_password("supersecurepassword")
             .submit
         }.to change { Jobs::CriticalUserEmail.jobs.size }.by(1)
 
@@ -249,7 +237,6 @@ RSpec.describe "Finish Installation" do
             .visit_register
             .select_email("admin@example.com")
             .fill_username("differentuser")
-            .fill_password("supersecurepassword")
             .submit
         }.not_to change { Jobs::CriticalUserEmail.jobs.size }
       end
@@ -257,12 +244,13 @@ RSpec.describe "Finish Installation" do
       it "redirects to the wizard after admin confirms their email" do
         Jobs.run_immediately!
 
-        finish_installation_page
-          .visit_register
-          .select_email("admin@example.com")
-          .fill_username("newadmin")
-          .fill_password("supersecurepassword")
-          .submit
+        Capybara.using_wait_time(15) do
+          finish_installation_page
+            .visit_register
+            .select_email("admin@example.com")
+            .fill_username("newadmin")
+            .submit
+        end
 
         expect(finish_installation_page).to be_redirected_to_confirm_email
 
