@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 te:
+  mcp:
+    oauth:
+      deny: "తిరస్కరించండి"
+      approve: "అధికారం ఇవ్వండి"
   llms_txt:
     sections:
       optional: "ఐచ్ఛికం"

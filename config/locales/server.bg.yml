@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 bg:
+  mcp:
+    oauth:
+      deny: "Отказ"
   llms_txt:
     sections:
       optional: "По избор"

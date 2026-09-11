@@ -987,10 +987,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 
-    destination_topic = Topic.find_by(id: destination_topic_id)
-    guardian.ensure_can_create_post_on_topic!(destination_topic)
-
-    args = {}
+    args = { guardian: guardian }
     args[:destination_topic_id] = destination_topic_id.to_i
     args[:chronological_order] = params[:chronological_order] == "true"
     args[:freeze_original] = params[:freeze_original] == "true"
@@ -1005,6 +1002,8 @@ class TopicsController < ApplicationController
     hijack(info: "merging topic #{topic_id.inspect} into #{destination_topic_id.inspect}") do
       destination_topic = topic.move_posts(acting_user, topic.posts.pluck(:id), args)
       render_topic_changes(destination_topic)
+    rescue Discourse::InvalidAccess => ex
+      rescue_with_handler(ex)
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
       render_json_error(ex)
     end
@@ -1040,14 +1039,12 @@ class TopicsController < ApplicationController
       end
     end
 
-    if params[:destination_topic_id].present?
-      destination_topic = Topic.find_by(id: params[:destination_topic_id])
-      guardian.ensure_can_create_post_on_topic!(destination_topic)
-    end
-
+    request_guardian = guardian
     hijack do
-      destination_topic = move_posts_to_destination(topic)
+      destination_topic = move_posts_to_destination(topic, guardian: request_guardian)
       render_topic_changes(destination_topic)
+    rescue Discourse::InvalidAccess => ex
+      rescue_with_handler(ex)
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
       render_json_error(ex)
     end
@@ -1620,8 +1617,8 @@ class TopicsController < ApplicationController
     end
   end
 
-  def move_posts_to_destination(topic)
-    args = {}
+  def move_posts_to_destination(topic, guardian:)
+    args = { guardian: guardian }
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[
       :destination_topic_id

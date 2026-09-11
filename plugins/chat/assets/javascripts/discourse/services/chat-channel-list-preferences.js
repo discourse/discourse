@@ -63,6 +63,7 @@ export default class ChatChannelListPreferences extends Service {
   @tracked isSavingChannelsSort = false;
   @tracked isSavingStarredSort = false;
   @tracked isSavingDmsSort = false;
+  @tracked _bypassedFilters = {};
 
   constructor() {
     super(...arguments);
@@ -89,6 +90,34 @@ export default class ChatChannelListPreferences extends Service {
     return (
       this[this.#section(section).filter.value] ?? CHAT_CHANNEL_LIST_FILTERS.ALL
     );
+  }
+
+  effectiveFilterFor(section) {
+    return this.isFilterBypassedFor(section)
+      ? CHAT_CHANNEL_LIST_FILTERS.ALL
+      : this.filterFor(section);
+  }
+
+  isFilterBypassedFor(section) {
+    return this._bypassedFilters[section] ?? false;
+  }
+
+  showAllChannels(section) {
+    if (SECTIONS[section] && !this.isSavingFilterFor(section)) {
+      this._bypassedFilters = { ...this._bypassedFilters, [section]: true };
+    }
+  }
+
+  applyFilter(section) {
+    this._bypassedFilters = { ...this._bypassedFilters, [section]: false };
+  }
+
+  toggleFilter(section) {
+    if (this.isFilterBypassedFor(section)) {
+      this.applyFilter(section);
+    } else {
+      this.showAllChannels(section);
+    }
   }
 
   isDefaultFilterFor(section) {
@@ -119,8 +148,18 @@ export default class ChatChannelListPreferences extends Service {
       return false;
     }
 
+    if (!this.currentUser || this.isSavingFilterFor(section)) {
+      return false;
+    }
+
+    const bypassed = this.isFilterBypassedFor(section);
+    this.applyFilter(section);
     const { field, value, saving } = SECTIONS[section].filter;
-    return await this.#save(field, value, saving, filter);
+    const saved = await this.#save(field, value, saving, filter);
+    if (!saved && bypassed) {
+      this.showAllChannels(section);
+    }
+    return saved;
   }
 
   async setSort(section, sort) {

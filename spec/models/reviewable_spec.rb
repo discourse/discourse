@@ -620,6 +620,20 @@ RSpec.describe Reviewable, type: :model do
       )
     end
 
+    it "keeps the reviewable in the queue when the action leaves it pending" do
+      reviewable =
+        PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post).reviewable
+      UserSilencer.silence(post.user, moderator, post_id: post.id)
+
+      perform_result = nil
+      expect { perform_result = reviewable.perform(moderator, :unsilence_user) }.not_to change {
+        Jobs::NotifyReviewable.jobs.size
+      }
+
+      expect(reviewable.reload).to be_pending
+      expect(perform_result.remove_reviewable_ids).to be_empty
+    end
+
     it "triggers a notification on approve -> reject to update status" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
 

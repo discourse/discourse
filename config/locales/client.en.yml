@@ -6239,6 +6239,8 @@ en:
         synonyms_hint: "When the above tags are used, they will be replaced with %{baseTagName}."
         add_synonyms_confirm: "Any place that currently uses %{synonymNames} will be changed to use %{tagName} instead. Are you sure you want to make this change?"
       localization:
+        language: "Tag language"
+        language_description: "The primary language of this tag’s name and description."
         hint: "Add localizations to show different tag names for users in different languages."
         locale: "Locale"
         name: "Name"

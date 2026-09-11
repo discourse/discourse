@@ -88,6 +88,28 @@ describe DiscourseMcp::OAuth do
     expect(McpOauthClient.find_by(client_id:)).to eq(nil)
   end
 
+  it "accepts metadata when none is one of the supported client authentication methods" do
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
+    client_id = "https://client.example.com/oauth/client.json"
+    allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
+      {
+        "client_id" => client_id,
+        "client_name" => "Metadata client",
+        "redirect_uris" => ["https://client.example.com/callback"],
+        "token_endpoint_auth_method" => "private_key_jwt",
+        "token_endpoint_auth_methods_supported" => %w[none private_key_jwt],
+      },
+    )
+
+    resolved_client = described_class::ClientResolver.resolve!(client_id, user:)
+
+    expect(resolved_client).to have_attributes(
+      client_id: client_id,
+      registration_type: "cimd",
+      trust_state: "approved",
+    )
+  end
+
   it "rejects metadata that requires unsupported client authentication" do
     SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
     client_id = "https://client.example.com/oauth/client.json"
@@ -97,6 +119,25 @@ describe DiscourseMcp::OAuth do
         "client_name" => "Confidential metadata client",
         "redirect_uris" => ["https://client.example.com/callback"],
         "token_endpoint_auth_method" => "private_key_jwt",
+      },
+    )
+
+    expect { described_class::ClientResolver.resolve!(client_id, user:) }.to raise_error(
+      Discourse::InvalidAccess,
+    )
+    expect(McpOauthClient.find_by(client_id:)).to eq(nil)
+  end
+
+  it "rejects metadata when the preferred authentication method is not a supported choice" do
+    SiteSetting.mcp_oauth_client_id_metadata_policy = "any_domain"
+    client_id = "https://client.example.com/oauth/client.json"
+    allow(described_class::ClientResolver).to receive(:fetch_metadata).and_return(
+      {
+        "client_id" => client_id,
+        "client_name" => "Inconsistent metadata client",
+        "redirect_uris" => ["https://client.example.com/callback"],
+        "token_endpoint_auth_method" => "private_key_jwt",
+        "token_endpoint_auth_methods_supported" => ["none"],
       },
     )
 

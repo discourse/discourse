@@ -8,6 +8,10 @@ sw:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Tarehe"
+          outcomes:
+            failed: "Kushindwa"
         reports:
           filters:
             sort_by:

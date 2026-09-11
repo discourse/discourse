@@ -51,49 +51,20 @@ class PostsController < ApplicationController
 
     if params[:id] == "private_posts"
       raise Discourse::NotFound if current_user.nil?
-
-      allowed_private_topics = TopicAllowedUser.where(user_id: current_user.id).select(:topic_id)
-
-      allowed_groups = GroupUser.where(user_id: current_user.id).select(:group_id)
-      allowed_private_topics_by_group =
-        TopicAllowedGroup.where(group_id: allowed_groups).select(:topic_id)
-
-      all_allowed =
-        Topic
-          .where(id: allowed_private_topics)
-          .or(Topic.where(id: allowed_private_topics_by_group))
-          .select(:id)
-
       posts =
-        Post
-          .private_posts
-          .where(post_type: Topic.visible_post_types(current_user))
-          .order(id: :desc)
-          .includes(topic: :category)
-          .includes(user: %i[primary_group flair_group])
-          .includes(:reply_to_user)
-          .limit(50)
+        LatestPostsQuery.new(user: current_user, guardian:).private_posts(
+          before_post_id: last_post_id,
+        )
       rss_description = I18n.t("rss_description.private_posts")
-
-      posts = posts.where(topic_id: all_allowed) if !current_user.admin?
     else
       posts =
-        Post
-          .public_posts
-          .visible
-          .where(post_type: Post.types[:regular])
-          .order(id: :desc)
-          .includes(topic: %i[category localizations])
-          .includes(user: %i[primary_group flair_group])
-          .includes(:reply_to_user)
-          .where("categories.id" => Category.secured(guardian).select(:id))
-          .limit(50)
+        LatestPostsQuery.new(user: current_user, guardian:).public_posts(
+          before_post_id: last_post_id,
+        )
 
       rss_description = I18n.t("rss_description.posts")
       @use_canonical = true
     end
-
-    posts = posts.where("posts.id < ?", last_post_id) if last_post_id
 
     posts = posts.to_a
 
