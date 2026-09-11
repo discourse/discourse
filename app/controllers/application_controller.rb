@@ -163,7 +163,7 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t("site_setting_missing", name: e.message), status: 500
   end
 
-  rescue_from ActionController::RoutingError, PluginDisabled do
+  rescue_from ActionController::RoutingError, ActionDispatch::MissingController, PluginDisabled do
     # This error is raised outside of the normal request response cycle and is called via the
     # `DiscoursePublicExceptions` middleware which creates a new instance of the ApplicationController.
     # As a result, controller actions hooks are not called and we need to explicitly call `dont_cache_page` here.
