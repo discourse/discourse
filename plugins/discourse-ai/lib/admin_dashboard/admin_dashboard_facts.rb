@@ -463,7 +463,6 @@ module DiscourseAi
               AND e.created_at < (:end_date::date + 1)
               AND e.topic_id IS NOT NULL
               AND e.normalized_referrer IS NOT NULL
-              AND #{BrowserPageviewEvent.rollup_source_condition(table: "e")}
               AND #{topic_conditions}
             GROUP BY e.topic_id, t.title
             ORDER BY visits DESC

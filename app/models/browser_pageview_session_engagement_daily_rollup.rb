@@ -11,8 +11,6 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
   def self.aggregate(start_date:, end_date:)
     start_date = start_date.to_date
     end_date = end_date.to_date + 1
-    source_condition = BrowserPageviewEvent.rollup_source_condition
-
     transaction do
       DB.exec(<<~SQL, start_date:, end_date:)
         DELETE FROM browser_pageview_session_engagement_daily_rollups rollup
@@ -23,7 +21,6 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
             FROM browser_pageview_events
             WHERE created_at >= rollup.date
               AND created_at < rollup.date + 1
-              AND #{source_condition}
           )
       SQL
 
@@ -34,7 +31,6 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
           FROM browser_pageview_events
           WHERE created_at >= :start_date
             AND created_at < LEAST(:end_date::timestamp, :session_started_before::timestamp)
-            AND #{source_condition}
         ),
         session_pageviews AS (
           SELECT
@@ -45,7 +41,6 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
             bool_or(#{CrawlerScorer.likely_crawler_condition(table: "bpe")}) AS likely_crawler
           FROM browser_pageview_events bpe
           JOIN active_sessions ON active_sessions.session_id = bpe.session_id
-          WHERE #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
           GROUP BY bpe.session_id
           HAVING MIN(bpe.created_at) >= :start_date
         )

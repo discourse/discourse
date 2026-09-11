@@ -48,17 +48,9 @@ class Report
   ]
   ADMIN_ONLY_RELATED_ITEMS_REPORTS = %w[new_contributors signups]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
-  BROWSER_PAGEVIEW_REPORTS = %w[
-    top_countries_by_browser_pageviews
-    top_entry_urls
-    top_referrers_by_browser_pageviews
-  ]
 
   def self.hidden?(type, guardian:)
     return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
-    if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
-      return true
-    end
 
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
@@ -503,12 +495,7 @@ class Report
   # too. This is to reflect what is shown in the "Site traffic" report
   # by default.
   def self.page_view_requests
-    ApplicationRequest.where(
-      req_type: [
-        ApplicationRequest.req_types[:page_view_anon_browser],
-        ApplicationRequest.req_types[:page_view_logged_in_browser],
-      ].flatten,
-    )
+    ApplicationRequest.browser_pageviews
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)

@@ -607,12 +607,6 @@ basic:
     default: false
     hidden: true
     client: true
-  trigger_browser_pageview_events:
-    default: false
-    hidden: true
-  persist_browser_pageview_events:
-    default: true
-    hidden: true
   clean_up_browser_pageview_events:
     default: false
     hidden: true

@@ -40,7 +40,7 @@ class AdminDashboardSiteTraffic
       pageview_series: pageview_series(current_rows, include_embedded: include_embedded),
     }
 
-    if SiteSetting.persist_browser_pageview_events && !SiteSetting.use_legacy_pageviews
+    if !SiteSetting.use_legacy_pageviews
       top_countries = fetch_card("top_countries_by_browser_pageviews")
       response[:top_countries] = top_countries if top_countries
 
@@ -120,10 +120,8 @@ class AdminDashboardSiteTraffic
     direct_traffic = direct_traffic_value
     kpis[:direct_traffic] = { value: direct_traffic } if !direct_traffic.nil?
 
-    if SiteSetting.persist_browser_pageview_events
-      kpis[:bounce_rate] = { value: bounce_rate_value }
-      kpis[:average_session_duration_seconds] = { value: average_session_duration_value }
-    end
+    kpis[:bounce_rate] = { value: bounce_rate_value }
+    kpis[:average_session_duration_seconds] = { value: average_session_duration_value }
 
     kpis
   end
@@ -183,8 +181,6 @@ class AdminDashboardSiteTraffic
   end
 
   def direct_traffic_value
-    return nil if !SiteSetting.persist_browser_pageview_events
-
     count_sql = BrowserPageviewEvent.rollup_count_sql
 
     row = DB.query(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date).first
@@ -312,9 +308,10 @@ class AdminDashboardSiteTraffic
   end
 
   def beacon_cutover_date
+    return if SiteSetting.use_legacy_pageviews
     return @beacon_cutover_date if defined?(@beacon_cutover_date)
 
-    @beacon_cutover_date = BrowserPageviewEvent.beacon_cutover_date
+    @beacon_cutover_date = ApplicationRequest.browser_pageview_beacon_cutover_date
   end
 
   def traffic_rows(range_start_date, range_end_date)
