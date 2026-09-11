@@ -251,6 +251,72 @@ test("resolves plugin admin source maps to the admin JavaScript directory", () =
   });
 });
 
+test("keeps direct call-site attribution separate from caller attribution", () => {
+  temporaryDirectory = fs.mkdtempSync(
+    path.join(os.tmpdir(), "discourse-deprecation-report-")
+  );
+  const sourceMap = new SourceMapGenerator({ file: "bundle.js" });
+  addSource(
+    sourceMap,
+    1,
+    "frontend/discourse/app/lib/deprecated.js",
+    10,
+    "deprecated(message, options);"
+  );
+  addSource(
+    sourceMap,
+    2,
+    "discourse/plugins/example/discourse/initializers/legacy.js.es6",
+    5,
+    "deprecated(message, options);"
+  );
+  addSource(
+    sourceMap,
+    3,
+    "discourse/plugins/example/discourse/initializers/loader.js",
+    20,
+    "loadLegacy();"
+  );
+  fs.writeFileSync(
+    path.join(temporaryDirectory, "bundle.js.map"),
+    sourceMap.toString()
+  );
+  const entry = {
+    id: "discourse.es6-extension",
+    origin: "example",
+    stack: [
+      "    at deprecated (http://localhost/bundle.js:1:1)",
+      "    at legacy (http://localhost/bundle.js:2:1)",
+      "    at loader (http://localhost/bundle.js:3:1)",
+    ].join("\n"),
+  };
+
+  const report = buildReport({
+    entries: [
+      { ...entry, count: 2, reportAtCallSite: true },
+      { ...entry, count: 1 },
+    ],
+    resolver: new DeprecationStackResolver({ mapRoots: [temporaryDirectory] }),
+  });
+
+  expect(
+    report.files.map(({ file, deprecations }) => ({
+      file,
+      count: deprecations[0].count,
+    }))
+  ).toEqual([
+    {
+      file: "plugins/example/assets/javascripts/discourse/initializers/legacy.js.es6",
+      count: 2,
+    },
+    {
+      file: "plugins/example/assets/javascripts/discourse/initializers/loader.js",
+      count: 1,
+    },
+  ]);
+  expect(report.unresolved).toEqual([]);
+});
+
 test("merges compact reports and renders the shared summary", () => {
   const first = {
     format: 1,

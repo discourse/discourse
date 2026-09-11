@@ -273,7 +273,8 @@ class DeprecationStackResolver {
     const viaWrapper = frames.some(
       (frame) => frame.resolved && DEPRECATION_WRAPPER_PATTERN.test(frame.file)
     );
-    const callers = viaWrapper ? owned.slice(1) : owned;
+    const callers =
+      viaWrapper && !entry.reportAtCallSite ? owned.slice(1) : owned;
     const candidate = callers[0];
     // An unmapped frame may be the actual caller, so don't attribute its
     // deprecation to a later frame just because that frame has a source map.
@@ -318,6 +319,7 @@ class DeprecationStackResolver {
 function rawEntryKey(entry) {
   return [
     entry.id,
+    entry.reportAtCallSite === true,
     entry.origin,
     entry.module,
     entry.testName,

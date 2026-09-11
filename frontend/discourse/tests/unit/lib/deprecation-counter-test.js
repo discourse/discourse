@@ -20,6 +20,44 @@ module("Unit | Lib | deprecation-counter", function (hooks) {
     this.sandbox.restore();
   });
 
+  test("preserves call-site attribution in browser and system spec details", function (assert) {
+    const reported = [];
+    window.Testem = {
+      useCustomAdapter(callback) {
+        callback({
+          emit(event, tag, payload) {
+            if (tag === "deprecation-details") {
+              reported.push(...payload.details);
+            }
+          },
+        });
+      },
+    };
+    const counter = new DeprecationCounter();
+
+    for (const reportAtCallSite of [true, false]) {
+      counter.handleDiscourseDeprecation("Example", {
+        id: "example.deprecation",
+        reportAtCallSite,
+      });
+    }
+
+    assert.deepEqual(
+      reported.map((detail) => detail.reportAtCallSite),
+      [true, false],
+      "browser details keep distinct attribution modes for the same stack"
+    );
+    assert.deepEqual(
+      this.log.args.map(
+        ([message]) =>
+          JSON.parse(message.slice("deprecation_detail:".length))
+            .reportAtCallSite
+      ),
+      [true, false],
+      "system spec logs preserve the attribution mode"
+    );
+  });
+
   test("keeps counting after exhausting the stack capture budget", function (assert) {
     const counter = new DeprecationCounter();
     const capture = this.sandbox

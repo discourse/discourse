@@ -115,15 +115,15 @@ export default class DeprecationCounter {
     const id = options?.id || "discourse.(unknown)";
 
     if (this.shouldCount(id)) {
-      this.incrementCount(id);
+      this.incrementCount(id, options?.reportAtCallSite === true);
     }
   }
 
-  incrementCount(id) {
+  incrementCount(id, reportAtCallSite = false) {
     const existingCount = this.counts.get(id) || 0;
     this.counts.set(id, existingCount + 1);
 
-    this.recordDetail(id);
+    this.recordDetail(id, reportAtCallSite);
 
     if (window.Testem) {
       reportDeprecationToTestem(id, this.#origin);
@@ -139,7 +139,7 @@ export default class DeprecationCounter {
    * so the CI report can point at both the spec and the deprecated call site.
    * Identical occurrences are collapsed into a single entry with a count.
    */
-  recordDetail(id) {
+  recordDetail(id, reportAtCallSite = false) {
     if (this.#stackCaptures >= MAX_STACK_CAPTURES) {
       return;
     }
@@ -149,6 +149,7 @@ export default class DeprecationCounter {
     const currentTest = this.#qunit?.config?.current;
     const key = [
       this.#instanceId,
+      reportAtCallSite,
       id,
       this.#origin,
       currentTest?.module?.name,
@@ -168,6 +169,7 @@ export default class DeprecationCounter {
       const detail = {
         key,
         id,
+        reportAtCallSite,
         origin: this.#origin,
         module: currentTest?.module?.name,
         testName: currentTest?.testName,
@@ -187,10 +189,11 @@ export default class DeprecationCounter {
     }
 
     if (isRailsTesting()) {
-      // System specs identify the spec themselves, so only the JS stack is
-      // needed here.
+      // System specs identify the spec themselves.
       // eslint-disable-next-line no-console
-      console.log(`deprecation_detail:${JSON.stringify({ id, stack })}`);
+      console.log(
+        `deprecation_detail:${JSON.stringify({ id, stack, reportAtCallSite })}`
+      );
     }
   }
 

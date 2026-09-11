@@ -65,6 +65,7 @@ module TurboTests
               count: 1,
               origin: extract_origin_from_example(example) || "unknown",
               stack: detail["stack"],
+              reportAtCallSite: detail["reportAtCallSite"],
               test: {
                 module: nil,
                 name: example.full_description,
