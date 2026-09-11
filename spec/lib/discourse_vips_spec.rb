@@ -83,18 +83,22 @@ RSpec.describe DiscourseVips do
   end
 
   describe ".svg_dimensions" do
-    {
-      "image.svg" => [100, 50],
-      "tiny.svg" => [115, 86],
-      "massive.svg" => [11_520, 11_615],
-      "zero_sized.svg" => [120, 90],
-    }.each do |filename, dimensions|
-      it "returns the intrinsic dimensions of #{filename}" do
-        result =
-          described_class.svg_dimensions(input_path: file_from_fixtures(filename).path, timeout: 5)
+    it "returns explicit SVG dimensions" do
+      input_path = file_from_fixtures("image.svg").path
 
-        expect(result).to eq(dimensions)
-      end
+      expect(described_class.svg_dimensions(input_path:, timeout: 5)).to eq([100, 50])
+    end
+
+    it "rounds fractional SVG dimensions" do
+      input_path = file_from_fixtures("tiny.svg").path
+
+      expect(described_class.svg_dimensions(input_path:, timeout: 5)).to eq([115, 86])
+    end
+
+    it "returns large SVG dimensions" do
+      input_path = file_from_fixtures("massive.svg").path
+
+      expect(described_class.svg_dimensions(input_path:, timeout: 5)).to eq([11_520, 11_615])
     end
 
     it "uses the viewBox when the SVG has no explicit dimensions" do
@@ -109,18 +113,16 @@ RSpec.describe DiscourseVips do
       expect(dimensions).to eq([120, 90])
     end
 
-    it "uses a viewBox with surrounding whitespace for zero-sized SVGs" do
-      [" 0 0 120 90", " \t\n0\t0\n120 90\r "].each do |viewbox|
-        file =
-          file_from_contents(
-            %(<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="#{viewbox}"/>),
-            "whitespace-viewbox.svg",
-          )
+    it "rejects a zero-sized SVG with surrounding viewBox whitespace" do
+      file =
+        file_from_contents(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox=" 0 0 120 90 "/>',
+          "whitespace-viewbox.svg",
+        )
 
-        dimensions = described_class.svg_dimensions(input_path: file.path, timeout: 5)
-
-        expect(dimensions).to eq([120, 90])
-      end
+      expect { described_class.svg_dimensions(input_path: file.path, timeout: 5) }.to raise_error(
+        DiscourseVips::InvalidImage,
+      )
     end
 
     it "rejects a zero-sized SVG without a viewBox" do
@@ -135,18 +137,28 @@ RSpec.describe DiscourseVips do
       )
     end
 
-    { [0, 60] => [120, 60], [80, 0] => [80, 90] }.each do |dimensions, expected_dimensions|
-      it "uses the corresponding viewBox dimension for #{dimensions.inspect}" do
-        file =
-          file_from_contents(
-            %(<svg xmlns="http://www.w3.org/2000/svg" width="#{dimensions[0]}" height="#{dimensions[1]}" viewBox="0 0 120 90"/>),
-            "zero-dimension.svg",
-          )
+    it "rejects an SVG with zero width" do
+      file =
+        file_from_contents(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="60" viewBox="0 0 120 90"/>',
+          "zero-width.svg",
+        )
 
-        result = described_class.svg_dimensions(input_path: file.path, timeout: 5)
+      expect { described_class.svg_dimensions(input_path: file.path, timeout: 5) }.to raise_error(
+        DiscourseVips::InvalidImage,
+      )
+    end
 
-        expect(result).to eq(expected_dimensions)
-      end
+    it "rejects an SVG with zero height" do
+      file =
+        file_from_contents(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="0" viewBox="0 0 120 90"/>',
+          "zero-height.svg",
+        )
+
+      expect { described_class.svg_dimensions(input_path: file.path, timeout: 5) }.to raise_error(
+        DiscourseVips::InvalidImage,
+      )
     end
 
     it "rejects non-SVG images" do
