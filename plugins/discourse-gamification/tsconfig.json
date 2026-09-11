@@ -7,9 +7,21 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-gamification/*": ["./assets/javascripts/*"],
+      "discourse/plugins/discourse-gamification/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./admin/assets/javascripts/*",
+        "./admin/assets/javascripts/*.gjs",
+        "./admin/assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
+      ],
       "discourse/plugins/discourse-gamification/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+        "./admin/assets/javascripts/admin/*",
+        "./admin/assets/javascripts/admin/*.gjs",
+        "./admin/assets/javascripts/admin/*.gts"
       ]
     }
   }

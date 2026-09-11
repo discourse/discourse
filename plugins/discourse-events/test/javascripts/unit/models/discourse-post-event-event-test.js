@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import DiscoursePostEventEvent, {
   isWithinEventTimeframe,
-} from "../../discourse/models/discourse-post-event-event";
+} from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 module("Unit | Model | DiscoursePostEventEvent", function () {
   test("maps description fields from API response", function (assert) {

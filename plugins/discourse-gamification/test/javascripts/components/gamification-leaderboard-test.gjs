@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import GamificationLeaderboard from "../discourse/components/gamification-leaderboard";
+import GamificationLeaderboard from "discourse/plugins/discourse-gamification/discourse/components/gamification-leaderboard";
 
 module(
   "Discourse Gamification | Component | GamificationLeaderboard",

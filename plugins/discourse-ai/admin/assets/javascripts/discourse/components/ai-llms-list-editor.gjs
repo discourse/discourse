@@ -11,7 +11,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import AiCreditBar from "./ai-credit-bar";
+import AiCreditBar from "discourse/plugins/discourse-ai/discourse/components/ai-credit-bar";
 import AiDefaultLlmSelector from "./ai-default-llm-selector.gjs";
 import AiLlmEditor from "./ai-llm-editor.gjs";
 

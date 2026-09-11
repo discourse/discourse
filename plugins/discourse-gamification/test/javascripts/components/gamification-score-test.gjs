@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import GamificationScore from "../discourse/components/gamification-score";
+import GamificationScore from "discourse/plugins/discourse-gamification/discourse/components/gamification-score";
 
 module(
   "Discourse Gamification | Component | GamificationScore",

@@ -7,9 +7,13 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-cakeday/*": ["./assets/javascripts/*"],
-      "discourse/plugins/discourse-cakeday/admin/*": [
-        "./admin/assets/javascripts/admin/*"
+      "discourse/plugins/discourse-cakeday/*": [
+        "./assets/javascripts/*",
+        "./assets/javascripts/*.gjs",
+        "./assets/javascripts/*.gts",
+        "./test/javascripts/*",
+        "./test/javascripts/*.gjs",
+        "./test/javascripts/*.gts"
       ]
     }
   }
