@@ -32,6 +32,9 @@ RSpec.describe ExportCsvController do
         UserExport.create(file_name: "user-archive-codinghorror-150116-003249", user_id: user.id)
         post "/export_csv/export_entity.json", params: { entity: "user_archive" }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("csv_export.rate_limit_error"),
+        )
         expect(Jobs::ExportUserArchive.jobs.size).to eq(0)
       end
 
@@ -60,9 +63,10 @@ RSpec.describe ExportCsvController do
         expect(Jobs::ExportUserArchive.jobs.size).to eq(1)
       end
 
-      it "returns 404 when normal user tries to export admin entity" do
+      it "returns 403 when normal user tries to export admin entity" do
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
@@ -74,7 +78,8 @@ RSpec.describe ExportCsvController do
                  export_user_id: user2.id,
                },
              }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
         expect(Jobs::ExportUserArchive.jobs.size).to eq(0)
       end
 
@@ -138,7 +143,8 @@ RSpec.describe ExportCsvController do
                },
              }
 
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
         expect(Jobs::ExportCsvFile.jobs).to be_empty
       end
 
@@ -254,13 +260,15 @@ RSpec.describe ExportCsvController do
     describe "#export_entity" do
       it "does not allow moderators to export user_list" do
         post "/export_csv/export_entity.json", params: { entity: "user_list" }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
       end
 
       it "does not allow moderators to export screened_email without permission to view emails" do
         SiteSetting.moderators_view_emails = false
         post "/export_csv/export_entity.json", params: { entity: "screened_email" }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
       end
 
       it "does not allow moderators to export screened_email without permission to view IPs" do
@@ -269,7 +277,8 @@ RSpec.describe ExportCsvController do
 
         post "/export_csv/export_entity.json", params: { entity: "screened_email" }
 
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
@@ -293,7 +302,8 @@ RSpec.describe ExportCsvController do
                  export_user_id: user.id,
                },
              }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
         expect(Jobs::ExportUserArchive.jobs.size).to eq(0)
       end
 
@@ -317,7 +327,8 @@ RSpec.describe ExportCsvController do
                  end_date: "2026-02-15",
                },
              }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
@@ -331,7 +342,8 @@ RSpec.describe ExportCsvController do
                  end_date: "2026-02-15",
                },
              }
-        expect(response.status).to eq(422)
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("invalid_access"))
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
       end
 
