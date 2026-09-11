@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 cs:
+  mcp:
+    oauth:
+      deny: "Odmítnout"
+      approve: "Autorizovat"
   llms_txt:
     sections:
       optional: "Volitelné"
@@ -4239,6 +4243,12 @@ cs:
   performance_report:
     initial_post_raw: Toto téma zahrnuje denní přehledy výkonu vašeho webu.
     initial_topic_title: Zprávy o výkonu webových stránek
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamem."
+      few: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
+      many: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
+      other: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
   tags:
     title: "Štítky"
     restricted_tag_disallowed: 'Nelze použít štítek "%{tag}".'
@@ -4448,8 +4458,6 @@ cs:
         complete: "Příspěvek byl skryt a uživatel byl upozorněn."
       agree_and_edit:
         title: "Upravit příspěvek"
-        description: "Souhlasit s nahlášením a otevřít okno editoru pro úpravu příspěvku."
-        complete: "Nahlášení potvrzeno, nyní můžete příspěvek upravit."
       delete:
         title: "Smazat"
         complete: "Příspěvek smazán."
@@ -4542,30 +4550,6 @@ cs:
       approve_and_unhide:
         title: "Ano"
         complete: "Příspěvek schválen a zviditelněn"
-      post_actions:
-        bundle_title: "Co chcete s příspěvkem udělat?"
-      delete_post:
-        title: "Odstranit příspěvek"
-        description: "Smazat příspěvek"
-        complete: "Příspěvek smazán"
-      hide_post:
-        title: "Skrýt příspěvek"
-        description: "Skrýt tento příspěvek z veřejného zobrazení"
-        complete: "Příspěvek byl skryt"
-      unhide_post:
-        title: "Zviditelnit příspěvek"
-        description: "Zviditelnit tento příspěvek všem uživatelům"
-        complete: "Příspěvek byl zviditelněn"
-      restore_post:
-        title: "Obnovit příspěvek"
-        description: "Obnovit tento smazaný příspěvek"
-        complete: "Příspěvek obnoven"
-      edit_post:
-        title: "Upravit příspěvek"
-        description: "Upravit obsah tohoto příspěvku"
-        complete: "Příspěvek upraven"
-      user_actions:
-        bundle_title: "Co chcete udělat s tímto uživatelem?"
       silence_user:
         title: "Ztišit uživatele"
         complete: "Uživatel ztišen"

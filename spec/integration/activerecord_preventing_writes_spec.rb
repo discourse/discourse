@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "When ActiveRecord is preventing writes" do
-  it "should not result in an error response when there is a theme field that needs to be baked" do
+  it "does not return an error when a theme field needs baking" do
     theme_field =
       Fabricate(
         :theme_field,

@@ -6,7 +6,6 @@ export default class List extends FilterComponent {
   <template>
     <ComboBox
       @content={{this.filter.choices}}
-      @value={{this.filter.default}}
       @onChange={{this.onChange}}
       @options={{hash
         allowAny=this.filter.allow_any
@@ -15,6 +14,7 @@ export default class List extends FilterComponent {
         none="admin.dashboard.report_filter_any"
         disabled=this.filter.disabled
       }}
+      @value={{this.filter.default}}
     />
   </template>
 }

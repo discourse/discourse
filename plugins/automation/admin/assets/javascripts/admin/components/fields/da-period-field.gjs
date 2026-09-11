@@ -57,26 +57,26 @@ export default class PeriodField extends BaseField {
 
   <template>
     <div class="field period-field control-group">
-      <DAFieldLabel @label={{@label}} @field={{@field}} />
+      <DAFieldLabel @field={{@field}} @label={{@label}} />
 
       <div class="controls">
         {{this.recurringLabel}}
 
         <Input
-          @type="number"
           defaultValue="1"
-          @value={{this.interval}}
           disabled={{@field.isDisabled}}
           required={{@field.isRequired}}
+          @type="number"
+          @value={{this.interval}}
           {{on "input" this.mutInterval}}
         />
 
         <ComboBox
-          @value={{this.frequency}}
           @content={{this.replacedContent}}
           @onChange={{this.mutFrequency}}
           @options={{hash allowAny=false disabled=@field.isDisabled}}
           @required={{@field.isRequired}}
+          @value={{this.frequency}}
         />
 
         <DAFieldDescription @description={{@description}} />

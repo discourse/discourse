@@ -78,9 +78,9 @@ export default class EditBadgeGroupings extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.badges.badge_groupings.modal_title"}}
       @bodyClass="badge-groupings-modal"
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.badges.badge_groupings.modal_title"}}
     >
       <:body>
         <div class="badge-groupings">
@@ -90,8 +90,8 @@ export default class EditBadgeGroupings extends Component {
                 <div class="badge-grouping">
                   {{#if wc.editing}}
                     <Input
-                      @value={{wc.name}}
                       class="badge-grouping-name-input"
+                      @value={{wc.name}}
                     />
                   {{else}}
                     <span>{{wc.displayName}}</span>
@@ -100,33 +100,33 @@ export default class EditBadgeGroupings extends Component {
                 <div class="actions">
                   {{#if wc.editing}}
                     <DButton
+                      class="btn-default"
                       @action={{fn (mut wc.editing) false}}
                       @icon="check"
-                      class="btn-default"
                     />
                   {{else}}
                     <DButton
+                      class="btn-default"
                       @action={{fn (mut wc.editing) true}}
                       @disabled={{wc.system}}
                       @icon="pencil"
-                      class="btn-default"
                     />
                   {{/if}}
                   <DButton
+                    class="btn-default"
                     @action={{fn this.up wc}}
                     @icon="chevron-up"
-                    class="btn-default"
                   />
                   <DButton
+                    class="btn-default"
                     @action={{fn this.down wc}}
                     @icon="chevron-down"
-                    class="btn-default"
                   />
                   <DButton
+                    class="btn-default"
                     @action={{fn this.delete wc}}
                     @disabled={{wc.system}}
                     @icon="xmark"
-                    class="btn-default"
                   />
                 </div>
               </li>
@@ -134,17 +134,17 @@ export default class EditBadgeGroupings extends Component {
           </ul>
         </div>
         <DButton
-          @action={{this.add}}
           class="btn-default badge-groupings__add-grouping"
+          @action={{this.add}}
           @label="admin.badges.new"
         />
       </:body>
       <:footer>
         <DButton
-          @action={{this.saveAll}}
-          @label="admin.badges.save"
           class="btn-primary badge-groupings__save"
+          @action={{this.saveAll}}
           @disabled={{this.submitDisabled}}
+          @label="admin.badges.save"
         />
         <DButton
           class="btn-flat d-modal-cancel"

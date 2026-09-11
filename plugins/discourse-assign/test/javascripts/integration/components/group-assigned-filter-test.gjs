@@ -21,7 +21,7 @@ module("Integration | Component | GroupAssignedFilter", function (hooks) {
 
     await render(
       <template>
-        <GroupAssignedFilter @showAvatar={{true}} @filter={{filter}} />
+        <GroupAssignedFilter @filter={{filter}} @showAvatar={{true}} />
       </template>
     );
 

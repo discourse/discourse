@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 pt:
+  mcp:
+    oauth:
+      deny: "Rejeitar"
+      approve: "Autorizar"
   llms_txt:
     sections:
       optional: "Opcional"
@@ -2203,8 +2207,6 @@ pt:
         title: "Sim"
       approve_and_unhide:
         title: "Sim"
-      delete_post:
-        complete: "Publicação eliminada"
       silence_user:
         title: "Silenciar utilizador"
       delete_user:

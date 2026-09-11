@@ -514,7 +514,63 @@ RSpec.describe Boards::Api::BoardsController do
     end
   end
 
-  describe "POST /boards/api/boards" do
+  describe "#create" do
+    it "accepts all supported ACL permissions and retains mandatory admin access" do
+      sign_in(manager)
+
+      post "/boards/api/boards.json",
+           params: {
+             board: {
+               name: "Permission board",
+               slug: "permission-board",
+               acl: [
+                 { type: "group", id: read_group.id, permission: "view" },
+                 { type: "group", id: write_group.id, permission: "edit" },
+                 { type: "group", id: manage_group.id, permission: "manage" },
+               ],
+             },
+           }
+
+      expect(response.status).to eq(201)
+      board = Boards::Board.find(response.parsed_body["board"]["id"])
+      expect(
+        AccessControlList.where(target: board).pluck(:permission, :allowed_group_ids),
+      ).to contain_exactly(
+        ["view", [read_group.id]],
+        ["edit", [write_group.id]],
+        ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+      )
+    end
+
+    it "rejects an invalid permission name without creating a board, columns, or ACLs" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Invalid permissions",
+                 slug: "invalid-permissions",
+                 columns: [{ title: "Backlog" }],
+                 acl: [
+                   { type: "group", id: read_group.id, permission: "view" },
+                   { type: "group", id: manage_group.id, permission: "bogus" },
+                 ],
+               },
+             }
+      end.not_to change {
+        [
+          Boards::Board.count,
+          Boards::Column.count,
+          AccessControlList.count,
+          Boards::BoardHistory.count,
+        ]
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
     it "creates a board for users in the manage group" do
       sign_in(manager)
 
@@ -557,7 +613,61 @@ RSpec.describe Boards::Api::BoardsController do
     end
   end
 
-  describe "PUT /boards/api/boards/:id" do
+  describe "#update" do
+    fab!(:acl_board) do
+      Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+    end
+
+    it "accepts all supported ACL permissions and retains mandatory admin access" do
+      sign_in(manager)
+
+      put "/boards/api/boards/#{acl_board.id}.json",
+          params: {
+            board: {
+              acl: [
+                { type: "group", id: read_group.id, permission: "view" },
+                { type: "group", id: write_group.id, permission: "edit" },
+                { type: "group", id: manage_group.id, permission: "manage" },
+              ],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(
+        AccessControlList.where(target: acl_board).pluck(:permission, :allowed_group_ids),
+      ).to contain_exactly(
+        ["view", [read_group.id]],
+        ["edit", [write_group.id]],
+        ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+      )
+    end
+
+    it "rejects an invalid permission name and preserves the board and its existing ACLs" do
+      sign_in(manager)
+      previous_attributes = acl_board.attributes
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      expect do
+        put "/boards/api/boards/#{acl_board.id}.json",
+            params: {
+              board: {
+                name: "Invalid update",
+                acl: [
+                  { type: "group", id: read_group.id, permission: "view" },
+                  { type: "group", id: manage_group.id, permission: "bogus" },
+                ],
+              },
+            }
+      end.not_to change { Boards::BoardHistory.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(acl_board.reload.attributes).to eq(previous_attributes)
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+    end
+
     it "updates board attributes for users in the manage group" do
       board =
         Fabricate(

@@ -1,4 +1,5 @@
 import { i18n } from "discourse-i18n";
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 import {
   playUserJoinedSound,
   playUserLeftSound,
@@ -98,9 +99,8 @@ export default class RosterHandler {
     );
     const currentUserId = this.#getCurrentUserId();
 
-    // eslint-disable-next-line no-console
-    console.log(
-      `[voice] handleParticipants room=${roomId}, participants=[${Array.from(participantIds)}], currentUser=${currentUserId}`
+    voiceLog.info(
+      `[voice] handleParticipants room=${roomId}, count=${participantIds.size}`
     );
 
     if (this.#roleChangeInProgress.has(roomId)) {
@@ -156,10 +156,8 @@ export default class RosterHandler {
           if (existingPeerIds.size > 0 || !this.#isConnectingRoom(roomId)) {
             hasNewPeer = true;
           }
-          // eslint-disable-next-line no-console
-          console.log(
-            `[voice] creating peer connection to user ${participantId}`
-          );
+
+          voiceLog.info("[voice] creating peer connection");
 
           await this.#createAndOfferPeer(roomId, participantId);
         } else {
@@ -195,6 +193,47 @@ export default class RosterHandler {
 
     if (this.#getLocalVideoKind()) {
       await this.#syncVideoSenders(roomId);
+    }
+  }
+
+  async handleRoleChange(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const newRole = payload.role;
+
+    if (targetUserId === this.#getCurrentUserId()) {
+      await this.#handleOwnRoleChange(roomId, newRole);
+    } else {
+      this.#handlePeerRoleChange(roomId, targetUserId);
+    }
+  }
+
+  handleHandRaise(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const isSelf = targetUserId === this.#getCurrentUserId();
+
+    if (isSelf && !payload.raised && payload.reason === "dismissed") {
+      this.#toasts.default({
+        duration: 5000,
+        data: { message: i18n("voice.stage.request_dismissed") },
+      });
+      return;
+    }
+
+    const room = this.#getRoom(roomId);
+    if (!isSelf && payload.raised && room?.can_manage) {
+      const participant = (room.active_participants || []).find(
+        (p) => Number(p?.id) === targetUserId
+      );
+      if (participant) {
+        this.#toasts.default({
+          duration: 5000,
+          data: {
+            message: i18n("voice.stage.hand_raised_toast", {
+              username: participant.username,
+            }),
+          },
+        });
+      }
     }
   }
 
@@ -239,17 +278,6 @@ export default class RosterHandler {
       if (!allowedToPublish.has(userId)) {
         this.#removeRemoteStream(roomId, userId);
       }
-    }
-  }
-
-  async handleRoleChange(roomId, payload) {
-    const targetUserId = Number(payload.user_id);
-    const newRole = payload.role;
-
-    if (targetUserId === this.#getCurrentUserId()) {
-      await this.#handleOwnRoleChange(roomId, newRole);
-    } else {
-      this.#handlePeerRoleChange(roomId, targetUserId);
     }
   }
 
@@ -313,42 +341,10 @@ export default class RosterHandler {
       // the microphone to match the new role.
       try {
         await this.#livekit.sessionFor(roomId)?.refreshPublications();
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[voice-livekit] failed to refresh publications after a role change in room ${roomId}`,
-          error
+      } catch {
+        voiceLog.warn(
+          `[voice-livekit] failed to refresh publications after a role change in room ${roomId}`
         );
-      }
-    }
-  }
-
-  handleHandRaise(roomId, payload) {
-    const targetUserId = Number(payload.user_id);
-    const isSelf = targetUserId === this.#getCurrentUserId();
-
-    if (isSelf && !payload.raised && payload.reason === "dismissed") {
-      this.#toasts.default({
-        duration: 5000,
-        data: { message: i18n("voice.stage.request_dismissed") },
-      });
-      return;
-    }
-
-    const room = this.#getRoom(roomId);
-    if (!isSelf && payload.raised && room?.can_manage) {
-      const participant = (room.active_participants || []).find(
-        (p) => Number(p?.id) === targetUserId
-      );
-      if (participant) {
-        this.#toasts.default({
-          duration: 5000,
-          data: {
-            message: i18n("voice.stage.hand_raised_toast", {
-              username: participant.username,
-            }),
-          },
-        });
       }
     }
   }

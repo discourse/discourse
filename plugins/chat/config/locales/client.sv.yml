@@ -108,7 +108,7 @@ sv:
         process_started: "Processen för att radera kanalen har påbörjats. Denna modal kommer att stängas inom kort och du kommer inte längre att se den raderade kanalen någonstans."
       channels_list_popup:
         browse: "Bläddra bland kanaler"
-        create: "Ny kanal"
+        create: "Ny kanal..."
       close: "Stäng"
       remove: "Ta bort"
       collapse: "Komprimera chattruta"
@@ -123,8 +123,6 @@ sv:
       muted: "tystat"
       joined: "gick med"
       empty_state:
-        direct_message_cta: "Starta en personlig chatt"
-        direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
         title: "Inga kanaler hittades"
         my_threads: "Du har inga trådar än. Trådar du deltar i kommer att visas här."
       email_frequency:
@@ -489,14 +487,15 @@ sv:
       direct_messages:
         title: "DM"
         aria_label: "Byt till direktmeddelanden"
-        new: "Skapa en personlig chatt"
         create: "Kör"
-        leave: "Lämna den här personliga chatten"
-        close: "Stäng den här personliga chatten"
         cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."
       channel_list:
         title: "Kanaler"
         aria_label: "Växla till kanallistan"
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Omnämnanden"
       incoming_webhooks:
         back: "Tillbaka"
         channel_placeholder: "Välj en kanal"
@@ -619,11 +618,6 @@ sv:
           direct_html: '<span>%{username}</span> <span>nämnde dig i "%{channel}"</span>'
           other_plain: 'nämnde %{identifier} i "%{channel}"'
           other_html: '<span>%{username}</span> <span>nämnde %{identifier} i "%{channel}"</span>'
-        direct_message_chat_mention:
-          direct: "nämnde dig i personlig chatt"
-          direct_html: "<span>%{username}</span> <span>nämnde dig i en personlig chatt</span>"
-          other_plain: "nämnde %{identifier} i personlig chatt"
-          other_html: "<span>%{username}</span> <span>nämnde %{identifier} i personlig chatt</span>"
         chat_message: "Nytt chattmeddelande"
         chat_quoted: "%{username} citerade ditt chattmeddelande"
     action_codes:
@@ -685,8 +679,6 @@ sv:
         chat:
           title: Chatt
     sidebar:
-      start_new_dm:
-        title: Skapa en personlig chatt
       panels:
         chat:
           label: "Chatt"

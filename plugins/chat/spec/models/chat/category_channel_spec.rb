@@ -126,6 +126,7 @@ RSpec.describe Chat::CategoryChannel do
           SiteSetting.slug_generation_method = "encoded"
           channel.slug = "测试"
         end
+
         after { SiteSetting.slug_generation_method = "ascii" }
 
         it "creates a slug with the correct escaping" do

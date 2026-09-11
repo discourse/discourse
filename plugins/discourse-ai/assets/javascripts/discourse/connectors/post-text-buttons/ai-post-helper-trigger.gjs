@@ -146,11 +146,11 @@ export default class AiPostHelperTrigger extends Component {
 
     <div class="ai-post-helper">
       <DButton
-        @icon="discourse-sparkles"
-        @title="discourse_ai.ai_helper.post_options_menu.title"
-        @label="discourse_ai.ai_helper.post_options_menu.trigger"
-        @action={{this.showAiPostHelperMenu}}
         class="btn-flat ai-post-helper__trigger"
+        @action={{this.showAiPostHelperMenu}}
+        @icon="discourse-sparkles"
+        @label="discourse_ai.ai_helper.post_options_menu.trigger"
+        @title="discourse_ai.ai_helper.post_options_menu.title"
       />
     </div>
   </template>

@@ -538,6 +538,9 @@ th:
       user_label: "ผู้ใช้"
       timeline:
         target_deleted: "โพสต์ถูกลบ"
+      author_penalty:
+        toast:
+          undo: "เลิกทำ"
       notes:
         delete: "ลบ"
       topic_label: "หัวข้อ"
@@ -931,6 +934,12 @@ th:
       ignored_users_instructions: "ระงับโพสต์ การแจ้งเตือน และข้อความส่วนตัวทั้งหมดจากผู้ใช้เหล่านี้"
       tracked_topics_link: "แสดง"
       apps: "แอป"
+      mcp_authorizations:
+        details: "รายละเอียด"
+        never: "ไม่เคย"
+        status: "สถานะ"
+        statuses:
+          active: "ใช้งานอยู่"
       api_approved: "อนุมัติแล้ว:"
       api_last_used_at: "ใช้ครั้งสุดท้ายเมื่อ:"
       api_expires_never: "ไม่เลย"
@@ -2707,6 +2716,53 @@ th:
       config:
         developer:
           title: "นักพัฒนา"
+        mcp:
+          tabs:
+            access: "การเข้าถึง"
+            activity: "กิจกรรม"
+          overview:
+            status: "สถานะ"
+          access:
+            title: "การเข้าถึง"
+            group: "กลุ่ม"
+            groups: "กลุ่ม"
+            actions: "การกระทำ"
+            edit: "แก้ไข"
+            delete: "ลบ"
+          primitives:
+            group_by_options:
+              kind: "ชนิด"
+            kind: "ชนิด"
+          clients:
+            actions: "การกระทำ"
+            block: "บล็อก"
+          authorizations:
+            user: "ผู้ใช้"
+            status: "สถานะ"
+            actions: "การกระทำ"
+          activity:
+            time: "เวลา"
+            user: "ผู้ใช้"
+            duration: "ช่วงเวลา"
+          values:
+            server_status:
+              disabled: "ปิดใช้งานแล้ว"
+            client_trust:
+              approved: "อนุมัติ"
+            authorization_status:
+              active: "ใช้งานอยู่"
+            activity_outcome:
+              success: "สำเร็จ"
+              error: "ผิดพลาด"
+            primitive_state:
+              disabled: "ปิดใช้งานแล้ว"
+            primitive_kind:
+              all: "ทุกประเภท"
+            filter:
+              all: "ทั้งหมด"
+          never: "ไม่เคย"
+          actions:
+            revoke: "เอาออก"
         emojis:
           title: "Emoji"
         files:

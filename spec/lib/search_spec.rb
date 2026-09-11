@@ -105,6 +105,7 @@ RSpec.describe Search do
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
+
       fab!(:topic) { Fabricate(:topic, tags: [hidden_tag]) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -167,7 +168,7 @@ RSpec.describe Search do
 
       after { SearchIndexer.disable }
 
-      it "should apply the custom ranking weights correctly" do
+      it "applies the custom ranking weights" do
         expect(Search.execute("start").posts).to eq([post2, post1])
 
         SiteSetting.search_ranking_weights = "{0.00001,0.2,0.4,1.0}"
@@ -270,21 +271,21 @@ RSpec.describe Search do
 
       before { SearchIndexer.index(suspended_user, force: true) }
 
-      it "should list suspended users to regular users if the setting is enabled" do
+      it "lists suspended users to regular users when enabled" do
         SiteSetting.enable_listing_suspended_users_on_search = true
 
         result = Search.execute("revolver_ocelot", guardian: Guardian.new(user))
         expect(result.users).to contain_exactly(suspended_user)
       end
 
-      it "shouldn't list suspended users to regular users if the setting is disabled" do
+      it "hides suspended users from regular users when disabled" do
         SiteSetting.enable_listing_suspended_users_on_search = false
 
         result = Search.execute("revolver_ocelot", guardian: Guardian.new(user))
         expect(result.users).to be_empty
       end
 
-      it "should list suspended users to admins regardless of the setting" do
+      it "lists suspended users to admins regardless of the setting" do
         SiteSetting.enable_listing_suspended_users_on_search = false
 
         result = Search.execute("revolver_ocelot", guardian: Guardian.new(Fabricate(:admin)))
@@ -351,7 +352,7 @@ RSpec.describe Search do
     end
   end
 
-  describe "categories" do
+  describe "nested category filters" do
     it "finds topics in sub-sub-categories" do
       SiteSetting.max_category_nesting = 3
 
@@ -400,7 +401,7 @@ RSpec.describe Search do
     end
     let!(:post2) { Fabricate(:post, topic: topic, user: user) }
 
-    it "should index correctly" do
+    it "indexes the post's searchable text" do
       search_data = post.post_search_data.search_data
 
       expect(search_data).to match(/fun/)
@@ -414,7 +415,7 @@ RSpec.describe Search do
       expect(post.post_search_data.reload.search_data).to match(/harpi/)
     end
 
-    it "should update posts index when topic category changes" do
+    it "updates the post index when the topic's category changes" do
       expect do topic.update!(category: Fabricate(:category)) end.to change {
         post.reload.post_search_data.version
       }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION).and change {
@@ -422,7 +423,7 @@ RSpec.describe Search do
             }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
     end
 
-    it "should update posts index when topic tags changes" do
+    it "updates the post index when the topic's tags change" do
       SiteSetting.tagging_enabled = true
       tag = Fabricate(:tag)
 
@@ -445,7 +446,7 @@ RSpec.describe Search do
       @indexed = @user.user_search_data.search_data
     end
 
-    it "should pick up on data" do
+    it "indexes the user's name" do
       expect(@indexed).to match(/fred/)
       expect(@indexed).to match(/jone/)
     end
@@ -458,11 +459,11 @@ RSpec.describe Search do
     let!(:post2) { Fabricate(:post, topic: topic) }
     let!(:post3) { Fabricate(:post) }
 
-    it "should index correctly" do
+    it "indexes the category name" do
       expect(category.category_search_data.search_data).to match(/america/)
     end
 
-    it "should update posts index when category name changes" do
+    it "updates the post index when the category name changes" do
       expect do category.update!(name: "some new name") end.to change {
         post.reload.post_search_data.version
       }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION).and change {
@@ -576,7 +577,7 @@ RSpec.describe Search do
     expect { Search.execute("evil trout") }.not_to raise_error
   end
 
-  describe "users" do
+  describe "user type filter" do
     let!(:user) { Fabricate(:user) }
     let(:result) { Search.execute("bruce", type_filter: "user") }
 
@@ -1660,7 +1661,7 @@ RSpec.describe Search do
       expect(search.posts.map(&:id)).to contain_exactly(post2.id, child_post.id)
     end
 
-    it "should return the right categories" do
+    it "returns matching categories and filters posts by category" do
       search = Search.execute("monkey")
 
       expect(search.categories).to contain_exactly(category, ignored_category)
@@ -1732,7 +1733,7 @@ RSpec.describe Search do
     describe "categories with different priorities" do
       let(:category2) { Fabricate(:category_with_definition) }
 
-      it "should return posts in the right order" do
+      it "returns posts in ranked order" do
         raw = "The pure genuine evian"
         post = Fabricate(:post, topic: category.topic, raw: raw)
         post2 = Fabricate(:post, topic: category2.topic, raw: raw)
@@ -2249,6 +2250,44 @@ RSpec.describe Search do
       expect(Search.execute("test after:jan").posts).to contain_exactly(post_1, post_2)
     end
 
+    it "returns no posts when a before or after date is invalid" do
+      post = Fabricate(:post, raw: "A searchable post")
+
+      expect(Search.execute("searchable", type_filter: "topic").posts).to contain_exactly(post)
+
+      %w[before after].each do |filter|
+        ["0346-04-07", "invalid", "2001-13-01", ""].each do |date|
+          expect(
+            Search.execute("searchable #{filter}:#{date}", type_filter: "topic").posts,
+          ).to be_empty
+        end
+      end
+    end
+
+    it "returns no posts when only one date bound is valid" do
+      Fabricate(:post, created_at: Time.zone.parse("2001-05-20"))
+
+      expect(
+        Search.execute("after:0346-04-07 before:2030-01-01", type_filter: "topic").posts,
+      ).to be_empty
+      expect(
+        Search.execute("after:2000-01-01 before:0346-05-07", type_filter: "topic").posts,
+      ).to be_empty
+    end
+
+    it "returns no posts for a search containing only invalid date bounds" do
+      post = Fabricate(:post)
+      SiteSetting.search_recent_regular_posts_offset_post_id = post.id
+
+      expect(
+        Search.execute(
+          "after:0346-04-07 before:0346-05-07",
+          type_filter: "topic",
+          search_type: :full_page,
+        ).posts,
+      ).to be_empty
+    end
+
     it "supports before/after filters and is not affected by the `search_recent_regular_posts_offset_post_id` site setting" do
       post_1 = Fabricate(:post, created_at: Time.zone.parse("2000-06-24"), like_count: 15)
       post_2 = Fabricate(:post, created_at: Time.zone.parse("2000-06-26"), like_count: 5)
@@ -2309,7 +2348,7 @@ RSpec.describe Search do
       let!(:post) { Fabricate(:post, raw: "hi this is a test 123 123", topic: topic, user: user) }
       let!(:post_2) { Fabricate(:post, user: user_2) }
 
-      it "should not return any posts if group does not exist" do
+      it "returns no posts if the group does not exist" do
         group.update!(
           visibility_level: Group.visibility_levels[:public],
           members_visibility_level: Group.visibility_levels[:public],
@@ -2318,7 +2357,7 @@ RSpec.describe Search do
         expect(Search.execute("group:99999").posts).to eq([])
       end
 
-      it "should return the right posts for a public group" do
+      it "returns matching posts for a public group" do
         group.update!(
           visibility_level: Group.visibility_levels[:public],
           members_visibility_level: Group.visibility_levels[:public],
@@ -2328,7 +2367,7 @@ RSpec.describe Search do
         expect(Search.execute("group:#{group.id}").posts).to contain_exactly(post)
       end
 
-      it "should return the right posts for a public group with members' visibility restricted to logged on users" do
+      it "respects member visibility for a public group" do
         group.update!(
           visibility_level: Group.visibility_levels[:public],
           members_visibility_level: Group.visibility_levels[:logged_on_users],
@@ -2340,7 +2379,7 @@ RSpec.describe Search do
         ).to contain_exactly(post)
       end
 
-      it "should return the right posts for a group with visibility restricted to logged on users with members' visibility restricted to members" do
+      it "respects group and member visibility restrictions" do
         group.update!(
           visibility_level: Group.visibility_levels[:logged_on_users],
           members_visibility_level: Group.visibility_levels[:members],
@@ -3096,7 +3135,7 @@ RSpec.describe Search do
       expect(results.posts).to eq([])
     end
 
-    it "won't work for users that can't see unlisted topics" do
+    it "excludes unlisted topics the user cannot see" do
       topic = Fabricate(:topic, title: "I am testing a search", visible: false)
       _post = Fabricate(:post, topic: topic, raw: "this is the first post", post_number: 1)
 
@@ -3115,6 +3154,7 @@ RSpec.describe Search do
 
   describe "ignore_diacritics" do
     before { SiteSetting.search_ignore_accents = true }
+
     let!(:post1) { Fabricate(:post, raw: "สวัสดี Rágis hello") }
 
     it("allows strips correctly") do
@@ -3137,6 +3177,7 @@ RSpec.describe Search do
 
   describe "include_diacritics" do
     before { SiteSetting.search_ignore_accents = false }
+
     let!(:post1) { Fabricate(:post, raw: "สวัสดี Régis hello") }
 
     it("allows strips correctly") do
@@ -3332,11 +3373,13 @@ RSpec.describe Search do
 
   describe "exclude_topics filter" do
     before { SiteSetting.tagging_enabled = true }
+
     let!(:user) { Fabricate(:user) }
+
     fab!(:group) { Fabricate(:group, name: "bruce-world-fans") }
     fab!(:topic) { Fabricate(:topic, title: "Bruce topic not a result") }
 
-    it "works" do
+    it "returns matching users, categories, groups, and tags without posts" do
       category = Fabricate(:category_with_definition, name: "bruceland", user: user)
       tag = Fabricate(:tag, name: "brucealicious")
 
@@ -3393,6 +3436,7 @@ RSpec.describe Search do
       SearchIndexer.enable
       DiscoursePluginRegistry.clear_modifiers!
     end
+
     after do
       SearchIndexer.disable
 

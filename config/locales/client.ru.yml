@@ -1150,6 +1150,9 @@ ru:
         note_added: "Примечание модератора"
         note_added_by: "Примечание модератора %{username} · %{relativeDate}"
         no_events: "Событий в хронологии нет"
+      author_penalty:
+        toast:
+          undo: "Отменить"
       notes:
         add_note_description: "Добавьте примечание, чтобы предоставить контекст другим модераторам."
         add_note_button: "Добавить примечание"
@@ -1829,7 +1832,6 @@ ru:
       admin: "%{user} — администратор"
       moderator_tooltip: "Модератор"
       admin_tooltip: "Администратор"
-      silenced_tooltip: "Этот пользователь заморожен"
       suspended_notice: "Пользователь заблокирован до %{date}."
       suspended_permanently: "Этот пользователь заблокирован."
       suspended_reason: "Причина: "
@@ -1888,6 +1890,16 @@ ru:
       tracked_topics_link: "Показать"
       automatically_unpin_topics: "Автоматически откреплять темы после прочтения"
       apps: "Приложения"
+      mcp_authorizations:
+        endpoint: "Ресурс"
+        scopes: "Области действия ключа API"
+        details: "Детали"
+        last_used: "Последнее использование"
+        never: "Никогда"
+        status: "Статус"
+        statuses:
+          active: "Активна"
+          revoked: "Отозван"
       revoke_access: "Лишить прав доступа"
       undo_revoke_access: "Отменить лишение прав доступа"
       api_approved: "Подтверждено:"
@@ -6273,6 +6285,74 @@ ru:
           header_description: "Предоставьте здесь информацию об этом сайте и вашей команде, чтобы люди могли узнать, что представляет собой ваше сообщество, кто за ним стоит и как с вами связаться в случае возникновения проблем. Отображается в разделе <a href='%{basePath}/about'>«О нас»</a> вашего сайта."
         developer:
           title: "Разработчикам"
+        mcp:
+          tabs:
+            access: "Доступ"
+            activity: "Активности"
+          overview:
+            status: "Статус"
+            tools: "Инструменты"
+          access:
+            title: "Доступ"
+            group: "Группа"
+            groups: "Группы"
+            actions: "Действия"
+            edit: "Изменить"
+            delete: "Удалить"
+          primitives:
+            group_by: "Группировать по"
+            group_by_options:
+              scope: "Область действия ключа API"
+              provider: "Поставщик"
+              kind: "Тип"
+            provider: "Поставщик"
+            kind: "Тип"
+            scope: "Область действия ключа API"
+            state: "Штат"
+            scopes: "Области действия ключа API"
+          clients:
+            actions: "Действия"
+            block: "Блокировка"
+            use_preset: "Настроить"
+            presets:
+              custom: "Другое"
+          authorizations:
+            user: "Пользователь"
+            last_used: "Последнее использование"
+            status: "Статус"
+            actions: "Действия"
+          activity:
+            rate_limits: "Ограничения"
+            outcome: "Результат"
+            time: "Время"
+            user: "Пользователь"
+            duration: "Период"
+          values:
+            server_status:
+              disabled: "Отключен"
+            client_trust:
+              approved: "Одобренные"
+            authorization_status:
+              active: "Активна"
+              revoked: "Отозван"
+            activity_outcome:
+              success: "Успех"
+              error: "Ошибка"
+            primitive_state:
+              enabled: "Включено"
+              disabled: "Отключен"
+            primitive_kind:
+              all: "Все типы"
+              tool: "Инструмент"
+              resource: "Ресурс"
+            primitive_risk:
+              read: "Только для чтения"
+              moderation: "Модерация"
+            filter:
+              all: "Все"
+          never: "Никогда"
+          actions:
+            revoke: "Отмена"
         experimental:
           title: "Экспериментальная функция"
           header_description: "Включайте и выключайте экспериментальные функции на вашем сайте, многие из них можно настроить для отдельных групп"

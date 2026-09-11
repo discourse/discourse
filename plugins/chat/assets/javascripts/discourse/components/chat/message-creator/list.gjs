@@ -68,14 +68,14 @@ export default class List extends Component {
                     "-highlighted"
                   )
                 }}
+                data-identifier={{item.identifier}}
+                id={{item.id}}
+                role="button"
+                tabindex="0"
                 {{on "click" (fn this.handleClick item)}}
                 {{on "keypress" (fn this.handleEnter item)}}
                 {{on "mousemove" (fn @onHighlight item)}}
                 {{on "mouseleave" (fn @onHighlight null)}}
-                role="button"
-                tabindex="0"
-                data-identifier={{item.identifier}}
-                id={{item.id}}
               >
                 {{component
                   (this.componentForItem item.type)

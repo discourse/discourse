@@ -93,16 +93,16 @@ export default class RuleRow extends Component {
 
       <td class="d-table__cell --controls">
         <DButton
+          class="btn-default btn-small edit"
+          @action={{fn @edit @rule}}
           @icon="pencil"
           @title="chat_integration.rule_table.edit_rule"
-          @action={{fn @edit @rule}}
-          class="btn-default btn-small edit"
         />
         <DButton
+          class="btn-danger btn-small delete"
+          @action={{fn this.delete @rule}}
           @icon="trash-can"
           @title="chat_integration.rule_table.delete_rule"
-          @action={{fn this.delete @rule}}
-          class="btn-danger btn-small delete"
         />
       </td>
     </tr>

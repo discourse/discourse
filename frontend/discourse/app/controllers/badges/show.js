@@ -50,12 +50,19 @@ export default class ShowController extends Controller {
     return this.model?.grant_count - this.userBadgesGrantCount;
   }
 
-  @computed("model.allow_title", "model.has_badge", "model")
+  @computed("model.id", "userBadgesAll")
+  get currentUserHasBadge() {
+    return !!this.userBadgesAll?.some(
+      (userBadge) => userBadge.badge?.id === this.model?.id
+    );
+  }
+
+  @computed("model.allow_title", "currentUserHasBadge")
   get canSelectTitle() {
     return (
       this.siteSettings.enable_badges &&
       this.model?.allow_title &&
-      this.model?.has_badge
+      this.currentUserHasBadge
     );
   }
 

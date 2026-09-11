@@ -10,7 +10,7 @@ module DiscourseEvents::Events
     end
 
     describe "#index" do
-      it "should not result in N+1 queries problem when multiple events are returned" do
+      it "avoids N+1 queries when returning multiple events" do
         # Warmup
         get "/discourse-post-event/events.json"
 
@@ -30,7 +30,7 @@ module DiscourseEvents::Events
         expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
       end
 
-      it "should not show deleted events" do
+      it "excludes deleted events" do
         active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
         active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
         deleted_event =
@@ -45,7 +45,7 @@ module DiscourseEvents::Events
         expect(event_ids).to match_array([active_event1.id, active_event2.id])
       end
 
-      it "should not show closed events" do
+      it "excludes closed events" do
         active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
         active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
         closed_event = Fabricate(:event, original_starts_at: 3.days.from_now, closed: true)
@@ -160,7 +160,7 @@ module DiscourseEvents::Events
         expect(response.parsed_body["events"].pluck("id")).to contain_exactly(private_event.id)
       end
 
-      it "should return events in ics format" do
+      it "returns events in ICS format" do
         event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
         event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
 
@@ -190,7 +190,7 @@ module DiscourseEvents::Events
         expect(body).to include("SUMMARY:Test Event 2")
       end
 
-      it "should include location and description in ics format" do
+      it "includes the location and description in ICS format" do
         event =
           Fabricate(
             :event,
@@ -247,7 +247,7 @@ module DiscourseEvents::Events
         expect(response.body).not_to match(/^X-INJECTED:evil$/)
       end
 
-      it "should not HTML-encode ampersands in ics format" do
+      it "does not HTML-encode ampersands in ICS format" do
         Fabricate(
           :event,
           original_starts_at: 1.day.from_now,
@@ -263,7 +263,7 @@ module DiscourseEvents::Events
         expect(response.body).not_to include("&amp;")
       end
 
-      it "should not HTML-encode topic title used as ics summary" do
+      it "does not HTML-encode the topic title used as the ICS summary" do
         event = Fabricate(:event, original_starts_at: 1.day.from_now)
         event.post.topic.update!(title: "Rock & Roll Music Festival 2026")
 
@@ -272,7 +272,7 @@ module DiscourseEvents::Events
         expect(response.body).to include("SUMMARY:Rock & Roll Music Festival 2026")
       end
 
-      it "should handle events without location and description in ics format" do
+      it "handles ICS events without a location or description" do
         event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Simple Event")
 
         get "/discourse-post-event/events.ics"
@@ -285,7 +285,7 @@ module DiscourseEvents::Events
         expect(body).to include("END:VEVENT")
       end
 
-      it "should include post url in description when no custom description is set" do
+      it "includes the post URL when no custom description is set" do
         event =
           Fabricate(:event, original_starts_at: 1.day.from_now, name: "Event Without Description")
 

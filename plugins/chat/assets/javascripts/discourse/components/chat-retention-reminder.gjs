@@ -39,9 +39,9 @@ export default class ChatRetentionReminder extends Component {
       <div class="chat-retention-reminder">
         <ChatRetentionReminderText @channel={{@channel}} />
         <DButton
+          class="no-text btn-icon btn-transparent dismiss-btn"
           @action={{this.dismiss}}
           @icon="xmark"
-          class="no-text btn-icon btn-transparent dismiss-btn"
         />
       </div>
     {{/if}}

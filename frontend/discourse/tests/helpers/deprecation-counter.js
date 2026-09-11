@@ -67,6 +67,10 @@ export default class DeprecationCounter {
   #qunit = null;
   #countsChanged = new Set();
 
+  get hasDeprecations() {
+    return this.counts.size > 0;
+  }
+
   start(origin, qunit) {
     this.startDiscourseHandler(origin, qunit);
     this.startEmberHandler();
@@ -193,10 +197,6 @@ export default class DeprecationCounter {
     );
     this.#countsChanged.clear();
     return updated.filter(Boolean);
-  }
-
-  get hasDeprecations() {
-    return this.counts.size > 0;
   }
 
   generateTable() {

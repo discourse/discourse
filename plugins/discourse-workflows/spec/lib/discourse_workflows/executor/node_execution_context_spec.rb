@@ -140,7 +140,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
-  describe "#helpers" do
+  describe "#helpers item normalization" do
     it "normalizes runtime-compatible items through execution helpers" do
       ctx = described_class.new(input_items: [], resolver: nil)
 
@@ -495,7 +495,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
-  describe "#helpers" do
+  describe "#helpers data table access" do
     fab!(:admin)
     fab!(:data_table, :discourse_workflows_data_table)
 
@@ -770,7 +770,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
-  describe "#create_post" do
+  describe "#create_post authorization" do
     fab!(:admin)
     fab!(:user)
     fab!(:first_post) { Fabricate(:post, user: user, raw: "First post", post_number: 1) }
@@ -1021,7 +1021,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
-  describe "#create_post" do
+  describe "#create_post provenance" do
     it "records bypass provenance custom fields on the created post" do
       author = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
       workflow = Fabricate(:discourse_workflows_workflow, published: true)

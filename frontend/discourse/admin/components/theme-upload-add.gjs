@@ -120,18 +120,18 @@ export default class ThemeUploadAdd extends Component {
   <template>
     <DModal
       class="add-upload-modal"
-      @title={{i18n "admin.customize.theme.add_upload"}}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "admin.customize.theme.add_upload"}}
     >
       <:body>
         <div class="inputs">
           <section class="field">
             <input
-              {{on "change" this.updateName}}
-              type="file"
-              id="file-input"
               accept="*"
+              id="file-input"
+              type="file"
+              {{on "change" this.updateName}}
             />
             <label for="file-input">
               {{i18n "admin.customize.theme.upload_file_tip"}}
@@ -152,16 +152,16 @@ export default class ThemeUploadAdd extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.upload}}
           @disabled={{this.disabled}}
           @icon="upload"
           @label="admin.customize.theme.upload"
-          class="btn-primary"
         />
         <DButton
+          class="btn-transparent d-modal-cancel"
           @action={{@closeModal}}
           @label="cancel"
-          class="btn-transparent d-modal-cancel"
         />
       </:footer>
     </DModal>

@@ -5,7 +5,7 @@ require_relative "../../lib/omniauth_apple"
 pem = ::OpenSSL::PKey::EC.generate("prime256v1").to_pem
 
 describe "sign in with apple" do
-  let(:jwk) { ::JWT::JWK.new(OpenSSL::PKey::RSA.generate(1024)) }
+  let(:jwk) { ::JWT::JWK.new(OpenSSL::PKey::RSA.generate(2048)) }
 
   before do
     Discourse.cache.delete("sign-in-with-apple-jwks")
@@ -111,7 +111,7 @@ describe "sign in with apple" do
       end
     end
 
-    it "works" do
+    it "authenticates the Apple callback payload" do
       # Like an OAuth2 callback, but with some apple-specific stuff per
       # https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
       get "/auth/apple/callback",

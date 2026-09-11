@@ -571,6 +571,9 @@ bs_BA:
       user_label: "User"
       timeline:
         target_deleted: "Post izbrisan"
+      author_penalty:
+        toast:
+          undo: "Vrati nazad"
       notes:
         delete: "Delete"
       topic_label: "Topic"
@@ -1001,7 +1004,6 @@ bs_BA:
       admin: "%{user} je admin"
       moderator_tooltip: "Ovaj korisnik je moderator"
       admin_tooltip: "Ovaj korisnik je admin"
-      silenced_tooltip: "Ovaj korisnik je ušutkan"
       suspended_notice: "Ovaj korisnike je suspendovan sve do %{date}."
       suspended_permanently: "Ovaj korisnik je suspendovan."
       suspended_reason: "Razlog: "
@@ -1056,6 +1058,12 @@ bs_BA:
       ignored_users_instructions: "Suzbijte sve objave, obavijesti i PM-ove od tih korisnika."
       tracked_topics_link: "Show"
       apps: "Aplikacije"
+      mcp_authorizations:
+        details: "Details"
+        never: "Nikad"
+        status: "Status"
+        statuses:
+          active: "Active"
       revoke_access: "Oduzmi pristup"
       undo_revoke_access: "Poništi oduzeti pristup"
       api_approved: "Odobreno:"
@@ -3235,6 +3243,58 @@ bs_BA:
       config:
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Pristup"
+            activity: "Activity"
+          overview:
+            status: "Status"
+          access:
+            title: "Pristup"
+            group: "Grupa"
+            groups: "Grupa"
+            actions: "Akcije"
+            edit: "Izmijeni"
+            delete: "Delete"
+          primitives:
+            group_by_options:
+              kind: "Tip"
+            kind: "Tip"
+          clients:
+            actions: "Akcije"
+            block: "Block"
+            presets:
+              custom: "Custom"
+          authorizations:
+            user: "User"
+            status: "Status"
+            actions: "Akcije"
+          activity:
+            time: "Vrijeme"
+            user: "User"
+            duration: "Trajanje"
+          values:
+            server_status:
+              disabled: "Neomogućen"
+            client_trust:
+              approved: "Dozvojeno"
+            authorization_status:
+              active: "Active"
+            activity_outcome:
+              success: "Uspjeh"
+              error: "Greška"
+            primitive_state:
+              enabled: "Omogućen"
+              disabled: "Neomogućen"
+            primitive_kind:
+              all: "Sve vrste"
+            primitive_risk:
+              moderation: "Moderacija"
+            filter:
+              all: "Sve"
+          never: "Nikad"
+          actions:
+            revoke: "Revoke"
         emojis:
           title: "Emoji"
         flags:

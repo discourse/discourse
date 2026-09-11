@@ -32,10 +32,10 @@ export default class GroupTimezone extends Component {
             }}
           >
             <DUserAvatar
-              @ariaHidden={{false}}
-              @user={{member}}
-              @size="small"
               class="group-timezones-member-avatar"
+              @ariaHidden={{false}}
+              @size="small"
+              @user={{member}}
             />
           </li>
         {{/each}}

@@ -32,8 +32,8 @@ module("Integration | ui-kit | DToggleSwitch", function (hooks) {
     await render(
       <template>
         <DToggleSwitch
-          @state={{this.state}}
           @label={{this.label}}
+          @state={{this.state}}
           @translatedLabel={{this.translatedLabel}}
         />
       </template>

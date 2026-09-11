@@ -495,6 +495,8 @@ module Discourse
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
+    request_path = args[:request]&.path&.delete_prefix(Discourse.base_path)&.delete_prefix("/")
+
     assets = []
 
     plugins.each do |plugin|
@@ -508,6 +510,8 @@ module Discourse
             importmap_name: "discourse/plugins/#{plugin.name}",
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "main", request_path),
           }
         end
       end
@@ -530,6 +534,8 @@ module Discourse
             type_module: true,
             external_plugin_imports:
               Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
+            route_bundle:
+              Plugin::JsManager.route_bundle_for_path(plugin.directory_name, "admin", request_path),
           }
         end
       end
@@ -1041,6 +1047,8 @@ module Discourse
   # before forking, otherwise the forked process might
   # be in a bad state
   def self.before_fork
+    DiscourseVips.before_fork
+
     if GlobalSetting.mini_racer_single_threaded
       ObjectSpace.each_object(MiniRacer::Context) { |c| c.low_memory_notification }
     else
@@ -1080,6 +1088,8 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    Demon::DiscourseVips.release_inherited_worker if defined?(Demon::DiscourseVips)
+
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
@@ -1322,7 +1332,7 @@ module Discourse
         ActionviewPrecompiler.precompile
       end,
       Thread.new do
-        LetterAvatar.image_magick_version
+        LetterAvatar.version
         LetterAvatar.cleanup_old
       end,
       Thread.new { SvgSprite.core_svgs },

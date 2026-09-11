@@ -11,7 +11,7 @@ RSpec.shared_examples "finding and showing post" do
     expect(response).to be_forbidden
   end
 
-  it "succeeds" do
+  it "returns 200 for an accessible post" do
     get url
     expect(response.status).to eq(200)
   end
@@ -965,7 +965,7 @@ RSpec.describe PostsController do
         expect(response.parsed_body["current_revision"]).to eq(2)
       end
 
-      it "won't update bump date if post is a whisper" do
+      it "does not update the bump date for whispers" do
         created_at = freeze_time 1.day.ago
         post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
 
@@ -1312,6 +1312,7 @@ RSpec.describe PostsController do
 
     context "when the user still has bookmarks in the topic" do
       before { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post, topic: post.topic)) }
+
       it "marks topic_bookmarked as true" do
         delete "/posts/#{post.id}/bookmark.json"
         expect(response.parsed_body["topic_bookmarked"]).to eq(true)
@@ -1474,7 +1475,7 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
-      it "will invalidate broken images cache" do
+      it "invalidates the broken images cache" do
         sign_in(moderator)
         PostHotlinkedMedia.create!(
           url: "https://example.com/image.jpg",
@@ -1760,7 +1761,7 @@ RSpec.describe PostsController do
         expect(Draft.get(user, Draft::NEW_TOPIC, 0)).to eq("test")
       end
 
-      it "will raise an error if specified category cannot be found" do
+      it "returns an error when the specified category does not exist" do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
@@ -1782,7 +1783,7 @@ RSpec.describe PostsController do
         )
       end
 
-      it "will raise an error if specified embed_url is invalid" do
+      it "returns an error when embed_url is invalid" do
         user = Fabricate(:admin)
         master_key = Fabricate(:api_key).key
 
@@ -2427,7 +2428,7 @@ RSpec.describe PostsController do
       end
 
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
-        it "should return a 400 response code when no custom fields has been permitted" do
+        it "returns 400 when no custom fields are permitted" do
           sign_in(user)
 
           post "/posts.json",
@@ -2453,7 +2454,7 @@ RSpec.describe PostsController do
             plugin
           end
 
-          it "should return a 400 response when trying to add a staff ony custom field for a non-staff user" do
+          it "returns 400 when a non-staff user adds a staff-only custom field" do
             sign_in(user)
 
             post "/posts.json",
@@ -2470,7 +2471,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({})
           end
 
-          it "should add custom fields to topic that is permitted for a non-staff user" do
+          it "adds topic custom fields permitted for non-staff users" do
             sign_in(user)
 
             post "/posts.json",
@@ -2487,7 +2488,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
           end
 
-          it "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
+          it "adds permitted topic custom fields through the deprecated meta_data parameter" do
             sign_in(user)
 
             post "/posts.json",
@@ -2504,7 +2505,7 @@ RSpec.describe PostsController do
             expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
           end
 
-          it "should add custom fields to topic that is permitted for a staff user and public user" do
+          it "adds topic custom fields permitted for staff and public users" do
             sign_in(Fabricate(:admin))
 
             post "/posts.json",
@@ -2645,7 +2646,7 @@ RSpec.describe PostsController do
           expect(response.status).to eq(422)
         end
 
-        it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
+        it "triggers flag_linked_posts_as_spam when the post creator returns spam" do
           SiteSetting.newuser_spam_host_threshold = 1
           sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
@@ -2840,7 +2841,7 @@ RSpec.describe PostsController do
     describe "shared draft" do
       fab!(:destination_category, :category)
 
-      it "will raise an error for regular users" do
+      it "returns an error for regular users" do
         post "/posts.json",
              params: {
                raw: "this is the shared draft content",
@@ -2854,7 +2855,7 @@ RSpec.describe PostsController do
       describe "as a staff user" do
         before { sign_in(moderator) }
 
-        it "will raise an error if there is no shared draft category" do
+        it "returns an error when no shared draft category exists" do
           post "/posts.json",
                params: {
                  raw: "this is the shared draft content",
@@ -2869,7 +2870,7 @@ RSpec.describe PostsController do
           fab!(:shared_category, :category)
           before { SiteSetting.shared_drafts_category = shared_category.id }
 
-          it "will work if the shared draft category is present" do
+          it "creates a shared draft when the shared draft category exists" do
             post "/posts.json",
                  params: {
                    raw: "this is the shared draft content",
@@ -2911,7 +2912,7 @@ RSpec.describe PostsController do
       context "as a staff user" do
         before { sign_in(admin) }
 
-        it "should be able to mark a topic as warning" do
+        it "marks the topic as a warning" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -2943,7 +2944,7 @@ RSpec.describe PostsController do
           expect(Topic.last.is_official_warning?).to eq(true)
         end
 
-        it "should be able to mark a topic as not a warning" do
+        it "removes the topic's warning status" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -2963,7 +2964,7 @@ RSpec.describe PostsController do
       end
 
       context "as a normal user" do
-        it "should not be able to mark a topic as warning" do
+        it "rejects marking the topic as a warning" do
           sign_in(user)
           post "/posts.json",
                params: {
@@ -2986,7 +2987,7 @@ RSpec.describe PostsController do
 
     context "with topic bump" do
       shared_examples "it works" do
-        it "should be able to skip topic bumping" do
+        it "skips topic bumping when requested" do
           original_bumped_at = 1.day.ago
           topic = Fabricate(:topic, bumped_at: original_bumped_at)
 
@@ -3016,7 +3017,7 @@ RSpec.describe PostsController do
           expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
         end
 
-        it "should be able to post with topic bumping" do
+        it "creates the post and bumps the topic" do
           post "/posts.json", params: { raw: "this is the test content", topic_id: topic.id }
 
           expect(response.status).to eq(200)
@@ -3048,7 +3049,7 @@ RSpec.describe PostsController do
         fab!(:topic)
 
         [:user].each do |user|
-          it "will raise an error for #{user}" do
+          it "returns an error for #{user}" do
             sign_in(Fabricate(user))
             post "/posts.json",
                  params: {
@@ -3548,7 +3549,8 @@ RSpec.describe PostsController do
 
     context "with a tagged topic" do
       let(:tag) { Fabricate(:tag) }
-      it "works" do
+
+      it "returns tagged topic revisions with tagging enabled or disabled" do
         SiteSetting.tagging_enabled = true
 
         post_revision.post.topic.update(tags: [tag])
@@ -4310,7 +4312,7 @@ RSpec.describe PostsController do
 
     context "with private posts" do
       describe "when not logged in" do
-        it "should return the right response" do
+        it "returns 404 and the private posts login form" do
           Fabricate(:post)
 
           get "/private-posts.rss"
@@ -4824,7 +4826,7 @@ RSpec.describe PostsController do
         expect(@controller.send(:create_params)).to include(hash_arg: { key1: "val" })
       end
 
-      it "allows strings to be added" do
+      it "allows arrays to be added" do
         instance.add_permitted_post_create_param(:array_arg)
         request.call
         expect(@controller.send(:create_params)).not_to include(array_arg: %w[1 2 3])

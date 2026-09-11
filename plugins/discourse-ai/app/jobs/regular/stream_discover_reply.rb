@@ -11,6 +11,11 @@ module Jobs
     def execute(args)
       return execute_legacy(args) if args[:request_id].blank?
 
+      ask_log = AskAiLog.find_by(id: args[:ask_ai_log_id], user_id: args[:user_id]) if args[
+        :ask_ai_log_id
+      ]
+      return if ask_log&.ask_outcome.present?
+
       return if (user = User.find_by(id: args[:user_id])).nil?
       return if (query = args[:query]).blank?
       return if !DiscourseAi::Discoveries.enabled_for_user?(user)
@@ -26,6 +31,7 @@ module Jobs
       base = { query:, request_id: args[:request_id] }
       queued_at = Float(args[:queued_at], exception: false)
       if queued_at && Time.now.to_f - queued_at > MAX_QUEUE_DELAY
+        ask_log.ask_outcome = :failed if ask_log
         publish_unavailable(user, base)
         return
       end
@@ -33,6 +39,7 @@ module Jobs
       admitted =
         DiscourseAi::Discoveries.admit_request(user_id: user.id, request_id: args[:request_id])
       if !admitted
+        ask_log.ask_outcome = :failed if ask_log
         publish_unavailable(user, base)
         return
       end
@@ -45,12 +52,22 @@ module Jobs
       end
       publish_update(user, base.merge(done: false, phase: "searching"))
 
+      stage = :rewrite
       rewritten_queries = rewrite_queries(user:, query:, cancel_manager:)
+      if ask_log
+        ask_log.assign_attributes(
+          keyword_query: rewritten_queries.keyword_query,
+          semantic_query: rewritten_queries.semantic_query,
+          query_locale: rewritten_queries.original_query_locale,
+        )
+        ask_log.failure_stage = :rewrite if rewritten_queries.failed
+      end
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
         return
       end
       return if !active_request?(user, args[:request_id])
 
+      stage = :retrieval
       retrieval = DiscourseAi::Discoveries::Retrieval.new(user:)
       retrieval_result =
         retrieval.call(
@@ -62,12 +79,15 @@ module Jobs
         return
       end
       return if !active_request?(user, args[:request_id])
+      ask_log.candidate_post_ids = retrieval_result.synthesis_candidates.pluck("post_id") if ask_log
       if retrieval_result.synthesis_candidates.empty?
+        ask_log.ask_outcome = :no_answer if ask_log
         publish_no_answer(user, base)
         return
       end
       candidate_topic_ids = retrieval_result.candidates.pluck("topic_id").uniq
 
+      stage = :synthesis
       result_settings = request_result_settings(args)
       synthesis =
         DiscourseAi::Discoveries::Synthesis.new(user:, ai_agent:, llm_model:, cancel_manager:)
@@ -137,6 +157,12 @@ module Jobs
               ai_discover_reply: last_published_answer,
             ),
           )
+          if ask_log && ask_log.time_to_first_answer_ms.nil?
+            ask_log.time_to_first_answer_ms = [
+              (Time.current - ask_log.asked_at) * 1000,
+              0,
+            ].max.round
+          end
         end
 
       if cancel_manager.cancelled? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline ||
@@ -153,6 +179,13 @@ module Jobs
           DiscourseAi::Discoveries::Synthesis.meaningful_answer?(result.answer)
 
       if answerable
+        ask_log&.assign_attributes(
+          ask_outcome: :answered,
+          answer_title: result.title,
+          answer: result.answer,
+          suggested_follow_up: result.follow_up,
+          source_post_ids: final_sources.pluck("post_id"),
+        )
         selected_sources = final_sources
         DiscourseAi::Discoveries.store_result(
           user_id: user.id,
@@ -177,17 +210,30 @@ module Jobs
           ),
         )
       else
+        ask_log.ask_outcome = :no_answer if ask_log
         publish_no_answer(user, base)
       end
     rescue LlmCreditAllocation::CreditLimitExceeded => e
+      ask_log&.assign_attributes(ask_outcome: :failed, failure_stage: stage)
       publish_error_update(user, e, base) if request_still_owned?(user, args[:request_id])
     rescue StandardError => e
+      ask_log&.assign_attributes(ask_outcome: :failed, failure_stage: stage)
       Rails.logger.error("Discourse AI Discoveries request #{args[:request_id]} failed: #{e.class}")
       publish_processing_error(user, base) if request_still_owned?(user, args[:request_id]) && base
     ensure
       cancel_manager&.stop_monitor
       if admitted
         DiscourseAi::Discoveries.release_request(user_id: user.id, request_id: args[:request_id])
+      end
+      if ask_log
+        if ask_log.ask_outcome.nil?
+          if deadline && Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+            ask_log.assign_attributes(ask_outcome: :failed, failure_stage: stage)
+          else
+            ask_log.ask_outcome = :cancelled
+          end
+        end
+        ask_log.save! if ask_log.changed?
       end
     end
 
@@ -316,7 +362,7 @@ module Jobs
       return fallback if DiscourseAi::Discoveries::Retrieval.explicit_filters?(query)
 
       agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_ask_ai_query_rewriter_agent)
-      return fallback if agent.nil? || !agent.enabled?
+      return fallback if agent.nil?
       return fallback if !user.in_any_groups?(agent.allowed_group_ids.to_a)
 
       llm_model_id = agent.default_llm_id.presence || SiteSetting.ai_default_llm_model

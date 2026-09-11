@@ -20,7 +20,7 @@ module(
 
       await render(
         <template>
-          <RequestGroupMembershipForm @model={{model}} @inline={{true}} />
+          <RequestGroupMembershipForm @inline={{true}} @model={{model}} />
         </template>
       );
 

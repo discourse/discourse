@@ -159,7 +159,7 @@ export default class AssignmentCollection extends Component {
   }
 
   <template>
-    <@form.Section @title={{this.label}} @subtitle={{this.description}}>
+    <@form.Section @subtitle={{this.description}} @title={{this.label}}>
       <@form.Collection
         @name={{this.assignmentsPath}}
         @tagName="div"
@@ -167,9 +167,9 @@ export default class AssignmentCollection extends Component {
       >
         <div class="workflows-property-engine__collection-row">
           <DButton
+            class="workflows-property-engine__collection-delete"
             @action={{fn this.removeAssignment collection.remove index}}
             @icon="xmark"
-            class="workflows-property-engine__collection-delete"
             @translatedAriaLabel={{i18n
               "discourse_workflows.property_engine.remove_assignment"
               name=item.name
@@ -185,59 +185,59 @@ export default class AssignmentCollection extends Component {
             as |object|
           >
             <Field
-              @form={{object}}
-              @formApi={{@formApi}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName="name"
+              @form={{object}}
+              @formApi={{@formApi}}
               @label={{i18n
                 "discourse_workflows.property_engine.assignment_name"
               }}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
-              @nodeType={{@nodeType}}
               @nodes={{@nodes}}
+              @nodeType={{@nodeType}}
               @nodeTypes={{@nodeTypes}}
               @schema={{this.nameSchema}}
               @session={{@session}}
             />
 
             <Field
-              @form={{object}}
-              @formApi={{@formApi}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName="type"
+              @form={{object}}
+              @formApi={{@formApi}}
               @label={{i18n
                 "discourse_workflows.property_engine.assignment_type"
               }}
-              @onSet={{fn this.handleTypeChange index}}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
-              @nodeType={{@nodeType}}
               @nodes={{@nodes}}
+              @nodeType={{@nodeType}}
               @nodeTypes={{@nodeTypes}}
+              @onSet={{fn this.handleTypeChange index}}
               @schema={{this.typeSchema}}
               @session={{@session}}
             />
 
             <Field
-              @form={{object}}
-              @formApi={{@formApi}}
               @configuration={{item}}
               @connections={{@connections}}
               @credentials={{@credentials}}
               @fieldName="value"
+              @form={{object}}
+              @formApi={{@formApi}}
               @label={{i18n
                 "discourse_workflows.property_engine.assignment_value"
               }}
               @node={{@node}}
               @nodeDefinition={{this.nodeDefinition}}
               @nodeParameters={{@nodeParameters}}
-              @nodeType={{@nodeType}}
               @nodes={{@nodes}}
+              @nodeType={{@nodeType}}
               @nodeTypes={{@nodeTypes}}
               @schema={{this.valueSchema item}}
               @session={{@session}}
@@ -248,12 +248,12 @@ export default class AssignmentCollection extends Component {
 
       <div class="workflows-property-engine__block-actions">
         <DButton
+          class="btn-default workflows-property-engine__add-attrs-btn"
           @action={{this.addAssignment}}
           @icon="plus"
           @translatedLabel={{i18n
             "discourse_workflows.property_engine.add_field"
           }}
-          class="btn-default workflows-property-engine__add-attrs-btn"
         />
       </div>
     </@form.Section>

@@ -9,9 +9,9 @@ Use this reference when working with `AccessControlList`, `AclTarget`, `Acl::Tar
 Important columns:
 
 - `target_type`, `target_id`: polymorphic target.
-- `permission`: freeform string such as `view`, `edit`, `manage`, or target-specific permissions.
+- `permission`: string ID declared by the target's `ACL_PERMISSIONS`, such as `view`, `edit`, or `manage`. The manager enforces this vocabulary; direct bulk inserts bypass that policy.
 - `allowed_group_ids`: bigint array of groups that hold the permission.
-- `allowed_user_ids`: bigint array of users that hold the permission. Backend lookup and persistence support is partial; the main remaining gap is complete `DAccessControl` user editing.
+- `allowed_user_ids`: bigint array of users that hold the permission. Backend storage/lookups and the frontend search picker support user grants; mandatory user ACL display still needs explicit UI support.
 - `owner`: string identifying the owning subsystem, usually `"core"` or a plugin name.
 
 The model has a uniqueness validation and DB index for target + permission. Multiple groups for the same permission collapse into one row.
@@ -133,8 +133,12 @@ Include `AclTarget` in any model that owns ACL rows:
 ```ruby
 class Board < ActiveRecord::Base
   include AclTarget
+
+  ACL_PERMISSIONS = Acl::Permissions.new(:view, :edit, :manage)
 end
 ```
+
+Every target must define or inherit `ACL_PERMISSIONS`. Use named readers such as `ACL_PERMISSIONS.manage` in mandatory, banned, and loss-warning declarations; an unknown reader raises `NoMethodError`. The permission set and its string values are frozen. The manager validates the final ACL list, including injected mandatory entries, against `ACL_PERMISSIONS.values` before replacing any rows. A missing constant raises `NameError` to expose an incorrectly implemented target; an unknown submitted permission fails the service policy.
 
 The concern provides:
 
@@ -150,7 +154,6 @@ The concern provides:
 - `.acl_is_banned?(acl)`
 - `.has_loss_warning_permissions?`
 - `.acl_triggers_loss_warning?(acl)`
-- `mandatory_acl_as_expanded_list(owner)`
 
 `AclTarget.acl_matches?(acl_a, acl_b)` is the shared comparator for mandatory and banned ACL matching. It normalizes `type` to symbols and compares `permission` as strings.
 
@@ -160,7 +163,7 @@ Define `self.mandatory_acl` on the target class when some grants must always exi
 
 ```ruby
 def self.mandatory_acl
-  [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+  [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: ACL_PERMISSIONS.manage }]
 end
 ```
 
@@ -168,7 +171,7 @@ Define `self.banned_acl` on the target class when specific grants must never be 
 
 ```ruby
 def self.banned_acl
-  [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
+  [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: ACL_PERMISSIONS.edit }]
 end
 ```
 
@@ -193,7 +196,7 @@ Define `self.loss_warning_permissions` when the current actor should confirm los
 
 ```ruby
 def self.loss_warning_permissions
-  %w[manage]
+  [ACL_PERMISSIONS.manage]
 end
 ```
 

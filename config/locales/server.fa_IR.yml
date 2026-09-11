@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  mcp:
+    oauth:
+      deny: "رد کردن"
+      approve: "اجازه دادن"
   llms_txt:
     sections:
       optional: "اختیاری"
@@ -2926,11 +2930,6 @@ fa_IR:
         title: "بله"
       approve_and_unhide:
         title: "بله"
-      delete_post:
-        title: "حذف نوشته"
-        complete: "نوشته حذف شده"
-      restore_post:
-        title: "بازیابی نوشته"
       suspend_user:
         title: "کاربر تعلیق شده"
       delete_user:

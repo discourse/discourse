@@ -13,8 +13,8 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
 
     await render(
       <template>
-        <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-          <form.Field @type="menu" @name="foo" @title="Foo" as |field|>
+        <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+          <form.Field @name="foo" @title="Foo" @type="menu" as |field|>
             <field.Control as |menu|>
               <menu.Item @value="item-1">Item 1</menu.Item>
               <menu.Item @value="item-2">Item 2</menu.Item>
@@ -40,10 +40,10 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field
-            @type="menu"
+            @disabled={{true}}
             @name="foo"
             @title="Foo"
-            @disabled={{true}}
+            @type="menu"
             as |field|
           >
             <field.Control />
@@ -59,7 +59,7 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     await render(
       <template>
         <Form as |form|>
-          <form.Field @type="menu" @name="foo" @title="Foo" as |field|>
+          <form.Field @name="foo" @title="Foo" @type="menu" as |field|>
             <field.Control @selection="Current item" as |menu|>
               <menu.Item @value="item-1">Item 1</menu.Item>
             </field.Control>

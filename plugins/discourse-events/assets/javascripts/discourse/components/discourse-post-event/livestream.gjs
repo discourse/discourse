@@ -86,8 +86,8 @@ export default class Livestream extends Component {
         {{else if this.hasLivestreamOnebox}}
           {{#if this.videoAttributes}}
             <this.lazyVideo
-              @videoAttributes={{this.videoAttributes}}
               @onLoadedVideo={{this.preventCloak}}
+              @videoAttributes={{this.videoAttributes}}
             />
           {{else}}
             {{this.oneboxHtml}}

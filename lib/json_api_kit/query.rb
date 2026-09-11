@@ -13,8 +13,8 @@ module JsonApiKit
     def records
       @records ||=
         Records.new(
-          rows.map do
-            Record.new(it, fields, type:, namespace:, relationships: sideloads.linkage_for(it))
+          rows.map do |row|
+            Record.new(row, fields, type:, namespace:, relationships: sideloads.linkage_for(row))
           end,
         )
     end

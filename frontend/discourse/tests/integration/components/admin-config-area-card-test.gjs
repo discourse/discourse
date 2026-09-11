@@ -23,8 +23,8 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
     await render(
       <template>
         <AdminConfigAreaCard
-          @translatedHeading="test heading"
           @collapsable={{true}}
+          @translatedHeading="test heading"
         ><:content>test</:content></AdminConfigAreaCard>
       </template>
     );
@@ -44,9 +44,9 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
     await render(
       <template>
         <AdminConfigAreaCard
-          @translatedHeading="test heading"
           @collapsable={{true}}
           @collapsed={{true}}
+          @translatedHeading="test heading"
         ><:content>test</:content></AdminConfigAreaCard>
       </template>
     );
@@ -60,8 +60,8 @@ module("Integration | Component | AdminConfigAreaCard", function (hooks) {
     await render(
       <template>
         <AdminConfigAreaCard
-          @translatedHeading="test heading"
           @collapsable={{true}}
+          @translatedHeading="test heading"
         >
           <:headerAction><button>test</button></:headerAction>
           <:content>test</:content></AdminConfigAreaCard>

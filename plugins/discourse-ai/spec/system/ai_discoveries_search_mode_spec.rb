@@ -28,7 +28,10 @@ describe "AI Discoveries search modes" do
 
   after { SearchIndexer.disable }
 
-  it "enables Ask AI as the default for new users" do
+  it "enables Ask AI as the default for new users without embeddings or semantic search" do
+    SiteSetting.ai_embeddings_enabled = false
+    SiteSetting.ai_embeddings_semantic_search_enabled = false
+
     visit "/"
     discoveries_search.open.fill_query("miyazaki").select_ask
 

@@ -269,7 +269,7 @@ export default class BoardsCard extends Component {
         },
       })
       .finally(() => {
-        if (!this.isDestroying && !this.isDestroyed) {
+        if (!this.isDestroying) {
           DiscourseURL.replaceState(boardUrl);
         }
       });
@@ -298,7 +298,7 @@ export default class BoardsCard extends Component {
         },
       })
       .finally(() => {
-        if (!navigatedAway && !this.isDestroying && !this.isDestroyed) {
+        if (!navigatedAway && !this.isDestroying) {
           DiscourseURL.replaceState(boardUrl);
         }
       });
@@ -332,21 +332,6 @@ export default class BoardsCard extends Component {
     } else {
       this.#openFloaterAssignModal();
     }
-  }
-
-  #openFloaterAssignModal() {
-    const assignedTo = this.args.card.assigned_to;
-    this.modal.show(BoardsFloaterAssignModal, {
-      model: {
-        currentAssignee: assignedTo?.username || assignedTo?.name || null,
-        onSave: async (name) => {
-          await this.args.onUpdateCard?.(this.args.card.id, {
-            assigned_to_name: name,
-          });
-          this.args.onRefreshBoard?.();
-        },
-      },
-    });
   }
 
   @action
@@ -433,13 +418,28 @@ export default class BoardsCard extends Component {
     this.#cleanupDragImage();
   }
 
+  #openFloaterAssignModal() {
+    const assignedTo = this.args.card.assigned_to;
+    this.modal.show(BoardsFloaterAssignModal, {
+      model: {
+        currentAssignee: assignedTo?.username || assignedTo?.name || null,
+        onSave: async (name) => {
+          await this.args.onUpdateCard?.(this.args.card.id, {
+            assigned_to_name: name,
+          });
+          this.args.onRefreshBoard?.();
+        },
+      },
+    });
+  }
+
   #scheduleDragSourceHide(cardElement, cardHeight) {
     this.#clearDragHideTimer();
 
     this.dragHideTimer = discourseLater(this, () => {
       this.dragHideTimer = null;
 
-      if (!this.isDestroying && !this.isDestroyed) {
+      if (!this.isDestroying) {
         if (shouldInsertSourceDropIndicator()) {
           this.#insertSourceDropIndicator(cardElement, cardHeight);
         }
@@ -520,11 +520,11 @@ export default class BoardsCard extends Component {
         (if @isDropHighlighted "discourse-boards-card--drop-highlighted")
         (if @isLinkHighlighted "discourse-boards-card--link-highlighted")
       }}
+      data-card-id={{@card.id}}
+      data-topic-id={{@card.topic_id}}
       draggable={{if @canWrite "true" "false"}}
       role="button"
       tabindex="0"
-      data-card-id={{@card.id}}
-      data-topic-id={{@card.topic_id}}
       {{on "dragstart" this.dragStart}}
       {{on "dragend" this.dragEnd}}
       {{on "click" this.onCardClick}}
@@ -545,13 +545,13 @@ export default class BoardsCard extends Component {
           <span class="discourse-boards-card__title">
             {{#if this.inlineOneboxData}}
               <a
-                href={{this.inlineOneboxData.url}}
                 class={{dConcatClass
                   "inline-onebox"
                   this.inlineOneboxData.css_class
                 }}
-                target="_blank"
+                href={{this.inlineOneboxData.url}}
                 rel="noopener noreferrer"
+                target="_blank"
               >{{this.inlineOneboxData.title}}</a>
             {{else}}
               <AutoLinkedText @text={{this.cardTitle}} />
@@ -560,8 +560,8 @@ export default class BoardsCard extends Component {
         {{/if}}
         {{#if this.canShowActions}}
           <DMenu
-            @identifier="boards-card-actions"
             @icon="ellipsis"
+            @identifier="boards-card-actions"
             @triggerClass="btn-flat btn-small discourse-boards-card__actions-trigger"
           >
             <:content>
@@ -569,27 +569,27 @@ export default class BoardsCard extends Component {
                 {{#unless this.isTopicCard}}
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent"
                       @action={{this.openDetailModal}}
                       @icon="pencil"
                       @label="edit"
-                      class="btn-transparent"
                     />
                   </dropdown.item>
                   <dropdown.item>
                     <DButton
+                      class="btn-transparent"
                       @action={{@onPromoteToTopic}}
                       @icon="plus"
                       @label="boards.board.new_topic"
-                      class="btn-transparent"
                     />
                   </dropdown.item>
                 {{/unless}}
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent btn-danger"
                     @action={{this.removeCard}}
                     @icon="trash-can"
                     @label="boards.board.remove_card"
-                    class="btn-transparent btn-danger"
                   />
                 </dropdown.item>
               </DDropdownMenu>
@@ -633,9 +633,9 @@ export default class BoardsCard extends Component {
               <div class="discourse-boards-card__assign">
                 {{#if this.isAssigned}}
                   <DMenu
+                    @class="btn-flat"
                     @identifier="boards-card-assignment"
                     @triggerClass="discourse-boards-card__assign-trigger"
-                    @class="btn-flat"
                   >
                     <:trigger>
                       {{#if this.assignedAvatarHtml}}
@@ -650,33 +650,33 @@ export default class BoardsCard extends Component {
                           {{#each this.topicAssignments as |assignment|}}
                             <dropdown.item>
                               <DButton
+                                class="btn-transparent"
                                 @action={{fn
                                   this.unassignTarget
                                   assignment
                                   args.close
                                 }}
-                                @translatedLabel={{assignment.unassignLabel}}
                                 @icon="user-xmark"
-                                class="btn-transparent"
+                                @translatedLabel={{assignment.unassignLabel}}
                               />
                             </dropdown.item>
                           {{/each}}
                         {{else}}
                           <dropdown.item>
                             <DButton
+                              class="btn-transparent"
                               @action={{fn this.unassignFromMenu args.close}}
                               @icon="user-xmark"
                               @label="boards.board.unassign"
-                              class="btn-transparent"
                             />
                           </dropdown.item>
                         {{/if}}
                         <dropdown.item>
                           <DButton
+                            class="btn-transparent"
                             @action={{fn this.editAssignments args.close}}
                             @icon="pencil"
                             @label="boards.board.edit_assignments"
-                            class="btn-transparent"
                           />
                         </dropdown.item>
                       </DDropdownMenu>
@@ -684,10 +684,10 @@ export default class BoardsCard extends Component {
                   </DMenu>
                 {{else}}
                   <DButton
+                    class="btn-flat discourse-boards-card__assign-btn"
                     @action={{this.handleAssign}}
                     @icon="user-plus"
                     @title="boards.board.assign"
-                    class="btn-flat discourse-boards-card__assign-btn"
                   />
                 {{/if}}
               </div>

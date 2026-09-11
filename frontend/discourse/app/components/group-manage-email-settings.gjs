@@ -17,26 +17,9 @@ export default class GroupManageEmailSettings extends Component {
 
   smtpSettingsValid = false;
 
-  @onEvent("init")
-  _determineSettingsValid() {
-    this.set(
-      "smtpSettingsValid",
-      this.group.smtp_enabled && this.group.smtp_server
-    );
-  }
-
   @computed("smtpSettingsValid", "group.smtp_enabled")
   get emailSettingsValid() {
     return !this.group?.smtp_enabled || this.smtpSettingsValid;
-  }
-
-  _anySmtpFieldsFilled() {
-    return [
-      this.group.smtp_server,
-      this.group.smtp_port,
-      this.group.email_username,
-      this.group.email_password,
-    ].some((value) => !isEmpty(value));
   }
 
   @action
@@ -67,6 +50,23 @@ export default class GroupManageEmailSettings extends Component {
     });
   }
 
+  @onEvent("init")
+  _determineSettingsValid() {
+    this.set(
+      "smtpSettingsValid",
+      this.group.smtp_enabled && this.group.smtp_server
+    );
+  }
+
+  _anySmtpFieldsFilled() {
+    return [
+      this.group.smtp_server,
+      this.group.smtp_port,
+      this.group.email_username,
+      this.group.email_password,
+    ].some((value) => !isEmpty(value));
+  }
+
   <template>
     <div class="group-manage-email-settings">
       <h3>{{i18n "groups.manage.email.smtp_title"}}</h3>
@@ -74,10 +74,10 @@ export default class GroupManageEmailSettings extends Component {
 
       <label for="enable_smtp">
         <Input
-          @type="checkbox"
-          @checked={{this.group.smtp_enabled}}
           id="enable_smtp"
           tabindex="1"
+          @checked={{this.group.smtp_enabled}}
+          @type="checkbox"
           {{on "input" this.smtpEnabledChange}}
         />
         {{i18n "groups.manage.email.enable_smtp"}}
@@ -86,8 +86,8 @@ export default class GroupManageEmailSettings extends Component {
       {{#if this.group.smtp_enabled}}
         <GroupSmtpEmailSettings
           @group={{this.group}}
-          @smtpSettingsValid={{this.smtpSettingsValid}}
           @onChangeSmtpSettingsValid={{this.onChangeSmtpSettingsValid}}
+          @smtpSettingsValid={{this.smtpSettingsValid}}
         />
       {{/if}}
 
@@ -99,11 +99,11 @@ export default class GroupManageEmailSettings extends Component {
             for="allow_unknown_sender_topic_replies"
           >
             <Input
-              @type="checkbox"
-              name="allow_unknown_sender_topic_replies"
               id="allow_unknown_sender_topic_replies"
-              @checked={{this.group.allow_unknown_sender_topic_replies}}
+              name="allow_unknown_sender_topic_replies"
               tabindex="13"
+              @checked={{this.group.allow_unknown_sender_topic_replies}}
+              @type="checkbox"
             />
             <span>{{i18n
                 "groups.manage.email.settings.allow_unknown_sender_topic_replies"
@@ -117,10 +117,10 @@ export default class GroupManageEmailSettings extends Component {
 
       <br />
       <GroupManageSaveButton
-        @model={{this.group}}
-        @disabled={{not this.emailSettingsValid}}
-        @beforeSave={{this.beforeSave}}
         @afterSave={{this.afterSave}}
+        @beforeSave={{this.beforeSave}}
+        @disabled={{not this.emailSettingsValid}}
+        @model={{this.group}}
         @tabindex="15"
       />
     </div>

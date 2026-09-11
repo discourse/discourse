@@ -11,6 +11,7 @@ RSpec.describe CategoryGuardian do
       it "returns false for anonymous user" do
         expect(Guardian.new.can_post_in_category?(category)).to eq(false)
       end
+
       it "returns true for admin" do
         expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
       end

@@ -386,6 +386,38 @@ export default class Topic extends RestModel {
     set(this, "details.allowed_groups", value);
   }
 
+  @computed("bookmarks.length")
+  get bookmarkCount() {
+    return this.bookmarks?.length;
+  }
+
+  set bookmarkCount(value) {
+    set(this, "bookmarks.length", value);
+  }
+
+  get details() {
+    return this._details;
+  }
+
+  set details(value) {
+    if (value instanceof TopicDetails) {
+      this._details = value;
+      return;
+    }
+
+    // we need to ensure that details is an instance of TopicDetails
+    this._details = this.store.createRecord("topicDetails", value);
+  }
+
+  @computed("category_id", "site.categoriesById.[]")
+  get category() {
+    return Category.findById(this.category_id);
+  }
+
+  set category(newCategory) {
+    this.set("category_id", newCategory?.id);
+  }
+
   @computed("deleted_at")
   get deleted() {
     return !isEmpty(this.deleted_at);
@@ -404,15 +436,6 @@ export default class Topic extends RestModel {
   @computed("archetype")
   get isBanner() {
     return this.archetype === "banner";
-  }
-
-  @computed("bookmarks.length")
-  get bookmarkCount() {
-    return this.bookmarks?.length;
-  }
-
-  set bookmarkCount(value) {
-    set(this, "bookmarks.length", value);
   }
 
   @computed("pinned", "category.isUncategorizedCategory")
@@ -588,20 +611,6 @@ export default class Topic extends RestModel {
     });
   }
 
-  get details() {
-    return this._details;
-  }
-
-  set details(value) {
-    if (value instanceof TopicDetails) {
-      this._details = value;
-      return;
-    }
-
-    // we need to ensure that details is an instance of TopicDetails
-    this._details = this.store.createRecord("topicDetails", value);
-  }
-
   @computed("visible")
   get invisible() {
     return this.visible !== undefined ? !this.visible : undefined;
@@ -627,15 +636,6 @@ export default class Topic extends RestModel {
     return { type: "topic", id: this.id };
   }
 
-  @computed("category_id", "site.categoriesById.[]")
-  get category() {
-    return Category.findById(this.category_id);
-  }
-
-  set category(newCategory) {
-    this.set("category_id", newCategory?.id);
-  }
-
   @computed("url")
   get shareUrl() {
     return resolveShareUrl(this.url, this.currentUser);
@@ -657,14 +657,6 @@ export default class Topic extends RestModel {
       slug = "topic";
     }
     return `${getURL("/t/")}${slug}/${this.id}`;
-  }
-
-  urlForPostNumber(postNumber) {
-    let url = this.url;
-    if (postNumber > 0) {
-      url += `/${postNumber}`;
-    }
-    return url;
   }
 
   @computed("unread_posts", "new_posts")
@@ -774,6 +766,28 @@ export default class Topic extends RestModel {
     return Site.currentProp("archetypes").find(
       (item) => item.id === this.archetype
     );
+  }
+
+  @computed("excerpt")
+  get escapedExcerpt() {
+    return applyValueTransformer(
+      "topic-escaped-excerpt",
+      emojiUnescape(this.excerpt),
+      { topic: this }
+    );
+  }
+
+  @computed("excerpt")
+  get excerptTruncated() {
+    return this.excerpt && this.excerpt.slice(-8) === "&hellip;";
+  }
+
+  urlForPostNumber(postNumber) {
+    let url = this.url;
+    if (postNumber > 0) {
+      url += `/${postNumber}`;
+    }
+    return url;
   }
 
   toggleStatus(property) {
@@ -1016,20 +1030,6 @@ export default class Topic extends RestModel {
       // On error, put the pin back
       this.setProperties({ pinned: true, unpinned: false });
     });
-  }
-
-  @computed("excerpt")
-  get escapedExcerpt() {
-    return applyValueTransformer(
-      "topic-escaped-excerpt",
-      emojiUnescape(this.excerpt),
-      { topic: this }
-    );
-  }
-
-  @computed("excerpt")
-  get excerptTruncated() {
-    return this.excerpt && this.excerpt.slice(-8) === "&hellip;";
   }
 
   archiveMessage() {

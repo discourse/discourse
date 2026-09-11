@@ -4,8 +4,8 @@ import { i18n } from "discourse-i18n";
 
 const OtherNotificationsListEmptyState = <template>
   <DEmptyState
-    @title={{i18n "user.no_other_notifications_title"}}
     @body={{trustHTML (i18n "user.no_other_notifications_body")}}
+    @title={{i18n "user.no_other_notifications_title"}}
   />
 </template>;
 

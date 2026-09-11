@@ -1,7 +1,11 @@
 import { buildBBCodeAttrs } from "discourse/lib/text";
+import PollNodeView from "../discourse/components/poll-node-view";
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: {
+    poll: { component: PollNodeView, name: "poll", hasContent: true },
+  },
   nodeSpec: {
     poll: {
       attrs: {
@@ -19,7 +23,7 @@ const extension = {
         order: { default: null },
         step: { default: null },
       },
-      content: "heading? bullet_list poll_info?",
+      content: "poll_title bullet_list poll_info?",
       group: "block",
       selectable: true,
       isolating: true,
@@ -71,6 +75,11 @@ const extension = {
         0,
       ],
     },
+    poll_title: {
+      content: "inline*",
+      parseDOM: [{ tag: "div.poll-title" }],
+      toDOM: () => ["div", { class: "poll-title" }, 0],
+    },
     poll_info: {
       content: "inline*",
       selectable: false,
@@ -90,7 +99,7 @@ const extension = {
       }),
     },
     poll_container: { ignore: true },
-    poll_title: { block: "heading" },
+    poll_title: { block: "poll_title" },
     poll_info: { block: "poll_info" },
     poll_info_counts: { ignore: true },
     poll_info_counts_count: { ignore: true },
@@ -104,15 +113,38 @@ const extension = {
     poll(state, node) {
       const attrs = buildBBCodeAttrs(node.attrs);
       state.write(`[poll${attrs ? ` ${attrs}` : ""}]\n`);
-      if (node.attrs.type === "number") {
-        // options are generated from the range, they are not authored content
-        if (node.firstChild?.type.name === "heading") {
-          state.render(node.firstChild, node, 0);
+
+      node.forEach((child, offset, index) => {
+        // the title node is always present, an untitled poll leaves it empty
+        if (child.type.name === "poll_title" && child.content.size === 0) {
+          return;
         }
-      } else {
-        state.renderContent(node);
-      }
+
+        // a number poll's options come from its range, not from authored items
+        if (child.type.name === "bullet_list" && node.attrs.type === "number") {
+          return;
+        }
+
+        state.render(child, node, index);
+      });
+
       state.write("[/poll]\n\n");
+    },
+    poll_title(state, node) {
+      state.write("# ");
+
+      // a title is one line of markdown: a break written as a newline would
+      // end the title and leave the rest of the poll unreadable to the parser
+      const { hard_break: hardBreak } = state.nodes;
+      state.nodes.hard_break = (titleState) => titleState.write("<br>");
+
+      try {
+        state.renderInline(node, false);
+      } finally {
+        state.nodes.hard_break = hardBreak;
+      }
+
+      state.closeBlock(node);
     },
     poll_info() {},
   },

@@ -41,13 +41,13 @@ export default class RemindAssignsFrequency extends Component {
               "discourse_assign.reminders_frequency.description"
             }}</label>
           <ComboBox
-            @id="remind-assigns-frequency"
-            @valueProperty="value"
             @content={{this.availableFrequencies}}
-            @value={{this.selectedFrequency}}
+            @id="remind-assigns-frequency"
             @onChange={{fn
               (mut this.user.custom_fields.remind_assigns_frequency)
             }}
+            @value={{this.selectedFrequency}}
+            @valueProperty="value"
           />
         </div>
       {{/if}}

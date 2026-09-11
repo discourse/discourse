@@ -88,6 +88,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Read do
       expect(results[:content]).to include("hello there")
       expect(results[:content]).not_to include("mister sam")
     end
+
     it "can read a topic" do
       topic_id = topic_with_tags.id
       results = tool.invoke

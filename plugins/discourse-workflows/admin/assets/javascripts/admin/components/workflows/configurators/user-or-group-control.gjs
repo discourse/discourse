@@ -12,17 +12,17 @@ export default class UserOrGroupControl extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <EmailGroupUserChooser
-        @value={{if @field.value @field.value null}}
         @onChange={{this.handleChange}}
         @options={{hash maximum=1 includeGroups=true excludeCurrentUser=false}}
+        @value={{if @field.value @field.value null}}
       />
     </ExpressionWrapper>
   </template>

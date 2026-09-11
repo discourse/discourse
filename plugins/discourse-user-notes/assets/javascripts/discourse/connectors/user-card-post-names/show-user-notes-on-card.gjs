@@ -33,9 +33,9 @@ export default class extends Component {
     <div class="show-user-notes-on-card">
       {{#if this.userNotesCount}}
         <DButton
-          @translatedTitle={{i18n "user_notes.show" count=this.userNotesCount}}
-          @action={{this.showUserNotes}}
           class="btn-flat"
+          @action={{this.showUserNotes}}
+          @translatedTitle={{i18n "user_notes.show" count=this.userNotesCount}}
         >
           {{#if this.siteSettings.enable_emoji}}
             {{dEmoji "memo"}}

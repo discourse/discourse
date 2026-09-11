@@ -57,12 +57,12 @@ export default (type) => {
       };
     }
 
-    _isArchive() {
-      return type === "archive";
-    }
-
     deactivate() {
       this.searchService.searchContext = null;
+    }
+
+    _isArchive() {
+      return type === "archive";
     }
   };
 };

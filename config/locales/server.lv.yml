@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 lv:
+  mcp:
+    oauth:
+      deny: "Atteikt"
   llms_txt:
     sections:
       optional: "Pēc izvēles"
@@ -648,8 +651,6 @@ lv:
         title: "Jā"
       approve_and_unhide:
         title: "Jā"
-      delete_post:
-        complete: "Ieraksts dzēsts"
       delete_user:
         complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"

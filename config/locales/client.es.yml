@@ -1027,6 +1027,9 @@ es:
         note_added: "Nota del moderador"
         note_added_by: "Nota del moderador creada por %{username} · %{relativeDate}"
         no_events: "No hay eventos que mostrar en la línea de tiempo"
+      author_penalty:
+        toast:
+          undo: "Deshacer"
       notes:
         add_note_description: "Añade una nota para proporcionar contexto a otros moderadores."
         add_note_button: "Añadir nota"
@@ -1673,7 +1676,6 @@ es:
       admin: "%{user} es un administrador"
       moderator_tooltip: "Este usuario es un moderador"
       admin_tooltip: "Este usuario es un administrador"
-      silenced_tooltip: "Este usuario está silenciado"
       suspended_notice: "Este usuario ha sido suspendido hasta %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Motivo: "
@@ -1732,6 +1734,16 @@ es:
       tracked_topics_link: "Mostrar"
       automatically_unpin_topics: "Desanclar temas automáticamente cuando los leo por completo"
       apps: "Aplicaciones"
+      mcp_authorizations:
+        endpoint: "Recurso"
+        scopes: "Ámbitos"
+        details: "Detalles"
+        last_used: "Usada por última vez"
+        never: "Nunca"
+        status: "Estado"
+        statuses:
+          active: "Activo"
+          revoked: "Revocada"
       revoke_access: "Revocar acceso"
       undo_revoke_access: "Deshacer revocación de acceso"
       api_approved: "Fecha de aprobación:"
@@ -5826,6 +5838,76 @@ es:
           header_description: "Proporciona aquí información sobre este sitio y tu equipo para que la gente pueda saber de qué trata tu comunidad, quién está detrás de ella y cómo ponerse en contacto contigo en caso de que haya algún problema. Se muestra en la página <a href='%{basePath}/about'>Acerca de</a> de tu sitio."
         developer:
           title: "Desarrollador"
+        mcp:
+          title: "Servidor MCP"
+          tabs:
+            access: "Acceso"
+            activity: "Actividad"
+          overview:
+            status: "Estado"
+            tools: "Herramientas"
+          access:
+            title: "Acceso"
+            group: "Grupo"
+            groups: "Grupos"
+            actions: "Acciones"
+            edit: "Editar"
+            delete: "Eliminar"
+          primitives:
+            group_by: "Agrupar por"
+            group_by_options:
+              scope: "Ámbito"
+              provider: "Proveedor"
+              kind: "Tipo"
+            provider: "Proveedor"
+            kind: "Tipo"
+            scope: "Ámbito"
+            state: "Estado"
+            scopes: "Ámbitos"
+          clients:
+            actions: "Acciones"
+            block: "Bloquear"
+            use_preset: "Configurar"
+            presets:
+              custom: "Personalizado"
+          authorizations:
+            user: "Usuario"
+            scopes: "Ámbitos concedidos"
+            last_used: "Usada por última vez"
+            status: "Estado"
+            actions: "Acciones"
+          activity:
+            rate_limits: "Límites de velocidad"
+            outcome: "Resultado"
+            time: "Hora"
+            user: "Usuario"
+            duration: "Duración"
+          values:
+            server_status:
+              disabled: "Desactivado"
+            client_trust:
+              approved: "Aprobado"
+            authorization_status:
+              active: "Activo"
+              revoked: "Revocada"
+            activity_outcome:
+              success: "Éxito"
+              error: "Error"
+            primitive_state:
+              enabled: "Activado"
+              disabled: "Desactivado"
+            primitive_kind:
+              all: "Todos los tipos"
+              tool: "Herramienta"
+              resource: "Recurso"
+            primitive_risk:
+              read: "Solo lectura"
+              moderation: "Moderación"
+            filter:
+              all: "Todo"
+          never: "Nunca"
+          actions:
+            revoke: "Revocar"
         experimental:
           title: "Experimental"
           header_description: "Activa o desactiva las características experimentales de tu sitio; la mayoría de ellas se pueden controlar en grupo"

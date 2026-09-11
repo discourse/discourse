@@ -142,7 +142,7 @@ ru:
         process_started: "Процесс удаления канала запущен. Это окно закроется в ближайшее время, вы больше не увидите удалённый канал."
       channels_list_popup:
         browse: "Просмотр каналов"
-        create: "Новый канал"
+        create: "Новый канал..."
       close: "Закрыть"
       remove: "Удалить"
       collapse: "Свернуть чат"
@@ -159,8 +159,6 @@ ru:
       muted: "Отключённый"
       joined: "подписан"
       empty_state:
-        direct_message_cta: "Начать личный чат"
-        direct_message: "Вы также можете начать личный чат с одним или несколькими пользователями."
         title: "Каналы не обнаружены"
         my_threads: "У вас пока нет цепочек сообщений. Здесь появятся цепочки сообщений, в которых вы участвуете."
       email_frequency:
@@ -614,14 +612,20 @@ ru:
       direct_messages:
         title: "Прямые сообщения"
         aria_label: "Перейти к прямым сообщениям"
-        new: "Создать личный чат"
         create: "Создать"
-        leave: "Выйти из личного чата"
-        close: "Закрыть личный чат"
+        leave: "Покинуть канал"
+        close: "Закрыть канал"
         cannot_create: "Вы не можете отправлять прямые сообщения."
       channel_list:
         title: "Каналы"
         aria_label: "Перейти к списку каналов"
+        options:
+          filter: "Фильтр"
+        filter:
+          all: "Все каналы"
+          mentions: "Упоминания"
+        sort:
+          priority: "Приоритет"
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Выберите канал"
@@ -789,11 +793,6 @@ ru:
           direct_html: '<span>Пользователь %{username}</span> <span>упомянул вас на канале «%{channel}»</span>'
           other_plain: 'упомянул(а) %{identifier} в канале «%{channel}»'
           other_html: '<span>%{username}</span> <span>упомянул(а) %{identifier} в канале «%{channel}»</span>'
-        direct_message_chat_mention:
-          direct: "упомянул вас в личном чате"
-          direct_html: "<span>Пользователь %{username}</span> <span>упомянул вас в личном чате</span>"
-          other_plain: "упомянул(а) %{identifier} в личном чате"
-          other_html: "<span>%{username}</span> <span>упомянул(а) %{identifier} в личном чате</span>"
         chat_message: "Новое сообщение в чате"
         chat_quoted: "Пользователь %{username} процитировал ваше сообщение в чате"
       titles:
@@ -865,9 +864,6 @@ ru:
         chat:
           title: Чат
     sidebar:
-      start_new_dm:
-        text: Начать новый DM
-        title: Создать личный чат
       panels:
         chat:
           label: "Чат"

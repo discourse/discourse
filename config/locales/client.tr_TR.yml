@@ -1042,6 +1042,9 @@ tr_TR:
         note_added: "Moderatör notu"
         note_added_by: "%{username} tarafından moderatör notu · %{relativeDate}"
         no_events: "Gösterilecek zaman çizelgesi etkinliği yok"
+      author_penalty:
+        toast:
+          undo: "Geri Al"
       notes:
         add_note_description: "Diğer moderatörlere bağlam sağlamak için bir not ekleyin."
         add_note_button: "Not ekle"
@@ -1688,7 +1691,6 @@ tr_TR:
       admin: "%{user} bir yönetici"
       moderator_tooltip: "Bu kullanıcı bir moderatör"
       admin_tooltip: "Bu kullanıcı bir yönetici"
-      silenced_tooltip: "Bu kullanıcı susturuldu"
       suspended_notice: "Bu kullanıcı %{date} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı uzaklaştırıldı."
       suspended_reason: "Sebep: "
@@ -1747,6 +1749,16 @@ tr_TR:
       tracked_topics_link: "Göster"
       automatically_unpin_topics: "En alta geldiğimde tüm konuların sabitlemesini kaldır"
       apps: "Uygulamalar"
+      mcp_authorizations:
+        endpoint: "Kaynak"
+        scopes: "Kapsamlar"
+        details: "Detaylar"
+        last_used: "Son kullanılan"
+        never: "Asla"
+        status: "Durum"
+        statuses:
+          active: "Aktif"
+          revoked: "İptal edildi"
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylandı:"
@@ -5913,6 +5925,76 @@ tr_TR:
         developer:
           title: "Geliştirici"
           header_description: "Güvenli modu ve diğer gelişmiş özellikleri yönetmek için geliştirici ayarları"
+        mcp:
+          title: "MCP sunucusu"
+          tabs:
+            access: "Erişim"
+            activity: "Aktivite"
+          overview:
+            status: "Durum"
+            tools: "Araçlar"
+          access:
+            title: "Erişim"
+            group: "Grup"
+            groups: "Gruplar"
+            actions: "Eylemler"
+            edit: "Düzenle"
+            delete: "Sil"
+          primitives:
+            group_by: "Gruplama ölçütü"
+            group_by_options:
+              scope: "Kapsam"
+              provider: "Sağlayıcı"
+              kind: "Tür"
+            provider: "Sağlayıcı"
+            kind: "Tür"
+            scope: "Kapsam"
+            state: "Eyalet"
+            scopes: "Kapsamlar"
+          clients:
+            actions: "Eylemler"
+            block: "Engelle"
+            use_preset: "Kur"
+            presets:
+              custom: "Özel"
+          authorizations:
+            user: "Kullanıcı"
+            scopes: "Verilen kapsamlar"
+            last_used: "Son kullanılan"
+            status: "Durum"
+            actions: "Eylemler"
+          activity:
+            rate_limits: "Oran limitleri"
+            outcome: "Sonuç"
+            time: "Saat"
+            user: "Kullanıcı"
+            duration: "Süre"
+          values:
+            server_status:
+              disabled: "Devre Dışı"
+            client_trust:
+              approved: "Onaylandı"
+            authorization_status:
+              active: "Aktif"
+              revoked: "İptal edildi"
+            activity_outcome:
+              success: "Başarılı"
+              error: "Hata"
+            primitive_state:
+              enabled: "Etkin mi"
+              disabled: "Devre Dışı"
+            primitive_kind:
+              all: "Bütün türler"
+              tool: "Araç"
+              resource: "Kaynak"
+            primitive_risk:
+              read: "Salt okunur"
+              moderation: "Moderasyon"
+            filter:
+              all: "Tümü"
+          never: "Asla"
+          actions:
+            revoke: "İptal Et"
         experimental:
           title: "Deneysel"
           header_description: "Siteniz için deneysel özellikleri açın veya kapatın, bunların çoğu grup bazında kontrol edilebilir"

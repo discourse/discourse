@@ -115,15 +115,16 @@ export default class BlockInfo extends Component<BlockInfoSignature> {
   <template>
     <div class="block-debug-info --rendered" data-block-name={{@blockName}}>
       <DTooltip
+        @hoverGracePeriod={{150}}
         @identifier="block-debug-info"
         @interactive={{true}}
-        @placement="bottom-start"
         @maxWidth={{500}}
+        @placement="bottom-start"
         @triggers={{hash
           mobile=(array "click")
           desktop=(array "hover" "click")
         }}
-        @untriggers={{hash mobile=(array "click") desktop=(array "mouseleave")}}
+        @untriggers={{hash mobile=(array "click") desktop=(array "hover")}}
       >
         <:trigger>
           <span class="block-debug-badge">

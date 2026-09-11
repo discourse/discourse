@@ -256,10 +256,6 @@ export default class ExecutionDetail extends Component {
     this.#progress.destroy();
   }
 
-  get currentTime() {
-    return this.#progress.currentTime;
-  }
-
   get execution() {
     return this.liveExecution?.id === this.args.execution.id
       ? this.liveExecution
@@ -268,6 +264,10 @@ export default class ExecutionDetail extends Component {
 
   set execution(value) {
     this.liveExecution = value;
+  }
+
+  get currentTime() {
+    return this.#progress.currentTime;
   }
 
   get isPending() {
@@ -303,112 +303,6 @@ export default class ExecutionDetail extends Component {
     this.#progress.unsubscribe();
     this.#progress.lastMessageId = this.execution.message_bus_last_id ?? 0;
     this.#syncLiveUpdates();
-  }
-
-  #syncLiveUpdates() {
-    if (this.isLive) {
-      this.#progress.subscribe(
-        `/discourse-workflows/execution/${this.execution.id}`
-      );
-    } else {
-      this.#progress.unsubscribe();
-    }
-
-    if (this.isRunning) {
-      this.#progress.startTicker();
-    } else {
-      this.#progress.stopTicker();
-    }
-  }
-
-  #applyProgress(message) {
-    if (
-      message.type !== "execution_progress" ||
-      message.execution?.id !== this.execution.id
-    ) {
-      return;
-    }
-
-    if (this.#refreshing && message.refresh) {
-      this.#refreshRequested = true;
-    }
-
-    const steps = [...(this.execution.steps || [])];
-    if (message.step) {
-      const index = steps.findIndex(
-        (step) => step.position === message.step.position
-      );
-      if (index === -1) {
-        steps.push(message.step);
-      } else {
-        steps[index] = { ...steps[index], ...message.step };
-      }
-    }
-
-    this.execution = {
-      ...this.execution,
-      ...message.execution,
-      steps,
-    };
-
-    if (message.refresh) {
-      this.#refreshExecution();
-    } else {
-      this.#syncLiveUpdates();
-    }
-  }
-
-  #resyncExecution() {
-    this.#progress.unsubscribe();
-    this.#refreshExecution();
-  }
-
-  async #refreshExecution() {
-    if (this.#refreshing) {
-      this.#refreshRequested = true;
-      return;
-    }
-
-    const executionId = this.execution.id;
-    const refreshToken = ++this.#refreshToken;
-    this.#refreshing = true;
-    try {
-      const result = await ajax(
-        `/admin/plugins/discourse-workflows/executions/${executionId}`
-      );
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        refreshToken !== this.#refreshToken ||
-        executionId !== this.execution.id
-      ) {
-        return;
-      }
-
-      this.execution = {
-        ...result.execution,
-        message_bus_last_id: result.meta?.message_bus_last_id ?? 0,
-      };
-      this.#progress.lastMessageId = this.execution.message_bus_last_id;
-      this.#progress.resetRetry();
-      this.#syncLiveUpdates();
-    } catch (error) {
-      if (
-        !this.isDestroying &&
-        !this.isDestroyed &&
-        refreshToken === this.#refreshToken
-      ) {
-        this.#progress.scheduleRetry(error);
-      }
-    } finally {
-      if (refreshToken === this.#refreshToken) {
-        this.#refreshing = false;
-        if (this.#refreshRequested && !this.isDestroying && !this.isDestroyed) {
-          this.#refreshRequested = false;
-          this.#refreshExecution();
-        }
-      }
-    }
   }
 
   @action
@@ -497,6 +391,107 @@ export default class ExecutionDetail extends Component {
     URL.revokeObjectURL(url);
   }
 
+  #syncLiveUpdates() {
+    if (this.isLive) {
+      this.#progress.subscribe(
+        `/discourse-workflows/execution/${this.execution.id}`
+      );
+    } else {
+      this.#progress.unsubscribe();
+    }
+
+    if (this.isRunning) {
+      this.#progress.startTicker();
+    } else {
+      this.#progress.stopTicker();
+    }
+  }
+
+  #applyProgress(message) {
+    if (
+      message.type !== "execution_progress" ||
+      message.execution?.id !== this.execution.id
+    ) {
+      return;
+    }
+
+    if (this.#refreshing && message.refresh) {
+      this.#refreshRequested = true;
+    }
+
+    const steps = [...(this.execution.steps || [])];
+    if (message.step) {
+      const index = steps.findIndex(
+        (step) => step.position === message.step.position
+      );
+      if (index === -1) {
+        steps.push(message.step);
+      } else {
+        steps[index] = { ...steps[index], ...message.step };
+      }
+    }
+
+    this.execution = {
+      ...this.execution,
+      ...message.execution,
+      steps,
+    };
+
+    if (message.refresh) {
+      this.#refreshExecution();
+    } else {
+      this.#syncLiveUpdates();
+    }
+  }
+
+  #resyncExecution() {
+    this.#progress.unsubscribe();
+    this.#refreshExecution();
+  }
+
+  async #refreshExecution() {
+    if (this.#refreshing) {
+      this.#refreshRequested = true;
+      return;
+    }
+
+    const executionId = this.execution.id;
+    const refreshToken = ++this.#refreshToken;
+    this.#refreshing = true;
+    try {
+      const result = await ajax(
+        `/admin/plugins/discourse-workflows/executions/${executionId}`
+      );
+      if (
+        this.isDestroying ||
+        refreshToken !== this.#refreshToken ||
+        executionId !== this.execution.id
+      ) {
+        return;
+      }
+
+      this.execution = {
+        ...result.execution,
+        message_bus_last_id: result.meta?.message_bus_last_id ?? 0,
+      };
+      this.#progress.lastMessageId = this.execution.message_bus_last_id;
+      this.#progress.resetRetry();
+      this.#syncLiveUpdates();
+    } catch (error) {
+      if (!this.isDestroying && refreshToken === this.#refreshToken) {
+        this.#progress.scheduleRetry(error);
+      }
+    } finally {
+      if (refreshToken === this.#refreshToken) {
+        this.#refreshing = false;
+        if (this.#refreshRequested && !this.isDestroying) {
+          this.#refreshRequested = false;
+          this.#refreshExecution();
+        }
+      }
+    }
+  }
+
   <template>
     <div
       class="workflows-execution-detail"
@@ -547,14 +542,14 @@ export default class ExecutionDetail extends Component {
 
           {{#if this.execution.workflow_call_caller.execution_url}}
             <DButton
+              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
+              @icon="up-right-from-square"
+              @label="discourse_workflows.executions.workflow_call_open_parent"
               @route="adminPlugins.show.discourse-workflows.show.executions.show"
               @routeModels={{array
                 this.execution.workflow_call_caller.workflow_id
                 this.execution.workflow_call_caller.execution_id
               }}
-              @icon="up-right-from-square"
-              @label="discourse_workflows.executions.workflow_call_open_parent"
-              class="btn-default btn-small workflows-execution-detail__workflow-call-link workflows-execution-detail__workflow-call-parent-link"
             />
           {{/if}}
         </div>
@@ -733,14 +728,14 @@ export default class ExecutionDetail extends Component {
 
                   {{#if step.workflow_call_run.execution_url}}
                     <DButton
+                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
+                      @icon="up-right-from-square"
+                      @label="discourse_workflows.executions.workflow_call_open"
                       @route="adminPlugins.show.discourse-workflows.show.executions.show"
                       @routeModels={{array
                         step.workflow_call_run.workflow_id
                         step.workflow_call_run.execution_id
                       }}
-                      @icon="up-right-from-square"
-                      @label="discourse_workflows.executions.workflow_call_open"
-                      class="btn-default btn-small workflows-execution-detail__workflow-call-link"
                     />
                   {{/if}}
 
@@ -792,10 +787,10 @@ export default class ExecutionDetail extends Component {
             }}
           </div>
           <DButton
+            class="btn-default btn-small"
             @action={{this.exportAsText}}
             @icon="download"
             @label="discourse_workflows.executions.export"
-            class="btn-default btn-small"
           />
         </div>
       </div>

@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::Agents::Tools::ReadArtifact do
   fab!(:llm_model)
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+
   fab!(:post)
   fab!(:post2) { Fabricate(:post, user: post.user) }
   fab!(:artifact) do

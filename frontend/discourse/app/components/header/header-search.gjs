@@ -8,6 +8,7 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class HeaderSearch extends Component {
+  @service site;
   @service siteSettings;
   @service currentUser;
   @service appEvents;
@@ -36,8 +37,9 @@ export default class HeaderSearch extends Component {
 
   get shouldDisplay() {
     return (
-      (this.siteSettings.login_required && this.currentUser) ||
-      !this.siteSettings.login_required
+      this.site.can_search &&
+      ((this.siteSettings.login_required && this.currentUser) ||
+        !this.siteSettings.login_required)
     );
   }
 
@@ -54,11 +56,11 @@ export default class HeaderSearch extends Component {
               <div class="search-menu">
                 {{#if this.showAdvancedSearchIcon}}
                   <DButton
-                    @icon="magnifying-glass"
-                    @translatedLabel={{@buttonText}}
-                    @title="search.open_advanced"
                     class={{dConcatClass "btn search-icon" @buttonClass}}
                     @href={{this.advancedSearchButtonHref}}
+                    @icon="magnifying-glass"
+                    @title="search.open_advanced"
+                    @translatedLabel={{@buttonText}}
                   />
                 {{/if}}
 

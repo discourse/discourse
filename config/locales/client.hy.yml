@@ -728,6 +728,9 @@ hy:
       user_label: "Օգտատեր"
       timeline:
         target_deleted: "Գրառումը ջնջված է"
+      author_penalty:
+        toast:
+          undo: "Ետարկել"
       notes:
         delete: "Ջնջել"
       topic_label: "Թեմա"
@@ -1291,7 +1294,6 @@ hy:
       admin: "%{user}-ը ադմին է"
       moderator_tooltip: "Այս օգտատերը մոդերատոր է"
       admin_tooltip: "Այս օգտատերն ադմին է"
-      silenced_tooltip: "Այս օգտատերը լռեցված է"
       suspended_notice: "Այս օգտատերը սառեցված է մինչև %{date}:"
       suspended_permanently: "Այս օգտատերը սառեցված է"
       suspended_reason: "Պատճառը՝ "
@@ -1346,6 +1348,13 @@ hy:
       ignored_users_instructions: "Անտեսել այս օգտատերերի բոլոր գրառումները, ծանուցումները և անձնական հաղորդագրությունները:"
       tracked_topics_link: "Ցուցադրել"
       apps: "Հավելվածներ"
+      mcp_authorizations:
+        details: "Մանրամասներ"
+        never: "Երբեք"
+        status: "Ստատուս"
+        statuses:
+          active: "Ակտիվ"
+          revoked: "Հետկանչված"
       revoke_access: "Հետ Կանչել Թույլտվությունը"
       undo_revoke_access: "Ետարկել Թույլտվության Հետկանչումը (Undo Revoke Access)"
       api_approved: "Հաստատված է՝"
@@ -3893,6 +3902,59 @@ hy:
       config:
         developer:
           title: "Ծրագրավորող"
+        mcp:
+          tabs:
+            access: "Հասանելիություն"
+            activity: "Ակտիվության"
+          overview:
+            status: "Ստատուս"
+          access:
+            title: "Հասանելիություն"
+            group: "Խմբավորել"
+            groups: "Խմբեր"
+            actions: "Գործողություններ"
+            edit: "Խմբագրել"
+            delete: "Ջնջել"
+          primitives:
+            group_by_options:
+              provider: "Մատակարար"
+              kind: "Տիպ"
+            provider: "Մատակարար"
+            kind: "Տիպ"
+          clients:
+            actions: "Գործողություններ"
+            block: "Արգելափակել"
+            presets:
+              custom: "Մասնավոր"
+          authorizations:
+            user: "Օգտատեր"
+            status: "Ստատուս"
+            actions: "Գործողություններ"
+          activity:
+            time: "Ժամ"
+            user: "Օգտատեր"
+          values:
+            server_status:
+              disabled: "Անջատված"
+            client_trust:
+              approved: "Հաստատված է"
+            authorization_status:
+              active: "Ակտիվ"
+              revoked: "Հետկանչված"
+            activity_outcome:
+              success: "Հաջողություն"
+              error: "Սխալ"
+            primitive_state:
+              disabled: "Անջատված"
+            primitive_kind:
+              all: "Բոլոր տեսակները"
+            primitive_risk:
+              moderation: "Մոդերացիա"
+            filter:
+              all: "Բոլոր"
+          never: "Երբեք"
+          actions:
+            revoke: "Հետ կանչել"
         emojis:
           title: "Էմոջի"
         flags:

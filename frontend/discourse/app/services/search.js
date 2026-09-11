@@ -9,16 +9,34 @@ export default class Search extends Service {
   @service siteSettings;
 
   @tracked activeGlobalSearchTerm = "";
-  @tracked searchContext;
   @tracked highlightTerm;
   @tracked inTopicContext = false;
   @tracked visible = false;
   @tracked results = {};
   @tracked noResults = false;
   @tracked welcomeBannerSearchInViewport = false;
-
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search
+
+  @tracked _searchContext;
+
+  get searchContext() {
+    return this._searchContext;
+  }
+
+  set searchContext(context) {
+    if (
+      this.inTopicContext &&
+      (context?.type !== this._searchContext?.type ||
+        context?.id !== this._searchContext?.id)
+    ) {
+      this.inTopicContext = false;
+      this.results = {};
+      this.noResults = false;
+    }
+
+    this._searchContext = context;
+  }
 
   get currentSearchInputId() {
     if (this.welcomeBannerSearchInViewport) {
@@ -34,12 +52,12 @@ export default class Search extends Service {
     return this.siteSettings.search_experience;
   }
 
-  focusSearchInput() {
-    document.getElementById(this.currentSearchInputId)?.focus();
-  }
-
   get contextType() {
     return this.searchContext?.type || null;
+  }
+
+  focusSearchInput() {
+    document.getElementById(this.currentSearchInputId)?.focus();
   }
 
   // The need to navigate with the keyboard creates a lot shared logic
@@ -116,8 +134,12 @@ export default class Search extends Service {
       }
 
       if (index === -1 && e.key === "ArrowDown") {
-        // change focus from the search input to the first navigation item
-        const firstResult = navigationItems[0] || focusableItems[0];
+        const firstResult =
+          focused
+            .closest(".search-menu")
+            .querySelector(
+              ".search-result-topic .search-link, .search-result-post .search-link"
+            ) || navigationItems[0];
         firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
         this.focusSearchInput();

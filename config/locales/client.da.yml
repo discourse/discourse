@@ -837,6 +837,9 @@ da:
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
         note_added: "Moderator note"
+      author_penalty:
+        toast:
+          undo: "Fortryd"
       notes:
         add_note_button: "Tilføj note"
         placeholder: "Skriv din note her..."
@@ -1422,7 +1425,6 @@ da:
       admin: "%{user} er en admin"
       moderator_tooltip: "Denne bruger er en moderator"
       admin_tooltip: "Denne bruger er en administrator"
-      silenced_tooltip: "Denne bruger er mådeholdt (silenced)"
       suspended_notice: "Denne bruger er suspenderet indtil %{date}."
       suspended_permanently: "Denne bruger er suspenderet."
       suspended_reason: "Begrundelse: "
@@ -1478,6 +1480,15 @@ da:
       tracked_topics_link: "Vis"
       automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden"
       apps: "Apps"
+      mcp_authorizations:
+        endpoint: "Ressource"
+        scopes: "Anvendelsesområder"
+        details: "Detaljer"
+        never: "Aldrig"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
+          revoked: "Tilbagekaldt"
       revoke_access: "Tilbagekald adgang"
       undo_revoke_access: "Fortryd Tilbagekald adgang"
       api_approved: "Godkendt:"
@@ -4443,6 +4454,64 @@ da:
           title: "Om dit websted"
         developer:
           title: "Udvikler"
+        mcp:
+          tabs:
+            access: "Adgang"
+            activity: "Aktivitet"
+          overview:
+            status: "Status"
+          access:
+            title: "Adgang"
+            group: "Gruppe"
+            groups: "Grupper"
+            actions: "Handlinger"
+            edit: "Rediger"
+            delete: "Slet"
+          primitives:
+            group_by_options:
+              provider: "Udbyder"
+              kind: "Type"
+            provider: "Udbyder"
+            kind: "Type"
+            scopes: "Anvendelsesområder"
+          clients:
+            actions: "Handlinger"
+            block: "Blokér"
+            presets:
+              custom: "Tilpasset"
+          authorizations:
+            user: "Bruger"
+            status: "Status"
+            actions: "Handlinger"
+          activity:
+            time: "Tidspunkt"
+            user: "Bruger"
+            duration: "Varighed"
+          values:
+            server_status:
+              disabled: "Deaktiveret"
+            client_trust:
+              approved: "Godkendt"
+            authorization_status:
+              active: "Aktiv"
+              revoked: "Tilbagekaldt"
+            activity_outcome:
+              success: "Succes"
+              error: "Fejl"
+            primitive_state:
+              enabled: "Aktiveret"
+              disabled: "Deaktiveret"
+            primitive_kind:
+              all: "Alle typer"
+              resource: "Ressource"
+            primitive_risk:
+              read: "Læs kun"
+              moderation: "Moderation"
+            filter:
+              all: "Alle"
+          never: "Aldrig"
+          actions:
+            revoke: "Tilbagekald"
         experimental:
           title: "Eksperimentel"
         emojis:

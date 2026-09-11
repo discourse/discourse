@@ -40,9 +40,9 @@ export default class MergeUsersProgress extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.user.merge.progress.title"}}
-      @dismissable={{false}}
       @closeModal={{@closeModal}}
+      @dismissable={{false}}
+      @title={{i18n "admin.user.merge.progress.title"}}
     >
       <:body>
         {{this.message}}

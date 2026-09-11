@@ -145,6 +145,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           customer_id: "y",
         )
       end
+
       context "when not showing contributors" do
         it "returns nothing if not set to show contributors" do
           SiteSetting.discourse_subscriptions_campaign_show_contributors = false

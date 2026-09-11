@@ -25,11 +25,11 @@ export default class DBreadcrumbsItem extends Component {
     return <template>
       <li ...attributes>
         {{#if route}}
-          <LinkTo @route={{route}} class={{@linkClass}}>
+          <LinkTo class={{@linkClass}} @route={{route}}>
             {{label}}
           </LinkTo>
         {{else}}
-          <a href={{getURL path}} class={{@linkClass}}>
+          <a class={{@linkClass}} href={{getURL path}}>
             {{label}}
           </a>
         {{/if}}

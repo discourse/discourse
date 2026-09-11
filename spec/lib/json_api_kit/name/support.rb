@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+RSpec.shared_examples "a name" do
+  describe "#convert" do
+    it "returns the name with the converted value" do
+      expect(name.convert(&:upcase)).to eq(name.with(value: name.value.upcase))
+    end
+  end
+
+  describe "#to_s" do
+    it "returns the value" do
+      expect(name.to_s).to eq(name.value)
+    end
+  end
+end

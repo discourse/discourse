@@ -15,13 +15,27 @@ RSpec.describe Jobs::CreateUserReviewable do
     expect(reviewable.payload["email"]).to eq(user.email)
   end
 
-  it "should not raise an error if there is a reviewable already" do
+  it "does not raise an error when a reviewable already exists" do
     SiteSetting.must_approve_users = true
     described_class.new.execute(user_id: user.id)
     described_class.new.execute(user_id: user.id)
 
     reviewable = Reviewable.find_by(target: user)
     expect(reviewable.reviewable_scores.size).to eq(1)
+  end
+
+  it "shows staff the current email when a user returns to the review queue" do
+    SiteSetting.must_approve_users = true
+    described_class.new.execute(user_id: user.id)
+    reviewable = Reviewable.find_by(target: user)
+    reviewable.update!(status: Reviewable.statuses[:approved])
+
+    user.primary_email.update!(email: "replacement@example.com")
+    described_class.new.execute(user_id: user.id)
+
+    reviewable.reload
+    expect(reviewable).to be_pending
+    expect(reviewable.payload["email"]).to eq("replacement@example.com")
   end
 
   describe "reasons" do

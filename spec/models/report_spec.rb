@@ -364,7 +364,7 @@ RSpec.describe Report do
     let(:report) { Report.find("page_view_legacy_total_reqs") }
 
     context "with no data" do
-      it "works" do
+      it "returns no legacy page-view requests" do
         expect(report.data).to be_empty
       end
     end
@@ -407,7 +407,7 @@ RSpec.describe Report do
     let(:report) { Report.find("page_view_total_reqs") }
 
     context "with no data" do
-      it "works" do
+      it "returns no page-view requests" do
         expect(report.data).to be_empty
       end
     end
@@ -1472,7 +1472,7 @@ RSpec.describe Report do
     let(:user) { Fabricate(:user) }
 
     context "with data" do
-      it "it works" do
+      it "returns each user's flagging ratio" do
         topic = Fabricate(:topic, user: user)
         2.times do
           post_disagreed = Fabricate(:post, topic: topic, user: user)
@@ -1510,7 +1510,7 @@ RSpec.describe Report do
     let(:robin) { Fabricate(:user, username: "robin") }
 
     context "with data" do
-      it "works" do
+      it "returns suspicious logins in reverse chronological order" do
         SiteSetting.verbose_auth_token_logging = true
 
         UserAuthToken.log(action: "suspicious", user_id: joffrey.id, created_at: 2.hours.ago)
@@ -1533,7 +1533,7 @@ RSpec.describe Report do
     let(:james) { Fabricate(:user, username: "james") }
 
     context "with data" do
-      it "works" do
+      it "returns administrator login details" do
         freeze_time_safe
 
         ip = [81, 2, 69, 142]
@@ -1600,7 +1600,7 @@ RSpec.describe Report do
         )
       end
 
-      it "works" do
+      it "returns upload details" do
         expect(report.data.length).to eq(2)
         expect_uploads_report_data_to_be_equal(report.data, khalil, khalil_upload)
         expect_uploads_report_data_to_be_equal(report.data, tarek, tarek_upload)
@@ -1635,7 +1635,7 @@ RSpec.describe Report do
         Fabricate(:ignored_user, user: tarek, ignored_user: matt)
       end
 
-      it "works" do
+      it "returns ignored-user counts" do
         expect(report.data.length).to eq(2)
 
         expect_ignored_users_report_data_to_be_equal(report.data, john, 1, 0)
@@ -1648,7 +1648,7 @@ RSpec.describe Report do
           Fabricate(:muted_user, user: tarek, muted_user: matt)
         end
 
-        it "works" do
+        it "returns ignore and mute counts" do
           expect(report.data.length).to eq(2)
           expect_ignored_users_report_data_to_be_equal(report.data, john, 1, 1)
           expect_ignored_users_report_data_to_be_equal(report.data, matt, 1, 1)
@@ -1680,7 +1680,7 @@ RSpec.describe Report do
     let(:reports) { Report.find("consolidated_page_views_browser_detection") }
 
     context "with no data" do
-      it "works" do
+      it "returns empty browser-detection series" do
         reports.data.each { |report| expect(report[:data]).to be_empty }
       end
     end
@@ -1699,7 +1699,7 @@ RSpec.describe Report do
         CachedCounting.disable
       end
 
-      it "works" do
+      it "returns consolidated browser-detection data" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
         6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
@@ -1792,7 +1792,7 @@ RSpec.describe Report do
     let(:reports) { Report.find("site_traffic") }
 
     context "with no data" do
-      it "works" do
+      it "returns empty site-traffic series" do
         reports.data.each { |report| expect(report[:data]).to be_empty }
       end
     end
@@ -1902,7 +1902,7 @@ RSpec.describe Report do
     let(:reports) { Report.find("consolidated_page_views") }
 
     context "with no data" do
-      it "works" do
+      it "returns empty page-view series" do
         reports.data.each { |report| expect(report[:data]).to be_empty }
       end
     end
@@ -1920,7 +1920,7 @@ RSpec.describe Report do
         CachedCounting.disable
       end
 
-      it "works" do
+      it "returns consolidated page-view data" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in) }
         ApplicationRequest.increment!(:page_view_anon)
@@ -1952,7 +1952,7 @@ RSpec.describe Report do
     let(:reports) { Report.find("consolidated_api_requests") }
 
     context "with no data" do
-      it "works" do
+      it "returns empty API-request series" do
         reports.data.each { |report| expect(report[:data]).to be_empty }
       end
     end
@@ -1969,7 +1969,7 @@ RSpec.describe Report do
         CachedCounting.disable
       end
 
-      it "works" do
+      it "returns consolidated API-request data" do
         2.times { ApplicationRequest.increment!(:api) }
         ApplicationRequest.increment!(:user_api)
 
@@ -1996,7 +1996,7 @@ RSpec.describe Report do
     let(:reports) { Report.find("trust_level_growth") }
 
     context "with no data" do
-      it "works" do
+      it "returns empty trust-level series" do
         reports.data.each { |report| expect(report[:data]).to be_empty }
       end
     end
@@ -2020,7 +2020,7 @@ RSpec.describe Report do
         )
       end
 
-      it "works" do
+      it "returns trust-level growth data" do
         tl1_reached = reports.data.find { |r| r[:req] == "tl1_reached" }
         tl2_reached = reports.data.find { |r| r[:req] == "tl2_reached" }
         tl3_reached = reports.data.find { |r| r[:req] == "tl3_reached" }
@@ -2108,7 +2108,7 @@ RSpec.describe Report do
 
   describe "top_uploads" do
     context "with no data" do
-      it "works" do
+      it "returns no uploads" do
         report = Report.find("top_uploads")
 
         expect(report.data).to be_empty
@@ -2119,7 +2119,7 @@ RSpec.describe Report do
       fab!(:jpg_upload) { Fabricate(:upload, extension: :jpg) }
       fab!(:png_upload) { Fabricate(:upload, extension: :png) }
 
-      it "works" do
+      it "returns uploads grouped by extension" do
         report = Report.find("top_uploads")
 
         expect(report.data.length).to eq(2)
@@ -2322,7 +2322,7 @@ RSpec.describe Report do
         )
       end
 
-      it "works" do
+      it "returns topic view statistics" do
         expect(report.data.length).to eq(2)
         expect(report.data[0]).to include(
           topic_id: topic_2.id,

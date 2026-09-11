@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  mcp:
+    oauth:
+      deny: "Avslå"
+      approve: "Autoriser"
   llms_txt:
     sections:
       optional: "Valgfritt"
@@ -1455,8 +1459,6 @@ nb_NO:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      delete_post:
-        complete: "Post slettet"
       delete_user:
         complete: "Bruker slettet"
   fallback_username: "bruker"

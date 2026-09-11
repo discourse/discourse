@@ -280,8 +280,8 @@ module(
         <template>
           <FormComposer
             @id="field-1"
-            @value={{this.initialValue}}
             @onChange={{this.onChange}}
+            @value={{this.initialValue}}
           />
         </template>
       );
@@ -313,8 +313,8 @@ module(
         <template>
           <FormComposer
             @id="field-1"
-            @value={{this.initialValue}}
             @onChange={{noop}}
+            @value={{this.initialValue}}
           />
         </template>
       );
@@ -381,8 +381,8 @@ module(
         <template>
           <FormComposer
             @id="field-1"
-            @value={{this.initialValue}}
             @onChange={{noop}}
+            @value={{this.initialValue}}
           />
         </template>
       );
@@ -401,8 +401,8 @@ module(
       await render(
         <template>
           <FormComposer
-            @id="field-1"
             @attributes={{hash label="Description"}}
+            @id="field-1"
             @onChange={{noop}}
           />
         </template>
@@ -425,8 +425,8 @@ module(
         <template>
           <FormComposer
             @id="field-1"
-            @validations={{hash required=true}}
             @onChange={{noop}}
+            @validations={{hash required=true}}
           />
         </template>
       );
@@ -478,8 +478,8 @@ module(
         <template>
           <FormComposer
             @id="field-1"
-            @value={{this.initialValue}}
             @onChange={{this.onChange}}
+            @value={{this.initialValue}}
           />
         </template>
       );

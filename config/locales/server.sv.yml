@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 sv:
+  mcp:
+    oauth:
+      deny: "Neka"
+      approve: "Godkänn"
   llms_txt:
     sections:
       optional: "Valfritt"
@@ -3981,13 +3985,6 @@ sv:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      delete_post:
-        title: "Radera inlägg"
-        complete: "Inlägg raderat"
-      hide_post:
-        title: "Dölj inlägg"
-      restore_post:
-        title: "Återställ inlägg"
       silence_user:
         title: "Tysta användare"
       suspend_user:

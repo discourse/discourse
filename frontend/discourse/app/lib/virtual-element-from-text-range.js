@@ -3,6 +3,14 @@ class VirtualElementFromTextRange {
     this.updateRect();
   }
 
+  get clientWidth() {
+    return this.rect.width;
+  }
+
+  get clientHeight() {
+    return this.rect.height;
+  }
+
   updateRect() {
     const selection = document.getSelection();
 
@@ -32,14 +40,6 @@ class VirtualElementFromTextRange {
 
   getClientRects() {
     return this.range.getClientRects();
-  }
-
-  get clientWidth() {
-    return this.rect.width;
-  }
-
-  get clientHeight() {
-    return this.rect.height;
   }
 }
 

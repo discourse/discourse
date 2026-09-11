@@ -45,8 +45,8 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def bio_cooked
-    if object.automatic
-      return I18n.t("groups.default_descriptions.#{Group::AUTO_GROUP_IDS[object.id]}")
+    if auto_group_name = Group::AUTO_GROUP_IDS[object.id]
+      return I18n.t("groups.default_descriptions.#{auto_group_name}")
     end
 
     object.bio_cooked

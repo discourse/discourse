@@ -6,10 +6,10 @@ const LoginRequired = <template>
   <h3>{{i18n "discourse_subscriptions.subscribe.unauthenticated"}}</h3>
 
   <DButton
-    @label="log_in"
+    class="btn btn-primary login-required subscriptions"
     @action={{routeAction "showLogin"}}
     @icon="user"
-    class="btn btn-primary login-required subscriptions"
+    @label="log_in"
   />
 </template>;
 
