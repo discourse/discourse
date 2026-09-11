@@ -226,10 +226,16 @@ module DiscourseDataExplorer
     private_class_method :bind_oid_hints
 
     def self.placeholders_for(value, binds, oid_hint)
+      # A fixed NULL token preserves the old literal's contextual type inference
+      # without interpolating any user-provided text into the SQL.
+      return "NULL" if value.nil?
+
       if value.is_a?(Array)
         return "NULL" if value.empty?
         value
           .map do |element|
+            next "NULL" if element.nil?
+
             binds << bind_for(element, oid_hint)
             "$#{binds.length}"
           end
@@ -253,8 +259,6 @@ module DiscourseDataExplorer
         { value: value.to_s, type: 701 }
       when true, false
         { value: value.to_s, type: 16 }
-      when nil
-        { value: nil, type: oid_hint || 0 }
       when Time
         { value: value.utc.iso8601, type: oid_hint || 0 }
       else
