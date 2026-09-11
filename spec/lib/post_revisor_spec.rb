@@ -298,8 +298,8 @@ describe PostRevisor do
     end
 
     describe "when `create_post_for_category_and_tag_changes` site setting is enabled" do
-      fab!(:tag1) { Fabricate(:tag, name: "First tag") }
-      fab!(:tag2) { Fabricate(:tag, name: "Second tag") }
+      fab!(:tag1) { Fabricate(:tag, name: "first-tag") }
+      fab!(:tag2) { Fabricate(:tag, name: "second-tag") }
 
       before do
         SiteSetting.create_post_for_category_and_tag_changes = true
@@ -343,6 +343,17 @@ describe PostRevisor do
 
         expect(post.topic.ordered_posts.last.raw).to eq(
           I18n.t("topic_tag_changed.removed", removed: "##{tag1.name}, ##{tag2.name}"),
+        )
+      end
+
+      it "suffixes a tag hashtag that collides with a category slug" do
+        Fabricate(:category, slug: tag1.name)
+        post.topic.update!(tags: [])
+
+        post_revisor.revise!(admin, tags: [tag1.name])
+
+        expect(post.topic.ordered_posts.last.raw).to eq(
+          I18n.t("topic_tag_changed.added", added: "##{tag1.name}::tag"),
         )
       end
 
