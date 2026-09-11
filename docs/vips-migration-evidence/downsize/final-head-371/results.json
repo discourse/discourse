@@ -1,0 +1,5852 @@
+{
+  "head": "371cc929bd1502a088fbcc00b28dd677bfc81d4e",
+  "iterations": 101,
+  "memory_iterations": 101,
+  "memory_poll_seconds": 0.001,
+  "image": "discourse/base:2.0.20260812-0036",
+  "digest": "sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "ruby": "ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [x86_64-linux]",
+  "libvips": "8.18.4",
+  "results": [
+    {
+      "backend": "imagemagick",
+      "sample": {
+        "name": "raster-percentage",
+        "input": "percentage.png",
+        "input_format": "png",
+        "output_format": "png",
+        "geometry": "50%"
+      },
+      "output": "raster-percentage-imagemagick.png",
+      "dimensions": [
+        51,
+        26
+      ],
+      "bytes": 1281,
+      "sha256": "52aeb58ef777bd270abcec832e9cef7cdacd9c24e8a0328fb876a652137c6c7b",
+      "median_ms": 38.98658603429794,
+      "timings_ms": [
+        39.91114720702171,
+        44.88862631842494,
+        39.111421909183264,
+        37.07679780200124,
+        38.18123694509268,
+        39.64971099048853,
+        36.09555400907993,
+        39.83763698488474,
+        38.46564516425133,
+        36.143635865300894,
+        34.78047298267484,
+        34.1758499853313,
+        32.196730840951204,
+        30.73622891679406,
+        44.94780395179987,
+        39.562777150422335,
+        37.2942597605288,
+        35.05203407257795,
+        35.49910709261894,
+        70.66429499536753,
+        39.72285706549883,
+        38.16118370741606,
+        39.65391963720322,
+        37.7958626486361,
+        33.00880687311292,
+        38.556876592338085,
+        39.95902789756656,
+        36.52351861819625,
+        38.536869920790195,
+        39.312510285526514,
+        36.977163050323725,
+        36.60590294748545,
+        39.24179915338755,
+        35.581867210567,
+        35.6885576620698,
+        39.497972931712866,
+        37.937222979962826,
+        41.22193111106753,
+        39.16571522131562,
+        38.44120306894183,
+        40.63868708908558,
+        38.22244517505169,
+        37.43854071944952,
+        41.967254132032394,
+        36.02152271196246,
+        39.01585377752781,
+        39.402601309120655,
+        47.9895961470902,
+        40.74036609381437,
+        36.67081007733941,
+        39.79146294295788,
+        37.220532074570656,
+        38.62514207139611,
+        53.65466792136431,
+        39.96923100203276,
+        38.00645098090172,
+        39.300926961004734,
+        40.56626325473189,
+        39.88169087097049,
+        41.13746527582407,
+        41.842274367809296,
+        37.95699216425419,
+        47.67716722562909,
+        47.23897809162736,
+        34.17128697037697,
+        33.43499172478914,
+        39.63175788521767,
+        37.41846280172467,
+        37.25457098335028,
+        37.06128662452102,
+        37.60936111211777,
+        37.66927216202021,
+        38.98658603429794,
+        38.545499090105295,
+        37.04083617776632,
+        39.01038970798254,
+        38.94734662026167,
+        37.927539087831974,
+        38.38880406692624,
+        38.18454872816801,
+        43.15165802836418,
+        48.374088015407324,
+        38.234204053878784,
+        43.46117004752159,
+        36.93609405308962,
+        53.55460522696376,
+        40.42572295293212,
+        37.72691870108247,
+        41.53122799471021,
+        40.060048922896385,
+        41.201512794941664,
+        38.30300783738494,
+        39.6776907145977,
+        39.879909716546535,
+        42.6219068467617,
+        40.753006003797054,
+        39.88625528290868,
+        42.267302982509136,
+        37.68345294520259,
+        39.726931136101484,
+        40.00747296959162
+      ],
+      "median_incremental_peak_mib": 3.30078125,
+      "memory": [
+        {
+          "baseline_mib": 38.01953125,
+          "peak_mib": 41.5546875,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 38.125,
+          "peak_mib": 41.4375,
+          "incremental_peak_mib": 3.3125,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 38.2578125,
+          "peak_mib": 41.609375,
+          "incremental_peak_mib": 3.3515625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 38.42578125,
+          "peak_mib": 41.671875,
+          "incremental_peak_mib": 3.24609375,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 38.23828125,
+          "peak_mib": 41.5390625,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 38.36328125,
+          "peak_mib": 41.6640625,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 46
+        },
+        {
+          "baseline_mib": 38.48046875,
+          "peak_mib": 41.77734375,
+          "incremental_peak_mib": 3.296875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 38.34765625,
+          "peak_mib": 41.640625,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 38.21875,
+          "peak_mib": 41.7734375,
+          "incremental_peak_mib": 3.5546875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 38.33203125,
+          "peak_mib": 41.6171875,
+          "incremental_peak_mib": 3.28515625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 38.44921875,
+          "peak_mib": 41.72265625,
+          "incremental_peak_mib": 3.2734375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 38.30078125,
+          "peak_mib": 41.58984375,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.40625,
+          "peak_mib": 41.69921875,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.515625,
+          "peak_mib": 41.7890625,
+          "incremental_peak_mib": 3.2734375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 38.37109375,
+          "peak_mib": 41.8984375,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 38.47265625,
+          "peak_mib": 41.984375,
+          "incremental_peak_mib": 3.51171875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 38.59375,
+          "peak_mib": 41.89453125,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 38.46875,
+          "peak_mib": 42.06640625,
+          "incremental_peak_mib": 3.59765625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 38.59375,
+          "peak_mib": 41.88671875,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 38.45703125,
+          "peak_mib": 41.984375,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 38.80078125,
+          "peak_mib": 42.109375,
+          "incremental_peak_mib": 3.30859375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 38.68359375,
+          "peak_mib": 41.73046875,
+          "incremental_peak_mib": 3.046875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 38.5546875,
+          "peak_mib": 42.10546875,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 38.67578125,
+          "peak_mib": 41.96875,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 38.54296875,
+          "peak_mib": 41.8359375,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 38.6640625,
+          "peak_mib": 41.96875,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 38.7890625,
+          "peak_mib": 41.875,
+          "incremental_peak_mib": 3.0859375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 38.69140625,
+          "peak_mib": 41.95703125,
+          "incremental_peak_mib": 3.265625,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.77734375,
+          "peak_mib": 42.0703125,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.64453125,
+          "peak_mib": 42.1875,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.76171875,
+          "peak_mib": 42.05078125,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.87109375,
+          "peak_mib": 42.16796875,
+          "incremental_peak_mib": 3.296875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 38.7421875,
+          "peak_mib": 42.28125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.59765625,
+          "peak_mib": 42.14453125,
+          "incremental_peak_mib": 3.546875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.7109375,
+          "peak_mib": 42.2578125,
+          "incremental_peak_mib": 3.546875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.828125,
+          "peak_mib": 41.62109375,
+          "incremental_peak_mib": 2.79296875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.94921875,
+          "peak_mib": 42.29296875,
+          "incremental_peak_mib": 3.34375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 38.875,
+          "peak_mib": 42.171875,
+          "incremental_peak_mib": 3.296875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 39.0,
+          "peak_mib": 41.98828125,
+          "incremental_peak_mib": 2.98828125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.828125,
+          "peak_mib": 42.35546875,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 38.671875,
+          "peak_mib": 42.22265625,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 38.78125,
+          "peak_mib": 42.08203125,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 38.8984375,
+          "peak_mib": 42.1953125,
+          "incremental_peak_mib": 3.296875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 38.76171875,
+          "peak_mib": 42.30078125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 38.87890625,
+          "peak_mib": 42.17578125,
+          "incremental_peak_mib": 3.296875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 38.73828125,
+          "peak_mib": 42.04296875,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 38.625,
+          "peak_mib": 42.15234375,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 38.98828125,
+          "peak_mib": 42.27734375,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.84375,
+          "peak_mib": 42.140625,
+          "incremental_peak_mib": 3.296875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.703125,
+          "peak_mib": 42.2890625,
+          "incremental_peak_mib": 3.5859375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.875,
+          "peak_mib": 42.3828125,
+          "incremental_peak_mib": 3.5078125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.9609375,
+          "peak_mib": 42.16015625,
+          "incremental_peak_mib": 3.19921875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 38.74609375,
+          "peak_mib": 42.29296875,
+          "incremental_peak_mib": 3.546875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 38.8671875,
+          "peak_mib": 42.17578125,
+          "incremental_peak_mib": 3.30859375,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 38.73828125,
+          "peak_mib": 42.3125,
+          "incremental_peak_mib": 3.57421875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.13671875,
+          "peak_mib": 42.19140625,
+          "incremental_peak_mib": 3.0546875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 39.03125,
+          "peak_mib": 42.2890625,
+          "incremental_peak_mib": 3.2578125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.86328125,
+          "peak_mib": 42.3984375,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 38.97265625,
+          "peak_mib": 42.28125,
+          "incremental_peak_mib": 3.30859375,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 39.09765625,
+          "peak_mib": 42.25,
+          "incremental_peak_mib": 3.15234375,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 38.828125,
+          "peak_mib": 42.37890625,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 38.9609375,
+          "peak_mib": 42.5078125,
+          "incremental_peak_mib": 3.546875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 39.08984375,
+          "peak_mib": 42.37109375,
+          "incremental_peak_mib": 3.28125,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 38.94921875,
+          "peak_mib": 42.484375,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 39.0546875,
+          "peak_mib": 42.35546875,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 39.19140625,
+          "peak_mib": 42.2265625,
+          "incremental_peak_mib": 3.03515625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 39.0546875,
+          "peak_mib": 42.34765625,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 38.9296875,
+          "peak_mib": 42.21875,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 39.04296875,
+          "peak_mib": 42.32421875,
+          "incremental_peak_mib": 3.28125,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 39.1484375,
+          "peak_mib": 42.453125,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 39.02734375,
+          "peak_mib": 42.31640625,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.1484375,
+          "peak_mib": 42.421875,
+          "incremental_peak_mib": 3.2734375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 39.00390625,
+          "peak_mib": 42.5390625,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 39.10546875,
+          "peak_mib": 42.40625,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 38.9765625,
+          "peak_mib": 42.265625,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.09375,
+          "peak_mib": 42.375,
+          "incremental_peak_mib": 3.28125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.9375,
+          "peak_mib": 42.23828125,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 38.81640625,
+          "peak_mib": 42.5859375,
+          "incremental_peak_mib": 3.76953125,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 38.91015625,
+          "peak_mib": 42.1875,
+          "incremental_peak_mib": 3.27734375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.01953125,
+          "peak_mib": 42.5546875,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.12890625,
+          "peak_mib": 42.44921875,
+          "incremental_peak_mib": 3.3203125,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.0234375,
+          "peak_mib": 42.30859375,
+          "incremental_peak_mib": 3.28515625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 38.88671875,
+          "peak_mib": 42.4140625,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 39.24609375,
+          "peak_mib": 42.5390625,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.11328125,
+          "peak_mib": 42.41015625,
+          "incremental_peak_mib": 3.296875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 38.98046875,
+          "peak_mib": 42.5234375,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.08984375,
+          "peak_mib": 42.37890625,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 39.19140625,
+          "peak_mib": 42.47265625,
+          "incremental_peak_mib": 3.28125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 39.046875,
+          "peak_mib": 42.58203125,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 39.16015625,
+          "peak_mib": 42.49609375,
+          "incremental_peak_mib": 3.3359375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 39.07421875,
+          "peak_mib": 42.3125,
+          "incremental_peak_mib": 3.23828125,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 39.15234375,
+          "peak_mib": 42.484375,
+          "incremental_peak_mib": 3.33203125,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 39.31640625,
+          "peak_mib": 42.5546875,
+          "incremental_peak_mib": 3.23828125,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 39.1171875,
+          "peak_mib": 42.46484375,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 39.02734375,
+          "peak_mib": 42.50390625,
+          "incremental_peak_mib": 3.4765625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 39.33203125,
+          "peak_mib": 42.3671875,
+          "incremental_peak_mib": 3.03515625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.203125,
+          "peak_mib": 42.4921875,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 39.0625,
+          "peak_mib": 42.58984375,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.40625,
+          "peak_mib": 42.6875,
+          "incremental_peak_mib": 3.28125,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.25,
+          "peak_mib": 42.796875,
+          "incremental_peak_mib": 3.546875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 39.36328125,
+          "peak_mib": 42.75390625,
+          "incremental_peak_mib": 3.390625,
+          "samples": 39
+        }
+      ]
+    },
+    {
+      "backend": "imagemagick",
+      "sample": {
+        "name": "raster-bounding-box",
+        "input": "bounding.png",
+        "input_format": "png",
+        "output_format": "png",
+        "geometry": "100x100>"
+      },
+      "output": "raster-bounding-box-imagemagick.png",
+      "dimensions": [
+        50,
+        100
+      ],
+      "bytes": 1852,
+      "sha256": "f5b5179ba1fcbeb29ea6bec26a5c6c085c2452c57a8f516e902566bbafb0ef14",
+      "median_ms": 45.410821214318275,
+      "timings_ms": [
+        40.5315519310534,
+        42.972260154783726,
+        52.95910686254501,
+        50.33758096396923,
+        42.06982580944896,
+        41.66953358799219,
+        41.05519596487284,
+        49.66396512463689,
+        49.49806025251746,
+        50.73900707066059,
+        42.48369811102748,
+        41.06088727712631,
+        47.8854151442647,
+        46.291283797472715,
+        40.267427917569876,
+        45.81329273059964,
+        41.13031504675746,
+        41.91080806776881,
+        39.940034970641136,
+        41.85223300009966,
+        49.86852314323187,
+        42.962513864040375,
+        38.86847058311105,
+        48.94046485424042,
+        42.27584460750222,
+        50.2293324097991,
+        49.899345729500055,
+        42.39241499453783,
+        39.04807101935148,
+        47.8726290166378,
+        40.82824010401964,
+        43.881784193217754,
+        39.662548806518316,
+        39.47519091889262,
+        42.23422100767493,
+        50.1191639341414,
+        45.68870039656758,
+        39.534343872219324,
+        41.682076174765825,
+        51.854688208550215,
+        43.64305920898914,
+        40.14921188354492,
+        40.09685292840004,
+        44.94669288396835,
+        45.931965578347445,
+        46.245650853961706,
+        48.90275001525879,
+        46.60221002995968,
+        46.92376218736172,
+        47.64614487066865,
+        48.15085371956229,
+        42.236090172082186,
+        42.78703359887004,
+        45.81070877611637,
+        41.686630342155695,
+        41.29772540181875,
+        41.9925469905138,
+        43.34069089964032,
+        41.83427523821592,
+        43.87154383584857,
+        47.93542064726353,
+        48.842818941920996,
+        48.61154407262802,
+        50.33682705834508,
+        47.062809113413095,
+        46.224189922213554,
+        48.723447136580944,
+        47.48191172257066,
+        47.2954330034554,
+        49.52428163960576,
+        45.83488730713725,
+        49.90534810349345,
+        43.854320887476206,
+        41.78899293765426,
+        45.410821214318275,
+        46.334908809512854,
+        47.383563593029976,
+        46.53342626988888,
+        47.497041057795286,
+        44.05555780977011,
+        51.913303788751364,
+        51.587373949587345,
+        44.906183145940304,
+        43.766532093286514,
+        44.764924328774214,
+        43.33217116072774,
+        39.7860836237669,
+        41.851967107504606,
+        45.432223938405514,
+        48.87119121849537,
+        44.599748216569424,
+        43.22166694328189,
+        42.44860587641597,
+        45.88834894821048,
+        44.378716964274645,
+        48.63972682505846,
+        46.95546068251133,
+        46.02250596508384,
+        48.69848769158125,
+        42.65637882053852,
+        49.15429977700114
+      ],
+      "median_incremental_peak_mib": 3.46875,
+      "memory": [
+        {
+          "baseline_mib": 39.7109375,
+          "peak_mib": 43.26171875,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 46
+        },
+        {
+          "baseline_mib": 39.72265625,
+          "peak_mib": 43.015625,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 39.73046875,
+          "peak_mib": 43.0234375,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 39.734375,
+          "peak_mib": 43.02734375,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 39.7421875,
+          "peak_mib": 43.26171875,
+          "incremental_peak_mib": 3.51953125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 39.73046875,
+          "peak_mib": 43.01171875,
+          "incremental_peak_mib": 3.28125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 39.7265625,
+          "peak_mib": 43.0078125,
+          "incremental_peak_mib": 3.28125,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.71875,
+          "peak_mib": 43.015625,
+          "incremental_peak_mib": 3.296875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 39.734375,
+          "peak_mib": 43.28125,
+          "incremental_peak_mib": 3.546875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 39.7265625,
+          "peak_mib": 43.3125,
+          "incremental_peak_mib": 3.5859375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.77734375,
+          "peak_mib": 43.046875,
+          "incremental_peak_mib": 3.26953125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 39.75390625,
+          "peak_mib": 43.03515625,
+          "incremental_peak_mib": 3.28125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 39.75,
+          "peak_mib": 43.26171875,
+          "incremental_peak_mib": 3.51171875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 39.73046875,
+          "peak_mib": 43.03515625,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.75,
+          "peak_mib": 42.96484375,
+          "incremental_peak_mib": 3.21484375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 39.6796875,
+          "peak_mib": 43.21875,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 39.94140625,
+          "peak_mib": 43.2421875,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 39.6953125,
+          "peak_mib": 43.23046875,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 39.69921875,
+          "peak_mib": 43.26953125,
+          "incremental_peak_mib": 3.5703125,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 39.71875,
+          "peak_mib": 43.2578125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 39.7265625,
+          "peak_mib": 43.26171875,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 39.71484375,
+          "peak_mib": 43.296875,
+          "incremental_peak_mib": 3.58203125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 39.7578125,
+          "peak_mib": 43.29296875,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.0,
+          "peak_mib": 43.29296875,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 39.75390625,
+          "peak_mib": 43.25390625,
+          "incremental_peak_mib": 3.5,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.7109375,
+          "peak_mib": 43.25,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 39.70703125,
+          "peak_mib": 43.30078125,
+          "incremental_peak_mib": 3.59375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 39.765625,
+          "peak_mib": 43.17578125,
+          "incremental_peak_mib": 3.41015625,
+          "samples": 51
+        },
+        {
+          "baseline_mib": 39.640625,
+          "peak_mib": 43.38671875,
+          "incremental_peak_mib": 3.74609375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 39.59375,
+          "peak_mib": 43.1328125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 39.84375,
+          "peak_mib": 43.140625,
+          "incremental_peak_mib": 3.296875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 39.83984375,
+          "peak_mib": 43.13671875,
+          "incremental_peak_mib": 3.296875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 39.6015625,
+          "peak_mib": 43.14453125,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.8671875,
+          "peak_mib": 43.17578125,
+          "incremental_peak_mib": 3.30859375,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 39.890625,
+          "peak_mib": 43.1796875,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 39.88671875,
+          "peak_mib": 43.42578125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 39.87890625,
+          "peak_mib": 43.16796875,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 47
+        },
+        {
+          "baseline_mib": 39.87109375,
+          "peak_mib": 43.6640625,
+          "incremental_peak_mib": 3.79296875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.1328125,
+          "peak_mib": 43.4375,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 40.1640625,
+          "peak_mib": 43.45703125,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 39.90625,
+          "peak_mib": 43.703125,
+          "incremental_peak_mib": 3.796875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.16015625,
+          "peak_mib": 43.45703125,
+          "incremental_peak_mib": 3.296875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.171875,
+          "peak_mib": 43.46484375,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.171875,
+          "peak_mib": 43.46875,
+          "incremental_peak_mib": 3.296875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 39.9296875,
+          "peak_mib": 43.46484375,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 39.9296875,
+          "peak_mib": 43.71484375,
+          "incremental_peak_mib": 3.78515625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.18359375,
+          "peak_mib": 43.45703125,
+          "incremental_peak_mib": 3.2734375,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 40.171875,
+          "peak_mib": 43.484375,
+          "incremental_peak_mib": 3.3125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.19921875,
+          "peak_mib": 43.4765625,
+          "incremental_peak_mib": 3.27734375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.19921875,
+          "peak_mib": 43.4921875,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.203125,
+          "peak_mib": 43.73828125,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 47
+        },
+        {
+          "baseline_mib": 40.203125,
+          "peak_mib": 43.75390625,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.20703125,
+          "peak_mib": 43.75390625,
+          "incremental_peak_mib": 3.546875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.21484375,
+          "peak_mib": 43.76953125,
+          "incremental_peak_mib": 3.5546875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.2265625,
+          "peak_mib": 43.5078125,
+          "incremental_peak_mib": 3.28125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.20703125,
+          "peak_mib": 43.25,
+          "incremental_peak_mib": 3.04296875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.20703125,
+          "peak_mib": 43.80859375,
+          "incremental_peak_mib": 3.6015625,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 40.26953125,
+          "peak_mib": 43.8046875,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 47
+        },
+        {
+          "baseline_mib": 40.2578125,
+          "peak_mib": 43.765625,
+          "incremental_peak_mib": 3.5078125,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.4765625,
+          "peak_mib": 43.74609375,
+          "incremental_peak_mib": 3.26953125,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.21875,
+          "peak_mib": 43.734375,
+          "incremental_peak_mib": 3.515625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.453125,
+          "peak_mib": 43.79296875,
+          "incremental_peak_mib": 3.33984375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.2578125,
+          "peak_mib": 43.75,
+          "incremental_peak_mib": 3.4921875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.20703125,
+          "peak_mib": 43.7890625,
+          "incremental_peak_mib": 3.58203125,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.25,
+          "peak_mib": 43.71875,
+          "incremental_peak_mib": 3.46875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.1796875,
+          "peak_mib": 43.7265625,
+          "incremental_peak_mib": 3.546875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 40.4296875,
+          "peak_mib": 43.71875,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.1875,
+          "peak_mib": 43.7265625,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 40.19140625,
+          "peak_mib": 43.71875,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.4296875,
+          "peak_mib": 43.7265625,
+          "incremental_peak_mib": 3.296875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.44921875,
+          "peak_mib": 43.73828125,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.4453125,
+          "peak_mib": 43.7421875,
+          "incremental_peak_mib": 3.296875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.1953125,
+          "peak_mib": 44.0078125,
+          "incremental_peak_mib": 3.8125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.4765625,
+          "peak_mib": 43.74609375,
+          "incremental_peak_mib": 3.26953125,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 40.45703125,
+          "peak_mib": 43.7421875,
+          "incremental_peak_mib": 3.28515625,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 40.203125,
+          "peak_mib": 43.95703125,
+          "incremental_peak_mib": 3.75390625,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 40.16015625,
+          "peak_mib": 43.75390625,
+          "incremental_peak_mib": 3.59375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.4609375,
+          "peak_mib": 43.92578125,
+          "incremental_peak_mib": 3.46484375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.38671875,
+          "peak_mib": 43.6796875,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.37109375,
+          "peak_mib": 43.65625,
+          "incremental_peak_mib": 3.28515625,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 40.359375,
+          "peak_mib": 43.65625,
+          "incremental_peak_mib": 3.296875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.3671875,
+          "peak_mib": 43.66015625,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 40.3671875,
+          "peak_mib": 43.65625,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 40.3671875,
+          "peak_mib": 43.890625,
+          "incremental_peak_mib": 3.5234375,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.59375,
+          "peak_mib": 43.8828125,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 40.3359375,
+          "peak_mib": 43.9140625,
+          "incremental_peak_mib": 3.578125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.6171875,
+          "peak_mib": 43.875,
+          "incremental_peak_mib": 3.2578125,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.3359375,
+          "peak_mib": 42.625,
+          "incremental_peak_mib": 2.2890625,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 40.3359375,
+          "peak_mib": 43.875,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.328125,
+          "peak_mib": 43.921875,
+          "incremental_peak_mib": 3.59375,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 40.38671875,
+          "peak_mib": 44.08203125,
+          "incremental_peak_mib": 3.6953125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.28515625,
+          "peak_mib": 43.828125,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.546875,
+          "peak_mib": 43.8359375,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 40.296875,
+          "peak_mib": 43.83984375,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.2890625,
+          "peak_mib": 44.08203125,
+          "incremental_peak_mib": 3.79296875,
+          "samples": 46
+        },
+        {
+          "baseline_mib": 40.53515625,
+          "peak_mib": 43.83203125,
+          "incremental_peak_mib": 3.296875,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 40.5546875,
+          "peak_mib": 43.84765625,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.30859375,
+          "peak_mib": 43.98828125,
+          "incremental_peak_mib": 3.6796875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.44921875,
+          "peak_mib": 43.9765625,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.43359375,
+          "peak_mib": 43.72265625,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.43359375,
+          "peak_mib": 43.9765625,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 37
+        }
+      ]
+    },
+    {
+      "backend": "imagemagick",
+      "sample": {
+        "name": "raster-pixel-area",
+        "input": "area.png",
+        "input_format": "png",
+        "output_format": "png",
+        "geometry": "1000@"
+      },
+      "output": "raster-pixel-area-imagemagick.png",
+      "dimensions": [
+        61,
+        16
+      ],
+      "bytes": 1373,
+      "sha256": "0bccd522df76a12ef3be65fb003c181d38f45ce80e2106e2f3bdcaafc2ba6fe8",
+      "median_ms": 43.228170834481716,
+      "timings_ms": [
+        49.28890196606517,
+        42.98236081376672,
+        40.53917899727821,
+        49.80977578088641,
+        39.15876103565097,
+        37.26820880547166,
+        40.28831096366048,
+        42.84927900880575,
+        42.91508300229907,
+        39.42299913614988,
+        42.74399112910032,
+        41.93003382533789,
+        42.20346221700311,
+        36.32758930325508,
+        38.59195997938514,
+        43.69971016421914,
+        50.670296885073185,
+        42.441124096512794,
+        48.80180163308978,
+        45.37547007203102,
+        44.30604726076126,
+        43.56719693168998,
+        38.516928907483816,
+        40.96699971705675,
+        47.37554024904966,
+        42.70639270544052,
+        42.36335027962923,
+        48.32336725667119,
+        42.279441840946674,
+        48.48228534683585,
+        45.89512199163437,
+        43.046674225479364,
+        43.57171198353171,
+        42.11017303168774,
+        44.747462030500174,
+        47.82733228057623,
+        49.988545011729,
+        38.4104922413826,
+        48.99993585422635,
+        47.66824608668685,
+        48.34081465378404,
+        44.16019981727004,
+        43.70905924588442,
+        47.19799989834428,
+        47.68900386989117,
+        43.5058968141675,
+        43.67530811578035,
+        52.12369514629245,
+        50.759308971464634,
+        42.896725703030825,
+        48.38906694203615,
+        47.435485292226076,
+        48.34143165498972,
+        54.152525030076504,
+        50.457817036658525,
+        54.98068407177925,
+        53.9539628662169,
+        48.15389774739742,
+        41.32475098595023,
+        43.31572074443102,
+        53.97273879498243,
+        44.00890786200762,
+        52.188721019774675,
+        44.45048002526164,
+        41.94809589534998,
+        51.04543408378959,
+        48.94997365772724,
+        46.40849260613322,
+        40.73194460943341,
+        41.818578727543354,
+        49.48224499821663,
+        41.8059010989964,
+        42.43074310943484,
+        39.98207487165928,
+        43.228170834481716,
+        44.3376530893147,
+        42.83412406221032,
+        37.54260716959834,
+        39.63551204651594,
+        39.605153258889914,
+        36.60717699676752,
+        39.66469503939152,
+        40.17792176455259,
+        35.42844206094742,
+        41.84160381555557,
+        39.09326996654272,
+        40.52757518365979,
+        40.75404303148389,
+        38.55225909501314,
+        37.336680106818676,
+        42.29909414425492,
+        47.25123289972544,
+        52.77938395738602,
+        43.242506217211485,
+        39.74528517574072,
+        43.749693781137466,
+        47.81286092475057,
+        41.42921604216099,
+        40.35172099247575,
+        38.850230164825916,
+        38.96507201716304
+      ],
+      "median_incremental_peak_mib": 3.34765625,
+      "memory": [
+        {
+          "baseline_mib": 40.60546875,
+          "peak_mib": 44.2109375,
+          "incremental_peak_mib": 3.60546875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.7890625,
+          "peak_mib": 43.89453125,
+          "incremental_peak_mib": 3.10546875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.73046875,
+          "peak_mib": 43.890625,
+          "incremental_peak_mib": 3.16015625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.71484375,
+          "peak_mib": 44.0703125,
+          "incremental_peak_mib": 3.35546875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.890625,
+          "peak_mib": 43.99609375,
+          "incremental_peak_mib": 3.10546875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.8203125,
+          "peak_mib": 44.125,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 139
+        },
+        {
+          "baseline_mib": 40.7109375,
+          "peak_mib": 44.07421875,
+          "incremental_peak_mib": 3.36328125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.65625,
+          "peak_mib": 44.06640625,
+          "incremental_peak_mib": 3.41015625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.64453125,
+          "peak_mib": 43.9375,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.51953125,
+          "peak_mib": 44.125,
+          "incremental_peak_mib": 3.60546875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.7109375,
+          "peak_mib": 44.07421875,
+          "incremental_peak_mib": 3.36328125,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 40.65234375,
+          "peak_mib": 43.984375,
+          "incremental_peak_mib": 3.33203125,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 40.57421875,
+          "peak_mib": 44.1875,
+          "incremental_peak_mib": 3.61328125,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 40.75390625,
+          "peak_mib": 44.12109375,
+          "incremental_peak_mib": 3.3671875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.703125,
+          "peak_mib": 44.0625,
+          "incremental_peak_mib": 3.359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.6484375,
+          "peak_mib": 44.2421875,
+          "incremental_peak_mib": 3.59375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.828125,
+          "peak_mib": 43.93359375,
+          "incremental_peak_mib": 3.10546875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 40.75390625,
+          "peak_mib": 43.85546875,
+          "incremental_peak_mib": 3.1015625,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 40.69140625,
+          "peak_mib": 44.3046875,
+          "incremental_peak_mib": 3.61328125,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 40.625,
+          "peak_mib": 43.984375,
+          "incremental_peak_mib": 3.359375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 40.8125,
+          "peak_mib": 43.9140625,
+          "incremental_peak_mib": 3.1015625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.75,
+          "peak_mib": 43.84375,
+          "incremental_peak_mib": 3.09375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.68359375,
+          "peak_mib": 44.1015625,
+          "incremental_peak_mib": 3.41796875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.671875,
+          "peak_mib": 43.98828125,
+          "incremental_peak_mib": 3.31640625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.82421875,
+          "peak_mib": 43.98046875,
+          "incremental_peak_mib": 3.15625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.82421875,
+          "peak_mib": 44.12109375,
+          "incremental_peak_mib": 3.296875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.7109375,
+          "peak_mib": 44.06640625,
+          "incremental_peak_mib": 3.35546875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.65234375,
+          "peak_mib": 44.0,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.5859375,
+          "peak_mib": 44.17578125,
+          "incremental_peak_mib": 3.58984375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.76171875,
+          "peak_mib": 44.109375,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.6875,
+          "peak_mib": 44.0234375,
+          "incremental_peak_mib": 3.3359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.8515625,
+          "peak_mib": 43.94921875,
+          "incremental_peak_mib": 3.09765625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.5390625,
+          "peak_mib": 44.14453125,
+          "incremental_peak_mib": 3.60546875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.7265625,
+          "peak_mib": 44.08203125,
+          "incremental_peak_mib": 3.35546875,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 40.66796875,
+          "peak_mib": 44.0234375,
+          "incremental_peak_mib": 3.35546875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.6015625,
+          "peak_mib": 44.20703125,
+          "incremental_peak_mib": 3.60546875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.78125,
+          "peak_mib": 44.12890625,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.71875,
+          "peak_mib": 44.0703125,
+          "incremental_peak_mib": 3.3515625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 40.66015625,
+          "peak_mib": 44.25390625,
+          "incremental_peak_mib": 3.59375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.5859375,
+          "peak_mib": 44.1796875,
+          "incremental_peak_mib": 3.59375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.76171875,
+          "peak_mib": 44.12109375,
+          "incremental_peak_mib": 3.359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.69921875,
+          "peak_mib": 44.05078125,
+          "incremental_peak_mib": 3.3515625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 40.640625,
+          "peak_mib": 44.23828125,
+          "incremental_peak_mib": 3.59765625,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 40.81640625,
+          "peak_mib": 44.22265625,
+          "incremental_peak_mib": 3.40625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.8046875,
+          "peak_mib": 44.1640625,
+          "incremental_peak_mib": 3.359375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.73828125,
+          "peak_mib": 44.046875,
+          "incremental_peak_mib": 3.30859375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 40.62890625,
+          "peak_mib": 43.97265625,
+          "incremental_peak_mib": 3.34375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.55859375,
+          "peak_mib": 44.1796875,
+          "incremental_peak_mib": 3.62109375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.0078125,
+          "peak_mib": 44.1015625,
+          "incremental_peak_mib": 3.09375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 40.6875,
+          "peak_mib": 44.0390625,
+          "incremental_peak_mib": 3.3515625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.625,
+          "peak_mib": 44.28515625,
+          "incremental_peak_mib": 3.66015625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.859375,
+          "peak_mib": 44.16796875,
+          "incremental_peak_mib": 3.30859375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.74609375,
+          "peak_mib": 44.140625,
+          "incremental_peak_mib": 3.39453125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 40.71875,
+          "peak_mib": 44.265625,
+          "incremental_peak_mib": 3.546875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 40.83984375,
+          "peak_mib": 44.1953125,
+          "incremental_peak_mib": 3.35546875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.77734375,
+          "peak_mib": 44.13671875,
+          "incremental_peak_mib": 3.359375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.70703125,
+          "peak_mib": 44.30859375,
+          "incremental_peak_mib": 3.6015625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.890625,
+          "peak_mib": 44.01171875,
+          "incremental_peak_mib": 3.12109375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.83984375,
+          "peak_mib": 43.94921875,
+          "incremental_peak_mib": 3.109375,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 40.78515625,
+          "peak_mib": 44.125,
+          "incremental_peak_mib": 3.33984375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.71484375,
+          "peak_mib": 44.0546875,
+          "incremental_peak_mib": 3.33984375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.640625,
+          "peak_mib": 44.2265625,
+          "incremental_peak_mib": 3.5859375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.80078125,
+          "peak_mib": 44.15234375,
+          "incremental_peak_mib": 3.3515625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.73828125,
+          "peak_mib": 44.15234375,
+          "incremental_peak_mib": 3.4140625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.98828125,
+          "peak_mib": 44.03125,
+          "incremental_peak_mib": 3.04296875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 40.8671875,
+          "peak_mib": 43.9609375,
+          "incremental_peak_mib": 3.09375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.80078125,
+          "peak_mib": 44.046875,
+          "incremental_peak_mib": 3.24609375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.6328125,
+          "peak_mib": 44.24609375,
+          "incremental_peak_mib": 3.61328125,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 40.80078125,
+          "peak_mib": 44.140625,
+          "incremental_peak_mib": 3.33984375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.71875,
+          "peak_mib": 44.06640625,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 40.65234375,
+          "peak_mib": 44.24609375,
+          "incremental_peak_mib": 3.59375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 40.58203125,
+          "peak_mib": 44.15625,
+          "incremental_peak_mib": 3.57421875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.73828125,
+          "peak_mib": 44.09765625,
+          "incremental_peak_mib": 3.359375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.6796875,
+          "peak_mib": 44.01953125,
+          "incremental_peak_mib": 3.33984375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.58984375,
+          "peak_mib": 44.1953125,
+          "incremental_peak_mib": 3.60546875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.78125,
+          "peak_mib": 44.1328125,
+          "incremental_peak_mib": 3.3515625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 40.70703125,
+          "peak_mib": 44.0546875,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.640625,
+          "peak_mib": 44.25,
+          "incremental_peak_mib": 3.609375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 40.83203125,
+          "peak_mib": 44.171875,
+          "incremental_peak_mib": 3.33984375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 41.01171875,
+          "peak_mib": 44.1171875,
+          "incremental_peak_mib": 3.10546875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 40.953125,
+          "peak_mib": 44.0546875,
+          "incremental_peak_mib": 3.1015625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 40.8828125,
+          "peak_mib": 43.99609375,
+          "incremental_peak_mib": 3.11328125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.81640625,
+          "peak_mib": 44.1796875,
+          "incremental_peak_mib": 3.36328125,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 41.0078125,
+          "peak_mib": 44.17578125,
+          "incremental_peak_mib": 3.16796875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 41.0,
+          "peak_mib": 44.04296875,
+          "incremental_peak_mib": 3.04296875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.87890625,
+          "peak_mib": 44.2265625,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.81640625,
+          "peak_mib": 44.1640625,
+          "incremental_peak_mib": 3.34765625,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 40.99609375,
+          "peak_mib": 44.09375,
+          "incremental_peak_mib": 3.09765625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.92578125,
+          "peak_mib": 44.046875,
+          "incremental_peak_mib": 3.12109375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.875,
+          "peak_mib": 43.98046875,
+          "incremental_peak_mib": 3.10546875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.81640625,
+          "peak_mib": 44.16015625,
+          "incremental_peak_mib": 3.34375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.0,
+          "peak_mib": 44.09765625,
+          "incremental_peak_mib": 3.09765625,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 40.921875,
+          "peak_mib": 44.078125,
+          "incremental_peak_mib": 3.15625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 40.921875,
+          "peak_mib": 44.01953125,
+          "incremental_peak_mib": 3.09765625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 40.86328125,
+          "peak_mib": 44.1796875,
+          "incremental_peak_mib": 3.31640625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 41.01171875,
+          "peak_mib": 44.1171875,
+          "incremental_peak_mib": 3.10546875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 40.9453125,
+          "peak_mib": 44.0390625,
+          "incremental_peak_mib": 3.09375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.87890625,
+          "peak_mib": 44.23828125,
+          "incremental_peak_mib": 3.359375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 41.07421875,
+          "peak_mib": 44.171875,
+          "incremental_peak_mib": 3.09765625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 40.7578125,
+          "peak_mib": 44.35546875,
+          "incremental_peak_mib": 3.59765625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 40.9375,
+          "peak_mib": 44.29296875,
+          "incremental_peak_mib": 3.35546875,
+          "samples": 41
+        }
+      ]
+    },
+    {
+      "backend": "imagemagick",
+      "sample": {
+        "name": "svg-percentage",
+        "input": "tiny.svg",
+        "input_format": "svg",
+        "output_format": "png",
+        "geometry": "50%"
+      },
+      "output": "svg-percentage-imagemagick.png",
+      "dimensions": [
+        58,
+        43
+      ],
+      "bytes": 1217,
+      "sha256": "133452bdb2ea625dd4ba5ddad90f13e84f9d1f5abe56e4b0e3025f7e69fb5cf7",
+      "median_ms": 43.95651305094361,
+      "timings_ms": [
+        50.727673806250095,
+        51.67580069974065,
+        49.58382714539766,
+        39.97277142480016,
+        41.13978520035744,
+        49.790243152529,
+        43.53312496095896,
+        43.73945714905858,
+        43.77360502257943,
+        43.33721101284027,
+        41.97870288044214,
+        40.16165481880307,
+        36.56399203464389,
+        39.72413623705506,
+        44.29401597008109,
+        35.319064278155565,
+        40.0083982385695,
+        42.63269901275635,
+        56.577421724796295,
+        50.260646268725395,
+        47.911728732287884,
+        43.33306476473808,
+        36.977259907871485,
+        40.655300952494144,
+        38.93195418640971,
+        42.415286879986525,
+        40.972116868942976,
+        42.761493008583784,
+        36.76337283104658,
+        39.76980410516262,
+        44.51060853898525,
+        41.04848485440016,
+        52.972584031522274,
+        43.767457362264395,
+        42.94389206916094,
+        46.82831093668938,
+        41.76203208044171,
+        54.398644249886274,
+        52.0310839638114,
+        40.75812082737684,
+        44.087335001677275,
+        56.18097586557269,
+        47.010737005621195,
+        45.05028808489442,
+        46.29438882693648,
+        40.17233103513718,
+        48.27395500615239,
+        46.38398997485638,
+        49.664655700325966,
+        47.73478489369154,
+        49.20147405937314,
+        56.43928702920675,
+        48.58492221683264,
+        48.445142805576324,
+        48.54787886142731,
+        49.72131410613656,
+        69.700937718153,
+        47.51804377883673,
+        47.1605621278286,
+        43.86300314217806,
+        46.25845514237881,
+        37.68520196899772,
+        49.8332898132503,
+        43.36114693433046,
+        43.95651305094361,
+        48.13417186960578,
+        41.080206632614136,
+        42.66201984137297,
+        48.943627160042524,
+        46.18211602792144,
+        39.759686216712,
+        44.552620965987444,
+        39.37579086050391,
+        40.93094915151596,
+        41.72070184722543,
+        42.498860973864794,
+        44.5225122384727,
+        53.46899991855025,
+        46.63164960220456,
+        44.308609794825315,
+        43.09515794739127,
+        44.82559114694595,
+        43.792478274554014,
+        48.988631926476955,
+        48.334489576518536,
+        45.08136119693518,
+        47.14083997532725,
+        37.8023199737072,
+        44.797565788030624,
+        46.40217870473862,
+        35.331600811332464,
+        37.92317910119891,
+        37.31759497895837,
+        41.4953101426363,
+        41.72365181148052,
+        39.5128489471972,
+        38.71867572888732,
+        38.85275684297085,
+        135.25162497535348,
+        38.26400591060519,
+        45.98110122606158
+      ],
+      "median_incremental_peak_mib": 3.5390625,
+      "memory": [
+        {
+          "baseline_mib": 41.08984375,
+          "peak_mib": 44.625,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.0703125,
+          "peak_mib": 44.62109375,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.31640625,
+          "peak_mib": 44.61328125,
+          "incremental_peak_mib": 3.296875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 41.30859375,
+          "peak_mib": 44.609375,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.046875,
+          "peak_mib": 44.65625,
+          "incremental_peak_mib": 3.609375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.35546875,
+          "peak_mib": 44.90234375,
+          "incremental_peak_mib": 3.546875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.33984375,
+          "peak_mib": 44.640625,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.34375,
+          "peak_mib": 44.84765625,
+          "incremental_peak_mib": 3.50390625,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.296875,
+          "peak_mib": 44.83984375,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.29296875,
+          "peak_mib": 44.80078125,
+          "incremental_peak_mib": 3.5078125,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 41.30078125,
+          "peak_mib": 44.58984375,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 41.27734375,
+          "peak_mib": 44.87890625,
+          "incremental_peak_mib": 3.6015625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.32421875,
+          "peak_mib": 44.55859375,
+          "incremental_peak_mib": 3.234375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.26171875,
+          "peak_mib": 44.80859375,
+          "incremental_peak_mib": 3.546875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.24609375,
+          "peak_mib": 44.71875,
+          "incremental_peak_mib": 3.47265625,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 41.234375,
+          "peak_mib": 44.52734375,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 41.23046875,
+          "peak_mib": 44.76953125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 41.46875,
+          "peak_mib": 44.76953125,
+          "incremental_peak_mib": 3.30078125,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 41.2109375,
+          "peak_mib": 44.74609375,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 41.19921875,
+          "peak_mib": 44.73828125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.1953125,
+          "peak_mib": 44.78515625,
+          "incremental_peak_mib": 3.58984375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 41.234375,
+          "peak_mib": 44.8984375,
+          "incremental_peak_mib": 3.6640625,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 41.14453125,
+          "peak_mib": 44.90625,
+          "incremental_peak_mib": 3.76171875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 41.34375,
+          "peak_mib": 44.90234375,
+          "incremental_peak_mib": 3.55859375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 41.3515625,
+          "peak_mib": 44.89453125,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.34375,
+          "peak_mib": 44.6640625,
+          "incremental_peak_mib": 3.3203125,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 41.25,
+          "peak_mib": 44.6953125,
+          "incremental_peak_mib": 3.4453125,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.13671875,
+          "peak_mib": 44.6875,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.125,
+          "peak_mib": 44.66796875,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.11328125,
+          "peak_mib": 44.65234375,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 46
+        },
+        {
+          "baseline_mib": 41.09765625,
+          "peak_mib": 44.63671875,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.07421875,
+          "peak_mib": 44.5390625,
+          "incremental_peak_mib": 3.46484375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.05078125,
+          "peak_mib": 44.58984375,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.03515625,
+          "peak_mib": 44.5703125,
+          "incremental_peak_mib": 3.53515625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.265625,
+          "peak_mib": 44.703125,
+          "incremental_peak_mib": 3.4375,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.15234375,
+          "peak_mib": 44.68359375,
+          "incremental_peak_mib": 3.53125,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 41.12109375,
+          "peak_mib": 44.70703125,
+          "incremental_peak_mib": 3.5859375,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 41.265625,
+          "peak_mib": 44.87890625,
+          "incremental_peak_mib": 3.61328125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.2734375,
+          "peak_mib": 44.98046875,
+          "incremental_peak_mib": 3.70703125,
+          "samples": 46
+        },
+        {
+          "baseline_mib": 41.4140625,
+          "peak_mib": 44.82421875,
+          "incremental_peak_mib": 3.41015625,
+          "samples": 50
+        },
+        {
+          "baseline_mib": 41.28515625,
+          "peak_mib": 44.97265625,
+          "incremental_peak_mib": 3.6875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.2890625,
+          "peak_mib": 44.78515625,
+          "incremental_peak_mib": 3.49609375,
+          "samples": 46
+        },
+        {
+          "baseline_mib": 41.28125,
+          "peak_mib": 44.9375,
+          "incremental_peak_mib": 3.65625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.046875,
+          "peak_mib": 44.73046875,
+          "incremental_peak_mib": 3.68359375,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.28515625,
+          "peak_mib": 44.70703125,
+          "incremental_peak_mib": 3.421875,
+          "samples": 48
+        },
+        {
+          "baseline_mib": 41.05078125,
+          "peak_mib": 44.87890625,
+          "incremental_peak_mib": 3.828125,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 41.0546875,
+          "peak_mib": 44.66796875,
+          "incremental_peak_mib": 3.61328125,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 41.1328125,
+          "peak_mib": 44.921875,
+          "incremental_peak_mib": 3.7890625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 41.41796875,
+          "peak_mib": 44.93359375,
+          "incremental_peak_mib": 3.515625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 41.29296875,
+          "peak_mib": 44.7890625,
+          "incremental_peak_mib": 3.49609375,
+          "samples": 49
+        },
+        {
+          "baseline_mib": 41.29296875,
+          "peak_mib": 44.96484375,
+          "incremental_peak_mib": 3.671875,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.45703125,
+          "peak_mib": 44.98828125,
+          "incremental_peak_mib": 3.53125,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 41.3125,
+          "peak_mib": 44.9609375,
+          "incremental_peak_mib": 3.6484375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 41.3828125,
+          "peak_mib": 44.9375,
+          "incremental_peak_mib": 3.5546875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 41.37109375,
+          "peak_mib": 44.67578125,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 41.37890625,
+          "peak_mib": 44.67578125,
+          "incremental_peak_mib": 3.296875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 41.296875,
+          "peak_mib": 44.78515625,
+          "incremental_peak_mib": 3.48828125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.5078125,
+          "peak_mib": 44.7265625,
+          "incremental_peak_mib": 3.21875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 41.234375,
+          "peak_mib": 44.78125,
+          "incremental_peak_mib": 3.546875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 41.4765625,
+          "peak_mib": 44.76953125,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.46875,
+          "peak_mib": 44.7578125,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.19921875,
+          "peak_mib": 44.75,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.20703125,
+          "peak_mib": 44.92578125,
+          "incremental_peak_mib": 3.71875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 41.43359375,
+          "peak_mib": 44.73046875,
+          "incremental_peak_mib": 3.296875,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 41.421875,
+          "peak_mib": 44.78125,
+          "incremental_peak_mib": 3.359375,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 41.4765625,
+          "peak_mib": 44.78125,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 41.48046875,
+          "peak_mib": 44.73046875,
+          "incremental_peak_mib": 3.25,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.41796875,
+          "peak_mib": 44.9609375,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 41.15625,
+          "peak_mib": 44.9453125,
+          "incremental_peak_mib": 3.7890625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.38671875,
+          "peak_mib": 44.9296875,
+          "incremental_peak_mib": 3.54296875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.375,
+          "peak_mib": 44.6640625,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.359375,
+          "peak_mib": 44.8984375,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.34375,
+          "peak_mib": 44.8984375,
+          "incremental_peak_mib": 3.5546875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.3515625,
+          "peak_mib": 44.84765625,
+          "incremental_peak_mib": 3.49609375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 41.296875,
+          "peak_mib": 44.890625,
+          "incremental_peak_mib": 3.59375,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 41.32421875,
+          "peak_mib": 44.82421875,
+          "incremental_peak_mib": 3.5,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.2734375,
+          "peak_mib": 44.8125,
+          "incremental_peak_mib": 3.5390625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 41.26171875,
+          "peak_mib": 44.83203125,
+          "incremental_peak_mib": 3.5703125,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.53125,
+          "peak_mib": 44.82421875,
+          "incremental_peak_mib": 3.29296875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.26171875,
+          "peak_mib": 44.8125,
+          "incremental_peak_mib": 3.55078125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.24609375,
+          "peak_mib": 44.96484375,
+          "incremental_peak_mib": 3.71875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.19140625,
+          "peak_mib": 44.92578125,
+          "incremental_peak_mib": 3.734375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.4296875,
+          "peak_mib": 44.734375,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.421875,
+          "peak_mib": 44.78515625,
+          "incremental_peak_mib": 3.36328125,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 41.51171875,
+          "peak_mib": 44.73828125,
+          "incremental_peak_mib": 3.2265625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 41.30078125,
+          "peak_mib": 44.9921875,
+          "incremental_peak_mib": 3.69140625,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.36328125,
+          "peak_mib": 44.703125,
+          "incremental_peak_mib": 3.33984375,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 41.3515625,
+          "peak_mib": 45.05078125,
+          "incremental_peak_mib": 3.69921875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 41.53515625,
+          "peak_mib": 45.015625,
+          "incremental_peak_mib": 3.48046875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 41.37109375,
+          "peak_mib": 45.0,
+          "incremental_peak_mib": 3.62890625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.35546875,
+          "peak_mib": 44.91796875,
+          "incremental_peak_mib": 3.5625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.37109375,
+          "peak_mib": 44.8828125,
+          "incremental_peak_mib": 3.51171875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 41.3125,
+          "peak_mib": 44.8671875,
+          "incremental_peak_mib": 3.5546875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 41.3125,
+          "peak_mib": 44.859375,
+          "incremental_peak_mib": 3.546875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 41.30078125,
+          "peak_mib": 44.60546875,
+          "incremental_peak_mib": 3.3046875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 41.2890625,
+          "peak_mib": 44.9453125,
+          "incremental_peak_mib": 3.65625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.453125,
+          "peak_mib": 44.7421875,
+          "incremental_peak_mib": 3.2890625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 41.44140625,
+          "peak_mib": 44.96875,
+          "incremental_peak_mib": 3.52734375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 41.40625,
+          "peak_mib": 45.00390625,
+          "incremental_peak_mib": 3.59765625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 41.44921875,
+          "peak_mib": 44.88671875,
+          "incremental_peak_mib": 3.4375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 41.2578125,
+          "peak_mib": 44.640625,
+          "incremental_peak_mib": 3.3828125,
+          "samples": 42
+        }
+      ]
+    },
+    {
+      "backend": "libvips",
+      "sample": {
+        "name": "raster-percentage",
+        "input": "percentage.png",
+        "input_format": "png",
+        "output_format": "png",
+        "geometry": "50%"
+      },
+      "output": "raster-percentage-libvips.png",
+      "dimensions": [
+        51,
+        26
+      ],
+      "bytes": 3808,
+      "sha256": "af90788eea60817ffb185f7875a9d916071e2f46fd69a51393fcdaa4d2d5985a",
+      "median_ms": 36.03052021935582,
+      "timings_ms": [
+        32.82255074009299,
+        34.30966520681977,
+        33.72595505788922,
+        31.704380176961422,
+        31.647007912397385,
+        35.85866233333945,
+        34.77837285026908,
+        36.03052021935582,
+        36.552637815475464,
+        34.689529333263636,
+        36.825903225690126,
+        35.17974121496081,
+        38.87357609346509,
+        33.14358415082097,
+        29.90704495459795,
+        37.15449897572398,
+        38.20589417591691,
+        34.50139379128814,
+        34.20051373541355,
+        41.048902086913586,
+        36.81693505495787,
+        36.62991477176547,
+        35.30031582340598,
+        34.8294572904706,
+        35.60655424371362,
+        35.826955921947956,
+        37.81098918989301,
+        35.71285912767053,
+        32.87669410929084,
+        35.280680283904076,
+        31.27872385084629,
+        30.865607783198357,
+        32.85106411203742,
+        31.88007604330778,
+        32.15273004025221,
+        33.37027318775654,
+        33.581329975277185,
+        32.763397321105,
+        34.46063958108425,
+        36.51973092928529,
+        37.09809435531497,
+        31.151666771620512,
+        32.622748985886574,
+        34.25940405577421,
+        36.124673672020435,
+        35.07992485538125,
+        29.422558844089508,
+        33.266874961555004,
+        39.717023726552725,
+        34.82744377106428,
+        36.59506421536207,
+        38.142334669828415,
+        39.68111285939813,
+        37.10844600573182,
+        33.600740134716034,
+        36.42506804317236,
+        36.63429291918874,
+        42.89004299789667,
+        39.36678124591708,
+        36.52448207139969,
+        37.18334389850497,
+        49.68035779893398,
+        33.40287460014224,
+        34.32055376470089,
+        35.9938801266253,
+        34.06469523906708,
+        32.23522985354066,
+        33.594072330743074,
+        34.35109602287412,
+        32.746884040534496,
+        33.536292146891356,
+        38.55663491412997,
+        36.54949925839901,
+        37.4776991084218,
+        38.63199008628726,
+        39.281022269278765,
+        38.29027200117707,
+        40.563705842942,
+        40.30538396909833,
+        46.01786518469453,
+        37.93737571686506,
+        37.60005906224251,
+        34.08086113631725,
+        34.96934985741973,
+        37.67603915184736,
+        38.3865162730217,
+        40.02922214567661,
+        40.797030087560415,
+        42.85758826881647,
+        38.353067357093096,
+        36.519431974738836,
+        36.44777787849307,
+        45.80356413498521,
+        45.89591594412923,
+        46.26451199874282,
+        41.68560495600104,
+        41.83128895238042,
+        33.62165205180645,
+        39.98977318406105,
+        34.846085123717785,
+        39.232426788657904
+      ],
+      "median_incremental_peak_mib": 5.21875,
+      "memory": [
+        {
+          "baseline_mib": 47.2890625,
+          "peak_mib": 52.28515625,
+          "incremental_peak_mib": 4.99609375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 47.2109375,
+          "peak_mib": 52.6875,
+          "incremental_peak_mib": 5.4765625,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 47.08203125,
+          "peak_mib": 52.328125,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 47.34375,
+          "peak_mib": 52.33203125,
+          "incremental_peak_mib": 4.98828125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 47.36328125,
+          "peak_mib": 52.32421875,
+          "incremental_peak_mib": 4.9609375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 47.30078125,
+          "peak_mib": 52.546875,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 47.19921875,
+          "peak_mib": 52.69921875,
+          "incremental_peak_mib": 5.5,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 47.3515625,
+          "peak_mib": 52.3359375,
+          "incremental_peak_mib": 4.984375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 47.28515625,
+          "peak_mib": 52.734375,
+          "incremental_peak_mib": 5.44921875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 47.42578125,
+          "peak_mib": 52.625,
+          "incremental_peak_mib": 5.19921875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 47.578125,
+          "peak_mib": 52.7734375,
+          "incremental_peak_mib": 5.1953125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 47.41796875,
+          "peak_mib": 52.66015625,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 47.65234375,
+          "peak_mib": 52.58984375,
+          "incremental_peak_mib": 4.9375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 47.53515625,
+          "peak_mib": 52.73828125,
+          "incremental_peak_mib": 5.203125,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 47.4765625,
+          "peak_mib": 52.4765625,
+          "incremental_peak_mib": 5.0,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 47.7265625,
+          "peak_mib": 52.63671875,
+          "incremental_peak_mib": 4.91015625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 47.4609375,
+          "peak_mib": 52.640625,
+          "incremental_peak_mib": 5.1796875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 47.4609375,
+          "peak_mib": 52.69921875,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 47.43359375,
+          "peak_mib": 52.6796875,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 47.703125,
+          "peak_mib": 52.91796875,
+          "incremental_peak_mib": 5.21484375,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 47.85546875,
+          "peak_mib": 52.80859375,
+          "incremental_peak_mib": 4.953125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 47.58203125,
+          "peak_mib": 52.796875,
+          "incremental_peak_mib": 5.21484375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 47.7890625,
+          "peak_mib": 53.05859375,
+          "incremental_peak_mib": 5.26953125,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 47.8046875,
+          "peak_mib": 52.80078125,
+          "incremental_peak_mib": 4.99609375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 47.88671875,
+          "peak_mib": 52.828125,
+          "incremental_peak_mib": 4.94140625,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 47.8671875,
+          "peak_mib": 52.84765625,
+          "incremental_peak_mib": 4.98046875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 47.83984375,
+          "peak_mib": 53.06640625,
+          "incremental_peak_mib": 5.2265625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 48.15234375,
+          "peak_mib": 53.1328125,
+          "incremental_peak_mib": 4.98046875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 48.03515625,
+          "peak_mib": 53.0234375,
+          "incremental_peak_mib": 4.98828125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 47.98828125,
+          "peak_mib": 52.98828125,
+          "incremental_peak_mib": 5.0,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 48.3046875,
+          "peak_mib": 53.2421875,
+          "incremental_peak_mib": 4.9375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 48.140625,
+          "peak_mib": 53.390625,
+          "incremental_peak_mib": 5.25,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 48.125,
+          "peak_mib": 53.375,
+          "incremental_peak_mib": 5.25,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 48.13671875,
+          "peak_mib": 53.3828125,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 48.12890625,
+          "peak_mib": 53.34375,
+          "incremental_peak_mib": 5.21484375,
+          "samples": 25
+        },
+        {
+          "baseline_mib": 48.2734375,
+          "peak_mib": 53.74609375,
+          "incremental_peak_mib": 5.47265625,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 48.65234375,
+          "peak_mib": 53.6484375,
+          "incremental_peak_mib": 4.99609375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 48.6796875,
+          "peak_mib": 53.640625,
+          "incremental_peak_mib": 4.9609375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 48.63671875,
+          "peak_mib": 53.80859375,
+          "incremental_peak_mib": 5.171875,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 48.52734375,
+          "peak_mib": 53.76953125,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 48.76171875,
+          "peak_mib": 53.75,
+          "incremental_peak_mib": 4.98828125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 48.66015625,
+          "peak_mib": 53.89453125,
+          "incremental_peak_mib": 5.234375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 48.9140625,
+          "peak_mib": 53.90625,
+          "incremental_peak_mib": 4.9921875,
+          "samples": 25
+        },
+        {
+          "baseline_mib": 48.80078125,
+          "peak_mib": 53.80078125,
+          "incremental_peak_mib": 5.0,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 48.796875,
+          "peak_mib": 53.79296875,
+          "incremental_peak_mib": 4.99609375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 48.81640625,
+          "peak_mib": 53.99609375,
+          "incremental_peak_mib": 5.1796875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 48.77734375,
+          "peak_mib": 53.96875,
+          "incremental_peak_mib": 5.19140625,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 48.87890625,
+          "peak_mib": 53.8671875,
+          "incremental_peak_mib": 4.98828125,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 48.87109375,
+          "peak_mib": 54.11328125,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 48.609375,
+          "peak_mib": 54.10546875,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 49.01171875,
+          "peak_mib": 54.00390625,
+          "incremental_peak_mib": 4.9921875,
+          "samples": 25
+        },
+        {
+          "baseline_mib": 48.90625,
+          "peak_mib": 54.1484375,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 49.17578125,
+          "peak_mib": 54.09765625,
+          "incremental_peak_mib": 4.921875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 49.18359375,
+          "peak_mib": 54.171875,
+          "incremental_peak_mib": 4.98828125,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 49.25,
+          "peak_mib": 54.20703125,
+          "incremental_peak_mib": 4.95703125,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 49.0078125,
+          "peak_mib": 54.24609375,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 49.31640625,
+          "peak_mib": 54.26171875,
+          "incremental_peak_mib": 4.9453125,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 49.0546875,
+          "peak_mib": 54.30078125,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 49.05859375,
+          "peak_mib": 54.4453125,
+          "incremental_peak_mib": 5.38671875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 49.2109375,
+          "peak_mib": 54.3828125,
+          "incremental_peak_mib": 5.171875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 49.171875,
+          "peak_mib": 54.41796875,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 49.13671875,
+          "peak_mib": 54.375,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 24
+        },
+        {
+          "baseline_mib": 49.2109375,
+          "peak_mib": 54.45703125,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 49.43359375,
+          "peak_mib": 54.4296875,
+          "incremental_peak_mib": 4.99609375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 49.515625,
+          "peak_mib": 54.2265625,
+          "incremental_peak_mib": 4.7109375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 49.27734375,
+          "peak_mib": 54.27734375,
+          "incremental_peak_mib": 5.0,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 49.375,
+          "peak_mib": 54.5859375,
+          "incremental_peak_mib": 5.2109375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 49.9140625,
+          "peak_mib": 54.8984375,
+          "incremental_peak_mib": 4.984375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 49.71484375,
+          "peak_mib": 55.203125,
+          "incremental_peak_mib": 5.48828125,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 50.0234375,
+          "peak_mib": 55.203125,
+          "incremental_peak_mib": 5.1796875,
+          "samples": 24
+        },
+        {
+          "baseline_mib": 49.74609375,
+          "peak_mib": 55.16796875,
+          "incremental_peak_mib": 5.421875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 50.11328125,
+          "peak_mib": 55.30078125,
+          "incremental_peak_mib": 5.1875,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 49.91796875,
+          "peak_mib": 55.40234375,
+          "incremental_peak_mib": 5.484375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 49.765625,
+          "peak_mib": 55.25390625,
+          "incremental_peak_mib": 5.48828125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 49.84765625,
+          "peak_mib": 55.09375,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 49.87109375,
+          "peak_mib": 55.37109375,
+          "incremental_peak_mib": 5.5,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 50.1953125,
+          "peak_mib": 55.40625,
+          "incremental_peak_mib": 5.2109375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 50.1953125,
+          "peak_mib": 55.42578125,
+          "incremental_peak_mib": 5.23046875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 50.05078125,
+          "peak_mib": 55.30078125,
+          "incremental_peak_mib": 5.25,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 50.17578125,
+          "peak_mib": 55.6640625,
+          "incremental_peak_mib": 5.48828125,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 50.1953125,
+          "peak_mib": 55.4453125,
+          "incremental_peak_mib": 5.25,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 50.2109375,
+          "peak_mib": 55.453125,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 50.2265625,
+          "peak_mib": 55.47265625,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 50.38671875,
+          "peak_mib": 55.58984375,
+          "incremental_peak_mib": 5.203125,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 50.1875,
+          "peak_mib": 55.6796875,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 50.30078125,
+          "peak_mib": 55.796875,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 50.3359375,
+          "peak_mib": 55.578125,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 50.23828125,
+          "peak_mib": 55.45703125,
+          "incremental_peak_mib": 5.21875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 50.3125,
+          "peak_mib": 55.55859375,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 50.203125,
+          "peak_mib": 55.4140625,
+          "incremental_peak_mib": 5.2109375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 50.3359375,
+          "peak_mib": 55.79296875,
+          "incremental_peak_mib": 5.45703125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 50.39453125,
+          "peak_mib": 55.80078125,
+          "incremental_peak_mib": 5.40625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 50.4296875,
+          "peak_mib": 55.62890625,
+          "incremental_peak_mib": 5.19921875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 50.4765625,
+          "peak_mib": 55.71484375,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 50.34375,
+          "peak_mib": 55.81640625,
+          "incremental_peak_mib": 5.47265625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 50.58984375,
+          "peak_mib": 55.828125,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 50.42578125,
+          "peak_mib": 55.671875,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 50.4609375,
+          "peak_mib": 55.70703125,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 50.5625,
+          "peak_mib": 55.8046875,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 25
+        },
+        {
+          "baseline_mib": 50.6796875,
+          "peak_mib": 55.66796875,
+          "incremental_peak_mib": 4.98828125,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 50.5625,
+          "peak_mib": 55.8046875,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 31
+        }
+      ]
+    },
+    {
+      "backend": "libvips",
+      "sample": {
+        "name": "raster-bounding-box",
+        "input": "bounding.png",
+        "input_format": "png",
+        "output_format": "png",
+        "geometry": "100x100>"
+      },
+      "output": "raster-bounding-box-libvips.png",
+      "dimensions": [
+        50,
+        100
+      ],
+      "bytes": 14629,
+      "sha256": "92fae380583d39a7fa1198c73fb756ad7f5ebe912da7fc4c2b1d94661202977f",
+      "median_ms": 33.71472284197807,
+      "timings_ms": [
+        34.010501112788916,
+        28.863299638032913,
+        30.52153717726469,
+        34.078862983733416,
+        36.63914231583476,
+        33.972670789808035,
+        34.87521503120661,
+        34.66861182823777,
+        34.973884001374245,
+        33.67113368585706,
+        33.854263834655285,
+        35.53287824615836,
+        32.44866104796529,
+        33.07031001895666,
+        35.06509866565466,
+        33.07369910180569,
+        33.1684248521924,
+        39.16238388046622,
+        32.64769213274121,
+        33.59468514099717,
+        32.90774393826723,
+        32.51089807599783,
+        34.55979423597455,
+        35.209949128329754,
+        33.87958789244294,
+        31.76350239664316,
+        30.50312027335167,
+        29.581815004348755,
+        30.958857852965593,
+        37.53624018281698,
+        36.36350389569998,
+        34.18887499719858,
+        33.09934074059129,
+        31.120687257498503,
+        31.869173981249332,
+        34.690072759985924,
+        38.134916219860315,
+        33.718602266162634,
+        31.33872104808688,
+        34.22053484246135,
+        33.15593861043453,
+        35.18707724288106,
+        34.03125610202551,
+        32.97673910856247,
+        31.217680778354406,
+        35.312023013830185,
+        36.70324757695198,
+        38.0969881080091,
+        34.89620378240943,
+        29.391820076853037,
+        33.18444732576609,
+        32.22317388281226,
+        33.56908913701773,
+        35.399142652750015,
+        33.21258816868067,
+        32.32924593612552,
+        30.98672814667225,
+        32.24795823916793,
+        32.751308754086494,
+        30.49210924655199,
+        37.74914983659983,
+        32.672074157744646,
+        31.83442074805498,
+        33.38573593646288,
+        30.24282678961754,
+        32.22689684480429,
+        33.95623620599508,
+        35.97297193482518,
+        33.408226910978556,
+        35.49800859764218,
+        37.311093881726265,
+        37.02156711369753,
+        49.77580299600959,
+        30.948692001402378,
+        31.438134610652924,
+        31.64988523349166,
+        32.20777912065387,
+        33.5475979372859,
+        32.258916180580854,
+        33.40377286076546,
+        32.90768899023533,
+        33.10946188867092,
+        31.973485834896564,
+        33.495516050606966,
+        33.71472284197807,
+        35.098738968372345,
+        34.37149524688721,
+        34.04669417068362,
+        39.66786339879036,
+        34.178768284618855,
+        35.74461489915848,
+        35.3506519459188,
+        33.791371155530214,
+        34.088730812072754,
+        33.20370661094785,
+        35.77757393941283,
+        35.92713130638003,
+        37.949935998767614,
+        36.27786599099636,
+        34.132308792322874,
+        34.18249124661088
+      ],
+      "median_incremental_peak_mib": 5.25,
+      "memory": [
+        {
+          "baseline_mib": 53.2578125,
+          "peak_mib": 58.75,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 53.234375,
+          "peak_mib": 58.89453125,
+          "incremental_peak_mib": 5.66015625,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.48828125,
+          "peak_mib": 58.8671875,
+          "incremental_peak_mib": 5.37890625,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 53.48046875,
+          "peak_mib": 58.97265625,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 53.484375,
+          "peak_mib": 58.69921875,
+          "incremental_peak_mib": 5.21484375,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.4375,
+          "peak_mib": 58.67578125,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 53.41796875,
+          "peak_mib": 58.66796875,
+          "incremental_peak_mib": 5.25,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 53.67578125,
+          "peak_mib": 58.875,
+          "incremental_peak_mib": 5.19921875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 53.35546875,
+          "peak_mib": 58.8125,
+          "incremental_peak_mib": 5.45703125,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 53.3671875,
+          "peak_mib": 58.75390625,
+          "incremental_peak_mib": 5.38671875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.62890625,
+          "peak_mib": 58.8671875,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 24
+        },
+        {
+          "baseline_mib": 53.609375,
+          "peak_mib": 59.0234375,
+          "incremental_peak_mib": 5.4140625,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 53.6015625,
+          "peak_mib": 59.06640625,
+          "incremental_peak_mib": 5.46484375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 53.59765625,
+          "peak_mib": 58.8359375,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 53.6015625,
+          "peak_mib": 58.875,
+          "incremental_peak_mib": 5.2734375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 53.609375,
+          "peak_mib": 58.8515625,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 53.59375,
+          "peak_mib": 58.8359375,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.5703125,
+          "peak_mib": 59.0625,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.6484375,
+          "peak_mib": 59.0625,
+          "incremental_peak_mib": 5.4140625,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 53.91796875,
+          "peak_mib": 59.1171875,
+          "incremental_peak_mib": 5.19921875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.58984375,
+          "peak_mib": 59.08984375,
+          "incremental_peak_mib": 5.5,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 53.58984375,
+          "peak_mib": 59.08203125,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 53.88671875,
+          "peak_mib": 59.0546875,
+          "incremental_peak_mib": 5.16796875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.66015625,
+          "peak_mib": 59.05078125,
+          "incremental_peak_mib": 5.390625,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 53.85546875,
+          "peak_mib": 59.03515625,
+          "incremental_peak_mib": 5.1796875,
+          "samples": 23
+        },
+        {
+          "baseline_mib": 53.85546875,
+          "peak_mib": 59.08984375,
+          "incremental_peak_mib": 5.234375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 53.83984375,
+          "peak_mib": 59.08984375,
+          "incremental_peak_mib": 5.25,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 53.88671875,
+          "peak_mib": 59.1171875,
+          "incremental_peak_mib": 5.23046875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 53.8125,
+          "peak_mib": 59.296875,
+          "incremental_peak_mib": 5.484375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 53.79296875,
+          "peak_mib": 59.04296875,
+          "incremental_peak_mib": 5.25,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 53.79296875,
+          "peak_mib": 59.0390625,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 53.77734375,
+          "peak_mib": 59.26171875,
+          "incremental_peak_mib": 5.484375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 53.984375,
+          "peak_mib": 59.09765625,
+          "incremental_peak_mib": 5.11328125,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 53.90234375,
+          "peak_mib": 59.33203125,
+          "incremental_peak_mib": 5.4296875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 53.91015625,
+          "peak_mib": 59.32421875,
+          "incremental_peak_mib": 5.4140625,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 53.91015625,
+          "peak_mib": 59.40234375,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 53.9375,
+          "peak_mib": 59.43359375,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 53.9765625,
+          "peak_mib": 59.46484375,
+          "incremental_peak_mib": 5.48828125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 54.21484375,
+          "peak_mib": 59.4453125,
+          "incremental_peak_mib": 5.23046875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.1875,
+          "peak_mib": 59.3671875,
+          "incremental_peak_mib": 5.1796875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 54.22265625,
+          "peak_mib": 59.21484375,
+          "incremental_peak_mib": 4.9921875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.00390625,
+          "peak_mib": 59.4609375,
+          "incremental_peak_mib": 5.45703125,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 54.10546875,
+          "peak_mib": 59.34375,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 54.10546875,
+          "peak_mib": 59.6015625,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 54.109375,
+          "peak_mib": 59.59375,
+          "incremental_peak_mib": 5.484375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 54.140625,
+          "peak_mib": 59.38671875,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 54.1328125,
+          "peak_mib": 59.62890625,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.20703125,
+          "peak_mib": 59.703125,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 25
+        },
+        {
+          "baseline_mib": 54.1875,
+          "peak_mib": 59.6796875,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.44140625,
+          "peak_mib": 59.6875,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.4453125,
+          "peak_mib": 59.94140625,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 54.44921875,
+          "peak_mib": 59.9375,
+          "incremental_peak_mib": 5.48828125,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 54.6953125,
+          "peak_mib": 59.94140625,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.734375,
+          "peak_mib": 59.94921875,
+          "incremental_peak_mib": 5.21484375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.45703125,
+          "peak_mib": 59.9296875,
+          "incremental_peak_mib": 5.47265625,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 54.68359375,
+          "peak_mib": 59.9296875,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 54.69140625,
+          "peak_mib": 59.94140625,
+          "incremental_peak_mib": 5.25,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 54.69921875,
+          "peak_mib": 59.94921875,
+          "incremental_peak_mib": 5.25,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 54.7109375,
+          "peak_mib": 59.9609375,
+          "incremental_peak_mib": 5.25,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 54.98046875,
+          "peak_mib": 60.23046875,
+          "incremental_peak_mib": 5.25,
+          "samples": 23
+        },
+        {
+          "baseline_mib": 54.78125,
+          "peak_mib": 59.99609375,
+          "incremental_peak_mib": 5.21484375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 54.76171875,
+          "peak_mib": 60.2578125,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 55.01171875,
+          "peak_mib": 60.18359375,
+          "incremental_peak_mib": 5.171875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 54.76953125,
+          "peak_mib": 60.26953125,
+          "incremental_peak_mib": 5.5,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 55.04296875,
+          "peak_mib": 60.0234375,
+          "incremental_peak_mib": 4.98046875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 54.78515625,
+          "peak_mib": 60.01953125,
+          "incremental_peak_mib": 5.234375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 54.82421875,
+          "peak_mib": 60.484375,
+          "incremental_peak_mib": 5.66015625,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 54.74609375,
+          "peak_mib": 60.23828125,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 55.01953125,
+          "peak_mib": 60.26953125,
+          "incremental_peak_mib": 5.25,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 55.08984375,
+          "peak_mib": 60.078125,
+          "incremental_peak_mib": 4.98828125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 54.98828125,
+          "peak_mib": 60.359375,
+          "incremental_peak_mib": 5.37109375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 54.9921875,
+          "peak_mib": 60.265625,
+          "incremental_peak_mib": 5.2734375,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 55.0390625,
+          "peak_mib": 60.28515625,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 55.05078125,
+          "peak_mib": 60.29296875,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 55.06640625,
+          "peak_mib": 60.56640625,
+          "incremental_peak_mib": 5.5,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 54.8125,
+          "peak_mib": 60.30078125,
+          "incremental_peak_mib": 5.48828125,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 54.9765625,
+          "peak_mib": 60.546875,
+          "incremental_peak_mib": 5.5703125,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 55.0546875,
+          "peak_mib": 60.296875,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 55.11328125,
+          "peak_mib": 60.61328125,
+          "incremental_peak_mib": 5.5,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 55.125,
+          "peak_mib": 60.37109375,
+          "incremental_peak_mib": 5.24609375,
+          "samples": 23
+        },
+        {
+          "baseline_mib": 55.17578125,
+          "peak_mib": 60.53515625,
+          "incremental_peak_mib": 5.359375,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 55.41015625,
+          "peak_mib": 60.36328125,
+          "incremental_peak_mib": 4.953125,
+          "samples": 25
+        },
+        {
+          "baseline_mib": 55.2109375,
+          "peak_mib": 60.47265625,
+          "incremental_peak_mib": 5.26171875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 55.28125,
+          "peak_mib": 60.48828125,
+          "incremental_peak_mib": 5.20703125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 55.41015625,
+          "peak_mib": 60.734375,
+          "incremental_peak_mib": 5.32421875,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 55.03515625,
+          "peak_mib": 60.69921875,
+          "incremental_peak_mib": 5.6640625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 55.04296875,
+          "peak_mib": 60.53515625,
+          "incremental_peak_mib": 5.4921875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 55.2890625,
+          "peak_mib": 60.53125,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 55.33203125,
+          "peak_mib": 60.77734375,
+          "incremental_peak_mib": 5.4453125,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 55.28125,
+          "peak_mib": 60.63671875,
+          "incremental_peak_mib": 5.35546875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 55.44140625,
+          "peak_mib": 60.66015625,
+          "incremental_peak_mib": 5.21875,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 55.4140625,
+          "peak_mib": 60.65234375,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 55.42578125,
+          "peak_mib": 60.6640625,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 55.40625,
+          "peak_mib": 60.64453125,
+          "incremental_peak_mib": 5.23828125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 55.4453125,
+          "peak_mib": 60.9296875,
+          "incremental_peak_mib": 5.484375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 55.421875,
+          "peak_mib": 60.91796875,
+          "incremental_peak_mib": 5.49609375,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 55.64453125,
+          "peak_mib": 60.88671875,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 55.62109375,
+          "peak_mib": 60.78125,
+          "incremental_peak_mib": 5.16015625,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 55.6640625,
+          "peak_mib": 60.8671875,
+          "incremental_peak_mib": 5.203125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 55.609375,
+          "peak_mib": 60.8515625,
+          "incremental_peak_mib": 5.2421875,
+          "samples": 26
+        },
+        {
+          "baseline_mib": 55.6015625,
+          "peak_mib": 60.8359375,
+          "incremental_peak_mib": 5.234375,
+          "samples": 26
+        }
+      ]
+    },
+    {
+      "backend": "libvips",
+      "sample": {
+        "name": "raster-pixel-area",
+        "input": "area.png",
+        "input_format": "png",
+        "output_format": "png",
+        "geometry": "1000@"
+      },
+      "output": "raster-pixel-area-libvips.png",
+      "dimensions": [
+        61,
+        16
+      ],
+      "bytes": 2972,
+      "sha256": "9129f85cb44d67de3e204d9397af4bc2008c538e3166c9cbc99d9861b25c94ab",
+      "median_ms": 35.47129314392805,
+      "timings_ms": [
+        37.758785765618086,
+        37.221083883196115,
+        35.475325770676136,
+        38.6006711050868,
+        42.823865078389645,
+        38.51018939167261,
+        38.36390096694231,
+        34.490966238081455,
+        36.1820119433105,
+        34.395834896713495,
+        38.881548680365086,
+        37.86071017384529,
+        41.92106332629919,
+        33.727775793522596,
+        41.7975839227438,
+        38.25631644576788,
+        40.136138908565044,
+        36.26398788765073,
+        35.28343513607979,
+        33.70944270864129,
+        36.771778017282486,
+        32.80682489275932,
+        31.349704135209322,
+        34.42877298220992,
+        34.00804102420807,
+        34.17551191523671,
+        33.94700679928064,
+        32.35747804865241,
+        36.68238176032901,
+        35.72757914662361,
+        33.68847584351897,
+        36.43036400899291,
+        35.391643177717924,
+        37.21532924100757,
+        36.43313283100724,
+        34.48762372136116,
+        36.71658271923661,
+        35.93074111267924,
+        36.71161271631718,
+        37.036702036857605,
+        37.138246931135654,
+        35.95323208719492,
+        36.97157884016633,
+        35.26904806494713,
+        37.63190004974604,
+        37.577598821371794,
+        37.163116969168186,
+        36.13659180700779,
+        36.374660674482584,
+        39.89224601536989,
+        36.32313385605812,
+        34.5988729968667,
+        35.47129314392805,
+        33.62020431086421,
+        33.16271770745516,
+        35.26182705536485,
+        35.66175885498524,
+        38.89149008318782,
+        35.6804090552032,
+        36.19185369461775,
+        37.27052127942443,
+        36.66793694719672,
+        33.75234315171838,
+        34.13408575579524,
+        36.25972382724285,
+        37.076340056955814,
+        35.29762011021376,
+        33.61760778352618,
+        32.39730419591069,
+        34.86180305480957,
+        33.61230483278632,
+        32.297249883413315,
+        34.89153925329447,
+        33.75109005719423,
+        33.12603710219264,
+        31.572510953992605,
+        33.3801107481122,
+        35.175074357539415,
+        34.68954190611839,
+        34.20566022396088,
+        32.11221471428871,
+        33.79545733332634,
+        35.296016838401556,
+        31.495586037635803,
+        36.47037409245968,
+        37.85340487957001,
+        35.38814885541797,
+        35.38887482136488,
+        34.07545480877161,
+        31.60276496782899,
+        35.29345476999879,
+        32.510193064808846,
+        31.58743493258953,
+        31.633303966373205,
+        34.298296086490154,
+        37.40738332271576,
+        37.36678417772055,
+        33.32296200096607,
+        37.20499621704221,
+        42.360499035567045,
+        42.271272744983435
+      ],
+      "median_incremental_peak_mib": 6.98828125,
+      "memory": [
+        {
+          "baseline_mib": 57.2421875,
+          "peak_mib": 64.453125,
+          "incremental_peak_mib": 7.2109375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 57.3203125,
+          "peak_mib": 64.06640625,
+          "incremental_peak_mib": 6.74609375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.19140625,
+          "peak_mib": 64.125,
+          "incremental_peak_mib": 6.93359375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.13671875,
+          "peak_mib": 64.3828125,
+          "incremental_peak_mib": 7.24609375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.53125,
+          "peak_mib": 64.46875,
+          "incremental_peak_mib": 6.9375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 57.296875,
+          "peak_mib": 64.2890625,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 57.37890625,
+          "peak_mib": 64.37109375,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 57.4609375,
+          "peak_mib": 64.44921875,
+          "incremental_peak_mib": 6.98828125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.5546875,
+          "peak_mib": 64.26953125,
+          "incremental_peak_mib": 6.71484375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.27734375,
+          "peak_mib": 64.26953125,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.30078125,
+          "peak_mib": 64.54296875,
+          "incremental_peak_mib": 7.2421875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.296875,
+          "peak_mib": 64.28515625,
+          "incremental_peak_mib": 6.98828125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 57.30859375,
+          "peak_mib": 64.30078125,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.41796875,
+          "peak_mib": 64.390625,
+          "incremental_peak_mib": 6.97265625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 57.48046875,
+          "peak_mib": 64.5546875,
+          "incremental_peak_mib": 7.07421875,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 57.33203125,
+          "peak_mib": 64.3203125,
+          "incremental_peak_mib": 6.98828125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 57.4140625,
+          "peak_mib": 64.41015625,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.3515625,
+          "peak_mib": 64.34375,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.62890625,
+          "peak_mib": 64.37109375,
+          "incremental_peak_mib": 6.7421875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.40625,
+          "peak_mib": 64.6484375,
+          "incremental_peak_mib": 7.2421875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.4296875,
+          "peak_mib": 64.6484375,
+          "incremental_peak_mib": 7.21875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 57.44140625,
+          "peak_mib": 64.65234375,
+          "incremental_peak_mib": 7.2109375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.7734375,
+          "peak_mib": 64.7421875,
+          "incremental_peak_mib": 6.96875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.58984375,
+          "peak_mib": 64.5859375,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.69921875,
+          "peak_mib": 64.90234375,
+          "incremental_peak_mib": 7.203125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 57.41796875,
+          "peak_mib": 64.4140625,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.51953125,
+          "peak_mib": 64.7578125,
+          "incremental_peak_mib": 7.23828125,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 57.3515625,
+          "peak_mib": 64.59765625,
+          "incremental_peak_mib": 7.24609375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.71484375,
+          "peak_mib": 64.70703125,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.55859375,
+          "peak_mib": 64.5546875,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.71484375,
+          "peak_mib": 64.66015625,
+          "incremental_peak_mib": 6.9453125,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.6953125,
+          "peak_mib": 64.69140625,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.57421875,
+          "peak_mib": 64.57421875,
+          "incremental_peak_mib": 7.0,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.70703125,
+          "peak_mib": 64.44140625,
+          "incremental_peak_mib": 6.734375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 57.57421875,
+          "peak_mib": 64.5625,
+          "incremental_peak_mib": 6.98828125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 57.4453125,
+          "peak_mib": 64.6875,
+          "incremental_peak_mib": 7.2421875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 57.859375,
+          "peak_mib": 64.828125,
+          "incremental_peak_mib": 6.96875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.72265625,
+          "peak_mib": 64.71875,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.6015625,
+          "peak_mib": 64.83984375,
+          "incremental_peak_mib": 7.23828125,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.73828125,
+          "peak_mib": 64.47265625,
+          "incremental_peak_mib": 6.734375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.6484375,
+          "peak_mib": 64.859375,
+          "incremental_peak_mib": 7.2109375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 57.734375,
+          "peak_mib": 64.70703125,
+          "incremental_peak_mib": 6.97265625,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.8671875,
+          "peak_mib": 64.60546875,
+          "incremental_peak_mib": 6.73828125,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 57.73828125,
+          "peak_mib": 64.984375,
+          "incremental_peak_mib": 7.24609375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.8828125,
+          "peak_mib": 64.84765625,
+          "incremental_peak_mib": 6.96484375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.796875,
+          "peak_mib": 64.796875,
+          "incremental_peak_mib": 7.0,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 58.00390625,
+          "peak_mib": 64.73828125,
+          "incremental_peak_mib": 6.734375,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 57.9765625,
+          "peak_mib": 64.9453125,
+          "incremental_peak_mib": 6.96875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 57.8125,
+          "peak_mib": 64.8125,
+          "incremental_peak_mib": 7.0,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.76953125,
+          "peak_mib": 64.76171875,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 57.859375,
+          "peak_mib": 64.8046875,
+          "incremental_peak_mib": 6.9453125,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 57.93359375,
+          "peak_mib": 64.6796875,
+          "incremental_peak_mib": 6.74609375,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 57.796875,
+          "peak_mib": 64.796875,
+          "incremental_peak_mib": 7.0,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 57.75390625,
+          "peak_mib": 65.00390625,
+          "incremental_peak_mib": 7.25,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.88671875,
+          "peak_mib": 64.61328125,
+          "incremental_peak_mib": 6.7265625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.76171875,
+          "peak_mib": 64.98828125,
+          "incremental_peak_mib": 7.2265625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 57.8671875,
+          "peak_mib": 64.859375,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 58.0390625,
+          "peak_mib": 64.7265625,
+          "incremental_peak_mib": 6.6875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.94921875,
+          "peak_mib": 64.6953125,
+          "incremental_peak_mib": 6.74609375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.921875,
+          "peak_mib": 64.671875,
+          "incremental_peak_mib": 6.75,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 57.8984375,
+          "peak_mib": 64.89453125,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 58.03125,
+          "peak_mib": 64.7734375,
+          "incremental_peak_mib": 6.7421875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 57.9765625,
+          "peak_mib": 64.96875,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 57.91796875,
+          "peak_mib": 64.66796875,
+          "incremental_peak_mib": 6.75,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 57.8828125,
+          "peak_mib": 64.87890625,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 57.8359375,
+          "peak_mib": 64.828125,
+          "incremental_peak_mib": 6.9921875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 58.046875,
+          "peak_mib": 64.7890625,
+          "incremental_peak_mib": 6.7421875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 57.75,
+          "peak_mib": 64.98828125,
+          "incremental_peak_mib": 7.23828125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.86328125,
+          "peak_mib": 64.86328125,
+          "incremental_peak_mib": 7.0,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 58.0859375,
+          "peak_mib": 64.83203125,
+          "incremental_peak_mib": 6.74609375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 58.04296875,
+          "peak_mib": 64.79296875,
+          "incremental_peak_mib": 6.75,
+          "samples": 110
+        },
+        {
+          "baseline_mib": 58.03515625,
+          "peak_mib": 65.0,
+          "incremental_peak_mib": 6.96484375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 58.2421875,
+          "peak_mib": 64.953125,
+          "incremental_peak_mib": 6.7109375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.95703125,
+          "peak_mib": 64.92578125,
+          "incremental_peak_mib": 6.96875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 57.796875,
+          "peak_mib": 65.0390625,
+          "incremental_peak_mib": 7.2421875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 58.0234375,
+          "peak_mib": 64.99609375,
+          "incremental_peak_mib": 6.97265625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 58.1875,
+          "peak_mib": 64.89453125,
+          "incremental_peak_mib": 6.70703125,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 58.05078125,
+          "peak_mib": 65.03125,
+          "incremental_peak_mib": 6.98046875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 57.9921875,
+          "peak_mib": 64.73828125,
+          "incremental_peak_mib": 6.74609375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 57.94921875,
+          "peak_mib": 64.9375,
+          "incremental_peak_mib": 6.98828125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 58.09765625,
+          "peak_mib": 64.80859375,
+          "incremental_peak_mib": 6.7109375,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 58.0703125,
+          "peak_mib": 65.0390625,
+          "incremental_peak_mib": 6.96875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 58.015625,
+          "peak_mib": 64.7578125,
+          "incremental_peak_mib": 6.7421875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 57.984375,
+          "peak_mib": 64.98046875,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 57.890625,
+          "peak_mib": 64.88671875,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 57.8671875,
+          "peak_mib": 64.86328125,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 58.1015625,
+          "peak_mib": 64.83203125,
+          "incremental_peak_mib": 6.73046875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 58.015625,
+          "peak_mib": 64.96875,
+          "incremental_peak_mib": 6.953125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 58.19140625,
+          "peak_mib": 64.94140625,
+          "incremental_peak_mib": 6.75,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 57.9140625,
+          "peak_mib": 64.9140625,
+          "incremental_peak_mib": 7.0,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 58.140625,
+          "peak_mib": 64.890625,
+          "incremental_peak_mib": 6.75,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 58.13671875,
+          "peak_mib": 64.859375,
+          "incremental_peak_mib": 6.72265625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 58.08984375,
+          "peak_mib": 64.79296875,
+          "incremental_peak_mib": 6.703125,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 58.01171875,
+          "peak_mib": 65.0,
+          "incremental_peak_mib": 6.98828125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 57.97265625,
+          "peak_mib": 64.71484375,
+          "incremental_peak_mib": 6.7421875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 57.9375,
+          "peak_mib": 64.93359375,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 57.89453125,
+          "peak_mib": 64.890625,
+          "incremental_peak_mib": 6.99609375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 58.1171875,
+          "peak_mib": 64.86328125,
+          "incremental_peak_mib": 6.74609375,
+          "samples": 42
+        },
+        {
+          "baseline_mib": 58.02734375,
+          "peak_mib": 65.2734375,
+          "incremental_peak_mib": 7.24609375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 57.91796875,
+          "peak_mib": 64.91796875,
+          "incremental_peak_mib": 7.0,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 58.15625,
+          "peak_mib": 64.90234375,
+          "incremental_peak_mib": 6.74609375,
+          "samples": 36
+        }
+      ]
+    },
+    {
+      "backend": "libvips",
+      "sample": {
+        "name": "svg-percentage",
+        "input": "tiny.svg",
+        "input_format": "svg",
+        "output_format": "png",
+        "geometry": "50%"
+      },
+      "output": "svg-percentage-libvips.png",
+      "dimensions": [
+        58,
+        43
+      ],
+      "bytes": 775,
+      "sha256": "5b4d0828cada3e2f4664f00910fc0c8e0da8b8794a29f83588d500fb5071c0d8",
+      "median_ms": 43.78105700016022,
+      "timings_ms": [
+        44.58759492263198,
+        43.383164796978235,
+        44.43477001041174,
+        42.15003503486514,
+        44.631579890847206,
+        40.95393419265747,
+        42.899416759610176,
+        46.72879306599498,
+        44.705580919981,
+        46.58864391967654,
+        46.07061529532075,
+        47.66595596447587,
+        45.70329934358597,
+        44.00333156809211,
+        42.161403223872185,
+        40.49788322299719,
+        45.37486704066396,
+        46.56239412724972,
+        44.80286128818989,
+        42.10418602451682,
+        40.5523250810802,
+        50.11253710836172,
+        52.16918420046568,
+        43.531675823032856,
+        44.359609950333834,
+        50.562395714223385,
+        46.844313852488995,
+        48.733522184193134,
+        42.9982440546155,
+        47.91307495906949,
+        43.27626107260585,
+        40.41322506964207,
+        42.491594795137644,
+        42.692855931818485,
+        43.727464973926544,
+        46.90672131255269,
+        45.45078007504344,
+        43.26807102188468,
+        44.32289395481348,
+        49.01483282446861,
+        44.03566103428602,
+        45.66368507221341,
+        48.288772348314524,
+        47.34631301835179,
+        49.03898108750582,
+        44.630147982388735,
+        45.841628685593605,
+        45.96045892685652,
+        45.854037161916494,
+        48.210686072707176,
+        42.797488160431385,
+        43.44271216541529,
+        44.761055149137974,
+        46.86034191399813,
+        43.00027107819915,
+        46.08522588387132,
+        47.84379806369543,
+        44.40860077738762,
+        43.26195828616619,
+        43.830232694745064,
+        46.44620977342129,
+        40.13635218143463,
+        36.4726590923965,
+        41.60143109038472,
+        43.78105700016022,
+        46.574827283620834,
+        46.83587094768882,
+        44.77004520595074,
+        45.504714362323284,
+        45.468124095350504,
+        40.01076379790902,
+        43.38464513421059,
+        42.69470600411296,
+        42.61793475598097,
+        44.19663501903415,
+        42.74462070316076,
+        42.136263102293015,
+        45.06532708182931,
+        44.120549224317074,
+        44.21886568889022,
+        39.80014193803072,
+        42.72965108975768,
+        42.742472141981125,
+        40.90770473703742,
+        42.988216038793325,
+        37.401102017611265,
+        43.68109209463,
+        40.54973227903247,
+        39.852332789450884,
+        38.66743389517069,
+        38.462209049612284,
+        39.07733177766204,
+        37.23574709147215,
+        40.04669887945056,
+        40.80668464303017,
+        35.70767492055893,
+        37.843285128474236,
+        41.749505791813135,
+        39.566601160913706,
+        42.468166910111904,
+        38.17159589380026
+      ],
+      "median_incremental_peak_mib": 7.1875,
+      "memory": [
+        {
+          "baseline_mib": 59.7890625,
+          "peak_mib": 66.9765625,
+          "incremental_peak_mib": 7.1875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 59.6796875,
+          "peak_mib": 67.11328125,
+          "incremental_peak_mib": 7.43359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 59.57421875,
+          "peak_mib": 67.015625,
+          "incremental_peak_mib": 7.44140625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 59.5859375,
+          "peak_mib": 67.26953125,
+          "incremental_peak_mib": 7.68359375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 59.85546875,
+          "peak_mib": 67.046875,
+          "incremental_peak_mib": 7.19140625,
+          "samples": 47
+        },
+        {
+          "baseline_mib": 59.65234375,
+          "peak_mib": 67.08203125,
+          "incremental_peak_mib": 7.4296875,
+          "samples": 46
+        },
+        {
+          "baseline_mib": 59.68359375,
+          "peak_mib": 67.1171875,
+          "incremental_peak_mib": 7.43359375,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 59.72265625,
+          "peak_mib": 66.90625,
+          "incremental_peak_mib": 7.18359375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 59.80859375,
+          "peak_mib": 66.99609375,
+          "incremental_peak_mib": 7.1875,
+          "samples": 47
+        },
+        {
+          "baseline_mib": 59.6875,
+          "peak_mib": 67.06640625,
+          "incremental_peak_mib": 7.37890625,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 59.74609375,
+          "peak_mib": 67.12890625,
+          "incremental_peak_mib": 7.3828125,
+          "samples": 44
+        },
+        {
+          "baseline_mib": 59.6640625,
+          "peak_mib": 67.09375,
+          "incremental_peak_mib": 7.4296875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 59.875,
+          "peak_mib": 67.3125,
+          "incremental_peak_mib": 7.4375,
+          "samples": 47
+        },
+        {
+          "baseline_mib": 59.890625,
+          "peak_mib": 67.03515625,
+          "incremental_peak_mib": 7.14453125,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 59.7421875,
+          "peak_mib": 67.16796875,
+          "incremental_peak_mib": 7.42578125,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 60.0,
+          "peak_mib": 67.14453125,
+          "incremental_peak_mib": 7.14453125,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 59.9296875,
+          "peak_mib": 67.11328125,
+          "incremental_peak_mib": 7.18359375,
+          "samples": 45
+        },
+        {
+          "baseline_mib": 59.84375,
+          "peak_mib": 67.26171875,
+          "incremental_peak_mib": 7.41796875,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 59.9921875,
+          "peak_mib": 67.171875,
+          "incremental_peak_mib": 7.1796875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 59.984375,
+          "peak_mib": 69.37109375,
+          "incremental_peak_mib": 9.38671875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 59.88671875,
+          "peak_mib": 69.31640625,
+          "incremental_peak_mib": 9.4296875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 59.85546875,
+          "peak_mib": 69.40625,
+          "incremental_peak_mib": 9.55078125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 59.921875,
+          "peak_mib": 68.51171875,
+          "incremental_peak_mib": 8.58984375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 59.9609375,
+          "peak_mib": 68.64453125,
+          "incremental_peak_mib": 8.68359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 59.84765625,
+          "peak_mib": 68.53515625,
+          "incremental_peak_mib": 8.6875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 59.7578125,
+          "peak_mib": 68.4375,
+          "incremental_peak_mib": 8.6796875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 59.8984375,
+          "peak_mib": 68.5625,
+          "incremental_peak_mib": 8.6640625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 60.04296875,
+          "peak_mib": 68.4765625,
+          "incremental_peak_mib": 8.43359375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 59.96484375,
+          "peak_mib": 68.65625,
+          "incremental_peak_mib": 8.69140625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 59.88671875,
+          "peak_mib": 68.5703125,
+          "incremental_peak_mib": 8.68359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 59.85546875,
+          "peak_mib": 68.5,
+          "incremental_peak_mib": 8.64453125,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 59.9921875,
+          "peak_mib": 68.68359375,
+          "incremental_peak_mib": 8.69140625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 59.94921875,
+          "peak_mib": 68.33203125,
+          "incremental_peak_mib": 8.3828125,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 59.8359375,
+          "peak_mib": 68.51953125,
+          "incremental_peak_mib": 8.68359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 60.0390625,
+          "peak_mib": 68.48046875,
+          "incremental_peak_mib": 8.44140625,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 60.02734375,
+          "peak_mib": 68.21484375,
+          "incremental_peak_mib": 8.1875,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 59.8828125,
+          "peak_mib": 68.57421875,
+          "incremental_peak_mib": 8.69140625,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 60.1484375,
+          "peak_mib": 68.5859375,
+          "incremental_peak_mib": 8.4375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 60.22265625,
+          "peak_mib": 68.60546875,
+          "incremental_peak_mib": 8.3828125,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 59.93359375,
+          "peak_mib": 68.3671875,
+          "incremental_peak_mib": 8.43359375,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 59.95703125,
+          "peak_mib": 68.39453125,
+          "incremental_peak_mib": 8.4375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 60.015625,
+          "peak_mib": 68.4375,
+          "incremental_peak_mib": 8.421875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 59.9140625,
+          "peak_mib": 68.59765625,
+          "incremental_peak_mib": 8.68359375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 59.96484375,
+          "peak_mib": 68.39453125,
+          "incremental_peak_mib": 8.4296875,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 59.88671875,
+          "peak_mib": 68.5703125,
+          "incremental_peak_mib": 8.68359375,
+          "samples": 40
+        },
+        {
+          "baseline_mib": 60.03125,
+          "peak_mib": 68.421875,
+          "incremental_peak_mib": 8.390625,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 60.08984375,
+          "peak_mib": 68.52734375,
+          "incremental_peak_mib": 8.4375,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 59.953125,
+          "peak_mib": 68.640625,
+          "incremental_peak_mib": 8.6875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 60.06640625,
+          "peak_mib": 68.74609375,
+          "incremental_peak_mib": 8.6796875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 59.921875,
+          "peak_mib": 68.609375,
+          "incremental_peak_mib": 8.6875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 60.0859375,
+          "peak_mib": 68.71875,
+          "incremental_peak_mib": 8.6328125,
+          "samples": 43
+        },
+        {
+          "baseline_mib": 60.15234375,
+          "peak_mib": 68.58984375,
+          "incremental_peak_mib": 8.4375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 60.0078125,
+          "peak_mib": 68.69140625,
+          "incremental_peak_mib": 8.68359375,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 60.1640625,
+          "peak_mib": 68.7890625,
+          "incremental_peak_mib": 8.625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 59.9453125,
+          "peak_mib": 68.375,
+          "incremental_peak_mib": 8.4296875,
+          "samples": 41
+        },
+        {
+          "baseline_mib": 59.921875,
+          "peak_mib": 66.6015625,
+          "incremental_peak_mib": 6.6796875,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 59.87109375,
+          "peak_mib": 67.05859375,
+          "incremental_peak_mib": 7.1875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 60.0,
+          "peak_mib": 67.1875,
+          "incremental_peak_mib": 7.1875,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 59.89453125,
+          "peak_mib": 67.05078125,
+          "incremental_peak_mib": 7.15625,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 60.234375,
+          "peak_mib": 67.171875,
+          "incremental_peak_mib": 6.9375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 60.08984375,
+          "peak_mib": 67.01171875,
+          "incremental_peak_mib": 6.921875,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 59.91796875,
+          "peak_mib": 67.0234375,
+          "incremental_peak_mib": 7.10546875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 60.203125,
+          "peak_mib": 66.8828125,
+          "incremental_peak_mib": 6.6796875,
+          "samples": 28
+        },
+        {
+          "baseline_mib": 60.1015625,
+          "peak_mib": 67.0078125,
+          "incremental_peak_mib": 6.90625,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 60.2109375,
+          "peak_mib": 67.109375,
+          "incremental_peak_mib": 6.8984375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 60.29296875,
+          "peak_mib": 66.9609375,
+          "incremental_peak_mib": 6.66796875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 60.1484375,
+          "peak_mib": 67.07421875,
+          "incremental_peak_mib": 6.92578125,
+          "samples": 29
+        },
+        {
+          "baseline_mib": 60.01953125,
+          "peak_mib": 67.20703125,
+          "incremental_peak_mib": 7.1875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 60.15234375,
+          "peak_mib": 67.078125,
+          "incremental_peak_mib": 6.92578125,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 60.3125,
+          "peak_mib": 66.9765625,
+          "incremental_peak_mib": 6.6640625,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 60.21484375,
+          "peak_mib": 66.89453125,
+          "incremental_peak_mib": 6.6796875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 60.12109375,
+          "peak_mib": 66.80078125,
+          "incremental_peak_mib": 6.6796875,
+          "samples": 27
+        },
+        {
+          "baseline_mib": 60.046875,
+          "peak_mib": 66.98046875,
+          "incremental_peak_mib": 6.93359375,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 60.20703125,
+          "peak_mib": 67.125,
+          "incremental_peak_mib": 6.91796875,
+          "samples": 34
+        },
+        {
+          "baseline_mib": 60.12890625,
+          "peak_mib": 67.0625,
+          "incremental_peak_mib": 6.93359375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 60.09375,
+          "peak_mib": 66.77734375,
+          "incremental_peak_mib": 6.68359375,
+          "samples": 39
+        },
+        {
+          "baseline_mib": 60.15625,
+          "peak_mib": 67.0703125,
+          "incremental_peak_mib": 6.9140625,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 60.08203125,
+          "peak_mib": 67.015625,
+          "incremental_peak_mib": 6.93359375,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 60.2734375,
+          "peak_mib": 66.95703125,
+          "incremental_peak_mib": 6.68359375,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 60.2421875,
+          "peak_mib": 66.93359375,
+          "incremental_peak_mib": 6.69140625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 60.2265625,
+          "peak_mib": 67.13671875,
+          "incremental_peak_mib": 6.91015625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 60.15625,
+          "peak_mib": 66.83984375,
+          "incremental_peak_mib": 6.68359375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 60.10546875,
+          "peak_mib": 67.02734375,
+          "incremental_peak_mib": 6.921875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 60.2890625,
+          "peak_mib": 66.97265625,
+          "incremental_peak_mib": 6.68359375,
+          "samples": 30
+        },
+        {
+          "baseline_mib": 60.24609375,
+          "peak_mib": 66.921875,
+          "incremental_peak_mib": 6.67578125,
+          "samples": 38
+        },
+        {
+          "baseline_mib": 60.20703125,
+          "peak_mib": 67.140625,
+          "incremental_peak_mib": 6.93359375,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 60.1328125,
+          "peak_mib": 67.05859375,
+          "incremental_peak_mib": 6.92578125,
+          "samples": 35
+        },
+        {
+          "baseline_mib": 60.4921875,
+          "peak_mib": 67.12109375,
+          "incremental_peak_mib": 6.62890625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 60.38671875,
+          "peak_mib": 67.32421875,
+          "incremental_peak_mib": 6.9375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 60.09375,
+          "peak_mib": 67.2734375,
+          "incremental_peak_mib": 7.1796875,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 60.29296875,
+          "peak_mib": 67.21875,
+          "incremental_peak_mib": 6.92578125,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 60.53125,
+          "peak_mib": 67.171875,
+          "incremental_peak_mib": 6.640625,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 60.44921875,
+          "peak_mib": 67.125,
+          "incremental_peak_mib": 6.67578125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 60.40625,
+          "peak_mib": 67.2578125,
+          "incremental_peak_mib": 6.8515625,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 60.21484375,
+          "peak_mib": 67.15234375,
+          "incremental_peak_mib": 6.9375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 60.23046875,
+          "peak_mib": 67.35546875,
+          "incremental_peak_mib": 7.125,
+          "samples": 31
+        },
+        {
+          "baseline_mib": 60.38671875,
+          "peak_mib": 67.05859375,
+          "incremental_peak_mib": 6.671875,
+          "samples": 36
+        },
+        {
+          "baseline_mib": 60.38671875,
+          "peak_mib": 67.265625,
+          "incremental_peak_mib": 6.87890625,
+          "samples": 37
+        },
+        {
+          "baseline_mib": 60.28125,
+          "peak_mib": 67.21875,
+          "incremental_peak_mib": 6.9375,
+          "samples": 32
+        },
+        {
+          "baseline_mib": 60.5,
+          "peak_mib": 67.1875,
+          "incremental_peak_mib": 6.6875,
+          "samples": 33
+        },
+        {
+          "baseline_mib": 60.59375,
+          "peak_mib": 67.2578125,
+          "incremental_peak_mib": 6.6640625,
+          "samples": 33
+        }
+      ]
+    }
+  ]
+}
