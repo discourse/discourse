@@ -467,7 +467,7 @@ RSpec.describe UserAnonymizer do
       expect(screened_email.reload.ip_address).to eq(anon_ip)
       expect(search_log.reload.ip_address).to eq(anon_ip)
       expect(topic_link_click.reload.ip_address).to eq(anon_ip)
-      topic_view = TopicViewItem.where(topic_id: topic.id, user_id: user.id).first
+      topic_view = TopicViewItem.find_by(topic_id: topic.id, user_id: user.id)
       expect(topic_view.ip_address).to eq(anon_ip)
       expect(delete_history.reload.ip_address).to eq(anon_ip)
       expect(user_history.reload.ip_address).to eq(anon_ip)
