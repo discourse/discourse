@@ -69,6 +69,82 @@ describe "Embed mode" do
     expect(page).to have_no_css(".embed-topic-footer")
   end
 
+  describe "first post actions" do
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "shows the first post's like count to anonymous users" do
+      PostActionCreator.like(Fabricate(:user), post)
+
+      visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+      expect(topic_page).to have_embed_topic_actions
+      expect(topic_page.embed_topic_actions).to have_css(".post-action-menu__like")
+      expect(topic_page.embed_topic_actions).to have_css(".like-count", text: "1")
+    end
+
+    it "only exposes like controls for the first post" do
+      visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+      expect(topic_page).to have_embed_topic_actions
+      expect(topic_page.embed_topic_actions).to have_css(".post-action-menu__like")
+      expect(topic_page.embed_topic_actions).to have_no_css(".post-action-menu__copy-link")
+      expect(topic_page.embed_topic_actions).to have_no_css(".post-action-menu__reply")
+      expect(topic_page.embed_topic_actions).to have_no_css(".show-more-actions")
+    end
+
+    it "prompts anonymous users to sign in when they like the first post" do
+      visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+      topic_page.click_embed_topic_like_button
+
+      expect(page).to have_css(".embed-auth-flow-modal")
+    end
+
+    it "does not show first post actions outside embed mode" do
+      visit("/t/#{topic.slug}/#{topic.id}")
+
+      expect(topic_page).to have_no_embed_topic_actions
+    end
+
+    context "when logged in" do
+      fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before { sign_in(user) }
+
+      it "likes and unlikes the first post" do
+        visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
+
+        topic_page.click_embed_topic_like_button
+
+        expect(topic_page.embed_topic_actions).to have_css(".post-action-menu__like.has-like")
+        expect(topic_page.embed_topic_actions).to have_css(".like-count", text: "1")
+        # The button updates optimistically, so wait for the server to catch up
+        try_until_success do
+          expect(
+            PostAction.where(
+              user:,
+              post:,
+              post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+            ),
+          ).to exist
+        end
+
+        topic_page.click_embed_topic_like_button
+
+        expect(topic_page.embed_topic_actions).to have_no_css(".post-action-menu__like.has-like")
+        try_until_success do
+          expect(
+            PostAction.where(
+              user:,
+              post:,
+              post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+            ),
+          ).not_to exist
+        end
+      end
+    end
+  end
+
   context "when logged in" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
