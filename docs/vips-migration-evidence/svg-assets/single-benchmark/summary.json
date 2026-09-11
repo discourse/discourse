@@ -1,26 +1,57 @@
 [
   {
+    "filename": "drop-shadow.svg",
+    "imagemagick": {
+      "value": {
+        "status": "ok"
+      },
+      "median_ms": 41.857277043163776,
+      "median_incremental_peak_mib": 4.17578125,
+      "dimensions": [
+        240,
+        100
+      ],
+      "output_bytes": 1286,
+      "output_sha256": "2ba787f1c3a1f6186d4af392209fecd9700de5e9b2b7105c498435bd1f3eaf91",
+      "output_path": "outputs/drop-shadow-imagemagick.png"
+    },
+    "libvips": {
+      "value": {
+        "status": "ok"
+      },
+      "median_ms": 41.72324109822512,
+      "median_incremental_peak_mib": 6.390625,
+      "dimensions": [
+        240,
+        100
+      ],
+      "output_bytes": 1733,
+      "output_sha256": "eb2f89571f4dbe5f0a05334bdabc523403ad6b59b2d2368e36b4bf2775006460",
+      "output_path": "outputs/drop-shadow-libvips.png"
+    }
+  },
+  {
     "filename": "large.svg",
     "imagemagick": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 1253.9466987363994,
-      "median_incremental_peak_mib": 95.53515625,
+      "median_ms": 1263.7011571787298,
+      "median_incremental_peak_mib": 95.51953125,
       "dimensions": [
         3000,
         1000
       ],
       "output_bytes": 43067,
-      "output_sha256": "109b02cbc543960a02c68ac77cdf8486cde04cc9473f364230676a55d0fa8305",
+      "output_sha256": "d6ba5f892ad144c338c2f3ee83263769ef0f9719cb6cd9b14e4175dfa51737d9",
       "output_path": "outputs/large-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 34.612095914781094,
-      "median_incremental_peak_mib": 5.91796875,
+      "median_ms": 39.28341902792454,
+      "median_incremental_peak_mib": 5.64453125,
       "dimensions": [
         300,
         100
@@ -36,22 +67,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 38.256910629570484,
-      "median_incremental_peak_mib": 3.37890625,
+      "median_ms": 33.24550297111273,
+      "median_incremental_peak_mib": 3.3828125,
       "dimensions": [
         120,
         80
       ],
       "output_bytes": 306,
-      "output_sha256": "7aaab72bab5c332c559308fb5d2f9871d6ffce96ddfe9f15ad9f22aa5dc77234",
+      "output_sha256": "3f1b0619bbb6a37fbbdf1833abffd84a0a4d36c8a113466373f15a9ac0ab0552",
       "output_path": "outputs/fixed-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 32.316595781594515,
-      "median_incremental_peak_mib": 5.1796875,
+      "median_ms": 35.88723670691252,
+      "median_incremental_peak_mib": 5.16796875,
       "dimensions": [
         120,
         80
@@ -67,22 +98,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 354.1810931637883,
-      "median_incremental_peak_mib": 5.07421875,
+      "median_ms": 342.4700992181897,
+      "median_incremental_peak_mib": 5.09375,
       "dimensions": [
         240,
         100
       ],
       "output_bytes": 7131,
-      "output_sha256": "f8d4d444b4aff051e497ed393fb71ab5ce3cd4677fef27cf916f0bbf6334589c",
+      "output_sha256": "fab8d723def0dc110677ea6d901e28b8e6c4b0f31ef168b6adb20a3f792cdb42",
       "output_path": "outputs/gradient-logo-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 305.97930308431387,
-      "median_incremental_peak_mib": 7.35546875,
+      "median_ms": 307.5541229918599,
+      "median_incremental_peak_mib": 7.06640625,
       "dimensions": [
         240,
         100
@@ -98,22 +129,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 348.1316165998578,
-      "median_incremental_peak_mib": 4.7265625,
+      "median_ms": 315.81652583554387,
+      "median_incremental_peak_mib": 4.71484375,
       "dimensions": [
         100,
         50
       ],
       "output_bytes": 304,
-      "output_sha256": "43805dff43470e33b5086eb7ccf0a9dcae1ca6992b9636692a90f8606a4e6006",
+      "output_sha256": "ba66de1a3b19b85f85d76d7e76d88a1393d7d60908331fea7620bd3bf73b20a4",
       "output_path": "outputs/image-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 292.9905061610043,
-      "median_incremental_peak_mib": 6.51171875,
+      "median_ms": 308.51496290415525,
+      "median_incremental_peak_mib": 8.328125,
       "dimensions": [
         100,
         50
@@ -129,14 +160,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.7532521225512,
+      "median_ms": 34.85591197386384,
       "median_incremental_peak_mib": 3.3828125,
       "dimensions": [
         120,
         90
       ],
       "output_bytes": 308,
-      "output_sha256": "afc33b516247383f52ae8d24eb3a03424209ae0a9ad2ef4066ca32426805ab48",
+      "output_sha256": "6b94d007c183c515891eb1d5c97d843728fd52b8aedded752fcf02b4f9202a7b",
       "output_path": "outputs/leading-whitespace-viewbox-imagemagick.png"
     },
     "libvips": {
@@ -144,8 +175,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 24.958330672234297,
-      "median_incremental_peak_mib": 6.16796875
+      "median_ms": 29.647880233824253,
+      "median_incremental_peak_mib": 5.6640625
     }
   },
   {
@@ -154,22 +185,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 36.549455020576715,
-      "median_incremental_peak_mib": 3.53125,
+      "median_ms": 41.78513400256634,
+      "median_incremental_peak_mib": 3.5390625,
       "dimensions": [
         115,
         86
       ],
       "output_bytes": 1439,
-      "output_sha256": "eae6f2f1fa46a6f39e1ca79e7d9fbc2c8ed0c9049b3ee14c5291fef0e35afaf9",
+      "output_sha256": "dcb1a5b6cbb2c62d5acd471c50320d8735504e3ce9c474859a7a889455100585",
       "output_path": "outputs/tiny-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 36.79085802286863,
-      "median_incremental_peak_mib": 6.15625,
+      "median_ms": 39.38777185976505,
+      "median_incremental_peak_mib": 6.37890625,
       "dimensions": [
         115,
         86
@@ -185,22 +216,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 29.782963916659355,
-      "median_incremental_peak_mib": 3.0859375,
+      "median_ms": 33.775954972952604,
+      "median_incremental_peak_mib": 3.08984375,
       "dimensions": [
         12,
         4
       ],
       "output_bytes": 329,
-      "output_sha256": "d23263dbf78643114ed686ee89b7a9ca3a30e317f5180e2c72f94c46da05cb9b",
+      "output_sha256": "8a7c554e57590bb5fa72e23e8e7299fea13f07277fd57d5fd1709516705895b5",
       "output_path": "outputs/transparency-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.055797684937716,
-      "median_incremental_peak_mib": 5.75390625,
+      "median_ms": 38.61294873058796,
+      "median_incremental_peak_mib": 5.64453125,
       "dimensions": [
         12,
         4
@@ -216,22 +247,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 31.377038918435574,
+      "median_ms": 37.520304787904024,
       "median_incremental_peak_mib": 3.3828125,
       "dimensions": [
         120,
         90
       ],
       "output_bytes": 308,
-      "output_sha256": "6709f737bccad5a1944aa69418cb9152327d8f57ede8c9df2ec698fd70f7d441",
+      "output_sha256": "6a4bbe1cba4bb40e8f562f68a776930178f602e404835ec544e08ff93e22af52",
       "output_path": "outputs/viewbox-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 35.11563502252102,
-      "median_incremental_peak_mib": 5.92578125,
+      "median_ms": 38.440211210399866,
+      "median_incremental_peak_mib": 6.12890625,
       "dimensions": [
         120,
         90
@@ -247,14 +278,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 31.436655670404434,
-      "median_incremental_peak_mib": 3.13671875,
+      "median_ms": 32.53466822206974,
+      "median_incremental_peak_mib": 3.140625,
       "dimensions": [
         80,
         90
       ],
       "output_bytes": 304,
-      "output_sha256": "8b82869747c42e8d438f741bca62347a548e136dac41738b746e20036df51625",
+      "output_sha256": "f4805460029a5567f59147d629dd7fc0349fbeef30e87eac3aebbbabfeebce35",
       "output_path": "outputs/zero-height-imagemagick.png"
     },
     "libvips": {
@@ -262,8 +293,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 26.485083159059286,
-      "median_incremental_peak_mib": 5.16796875
+      "median_ms": 31.254632398486137,
+      "median_incremental_peak_mib": 5.39453125
     }
   },
   {
@@ -272,14 +303,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 32.4379107914865,
+      "median_ms": 31.07517771422863,
       "median_incremental_peak_mib": 3.13671875,
       "dimensions": [
         120,
         60
       ],
       "output_bytes": 305,
-      "output_sha256": "45985c9dfb8bbc9f7814978a6c0ecc892439efaf8d0e6892c4d846bec9bc7249",
+      "output_sha256": "05cad99fd90fe7be11f0a5ab0cb735fa8ae9d47b2f792c8209b17ffeb4d4b8a4",
       "output_path": "outputs/zero-width-imagemagick.png"
     },
     "libvips": {
@@ -287,8 +318,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 24.9569620937109,
-      "median_incremental_peak_mib": 5.16796875
+      "median_ms": 33.454892225563526,
+      "median_incremental_peak_mib": 6.4296875
     }
   },
   {
@@ -297,14 +328,14 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 34.18905194848776,
-      "median_incremental_peak_mib": 3.44140625,
+      "median_ms": 31.562316231429577,
+      "median_incremental_peak_mib": 3.4453125,
       "dimensions": [
         120,
         90
       ],
       "output_bytes": 1171,
-      "output_sha256": "469d8772a361178146cb2ea94a731796633e48579f0c1780ce5dc21900a54082",
+      "output_sha256": "0d151e7650e9d566a30b7154fdbefc7d357604fa64cf85a6409d100738c6b3ba",
       "output_path": "outputs/zero_sized-imagemagick.png"
     },
     "libvips": {
@@ -312,8 +343,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 28.83044397458434,
-      "median_incremental_peak_mib": 6.140625
+      "median_ms": 35.151445772498846,
+      "median_incremental_peak_mib": 5.671875
     }
   },
   {
@@ -322,22 +353,22 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 41.92412691190839,
+      "median_ms": 40.09649623185396,
       "median_incremental_peak_mib": 3.9765625,
       "dimensions": [
         192,
         96
       ],
       "output_bytes": 2281,
-      "output_sha256": "365829687c916f1c8bd06b8f48a306e6b9bf1af9f121e546847073bd0ea1b832",
+      "output_sha256": "7e06572ce223a930e0ebebc2feacc7d604cf1e3291716ef0cfc8ae18007b985f",
       "output_path": "outputs/physical-units-imagemagick.png"
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 41.81895777583122,
-      "median_incremental_peak_mib": 6.640625,
+      "median_ms": 42.200207244604826,
+      "median_incremental_peak_mib": 6.4296875,
       "dimensions": [
         192,
         96
@@ -354,14 +385,14 @@
         "status": "error",
         "error_class": "Discourse::Utils::CommandError"
       },
-      "median_ms": 33.07560505345464,
+      "median_ms": 30.84010537713766,
       "median_incremental_peak_mib": 2.83984375
     },
     "libvips": {
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.120106905698776,
+      "median_ms": 39.016599766910076,
       "median_incremental_peak_mib": 6.13671875,
       "dimensions": [
         120,
@@ -379,7 +410,7 @@
         "status": "error",
         "error_class": "Discourse::Utils::CommandError"
       },
-      "median_ms": 32.04679815098643,
+      "median_ms": 37.745308596640825,
       "median_incremental_peak_mib": 2.83984375
     },
     "libvips": {
@@ -387,8 +418,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 26.622395031154156,
-      "median_incremental_peak_mib": 4.73828125
+      "median_ms": 29.84681073576212,
+      "median_incremental_peak_mib": 4.93359375
     }
   }
 ]

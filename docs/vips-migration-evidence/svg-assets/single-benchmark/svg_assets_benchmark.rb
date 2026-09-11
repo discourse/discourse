@@ -30,9 +30,9 @@ unless defined?(Rails.application)
   require "discourse_vips"
 end
 
-source_head = "7fe80ba41589d4759d466ce9657b4e67fab40867"
+source_head = "5bae38325ff68d2300fe381fcf1694d72cca7af9"
 worker_sha256 = Digest::SHA256.file(Rails.root.join("script/discourse_vips_worker")).hexdigest
-raise "Worker does not match #{source_head}" unless worker_sha256 == "17fedd1b1ab08925ff1f1d6f490d46bb046ad8c165734811d5b7cb03576edc1d"
+raise "Worker does not match #{source_head}" unless worker_sha256 == "6c5905080b186c1e0e9c2c5adac1c08df504a30fe1febbade31daa51838ca840"
 
 memory_counter = "/sys/fs/cgroup/memory.current"
 raise "Run in a dedicated Linux cgroup v2 container" unless File.readable?(memory_counter)
@@ -42,6 +42,7 @@ at_exit { FileUtils.remove_entry(input_directory) }
 output_directory = File.expand_path(ENV.fetch("BENCHMARK_OUTPUT", "svg-assets-benchmark-output"))
 FileUtils.mkdir_p(output_directory)
 inputs = {
+  "drop-shadow.svg" => '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="100"><defs><filter id="shadow"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dx="2" dy="2"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect x="20" y="20" width="180" height="50" rx="8" fill="#0088cc" filter="url(#shadow)"/></svg>',
   "large.svg" => '<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="1000" viewBox="0 0 3000 1000"><rect width="3000" height="1000" fill="#0088cc"/><circle cx="500" cy="500" r="250" fill="white"/></svg>',
   "fixed.svg" => "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"120\" height=\"80\"/>\n",
   "gradient-logo.svg" => "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"100\">\n  <defs>\n    <linearGradient id=\"logo-gradient\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">\n      <stop stop-color=\"#0088cc\"/>\n      <stop offset=\"1\" stop-color=\"#00c8a0\"/>\n    </linearGradient>\n  </defs>\n  <rect x=\"4\" y=\"8\" width=\"80\" height=\"80\" rx=\"18\" fill=\"url(#logo-gradient)\"/>\n  <circle cx=\"44\" cy=\"48\" r=\"20\" fill=\"white\"/>\n  <path d=\"M30 61v17l20-17\" fill=\"white\"/>\n  <text x=\"98\" y=\"60\" font-family=\"sans-serif\" font-size=\"30\" font-weight=\"700\" fill=\"#123456\">FORUM</text>\n</svg>\n",
@@ -88,7 +89,7 @@ end
       FileUtils.rm_f(output_path)
       operation = -> do
         if backend == :libvips
-          DiscourseVips.svg_to_png(input_path: path, output_path:, max_width: 300, max_height: 100, timeout: 10)
+          DiscourseVips.svg_to_png(input_path: path, output_path:, max_width: 300, max_height: 100, timeout: 3)
         else
           ImageMagick.magick("MSVG:#{path}", output_path, operation: :topic_og_asset_render, read: [path], write: [output_directory], timeout: 10)
         end
