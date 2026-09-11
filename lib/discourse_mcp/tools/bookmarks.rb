@@ -3,6 +3,8 @@
 module DiscourseMcp
   module Tools
     class ListBookmarks
+      OUTPUT_SCHEMA = OutputSchema.object(bookmarks: OutputSchema::OBJECT_ARRAY)
+
       def self.call(arguments:, request_context:)
         bookmarks =
           Bookmark

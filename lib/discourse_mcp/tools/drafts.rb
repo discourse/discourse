@@ -3,6 +3,15 @@
 module DiscourseMcp
   module Tools
     class GetDraft
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          optional: %w[sequence data],
+          draft_key: OutputSchema::STRING,
+          sequence: OutputSchema::INTEGER,
+          found: OutputSchema::BOOLEAN,
+          data: OutputSchema::OBJECT,
+        )
+
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")
@@ -49,6 +58,13 @@ module DiscourseMcp
     end
 
     class SaveDraft
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          draft_key: OutputSchema::STRING,
+          sequence: OutputSchema::INTEGER,
+          saved: OutputSchema::BOOLEAN,
+        )
+
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")
@@ -89,6 +105,9 @@ module DiscourseMcp
     end
 
     class DeleteDraft
+      OUTPUT_SCHEMA =
+        OutputSchema.object(draft_key: OutputSchema::STRING, deleted: OutputSchema::BOOLEAN)
+
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")

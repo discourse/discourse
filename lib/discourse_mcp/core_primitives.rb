@@ -33,6 +33,15 @@ module DiscourseMcp
       { type: "object", properties: properties, required: required, additionalProperties: false }
     end
 
+    def register_tool(registry, identifier, implementation:, **attributes)
+      registry.register_tool(
+        identifier,
+        implementation:,
+        output_schema: implementation::OUTPUT_SCHEMA,
+        **attributes,
+      )
+    end
+
     def register!
       registry = DiscourseMcp.registry
       register_read_tools(registry)
@@ -42,7 +51,8 @@ module DiscourseMcp
     end
 
     def register_read_tools(registry)
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_current_user_get",
         title: "Get current user",
         description:
@@ -51,7 +61,8 @@ module DiscourseMcp
         required_scopes: [DiscourseMcp::INITIAL_SCOPE],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_search",
         title: "Search Discourse",
         description:
@@ -77,7 +88,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_filter_topics",
         title: "Filter topics",
         description:
@@ -117,7 +129,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_search_posts",
         title: "Search posts",
         description:
@@ -145,7 +158,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_read_topic_posts",
         title: "Read selected topic posts",
         description:
@@ -201,7 +215,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_get_post_replies",
         title: "Get post replies",
         description:
@@ -231,7 +246,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_list_latest_posts",
         title: "List latest posts",
         description:
@@ -245,7 +261,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_get_topic_view_stats",
         title: "Get topic view stats",
         description:
@@ -273,7 +290,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_list_directory_items",
         title: "List directory items",
         description:
@@ -338,7 +356,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_read_topic",
         title: "Read topic",
         description: "Reads a topic and a bounded set of posts visible to the authenticated user.",
@@ -366,7 +385,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_read_post",
         title: "Read post",
         description: "Reads one visible post.",
@@ -376,7 +396,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_topic_list",
         title: "List topics",
         description: "Lists recent topics visible to the authenticated user.",
@@ -385,7 +406,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_category_list",
         title: "List categories",
         description: "Lists the visible category hierarchy.",
@@ -393,7 +415,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_tag_list",
         title: "List tags",
         description: "Lists visible tags ordered by usage.",
@@ -402,7 +425,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_get_user",
         title: "Get user",
         description: "Reads a user profile visible to the authenticated user.",
@@ -415,7 +439,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_list_user_posts",
         title: "List user posts",
         description: "Lists a user's visible topics and replies with zero-based pagination.",
@@ -443,7 +468,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_get_user_summary",
         title: "Get user summary",
         description: "Returns profile-visible aggregate activity for a user.",
@@ -456,7 +482,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_list_user_actions",
         title: "List user actions",
         description: "Lists a user's visible activity using named action types.",
@@ -498,7 +525,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_get_draft",
         title: "Get draft",
         description: "Retrieves one of the authenticated user's drafts by key.",
@@ -521,7 +549,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:drafts:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_bookmark_list",
         title: "List bookmarks",
         description: "Lists the authenticated user's bookmarks.",
@@ -530,7 +559,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_notification_list",
         title: "List notifications",
         description: "Lists the authenticated user's notifications.",
@@ -539,7 +569,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_list_private_messages",
         title: "List private messages",
         description: "Lists a personal or group private-message mailbox visible to the user.",
@@ -578,7 +609,8 @@ module DiscourseMcp
         required_scopes: %w[mcp:private-messages:read],
         annotations: READ_ONLY,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_read_private_message",
         title: "Read private message",
         description: "Reads a private message visible to the authenticated user.",
@@ -609,7 +641,8 @@ module DiscourseMcp
     end
 
     def register_write_tools(registry)
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_create_topic",
         title: "Create topic",
         description: "Creates a topic as the authenticated user.",
@@ -649,7 +682,8 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_create_post",
         title: "Create post",
         description: "Creates a reply in a topic as the authenticated user.",
@@ -682,7 +716,8 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_update_post",
         title: "Update post",
         description: "Edits a post when the authenticated user has permission.",
@@ -710,7 +745,8 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_update_topic",
         title: "Update topic",
         description: "Updates fields on a topic when the user may edit it.",
@@ -764,7 +800,8 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_update_user",
         title: "Update user",
         description: "Updates the authenticated user's own profile.",
@@ -824,7 +861,8 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_upload_file",
         title: "Upload file",
         description: "Uploads base64 data or a remote HTTP(S) file for the authenticated user.",
@@ -861,7 +899,8 @@ module DiscourseMcp
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_create_private_message",
         title: "Create private message",
         description: "Creates a private message as the authenticated user.",
@@ -917,7 +956,8 @@ module DiscourseMcp
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_reply_private_message",
         title: "Reply to private message",
         description: "Replies to a private message visible to the authenticated user.",
@@ -950,7 +990,8 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_invite_to_private_message",
         title: "Invite to private message",
         description:
@@ -997,7 +1038,8 @@ module DiscourseMcp
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_post_set_deleted",
         title: "Delete or recover own post",
         description: "Deletes or recovers a post owned by the authenticated user.",
@@ -1011,7 +1053,8 @@ module DiscourseMcp
         annotations: DESTRUCTIVE,
         risk: :destructive,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_save_draft",
         title: "Save draft",
         description: "Creates or updates a draft for the authenticated user.",
@@ -1063,7 +1106,8 @@ module DiscourseMcp
         annotations: WRITE,
         risk: :write,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_delete_draft",
         title: "Delete draft",
         description: "Deletes one of the authenticated user's drafts at its current sequence.",
@@ -1087,7 +1131,8 @@ module DiscourseMcp
         annotations: DESTRUCTIVE,
         risk: :destructive,
       )
-      registry.register_tool(
+      register_tool(
+        registry,
         "discourse_user_status_set",
         title: "Set user status",
         description: "Sets or clears the authenticated user's status.",

@@ -3,6 +3,9 @@
 module DiscourseMcp
   module Tools
     class Search
+      OUTPUT_SCHEMA =
+        OutputSchema.object(results: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
+
       def self.call(arguments:, request_context:)
         query = arguments.fetch("query").to_s
         limit = arguments.fetch("max_results", 10)
@@ -22,6 +25,8 @@ module DiscourseMcp
 
     class FilterTopics
       TOP_PERIODS = %w[daily weekly monthly quarterly yearly all].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(results: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)
         view = arguments.fetch("view", "filtered")
@@ -87,6 +92,17 @@ module DiscourseMcp
     end
 
     class SearchPosts
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          posts: OutputSchema::OBJECT_ARRAY,
+          topics: OutputSchema::OBJECT_ARRAY,
+          users: OutputSchema::OBJECT_ARRAY,
+          categories: OutputSchema::OBJECT_ARRAY,
+          groups: OutputSchema::ARRAY,
+          tags: OutputSchema::STRING_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
+
       def self.call(arguments:, request_context:)
         query = arguments.fetch("query")
         page = arguments.fetch("page", 1)

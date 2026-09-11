@@ -4,6 +4,14 @@ module DiscourseMcp
   module Tools
     class ListPrivateMessages
       MAILBOXES = %w[inbox sent archive unread new].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          mailbox: OutputSchema::STRING,
+          username: OutputSchema::STRING,
+          group_name: OutputSchema::STRING_OR_NULL,
+          messages: OutputSchema::OBJECT_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
 
       def self.call(arguments:, request_context:)
         mailbox = arguments.fetch("mailbox", "inbox")
@@ -132,6 +140,23 @@ module DiscourseMcp
     end
 
     class ReadPrivateMessage
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          topic_id: OutputSchema::INTEGER,
+          slug: OutputSchema::STRING,
+          title: OutputSchema::STRING,
+          archetype: OutputSchema::STRING,
+          subtype: OutputSchema::STRING_OR_NULL,
+          posts_count: OutputSchema::INTEGER,
+          last_read_post_number: OutputSchema::INTEGER_OR_NULL,
+          topic_archived: OutputSchema::BOOLEAN,
+          message_archived: OutputSchema::BOOLEAN,
+          allowed_users: OutputSchema::OBJECT_ARRAY,
+          allowed_groups: OutputSchema::OBJECT_ARRAY,
+          posts: OutputSchema::OBJECT_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
+
       def self.call(arguments:, request_context:)
         topic = private_message_topic!(arguments.fetch("topic_id"), request_context.guardian)
         start_post_number = arguments.fetch("start_post_number", 1)
@@ -187,6 +212,15 @@ module DiscourseMcp
     end
 
     class CreatePrivateMessage
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          topic_id: OutputSchema::INTEGER,
+          post_number: OutputSchema::INTEGER,
+          slug: OutputSchema::STRING,
+          title: OutputSchema::STRING,
+        )
+
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
         usernames = Array(arguments["usernames"])
@@ -234,6 +268,15 @@ module DiscourseMcp
     end
 
     class ReplyPrivateMessage
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          topic_id: OutputSchema::INTEGER,
+          post_number: OutputSchema::INTEGER,
+          reply_to_post_number: OutputSchema::INTEGER_OR_NULL,
+          slug: OutputSchema::STRING,
+        )
+
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
         topic =
@@ -259,6 +302,19 @@ module DiscourseMcp
     end
 
     class InviteToPrivateMessage
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          optional: %w[group notifications_requested user participant_added outcome_confirmed],
+          topic_id: OutputSchema::INTEGER,
+          recipient_type: OutputSchema::STRING,
+          status: OutputSchema::STRING,
+          group: OutputSchema::OBJECT,
+          notifications_requested: OutputSchema::BOOLEAN,
+          user: OutputSchema::OBJECT,
+          participant_added: OutputSchema::BOOLEAN,
+          outcome_confirmed: OutputSchema::BOOLEAN,
+        )
+
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
         topic =

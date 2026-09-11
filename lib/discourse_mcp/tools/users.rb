@@ -5,6 +5,18 @@ require "directory_items_query"
 module DiscourseMcp
   module Tools
     class CurrentUser
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          username: OutputSchema::STRING,
+          name: OutputSchema::STRING_OR_NULL,
+          trust_level: OutputSchema::INTEGER,
+          admin: OutputSchema::BOOLEAN,
+          moderator: OutputSchema::BOOLEAN,
+          scopes: OutputSchema::STRING_ARRAY,
+          resource: OutputSchema::STRING,
+        )
+
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         ToolHelpers.text_and_structured(
@@ -23,6 +35,8 @@ module DiscourseMcp
     class ListDirectoryItems
       PAGE_SIZE = ::DirectoryItemsQuery::PAGE_SIZE
       PAGE_LIMIT = ::DirectoryItemsQuery::PAGE_LIMIT
+      OUTPUT_SCHEMA =
+        OutputSchema.object(directory_items: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)
         unless SiteSetting.enable_user_directory?
@@ -104,6 +118,18 @@ module DiscourseMcp
     end
 
     class GetUser
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          username: OutputSchema::STRING,
+          name: OutputSchema::STRING_OR_NULL,
+          trust_level: OutputSchema::INTEGER,
+          created_at: OutputSchema::STRING,
+          bio: OutputSchema::STRING,
+          admin: OutputSchema::BOOLEAN,
+          moderator: OutputSchema::BOOLEAN,
+        )
+
       def self.call(arguments:, request_context:)
         user = ToolHelpers.visible_user!(arguments.fetch("username"), request_context.guardian)
 
@@ -122,6 +148,9 @@ module DiscourseMcp
     end
 
     class ListUserPosts
+      OUTPUT_SCHEMA =
+        OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
+
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
         user = ToolHelpers.visible_user!(arguments.fetch("username"), guardian)
@@ -163,6 +192,30 @@ module DiscourseMcp
         can_see_summary_stats
         can_see_user_actions
       ].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          username: OutputSchema::STRING,
+          likes_given: OutputSchema::ANY,
+          likes_received: OutputSchema::ANY,
+          topics_entered: OutputSchema::ANY,
+          posts_read_count: OutputSchema::ANY,
+          days_visited: OutputSchema::ANY,
+          topic_count: OutputSchema::ANY,
+          post_count: OutputSchema::ANY,
+          time_read: OutputSchema::ANY,
+          recent_time_read: OutputSchema::ANY,
+          bookmark_count: OutputSchema::ANY,
+          can_see_summary_stats: OutputSchema::ANY,
+          can_see_user_actions: OutputSchema::ANY,
+          top_topics: OutputSchema::OBJECT_ARRAY,
+          top_replies: OutputSchema::OBJECT_ARRAY,
+          top_links: OutputSchema::OBJECT_ARRAY,
+          most_liked_by_users: OutputSchema::OBJECT_ARRAY,
+          most_liked_users: OutputSchema::OBJECT_ARRAY,
+          most_replied_to_users: OutputSchema::OBJECT_ARRAY,
+          top_categories: OutputSchema::OBJECT_ARRAY,
+          badges: OutputSchema::OBJECT_ARRAY,
+        )
 
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
@@ -201,6 +254,12 @@ module DiscourseMcp
         "linked" => 17,
       }.freeze
       ACTION_NAMES = ACTION_TYPES.invert.freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          actions: OutputSchema::OBJECT_ARRAY,
+          categories: OutputSchema::OBJECT_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
 
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
@@ -289,6 +348,14 @@ module DiscourseMcp
         profile_background_upload_url
         card_background_upload_url
       ].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          success: OutputSchema::BOOLEAN,
+          username: OutputSchema::STRING,
+          updated_fields: OutputSchema::STRING_ARRAY,
+          avatar_updated: OutputSchema::BOOLEAN,
+          user: OutputSchema::OBJECT,
+        )
 
       def self.call(arguments:, request_context:)
         user = User.find_by_username(arguments.fetch("username"))
@@ -362,6 +429,8 @@ module DiscourseMcp
     end
 
     class SetUserStatus
+      OUTPUT_SCHEMA = OutputSchema.object(success: OutputSchema::BOOLEAN)
+
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         if arguments.fetch("clear", false)

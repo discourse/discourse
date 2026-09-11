@@ -7,6 +7,20 @@ module DiscourseMcp
   module Tools
     class UploadFile
       UPLOAD_TYPES = %w[avatar profile_background card_background composer].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          optional: %w[short_url short_path extension width height filesize human_filesize],
+          id: OutputSchema::INTEGER,
+          url: OutputSchema::STRING,
+          short_url: OutputSchema::STRING,
+          short_path: OutputSchema::STRING,
+          original_filename: OutputSchema::STRING,
+          extension: OutputSchema::STRING_OR_NULL,
+          width: OutputSchema::INTEGER_OR_NULL,
+          height: OutputSchema::INTEGER_OR_NULL,
+          filesize: OutputSchema::INTEGER,
+          human_filesize: OutputSchema::STRING,
+        )
 
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess

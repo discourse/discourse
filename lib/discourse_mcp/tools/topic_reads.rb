@@ -10,6 +10,13 @@ module DiscourseMcp
         "around_post" => %w[post_number limit],
         "usernames" => %w[usernames limit replies_only],
       }.freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          topic_id: OutputSchema::INTEGER,
+          selection_mode: OutputSchema::STRING,
+          posts: OutputSchema::OBJECT_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
 
       def self.call(arguments:, request_context:)
         validate_selection!(arguments)
@@ -132,6 +139,15 @@ module DiscourseMcp
     class GetPostReplies
       DIRECT_REPLIES_LIMIT = 20
       MODES = %w[reply_ids direct_replies reply_history].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          optional: %w[posts replies],
+          post_id: OutputSchema::INTEGER,
+          mode: OutputSchema::STRING,
+          posts: OutputSchema::OBJECT_ARRAY,
+          replies: OutputSchema::OBJECT_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
 
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
@@ -237,6 +253,9 @@ module DiscourseMcp
     end
 
     class ListLatestPosts
+      OUTPUT_SCHEMA =
+        OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
+
       def self.call(arguments:, request_context:)
         before_post_id = arguments["before_post_id"]
         posts =
@@ -278,6 +297,13 @@ module DiscourseMcp
     end
 
     class GetTopicViewStats
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          topic_id: OutputSchema::INTEGER,
+          view_stats: OutputSchema::OBJECT_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
+
       def self.call(arguments:, request_context:)
         topic = Topic.find_by(id: arguments.fetch("topic_id"))
         if topic.blank? || !request_context.guardian.can_see?(topic)
@@ -317,6 +343,23 @@ module DiscourseMcp
     end
 
     class GetTopic
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          title: OutputSchema::STRING,
+          slug: OutputSchema::STRING,
+          category_id: OutputSchema::INTEGER_OR_NULL,
+          tags: OutputSchema::STRING_ARRAY,
+          posts_count: OutputSchema::INTEGER,
+          created_at: OutputSchema::STRING,
+          last_posted_at: OutputSchema::STRING_OR_NULL,
+          closed: OutputSchema::BOOLEAN,
+          archived: OutputSchema::BOOLEAN,
+          url: OutputSchema::STRING,
+          posts: OutputSchema::OBJECT_ARRAY,
+          meta: OutputSchema::OBJECT,
+        )
+
       def self.call(arguments:, request_context:)
         topic = Topic.find_by(id: arguments.fetch("topic_id").to_i)
         if topic.blank? || !request_context.guardian.can_see?(topic)
@@ -351,6 +394,21 @@ module DiscourseMcp
     end
 
     class GetPost
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          optional: %w[accepted_answer topic_accepted_answer],
+          id: OutputSchema::INTEGER,
+          topic_id: OutputSchema::INTEGER,
+          topic_slug: OutputSchema::STRING_OR_NULL,
+          post_number: OutputSchema::INTEGER,
+          username: OutputSchema::STRING_OR_NULL,
+          created_at: OutputSchema::STRING,
+          raw: OutputSchema::STRING,
+          truncated: OutputSchema::BOOLEAN,
+          accepted_answer: OutputSchema::BOOLEAN_OR_NULL,
+          topic_accepted_answer: OutputSchema::BOOLEAN_OR_NULL,
+        )
+
       def self.call(arguments:, request_context:)
         post = ToolHelpers.visible_post!(arguments.fetch("post_id"), request_context.guardian)
         result =
@@ -371,6 +429,8 @@ module DiscourseMcp
     end
 
     class ListTopics
+      OUTPUT_SCHEMA = OutputSchema.object(topics: OutputSchema::OBJECT_ARRAY)
+
       def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 30).to_i.clamp(1, 50)
         topics = TopicQuery.new(request_context.user).list_latest.topics.first(limit)
@@ -386,6 +446,8 @@ module DiscourseMcp
     end
 
     class ListCategories
+      OUTPUT_SCHEMA = OutputSchema.object(categories: OutputSchema::OBJECT_ARRAY)
+
       def self.call(arguments:, request_context:)
         categories = Category.secured(request_context.guardian).order(:position, :id).limit(500)
         ToolHelpers.text_and_structured(
@@ -404,6 +466,8 @@ module DiscourseMcp
     end
 
     class ListTags
+      OUTPUT_SCHEMA = OutputSchema.object(tags: OutputSchema::OBJECT_ARRAY)
+
       def self.call(arguments:, request_context:)
         column = Tag.topic_count_column(request_context.guardian)
         tags = Tag.order(column => :desc).limit(arguments.fetch("limit", 100).to_i.clamp(1, 200))
