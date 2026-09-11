@@ -94,18 +94,88 @@ RSpec.describe Report do
   end
 
   describe ".find_cached" do
-    it "returns the cached payload for its reader" do
+    it "shares warmed core aggregates only with authorized staff" do
+      report = described_class.find("signups", guardian: Discourse.system_user.guardian)
+      described_class.cache(report)
+
+      expect(described_class.find_cached("signups", guardian: admin.guardian)).to eq(report.as_json)
+      expect(described_class.find_cached("signups", guardian: moderator.guardian)).to eq(
+        report.as_json,
+      )
+      expect(described_class.find_cached("signups", guardian: user.guardian)).to be_nil
+      expect(described_class.find_cached("signups", guardian: Guardian.new)).to be_nil
+    end
+
+    it "keeps reader-sensitive core reports separate even for readers with the same role" do
+      another_admin = Fabricate(:admin)
+      report = described_class.find("post_edits", guardian: admin.guardian)
+      described_class.cache(report)
+
+      expect(described_class.find_cached("post_edits", guardian: admin.guardian)).to eq(
+        report.as_json,
+      )
+      expect(described_class.find_cached("post_edits", guardian: another_admin.guardian)).to be_nil
+      expect(described_class.find_cached("post_edits", guardian: moderator.guardian)).to be_nil
+    end
+
+    it "keeps unclassified plugin reports separate" do
+      described_class.add_report("custom_reader_report") do |report|
+        report.data = [{ reader_id: report.current_user.id }]
+      end
+      report = described_class.find("custom_reader_report", guardian: admin.guardian)
+      described_class.cache(report)
+
+      expect(described_class.find_cached("custom_reader_report", guardian: admin.guardian)).to eq(
+        report.as_json,
+      )
+      expect(
+        described_class.find_cached("custom_reader_report", guardian: moderator.guardian),
+      ).to be_nil
+    ensure
+      described_class.remove_report("custom_reader_report")
+    end
+
+    it "keeps plugin replacements of shared core generators separate" do
+      core_report = described_class.find("signups", guardian: Discourse.system_user.guardian)
+      described_class.cache(core_report)
+      described_class.add_report("signups") do |report|
+        report.data = [{ reader_id: report.current_user.id }]
+      end
+
+      expect(described_class.find_cached("signups", guardian: admin.guardian)).to be_nil
       report = described_class.find("signups", guardian: admin.guardian)
       described_class.cache(report)
 
       expect(described_class.find_cached("signups", guardian: admin.guardian)).to eq(report.as_json)
+      expect(described_class.find_cached("signups", guardian: moderator.guardian)).to be_nil
+    ensure
+      described_class.remove_report("signups")
     end
 
-    it "keeps each reader's cached reports separate" do
-      report = described_class.find("signups", guardian: admin.guardian)
-      described_class.cache(report)
+    it "keeps translated aggregate payloads separate by locale" do
+      english_report =
+        I18n.with_locale(:en) do
+          report = described_class.find("signups", guardian: admin.guardian)
+          described_class.cache(report)
+          report.as_json
+        end
 
-      expect(described_class.find_cached("signups", guardian: moderator.guardian)).to be_nil
+      I18n.with_locale(:fr) do
+        expect(described_class.find_cached("signups", guardian: moderator.guardian)).to be_nil
+        report = described_class.find("signups", guardian: moderator.guardian)
+        described_class.cache(report)
+
+        expect(described_class.find_cached("signups", guardian: admin.guardian)).to eq(
+          report.as_json,
+        )
+        expect(report.as_json[:title]).not_to eq(english_report[:title])
+      end
+
+      I18n.with_locale(:en) do
+        expect(described_class.find_cached("signups", guardian: moderator.guardian)).to eq(
+          english_report,
+        )
+      end
     end
 
     it "applies current visibility to fresh and cached reads" do

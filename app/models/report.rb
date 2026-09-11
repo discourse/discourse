@@ -3,7 +3,7 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 5
+  SCHEMA_VERSION = 6
 
   RELATED_ITEMS_LIMIT = 50
 
@@ -156,6 +156,15 @@ class Report
   include Reports::WebCrawlers
   include Reports::WebHookEventsDailyAggregate
 
+  SHARED_CACHE_REPORT_OWNERS = {
+    "signups" => Reports::Signups::ClassMethods,
+    "dau_by_mau" => Reports::DauByMau::ClassMethods,
+    "new_contributors" => Reports::NewContributors::ClassMethods,
+    "daily_engaged_users" => Reports::DailyEngagedUsers::ClassMethods,
+    "trust_level_pipeline" => Reports::TrustLevelPipeline::ClassMethods,
+  }.freeze
+  private_constant :SHARED_CACHE_REPORT_OWNERS
+
   attr_accessor :type,
                 :data,
                 :total,
@@ -219,8 +228,6 @@ class Report
   end
 
   def self.cache_key(report)
-    guardian = report.guardian || report.current_user&.guardian
-
     [
       "reports",
       report.type,
@@ -230,12 +237,23 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
+      I18n.locale,
       report.purpose,
-      guardian&.user&.id || report.current_user&.id,
-      guardian&.can_see_ip?,
+      *cache_scope(report),
       CrawlerScorer.enabled?,
     ].compact.map(&:to_s).join(":")
   end
+
+  def self.cache_scope(report)
+    owner = SHARED_CACHE_REPORT_OWNERS[report.type]
+    if !report.include_related_items && owner && method("report_#{report.type}").owner == owner
+      return ["shared"]
+    end
+
+    guardian = report.guardian || report.current_user&.guardian
+    [guardian&.user&.id || report.current_user&.id, guardian&.can_see_ip?]
+  end
+  private_class_method :cache_scope
 
   def add_filter(name, options = {})
     available_filters[name] = options
