@@ -3,6 +3,20 @@
 module Chat
   module McpTools
     class ListChannels
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          channels: {
+            type: "array",
+            items:
+              DiscourseMcp::OutputSchema.object(
+                id: DiscourseMcp::OutputSchema::INTEGER,
+                title: DiscourseMcp::OutputSchema::STRING,
+                status: DiscourseMcp::OutputSchema::STRING,
+                direct_message: DiscourseMcp::OutputSchema::BOOLEAN,
+              ),
+          },
+        )
+
       def self.call(arguments:, request_context:)
         result = Chat::ListUserChannels.call(guardian: request_context.guardian)
         raise DiscourseMcp::ToolError, "Unable to list chat channels" if result.failure?
@@ -21,6 +35,27 @@ module Chat
     end
 
     class ListMessages
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          channel_id: DiscourseMcp::OutputSchema::INTEGER,
+          messages: {
+            type: "array",
+            items:
+              DiscourseMcp::OutputSchema.object(
+                id: DiscourseMcp::OutputSchema::INTEGER,
+                channel_id: DiscourseMcp::OutputSchema::INTEGER,
+                user_id: DiscourseMcp::OutputSchema::INTEGER_OR_NULL,
+                username: DiscourseMcp::OutputSchema::STRING_OR_NULL,
+                message: DiscourseMcp::OutputSchema::STRING,
+                created_at: DiscourseMcp::OutputSchema::STRING,
+                edited: DiscourseMcp::OutputSchema::BOOLEAN,
+                thread_id: DiscourseMcp::OutputSchema::INTEGER_OR_NULL,
+                in_reply_to_id: DiscourseMcp::OutputSchema::INTEGER_OR_NULL,
+              ),
+          },
+          meta: DiscourseMcp::OutputSchema::OBJECT,
+        )
+
       def self.call(arguments:, request_context:)
         result =
           Chat::ListChannelMessages.call(
@@ -63,6 +98,13 @@ module Chat
     end
 
     class CreateMessage
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          id: DiscourseMcp::OutputSchema::INTEGER,
+          channel_id: DiscourseMcp::OutputSchema::INTEGER,
+          created_at: DiscourseMcp::OutputSchema::STRING,
+        )
+
       def self.call(arguments:, request_context:)
         result =
           Chat::CreateMessage.call(

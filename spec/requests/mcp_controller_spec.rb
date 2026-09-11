@@ -200,9 +200,11 @@ describe "MCP transport" do
 
     post "/mcp", params: list_request.to_json, headers: classic_headers
 
-    tool_names = response.parsed_body.dig("result", "tools").pluck("name")
+    tools = response.parsed_body.dig("result", "tools")
+    tool_names = tools.pluck("name")
     expect(tool_names).to include("discourse_current_user_get")
     expect(tool_names).to all(match(/\A[A-Za-z0-9_]+\z/))
+    expect(tools).to all(include("outputSchema" => include("type" => "object")))
   end
 
   it "uses the server-wide cache TTL setting for cacheable responses" do

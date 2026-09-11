@@ -458,6 +458,7 @@ after_initialize do
       required: %w[post_id reaction],
       additionalProperties: false,
     },
+    output_schema: DiscourseReactions::McpTools::SetReaction::OUTPUT_SCHEMA,
     required_scopes: %w[discourse-reactions:write],
     annotations: {
       readOnlyHint: false,

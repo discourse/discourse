@@ -3,6 +3,17 @@
 module DiscourseMcp
   module Tools
     class CreateTopic
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          topic_id: OutputSchema::INTEGER,
+          slug: OutputSchema::STRING,
+          title: OutputSchema::STRING,
+          username: OutputSchema::STRING,
+          requested_author: OutputSchema::STRING_OR_NULL,
+          author_applied: OutputSchema::BOOLEAN_OR_NULL,
+        )
+
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
         post =
@@ -29,6 +40,16 @@ module DiscourseMcp
     end
 
     class ReplyTopic
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          topic_id: OutputSchema::INTEGER,
+          post_number: OutputSchema::INTEGER,
+          username: OutputSchema::STRING,
+          requested_author: OutputSchema::STRING_OR_NULL,
+          author_applied: OutputSchema::BOOLEAN_OR_NULL,
+        )
+
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
         post =
@@ -52,6 +73,16 @@ module DiscourseMcp
     end
 
     class EditPost
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          id: OutputSchema::INTEGER,
+          topic_id: OutputSchema::INTEGER,
+          post_number: OutputSchema::INTEGER,
+          raw: OutputSchema::STRING,
+          updated_at: OutputSchema::STRING,
+          edit_reason: OutputSchema::STRING_OR_NULL,
+        )
+
       def self.call(arguments:, request_context:)
         post = Post.find_by(id: arguments.fetch("post_id").to_i)
         if post.blank? || !request_context.guardian.can_edit_post?(post)
@@ -76,6 +107,13 @@ module DiscourseMcp
 
     class UpdateTopic
       MUTABLE_FIELDS = %w[title category_id tags featured_link].freeze
+      OUTPUT_SCHEMA =
+        OutputSchema.object(
+          success: OutputSchema::BOOLEAN,
+          topic_id: OutputSchema::INTEGER,
+          updated_fields: OutputSchema::STRING_ARRAY,
+          topic: OutputSchema::OBJECT,
+        )
 
       def self.call(arguments:, request_context:)
         topic = Topic.find_by(id: arguments.fetch("topic_id"))
@@ -175,6 +213,9 @@ module DiscourseMcp
     end
 
     class SetPostDeleted
+      OUTPUT_SCHEMA =
+        OutputSchema.object(post_id: OutputSchema::INTEGER, deleted: OutputSchema::BOOLEAN)
+
       def self.call(arguments:, request_context:)
         post = Post.find_by(id: arguments.fetch("post_id").to_i, user_id: request_context.user_id)
         raise DiscourseMcp::ToolError, "Post not found" if post.blank?

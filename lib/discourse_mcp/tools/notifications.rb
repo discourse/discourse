@@ -3,6 +3,8 @@
 module DiscourseMcp
   module Tools
     class ListNotifications
+      OUTPUT_SCHEMA = OutputSchema.object(notifications: OutputSchema::OBJECT_ARRAY)
+
       def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 50).to_i.clamp(1, 100)
         notifications =

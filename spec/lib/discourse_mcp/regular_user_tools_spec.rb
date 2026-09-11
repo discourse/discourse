@@ -751,6 +751,13 @@ describe DiscourseMcp::Tools do
 end
 
 describe DiscourseMcp::CorePrimitives do
+  it "declares an output schema for every tool" do
+    tools_without_output_schema =
+      DiscourseMcp.registry.all(:tool).reject(&:output_schema).map(&:identifier)
+
+    expect(tools_without_output_schema).to be_empty
+  end
+
   it "registers the compatible regular-user tool names" do
     expected_names = %w[
       discourse_create_post

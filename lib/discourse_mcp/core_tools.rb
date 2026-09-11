@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "discourse_mcp/tool_helpers"
+require "discourse_mcp/output_schema"
 require "discourse_mcp/tools/search"
 require "discourse_mcp/tools/topic_reads"
 require "discourse_mcp/tools/topic_writes"
