@@ -341,14 +341,14 @@ module Middleware
             # technically lua will cast for us, but might as well be
             # prudent here, hence the to_i
             if count.to_i < GlobalSetting.anon_cache_store_threshold
-              headers["X-Discourse-Cached"] = "skip"
+              headers["x-discourse-cached"] = "skip"
               return status, headers, response
             end
           end
 
           headers_stripped =
             Rack::Headers[headers].delete_if { |k, _| %w[set-cookie x-miniprofiler-ids].include? k }
-          headers_stripped["X-Discourse-Cached"] = "true"
+          headers_stripped["x-discourse-cached"] = "true"
           parts = []
           response.each { |part| parts << part }
 
@@ -362,7 +362,7 @@ module Middleware
           Discourse.redis.setex(cache_key_body, cache_duration, compress(parts.join))
           Discourse.redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
 
-          headers["X-Discourse-Cached"] = "store"
+          headers["x-discourse-cached"] = "store"
         else
           parts = response
         end
@@ -431,7 +431,7 @@ module Middleware
           @app.call(env)
         end
 
-      result[1]["Set-Cookie"] = "dosp=1; Path=/" if force_anon
+      result[1]["set-cookie"] = "dosp=1; Path=/" if force_anon
 
       result
     end
