@@ -8,7 +8,7 @@ class McpOauthMetadataController < ApplicationController
     render json: {
              resource: DiscourseMcp.resource_url,
              authorization_servers: [DiscourseMcp.issuer],
-             scopes_supported: [DiscourseMcp::INITIAL_SCOPE],
+             scopes_supported: DiscourseMcp.registry.scopes,
              bearer_methods_supported: ["header"],
            }
   end
