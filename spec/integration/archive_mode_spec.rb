@@ -113,6 +113,16 @@ RSpec.describe "Site archived" do
       sso.username = existing.username
       expect { sso.lookup_or_create_user("127.0.0.1") }.not_to raise_error
     end
+
+    it "blocks passwordless-login-code account creation for unknown emails" do
+      expect do
+        User::Action::CreateFromVerifiedEmail.call(
+          email: "new-code-user@example.com",
+          ip_address: "127.0.0.1",
+        )
+      end.to raise_error(Discourse::SiteArchived)
+      expect(User.with_email("new-code-user@example.com")).to be_empty
+    end
   end
 
   context "when an operational readonly reason is also active" do

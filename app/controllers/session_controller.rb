@@ -903,6 +903,12 @@ class SessionController < ApplicationController
   end
 
   def process_verified_login_code(matched_user)
+    # Existing-user login is allowed while archived; account creation is not.
+    # The model-layer guard in CreateFromVerifiedEmail exists too, but the
+    # Service framework swallows exceptions inside ModelStep, so raising here
+    # is what actually surfaces the 503 archive response.
+    raise Discourse::SiteArchived if SiteSetting.site_archived && matched_user.nil?
+
     if matched_user &&
          (matched_user.totp_or_backup_codes_enabled? || matched_user.security_keys_enabled?)
       if missing_second_factor_params?
