@@ -1,0 +1,49 @@
+{
+  "pr": 43453,
+  "head": "dfbd095f54e7d0b0c32204d6768880cbbedd2fdc",
+  "files": [
+    {
+      "path": "lib/image_magick.rb",
+      "measured_sha256": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+      "pr_sha256": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+      "identical": true
+    },
+    {
+      "path": "lib/discourse_vips.rb",
+      "measured_sha256": "9ef939243e0cd9a8f3dd04d17e4cd6a48e9358e98e1f288b7aeb8c23a1310fc1",
+      "pr_sha256": "603bd0f6d7366a508946b167766c7acc9da76e73218a1a25b309e35f9178a8d3",
+      "identical": false
+    },
+    {
+      "path": "lib/discourse/safe_exec.rb",
+      "measured_sha256": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "pr_sha256": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "identical": true
+    },
+    {
+      "path": "lib/image_processing/instrumentation.rb",
+      "measured_sha256": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "pr_sha256": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "identical": true
+    },
+    {
+      "path": "lib/discourse_vips/client.rb",
+      "measured_sha256": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "pr_sha256": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "identical": true
+    },
+    {
+      "path": "lib/discourse_vips/worker_process.rb",
+      "measured_sha256": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+      "pr_sha256": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+      "identical": true
+    },
+    {
+      "path": "script/discourse_vips_worker",
+      "measured_sha256": "f09e23eb449a2b35a6a1b1970f6977c95c842ac4a7b884d1744b77a5e6c8fa33",
+      "pr_sha256": "f09e23eb449a2b35a6a1b1970f6977c95c842ac4a7b884d1744b77a5e6c8fa33",
+      "identical": true
+    }
+  ],
+  "only_difference": "Approved comment above DiscourseVips.animated?; all executable lines identical. Worker, IPC, sandbox, ImageMagick wrapper and instrumentation are byte-identical."
+}

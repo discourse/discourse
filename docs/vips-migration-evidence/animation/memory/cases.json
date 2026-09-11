@@ -1,0 +1,72 @@
+[
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "static.gif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/static.gif",
+    "source_sha256": "86976a133313408fb5dd53f4126550a6bde033eef79beed3e2ca860d6ac71e70",
+    "imagemagick_median_ms": 26.86566300690174,
+    "libvips_median_ms": 19.889434799551964
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "static.webp",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/static.webp",
+    "source_sha256": "2fbaf43c86a30bc0bb7edfe34a454ebb09455c19407d7eb9fd33ed4285caf0b5",
+    "imagemagick_median_ms": 28.698670212179422,
+    "libvips_median_ms": 21.751207765191793
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "static.avif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/static.avif",
+    "source_sha256": "5e7acd7ee20124f83316f40ef3c395286b2d0e402468d3d97a0f18659540c0c6",
+    "imagemagick_median_ms": 29.37918482348323,
+    "libvips_median_ms": 22.632895968854427
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "tiny_animated.gif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/tiny_animated.gif",
+    "source_sha256": "d3255fd4446c581da6fe23847ca3df8b2b9b729f60bad432cbb2bca2319951c5",
+    "imagemagick_median_ms": 30.284386593848467,
+    "libvips_median_ms": 22.521615959703922
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "animated.gif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/animated.gif",
+    "source_sha256": "1a9b34fc78ac562790a10b7042d10ad359c2214ca99e644e6c9dd25b6de5a08d",
+    "imagemagick_median_ms": 32.704152166843414,
+    "libvips_median_ms": 23.47528701648116
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "animated.webp",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/animated.webp",
+    "source_sha256": "4a6b6b239d6da08999d4a2d5f2debb49cda6f1eedec4b241da8ee1d5c65cf1e0",
+    "imagemagick_median_ms": 45.53429177030921,
+    "libvips_median_ms": 25.404317304491997
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "multipage.avif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/multipage.avif",
+    "source_sha256": "88ea0be3530a6a83f0e719aa6fd36ec96884d945512aeb52747ce7200b36eced",
+    "imagemagick_median_ms": 35.13879096135497,
+    "libvips_median_ms": 26.65875619277358
+  }
+]

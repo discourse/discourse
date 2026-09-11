@@ -1,0 +1,30 @@
+{
+  "image": "discourse/base:2.0.20260812-0036",
+  "digest": "discourse/base@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "source_sha256": {
+    "animation": {
+      "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+      "lib/discourse_vips.rb": "9ef939243e0cd9a8f3dd04d17e4cd6a48e9358e98e1f288b7aeb8c23a1310fc1",
+      "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+      "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+      "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+      "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+      "script/discourse_vips_worker": "f09e23eb449a2b35a6a1b1970f6977c95c842ac4a7b884d1744b77a5e6c8fa33",
+      "Gemfile": "55713ee72f90136ad9a726fcdf022fbe1742b0bc2b686c338fb57bc2f3a9cd47",
+      "Gemfile.lock": "8216230887180790674978519528753b061bc9e201510b90d8fe3710a04346fb"
+    }
+  },
+  "harness_sha256": {
+    "run.rb": "8c900bb80259d7f6a02c062e8e665d917ae1df7b24fc3bd6b627161b2a422a5a",
+    "bootstrap.rb": "20ae024a9550318a618dbab6eb76e58d4b1f9d193411ec064718322177415f5b",
+    "cases.json": "0c5cea7fd780a6c705092c64ca0a019e8b049f61851a16374a43c8569ab0b3f8",
+    "collect.py": "cf1a1d6d414b688c1986576ccf4d38e21bef4c40ea7a9370c99994b927f65a9b",
+    "Gemfile": "f2cc2c492b57826eb7857ffaaad36085772eba989cadb0f2a543fa5f4bc8fc92",
+    "Gemfile.lock": "a8f475f7e00d88b7a8441a6dec8122a1256d195ac839f2e21da41c342e9ee359"
+  },
+  "method": "median of 3 fresh-container cgroup memory.peak readings; each container includes Ruby harness boot, one warmup and five operations; total peak includes worker/process tree, charged file cache and kernel; MiB=bytes/1048576; existing timing from separate warm benchmarks",
+  "uid": 1000,
+  "cpu_limit": 2,
+  "memory": "2g",
+  "memory_swap": "3g"
+}

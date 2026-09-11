@@ -1,0 +1,268 @@
+[
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "static.gif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/static.gif",
+    "source_sha256": "86976a133313408fb5dd53f4126550a6bde033eef79beed3e2ca860d6ac71e70",
+    "imagemagick_median_ms": 26.86566300690174,
+    "libvips_median_ms": 19.889434799551964,
+    "memory": {
+      "imagemagick": {
+        "median_peak_mib": 24.20703125,
+        "peak_bytes_trials": [
+          25141248,
+          25382912,
+          25407488
+        ],
+        "peak_mib_trials": [
+          23.9765625,
+          24.20703125,
+          24.23046875
+        ]
+      },
+      "libvips": {
+        "median_peak_mib": 34.93359375,
+        "peak_bytes_trials": [
+          36581376,
+          36630528,
+          36638720
+        ],
+        "peak_mib_trials": [
+          34.88671875,
+          34.93359375,
+          34.94140625
+        ]
+      }
+    }
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "static.webp",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/static.webp",
+    "source_sha256": "2fbaf43c86a30bc0bb7edfe34a454ebb09455c19407d7eb9fd33ed4285caf0b5",
+    "imagemagick_median_ms": 28.698670212179422,
+    "libvips_median_ms": 21.751207765191793,
+    "memory": {
+      "imagemagick": {
+        "median_peak_mib": 24.04296875,
+        "peak_bytes_trials": [
+          25288704,
+          25210880,
+          25202688
+        ],
+        "peak_mib_trials": [
+          24.1171875,
+          24.04296875,
+          24.03515625
+        ]
+      },
+      "libvips": {
+        "median_peak_mib": 34.93359375,
+        "peak_bytes_trials": [
+          36651008,
+          36626432,
+          36630528
+        ],
+        "peak_mib_trials": [
+          34.953125,
+          34.9296875,
+          34.93359375
+        ]
+      }
+    }
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "static.avif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/static.avif",
+    "source_sha256": "5e7acd7ee20124f83316f40ef3c395286b2d0e402468d3d97a0f18659540c0c6",
+    "imagemagick_median_ms": 29.37918482348323,
+    "libvips_median_ms": 22.632895968854427,
+    "memory": {
+      "imagemagick": {
+        "median_peak_mib": 24.109375,
+        "peak_bytes_trials": [
+          25194496,
+          25280512,
+          25329664
+        ],
+        "peak_mib_trials": [
+          24.02734375,
+          24.109375,
+          24.15625
+        ]
+      },
+      "libvips": {
+        "median_peak_mib": 34.94140625,
+        "peak_bytes_trials": [
+          36638720,
+          36642816,
+          36614144
+        ],
+        "peak_mib_trials": [
+          34.94140625,
+          34.9453125,
+          34.91796875
+        ]
+      }
+    }
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "tiny_animated.gif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/tiny_animated.gif",
+    "source_sha256": "d3255fd4446c581da6fe23847ca3df8b2b9b729f60bad432cbb2bca2319951c5",
+    "imagemagick_median_ms": 30.284386593848467,
+    "libvips_median_ms": 22.521615959703922,
+    "memory": {
+      "imagemagick": {
+        "median_peak_mib": 24.21875,
+        "peak_bytes_trials": [
+          25419776,
+          25395200,
+          25350144
+        ],
+        "peak_mib_trials": [
+          24.2421875,
+          24.21875,
+          24.17578125
+        ]
+      },
+      "libvips": {
+        "median_peak_mib": 34.96875,
+        "peak_bytes_trials": [
+          36605952,
+          36667392,
+          36737024
+        ],
+        "peak_mib_trials": [
+          34.91015625,
+          34.96875,
+          35.03515625
+        ]
+      }
+    }
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "animated.gif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/animated.gif",
+    "source_sha256": "1a9b34fc78ac562790a10b7042d10ad359c2214ca99e644e6c9dd25b6de5a08d",
+    "imagemagick_median_ms": 32.704152166843414,
+    "libvips_median_ms": 23.47528701648116,
+    "memory": {
+      "imagemagick": {
+        "median_peak_mib": 25.296875,
+        "peak_bytes_trials": [
+          26652672,
+          26525696,
+          26370048
+        ],
+        "peak_mib_trials": [
+          25.41796875,
+          25.296875,
+          25.1484375
+        ]
+      },
+      "libvips": {
+        "median_peak_mib": 34.875,
+        "peak_bytes_trials": [
+          36569088,
+          36507648,
+          36614144
+        ],
+        "peak_mib_trials": [
+          34.875,
+          34.81640625,
+          34.91796875
+        ]
+      }
+    }
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "animated.webp",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/animated.webp",
+    "source_sha256": "4a6b6b239d6da08999d4a2d5f2debb49cda6f1eedec4b241da8ee1d5c65cf1e0",
+    "imagemagick_median_ms": 45.53429177030921,
+    "libvips_median_ms": 25.404317304491997,
+    "memory": {
+      "imagemagick": {
+        "median_peak_mib": 27.0234375,
+        "peak_bytes_trials": [
+          28360704,
+          28336128,
+          28270592
+        ],
+        "peak_mib_trials": [
+          27.046875,
+          27.0234375,
+          26.9609375
+        ]
+      },
+      "libvips": {
+        "median_peak_mib": 34.9375,
+        "peak_bytes_trials": [
+          36769792,
+          36634624,
+          36610048
+        ],
+        "peak_mib_trials": [
+          35.06640625,
+          34.9375,
+          34.9140625
+        ]
+      }
+    }
+  },
+  {
+    "pr": 43453,
+    "operation": "animation",
+    "sample": "multipage.avif",
+    "bundle": "animation",
+    "input": "spec/fixtures/images/multipage.avif",
+    "source_sha256": "88ea0be3530a6a83f0e719aa6fd36ec96884d945512aeb52747ce7200b36eced",
+    "imagemagick_median_ms": 35.13879096135497,
+    "libvips_median_ms": 26.65875619277358,
+    "memory": {
+      "imagemagick": {
+        "median_peak_mib": 24.1796875,
+        "peak_bytes_trials": [
+          25276416,
+          25354240,
+          25382912
+        ],
+        "peak_mib_trials": [
+          24.10546875,
+          24.1796875,
+          24.20703125
+        ]
+      },
+      "libvips": {
+        "median_peak_mib": 34.953125,
+        "peak_bytes_trials": [
+          36712448,
+          36638720,
+          36651008
+        ],
+        "peak_mib_trials": [
+          35.01171875,
+          34.94140625,
+          34.953125
+        ]
+      }
+    }
+  }
+]
