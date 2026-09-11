@@ -109,8 +109,7 @@ gem "mini_racer"
 
 gem "highline", require: false
 
-# TODO: upgrade to Rack 3 now that Unicorn has been removed
-gem "rack", "< 3"
+gem "rack"
 
 gem "rack-protection" # security
 gem "cbor", require: false

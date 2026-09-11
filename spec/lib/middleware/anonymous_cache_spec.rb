@@ -208,11 +208,11 @@ RSpec.describe Middleware::AnonymousCache do
         global_setting :compress_anon_cache, true
 
         payload = "x" * 1000
-        helper.cache([200, { "HELLO" => "WORLD" }, [payload]])
+        helper.cache([200, { "hello" => "WORLD" }, [payload]])
 
         helper = new_helper("ANON_CACHE_DURATION" => 10)
         expect(helper.cached).to eq(
-          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]],
+          [200, { "x-discourse-cached" => "true", "hello" => "WORLD" }, [payload]],
         )
 
         # depends on i7z implementation, but lets assume it is stable unless we discover
@@ -221,11 +221,11 @@ RSpec.describe Middleware::AnonymousCache do
       end
 
       it "handles brotli switching" do
-        helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
+        helper.cache([200, { "hello" => "WORLD" }, ["hello ", "my world"]])
 
         helper = new_helper("ANON_CACHE_DURATION" => 10)
         expect(helper.cached).to eq(
-          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]],
+          [200, { "x-discourse-cached" => "true", "hello" => "WORLD" }, ["hello my world"]],
         )
 
         helper = new_helper("ANON_CACHE_DURATION" => 10, "HTTP_ACCEPT_ENCODING" => "gz, br")
@@ -235,23 +235,23 @@ RSpec.describe Middleware::AnonymousCache do
       it "includes the forced color mode in the cache key" do
         dark_helper =
           new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=dark")
-        dark_helper.cache([200, { "HELLO" => "WORLD" }, ["dark mode"]])
+        dark_helper.cache([200, { "hello" => "WORLD" }, ["dark mode"]])
 
         light_helper =
           new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=light")
         expect(light_helper.cached).to eq(nil)
 
-        light_helper.cache([200, { "HELLO" => "WORLD" }, ["light mode"]])
+        light_helper.cache([200, { "hello" => "WORLD" }, ["light mode"]])
 
         auto_helper = new_helper("ANON_CACHE_DURATION" => 10)
         expect(auto_helper.cached).to eq(nil)
 
-        auto_helper.cache([200, { "HELLO" => "WORLD" }, ["auto color mode"]])
+        auto_helper.cache([200, { "hello" => "WORLD" }, ["auto color mode"]])
 
         unknown_helper =
           new_helper("ANON_CACHE_DURATION" => 10, "HTTP_COOKIE" => "forced_color_mode=blada")
         expect(unknown_helper.cached).to eq(
-          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["auto color mode"]],
+          [200, { "hello" => "WORLD", "x-discourse-cached" => "true" }, ["auto color mode"]],
         )
 
         dark_helper =
@@ -261,31 +261,31 @@ RSpec.describe Middleware::AnonymousCache do
         auto_helper = new_helper("ANON_CACHE_DURATION" => 10)
 
         expect(dark_helper.cached).to eq(
-          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["dark mode"]],
+          [200, { "hello" => "WORLD", "x-discourse-cached" => "true" }, ["dark mode"]],
         )
         expect(light_helper.cached).to eq(
-          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["light mode"]],
+          [200, { "hello" => "WORLD", "x-discourse-cached" => "true" }, ["light mode"]],
         )
         expect(auto_helper.cached).to eq(
-          [200, { "HELLO" => "WORLD", "X-Discourse-Cached" => "true" }, ["auto color mode"]],
+          [200, { "hello" => "WORLD", "x-discourse-cached" => "true" }, ["auto color mode"]],
         )
       end
 
       it "returns cached data for cached requests" do
         helper.is_mobile = true
         expect(helper.cached).to eq(nil)
-        helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
+        helper.cache([200, { "hello" => "WORLD" }, ["hello ", "my world"]])
 
         helper = new_helper("ANON_CACHE_DURATION" => 10)
         helper.is_mobile = true
         expect(helper.cached).to eq(
-          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]],
+          [200, { "x-discourse-cached" => "true", "hello" => "WORLD" }, ["hello my world"]],
         )
 
         expect(crawler.cached).to eq(nil)
-        crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
+        crawler.cache([200, { "hello" => "WORLD" }, ["hello ", "world"]])
         expect(crawler.cached).to eq(
-          [200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]],
+          [200, { "x-discourse-cached" => "true", "hello" => "WORLD" }, ["hello world"]],
         )
       end
     end
@@ -394,16 +394,10 @@ RSpec.describe Middleware::AnonymousCache do
 
   describe "invalid request payload" do
     it "returns 413 for GET request with payload" do
-      status, headers, _ =
-        middleware.call(
-          env.tap do |environment|
-            environment[Rack::RACK_INPUT].write("test")
-            environment[Rack::RACK_INPUT].rewind
-          end,
-        )
+      status, headers, _ = middleware.call(env(Rack::RACK_INPUT => StringIO.new("test")))
 
       expect(status).to eq(413)
-      expect(headers["Cache-Control"]).to eq("private, max-age=0, must-revalidate")
+      expect(headers["cache-control"]).to eq("private, max-age=0, must-revalidate")
     end
   end
 

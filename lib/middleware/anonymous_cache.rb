@@ -94,7 +94,7 @@ module Middleware
         return false if @request.path.ends_with?("robots.txt")
         return false if @request.path.ends_with?("llms.txt")
         return false if @request.path.ends_with?("srv/status")
-        return false if @request[Auth::DefaultCurrentUserProvider::API_KEY]
+        return false if @request.params[Auth::DefaultCurrentUserProvider::API_KEY]
         return false if @env[Auth::DefaultCurrentUserProvider::USER_API_KEY]
         return false if @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
 
@@ -237,7 +237,7 @@ module Middleware
       def no_cache_bypass
         request = Rack::Request.new(@env)
         request.cookies["_bypass_cache"].nil? && (request.path != "/srv/status") &&
-          request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          request.params[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
       end
@@ -316,7 +316,7 @@ module Middleware
             if req_params = other[1].delete(ADP)
               env[ADP] = req_params
             end
-            [other[0], other[1], [body]]
+            [other[0], Rack::Headers[other[1]], [body]]
           end
         end
       end
@@ -347,7 +347,7 @@ module Middleware
           end
 
           headers_stripped =
-            headers.dup.delete_if { |k, _| %w[Set-Cookie X-MiniProfiler-Ids].include? k }
+            Rack::Headers[headers].delete_if { |k, _| %w[set-cookie x-miniprofiler-ids].include? k }
           headers_stripped["X-Discourse-Cached"] = "true"
           parts = []
           response.each { |part| parts << part }
@@ -387,8 +387,8 @@ module Middleware
       return @app.call(env) if defined?(@@disabled) && @@disabled
 
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
-           env[Rack::RACK_INPUT].read(1).present?
-        return 413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []
+           env[Rack::RACK_INPUT]&.read(1).present?
+        return 413, { "cache-control" => "private, max-age=0, must-revalidate" }, []
       end
 
       helper = Helper.new(env)

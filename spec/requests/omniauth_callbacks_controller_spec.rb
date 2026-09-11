@@ -522,7 +522,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         events = DiscourseEvent.track_events { get "/auth/google_oauth2/callback.json" }
 
         expect(
-          response.headers["Set-Cookie"].match(%r{^authentication_data=.*; path=/forum}),
+          Array(response.headers["Set-Cookie"]).join("\n").match(%r{^authentication_data=.*; path=/forum}),
         ).not_to eq(nil)
 
         expect(events.map { |event| event[:event_name] }).to include(
