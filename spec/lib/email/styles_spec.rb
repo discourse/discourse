@@ -42,6 +42,14 @@ RSpec.describe Email::Styles do
       expect(frag.at("img")["src"]).to eq("#{Discourse.base_url}/some-image.png")
     end
 
+    it "converts relative links to absolute links" do
+      frag = basic_fragment("<a href='/u/someone'>someone</a><a href='mailto:a@b.com'>mail</a>")
+
+      expect(frag.css("a").map { |link| link["href"] }).to eq(
+        ["#{Discourse.base_url}/u/someone", "mailto:a@b.com"],
+      )
+    end
+
     it "preserves classes and ids" do
       raw = '<div class="foo" id="bar"><div class="foo" id="bar"></div></div>'
       frag = basic_fragment(raw)
