@@ -1457,7 +1457,7 @@ class BulkImport::Generic < BulkImport::Base
       next if group_id.nil?
       next unless existing_group_user_ids.add?([group_id, user_id])
 
-      { group_id: group_id, user_id: user_id, owner: row["owner"] }
+      { group_id: group_id, user_id: user_id, owner: row["owner"], created_at: row["created_at"] }
     end
 
     group_members.close
@@ -4318,6 +4318,11 @@ class BulkImport::Generic < BulkImport::Base
     max_position = BadgeGrouping.maximum(:position) || 0
 
     rows.each do |row|
+      if row["badge_group"].blank?
+        @badge_group_mapping[row["badge_group"]] = BadgeGrouping::Other
+        next
+      end
+
       grouping =
         BadgeGrouping.find_or_create_by!(name: row["badge_group"]) do |bg|
           bg.position = max_position += 1
@@ -4350,6 +4355,7 @@ class BulkImport::Generic < BulkImport::Base
 
       {
         original_id: row["id"],
+        existing_id: row["existing_id"],
         name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
