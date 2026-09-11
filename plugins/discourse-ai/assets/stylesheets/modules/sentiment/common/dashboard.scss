@@ -196,6 +196,36 @@
 .sentiment-analysis-table {
   font-weight: bold;
   font-size: var(--font-up-1);
+
+  @include viewport.until(sm) {
+    thead {
+      display: none;
+    }
+
+    &__row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      column-gap: var(--space-2);
+      row-gap: var(--space-2);
+      padding: var(--space-3);
+      margin-bottom: var(--space-2);
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-border-radius);
+    }
+
+    &__title {
+      flex: 1 1 auto;
+    }
+
+    &__total-score {
+      flex: 0 0 auto;
+    }
+
+    .sentiment-horizontal-bar {
+      flex: 1 1 100%;
+    }
+  }
 }
 
 .sentiment-horizontal-bar {
