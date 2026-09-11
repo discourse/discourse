@@ -32,19 +32,19 @@ class Discourse::Cors
   end
 
   def self.apply_headers(cors_origins, env, headers)
-    if headers["Access-Control-Allow-Origin"]
+    if headers["access-control-allow-origin"]
       # Already configured. Probably by ApplicationController#apply_cdn_headers
     elsif cors_origins
       origin = env["HTTP_ORIGIN"]
       origin = nil if origin && cors_origins.exclude?(origin)
 
-      headers["Access-Control-Allow-Origin"] = origin || cors_origins[0]
+      headers["access-control-allow-origin"] = origin || cors_origins[0]
       headers[
-        "Access-Control-Allow-Headers"
+        "access-control-allow-headers"
       ] = "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization"
-      headers["Access-Control-Allow-Credentials"] = "true"
-      headers["Access-Control-Allow-Methods"] = "POST, PUT, GET, OPTIONS, DELETE"
-      headers["Access-Control-Max-Age"] = "7200"
+      headers["access-control-allow-credentials"] = "true"
+      headers["access-control-allow-methods"] = "POST, PUT, GET, OPTIONS, DELETE"
+      headers["access-control-max-age"] = "7200"
     end
 
     headers
