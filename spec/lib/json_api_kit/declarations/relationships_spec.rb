@@ -22,6 +22,28 @@ RSpec.describe JsonApiKit::Declarations::Relationships do
   end
   let(:declarations) { [user_relationship, tags_relationship] }
 
+  describe "#fetch" do
+    subject(:relationship) { relationships.fetch(name) }
+
+    let(:name) { "user" }
+
+    it "returns the declaration with that name" do
+      expect(relationship).to equal(user_relationship)
+    end
+
+    context "when the name is not declared" do
+      let(:name) { "author" }
+
+      it "raises a lookup error" do
+        expect { relationship }.to raise_error(KeyError)
+      end
+
+      it "uses a caller-supplied fallback" do
+        expect(relationships.fetch(name) { :unknown }).to eq(:unknown)
+      end
+    end
+  end
+
   describe "#pick" do
     it "returns every one of them" do
       expect(relationships.pick(%w[user tags])).to eq([user_relationship, tags_relationship])
@@ -59,8 +81,6 @@ RSpec.describe JsonApiKit::Declarations::Relationships do
   end
 
   describe "#resolves?" do
-    subject { relationships }
-
     let(:path) { JsonApiKit::Path.for("user") }
 
     it { is_expected.to resolve(path) }
