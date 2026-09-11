@@ -71,7 +71,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SearchSettings do
 
       url_column = results[:column_names].index("url")
       expect(results[:rows][0][url_column]).to eq(
-        "#{Discourse.base_url}/admin/site_settings/category/all_settings?filter=default_locale",
+        "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=default_locale",
       )
     end
   end

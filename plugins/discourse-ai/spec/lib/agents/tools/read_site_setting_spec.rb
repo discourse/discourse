@@ -26,7 +26,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ReadSiteSetting do
     expect(tool("min_post_length").invoke).to eq(
       setting_name: "min_post_length",
       value: 42,
-      url: "#{Discourse.base_url}/admin/site_settings/category/all_settings?filter=min_post_length",
+      url: "#{Discourse.base_url}/admin/site_settings/category/all_results?filter=min_post_length",
     )
   end
 
