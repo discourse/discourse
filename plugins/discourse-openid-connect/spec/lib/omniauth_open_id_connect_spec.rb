@@ -184,7 +184,7 @@ describe OmniAuth::Strategies::OpenIDConnect do
             body: hash_including("code" => "supersecretcode", "p" => "someallowedvalue"),
           ).to_return(
             status: 200,
-            body: { access_token: "AnAccessToken", id_token: @token }.to_json,
+            body: { id_token: @token }.to_json,
             headers: {
               "Content-Type" => "application/json",
             },
@@ -200,6 +200,20 @@ describe OmniAuth::Strategies::OpenIDConnect do
           expect(strategy.info[:email]).to eq("tokenemail@example.com")
           expect(strategy.extra[:id_token]).to eq(@token)
           expect(@app_called).to eq(true)
+        end
+
+        it "handles a blank access_token alongside the id_token" do
+          stub_request(:post, "https://id.example.com/token").to_return(
+            status: 200,
+            body: { access_token: "", id_token: @token }.to_json,
+            headers: {
+              "Content-Type" => "application/json",
+            },
+          )
+
+          expect(strategy.callback_phase[0]).to eq(200)
+          expect(strategy.uid).to eq("someuserid")
+          expect(strategy.extra[:id_token]).to eq(@token)
         end
 
         it "checks the nonce" do
