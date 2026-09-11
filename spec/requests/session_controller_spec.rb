@@ -1583,18 +1583,35 @@ RSpec.describe SessionController do
     context "when the site is archived" do
       before { SiteSetting.site_archived = true }
 
-      it "allows a non-staff user to log in via DiscourseConnect" do
+      it "allows an existing user to log in via DiscourseConnect" do
+        existing = Fabricate(:user, email: "existing@bob.com")
+        Fabricate(:single_sign_on_record, user: existing, external_id: "existing-external-id")
+
+        sso = get_sso("/a/")
+        sso.external_id = "existing-external-id"
+        sso.email = "existing@bob.com"
+        sso.username = existing.username
+
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+
+        expect(response.status).not_to eq(503)
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(logged_on_user&.id).to eq(existing.id)
+      end
+
+      it "does not create a new user via DiscourseConnect (archive blocks account creation)" do
         sso = get_sso("/a/")
         sso.external_id = "666"
         sso.email = "bob@bob.com"
         sso.name = "Bob Bobson"
         sso.username = "bob"
 
-        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        expect do
+          get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        end.not_to change { User.count }
 
-        expect(response.status).not_to eq(503)
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        expect(logged_on_user).not_to eq(nil)
+        expect(logged_on_user).to eq(nil)
       end
     end
 
