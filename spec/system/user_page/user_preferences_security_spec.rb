@@ -22,6 +22,8 @@ describe "User preferences | Security" do
 
   shared_examples "security keys" do
     it "adds a 2FA security key and logs in with it" do
+      SiteSetting.enable_local_logins_via_code = false
+
       with_virtual_authenticator do
         confirm_session_modal =
           user_preferences_security_page

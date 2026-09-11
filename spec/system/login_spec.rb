@@ -14,6 +14,7 @@ shared_examples "login scenarios" do
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before do
+    SiteSetting.enable_local_logins_via_code = false
     SiteSetting.hide_email_address_taken = false
     Jobs.run_immediately!
   end
@@ -304,6 +305,8 @@ shared_examples "login scenarios" do
   end
 
   context "with two-factor authentication" do
+    let(:forgot_password_modal) { PageObjects::Modals::ForgotPassword.new }
+    let(:reset_password_page) { PageObjects::Pages::UserResetPassword.new }
     let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
     let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
@@ -384,6 +387,24 @@ shared_examples "login scenarios" do
       find(".email-login-form .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "can reset password with an email code and TOTP" do
+      SiteSetting.enable_local_logins_via_code = true
+
+      login_form.open.fill_username("john").forgot_password
+      forgot_password_modal.request_reset
+
+      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.to).to contain_exactly(user.email)
+      forgot_password_modal.submit_code(mail.subject[/(\d{6})/, 1])
+
+      expect(reset_password_page).to have_totp_description
+      reset_password_page.fill_in_totp(ROTP::TOTP.new(user_second_factor.data).now).submit_totp
+      reset_password_page.fill_in_new_password("newsuperpassword").submit_new_password
+
+      expect(reset_password_page).to have_logged_in_user
     end
 
     it "can reset password with TOTP" do

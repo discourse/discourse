@@ -3693,6 +3693,8 @@ RSpec.describe SessionController do
   end
 
   describe "#forgot_password" do
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     context "when email codes are enabled" do
       before { SiteSetting.enable_local_logins_via_code = true }
 
