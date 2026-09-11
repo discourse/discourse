@@ -173,6 +173,50 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       .hasText("Every Thursday", "uses the date's weekday, not the prior day");
   });
 
+  test("renders the recurrence weekday for an expired recurring event with no current date", async function (assert) {
+    const event = buildEvent({
+      recurrence: "every_week",
+      all_day: true,
+      is_expired: true,
+      starts_at: null,
+      ends_at: null,
+      rrule:
+        "DTSTART:20260820T000000Z\nRRULE:FREQ=WEEKLY;BYDAY=TH;UNTIL=20260827T235900;INTERVAL=1;WKST=MO",
+    });
+
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-recurrence");
+
+    assert
+      .dom(".event-recurrence")
+      .hasText(
+        "Every Thursday",
+        "uses the original recurrence date instead of rendering an invalid weekday"
+      );
+  });
+
+  test("renders the monthly recurrence label for an expired timed event with no current date", async function (assert) {
+    const event = buildEvent({
+      recurrence: "every_month",
+      is_expired: true,
+      starts_at: null,
+      ends_at: null,
+      timezone: "Europe/London",
+      show_local_time: true,
+      rrule: "DTSTART:20260226T180000\nRRULE:FREQ=MONTHLY;INTERVAL=1;WKST=MO",
+    });
+
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-recurrence");
+
+    assert
+      .dom(".event-recurrence")
+      .hasText(
+        "The fourth Thursday of every month",
+        "uses the original timed recurrence date for the monthly label"
+      );
+  });
+
   test("labels a fourth weekday as fourth even when the month has no fifth", async function (assert) {
     // 2026-02-26 is both the fourth and the final Thursday of February
     stubApi.call(
