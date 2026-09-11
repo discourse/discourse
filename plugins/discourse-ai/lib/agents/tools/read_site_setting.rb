@@ -35,7 +35,7 @@ module DiscourseAi
             setting_name: setting_name,
             value: SiteSetting.get(setting_sym),
             url:
-              "#{Discourse.base_url}/admin/site_settings/category/all_settings?#{Rack::Utils.build_query(filter: setting_name)}",
+              "#{Discourse.base_url}/admin/site_settings/category/all_results?#{Rack::Utils.build_query(filter: setting_name)}",
           }
         end
 

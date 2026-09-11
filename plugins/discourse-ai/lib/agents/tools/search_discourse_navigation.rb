@@ -8,7 +8,7 @@ module DiscourseAi
         MAX_QUERY_LENGTH = 200
 
         CORE_PATHS = {
-          settings: "/admin/site_settings/category/all_settings",
+          settings: "/admin/site_settings/category/all_results",
           users: "/admin/users/list/active",
           groups: "/admin/groups",
           review: "/review",

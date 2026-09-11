@@ -89,7 +89,7 @@ module DiscourseAi
               end
               result[
                 :url
-              ] = "#{Discourse.base_url}/admin/site_settings/category/all_settings?#{Rack::Utils.build_query(filter: setting[:setting])}"
+              ] = "#{Discourse.base_url}/admin/site_settings/category/all_results?#{Rack::Utils.build_query(filter: setting[:setting])}"
               result
             end
           end
