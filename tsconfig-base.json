@@ -6,6 +6,7 @@
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
     "allowJs": true,
     "skipLibCheck": true,
