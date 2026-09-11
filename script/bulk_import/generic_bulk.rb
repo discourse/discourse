@@ -5182,6 +5182,14 @@ class BulkImport::Generic < BulkImport::Base
 
     placeholders.each do |placeholder|
       case placeholder["type"]
+      when "topic_url"
+        topic_id = topic_id_from_imported_id(placeholder["id"])
+        topic = topic_id && Topic.find_by(id: topic_id)
+        unless topic
+          puts "WARNING: Skipping permalink #{row["url"]}: missing topic target for #{placeholder["id"]}"
+          return nil
+        end
+        external_url.gsub!(placeholder["placeholder"], "t/#{topic.slug}/#{topic.id}")
       when "category_url"
         category_id = category_id_from_imported_id(placeholder["id"])
         category = Category.find(category_id)

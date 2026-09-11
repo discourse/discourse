@@ -42,6 +42,99 @@ if generic_import_dependencies_available
       end
     end
 
+    describe "permalink topic URL placeholders" do
+      fab!(:topic)
+
+      let(:source_db) { SQLite3::Database.new(":memory:", results_as_hash: true) }
+      let(:importer) do
+        described_class.allocate.tap do |instance|
+          instance.instance_variable_set(:@source_db, source_db)
+          instance.instance_variable_set(:@topics, { 291_850_680 => topic.id })
+          instance.instance_variable_set(
+            :@raw_connection,
+            ActiveRecord::Base.connection.raw_connection,
+          )
+          instance.instance_variable_set(:@encoder, PG::TextEncoder::CopyRow.new)
+        end
+      end
+
+      before do
+        source_db.execute(<<~SQL)
+          CREATE TABLE permalinks (
+            url TEXT, topic_id INTEGER, post_id INTEGER, category_id INTEGER,
+            tag_id INTEGER, user_id INTEGER, external_url TEXT, external_url_placeholders TEXT
+          )
+        SQL
+        source_db.execute(
+          "INSERT INTO permalinks (url, external_url, external_url_placeholders) VALUES (?, ?, ?)",
+          [
+            "old-feed",
+            "/[notice-topic].rss",
+            [{ type: "topic_url", id: 291_850_680, placeholder: "[notice-topic]" }].to_json,
+          ],
+        )
+      end
+
+      after { source_db.close }
+
+      describe "#calculate_external_url" do
+        it "resolves a topic URL to the destination ID and final slug" do
+          topic.update!(title: "Final notice slug")
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+
+          expect(importer.calculate_external_url(row)).to eq("/t/final-notice-slug/#{topic.id}.rss")
+          expect(topic.id).not_to eq(291_850_680)
+        end
+
+        it "skips the URL when a later topic placeholder has no mapping" do
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+          row["external_url"] += "?next=[missing-topic]"
+          placeholders = JSON.parse(row["external_url_placeholders"])
+          placeholders << { type: "topic_url", id: 999, placeholder: "[missing-topic]" }
+          row["external_url_placeholders"] = placeholders.to_json
+          result = nil
+
+          expect { result = importer.calculate_external_url(row) }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target for 999/,
+          ).to_stdout
+
+          expect(result).to eq(nil)
+        end
+
+        it "warns and returns no URL when the mapped topic no longer exists" do
+          importer.instance_variable_set(:@topics, { 291_850_680 => -999 })
+          row = source_db.get_first_row("SELECT * FROM permalinks")
+          result = nil
+
+          expect { result = importer.calculate_external_url(row) }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target/,
+          ).to_stdout
+
+          expect(result).to eq(nil)
+        end
+      end
+
+      describe "#import_permalinks" do
+        it "warns and skips a permalink whose topic mapping is missing" do
+          importer.instance_variable_set(:@topics, {})
+
+          expect { importer.import_permalinks }.to output(
+            /WARNING: Skipping permalink old-feed: missing topic target for 291850680/,
+          ).to_stdout
+
+          expect(Permalink.exists?(url: "old-feed")).to eq(false)
+        end
+
+        it "preserves an existing destination permalink" do
+          Permalink.create!(url: "old-feed", external_url: "/reviewed-feed.rss")
+
+          importer.import_permalinks
+
+          expect(Permalink.find_by!(url: "old-feed").external_url).to eq("/reviewed-feed.rss")
+        end
+      end
+    end
+
     describe "importing notification choices" do
       fab!(:subscriber, :user)
       fab!(:category)
