@@ -9,7 +9,12 @@ module Jobs
       raise Discourse::InvalidParameters.new(:code) if args[:code].blank?
       return if !UpcomingChanges.enabled?(:enable_local_logins_via_code)
 
-      message = EmailLoginCodeMailer.send_code(args[:to_address], args[:code])
+      message =
+        EmailLoginCodeMailer.send_code(
+          args[:to_address],
+          args[:code],
+          password_reset: args[:password_reset],
+        )
       Email::Sender.new(message, :email_login_code).send
     end
   end

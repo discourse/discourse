@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -16,6 +17,7 @@ import { i18n } from "discourse-i18n";
 export default class ConfirmSession extends Component {
   @service dialog;
   @service currentUser;
+  @service modal;
   @service siteSettings;
 
   @tracked errorMessage;
@@ -94,6 +96,18 @@ export default class ConfirmSession extends Component {
   async sendPasswordResetEmail() {
     try {
       const result = await this.currentUser.changePassword();
+
+      if (result.email_code) {
+        this.dialog.cancel();
+        this.modal.show(ForgotPassword, {
+          model: {
+            codeSent: true,
+            emailOrUsername:
+              this.currentUser.email || this.currentUser.username,
+          },
+        });
+        return;
+      }
 
       if (result.success) {
         this.errorMessage = null;

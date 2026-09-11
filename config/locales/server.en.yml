@@ -3673,6 +3673,16 @@ en:
 
       This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
 
+  password_reset_code_mailer:
+    title: "Password reset code"
+    subject_template: "%{code} is your password reset code"
+    text_body_template: |
+      Use this code to reset your password on %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
+
   invite_mailer:
     title: "Invite Mailer"
     subject_template: "%{inviter_name} invited you to '%{topic_title}' on %{site_domain_name}"

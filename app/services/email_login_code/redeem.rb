@@ -48,7 +48,7 @@ class EmailLoginCode::Redeem
   private
 
   def fetch_login_code(params:)
-    EmailLoginCode.active.for_email(params.email).first
+    EmailLoginCode.login.active.for_email(params.email).first
   end
 
   def code_matches(login_code:, params:)
