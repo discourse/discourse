@@ -493,22 +493,22 @@ importers:
         version: 4.1.2
       '@embroider/compat':
         specifier: ^4.1.22
-        version: 4.1.22(@embroider/core@4.6.3(@glint/template@1.9.0))(@glint/template@1.9.0)
+        version: 4.1.22(@embroider/core@4.6.4(@glint/template@1.9.0))(@glint/template@1.9.0)
       '@embroider/config-meta-loader':
         specifier: 1.0.0
         version: 1.0.0
       '@embroider/core':
-        specifier: ^4.6.3
-        version: 4.6.3(@glint/template@1.9.0)
+        specifier: ^4.6.4
+        version: 4.6.4(@glint/template@1.9.0)
       '@embroider/macros':
         specifier: ^1.20.6
         version: 1.20.6(@babel/core@7.29.7)(@glint/template@1.9.0)
       '@embroider/router':
         specifier: ^3.0.6
-        version: 3.0.6(@embroider/core@4.6.3(@glint/template@1.9.0))
+        version: 3.0.6(@embroider/core@4.6.4(@glint/template@1.9.0))
       '@embroider/vite':
         specifier: ^1.7.10
-        version: 1.7.10(@embroider/core@4.6.3(@glint/template@1.9.0))(@glint/template@1.9.0)(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        version: 1.7.10(@embroider/core@4.6.4(@glint/template@1.9.0))(@glint/template@1.9.0)(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
       '@floating-ui/dom':
         specifier: ^1.8.0
         version: 1.8.0
@@ -1920,8 +1920,8 @@ packages:
     resolution: {integrity: sha512-qznkdjgEGPe6NM94hZNXvOm/WhrJwBh8FtSQZ+nGjh9TOjY42tOiTEevFuM0onNXUn6bpdGzmjwKo2xY2jxQxQ==}
     engines: {node: 12.* || 14.* || >= 16}
 
-  '@embroider/core@4.6.3':
-    resolution: {integrity: sha512-BdUDoifoB6YDJz30H+GNvQcEAB6a8/3OQinS+5wP3LlTCfPQjHChtZxdMwqvzReOSU1qVi2WGDx4xJh/0OREjg==}
+  '@embroider/core@4.6.4':
+    resolution: {integrity: sha512-T9nBm+XaS/c8Fx3M27GwQE8oSG7OJnmjparwZV1aB1SR6kJmU33zUiOV6+HxHY1qzupSQ+lOgMizeL2vN0akbA==}
     engines: {node: '>= 20.19.*'}
 
   '@embroider/legacy-inspector-support@0.1.3':
@@ -6243,8 +6243,8 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     deprecated: This package is no longer supported.
 
-  nwsapi@2.2.25:
-    resolution: {integrity: sha512-kktSgNDIbyEIs/LrE6dtEMnfzxSDpXViFl6c4gFjz/CgtnL4GDCR3wyZXzjvAXsNB8dXU4dAfvIOgLMH2/vwLg==}
+  nwsapi@2.2.27:
+    resolution: {integrity: sha512-gQPNF78qebCQ6tvVFBYrvJdBNOrYZm90ZlXgpIFm06p6qHDHq/XC4TnJftN6OMbxVE0UTBAoRgcsDeJBBooITw==}
 
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
@@ -9356,7 +9356,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/compat@4.1.22(@embroider/core@4.6.3(@glint/template@1.9.0))(@glint/template@1.9.0)':
+  '@embroider/compat@4.1.22(@embroider/core@4.6.4(@glint/template@1.9.0))(@glint/template@1.9.0)':
     dependencies:
       '@babel/code-frame': 7.29.7
       '@babel/core': 7.29.7
@@ -9367,7 +9367,7 @@ snapshots:
       '@babel/preset-env': 7.29.7(@babel/core@7.29.7)
       '@babel/runtime': 7.29.7
       '@babel/traverse': 7.29.8
-      '@embroider/core': 4.6.3(@glint/template@1.9.0)
+      '@embroider/core': 4.6.4(@glint/template@1.9.0)
       '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.9.0)
       '@types/babel__code-frame': 7.27.0
       assert-never: 1.4.0
@@ -9411,7 +9411,7 @@ snapshots:
 
   '@embroider/config-meta-loader@1.0.0': {}
 
-  '@embroider/core@4.6.3(@glint/template@1.9.0)':
+  '@embroider/core@4.6.4(@glint/template@1.9.0)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/parser': 7.29.8
@@ -9474,12 +9474,12 @@ snapshots:
       mem: 8.1.1
       resolve.exports: 2.0.3
 
-  '@embroider/router@3.0.6(@embroider/core@4.6.3(@glint/template@1.9.0))':
+  '@embroider/router@3.0.6(@embroider/core@4.6.4(@glint/template@1.9.0))':
     dependencies:
       '@ember/test-waiters': 4.1.2
       '@embroider/addon-shim': 1.10.3
     optionalDependencies:
-      '@embroider/core': 4.6.3(@glint/template@1.9.0)
+      '@embroider/core': 4.6.4(@glint/template@1.9.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -9518,10 +9518,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/vite@1.7.10(@embroider/core@4.6.3(@glint/template@1.9.0))(@glint/template@1.9.0)(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))':
+  '@embroider/vite@1.7.10(@embroider/core@4.6.4(@glint/template@1.9.0))(@glint/template@1.9.0)(vite@8.2.2(@types/node@26.4.0)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))':
     dependencies:
       '@babel/core': 7.29.7
-      '@embroider/core': 4.6.3(@glint/template@1.9.0)
+      '@embroider/core': 4.6.4(@glint/template@1.9.0)
       '@embroider/macros': 1.20.6(@babel/core@7.29.7)(@glint/template@1.9.0)
       '@embroider/reverse-exports': 0.2.0
       assert-never: 1.4.0
@@ -13772,7 +13772,7 @@ snapshots:
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.25
+      nwsapi: 2.2.27
       parse5: 7.3.0
       rrweb-cssom: 0.7.1
       saxes: 6.0.0
@@ -13799,7 +13799,7 @@ snapshots:
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.25
+      nwsapi: 2.2.27
       parse5: 7.3.0
       rrweb-cssom: 0.8.0
       saxes: 6.0.0
@@ -14476,7 +14476,7 @@ snapshots:
       gauge: 5.0.2
       set-blocking: 2.0.0
 
-  nwsapi@2.2.25: {}
+  nwsapi@2.2.27: {}
 
   object-assign@4.1.1: {}
 
