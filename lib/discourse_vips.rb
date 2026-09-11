@@ -3,6 +3,9 @@
 require_relative "discourse_vips/client"
 
 module DiscourseVips
+  SVG_DIMENSIONS_TIMEOUT_SECONDS = 3
+  private_constant :SVG_DIMENSIONS_TIMEOUT_SECONDS
+
   def self.version
     Client.call(["version"], operation: :vips_version)
   end
@@ -24,6 +27,7 @@ module DiscourseVips
   end
 
   def self.svg_dimensions(input_path:, timeout:)
+    timeout = [timeout, SVG_DIMENSIONS_TIMEOUT_SECONDS].min
     Client.call(["svg-dimensions", input_path], operation: :upload_svg_dimensions, timeout:)
   end
 

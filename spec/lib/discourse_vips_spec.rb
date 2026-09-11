@@ -177,6 +177,34 @@ RSpec.describe DiscourseVips do
         DiscourseVips::InvalidImage,
       )
     end
+
+    it "bounds dimensionless SVG filter graphs and keeps the worker available" do
+      filter_primitives =
+        10_000
+          .times
+          .map do |index|
+            input = index.zero? ? "SourceGraphic" : "blur#{index - 1}"
+            %(<feGaussianBlur in="#{input}" result="blur#{index}" stdDeviation="5"/>)
+          end
+          .join
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg">
+          <defs><filter id="dense">#{filter_primitives}</filter></defs>
+          <rect width="300" height="100" fill="#ff0000" filter="url(#dense)"/>
+        </svg>
+      SVG
+      file = file_from_contents(svg, "dimensionless-dense-filter.svg")
+      started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+      expect { described_class.svg_dimensions(input_path: file.path, timeout: 10) }.to raise_error(
+        DiscourseVips::Error,
+        "libvips operation failed",
+      ) { |error| expect(error).not_to be_a(DiscourseVips::OperationTimeout) }
+
+      elapsed_seconds = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at
+      expect(elapsed_seconds).to be < 2.5
+      expect(described_class.version).to match(/\A\d+\.\d+\.\d+\z/)
+    end
   end
 
   describe "worker lifecycle" do

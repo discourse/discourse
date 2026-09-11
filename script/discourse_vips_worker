@@ -27,6 +27,12 @@ class DiscourseVipsWorker
     WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
     private_constant :WARM_OPERATIONS
 
+    SVG_DIMENSIONS_RLIMITS = {
+      cpu_seconds: 1,
+      memory_bytes: 1024 * 1024 * 1024,
+    }.freeze
+    private_constant :SVG_DIMENSIONS_RLIMITS
+
     def self.warm
       WARM_OPERATIONS.each do |name|
         operation = Vips.vips_operation_new(name)
@@ -55,9 +61,10 @@ class DiscourseVipsWorker
       end
     end
 
-    def initialize(read_paths: [], write_paths: [], &action)
+    def initialize(read_paths: [], write_paths: [], rlimits: {}, &action)
       @read_paths = read_paths
       @write_paths = write_paths
+      @rlimits = rlimits
       @action = action
     end
 
@@ -70,6 +77,10 @@ class DiscourseVipsWorker
         "read" => existing_paths([*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *@read_paths]),
         "write" => existing_paths([scratch, *@write_paths]),
       }
+    end
+
+    def sandbox_rlimits(defaults:)
+      defaults.merge(@rlimits)
     end
 
     def self.version
@@ -153,11 +164,12 @@ class DiscourseVipsWorker
     private_class_method :animated
 
     def self.svg_dimensions(input_path)
-      new(read_paths: [input_path]) do
+      new(read_paths: [input_path], rlimits: SVG_DIMENSIONS_RLIMITS) do
         raise ArgumentError, "invalid SVG dimensions arguments" if !input_path
 
         block_loaders(allowed: %w[VipsForeignLoadSvg])
         begin
+          Vips.concurrency_set(1)
           image = Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)
           [image.width, image.height]
         rescue Vips::Error => error
@@ -295,7 +307,7 @@ class DiscourseVipsWorker
           timeout: Float(request.fetch("timeout")),
           env: child_environment(scratch),
           unsetenv_others: true,
-          rlimits: RLIMITS,
+          rlimits: operation.sandbox_rlimits(defaults: RLIMITS),
           seccomp_deny_network: LINUX_PLATFORM,
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|
