@@ -190,10 +190,6 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           w, h = [0, 0]
 
-          # identify can behave differently depending on how it's compiled and
-          # what programs (e.g. inkscape) are installed on your system.
-          # 'MSVG:' forces ImageMagick to use internal routines and behave
-          # consistently whether it's running from our docker container or not
           begin
             w, h =
               if GlobalSetting.enable_vips_image_processing
@@ -202,6 +198,10 @@ class UploadCreator
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
               else
+                # identify can behave differently depending on how it's compiled and
+                # what programs (e.g. inkscape) are installed on your system.
+                # 'MSVG:' forces ImageMagick to use internal routines and behave
+                # consistently whether it's running from our docker container or not
                 ImageMagick
                   .identify(
                     "-ping",
