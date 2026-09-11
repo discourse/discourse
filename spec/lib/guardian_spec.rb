@@ -2663,6 +2663,27 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_see_report?" do
+    it "allows visible reports only for staff" do
+      expect(Guardian.new.can_see_report?("signups")).to be_falsey
+      expect(user.guardian.can_see_report?("signups")).to be_falsey
+      expect(moderator.guardian.can_see_report?("signups")).to be_truthy
+      expect(admin.guardian.can_see_report?("signups")).to be_truthy
+    end
+
+    it "restricts admin-only reports to admins" do
+      expect(moderator.guardian.can_see_report?("admin_logins")).to be_falsey
+      expect(admin.guardian.can_see_report?("admin_logins")).to be_truthy
+    end
+
+    it "denies reports hidden by site settings even to admins" do
+      SiteSetting.use_legacy_pageviews = false
+
+      expect(moderator.guardian.can_see_report?("page_view_anon_reqs")).to be_falsey
+      expect(admin.guardian.can_see_report?("page_view_anon_reqs")).to be_falsey
+    end
+  end
+
   describe "#can_export_entity?" do
     let(:anonymous_guardian) { Guardian.new }
     let(:user_guardian) { Guardian.new(user) }
@@ -2696,6 +2717,28 @@ RSpec.describe Guardian do
         moderator_guardian.can_export_entity?("report", nil, { name: "top_uploads" }),
       ).to be_falsey
       expect(admin_guardian.can_export_entity?("report", nil, { name: "top_uploads" })).to be_truthy
+    end
+
+    it "denies named reports hidden by site settings even to admins" do
+      SiteSetting.use_legacy_pageviews = false
+
+      expect(
+        moderator_guardian.can_export_entity?("report", nil, name: "page_view_anon_reqs"),
+      ).to be_falsey
+      expect(
+        admin_guardian.can_export_entity?("report", nil, name: "page_view_anon_reqs"),
+      ).to be_falsey
+    end
+
+    it "allows staff to export visible named reports" do
+      SiteSetting.use_legacy_pageviews = true
+
+      expect(
+        moderator_guardian.can_export_entity?("report", nil, name: "page_view_anon_reqs"),
+      ).to be_truthy
+      expect(
+        admin_guardian.can_export_entity?("report", nil, name: "page_view_anon_reqs"),
+      ).to be_truthy
     end
 
     it "allows moderators to export suspicious login reports when IP viewing is disabled" do

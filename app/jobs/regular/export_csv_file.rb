@@ -209,7 +209,6 @@ module Jobs
           **@extra.symbolize_keys,
           filters: @extra[:filters],
           guardian: @current_user.guardian,
-          purpose: :export,
         )
       raise Discourse::NotFound if report.blank?
 

@@ -192,7 +192,6 @@ class Report
                 :y_axis_title,
                 :current_user,
                 :guardian,
-                :purpose,
                 :include_related_items,
                 :related_items,
                 :related_items_totals
@@ -238,7 +237,6 @@ class Report
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
       I18n.locale,
-      report.purpose,
       *cache_scope(report),
       CrawlerScorer.enabled?,
     ].compact.map(&:to_s).join(":")
@@ -350,7 +348,6 @@ class Report
           start_date: start_date,
           end_date: end_date,
           guardian: guardian,
-          purpose: purpose,
         )&.as_json
       end
     end
@@ -403,7 +400,6 @@ class Report
     report.filters = opts[:filters] if opts[:filters]
     report.guardian = opts[:guardian] || opts[:current_user]&.guardian
     report.current_user = report.guardian&.user
-    report.purpose = opts[:purpose] || :view
     report.include_related_items =
       opts[:include_related_items] &&
         (report.guardian&.is_admin? || !admin_only_related_items_report_types.include?(report.type))
@@ -414,11 +410,11 @@ class Report
     report
   end
 
-  def self.find_cached(type, guardian:, purpose: :view, **opts)
+  def self.find_cached(type, guardian:, **opts)
     type = type.to_s
-    return unless allowed?(type, guardian: guardian, purpose: purpose)
+    return unless allowed?(type, guardian: guardian)
 
-    report = _get(type, opts.merge(guardian: guardian, purpose: purpose))
+    report = _get(type, opts.merge(guardian: guardian))
     return if report.include_related_items
 
     Discourse.cache.read(cache_key(report))
@@ -431,12 +427,12 @@ class Report
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end
 
-  def self.find(type, guardian:, purpose: :view, **opts)
+  def self.find(type, guardian:, **opts)
     type = type.to_s
-    return unless allowed?(type, guardian: guardian, purpose: purpose)
+    return unless allowed?(type, guardian: guardian)
 
     begin
-      report = _get(type, opts.merge(guardian: guardian, purpose: purpose))
+      report = _get(type, opts.merge(guardian: guardian))
       report_method = :"report_#{type}"
 
       begin
@@ -476,15 +472,10 @@ class Report
     report
   end
 
-  def self.allowed?(type, guardian:, purpose:)
+  def self.allowed?(type, guardian:)
     raise ArgumentError, "guardian is required" if guardian.nil?
-    raise ArgumentError, "invalid report purpose" if %i[view export].exclude?(purpose)
 
-    if purpose == :export
-      guardian.can_export_entity?("report", nil, name: type)
-    else
-      guardian.is_staff? && !hidden?(type, guardian: guardian)
-    end
+    guardian.can_see_report?(type)
   end
   private_class_method :allowed?
 

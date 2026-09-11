@@ -127,6 +127,39 @@ RSpec.describe ExportCsvController do
         expect(job_data["user_id"]).to eq(admin.id)
       end
 
+      it "denies named reports hidden by site settings" do
+        SiteSetting.use_legacy_pageviews = false
+
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "page_view_anon_reqs",
+               },
+             }
+
+        expect(response.status).to eq(422)
+        expect(Jobs::ExportCsvFile.jobs).to be_empty
+      end
+
+      it "enqueues named reports visible to admins" do
+        SiteSetting.use_legacy_pageviews = true
+
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "page_view_anon_reqs",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
+        job_data = Jobs::ExportCsvFile.jobs.first["args"].first
+        expect(job_data["args"]["name"]).to eq("page_view_anon_reqs")
+        expect(job_data["user_id"]).to eq(admin.id)
+      end
+
       it "does not rate-limit exports for staff" do
         UserExport.create(file_name: "screened-email-150116-010145", user_id: admin.id)
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }

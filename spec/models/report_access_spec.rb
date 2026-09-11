@@ -17,12 +17,6 @@ RSpec.describe Report do
         )
       end
 
-      it "rejects unsupported purposes" do
-        expect {
-          described_class.public_send(method, "signups", guardian: admin.guardian, purpose: :edit)
-        }.to raise_error(ArgumentError, "invalid report purpose")
-      end
-
       it "denies viewing reports to regular and anonymous users" do
         expect(described_class.public_send(method, "signups", guardian: user.guardian)).to be_nil
         expect(described_class.public_send(method, "signups", guardian: Guardian.new)).to be_nil
@@ -31,12 +25,6 @@ RSpec.describe Report do
       it "denies admin-only reports to moderators" do
         expect(
           described_class.public_send(method, "admin_logins", guardian: moderator.guardian),
-        ).to be_nil
-      end
-
-      it "denies exporting reports to regular users" do
-        expect(
-          described_class.public_send(method, "signups", guardian: user.guardian, purpose: :export),
         ).to be_nil
       end
     end
@@ -56,24 +44,12 @@ RSpec.describe Report do
       expect(described_class.find("missing_report", guardian: admin.guardian)).to be_nil
     end
 
-    it "preserves admin exports for reports hidden by site settings" do
-      SiteSetting.use_legacy_pageviews = false
-
-      report =
-        described_class.find("page_view_anon_reqs", guardian: admin.guardian, purpose: :export)
-
-      expect(report).to be_a(Report)
-      expect(report.current_user).to eq(admin)
-      expect(described_class.find("page_view_anon_reqs", guardian: admin.guardian)).to be_nil
+    it "allows admins to read admin-only reports" do
+      expect(described_class.find("admin_logins", guardian: admin.guardian)).to be_a(Report)
     end
 
-    it "uses export permissions for moderators" do
-      expect(
-        described_class.find("signups", guardian: moderator.guardian, purpose: :export),
-      ).to be_a(Report)
-      expect(
-        described_class.find("admin_logins", guardian: moderator.guardian, purpose: :export),
-      ).to be_nil
+    it "allows moderators to read visible reports" do
+      expect(described_class.find("signups", guardian: moderator.guardian)).to be_a(Report)
     end
 
     it "includes related crawler reports when viewing crawler requests" do
@@ -82,12 +58,12 @@ RSpec.describe Report do
       expect(report.as_json[:related_report][:type]).to eq("web_crawlers")
     end
 
-    it "applies export permissions when serializing related crawler reports" do
+    it "applies visibility when serializing related crawler reports" do
       guardian = admin.guardian
-      guardian.stubs(:can_export_entity?).returns(true)
-      guardian.stubs(:can_export_entity?).with("report", nil, name: "web_crawlers").returns(false)
+      guardian.stubs(:can_see_report?).returns(true)
+      guardian.stubs(:can_see_report?).with("web_crawlers").returns(false)
 
-      report = described_class.find("page_view_crawler_reqs", guardian: guardian, purpose: :export)
+      report = described_class.find("page_view_crawler_reqs", guardian: guardian)
 
       expect(report.as_json[:related_report]).to be_nil
     end
@@ -180,6 +156,12 @@ RSpec.describe Report do
 
     it "applies current visibility to fresh and cached reads" do
       SiteSetting.use_legacy_pageviews = true
+      admin_report = described_class.find("page_view_anon_reqs", guardian: admin.guardian)
+      described_class.cache(admin_report)
+      expect(described_class.find_cached("page_view_anon_reqs", guardian: admin.guardian)).to eq(
+        admin_report.as_json,
+      )
+
       report = described_class.find("page_view_anon_reqs", guardian: moderator.guardian)
       described_class.cache(report)
       expect(
@@ -188,30 +170,20 @@ RSpec.describe Report do
 
       SiteSetting.use_legacy_pageviews = false
 
+      expect(described_class.find("page_view_anon_reqs", guardian: admin.guardian)).to be_nil
+      expect(described_class.find_cached("page_view_anon_reqs", guardian: admin.guardian)).to be_nil
       expect(described_class.find("page_view_anon_reqs", guardian: moderator.guardian)).to be_nil
       expect(
         described_class.find_cached("page_view_anon_reqs", guardian: moderator.guardian),
       ).to be_nil
     end
 
-    it "keeps view and export payloads separate" do
-      report = described_class.find("signups", guardian: admin.guardian, purpose: :export)
-      described_class.cache(report)
-
-      expect(described_class.find_cached("signups", guardian: admin.guardian)).to be_nil
-      expect(
-        described_class.find_cached("signups", guardian: admin.guardian, purpose: :export),
-      ).to eq(report.as_json)
-    end
-
-    it "applies export permissions to cached reports" do
-      report = described_class.find("signups", guardian: moderator.guardian, purpose: :export)
+    it "denies cached reports after a moderator loses staff access" do
+      report = described_class.find("signups", guardian: moderator.guardian)
       described_class.cache(report)
       moderator.update!(moderator: false)
 
-      expect(
-        described_class.find_cached("signups", guardian: moderator.guardian, purpose: :export),
-      ).to be_nil
+      expect(described_class.find_cached("signups", guardian: moderator.guardian)).to be_nil
     end
 
     it "bypasses cached aggregates when related items are requested" do
