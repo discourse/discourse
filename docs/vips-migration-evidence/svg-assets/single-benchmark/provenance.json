@@ -6,8 +6,10 @@
   "cpu_limit": 2,
   "memory_limit": "2g",
   "memory_swap_limit": "3g",
-  "script_sha256": "8249dc7b091b7420b1ec96b88baf327faf5e1a4ccbe527f851fa0f080ecfa0cb",
-  "results_sha256": "a8552423b5cd6a97ae9fc46ff7120794a4afb7afcc4a2ffe7cf2479deab5c271",
+  "script_sha256": "e202dd3c781d026df65a7a51ed80e3aa4d003457de9a2d3a08b1a57e3e309b11",
+  "results_sha256": "c8cf91cdbcb350ce53f032dee826b02b2848e91f25d2173aefd6fef5a94ad1a4",
+  "source_head": "7fe80ba41589d4759d466ce9657b4e67fab40867",
+  "worker_sha256": "17fedd1b1ab08925ff1f1d6f490d46bb046ad8c165734811d5b7cb03576edc1d",
   "source": [
     {
       "path": "lib/image_magick.rb",
@@ -15,7 +17,7 @@
     },
     {
       "path": "lib/discourse_vips.rb",
-      "sha256": "1d4da01c87250cf6477432fc954f7e0435a6e8bab255b7f6016505a65a227af2"
+      "sha256": "aa61a1f973089277f833eef041a9ff8cf6c30013b801dffe56712c6421e5f4de"
     },
     {
       "path": "lib/discourse/safe_exec.rb",
@@ -35,13 +37,15 @@
     },
     {
       "path": "script/discourse_vips_worker",
-      "sha256": "5e544584ef434c7f388d66ec944c17e4873a377baf4104a08940bb15a0f21970"
+      "sha256": "17fedd1b1ab08925ff1f1d6f490d46bb046ad8c165734811d5b7cb03576edc1d"
     }
   ],
   "timing_calls_per_backend_per_input": 101,
   "memory_calls_per_backend_per_input": 101,
   "counter_samples_per_call": {
-    "min": 15,
-    "max": 309
-  }
+    "min": 17,
+    "max": 1242
+  },
+  "max_width": 300,
+  "max_height": 100
 }

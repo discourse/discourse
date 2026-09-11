@@ -2,6 +2,10 @@ Run `bundle exec ruby /tmp/svg_assets_benchmark.rb` from the PR checkout in a de
 
 Each backend uses one Ruby child across the corpus. The native worker starts once and stays warm. Each input receives one warm-up call, 101 timed calls, and 101 separate memory calls. Timing excludes startup and memory sampling. Memory reports the median sampled per-call peak increase above the immediately preceding idle baseline, using cgroup memory.current with 1ms polling. This excludes already allocated worker memory but includes changes in charged execution-child, kernel, cache, output-file and coordinator memory. It is neither heap allocation nor RSS; peaks between samples can be missed.
 
-The enabled operation calls only DiscourseVips.svg_to_png, with no ImageMagick fallback. Failed conversion attempts are timed and reported as errors. The caller omits an asset that cannot be converted and can continue generating the card. PNG evidence is only supplied for successful conversions; a missing after image for a zero-dimension SVG is an intentional compatibility difference.
+The enabled operation calls only DiscourseVips.svg_to_png, with max_width: 300 and max_height: 100 and no ImageMagick fallback. The worker reads SVG dimensions before rasterization and reduces the loader scale to fit those limits without enlarging smaller assets. The large.svg input is 3,000×1,000 pixels: ImageMagick renders its full dimensions, while libvips produces 300×100. This benchmark measures a representative oversized asset, not a resource-exhaustion case.
+
+Failed conversion attempts are timed and reported as errors. The caller omits an asset that cannot be converted and can continue generating the card. PNG evidence is only supplied for successful conversions; a missing after image for a zero-dimension SVG is an intentional compatibility difference. Each measured call must return the same outcome as its warm-up call.
+
+The script verifies the worker SHA256 against source head 7fe80ba41589d4759d466ce9657b4e67fab40867 before starting and records both in the raw results.
 
 Production image: discourse/base:2.0.20260812-0036, digest sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5. UID/GID 1000, two CPUs, 2GiB memory and 3GiB combined memory/swap. Source hashes identify the exact executable files measured.

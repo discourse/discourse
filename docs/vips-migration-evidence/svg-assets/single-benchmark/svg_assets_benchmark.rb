@@ -2,6 +2,7 @@ require "json"
 require "pathname"
 require "tmpdir"
 require "fileutils"
+require "digest"
 
 unless defined?(Rails.application)
   require "active_support"
@@ -29,6 +30,10 @@ unless defined?(Rails.application)
   require "discourse_vips"
 end
 
+source_head = "7fe80ba41589d4759d466ce9657b4e67fab40867"
+worker_sha256 = Digest::SHA256.file(Rails.root.join("script/discourse_vips_worker")).hexdigest
+raise "Worker does not match #{source_head}" unless worker_sha256 == "17fedd1b1ab08925ff1f1d6f490d46bb046ad8c165734811d5b7cb03576edc1d"
+
 memory_counter = "/sys/fs/cgroup/memory.current"
 raise "Run in a dedicated Linux cgroup v2 container" unless File.readable?(memory_counter)
 
@@ -37,6 +42,7 @@ at_exit { FileUtils.remove_entry(input_directory) }
 output_directory = File.expand_path(ENV.fetch("BENCHMARK_OUTPUT", "svg-assets-benchmark-output"))
 FileUtils.mkdir_p(output_directory)
 inputs = {
+  "large.svg" => '<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="1000" viewBox="0 0 3000 1000"><rect width="3000" height="1000" fill="#0088cc"/><circle cx="500" cy="500" r="250" fill="white"/></svg>',
   "fixed.svg" => "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"120\" height=\"80\"/>\n",
   "gradient-logo.svg" => "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"100\">\n  <defs>\n    <linearGradient id=\"logo-gradient\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">\n      <stop stop-color=\"#0088cc\"/>\n      <stop offset=\"1\" stop-color=\"#00c8a0\"/>\n    </linearGradient>\n  </defs>\n  <rect x=\"4\" y=\"8\" width=\"80\" height=\"80\" rx=\"18\" fill=\"url(#logo-gradient)\"/>\n  <circle cx=\"44\" cy=\"48\" r=\"20\" fill=\"white\"/>\n  <path d=\"M30 61v17l20-17\" fill=\"white\"/>\n  <text x=\"98\" y=\"60\" font-family=\"sans-serif\" font-size=\"30\" font-weight=\"700\" fill=\"#123456\">FORUM</text>\n</svg>\n",
   "image.svg" => "<svg width=\"100\" height=\"50\">\n  <style>\n    .black { fill: #FFFFFF; }\n  </style>\n  <text class=\"black\" x=\"25\" y=\"25\">Discourse</text>\n</svg>\n",
@@ -82,7 +88,7 @@ end
       FileUtils.rm_f(output_path)
       operation = -> do
         if backend == :libvips
-          DiscourseVips.svg_to_png(input_path: path, output_path:, timeout: 10)
+          DiscourseVips.svg_to_png(input_path: path, output_path:, max_width: 300, max_height: 100, timeout: 10)
         else
           ImageMagick.magick("MSVG:#{path}", output_path, operation: :topic_og_asset_render, read: [path], write: [output_directory], timeout: 10)
         end
@@ -94,13 +100,13 @@ end
       value = operation.call
       timings = Array.new(iterations) do
         started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        operation.call
+        raise "Conversion outcome changed" unless operation.call == value
         (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started) * 1000
       end
       child_output.puts(JSON.generate(backend:, filename:, value:, median_ms: timings.sort[iterations / 2], timings_ms: timings))
       memory_iterations.times do
         raise "Memory phase was not acknowledged" unless child_control.gets == "measure\n"
-        operation.call
+        raise "Conversion outcome changed" unless operation.call == value
         child_output.puts("done")
       end
       raise "Next sample was not acknowledged" unless child_control.gets == "next\n"
@@ -143,4 +149,4 @@ end
   control.close
 end
 
-puts JSON.pretty_generate(iterations:, memory_iterations:, memory_poll_seconds: 0.001, memory_counter:, ruby: RUBY_DESCRIPTION, results:)
+puts JSON.pretty_generate(source_head:, worker_sha256:, iterations:, memory_iterations:, memory_poll_seconds: 0.001, memory_counter:, ruby: RUBY_DESCRIPTION, results:)
