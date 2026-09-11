@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require "open3"
+
 RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 RSpec::Support.require_rspec_core "formatters/console_codes"
 
@@ -13,7 +15,8 @@ module TurboTests
 
       if totals_by_id.present?
         summary = write_js_deprecation_report(notification.examples, totals_by_id, totals_by_origin)
-        output.puts "\n#{summary}\n" if summary
+        summary ||= fallback_js_deprecation_summary(totals_by_id, totals_by_origin)
+        output.puts "\n#{summary}\n"
       end
 
       super(notification)
@@ -86,19 +89,37 @@ module TurboTests
 
       payload = { entries:, totals: totals_by_id, totalsByOrigin: totals_by_origin }
       cli = Rails.root.join("frontend/discourse/lib/deprecation-report-cli.js").to_s
-      summary =
-        IO.popen(["node", cli, "build", report_path, group], "r+") do |io|
-          io.write(payload.to_json)
-          io.close_write
-          io.read
-        end
+      summary, stderr, status =
+        Open3.capture3("node", cli, "build", report_path, group, stdin_data: payload.to_json)
 
-      return nil unless $?.success?
+      unless status.success?
+        reason = status.signaled? ? "signal #{status.termsig}" : "exit status #{status.exitstatus}"
+        output.puts "\n[Deprecation Counter] Failed to build detailed report (#{reason})."
+        output.puts stderr if stderr.present?
+        return nil
+      end
 
+      output.puts stderr if stderr.present?
       summary
     rescue StandardError => e
       output.puts "\n[Deprecation Counter] Failed to build detailed report: #{e.message}\n"
       nil
+    end
+
+    def fallback_js_deprecation_summary(totals_by_id, totals_by_origin)
+      summary = +"[Deprecation Counter] Test run completed with deprecations:\n\n"
+      summary << "| id | count |\n| --- | --- |\n"
+      totals_by_id.sort.each { |id, count| summary << "| #{id} | #{count} |\n" }
+
+      if totals_by_origin.any?
+        summary << "\nDeprecations by spec origin:\n\n"
+        summary << "| origin | id | count |\n| --- | --- | --- |\n"
+        totals_by_origin.sort.each do |origin, counts|
+          counts.sort.each { |id, count| summary << "| #{origin} | #{id} | #{count} |\n" }
+        end
+      end
+
+      summary
     end
 
     def extract_origin_from_example(example)
