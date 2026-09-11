@@ -2,6 +2,7 @@ require "json"
 require "pathname"
 require "tmpdir"
 require "fileutils"
+require "digest"
 
 unless defined?(Rails.application)
   require "active_support"
@@ -28,6 +29,10 @@ unless defined?(Rails.application)
   require "image_magick"
   require "discourse_vips"
 end
+
+source_head = "6eda6188fca6bfa384406e9934e4547201cb08f2"
+worker_sha256 = Digest::SHA256.file(Rails.root.join("script/discourse_vips_worker")).hexdigest
+raise "Worker does not match #{source_head}" unless worker_sha256 == "2c2ff7fc5a7ead8358f073b71d2d5e5e299b7ff53585f4517b7b896e7e512df8"
 
 memory_counter = "/sys/fs/cgroup/memory.current"
 raise "Run in a dedicated Linux cgroup v2 container" unless File.readable?(memory_counter)
@@ -137,4 +142,4 @@ end
   control.close
 end
 
-puts JSON.pretty_generate(iterations:, memory_iterations:, memory_poll_seconds: 0.001, memory_counter:, ruby: RUBY_DESCRIPTION, results:)
+puts JSON.pretty_generate(source_head:, worker_sha256:, iterations:, memory_iterations:, memory_poll_seconds: 0.001, memory_counter:, ruby: RUBY_DESCRIPTION, results:)

@@ -1,0 +1,170 @@
+[
+  {
+    "filename": "heif-color-grid-12bit.heic-imagemagick.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 888,
+    "sha256": "520e09e6eeac9c22ff795fe5bf58aa33e89ac4931dc39e66bc5055801d34c5f8",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-12bit.heic-libvips.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 818,
+    "sha256": "41ad70a192a2c977560c6a911b1e42fbed56f6d4c6ba52ec45bdfeb61a2d1501",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-8bit.heic-imagemagick.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 880,
+    "sha256": "e66e8a883a6c3f58a9e76e317e09f25e0d9600a9b213b0d705f53e3eb314351b",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-8bit.heic-libvips.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 815,
+    "sha256": "2f03c5a4ea2dd2aee5acb1c283d8f07e87bbf1786eba806f5215a2e11094ad0a",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-alpha-12bit.heic-imagemagick.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 870,
+    "sha256": "3408d4cb2e3f9cb0f819c4ee6e80b0c6027430b008edced318d0fc4732df296a",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-alpha-12bit.heic-libvips.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 816,
+    "sha256": "628a8d7a1a9907a4768662e37d3a2054f40e4cef4bc720aeb1a33dff0e47e384",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-alpha-8bit.heic-imagemagick.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 870,
+    "sha256": "e7b58b93aa32a2ad51d7b144f3c23f28725da4a74d47e66828233d972e522959",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-alpha-8bit.heic-libvips.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 814,
+    "sha256": "ed309956f24166b422dbd889a218045b42e139b2c8200026ec58ab5837dbd43c",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-mirrored.heic-imagemagick.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 879,
+    "sha256": "427ff77fde6fbd2489fba2854be1ad0f692f0d321c01043f96caab2877e71dbe",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-mirrored.heic-libvips.jpg",
+    "dimensions": [
+      60,
+      40
+    ],
+    "bytes": 815,
+    "sha256": "f6e9445ef67226663e470643af1c851efed263c4e6955747b0906d84e66014be",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-rotated.heic-imagemagick.jpg",
+    "dimensions": [
+      40,
+      60
+    ],
+    "bytes": 927,
+    "sha256": "2e3fa1d3f0d3d6fac6226204a00b15e357129cf192a6df8f11db4fdd34b56139",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "heif-color-grid-rotated.heic-libvips.jpg",
+    "dimensions": [
+      40,
+      60
+    ],
+    "bytes": 850,
+    "sha256": "85e977ca6fd8aa075deddf281777b6dbfe03d5e37cf744e4517e6d868054cc6d",
+    "icc_bytes": null,
+    "icc_sha256": null,
+    "orientation": 1
+  },
+  {
+    "filename": "should_be_jpeg.heic-imagemagick.jpg",
+    "dimensions": [
+      846,
+      1129
+    ],
+    "bytes": 250814,
+    "sha256": "a6d6f61624ccdf29fbe7e9e3a12a1ad6b28a88ddd8d4e61122dc2728518a5b89",
+    "icc_bytes": 548,
+    "icc_sha256": "e468e89239fc0493d5e8fb9b014e91b210c6caa73c81edf04c3d21a734f377cc",
+    "orientation": 1
+  },
+  {
+    "filename": "should_be_jpeg.heic-libvips.jpg",
+    "dimensions": [
+      846,
+      1129
+    ],
+    "bytes": 235175,
+    "sha256": "4ad8358486ccfc85e10844a18798bf2178978a671235d1c238abe8e4caf17b83",
+    "icc_bytes": 548,
+    "icc_sha256": "e468e89239fc0493d5e8fb9b014e91b210c6caa73c81edf04c3d21a734f377cc",
+    "orientation": 1
+  }
+]

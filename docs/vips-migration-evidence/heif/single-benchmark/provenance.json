@@ -6,16 +6,16 @@
   "cpu_limit": 2,
   "memory_limit": "2g",
   "memory_swap_limit": "3g",
-  "script_sha256": "2e65f918d3a5823fc5ce7d17cfad8c85eb857f9f34a54cfd65a0d1998a63de39",
-  "results_sha256": "e89f7e26ddf9110e2353462d4e8a13a4c7b39d1e3aae6ee849ef0d096d40ff41",
+  "script_sha256": "58bfa7e87f28b48dfb2c2cc7610f0b2755f3da0e2647b311b8d5e3ffbc4589b7",
+  "results_sha256": "95cd76f8bba0b8e1e6e973640b3936c9b4983c025e879466e8e8ffa67f268479",
   "source": {
-    "lib/discourse_vips.rb": "bf97ceca5d444fe92f8bfdc36aa9e72de852a4083f0fb8d665bf240af45adcc8",
+    "lib/discourse_vips.rb": "df005189821dc3fbf87644c79c2c8277d2ecd885a85a3783e85e6043d7654552",
     "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
     "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
     "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
     "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
     "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
-    "script/discourse_vips_worker": "e7de77820f2944f68b7f53f2137a380a16f417b3ba1dd7a25b486b0c634fd2e4",
+    "script/discourse_vips_worker": "2c2ff7fc5a7ead8358f073b71d2d5e5e299b7ff53585f4517b7b896e7e512df8",
     "spec/fixtures/images/heif-truncated-payload.heic": "5fd8ec48f9c58efd73be80fa59652390884b45a18400764dc87f0bba53fe1839",
     "spec/fixtures/images/heif-color-grid-12bit.heic": "8be52cbe27a039c0a69a7630c31a06a37acb0fb0c665fd5f209ec7e7ae18a8d1",
     "spec/fixtures/images/heif-color-grid-alpha-8bit.heic": "42e7485bc47f59fae6117340e4fcbc45f5abade8a45bb0177411a2c53b57b0fe",
@@ -28,12 +28,14 @@
   "timing_calls_per_backend_per_input": 101,
   "memory_calls_per_backend_per_input": 101,
   "counter_samples_per_call": {
-    "min": 14,
-    "max": 232
+    "min": 4,
+    "max": 267
   },
   "native_jpeg_options": {
     "Q": 93,
     "optimize_coding": true,
     "interlace": false
-  }
+  },
+  "source_head": "6eda6188fca6bfa384406e9934e4547201cb08f2",
+  "worker_sha256": "2c2ff7fc5a7ead8358f073b71d2d5e5e299b7ff53585f4517b7b896e7e512df8"
 }

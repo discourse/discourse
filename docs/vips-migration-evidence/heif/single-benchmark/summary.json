@@ -5,8 +5,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 32.86359179764986,
-      "median_incremental_peak_mib": 2.84765625,
+      "median_ms": 30.59018077328801,
+      "median_incremental_peak_mib": 2.84375,
       "output": {
         "filename": "heif-color-grid-12bit.heic-imagemagick.jpg",
         "dimensions": [
@@ -24,8 +24,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 31.556669622659683,
-      "median_incremental_peak_mib": 4.71484375,
+      "median_ms": 33.053901977837086,
+      "median_incremental_peak_mib": 4.49609375,
       "output": {
         "filename": "heif-color-grid-12bit.heic-libvips.jpg",
         "dimensions": [
@@ -46,8 +46,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 32.24784601479769,
-      "median_incremental_peak_mib": 2.84375,
+      "median_ms": 33.862875774502754,
+      "median_incremental_peak_mib": 3.08203125,
       "output": {
         "filename": "heif-color-grid-8bit.heic-imagemagick.jpg",
         "dimensions": [
@@ -65,8 +65,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 31.1585096642375,
-      "median_incremental_peak_mib": 4.49609375,
+      "median_ms": 34.75561970844865,
+      "median_incremental_peak_mib": 4.4609375,
       "output": {
         "filename": "heif-color-grid-8bit.heic-libvips.jpg",
         "dimensions": [
@@ -87,8 +87,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.71570119634271,
-      "median_incremental_peak_mib": 3.08203125,
+      "median_ms": 35.29960010200739,
+      "median_incremental_peak_mib": 3.078125,
       "output": {
         "filename": "heif-color-grid-alpha-12bit.heic-imagemagick.jpg",
         "dimensions": [
@@ -106,8 +106,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 32.09460619837046,
-      "median_incremental_peak_mib": 4.7421875,
+      "median_ms": 34.95320584625006,
+      "median_incremental_peak_mib": 4.7109375,
       "output": {
         "filename": "heif-color-grid-alpha-12bit.heic-libvips.jpg",
         "dimensions": [
@@ -128,8 +128,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 32.02051809057593,
-      "median_incremental_peak_mib": 3.07421875,
+      "median_ms": 41.62622522562742,
+      "median_incremental_peak_mib": 2.8515625,
       "output": {
         "filename": "heif-color-grid-alpha-8bit.heic-imagemagick.jpg",
         "dimensions": [
@@ -147,8 +147,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.67354208603501,
-      "median_incremental_peak_mib": 4.72265625,
+      "median_ms": 35.40225001052022,
+      "median_incremental_peak_mib": 4.703125,
       "output": {
         "filename": "heif-color-grid-alpha-8bit.heic-libvips.jpg",
         "dimensions": [
@@ -169,8 +169,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 33.72804028913379,
-      "median_incremental_peak_mib": 2.9453125,
+      "median_ms": 33.63643633201718,
+      "median_incremental_peak_mib": 2.84375,
       "output": {
         "filename": "heif-color-grid-mirrored.heic-imagemagick.jpg",
         "dimensions": [
@@ -188,8 +188,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 40.39807803928852,
-      "median_incremental_peak_mib": 5.98046875,
+      "median_ms": 40.62851704657078,
+      "median_incremental_peak_mib": 5.98828125,
       "output": {
         "filename": "heif-color-grid-mirrored.heic-libvips.jpg",
         "dimensions": [
@@ -210,8 +210,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 37.678978871554136,
-      "median_incremental_peak_mib": 2.9140625,
+      "median_ms": 36.602308973670006,
+      "median_incremental_peak_mib": 2.83984375,
       "output": {
         "filename": "heif-color-grid-rotated.heic-imagemagick.jpg",
         "dimensions": [
@@ -229,8 +229,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 41.30272613838315,
-      "median_incremental_peak_mib": 5.4921875,
+      "median_ms": 42.20761591568589,
+      "median_incremental_peak_mib": 5.453125,
       "output": {
         "filename": "heif-color-grid-rotated.heic-libvips.jpg",
         "dimensions": [
@@ -251,8 +251,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 198.02182679995894,
-      "median_incremental_peak_mib": 30.83984375,
+      "median_ms": 224.32229574769735,
+      "median_incremental_peak_mib": 30.8359375,
       "output": {
         "filename": "should_be_jpeg.heic-imagemagick.jpg",
         "dimensions": [
@@ -270,8 +270,8 @@
       "value": {
         "status": "ok"
       },
-      "median_ms": 148.18265615031123,
-      "median_incremental_peak_mib": 13.30078125,
+      "median_ms": 140.06032096222043,
+      "median_incremental_peak_mib": 13.375,
       "output": {
         "filename": "should_be_jpeg.heic-libvips.jpg",
         "dimensions": [
@@ -293,7 +293,7 @@
         "status": "error",
         "error_class": "Discourse::Utils::CommandError"
       },
-      "median_ms": 32.624649815261364,
+      "median_ms": 32.70195331424475,
       "median_incremental_peak_mib": 2.83984375
     },
     "libvips": {
@@ -301,8 +301,8 @@
         "status": "error",
         "error_class": "DiscourseVips::InvalidImage"
       },
-      "median_ms": 25.658775120973587,
-      "median_incremental_peak_mib": 4.48046875
+      "median_ms": 27.61495392769575,
+      "median_incremental_peak_mib": 4.484375
     }
   }
 ]

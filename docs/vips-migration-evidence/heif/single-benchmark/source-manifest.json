@@ -1,0 +1,17 @@
+{
+  "lib/discourse_vips.rb": "df005189821dc3fbf87644c79c2c8277d2ecd885a85a3783e85e6043d7654552",
+  "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+  "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+  "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+  "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+  "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+  "script/discourse_vips_worker": "2c2ff7fc5a7ead8358f073b71d2d5e5e299b7ff53585f4517b7b896e7e512df8",
+  "spec/fixtures/images/heif-truncated-payload.heic": "5fd8ec48f9c58efd73be80fa59652390884b45a18400764dc87f0bba53fe1839",
+  "spec/fixtures/images/heif-color-grid-12bit.heic": "8be52cbe27a039c0a69a7630c31a06a37acb0fb0c665fd5f209ec7e7ae18a8d1",
+  "spec/fixtures/images/heif-color-grid-alpha-8bit.heic": "42e7485bc47f59fae6117340e4fcbc45f5abade8a45bb0177411a2c53b57b0fe",
+  "spec/fixtures/images/heif-color-grid-mirrored.heic": "027ab3a60b4ff33ab40a35ff09b65182b2fc1c15e0a2b78cf5365b1493750076",
+  "spec/fixtures/images/heif-color-grid-8bit.heic": "7d5853f0f145774cbedad7aa228c58fb0ed8877cf1a4ef45b356a130654be59b",
+  "spec/fixtures/images/heif-color-grid-alpha-12bit.heic": "b6109e87fa9aa6927724276e8db07e631c8e89566c0475ce0e7c28730afdf346",
+  "spec/fixtures/images/heif-color-grid-rotated.heic": "8b70b984863affbbc770fe5647b81fef31106a585357b275311e916dad722a31",
+  "spec/fixtures/images/should_be_jpeg.heic": "8b03fc3b2a7be99085a6a370fca5c6eb24a868a4330e2a7368d2462ec4813d4e"
+}
