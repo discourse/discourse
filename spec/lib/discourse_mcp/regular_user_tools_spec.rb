@@ -106,6 +106,42 @@ describe DiscourseMcp::Tools do
     end
   end
 
+  describe DiscourseMcp::Tools::ListCategories do
+    it "lists only categories visible to the caller" do
+      public_category = Fabricate(:category)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+      result =
+        described_class.call(arguments: {}, request_context: request_context(user)).fetch(
+          :structuredContent,
+        )
+
+      category_ids = result.fetch(:categories).pluck(:id)
+      expect(category_ids).to include(public_category.id)
+      expect(category_ids).not_to include(private_category.id)
+    end
+  end
+
+  describe DiscourseMcp::Tools::ListTags do
+    it "lists only tags visible to the caller" do
+      visible_tag = Fabricate(:tag)
+      hidden_tag = Fabricate(:tag)
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+
+      result =
+        described_class.call(
+          arguments: {
+            "limit" => 200,
+          },
+          request_context: request_context(user),
+        ).fetch(:structuredContent)
+
+      tag_ids = result.fetch(:tags).pluck(:id)
+      expect(tag_ids).to include(visible_tag.id)
+      expect(tag_ids).not_to include(hidden_tag.id)
+    end
+  end
+
   describe DiscourseMcp::Resources::Topic do
     it "does not expose tags hidden from the caller" do
       hidden_tag = Fabricate(:tag)
@@ -164,6 +200,48 @@ describe DiscourseMcp::Tools do
         admin: false,
         moderator: false,
       )
+    end
+  end
+
+  describe DiscourseMcp::Tools::ListBookmarks do
+    it "lists only the caller's visible bookmarks" do
+      visible_bookmark = Fabricate(:bookmark, user:)
+      Fabricate(:bookmark, user: other_user)
+      private_post =
+        Fabricate(
+          :post,
+          topic:
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+        )
+      hidden_bookmark = Fabricate(:bookmark, user:, bookmarkable: private_post)
+
+      result =
+        described_class.call(arguments: {}, request_context: request_context(user)).fetch(
+          :structuredContent,
+        )
+
+      bookmark_ids = result.fetch(:bookmarks).pluck(:id)
+      expect(bookmark_ids).to include(visible_bookmark.id)
+      expect(bookmark_ids).not_to include(hidden_bookmark.id)
+    end
+  end
+
+  describe DiscourseMcp::Tools::ListNotifications do
+    it "lists only the caller's notifications from visible topics" do
+      visible_notification = Fabricate(:notification, user:)
+      Fabricate(:notification, user: other_user)
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      hidden_notification = Fabricate(:notification, user:, topic: private_topic)
+
+      result =
+        described_class.call(arguments: {}, request_context: request_context(user)).fetch(
+          :structuredContent,
+        )
+
+      notification_ids = result.fetch(:notifications).pluck(:id)
+      expect(notification_ids).to include(visible_notification.id)
+      expect(notification_ids).not_to include(hidden_notification.id)
     end
   end
 
@@ -326,6 +404,46 @@ describe DiscourseMcp::Tools do
     end
   end
 
+  describe DiscourseMcp::Tools::SetPostDeleted do
+    fab!(:topic) { Fabricate(:post, user:).topic }
+    fab!(:post) { Fabricate(:post, topic:, user:) }
+
+    it "deletes and recovers only the caller's post" do
+      result =
+        described_class.call(
+          arguments: {
+            "post_id" => post.id,
+            "deleted" => true,
+          },
+          request_context: request_context(user),
+        ).fetch(:structuredContent)
+
+      expect(result).to eq(post_id: post.id, deleted: true)
+      expect(post.reload.user_deleted).to eq(true)
+
+      described_class.call(
+        arguments: {
+          "post_id" => post.id,
+          "deleted" => false,
+        },
+        request_context: request_context(user),
+      )
+      expect(post.reload.user_deleted).to eq(false)
+
+      [other_user, moderator, admin].each do |other_actor|
+        expect do
+          described_class.call(
+            arguments: {
+              "post_id" => post.id,
+              "deleted" => true,
+            },
+            request_context: request_context(other_actor),
+          )
+        end.to raise_error(DiscourseMcp::ToolError)
+      end
+    end
+  end
+
   describe DiscourseMcp::Tools::UpdateUser do
     it "lets a user update their own profile" do
       result =
@@ -353,6 +471,31 @@ describe DiscourseMcp::Tools do
           )
         end.to raise_error(Discourse::InvalidAccess)
       end
+    end
+  end
+
+  describe DiscourseMcp::Tools::SetUserStatus do
+    before { SiteSetting.enable_user_status = true }
+
+    it "sets and clears only the caller's status" do
+      result =
+        described_class.call(
+          arguments: {
+            "description" => "Reviewing MCP tools",
+            "emoji" => "mag",
+          },
+          request_context: request_context(user),
+        ).fetch(:structuredContent)
+
+      expect(result).to eq(success: true)
+      expect(user.reload.user_status).to have_attributes(
+        description: "Reviewing MCP tools",
+        emoji: "mag",
+      )
+      expect(other_user.user_status).to be_nil
+
+      described_class.call(arguments: { "clear" => true }, request_context: request_context(user))
+      expect(user.reload.user_status).to be_nil
     end
   end
 
