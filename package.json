@@ -11,6 +11,7 @@
     "@glint/tsserver-plugin": "^2.7.7",
     "@rdil/parallel-prettier": "^3.0.0",
     "concurrently": "^10.0.5",
+    "ember-content-mapper": "^0.3.1",
     "eslint": "10.6.0",
     "execa": "^10.0.1",
     "jsdoc": "^4.0.5",
@@ -23,9 +24,11 @@
     "postcss-value-parser": "^4.2.0",
     "prettier": "3.8.1",
     "stylelint": "17.5.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-7": "npm:typescript@7.1.0-dev.20260901.1"
   },
   "scripts": {
+    "prepare": "pnpm types:generate",
     "dev": "bin/dev",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
@@ -35,9 +38,9 @@
     "lint:js:fix": "eslint --fix ./frontend $(script/list_bundled_plugins) ./themes --no-error-on-unmatched-pattern",
     "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}') 'themes/**/*.{js,gjs,ts,gts,cjs,mjs,scss}'",
     "lint:prettier:fix": "pnpm prettier -w --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'frontend/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,ts,gts,mts,cts,cjs,mjs}') 'themes/**/*.{js,gjs,ts,gts,cjs,mjs,scss}'",
-    "lint:types": "NODE_OPTIONS=--max-old-space-size=8192 ember-tsc -b",
+    "lint:types": "node node_modules/typescript-7/bin/tsc -b --runExternalCode",
     "types:generate": "pnpm --dir=frontend/discourse-i18n ember-tsc && pnpm --dir=frontend/discourse-types generate-external",
-    "types:watch": "pnpm types:generate && NODE_OPTIONS=--max-old-space-size=8192 pnpm ember-tsc -b --watch --preserveWatchOutput",
+    "types:watch": "pnpm types:generate && node node_modules/typescript-7/bin/tsc -b --runExternalCode --watch --preserveWatchOutput",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",

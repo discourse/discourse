@@ -1,4 +1,9 @@
 {
   "extends": "discourse/tsconfig-plugin",
-  "include": ["javascripts/**/*", "test/**/*"]
+  "include": ["javascripts/**/*", "test/**/*"],
+  "references": [
+    {
+      "path": "../../frontend/discourse"
+    }
+  ]
 }

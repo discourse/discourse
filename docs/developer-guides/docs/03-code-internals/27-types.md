@@ -20,7 +20,7 @@ Types whose meaning a runtime test can't capture (a generic's resolved type, an 
 
 - **CLI**: Run `pnpm lint:types`
 
-- **VSCode**: Install the [Glint v2](https://marketplace.visualstudio.com/items?itemName=typed-ember.glint2-vscode) extension. This is part of our [recommended config](https://github.com/discourse/discourse/blob/main/.vscode/extensions.json), so you may already have it. If anything isn't working, you may need to trigger "Restart extension host" from VSCode's command palette, or restart the IDE.
+- **VSCode**: Install the [TypeScript (Native Preview)](https://marketplace.visualstudio.com/items?itemName=TypeScript.native-preview) and [Glint v2](https://marketplace.visualstudio.com/items?itemName=typed-ember.glint2-vscode) extensions. Glint 1.4.0 and newer hands `.gts`/`.gjs` files to TypeScript's own language server. Both are part of our [recommended config](https://github.com/discourse/discourse/blob/main/.vscode/extensions.json), so you may already have it. If anything isn't working, you may need to trigger "Restart extension host" from VSCode's command palette, or restart the IDE.
 
 - **JetBrains** (RubyMine, WebStorm, Intellij, etc.): Install the [EmberExperimental](https://plugins.jetbrains.com/plugin/15499-emberexperimental-js) plugin.
 
@@ -32,22 +32,13 @@ Ensure that you've run `pnpm install` recently
 
 Official themes/plugins, and the official skeletons, are all wired up for types. To enable it for your own plugin/theme, pull in the latest changes from the relevant skeleton (`package.json`, `tsconfig.json`)
 
-## Live type updates for bundled plugins and themes
+## Bundled plugins and themes
 
-If you're adding or changing core types and need to use those changes immediately in a bundled plugin or theme, use live type updates.
+Plugins and themes in this repository depend on `@discourse/types` through the pnpm workspace and reference the core project from their `tsconfig.json`. `pnpm lint:types` builds core first, so a core type change is checked against every bundled plugin in the same run, with no release or version bump in between.
 
-To do so, temporarily change the plugin or theme's `package.json` to:
+In the editor, the TypeScript 7 language server resolves core imports straight to core source. Editors still on TypeScript 6 read the declarations that the last `pnpm lint:types` emitted, so run it, or keep `pnpm types:watch` running, after changing core types.
 
-```json
-{
-  "private": true,
-  "dependencies": {
-    "discourse": "workspace:@discourse/types@*"
-  }
-}
-```
-
-Then run `pnpm install` and start the type watcher with `pnpm types:watch`.
+External plugins and themes consume the published `@discourse/types` package. It is published from `main` by the `publish-types` workflow.
 
 ## Relative imports
 
