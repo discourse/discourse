@@ -95,16 +95,41 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def show
-    if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
+    token = params.fetch(:token)
+    backup_id = params.fetch(:id)
+
+    email_token_valid = EmailBackupToken.compare(current_user.id, token)
+    resume_token_valid =
+      !email_token_valid &&
+        SiteSetting.backup_download_resume_window !=
+          BackupDownloadResumeWindowSiteSetting::DISABLED && request.headers["Range"].present? &&
+        BackupDownloadResumeToken.compare(current_user.id, backup_id, token)
+
+    if !email_token_valid && !resume_token_valid
       @error = I18n.t("download_backup_mailer.no_token")
       return render layout: "no_ember", status: :unprocessable_entity, formats: [:html]
     end
 
     store = BackupRestore::BackupStore.create
 
-    if backup = store.file(params.fetch(:id), include_download_source: true)
-      EmailBackupToken.del(current_user.id)
-      StaffActionLogger.new(current_user).log_backup_download(backup)
+    if backup = store.file(backup_id, include_download_source: true)
+      if email_token_valid
+        if !store.remote?
+          resume_ttl =
+            BackupDownloadResumeWindowSiteSetting.resume_ttl(
+              SiteSetting.backup_download_resume_window,
+              email_token_ttl: EmailBackupToken.ttl(current_user.id),
+            )
+
+          BackupDownloadResumeToken.set(current_user.id, backup_id, token, ttl: resume_ttl)
+        end
+
+        EmailBackupToken.del(current_user.id)
+        StaffActionLogger.new(current_user).log_backup_download(backup)
+      elsif store.remote?
+        @error = I18n.t("download_backup_mailer.no_token")
+        return render layout: "no_ember", status: :unprocessable_entity, formats: [:html]
+      end
 
       if store.remote?
         redirect_to backup.source, allow_other_host: true
