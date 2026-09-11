@@ -8,7 +8,7 @@ RSpec.describe UploadCreator do
 
   describe "#create_for" do
     shared_examples "animated upload preservation" do
-      it "preserves animated uploads when FastImage is inconclusive" do
+      it "preserves animated GIF uploads" do
         FastImage.stubs(:animated?).returns(nil)
         file = file_from_fixtures("tiny_animated.gif")
         original = File.binread(file.path)
