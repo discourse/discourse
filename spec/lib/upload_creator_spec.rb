@@ -532,16 +532,77 @@ RSpec.describe UploadCreator do
       let(:filename) { "should_be_jpeg.heic" }
       let(:file) { file_from_fixtures(filename, "images") }
 
-      it "stores the upload with the expected extension" do
-        expect do
-          UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
-        end.to change { Upload.count }.by(1)
+      shared_examples "HEIF image conversion" do |grid_filename, width, height|
+        it "stores #{grid_filename} as a JPEG with the expected dimensions" do
+          upload =
+            described_class.new(
+              file_from_fixtures(grid_filename),
+              grid_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-        upload = Upload.last
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(extension: "jpeg", width:, height:)
+          stored_path = Discourse.store.path_for(upload)
+          expect(FastImage.type(stored_path)).to eq(:jpeg)
+          expect(FastImage.size(stored_path)).to eq([width, height])
+        end
+      end
 
-        expect(upload.extension).to eq("jpeg")
-        expect(File.extname(upload.url)).to eq(".jpeg")
-        expect(upload.original_filename).to eq("should_be_jpeg.jpg")
+      shared_examples "HEIF upload conversion" do
+        it "stores a JPEG" do
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+          stored_path = Discourse.store.path_for(upload)
+
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(
+            extension: "jpeg",
+            original_filename: "should_be_jpeg.jpg",
+            width: 846,
+            height: 1129,
+          )
+          expect(File.extname(upload.url)).to eq(".jpeg")
+          expect(FastImage.type(stored_path)).to eq(:jpeg)
+          expect(FastImage.size(stored_path)).to eq([846, 1129])
+        end
+
+        it "removes conversion tempfiles after an invalid HEIF" do
+          source_file = file_from_fixtures("heif-truncated-payload.heic")
+
+          Dir.mktmpdir do |directory|
+            Dir.stubs(:tmpdir).returns(directory)
+
+            expect {
+              described_class.new(source_file, "invalid.heic", force_optimize: true).create_for(
+                user.id,
+              )
+            }.to raise_error(error_class)
+
+            expect(Dir.children(directory)).to eq([])
+            expect(source_file).to be_closed
+          end
+        end
+
+        include_examples "HEIF image conversion", "heif-color-grid-rotated.heic", 40, 60
+        include_examples "HEIF image conversion", "heif-color-grid-mirrored.heic", 60, 40
+        include_examples "HEIF image conversion", "heif-color-grid-8bit.heic", 60, 40
+        include_examples "HEIF image conversion", "heif-color-grid-alpha-8bit.heic", 60, 40
+      end
+
+      context "with libvips disabled" do
+        before { global_setting :enable_vips_image_processing, false }
+
+        let(:error_class) { Discourse::Utils::CommandError }
+
+        include_examples "HEIF upload conversion"
+      end
+
+      context "with libvips enabled" do
+        before { global_setting :enable_vips_image_processing, true }
+
+        let(:error_class) { DiscourseVips::InvalidImage }
+
+        include_examples "HEIF upload conversion"
       end
     end
 
