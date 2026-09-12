@@ -16,6 +16,13 @@ en:
       labels:
         username: Username
 
+  discourse_workflows:
+    errors:
+      event:
+        unknown_operation: "Unknown event operation: %{operation}."
+        not_found: "No event found in topic %{topic_id}."
+        missing_event_block: "The event post does not contain an [event] block."
+
   discourse_automation:
     triggerables:
       event_started:
