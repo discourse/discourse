@@ -4,6 +4,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.gif" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
+  let(:rate_limited_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat4.png" }
   let(:encoded_image_url) { "https://example.com/אלחוט-.jpg" }
   let(:gif) do
     Base64.decode64(
@@ -30,6 +31,12 @@ RSpec.describe Jobs::PullHotlinkedImages do
       },
     )
     stub_request(:get, broken_image_url).to_return(status: 404)
+    stub_request(:get, rate_limited_image_url).to_return(
+      status: 429,
+      headers: {
+        "Retry-After" => "120",
+      },
+    )
     stub_request(:get, large_image_url).to_return(
       body: large_png,
       headers: {
@@ -101,6 +108,37 @@ RSpec.describe Jobs::PullHotlinkedImages do
         },
         at: Time.zone.now + delay.seconds,
       ) { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+    end
+
+    it "retries at Retry-After instead of recording a failure when rate limited" do
+      Jobs.run_later!
+
+      post = Fabricate(:post, user: user, raw: "<img src='#{rate_limited_image_url}'>")
+
+      freeze_time
+      expect_enqueued_with(
+        job: :pull_hotlinked_images,
+        args: {
+          post_id: post.id,
+          rate_limit_retries: 1,
+        },
+        at: 120.seconds.from_now,
+      ) { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+
+      expect(post.reload.post_hotlinked_media).to be_empty
+    end
+
+    it "stops retrying rate limited images once the retry limit is reached" do
+      Jobs.run_later!
+
+      post = Fabricate(:post, user: user, raw: "<img src='#{rate_limited_image_url}'>")
+
+      expect_not_enqueued_with(job: :pull_hotlinked_images) do
+        Jobs::PullHotlinkedImages.new.execute(
+          post_id: post.id,
+          rate_limit_retries: described_class::MAX_RATE_LIMIT_RETRIES,
+        )
+      end
     end
 
     it "removes downloaded images when they are no longer needed" do

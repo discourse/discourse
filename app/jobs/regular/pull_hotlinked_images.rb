@@ -4,11 +4,15 @@ module Jobs
   class PullHotlinkedImages < ::Jobs::Base
     sidekiq_options queue: "low"
 
+    MAX_RATE_LIMIT_RETRIES = 3
+
     def execute(args)
       disable_if_low_on_disk_space
 
       @post_id = args[:post_id]
       raise Discourse::InvalidParameters.new(:post_id) if @post_id.blank?
+
+      @rate_limit_retries = args[:rate_limit_retries].to_i
 
       # in test we have no choice cause we don't want to cause a deadlock
       if Jobs.run_immediately?
@@ -27,6 +31,7 @@ module Jobs
       hotlinked_map = post.post_hotlinked_media.index_by { |r| r.url }
 
       changed_hotlink_records = false
+      retry_after = nil
 
       HotlinkedMedia
         .extract_candidates(post.cooked)
@@ -55,6 +60,10 @@ module Jobs
             changed_hotlink_records = true
             hotlink_record.save!
           end
+        rescue HotlinkedMediaDownloader::RateLimitedError => e
+          retry_after = e.retry_after
+          log(:warn, "Rate limited (#{download_src}) post: #{@post_id}, retry in #{retry_after}s")
+          break
         rescue => e
           raise e if Rails.env.test?
           log(
@@ -76,6 +85,15 @@ module Jobs
         update_raw_delay = SiteSetting.editing_grace_period + 1
         Jobs.enqueue_in(update_raw_delay, :update_hotlinked_raw, post_id: post.id)
       end
+
+      return if retry_after.nil? || @rate_limit_retries >= MAX_RATE_LIMIT_RETRIES
+
+      Jobs.enqueue_in(
+        retry_after,
+        :pull_hotlinked_images,
+        post_id: @post_id,
+        rate_limit_retries: @rate_limit_retries + 1,
+      )
     end
 
     # Error classes live on HotlinkedMediaDownloader now; these aliases keep the
