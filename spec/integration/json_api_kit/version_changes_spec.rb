@@ -27,8 +27,9 @@ RSpec.describe "JSON:API version changes", type: :request do
   include_context "with a listing of topics"
 
   let(:first_version) { JsonApiKit::Timeline::FIRST_RELEASE }
-  let(:change) { JsonApiKitSpec::RenameTopicsPostedAtToCreatedAt.new(__FILE__) }
-  let(:change_version) { change.version }
+  let(:version_change) { JsonApiKitSpec::RenameTopicsPostedAtToCreatedAt.new(__FILE__) }
+  let(:version_changes) { JsonApiKit::VersionChanges.new([version_change]) }
+  let(:change_version) { version_change.version }
   let(:version) { first_version.to_s }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:error) { parsed_body["errors"].sole }
@@ -40,7 +41,7 @@ RSpec.describe "JSON:API version changes", type: :request do
     middle.update_columns(last_posted_at: Time.utc(2026, 8, 1))
     newest.update_columns(last_posted_at: Time.utc(2026, 8, 2))
     freeze_time(change_version.date + 1.day)
-    allow(JsonApiKit::VersionChange).to receive(:all).and_return([change])
+    allow(JsonApiKit::VersionChanges).to receive(:core).and_return(version_changes)
     Rails.application.routes.disable_clear_and_finalize = true
     Rails.application.routes.draw do
       get "/api/changed-topics" => "json_api_kit_spec/changed_topics#index"

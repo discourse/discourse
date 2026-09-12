@@ -54,7 +54,9 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
           .new(__FILE__)
       end
 
-      before { allow(JsonApiKit::VersionChange).to receive(:after).and_return([version_change]) }
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
 
       it "translates the linkage type" do
         expect(relationship_object.to_h[:data]).to eq(type: "topicAuthors", id: author.id.to_s)

@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-Rails.application.config.after_initialize { JsonApiKit::VersionChange.all }
+Rails.application.config.after_initialize { JsonApiKit::VersionChanges.core }
