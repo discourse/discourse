@@ -1,6 +1,10 @@
 import { cancel } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import {
+  isRateLimitError,
+  rateLimitWaitSeconds,
+} from "discourse/lib/ajax-error";
 import { camelCaseToSnakeCase } from "discourse/lib/case-converter";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
@@ -15,7 +19,8 @@ let cache = {},
   cacheKey,
   cacheTime,
   currentTerm,
-  oldSearch;
+  oldSearch,
+  rateLimitedUntil = 0;
 
 export function resetUserSearchCache() {
   cache = {};
@@ -23,6 +28,7 @@ export function resetUserSearchCache() {
   cacheTime = null;
   currentTerm = null;
   oldSearch = null;
+  rateLimitedUntil = 0;
 }
 
 function performSearch(
@@ -44,6 +50,11 @@ function performSearch(
   let cached = cache[term];
   if (cached) {
     resultsFn(cloneJSON(cached));
+    return;
+  }
+
+  if (rateLimitedUntil > Date.now()) {
+    resultsFn(CANCELLED_STATUS);
     return;
   }
 
@@ -103,6 +114,11 @@ function performSearch(
       // If there is a newer search term, return null
       if (term === currentTerm) {
         returnVal = r;
+      }
+    })
+    .catch(function (error) {
+      if (isRateLimitError(error)) {
+        rateLimitedUntil = Date.now() + rateLimitWaitSeconds(error) * 1000;
       }
     })
     .finally(function () {
