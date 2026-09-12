@@ -702,6 +702,56 @@ RSpec.describe Admin::BackupsController do
           )
         end
       end
+
+      context "when the global request rate limiter trips" do
+        before do
+          described_class.any_instance.stubs(:has_enough_space_on_disk?).returns(true)
+
+          global_setting :max_reqs_per_ip_mode, "block"
+          global_setting :max_reqs_per_ip_per_10_seconds, 2
+          global_setting :max_reqs_rate_limit_on_private, true
+
+          RateLimiter.enable
+          RateLimiter.clear_all_global!
+          freeze_time_safe
+        end
+
+        def upload_chunk(number)
+          post "/admin/backups/upload.json",
+               params: {
+                 resumableFilename: "test_Site-0123456789.tar.gz",
+                 resumableTotalSize: 100.megabytes,
+                 resumableIdentifier: "test",
+                 resumableChunkNumber: number.to_s,
+                 resumableChunkSize: "1",
+                 resumableCurrentChunkSize: "1",
+                 file: fixture_file_upload(Tempfile.new),
+               }
+        end
+
+        it "returns a 429 with a Retry-After header" do
+          @paths =
+            (1..3).map do
+              backup_path(File.join("tmp", "test", "test_Site-0123456789.tar.gz.part#{_1}"))
+            end
+
+          upload_chunk(1)
+          expect(response.status).to eq(200)
+
+          upload_chunk(2)
+          expect(response.status).to eq(200)
+
+          upload_chunk(3)
+          expect(response.status).to eq(429)
+          expect(response.headers["Retry-After"]).to eq("10")
+          expect(response.headers["Discourse-Rate-Limit-Error-Code"]).to eq("user_10_secs_limit")
+          expect(response.body).to eq(<<~MSG)
+            Slow down, you're making too many requests.
+            Please retry again in 10 seconds.
+            Error code: user_10_secs_limit.
+          MSG
+        end
+      end
     end
 
     shared_examples "uploading backup chunk not allowed" do
