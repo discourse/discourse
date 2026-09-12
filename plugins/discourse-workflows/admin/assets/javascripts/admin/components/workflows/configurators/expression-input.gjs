@@ -218,6 +218,16 @@ export default class ExpressionInput extends Component {
   }
 
   @action
+  labelEditor(view) {
+    if (this.args.inputId) {
+      view.contentDOM.id = this.args.inputId;
+    }
+    if (this.args.inputLabel) {
+      view.contentDOM.setAttribute("aria-label", this.args.inputLabel);
+    }
+  }
+
+  @action
   registerWrapper(element) {
     this.wrapperElement = element;
   }
@@ -274,6 +284,7 @@ export default class ExpressionInput extends Component {
         @onChange={{this.handleChange}}
         @onFocusIn={{this.handleFocusIn}}
         @onFocusOut={{this.handleFocusOut}}
+        @onSetup={{this.labelEditor}}
         @value={{this.displayValue}}
       />
     </div>

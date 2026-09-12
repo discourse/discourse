@@ -1,4 +1,16 @@
 en:
+  discourse_workflows:
+    errors:
+      create_board_column:
+        board_not_found: "Could not find the board for this column."
+        forbidden: "The workflow execution user does not have permission to manage this board."
+        invalid_params: "Could not create board column: %{errors}"
+        failed: "Could not create the board column."
+      create_board:
+        forbidden: "The workflow execution user does not have permission to create boards."
+        invalid_params: "Could not create board: %{errors}"
+        acl_failed: "Could not create the board's access permissions. Check the selected groups and permissions."
+        failed: "Could not create the board."
   site_settings:
     boards_enabled: "Organize topics, and lightweight standalone “floater” cards, into configurable, drag-and-drop kanban-style boards and columns, all with a purpose built management UI and per-board access control"
     boards_manage_board_allowed_groups: "Groups allowed to create and configure boards."

@@ -17,6 +17,7 @@ register_asset "stylesheets/boards-topic-pill.scss"
 register_asset "stylesheets/boards-add-from-topic-menu.scss"
 register_svg_icon "table-columns"
 register_svg_icon "boards"
+register_svg_icon "box-archive"
 
 module ::Boards
   PLUGIN_NAME = "boards"
@@ -25,6 +26,14 @@ end
 require_relative "lib/boards/engine"
 
 after_initialize do
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/create_board/v1"
+      require_relative "lib/discourse_workflows/nodes/create_board_column/v1"
+      [DiscourseWorkflows::Nodes::CreateBoard::V1, DiscourseWorkflows::Nodes::CreateBoardColumn::V1]
+    end
+  end
+
   # Keep queued jobs from the standalone plugin executable across the deploy.
   legacy_jobs =
     if Jobs.const_defined?(:DiscourseKanban, false)
