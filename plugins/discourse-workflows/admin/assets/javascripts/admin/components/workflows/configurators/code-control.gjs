@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export function normalizeCodeEditorValue(value, lang = "text") {
@@ -28,6 +28,11 @@ export default class CodeControl extends Component {
 
   get lang() {
     return this.args.schema?.control_options?.lang || "text";
+  }
+
+  /** "text" is the absence of a language rather than one to look up. */
+  get language() {
+    return this.lang === "text" ? undefined : this.lang;
   }
 
   get content() {
@@ -56,18 +61,18 @@ export default class CodeControl extends Component {
 
   <template>
     <div class="workflows-code-control" {{didInsert this.normalizeFieldValue}}>
-      <AceEditor
+      <CodeEditor
         aria-describedby={{@field.describedBy}}
         aria-invalid={{if @field.error "true"}}
         class="form-kit__control-code"
         id={{@field.id}}
         name={{@field.name}}
         style={{this.style}}
-        @content={{this.content}}
         @disabled={{@field.disabled}}
-        @mode={{this.lang}}
+        @language={{this.language}}
         @onChange={{this.handleInput}}
         @resizable={{true}}
+        @value={{this.content}}
       />
     </div>
   </template>

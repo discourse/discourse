@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Category from "discourse/models/category";
+import { fillInCodeEditor } from "discourse/tests/helpers/code-editor-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -418,8 +419,8 @@ acceptance("Param Input", function (needs) {
   test("creates input boxes if has parameters when save", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
-    await fillIn(
-      ".query-editor .ace_text-input",
+    await fillInCodeEditor(
+      ".query-editor .code-editor",
       "-- [params]\n-- int :months_ago = 1\n\nSELECT 1"
     );
     await click(".query-run-split__primary");

@@ -18,13 +18,13 @@ import {
   dataExplorerStore,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import sqlCompletionSchema from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-completion-schema";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
-  @service appEvents;
   @service siteSettings;
   @service messageBus;
   @service toasts;
@@ -37,15 +37,23 @@ export default class PluginsExplorerController extends Controller {
   @tracked dirty = false;
   @tracked isCachedResult = false;
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
+
   @tracked view = "table";
+
   @tracked mode = "manual";
+
   @tracked aiPrompt = "";
+
   @tracked aiGenerating = false;
+
   @tracked lastGeneratedPrompt = null;
 
   queryParams = ["params"];
+
   order = null;
+
   form = null;
+
   shouldAutoRun = false;
 
   /**
@@ -76,6 +84,12 @@ export default class PluginsExplorerController extends Controller {
   // is confusing otherwise.
   get actionsBusy() {
     return this.loading || this.aiGenerating;
+  }
+
+  // The editor completes table and column names against the live schema.
+  get sqlLanguageOptions() {
+    const schema = sqlCompletionSchema(this.schema);
+    return schema ? { schema } : undefined;
   }
 
   get saveDisabled() {
@@ -238,7 +252,6 @@ export default class PluginsExplorerController extends Controller {
     }
 
     panes.style.height = `${size}px`;
-    this.appEvents.trigger("ace:resize");
   }
 
   /** Lets go of the panes. Called by the route on exit. */

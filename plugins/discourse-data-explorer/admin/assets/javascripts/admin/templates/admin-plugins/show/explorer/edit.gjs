@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
+import CodeEditor from "discourse/components/code-editor";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, notEq, or } from "discourse/truth-helpers";
@@ -128,13 +128,14 @@ export default class QueriesEdit extends Component {
             {{#if @controller.editingQuery}}
               <div class="panels-flex query-editor__panes">
                 <div class="editor-panel">
-                  <AceEditor
-                    @content={{@controller.model.sql}}
+                  <CodeEditor
                     @disabled={{@controller.editorDisabled}}
-                    @mode="sql"
+                    @language="sql"
+                    @languageOptions={{@controller.sqlLanguageOptions}}
                     @onChange={{@controller.updateSql}}
                     @save={{@controller.save}}
                     @submit={{@controller.run}}
+                    @value={{@controller.model.sql}}
                   />
                 </div>
 
@@ -253,13 +254,14 @@ export default class QueriesEdit extends Component {
           {{#if @controller.editingQuery}}
             <div class="panels-flex query-editor__panes">
               <div class="editor-panel">
-                <AceEditor
-                  @content={{@controller.model.sql}}
+                <CodeEditor
                   @disabled={{@controller.editorDisabled}}
-                  @mode="sql"
+                  @language="sql"
+                  @languageOptions={{@controller.sqlLanguageOptions}}
                   @onChange={{@controller.updateSql}}
                   @save={{@controller.save}}
                   @submit={{@controller.run}}
+                  @value={{@controller.model.sql}}
                 />
               </div>
 

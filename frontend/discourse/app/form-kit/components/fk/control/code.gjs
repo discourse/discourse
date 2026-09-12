@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
 
@@ -23,7 +23,7 @@ export default class FKControlCode extends FKBaseControl {
   }
 
   <template>
-    <AceEditor
+    <CodeEditor
       aria-describedby={{@field.describedBy}}
       aria-invalid={{if @field.error "true"}}
       class="form-kit__control-code"
@@ -31,11 +31,11 @@ export default class FKControlCode extends FKBaseControl {
       name={{@field.name}}
       style={{this.style}}
       ...attributes
-      @content={{this.initialValue}}
       @disabled={{@field.disabled}}
-      @mode={{@lang}}
+      @language={{@lang}}
       @onChange={{this.handleInput}}
       @resizable={{true}}
+      @value={{this.initialValue}}
     />
   </template>
 }

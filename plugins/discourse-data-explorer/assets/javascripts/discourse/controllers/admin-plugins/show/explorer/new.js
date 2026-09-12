@@ -14,6 +14,7 @@ import {
   rememberedMode,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import sqlCompletionSchema from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-completion-schema";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
 
@@ -33,22 +34,37 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
+
   @tracked groups = null;
+
   @tracked aiGroupIds = [];
+
   @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
+
   @tracked manualSql = "SELECT 1";
+
   @tracked previewLoading = false;
+
   @tracked previewResults = null;
+
   @tracked showPreview = false;
+
   @tracked view = "sql";
 
   manualFormData = { name: "", description: "", groupIds: [] };
+
   _teardownAiGeneration = null;
 
   get previewDisabled() {
     return (
       this.aiGenerating || this.previewLoading || !this.generatedSql.trim()
     );
+  }
+
+  // The editor completes table and column names against the live schema.
+  get sqlLanguageOptions() {
+    const schema = sqlCompletionSchema(this.schema);
+    return schema ? { schema } : undefined;
   }
 
   get groupOptions() {

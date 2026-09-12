@@ -77,7 +77,7 @@ RSpec.describe "Data explorer query runner" do
 
       expect(page).to have_css(".query-run-split__primary", text: I18n.t("js.explorer.run"))
 
-      PageObjects::Components::AceEditor.new.set_input("SELECT 2")
+      PageObjects::Components::CodeEditor.new.set_input("SELECT 2")
 
       expect(page).to have_css(".query-run-split__primary", text: I18n.t("js.explorer.saverun"))
     end
