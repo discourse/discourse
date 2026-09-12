@@ -74,6 +74,43 @@ RSpec.describe Auth::Result do
 
   describe "#apply_associated_attributes!" do
     fab!(:user_field)
+    fab!(:existing_associated_group) do
+      AssociatedGroup.create!(
+        name: "Existing group",
+        provider_id: "existing-group",
+        provider_name: "test",
+      )
+    end
+
+    before { result.extra_data = { provider: "test" } }
+
+    it "does not manage associated groups when they are unset" do
+      user.update!(associated_group_ids: [existing_associated_group.id])
+
+      result.associated_groups = nil
+      result.apply_associated_attributes!
+
+      expect(user.reload.associated_group_ids).to eq([existing_associated_group.id])
+    end
+
+    it "clears associated groups when they are set to an empty array" do
+      user.update!(associated_group_ids: [existing_associated_group.id])
+
+      result.associated_groups = []
+      result.apply_associated_attributes!
+
+      expect(user.reload.associated_groups).to be_empty
+    end
+
+    it "persists associated groups when provided by the result" do
+      result.associated_groups = [{ id: "engineering", name: "Engineering" }]
+      result.apply_associated_attributes!
+
+      associated_group = AssociatedGroup.find_by(provider_id: "engineering")
+
+      expect(associated_group.name).to eq("Engineering")
+      expect(user.reload.associated_groups).to contain_exactly(associated_group)
+    end
 
     it "writes user_field_values to the user's custom fields" do
       result.user_field_values = { user_field.id.to_s => "Engineering" }
