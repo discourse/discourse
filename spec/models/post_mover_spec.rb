@@ -32,6 +32,15 @@ RSpec.describe PostMover do
       end.not_to change { [Post.count, reply.reload.topic_id, topic.reload.closed] }
     end
 
+    it "does not emit topic_created when moving to an existing topic" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      events = DiscourseEvent.track_events(:topic_created) { mover.to_topic(destination_topic.id) }
+
+      expect(events).to be_empty
+      expect(reply.reload.topic_id).to eq(destination_topic.id)
+    end
+
     it "rejects the move when no destination is given" do
       mover = described_class.new(topic, admin, [reply.id])
 
@@ -44,6 +53,33 @@ RSpec.describe PostMover do
     fab!(:topic)
     fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:reply) { Fabricate(:post, topic: topic) }
+
+    it "emits topic_created once for the completed split" do
+      mover = described_class.new(topic, admin, [reply.id])
+      destination = nil
+
+      events =
+        DiscourseEvent.track_events(:topic_created) do
+          destination = mover.to_new_topic("A separate discussion")
+        end
+
+      expect(events.size).to eq(1)
+      expect(events.first[:params]).to eq([destination, {}, admin, { continue_on_error: true }])
+      expect(destination.first_post).to eq(reply.reload)
+      expect(destination.excerpt).to be_present
+    end
+
+    it "does not emit topic_created when creating the destination fails" do
+      mover = described_class.new(topic, admin, [reply.id])
+
+      events =
+        DiscourseEvent.track_events(:topic_created) do
+          expect { mover.to_new_topic("") }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+      expect(events).to be_empty
+      expect(reply.reload.topic_id).to eq(topic.id)
+    end
 
     it "does not create a topic when the user cannot move posts from the source topic" do
       mover = described_class.new(topic, Fabricate(:user), [reply.id])
