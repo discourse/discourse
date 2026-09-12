@@ -127,6 +127,8 @@ class DiscourseConnect < DiscourseConnectBase
       sso_record = user.single_sign_on_record
     end
 
+    user.skip_username_watched_words_validation = true
+
     # ensure it's not staged anymore
     user.unstage!
 
@@ -263,6 +265,7 @@ class DiscourseConnect < DiscourseConnectBase
         end
 
         user = User.new(user_params)
+        user.skip_username_watched_words_validation = true
 
         if SiteSetting.must_approve_users && EmailValidator.can_auto_approve_user?(email)
           ReviewableUser.set_approved_fields!(user, Discourse.system_user)
