@@ -34,6 +34,16 @@ module JsonApiKitSpec
     end
   end
 
+  class RenameThingsSortAndFilter < JsonApiKit::VersionChange
+    version "2026-09-20"
+    description "The things resource renames its `bumped_at` sort and its `label` filter."
+
+    resource :things do
+      renamed_sort from: :bumped_at, to: :last_posted_at
+      renamed_filter from: :label, to: :name
+    end
+  end
+
   class RenameThingsAndPeople < JsonApiKit::VersionChange
     version "2026-10-01"
     description "Two resources change their names."
@@ -162,6 +172,62 @@ RSpec.describe JsonApiKit::VersionChange do
         expect(transformations).to all(be_a(JsonApiKit::VersionChange::Merge))
       end
     end
+
+    context "when the resource renames a sort and a filter" do
+      let(:change_class) { JsonApiKitSpec::RenameThingsSortAndFilter }
+      let(:previous_names) { transformations.map(&:from) }
+
+      it "collects one rename for the sort and one for the filter" do
+        expect(previous_names).to contain_exactly(
+          JsonApiKit::Name::Sort.new(value: "bumped_at", type: "things"),
+          JsonApiKit::Name::Filter.new(value: "label", type: "things"),
+        )
+      end
+    end
+
+    context "when a rename declares a converter" do
+      subject(:declare_resource) { Class.new(described_class).resource(:things, &declarations) }
+
+      context "when a sort rename declares an up converter" do
+        let(:declarations) do
+          proc { renamed_sort from: :label, to: :name, up: ->(value) { value } }
+        end
+
+        it "rejects the converter option" do
+          expect { declare_resource }.to raise_error(ArgumentError, "unknown keyword: :up")
+        end
+      end
+
+      context "when a sort rename declares a down converter" do
+        let(:declarations) do
+          proc { renamed_sort from: :label, to: :name, down: ->(value) { value } }
+        end
+
+        it "rejects the converter option" do
+          expect { declare_resource }.to raise_error(ArgumentError, "unknown keyword: :down")
+        end
+      end
+
+      context "when a filter rename declares an up converter" do
+        let(:declarations) do
+          proc { renamed_filter from: :label, to: :name, up: ->(value) { value } }
+        end
+
+        it "rejects the converter option" do
+          expect { declare_resource }.to raise_error(ArgumentError, "unknown keyword: :up")
+        end
+      end
+
+      context "when a filter rename declares a down converter" do
+        let(:declarations) do
+          proc { renamed_filter from: :label, to: :name, down: ->(value) { value } }
+        end
+
+        it "rejects the converter option" do
+          expect { declare_resource }.to raise_error(ArgumentError, "unknown keyword: :down")
+        end
+      end
+    end
   end
 
   describe "#version" do
@@ -206,6 +272,14 @@ RSpec.describe JsonApiKit::VersionChange do
 
       it "returns the name" do
         expect(current_name).to eq(name)
+      end
+
+      context "when the change renames the filter" do
+        let(:change_class) { JsonApiKitSpec::RenameThingsSortAndFilter }
+
+        it "returns the new name of the filter" do
+          expect(current_name).to eq(name.with(value: "name"))
+        end
       end
     end
 

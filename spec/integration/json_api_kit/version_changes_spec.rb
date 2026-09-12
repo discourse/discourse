@@ -17,6 +17,8 @@ module JsonApiKitSpec
                         to: :title,
                         down: ->(title) { title.to_s.split(" ") },
                         up: ->(words) { words.to_a.join(" ") }
+      renamed_sort from: :bumped_at, to: :last_posted_at
+      renamed_filter from: :name, to: :title
     end
   end
 end
@@ -34,6 +36,9 @@ RSpec.describe "JSON:API version changes", type: :request do
   let(:ids) { parsed_body["data"].map { it["id"] } }
 
   before do
+    oldest.update_columns(last_posted_at: Time.utc(2026, 8, 3))
+    middle.update_columns(last_posted_at: Time.utc(2026, 8, 1))
+    newest.update_columns(last_posted_at: Time.utc(2026, 8, 2))
     freeze_time(change_version.date + 1.day)
     allow(JsonApiKit::VersionChange).to receive(:all).and_return([change])
     Rails.application.routes.disable_clear_and_finalize = true
@@ -152,6 +157,59 @@ RSpec.describe "JSON:API version changes", type: :request do
       end
     end
 
+    context "when the request sorts by the renamed sort" do
+      let(:query) { { "sort" => "bumpedAt" } }
+
+      it "orders the rows by the current sort" do
+        expect(ids).to eq([middle.id.to_s, newest.id.to_s, oldest.id.to_s])
+      end
+    end
+
+    context "when the request sorts by the current name of the renamed sort" do
+      let(:query) { { "sort" => "lastPostedAt" } }
+
+      it "sends the reason" do
+        expect(error).to eq(
+          refusal(
+            title: "Invalid member name",
+            detail: "Use bumpedAt, not lastPostedAt.",
+            parameter: "sort",
+          ).deep_stringify_keys,
+        )
+      end
+    end
+
+    context "when the request filters by the renamed filter" do
+      let(:query) { { "filter" => { "name" => newest.title } } }
+
+      it "sends the rows the current filter keeps" do
+        expect(ids).to eq([newest.id.to_s])
+      end
+    end
+
+    context "when a refusal includes the renamed sort" do
+      let(:query) do
+        {
+          "sort" => "bumpedAt",
+          "page" => {
+            "anchor" => {
+              "postedAt" => middle.created_at.iso8601(6),
+            },
+          },
+        }
+      end
+
+      it "sends the name of that version" do
+        expect(error).to eq(
+          refusal(
+            title: "Anchor does not match the sort",
+            detail: "The anchor is postedAt, but this request sorts by bumpedAt.",
+            parameter: "page[anchor][postedAt]",
+          ).deep_stringify_keys,
+        )
+      end
+    end
+
     context "when the request uses the new name" do
       let(:query) { { "fields" => { "topics" => "createdAt" } } }
 
@@ -197,6 +255,14 @@ RSpec.describe "JSON:API version changes", type: :request do
 
       it "sends that field only" do
         expect(attributes.keys).to contain_exactly("createdAt")
+      end
+    end
+
+    context "when the request sorts by the current sort" do
+      let(:query) { { "sort" => "lastPostedAt" } }
+
+      it "orders the rows by that sort" do
+        expect(ids).to eq([middle.id.to_s, newest.id.to_s, oldest.id.to_s])
       end
     end
   end
