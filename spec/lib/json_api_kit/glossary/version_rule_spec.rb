@@ -80,6 +80,40 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
         expect(declared_attributes).to eq(name.with(value: "published_at") => "2026-08-01 00:00:00")
       end
     end
+
+    context "when a converter fails after an earlier merge" do
+      let(:changes) { [first_change, second_change, reuse_change] }
+      let(:first_change) { JsonApiKitSpec::MergeRuleChange.new(__FILE__) }
+      let(:second_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              renamed_attribute from: :posted_at,
+                                to: :created_at,
+                                up: ->(value) { Time.iso8601(value) },
+                                down: ->(value) { value.iso8601 }
+            end
+          end
+          .new(__FILE__)
+      end
+      let(:reuse_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              renamed_attribute from: :other_date, to: :posted_at
+            end
+          end
+          .new(__FILE__)
+      end
+      let(:value) { "posted_date" }
+      let(:attributes) { { name => "invalid", name.with(value: "posted_time") => "invalid" } }
+
+      it "reports the earlier merge inputs without applying the later rename" do
+        expect { declared_attributes }.to raise_error(
+          having_attributes(names: [name, name.with(value: "posted_time")]),
+        )
+      end
+    end
   end
 
   describe "#declared_name" do

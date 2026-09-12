@@ -319,6 +319,85 @@ RSpec.describe JsonApiKit::Request::Parameters do
     end
   end
 
+  context "when a type changes after a field name" do
+    let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+    let(:field_change) do
+      Class
+        .new(JsonApiKit::VersionChange) do
+          resource :discussion_threads do
+            renamed_attribute from: :heading, to: :title
+            renamed_filter from: :label, to: :title
+          end
+        end
+        .new(__FILE__)
+    end
+    let(:type_change) do
+      Class
+        .new(JsonApiKit::VersionChange) { renamed_type from: :discussion_threads, to: :topics }
+        .new(__FILE__)
+    end
+
+    before do
+      allow(JsonApiKit::VersionChange).to receive(:after).and_return([field_change, type_change])
+    end
+
+    context "when the request supplies a fieldset" do
+      let(:parameters) { { "fields" => { "discussionThreads" => "heading" } } }
+
+      it "translates the type and field together" do
+        expect(declared_parameters).to eq("fields" => { "topics" => ["title"] })
+      end
+    end
+
+    context "when the fieldset is empty" do
+      let(:parameters) { { "fields" => { "discussionThreads" => "" } } }
+
+      it "translates the type without a field name" do
+        expect(declared_parameters).to eq("fields" => { "topics" => [] })
+      end
+    end
+
+    context "when the fieldset value is invalid" do
+      let(:parameters) { { "fields" => { "discussionThreads" => 42 } } }
+
+      it "translates the type for the contract" do
+        expect(declared_parameters).to eq("fields" => { "topics" => 42 })
+      end
+    end
+
+    context "when the request supplies names without a type" do
+      let(:parameters) do
+        {
+          "sort" => "heading",
+          "filter" => {
+            "label" => "A",
+          },
+          "page" => {
+            "anchor" => {
+              "heading" => "A",
+            },
+          },
+        }
+      end
+
+      it "derives the historical type before translating names" do
+        expect(declared_parameters).to eq(
+          "sort" => {
+            "title" => :asc,
+          },
+          "filter" => {
+            "title" => "A",
+          },
+          "page" => {
+            "anchor" => {
+              "title" => "A",
+            },
+          },
+        )
+      end
+    end
+  end
+
   describe "#fieldsets" do
     subject(:fieldsets) { request_parameters.fieldsets }
 

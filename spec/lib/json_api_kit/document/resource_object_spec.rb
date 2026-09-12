@@ -111,7 +111,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
 
         expect(JsonApiKit::Document::RelationshipObject).to have_received(:new).with(
           linkage,
-          urls:,
+          client:,
           owner: record,
           name: "user",
         )
