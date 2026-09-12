@@ -83,7 +83,7 @@ export default class ChatComposerUploads extends Component {
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     if (this.inProgressUploads?.length > 0) {
-      this.uppyUpload.uppyWrapper.uppyInstance?.cancelAll();
+      this.uppyUpload.cancelAllUploads();
     }
 
     this.uploads = this.existingUploads ? cloneJSON(this.existingUploads) : [];

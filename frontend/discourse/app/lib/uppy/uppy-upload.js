@@ -16,6 +16,8 @@ import { deepMerge } from "discourse/lib/object";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
+  displayUploadErrors,
+  rateLimitRetryOptions,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
@@ -101,6 +103,8 @@ export default class UppyUpload {
   inProgressUploads = trackedArray();
 
   uppyWrapper;
+
+  #bufferedUploadErrors = [];
 
   #fileInputEventListener;
   #usingS3Uploads;
@@ -280,8 +284,10 @@ export default class UppyUpload {
             }
           })
           .catch((errResponse) => {
-            displayErrorForUpload(errResponse, this.siteSettings, file.name);
-            this.#triggerInProgressUploadsEvent();
+            this.#removeInProgressUpload(file.id);
+            this.#bufferUploadError(errResponse, file.name);
+
+            this.#finishBatch();
           });
       } else {
         this.#removeInProgressUpload(file.id);
@@ -303,12 +309,10 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on(
       "upload-error",
       (file, error, response) => {
-        if (response?.aborted) {
-          return; // User cancelled the upload
-        }
         this.#removeInProgressUpload(file.id);
-        displayErrorForUpload(response || error, this.siteSettings, file.name);
-        this.#reset();
+        this.#bufferUploadError(response || error, file.name);
+
+        this.#finishBatch();
       }
     );
 
@@ -414,6 +418,7 @@ export default class UppyUpload {
   cancelSingleUpload(data) {
     this.uppyWrapper.uppyInstance.removeFile(data.fileId);
     this.#removeInProgressUpload(data.fileId);
+    this.#finishBatch();
   }
 
   @bind
@@ -421,6 +426,7 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance?.cancelAll();
     this.inProgressUploads.length = 0;
     this.#triggerInProgressUploadsEvent();
+    this.#finishBatch();
   }
 
   @bind
@@ -461,7 +467,7 @@ export default class UppyUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: this.#xhrUploadUrl(),
-      shouldRetry: () => false,
+      ...rateLimitRetryOptions,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -544,6 +550,19 @@ export default class UppyUpload {
     });
   }
 
+  #bufferUploadError(data, fileName) {
+    this.#bufferedUploadErrors.push({ data, fileName });
+  }
+
+  #finishBatch() {
+    if (this.inProgressUploads.length > 0) {
+      return;
+    }
+
+    displayUploadErrors(this.#bufferedUploadErrors, this.siteSettings);
+    this.#reset();
+  }
+
   #reset() {
     this.uppyWrapper.uppyInstance?.cancelAll();
     Object.assign(this, {
@@ -553,6 +572,7 @@ export default class UppyUpload {
       uploadProgress: 0,
       filesAwaitingUpload: false,
     });
+    this.#bufferedUploadErrors = [];
     if (this._fileInputEl) {
       this._fileInputEl.value = "";
     }
@@ -575,6 +595,7 @@ export default class UppyUpload {
     this.appEvents.trigger(
       `upload-mixin:${this.config.id}:all-uploads-complete`
     );
-    this.#reset();
+
+    this.#finishBatch();
   }
 }

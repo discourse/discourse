@@ -7,12 +7,46 @@ import {
   allowsImages,
   authorizedExtensions,
   dialog,
+  displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
   isImage,
+  rateLimitRetryOptions,
   validateUploadedFiles,
 } from "discourse/lib/uploads";
+import { TOO_MANY_REQUESTS } from "discourse/tests/helpers/create-pretender";
 import I18n, { i18n } from "discourse-i18n";
+
+const RETRY_AFTER_SECONDS = 1;
+const TOO_LONG_TO_WAIT_SECONDS = 600;
+
+function middlewareRateLimit(retryAfter = RETRY_AFTER_SECONDS) {
+  const headers = {
+    "Retry-After": String(retryAfter),
+    "Content-Type": "text/plain",
+  };
+
+  return {
+    status: TOO_MANY_REQUESTS,
+    responseText:
+      "Slow down, you're making too many requests.\n" +
+      `Please retry again in ${retryAfter} seconds.\n`,
+    getResponseHeader: (name) => headers[name],
+  };
+}
+
+function controllerRateLimit(waitSeconds = RETRY_AFTER_SECONDS) {
+  return {
+    jqXHR: {
+      status: TOO_MANY_REQUESTS,
+      responseJSON: {
+        errors: ["rate limited"],
+        error_type: "rate_limit",
+        extras: { wait_seconds: waitSeconds },
+      },
+    },
+  };
+}
 
 module("Unit | Utility | uploads", function (hooks) {
   setupTest(hooks);
@@ -468,6 +502,97 @@ module("Unit | Utility | uploads", function (hooks) {
     assert.true(
       dialog.alert.calledWith("upload failed"),
       "the alert is called"
+    );
+  });
+
+  test("displayErrorForUpload - rate limits report the advertised wait", function (assert) {
+    sinon.stub(dialog, "alert");
+
+    const chunked = new Error("Non 2xx");
+    chunked.source = middlewareRateLimit();
+
+    displayErrorForUpload(middlewareRateLimit(), {}, "test.png");
+    displayErrorForUpload(chunked, {}, "backup.tar.gz");
+    displayErrorForUpload(controllerRateLimit(30), {}, "test.png");
+
+    assert.deepEqual(
+      dialog.alert.args.flat(),
+      [
+        i18n("too_many_requests", { count: RETRY_AFTER_SECONDS }),
+        i18n("too_many_requests", { count: RETRY_AFTER_SECONDS }),
+        i18n("too_many_requests", { count: 30 }),
+      ],
+      "the wait comes from Retry-After, error.source, then extras.wait_seconds"
+    );
+  });
+
+  test("displayErrorForBulkUpload - one rate limited file speaks for the batch", function (assert) {
+    sinon.stub(dialog, "alert");
+    displayErrorForBulkUpload([
+      { data: { status: 422 }, fileName: "a.png" },
+      { data: middlewareRateLimit(), fileName: "b.png" },
+    ]);
+    assert.true(
+      dialog.alert.calledWith(
+        i18n("too_many_requests", { count: RETRY_AFTER_SECONDS })
+      ),
+      "the actionable rate limit wins over the list of file names"
+    );
+  });
+
+  test("displayErrorForBulkUpload - falls back to the file names", function (assert) {
+    sinon.stub(dialog, "alert");
+    displayErrorForBulkUpload([
+      { data: { status: 422 }, fileName: "a.png" },
+      { data: { status: 422 }, fileName: "b.png" },
+    ]);
+    assert.true(
+      dialog.alert.calledWith(
+        i18n("post.errors.upload", { file_name: "a.png and b.png" })
+      ),
+      "the alert is called"
+    );
+  });
+
+  test("rateLimitRetryOptions - only retries a rate limit worth waiting for", function (assert) {
+    assert.true(
+      rateLimitRetryOptions.shouldRetry(middlewareRateLimit()),
+      "a 429 is retried"
+    );
+    assert.false(
+      rateLimitRetryOptions.shouldRetry({ status: 422 }),
+      "a 422 is not retried"
+    );
+    assert.false(
+      rateLimitRetryOptions.shouldRetry(
+        middlewareRateLimit(TOO_LONG_TO_WAIT_SECONDS)
+      ),
+      "a 429 that asks for a very long wait fails fast instead"
+    );
+  });
+
+  test("rateLimitRetryOptions - waits out Retry-After before retrying", async function (assert) {
+    const startedAt = Date.now();
+    await rateLimitRetryOptions.onAfterResponse(middlewareRateLimit(), 0);
+
+    assert.true(
+      Date.now() - startedAt >= RETRY_AFTER_SECONDS * 1000,
+      "the retry is delayed by Retry-After, not by uppy's fixed sub-second ladder"
+    );
+  });
+
+  test("rateLimitRetryOptions - never waits when there is nothing left to wait for", async function (assert) {
+    const startedAt = Date.now();
+
+    await rateLimitRetryOptions.onAfterResponse(
+      middlewareRateLimit(),
+      rateLimitRetryOptions.retries
+    );
+    await rateLimitRetryOptions.onAfterResponse({ status: 200 }, 0);
+
+    assert.true(
+      Date.now() - startedAt < RETRY_AFTER_SECONDS * 1000,
+      "an exhausted retry budget and a successful response both report immediately"
     );
   });
 });
