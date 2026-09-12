@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe AssetProcessor do
+  describe ".append_es6_deprecation" do
+    it "attributes the warning to the file using the deprecated extension" do
+      result = described_class.append_es6_deprecation("export default {};", "legacy.js.es6")
+
+      expect(result).to include('id: "discourse.es6-extension"', "reportAtCallSite: true")
+    end
+  end
+
   def entrypoint(result, name)
     result.values.find { |chunk| chunk["name"] == name }
   end

@@ -293,6 +293,7 @@ RSpec.configure do |config|
     expect(deprecation_error).to be_nil, deprecation_error
 
     EmberDeprecations.record_counts($playwright_logger&.logs, example.metadata)
+    EmberDeprecations.record_details($playwright_logger&.logs, example.metadata)
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
 
