@@ -67,6 +67,18 @@ export default class InterfaceController extends Controller {
     return deepEqual(this.model?.id, this.currentUser?.id);
   }
 
+  @computed(
+    "model.id",
+    "currentUser.id",
+    "currentUser.can_enable_bulk_permanent_topic_deletion"
+  )
+  get canEnableBulkPermanentTopicDeletion() {
+    return (
+      this.isViewingOwnProfile &&
+      this.currentUser?.can_enable_bulk_permanent_topic_deletion
+    );
+  }
+
   @computed("makeThemeDefault")
   get saveAttrNames() {
     let attrs = [
@@ -95,6 +107,10 @@ export default class InterfaceController extends Controller {
 
     if (this.siteSettings.allow_user_locale) {
       attrs.push("locale");
+    }
+
+    if (this.canEnableBulkPermanentTopicDeletion) {
+      attrs.push("bulk_permanent_topic_deletion");
     }
 
     if (this.makeThemeDefault) {

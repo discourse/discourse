@@ -344,6 +344,69 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_permanently_delete_topic?" do
+    fab!(:first_post) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:reply) { Fabricate(:post, topic: topic, post_number: 2) }
+    fab!(:another_admin, :admin)
+
+    before do
+      SiteSetting.can_permanently_delete = true
+      SiteSetting.allow_bulk_permanent_topic_deletion = false
+
+      PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
+    end
+
+    it "requires individual post deletion by default" do
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(false)
+    end
+
+    it "does not enable bulk deletion when only the hidden gate is enabled" do
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(false)
+    end
+
+    it "does not enable bulk deletion when only the admin preference is enabled" do
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(false)
+    end
+
+    it "allows bulk deletion when the hidden gate and admin preference are both enabled" do
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(true)
+    end
+
+    it "does not apply one admin's preference to another admin" do
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(true)
+      expect(Guardian.new(another_admin).can_permanently_delete_topic?(topic.reload)).to eq(false)
+    end
+
+    it "restores individual post deletion when the hidden gate is disabled again" do
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(true)
+
+      SiteSetting.allow_bulk_permanent_topic_deletion = false
+
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(false)
+    end
+
+    it "still enforces the permanent deletion timer" do
+      SiteSetting.allow_bulk_permanent_topic_deletion = true
+      admin.user_option.update!(bulk_permanent_topic_deletion: true)
+      topic.update!(deleted_by_id: admin.id, deleted_at: Time.zone.now)
+
+      expect(Guardian.new(admin).can_permanently_delete_topic?(topic.reload)).to eq(false)
+    end
+  end
+
   describe "#is_in_edit_topic_groups?" do
     it "returns true if the user is in edit_all_topic_groups" do
       group.add(user)
