@@ -2,6 +2,10 @@ import { trustHTML } from "@ember/template";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 
+export const TOO_MANY_REQUESTS = 429;
+const DEFAULT_RATE_LIMIT_WAIT_SECONDS = 15;
+export const MAX_RATE_LIMIT_RETRY_SECONDS = 60;
+
 export function extractErrorInfo(
   error,
   defaultMessage,
@@ -35,7 +39,10 @@ export function extractErrorInfo(
     parsedJSON = error.responseJSON;
   }
 
-  if (!parsedJSON && error.responseText) {
+  const contentType = error.getResponseHeader?.("Content-Type");
+  const isJSON = !contentType || contentType.includes("json");
+
+  if (!parsedJSON && isJSON && error.responseText) {
     try {
       parsedJSON = JSON.parse(error.responseText);
     } catch (ex) {
@@ -69,6 +76,12 @@ export function extractErrorInfo(
     }
   }
 
+  if (!parsedError && isRateLimitError(error)) {
+    parsedError = i18n("too_many_requests", {
+      count: rateLimitWaitSeconds(error),
+    });
+  }
+
   if (!parsedError) {
     if (error.status && error.status >= 400) {
       parsedError = error.status + " " + error.statusText;
@@ -87,9 +100,33 @@ export function extractError(error, defaultMessage) {
   return extractErrorInfo(error, defaultMessage).message;
 }
 
+function responseFor(error) {
+  return error.jqXHR ?? error.source ?? error;
+}
+
 export function isReadOnlyError(error) {
-  const xhr = error.jqXHR ?? error;
+  const xhr = responseFor(error);
   return xhr.status === 503 && xhr.responseJSON?.error_type === "read_only";
+}
+
+export function isRateLimitError(error) {
+  return responseFor(error).status === TOO_MANY_REQUESTS;
+}
+
+export function rateLimitWaitSeconds(error) {
+  const xhr = responseFor(error);
+
+  const retryAfter = parseInt(xhr.getResponseHeader?.("Retry-After"), 10);
+  if (retryAfter > 0) {
+    return retryAfter;
+  }
+
+  const waitSeconds = xhr.responseJSON?.extras?.wait_seconds;
+  if (waitSeconds > 0) {
+    return waitSeconds;
+  }
+
+  return DEFAULT_RATE_LIMIT_WAIT_SECONDS;
 }
 
 export function throwAjaxError(undoCallback, defaultMessage) {

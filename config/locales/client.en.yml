@@ -514,6 +514,9 @@ en:
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
     multiple_errors: "Multiple errors occurred: %{errors}"
+    too_many_requests:
+      one: "You’ve performed this action too many times. Please wait %{count} second before trying again."
+      other: "You’ve performed this action too many times. Please wait %{count} seconds before trying again."
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
