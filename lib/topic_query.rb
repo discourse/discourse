@@ -119,6 +119,7 @@ class TopicQuery
   self.results_filter_callbacks = []
 
   attr_accessor :options, :user, :guardian
+  attr_reader :invalid_filters
 
   def self.add_custom_filter(key, &blk)
     @custom_filters ||= {}
@@ -146,6 +147,7 @@ class TopicQuery
     @options = options.dup
     @user = user
     @guardian = options[:guardian] || Guardian.new(@user)
+    @invalid_filters = []
   end
 
   def joined_topic_user(list = nil)
@@ -313,6 +315,7 @@ class TopicQuery
       )
 
     results = topics_filter.filter_from_query_string(@options[:q])
+    @invalid_filters = topics_filter.invalid_filters
 
     if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
       results = remove_muted_topics(results, @user)
