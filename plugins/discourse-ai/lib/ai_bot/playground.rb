@@ -503,6 +503,7 @@ module DiscourseAi
         attributed_user: nil,
         feature_context: nil,
         authorization_user_id: nil,
+        visibility_user: post.user,
         &blk
       )
         # this is a multithreading issue
@@ -548,6 +549,7 @@ module DiscourseAi
                 include_document_uploads: include_document_uploads?,
                 allowed_attachment_types: bot.model.allowed_attachment_types,
                 bot_usernames: available_bot_usernames,
+                visibility_user: visibility_user,
               ),
           )
 

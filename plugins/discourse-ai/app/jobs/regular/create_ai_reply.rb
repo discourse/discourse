@@ -20,6 +20,14 @@ module Jobs
         end
       return if authorization_user.nil?
 
+      visibility_user =
+        if args.key?(:visibility_user_id)
+          User.find_by(id: args[:visibility_user_id])
+        else
+          post.user
+        end
+      return if visibility_user.nil?
+
       llm_model_id = args[:llm_model_id]
 
       begin
@@ -35,6 +43,7 @@ module Jobs
             feature_name: "bot",
             existing_reply_post: reply_post,
             authorization_user_id: authorization_user.id,
+            visibility_user: visibility_user,
           )
       rescue DiscourseAi::Agents::Bot::BOT_NOT_FOUND
         Rails.logger.warn(

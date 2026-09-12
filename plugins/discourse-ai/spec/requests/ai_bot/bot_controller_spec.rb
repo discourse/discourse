@@ -624,6 +624,54 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(404)
     end
 
+    it "does not send hidden post content to the LLM when an eligible user retries a moderator's reply" do
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      topic = Fabricate(:topic, user: moderator)
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: moderator,
+          raw: "Hidden context that must not reach the LLM",
+          hidden: true,
+        )
+      trigger_post =
+        Fabricate(:post, topic: topic, user: moderator, raw: "Hello @#{bot_user.username}")
+
+      aggregate_failures do
+        expect(Guardian.new(moderator).can_see?(hidden_post)).to eq(true)
+        expect(Guardian.new(user).can_see?(hidden_post)).to eq(false)
+      end
+
+      reply_post =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Initial response"]) do
+          DiscourseAi::AiBot::Playground.new(bot).reply_to(trigger_post)
+        end
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+
+      response_status = response.status
+      response_body = response.body
+      job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+      prompts = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Retry response"],
+      ) do |_, _, captured_prompts|
+        Jobs::CreateAiReply.new.execute(job_args)
+        prompts = captured_prompts
+      end
+
+      prompt_content = prompts.flat_map(&:messages).map { |message| message[:content] }.join
+
+      aggregate_failures do
+        expect(response_status).to eq(200)
+        expect(response_body).to include("success")
+        expect(job_args[:visibility_user_id]).to eq(user.id)
+        expect(prompt_content).not_to include(hidden_post.raw)
+      end
+    end
+
     it "allows retrying if LLM model has a negative id (seeded)" do
       seeded_llm_model = Fabricate(:llm_model, id: -9999, user: bot_user, name: "second-model")
 
