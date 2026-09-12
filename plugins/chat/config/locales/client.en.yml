@@ -323,6 +323,8 @@ en:
       message_too_long: "Message is too long, messages must be a maximum of %{count} characters."
       retry_staged_message:
         title: "Network error"
+        rate_limited_title: "Too many messages"
+        rate_limited_waiting: "Too many messages, wait a moment"
         action: "Send again?"
       bookmark_message: "Bookmark"
       bookmark_message_edit: "Edit Bookmark"

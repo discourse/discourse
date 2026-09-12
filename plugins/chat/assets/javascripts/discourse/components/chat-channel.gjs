@@ -751,16 +751,7 @@ export default class ChatChannel extends Component {
   _onSendError(id, error) {
     const stagedMessage =
       this.args.channel.messagesManager.findStagedMessage(id);
-    if (stagedMessage) {
-      if (error.jqXHR?.responseJSON?.errors?.length) {
-        // only network errors are retryable
-        stagedMessage.message = "";
-        stagedMessage.cooked = "";
-        stagedMessage.error = error.jqXHR.responseJSON.errors[0];
-      } else {
-        stagedMessage.error = "network_error";
-      }
-    }
+    stagedMessage?.setSendError(error);
 
     this.resetComposerMessage();
   }
