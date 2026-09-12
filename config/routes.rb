@@ -42,6 +42,7 @@ Discourse::Application.routes.draw do
       resources :sitemap, only: [:index]
       get "/sitemap_:page" => "sitemap#page", :page => /[1-9][0-9]*/
       get "/sitemap_recent" => "sitemap#recent"
+      get "/sitemap_published_pages" => "sitemap#published_pages"
       get "/news" => "sitemap#news"
     end
 
