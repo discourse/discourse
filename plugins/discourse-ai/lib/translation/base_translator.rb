@@ -3,6 +3,10 @@
 module DiscourseAi
   module Translation
     class BaseTranslator
+      DEFAULT_OUTPUT_TOKEN_BUDGET = 8192
+      TRANSLATION_EXPANSION_FACTOR = 2
+      PROMPT_TOKEN_RESERVE = 256
+
       def initialize(
         text:,
         target_locale:,
@@ -33,17 +37,35 @@ module DiscourseAi
         return nil if model.blank?
 
         bot = DiscourseAi::Agents::Bot.as(translation_user, agent:, model:)
+        tokenizer = model.tokenizer_class
+        payload_overhead = tokenizer.size(formatted_content(""))
+        chunk_size = chunk_token_budget(model, agent, payload_overhead)
+        chunks =
+          ContentSplitter.split(content: @text, chunk_size:) do |text|
+            [tokenizer.size(text), tokenizer.size(formatted_content(text)) - payload_overhead].max
+          end
 
         translated =
-          ContentSplitter
-            .split(content: @text, chunk_size: model.max_output_tokens)
-            .map { |text| get_translation(text:, bot:, translation_user:, model:) }
-            .join("")
+          chunks.map { |text| get_translation(text:, bot:, translation_user:, model:) }.join("")
 
         strip_control_characters(translated)
       end
 
       private
+
+      def chunk_token_budget(model, agent, payload_overhead)
+        output_tokens = model.max_output_tokens || DEFAULT_OUTPUT_TOKEN_BUDGET
+        prompt_tokens =
+          [agent.system_prompt, *Array(agent.examples).flatten].sum do |text|
+            model.tokenizer_class.size(text)
+          end
+        prompt_tokens += model.tokenizer_class.size(JSON.generate(agent.response_format))
+        input_budget =
+          model.max_prompt_tokens - output_tokens - prompt_tokens - payload_overhead -
+            PROMPT_TOKEN_RESERVE
+
+        [input_budget, output_tokens / TRANSLATION_EXPANSION_FACTOR].min
+      end
 
       def formatted_content(content)
         payload = { content:, target_locale: @target_locale }

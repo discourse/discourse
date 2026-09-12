@@ -23,20 +23,27 @@ module DiscourseAi
         /\s+/, # any whitespace
       ].freeze
 
-      def self.split(content:, chunk_size: DEFAULT_CHUNK_SIZE)
+      def self.split(content:, chunk_size: DEFAULT_CHUNK_SIZE, &measure)
         return [] if content.nil?
         return [""] if content.empty?
         chunk_size ||= DEFAULT_CHUNK_SIZE
-        return [content] if content.length <= chunk_size
+        raise ArgumentError, "Chunk size must be positive" if chunk_size <= 0
 
         chunks = []
-        remaining = content.dup
+        offset = 0
 
-        while remaining.present?
-          chunk = extract_mixed_chunk(remaining, size: chunk_size)
-          break if chunk.empty?
+        while offset < content.length
+          chunk = content[offset..]
+          loop do
+            length = fitting_length(chunk, chunk_size, &measure)
+            break if length == chunk.length
+
+            chunk = extract_mixed_chunk(chunk, size: length)
+            break if !measure || measure.call(chunk) <= chunk_size
+          end
+
           chunks << chunk
-          remaining = remaining[chunk.length..-1]
+          offset += chunk.length
         end
 
         chunks
@@ -44,65 +51,91 @@ module DiscourseAi
 
       private
 
+      def self.fitting_length(text, size, &measure)
+        return [text.length, size].min if !measure
+        return text.length if measure.call(text) <= size
+
+        lower = 0
+        upper = text.length
+        while lower + 1 < upper
+          middle = (lower + upper) / 2
+          if measure.call(text[0...middle]) <= size
+            lower = middle
+          else
+            upper = middle
+          end
+        end
+
+        raise ArgumentError, "Chunk size is too small to fit content" if lower == 0
+
+        lower
+      end
+
       def self.extract_mixed_chunk(text, size:)
-        return text if text.length <= size
-
-        # try each splitting strategy in order
         split_point =
-          [
-            -> { find_nearest_html_end_index(text, size) },
-            -> { find_nearest_bbcode_end_index(text, size) },
-            -> { find_text_boundary(text, size) },
-            -> { size },
-          ].lazy.map(&:call).compact.find { |pos| pos <= size }
+          find_nearest_bbcode_end_index(text, size) || find_nearest_html_end_index(text, size) ||
+            find_text_boundary(text, size) || size
 
+        split_point += 1 while split_point < size && text[split_point].match?(/\s/)
         text[0...split_point]
       end
 
       def self.find_nearest_html_end_index(text, target_pos)
-        return nil if !text.include?("<")
+        return if !text.include?("<")
 
-        begin
-          doc = Nokogiri::HTML5.fragment(text)
-          max_length_within_target = 0
-
-          doc.children.each do |node|
-            html = node.to_html
-            end_pos = max_length_within_target + html.length
-            return max_length_within_target if max_length_within_target > 0 && end_pos > target_pos
-            max_length_within_target = end_pos
-          end
-          nil
-        rescue Nokogiri::SyntaxError
-          nil
-        end
+        handler = HtmlBoundaries.new(text, target_pos)
+        Nokogiri::HTML4::SAX::Parser
+          .new(handler, Encoding::UTF_8)
+          .parse_memory(text) { |context| handler.context = context }
+        handler.element_end || handler.text_end
       end
 
       def self.find_nearest_bbcode_end_index(text, target_pos)
-        max_length_within_target = 0
-        BBCODE_PATTERNS.each do |pattern|
-          text.scan(pattern) do |_|
-            match = $~
-            tag_end = match.end(0)
-            return max_length_within_target if max_length_within_target > 0 && tag_end > target_pos
-            max_length_within_target = tag_end
+        BBCODE_PATTERNS
+          .flat_map do |pattern|
+            text.to_enum(:scan, pattern).flat_map { Regexp.last_match.offset(0) }
           end
-        end
-
-        nil
+          .select { |position| position.positive? && position <= target_pos }
+          .max
       end
 
       def self.find_text_boundary(text, target_pos)
-        search_text = text
-
         TEXT_BOUNDARIES.each do |pattern|
-          if pos = search_text.rindex(pattern, target_pos)
-            # Include all trailing whitespace
-            pos += 1 while pos < search_text.length && search_text[pos].match?(/\s/)
-            return pos
-          end
+          next if !text[0...target_pos].rindex(pattern)
+
+          return Regexp.last_match.end(0)
         end
         nil
+      end
+
+      class HtmlBoundaries < Nokogiri::XML::SAX::Document
+        attr_accessor :context
+        attr_reader :element_end, :text_end
+
+        def initialize(text, target_pos)
+          @target_pos = target_pos
+          @line_offsets = [0]
+          text.each_line { |line| @line_offsets << @line_offsets.last + line.length }
+        end
+
+        def end_element(_name)
+          @element_end = source_position || @element_end
+        end
+
+        alias_method :comment, :end_element
+
+        def characters(_text)
+          @text_end = source_position || @text_end
+        end
+
+        alias_method :cdata_block, :characters
+
+        private
+
+        def source_position
+          position = @line_offsets[context.line - 1] + context.column - 1
+          position if position.positive? && position <= @target_pos
+        end
       end
     end
   end
