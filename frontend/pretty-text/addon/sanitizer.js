@@ -15,12 +15,16 @@ function attr(name, value) {
 
 export { escape };
 
+// Hostnames, IPv4, IPv6 literals
+const ALLOWED_HREF_HOST = "(?:\\[[\\da-f:.]+\\]|[\\w.\\-]+)";
+const ALLOWED_HTTP_HREF = new RegExp(`^(https?:)?//${ALLOWED_HREF_HOST}`, "i");
+
 export function hrefAllowed(href, extraHrefMatchers) {
   // escape single quotes
   href = href.replace(/'/g, "%27");
 
   // absolute urls
-  if (/^(https?:)?\/\/[\w\.\-]+/i.test(href)) {
+  if (ALLOWED_HTTP_HREF.test(href)) {
     return href;
   }
   // relative urls
@@ -104,7 +108,10 @@ export function sanitize(text, allowLister) {
 
   if (allowedHrefSchemes && allowedHrefSchemes.length > 0) {
     extraHrefMatchers = [
-      new RegExp("^(" + allowedHrefSchemes.join("|") + ")://[\\w\\.\\-]+", "i"),
+      new RegExp(
+        "^(" + allowedHrefSchemes.join("|") + ")://" + ALLOWED_HREF_HOST,
+        "i"
+      ),
     ];
     if (allowedHrefSchemes.includes("tel")) {
       extraHrefMatchers.push(new RegExp("^tel://\\+?[\\w\\.\\-]+", "i"));
