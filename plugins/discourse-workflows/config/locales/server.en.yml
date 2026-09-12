@@ -85,10 +85,11 @@ en:
       topic:
         create_failed: "Failed to create topic."
         bump_failed: "Failed to bump topic."
+        invalid_filter: "Invalid topic filter: %{fragments}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
         edit_failed: "Failed to edit post."
-        invalid_filter: "Invalid post filter fragment: %{fragments}."
+        invalid_filter: "Invalid post filter: %{fragments}."
       flag_post:
         unknown_flag_type: "Unknown flag type: %{flag_type}."
         actor_not_staff: "The acting user must be a staff member to flag posts."
