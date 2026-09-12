@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
@@ -85,6 +86,71 @@ module("Integration | Component | EventDate", function (hooks) {
         "title",
         /February 2, 2026.*5:00 PM/,
         "displays date in browser timezone (Harare) when no event timezone"
+      );
+  });
+
+  test("updates as time passes without topic changes", async function (assert) {
+    this.siteSettings.use_local_event_date = false;
+    moment.tz.guess = () => "UTC";
+    this.clock = fakeTime("2026-09-04T13:12:00Z", "UTC", true);
+
+    const topic = {
+      event_starts_at: "2026-09-04T13:11:00.000Z",
+      event_ends_at: "2026-09-04T13:13:00.000Z",
+    };
+
+    await render(<template><EventDate @topic={{topic}} /></template>);
+
+    assert
+      .dom(".event-relative-date.current")
+      .exists("shows the event as current before it ends");
+
+    this.clock.tick(2 * 60 * 1000);
+    getOwner(this).lookup("service:a11y").autoUpdatingRelativeDateRef =
+      new Date();
+
+    await settled();
+
+    assert
+      .dom(".event-relative-date.past")
+      .exists("updates to past after the event ends");
+  });
+
+  test("updates when topic event dates are rehydrated", async function (assert) {
+    moment.tz.guess = () => "UTC";
+    this.clock = fakeTime("2026-09-04T12:28:00Z", "UTC", true);
+
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", {
+      id: 1234,
+      event_starts_at: "2026-09-04T11:25:00.000Z",
+      event_ends_at: "2026-09-04T11:27:00.000Z",
+    });
+
+    await render(<template><EventDate @topic={{topic}} /></template>);
+
+    assert
+      .dom(".event-date")
+      .hasAttribute(
+        "title",
+        /September 4, 2026/,
+        "shows the initial event date"
+      );
+
+    store.createRecord("topic", {
+      id: 1234,
+      event_starts_at: "2026-09-11T11:25:00.000Z",
+      event_ends_at: "2026-09-11T11:27:00.000Z",
+    });
+
+    await settled();
+
+    assert
+      .dom(".event-date")
+      .hasAttribute(
+        "title",
+        /September 11, 2026/,
+        "rerenders when the existing topic is rehydrated"
       );
   });
 
