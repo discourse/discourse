@@ -146,13 +146,21 @@ module DiscourseAi
           end
         end
 
-        client = DiscourseAi::Mcp::Client.new(ai_mcp_server)
-        initialized = client.initialize_session
-        tools = client.list_tools(session_id: initialized[:session_id])
+        if ai_mcp_server.persisted? && !ai_mcp_server.changed?
+          tools = DiscourseAi::Mcp::ToolRegistry.refresh!(ai_mcp_server, raise_on_error: true)
+          protocol_version = ai_mcp_server.protocol_version
+          server_capabilities = ai_mcp_server.server_capabilities
+        else
+          client = DiscourseAi::Mcp::Client.new(ai_mcp_server)
+          initialized = client.initialize_session
+          tools = client.list_tools(session_id: initialized[:session_id])
+          protocol_version = initialized[:result]["protocolVersion"]
+          server_capabilities = initialized[:result]["capabilities"] || {}
+        end
 
         render json: {
-                 protocol_version: initialized[:result]["protocolVersion"],
-                 server_capabilities: initialized[:result]["capabilities"] || {},
+                 protocol_version: protocol_version,
+                 server_capabilities: server_capabilities,
                  tool_count: tools.length,
                  tool_names: tools.map { |tool| tool["name"] },
                }
