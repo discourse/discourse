@@ -29,6 +29,8 @@ class Middleware::RequestTracker
   STATIC_IP_SKIPPER =
     ENV["DISCOURSE_MAX_REQS_PER_IP_EXCEPTIONS"]&.split&.map { |ip| IPAddr.new(ip) }
 
+  TOO_MANY_REQUESTS = 429
+
   MAX_URL_LENGTH = 2000
   MAX_SESSION_ID_LENGTH = 32
   MAX_USER_AGENT_LENGTH = 1000
@@ -328,7 +330,8 @@ class Middleware::RequestTracker
         headers["X-Discourse-Username"] = username
       end
 
-      return 429, headers, [message]
+      result = [TOO_MANY_REQUESTS, headers, [message]]
+      return result
     end
 
     if !cookie
@@ -342,7 +345,8 @@ class Middleware::RequestTracker
           "Discourse-Rate-Limit-Error-Code" => error_code,
         }
 
-        return 429, headers, [message]
+        result = [TOO_MANY_REQUESTS, headers, [message]]
+        return result
       end
     end
 
