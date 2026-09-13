@@ -4330,7 +4330,11 @@ CREATE TABLE public.discourse_kanban_boards (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     category_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
-    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL
+    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    archived boolean DEFAULT false NOT NULL,
+    archived_at timestamp(6) without time zone,
+    archived_by_id bigint,
+    original_slug character varying
 );
 
 
@@ -25068,6 +25072,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260910033302'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),

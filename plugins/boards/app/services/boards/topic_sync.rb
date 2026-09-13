@@ -8,6 +8,8 @@ module Boards
       return unless SiteSetting.boards_enabled?
 
       board = Board.includes(:columns).find(board.id) unless board.association(:columns).loaded?
+      return if board.archived?
+
       columns = board.columns.to_a
 
       # 1. Build topic-to-columns mapping via simple queries
@@ -107,7 +109,7 @@ module Boards
            AND acl.target_type = 'Boards::Board'
            AND acl.permission IN ('view', 'edit', 'manage')
           LEFT JOIN LATERAL UNNEST(acl.allowed_group_ids) AS acl_groups(acl_group_id) ON TRUE
-          WHERE c.topic_id = :topic_id
+          WHERE c.topic_id = :topic_id AND NOT b.archived
           GROUP BY c.id, c.board_id
         SQL
 
@@ -120,7 +122,7 @@ module Boards
         board_groups[row.board_id] ||= row.allowed_group_ids || []
       end
 
-      Card.where(topic_id: topic_id).delete_all
+      Card.where(id: rows.map(&:card_id)).delete_all
       publish_sync_changes(board_groups:, deleted_by_board:, created_cards: [])
     end
 
@@ -137,7 +139,7 @@ module Boards
           SELECT b.id AS board_id, c.id AS column_id, c.tag_id AS column_tag_id
           FROM discourse_kanban_boards b
           JOIN discourse_kanban_columns c ON c.board_id = b.id
-          WHERE (b.category_ids != '{}' OR b.tag_ids != '{}')
+          WHERE NOT b.archived AND (b.category_ids != '{}' OR b.tag_ids != '{}')
             AND (b.category_ids = '{}' OR :topic_category_id = ANY(b.category_ids))
             AND (b.tag_ids = '{}' OR b.tag_ids && :topic_tag_ids)
             AND (c.tag_id IS NULL OR c.tag_id = ANY(:topic_tag_ids))
@@ -160,7 +162,7 @@ module Boards
            AND acl.target_type = 'Boards::Board'
            AND acl.permission IN ('view', 'edit', 'manage')
           LEFT JOIN LATERAL UNNEST(acl.allowed_group_ids) AS acl_groups(acl_group_id) ON TRUE
-          WHERE b.id IN (
+          WHERE NOT b.archived AND b.id IN (
             SELECT board_id FROM matching
             UNION ALL
             SELECT board_id FROM discourse_kanban_cards WHERE topic_id = :topic_id
@@ -174,7 +176,7 @@ module Boards
           SELECT c.id AS card_id, c.board_id, c.column_id
           FROM discourse_kanban_cards c
           JOIN discourse_kanban_boards b ON b.id = c.board_id
-          WHERE c.topic_id = :topic_id
+          WHERE c.topic_id = :topic_id AND NOT b.archived
             AND (b.category_ids != '{}' OR b.tag_ids != '{}')
           FOR UPDATE OF c
         ) ec
@@ -354,6 +356,9 @@ module Boards
     private_class_method :trim_excess_cards
 
     def self.publish_sync_changes(board_groups:, deleted_by_board:, created_cards:)
+      archived_ids = Board.where(id: board_groups.keys, archived: true).pluck(:id)
+      board_groups = board_groups.except(*archived_ids)
+
       deleted_by_board.each do |board_id, card_ids|
         card_ids.each do |card_id|
           publish_to_board(board_groups, board_id, type: "card_deleted", card_id: card_id)

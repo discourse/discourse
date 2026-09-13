@@ -177,4 +177,24 @@ RSpec.describe Boards::Publisher do
       expect(messages.first.group_ids).to be_nil
     end
   end
+
+  describe "publishing to an archived board" do
+    subject(:result) do
+      described_class.publish_card_created!(board, card_data, client_id: test_client_id)
+      described_class.publish_card_updated!(board, card_data, client_id: test_client_id)
+      described_class.publish_card_moved!(board, card_data, client_id: test_client_id)
+      described_class.publish_card_deleted!(board, card.id, client_id: test_client_id)
+      described_class.publish_column_cleared!(board, column.id, client_id: test_client_id)
+      described_class.publish_columns_reordered!(board, [column.id], client_id: test_client_id)
+      described_class.publish_board_updated!(board, client_id: test_client_id)
+    end
+
+    let(:messages) { MessageBus.track_publish(channel) { result } }
+
+    it "suppresses every board event even when the caller has a stale board instance" do
+      Boards::Board.find(board.id).update!(archived: true)
+
+      expect(messages).to be_empty
+    end
+  end
 end

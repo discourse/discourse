@@ -24,8 +24,11 @@ module Boards
              -> { order(created_at: :asc) },
              class_name: "Boards::BoardHistory",
              inverse_of: :board
+    belongs_to :archived_by, class_name: "User", optional: true
     belongs_to :created_by, class_name: "User"
     belongs_to :updated_by, class_name: "User", optional: true
+
+    scope :open, -> { where(archived: false) }
 
     enum :card_style, { detailed: 0, simple: 1 }, default: :detailed
 
@@ -62,6 +65,21 @@ module Boards
 
     def self.loss_warning_permissions
       [ACL_PERMISSIONS.manage]
+    end
+
+    def archive_slug(date)
+      base = "#{slug}-archived-#{date.strftime("%Y%m%d")}"
+      candidate = base
+      suffix = 1
+      while self.class.where.not(id: id).exists?(slug: candidate)
+        suffix += 1
+        candidate = "#{base}-#{suffix}"
+      end
+      candidate
+    end
+
+    def old_slug_used?
+      archived? && self.class.where.not(id: id).exists?(slug: original_slug)
     end
 
     def url
@@ -193,6 +211,8 @@ module Boards
     private
 
     def normalize_slug
+      return if archived? || (will_save_change_to_archived? && slug == original_slug_in_database)
+
       source = slug.presence || name
       self.slug = Slug.for(source) if source.present?
     end
@@ -235,9 +255,12 @@ end
 # Table name: discourse_kanban_boards
 #
 #  id                   :bigint           not null, primary key
+#  archived             :boolean          default(FALSE), not null
+#  archived_at          :datetime
 #  card_style           :integer          default("detailed"), not null
 #  category_ids         :integer          default([]), not null, is an Array
 #  name                 :string           not null
+#  original_slug        :string
 #  require_confirmation :boolean          default(TRUE), not null
 #  show_tags            :boolean          default(FALSE), not null
 #  show_topic_thumbnail :boolean          default(FALSE), not null
@@ -245,6 +268,7 @@ end
 #  tag_ids              :integer          default([]), not null, is an Array
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  archived_by_id       :bigint
 #  created_by_id        :bigint
 #  updated_by_id        :bigint
 #

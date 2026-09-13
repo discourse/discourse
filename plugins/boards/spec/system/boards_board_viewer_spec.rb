@@ -703,6 +703,48 @@ describe "Boards Board Viewer" do
     end
   end
 
+  context "when archiving a board" do
+    it "archives through the menu and restores editing after unarchiving" do
+      board =
+        Fabricate(
+          :boards_board,
+          slug: "archive-roundtrip",
+          additional_manage_groups: [manage_group],
+        )
+      column = Fabricate(:boards_column, board:, title: "To Do")
+      card = Fabricate(:boards_card, board:, column:)
+      sign_in(manager)
+      board_viewer.visit_board(board)
+
+      board_viewer.open_controls_menu
+      find("[data-content] [data-identifier='archive-board'] button").click
+      within(".discourse-boards-archive-modal") do
+        expect(page).to have_link("the boards list", href: "/boards")
+        find("button[type='submit']").click
+      end
+
+      expect(page).to have_no_css(".discourse-boards-archive-modal")
+      expect(page).to have_current_path(
+        "/boards/archive-roundtrip-archived-#{Time.zone.today.strftime("%Y%m%d")}/#{board.id}",
+      )
+      expect(board_viewer).to have_no_add_card_button_in_column("To Do")
+      expect(page).to have_css("[data-card-id='#{card.id}'][draggable='false']")
+
+      board_viewer.open_controls_menu
+      expect(board_viewer).to have_no_board_settings_option
+      find("[data-content] [data-identifier='archive-board'] button").click
+      within(".discourse-boards-archive-modal") do
+        expect(page).to have_no_css("input[name='slug']")
+        find("button[type='submit']").click
+      end
+
+      expect(page).to have_no_css(".discourse-boards-archive-modal")
+      expect(page).to have_current_path("/boards/archive-roundtrip/#{board.id}")
+      expect(board_viewer).to have_add_card_button_in_column("To Do")
+      expect(page).to have_css("[data-card-id='#{card.id}'][draggable='true']")
+    end
+  end
+
   context "with controls menu" do
     it "toggles fullscreen mode" do
       result = create_board(with_columns: [{ title: "To Do", position: 0 }])
@@ -728,14 +770,13 @@ describe "Boards Board Viewer" do
       expect(board_viewer).to have_board_settings_option
     end
 
-    it "hides board settings option for users not in the manage group" do
+    it "hides the controls menu for users without board management actions" do
       result = create_board(with_columns: [{ title: "To Do", position: 0 }])
 
       sign_in(user)
       board_viewer.visit_board(result.board)
 
-      board_viewer.open_controls_menu
-      expect(board_viewer).to have_no_board_settings_option
+      expect(board_viewer).to have_no_controls_menu
     end
   end
 

@@ -157,4 +157,28 @@ RSpec.describe Boards::Api::ColumnsController do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "archived column mutation protection" do
+    before do
+      board.update!(archived: true)
+      sign_in(admin)
+    end
+
+    it "rejects creating, updating, and deleting columns" do
+      post "/boards/api/boards/#{board.id}/columns.json", params: { column: { title: "New" } }
+      expect(response.status).to eq(403)
+
+      put "/boards/api/boards/#{board.id}/columns/#{column.id}.json",
+          params: {
+            column: {
+              title: "Changed",
+            },
+          }
+      expect(response.status).to eq(403)
+
+      delete "/boards/api/boards/#{board.id}/columns/#{column.id}.json"
+      expect(response.status).to eq(403)
+      expect(board.columns.pluck(:id)).to eq([column.id])
+    end
+  end
 end

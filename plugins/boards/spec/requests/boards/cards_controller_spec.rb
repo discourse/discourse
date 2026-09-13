@@ -1756,4 +1756,40 @@ RSpec.describe Boards::Api::CardsController do
       expect(response.body).not_to include(private_topic.title)
     end
   end
+
+  describe "archived card mutation protection" do
+    fab!(:card) { Fabricate(:boards_card, board:, column: col_todo) }
+
+    before do
+      board.update!(archived: true)
+      sign_in(admin)
+    end
+
+    it "rejects creating, moving, editing, deleting, and clearing cards" do
+      post "/boards/api/boards/#{board.id}/cards.json",
+           params: {
+             card: {
+               column_id: col_todo.id,
+               title: "New",
+             },
+           }
+      expect(response.status).to eq(403)
+
+      put "/boards/api/boards/#{board.id}/cards/#{card.id}.json",
+          params: {
+            card: {
+              title: "Edited",
+              column_id: col_done.id,
+            },
+          }
+      expect(response.status).to eq(403)
+
+      delete "/boards/api/boards/#{board.id}/cards/#{card.id}.json"
+      expect(response.status).to eq(403)
+
+      delete "/boards/api/boards/#{board.id}/columns/#{col_todo.id}/cards.json"
+      expect(response.status).to eq(403)
+      expect(board.cards.pluck(:id)).to eq([card.id])
+    end
+  end
 end

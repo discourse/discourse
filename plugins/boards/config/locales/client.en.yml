@@ -3,6 +3,10 @@ en:
     boards:
       filter_boards: "Filter boards"
       filter_boards_no_results: "No boards match your search"
+      status:
+        all: "All"
+        open: "Open"
+        archived: "Archived"
       topic_footer:
         add_to_board: "Add to board"
         already_added: "Already added"
@@ -48,6 +52,15 @@ en:
         column_settings_title: "Column settings"
         new_column_title: "New column"
         new_board: "New board"
+        archive_board: "Archive board"
+        unarchive_board: "Unarchive board"
+        unarchive_board_menu: "Unarchive board..."
+        confirm_archive: 'Are you sure you want to archive this board? You can see archived boards on <a href="%{boards_url}">the boards list</a> by choosing "Archived" from the filter dropdown.'
+        confirm_unarchive: "Are you sure you want to unarchive this board?"
+        archived_successfully: "Board archived successfully"
+        unarchived_successfully: "Board unarchived successfully"
+        unarchive_slug_required: "The original board slug is now in use. Choose a new slug to unarchive this board."
+        archived_tooltip: "This board is archived. Cards and columns can no longer be changed."
         delete_board: "Delete board"
         remove_card: "Remove"
         new_topic: "New topic..."

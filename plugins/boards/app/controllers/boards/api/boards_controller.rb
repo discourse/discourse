@@ -6,7 +6,7 @@ module Boards
       DEFAULT_INDEX_PERMISSIONS = %w[view edit manage].freeze
 
       before_action :ensure_logged_in,
-                    only: %i[create update destroy move_column constraint_preview]
+                    only: %i[create update destroy move_column constraint_preview archive unarchive]
       before_action :find_board!, only: %i[show]
       before_action :ensure_board_read!, only: %i[show]
 
@@ -28,10 +28,21 @@ module Boards
             .with_any_acl_permissions(guardian, allowed_permissions)
             .order(:name)
             .to_a
+        used_slugs =
+          Boards::Board
+            .where(slug: boards.select(&:archived?).map(&:original_slug))
+            .pluck(:slug)
+            .to_set
         tag_name_map = build_tag_name_map(*boards)
         render json: {
                  boards:
-                   serialize_data(boards, Boards::BoardSerializer, root: false, tag_name_map:),
+                   serialize_data(
+                     boards,
+                     Boards::BoardSerializer,
+                     root: false,
+                     tag_name_map:,
+                     used_slugs:,
+                   ),
                }
       end
 
@@ -49,6 +60,7 @@ module Boards
 
         boards =
           Boards::Board
+            .open
             .includes(:columns, :created_by)
             .with_any_acl_permissions(guardian, allowed_permissions)
             .order(:name)
@@ -119,7 +131,7 @@ module Boards
                    serialize_board(
                      @board,
                      tag_name_map:,
-                     include_acl: guardian.can_manage_boards_board?(@board),
+                     include_acl: guardian.can_manage_board?(@board),
                    ),
                  columns: columns,
                }
@@ -149,7 +161,7 @@ module Boards
         ) do
           on_success do |board:, cards_removed_count:|
             response = {
-              board: serialize_board(board, include_acl: guardian.can_manage_boards_board?(board)),
+              board: serialize_board(board, include_acl: guardian.can_manage_board?(board)),
             }
             response[:cards_removed_count] = cards_removed_count if cards_removed_count.to_i > 0
             render json: response
@@ -227,6 +239,82 @@ module Boards
         end
 
         render json: { cards_to_remove: count }
+      end
+
+      def archive
+        Boards::Archive.call(
+          service_params.deep_merge(
+            params: {
+              board_id: params[:id],
+              client_id: params[:client_id],
+            },
+          ),
+        ) do
+          on_success do |board:|
+            render json: {
+                     board:
+                       Boards::BoardSerializer.new(
+                         board,
+                         scope: guardian,
+                         root: false,
+                         tag_name_map: build_tag_name_map(board),
+                       ).as_json,
+                   }
+          end
+          on_model_not_found(:board) { raise Discourse::NotFound }
+          on_failed_policy(:can_archive) { raise Discourse::InvalidAccess }
+          on_failed_contract do |contract|
+            render json: failed_json.merge(errors: contract.errors.full_messages),
+                   status: :bad_request
+          end
+          on_exceptions(ActiveRecord::RecordInvalid) do |exception|
+            render json: failed_json.merge(errors: exception.record.errors.full_messages),
+                   status: :unprocessable_entity
+          end
+          on_exceptions(ActiveRecord::RecordNotUnique) do
+            render json: failed_json.merge(errors: [I18n.t("boards.errors.slug_unavailable")]),
+                   status: :unprocessable_entity
+          end
+          on_failure { render json: failed_json, status: :unprocessable_entity }
+        end
+      end
+
+      def unarchive
+        Boards::Unarchive.call(
+          service_params.deep_merge(
+            params: {
+              board_id: params[:id],
+              client_id: params[:client_id],
+            },
+          ),
+        ) do
+          on_success do |board:|
+            render json: {
+                     board:
+                       Boards::BoardSerializer.new(
+                         board,
+                         scope: guardian,
+                         root: false,
+                         tag_name_map: build_tag_name_map(board),
+                       ).as_json,
+                   }
+          end
+          on_model_not_found(:board) { raise Discourse::NotFound }
+          on_failed_policy(:can_unarchive) { raise Discourse::InvalidAccess }
+          on_failed_contract do |contract|
+            render json: failed_json.merge(errors: contract.errors.full_messages),
+                   status: :bad_request
+          end
+          on_exceptions(ActiveRecord::RecordInvalid) do |exception|
+            render json: failed_json.merge(errors: exception.record.errors.full_messages),
+                   status: :unprocessable_entity
+          end
+          on_exceptions(ActiveRecord::RecordNotUnique) do
+            render json: failed_json.merge(errors: [I18n.t("boards.errors.slug_unavailable")]),
+                   status: :unprocessable_entity
+          end
+          on_failure { render json: failed_json, status: :unprocessable_entity }
+        end
       end
 
       def destroy
