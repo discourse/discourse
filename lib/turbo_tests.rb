@@ -14,6 +14,8 @@ require "parallel_tests/rspec/runner"
 
 require "./lib/turbo_tests/reporter"
 require "./lib/turbo_tests/runner"
+require "./lib/turbo_tests/work_queue"
+require "./lib/turbo_tests/worker_process"
 require "./lib/turbo_tests/json_rows_formatter"
 require "./lib/turbo_tests/documentation_formatter"
 

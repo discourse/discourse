@@ -28,7 +28,7 @@ jobs:
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
-          matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
+          (matrix.build_type == 'backend' || (matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'chat')))
           && 'cdck-linux-16-core'
           || 'cdck-linux-8-core'
         )
@@ -95,7 +95,12 @@ jobs:
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
+          system_test_cores=$(nproc)
+          system_test_workers=$((system_test_cores / 2 + 2))
+          if [ "$system_test_cores" -eq 16 ] && { [ "${{ matrix.target }}" = "core" ] || [ "${{ matrix.target }}" = "core-plugins" ]; }; then
+            system_test_workers=15
+          fi
+          echo "PARALLEL_TEST_PROCESSORS=$system_test_workers" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
@@ -128,16 +133,17 @@ jobs:
         run: |
           ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
-      - name: Setup gems
-        run: |
-          bundle config --local path vendor/bundle
-          bundle config --local deployment true
-          bundle config --local without development
-          bundle install --jobs $(($(nproc) - 1))
-          bundle clean
+      - parallel:
+          - name: Setup gems
+            run: |
+              bundle config --local path vendor/bundle
+              bundle config --local deployment true
+              bundle config --local without development
+              bundle install --jobs $(($(nproc) - 1))
+              bundle clean
 
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
+          - name: pnpm install
+            run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
         if: matrix.target == 'official-plugins' || matrix.target == 'plugins'
@@ -186,6 +192,10 @@ jobs:
             if: env.USES_PARALLEL_DATABASES == 'true'
             run: bin/rake parallel:create parallel:migrate
 
+          - name: Ember Build
+            if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
+            run: script/assemble_ember_build.rb
+
           - name: Check Annotations
             if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
             env:
@@ -225,8 +235,8 @@ jobs:
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
           path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
+          key: rspec-runtime-v2-${{ matrix.target }}-${{ matrix.build_type }}-${{ github.run_id }}
+          restore-keys: rspec-runtime-v2-${{ matrix.target }}-${{ matrix.build_type }}-
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
@@ -257,10 +267,6 @@ jobs:
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: LD_PRELOAD="$RUBY_ALLOCATOR" bin/turbo_rspec --use-runtime-info --format=progress
-
-      - name: Ember Build
-        if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        run: script/assemble_ember_build.rb
 
       - name: Prepare Chrome environment for QUnit
         if: matrix.build_type == 'frontend'
@@ -305,14 +311,43 @@ jobs:
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
+          DISCOURSE_LATE_SYSTEM_YJIT: "1"
+          DISCOURSE_SYSTEM_BROWSER_CACHE: "1"
+          DISCOURSE_TURBO_RSPEC_DYNAMIC_SCHEDULING: "1"
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+        run: |
+          report_system_test_cpu() {
+            system_test_exit_status=$?
+            system_test_cpu_end=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+            printf 'CI_SYSTEM_CPU_END {"usage_usec":%s,"elapsed_seconds":%s,"exit_status":%s}\n' \
+              "${system_test_cpu_end:-null}" "$((SECONDS - system_test_started_seconds))" "$system_test_exit_status"
+            exit "$system_test_exit_status"
+          }
+          system_test_cpu_start=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+          printf 'CI_SYSTEM_CPU_START {"usage_usec":%s}\n' "${system_test_cpu_start:-null}"
+          system_test_started_seconds=$SECONDS
+          trap report_system_test_cpu EXIT
+          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
+          DISCOURSE_LATE_SYSTEM_YJIT: "1"
+          DISCOURSE_SYSTEM_BROWSER_CACHE: "1"
+          DISCOURSE_TURBO_RSPEC_DYNAMIC_SCHEDULING: "1"
           CHECKOUT_TIMEOUT: 10
         run: |
+          report_system_test_cpu() {
+            system_test_exit_status=$?
+            system_test_cpu_end=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+            printf 'CI_SYSTEM_CPU_END {"usage_usec":%s,"elapsed_seconds":%s,"exit_status":%s}\n' \
+              "${system_test_cpu_end:-null}" "$((SECONDS - system_test_started_seconds))" "$system_test_exit_status"
+            exit "$system_test_exit_status"
+          }
+          system_test_cpu_start=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { print $2 }' /sys/fs/cgroup/cpu.stat 2>/dev/null || true)
+          printf 'CI_SYSTEM_CPU_START {"usage_usec":%s}\n' "${system_test_cpu_start:-null}"
+          system_test_started_seconds=$SECONDS
+          trap report_system_test_cpu EXIT
           LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system
 
       - name: Official Plugins System Tests
@@ -332,7 +367,31 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
+        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation tmp/themes/*/spec/system themes/*/spec/system
+
+      - name: Report system test file runtimes
+        if: success() && matrix.build_type == 'system'
+        run: |
+          ruby -rjson -rset <<'RUBY'
+          path = "tmp/turbo_rspec_runtime.log"
+          exit unless File.file?(path)
+
+          tracked_files = IO.popen(%w[git ls-files -z -- spec/system plugins themes], &:read).split("\0").to_set
+          totals = Hash.new(0.0)
+          File.foreach(path) do |line|
+            file, separator, duration = line.strip.rpartition(":")
+            next if separator.empty? || !tracked_files.include?(file)
+            next unless file.match?(%r{\A(?:spec/system|plugins/[^/]+/spec/system|themes/[^/]+/spec/system)/[A-Za-z0-9_/.-]+_spec\.rb\z})
+
+            seconds = Float(duration, exception: false)
+            next unless seconds&.finite? && seconds >= 0
+
+            totals[file] += seconds
+          end
+          totals.sort.each do |file, seconds|
+            puts "SYSTEM_FILE_TIMING #{JSON.generate(file: file, seconds: seconds)}"
+          end
+          RUBY
 
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
@@ -365,6 +424,93 @@ jobs:
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
+
+      - name: Report peak container memory
+        if: always()
+        continue-on-error: true
+        run: |
+          memory_mount_path() {
+            awk -v membership="$1" -v mountpoint="$2" -v filesystem="$3" '
+              {
+                split($0, sections, " - ")
+                split(sections[2], mount, " ")
+                if ($5 != mountpoint || mount[1] != filesystem) next
+                if (filesystem == "cgroup" && mount[3] !~ /(^|,)memory(,|$)/) next
+                if (membership == $4) {
+                  print $5
+                } else if ($4 == "/" && membership ~ /^\//) {
+                  print $5 membership
+                } else if (index(membership, $4 "/") == 1) {
+                  print $5 substr(membership, length($4) + 1)
+                }
+              }
+            ' /proc/self/mountinfo
+          }
+
+          cgroup_version=unavailable
+          peak_mib=null
+          limit_mib=null
+          oom=null
+          oom_kill=null
+          runner_mib=$(awk '/^MemTotal:/ { printf "%.2f", $2 / 1024 }' /proc/meminfo)
+          runner_mib=${runner_mib:-null}
+          cgroup_path=$(awk -F: '$1 == "0" { print $3 }' /proc/self/cgroup)
+          memory_dir=$(memory_mount_path "$cgroup_path" /sys/fs/cgroup cgroup2)
+          peak_file="$memory_dir/memory.peak"
+          limit_file="$memory_dir/memory.max"
+
+          if [ -n "$memory_dir" ] && [ -r "$peak_file" ]; then
+            cgroup_version=2
+            oom=$(awk '$1 == "oom" && $2 ~ /^[0-9]+$/ { print $2 }' "$memory_dir/memory.events" 2>/dev/null || true)
+            oom_kill=$(awk '$1 == "oom_kill" && $2 ~ /^[0-9]+$/ { print $2 }' "$memory_dir/memory.events" 2>/dev/null || true)
+            oom=${oom:-null}
+            oom_kill=${oom_kill:-null}
+          else
+            cgroup_path=$(awk -F: '$2 ~ /(^|,)memory(,|$)/ { print $3 }' /proc/self/cgroup)
+            memory_dir=$(memory_mount_path "$cgroup_path" /sys/fs/cgroup/memory cgroup)
+            peak_file="$memory_dir/memory.max_usage_in_bytes"
+            limit_file="$memory_dir/memory.limit_in_bytes"
+            if [ -n "$memory_dir" ] && [ -r "$peak_file" ]; then
+              cgroup_version=1
+            fi
+          fi
+
+          if [ "$cgroup_version" != unavailable ]; then
+            peak_mib=$(awk '/^[0-9]+$/ { printf "%.2f", $1 / 1048576 }' "$peak_file")
+            limit_mib=$(awk '/^[0-9]+$/ && $1 < 9223372036850000000 { printf "%.2f", $1 / 1048576 }' "$limit_file" 2>/dev/null || true)
+            peak_mib=${peak_mib:-null}
+            limit_mib=${limit_mib:-null}
+          fi
+
+          printf 'CI_MEMORY {"cgroup_version":"%s","peak_mib":%s,"limit_mib":%s,"runner_memtotal_mib":%s,"oom":%s,"oom_kill":%s}\n' \
+            "$cgroup_version" "$peak_mib" "$limit_mib" "$runner_mib" "$oom" "$oom_kill"
+          usage_seconds=null
+          nr_throttled=null
+          throttled_seconds=null
+          quota_cores=null
+          processor_count=$(nproc 2>/dev/null || true)
+          processor_count=${processor_count:-null}
+          if [ "$cgroup_version" = 2 ]; then
+            usage_seconds=$(awk '$1 == "usage_usec" && $2 ~ /^[0-9]+$/ { printf "%.6f", $2 / 1000000 }' "$memory_dir/cpu.stat" 2>/dev/null || true)
+            nr_throttled=$(awk '$1 == "nr_throttled" && $2 ~ /^[0-9]+$/ { print $2 }' "$memory_dir/cpu.stat" 2>/dev/null || true)
+            throttled_seconds=$(awk '$1 == "throttled_usec" && $2 ~ /^[0-9]+$/ { printf "%.6f", $2 / 1000000 }' "$memory_dir/cpu.stat" 2>/dev/null || true)
+            quota_cores=$(awk 'NF == 2 && $1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && $1 > 0 && $2 > 0 { printf "%.6f", $1 / $2 }' "$memory_dir/cpu.max" 2>/dev/null || true)
+            usage_seconds=${usage_seconds:-null}
+            nr_throttled=${nr_throttled:-null}
+            throttled_seconds=${throttled_seconds:-null}
+            quota_cores=${quota_cores:-null}
+          fi
+          printf 'CI_CPU {"usage_seconds":%s,"nr_throttled":%s,"throttled_seconds":%s,"quota_cores":%s,"nproc":%s}\n' \
+            "$usage_seconds" "$nr_throttled" "$throttled_seconds" "$quota_cores" "$processor_count"
+          {
+            printf '### Container memory\n\n'
+            printf '| Measurement | MiB |\n| --- | ---: |\n'
+            printf '| Peak job-container memory | %s |\n' "${peak_mib/null/unavailable}"
+            printf '| Cgroup memory limit | %s |\n' "${limit_mib/null/unlimited or unavailable}"
+            printf '| Runner MemTotal | %s |\n\n' "${runner_mib/null/unavailable}"
+            printf 'Cgroup OOM events: %s; OOM kills: %s.\n\n' "${oom/null/unavailable}" "${oom_kill/null/unavailable}"
+            printf 'Peak covers the container cgroup and descendants since creation, including page cache. Runner MemTotal is host capacity, not the container limit.\n'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'

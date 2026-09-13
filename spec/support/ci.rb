@@ -20,35 +20,43 @@ RSpec.configure do |config|
 
     mutex = Mutex.new
     condition_variable = ConditionVariable.new
+    readiness_condition = ConditionVariable.new
     test_running = false
     is_waiting = false
 
-    backtrace_logger =
-      Thread.new do
-        loop do
+    Thread.new do
+      loop do
+        timed_out =
           mutex.synchronize do
             is_waiting = true
-            condition_variable.wait(mutex)
+            readiness_condition.signal
+            condition_variable.wait(mutex) until test_running
             is_waiting = false
-          end
-
-          sleep PER_SPEC_TIMEOUT_SECONDS - 1
-
-          if mutex.synchronize { test_running }
-            puts "::group::[#{Process.pid}] Threads backtraces 1 second before timeout"
-
-            Thread.list.each do |thread|
-              puts "\n"
-              thread.backtrace.each { |line| puts line }
-              puts "\n"
+            deadline =
+              Process.clock_gettime(Process::CLOCK_MONOTONIC) + PER_SPEC_TIMEOUT_SECONDS - 1
+            while test_running
+              remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+              break if remaining <= 0
+              condition_variable.wait(mutex, remaining)
             end
-
-            puts "::endgroup::"
+            test_running
           end
-        rescue StandardError => e
-          puts "Error in backtrace logger: #{e}"
+
+        if timed_out && mutex.synchronize { test_running }
+          puts "::group::[#{Process.pid}] Threads backtraces 1 second before timeout"
+
+          Thread.list.each do |thread|
+            puts "\n"
+            thread.backtrace.each { |line| puts line }
+            puts "\n"
+          end
+
+          puts "::endgroup::"
         end
+      rescue StandardError => e
+        puts "Error in backtrace logger: #{e}"
       end
+    end
 
     config.around do |example_procsy|
       Timeout.timeout(
@@ -67,9 +75,11 @@ RSpec.configure do |config|
         puts example_procsy.example.metadata
         puts "---"
       ensure
-        mutex.synchronize { test_running = false }
-        backtrace_logger.wakeup
-        sleep 0.01 while !mutex.synchronize { is_waiting }
+        mutex.synchronize do
+          test_running = false
+          condition_variable.signal
+          readiness_condition.wait(mutex) until is_waiting
+        end
       end
     end
 

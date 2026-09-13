@@ -54,6 +54,7 @@ module TurboTests
       @messages = Queue.new
       @threads = []
       @error = false
+      @subprocesses = {}
     end
 
     def run
@@ -69,13 +70,29 @@ module TurboTests
 
       setup_tmp_dir
 
+      if ENV["DISCOURSE_TURBO_RSPEC_DYNAMIC_SCHEDULING"] == "1"
+        unless @files.any? && @files.all? { |file| file.match?(%r{(?:\A|/)spec/system/}) }
+          raise ArgumentError, "Dynamic scheduling requires only system spec files"
+        end
+        @work_queue =
+          WorkQueue.new(
+            files: @files,
+            worker_count: @num_processes,
+            events: @messages,
+            runtime_log: @use_runtime_info ? "tmp/turbo_rspec_runtime.log" : nil,
+          )
+        @work_queue.start
+        @reporter.message("Dynamic file sequence: #{@work_queue.sequence_path}; seed: #{@seed}")
+      end
+
       @reporter.add_formatter(Flaky::FailuresLoggerFormatter.new) if @retry_and_log_flaky_tests
 
       subprocess_opts = { record_runtime: @use_runtime_info }
 
       start_multisite_subprocess(@files, **subprocess_opts)
 
-      tests_in_groups.each_with_index do |tests, process_id|
+      regular_groups = @work_queue ? Array.new(@num_processes) { @files } : tests_in_groups
+      regular_groups.each_with_index do |tests, process_id|
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
       end
 
@@ -83,11 +100,20 @@ module TurboTests
 
       handle_messages
 
+      if @work_queue
+        finish_dynamic_subprocesses
+        unless @work_queue.complete?
+          @dynamic_failure = true
+          @reporter.error_outside_of_examples
+        end
+        @error = true if @subprocesses.values.any? { |thread|
+          thread.alive? || !thread.value.success?
+        }
+      end
       @reporter.finish
+      @threads.each(&:join) unless @work_queue
 
-      @threads.each(&:join)
-
-      if @retry_and_log_flaky_tests && @reporter.failed_examples.present?
+      if @retry_and_log_flaky_tests && @reporter.failed_examples.present? && !@dynamic_failure
         retry_failed_examples_threshold = 10
 
         if @reporter.failed_examples.length <= retry_failed_examples_threshold
@@ -99,7 +125,14 @@ module TurboTests
         end
       end
 
-      @reporter.failed_examples.empty? && !@error
+      @reporter.failed_examples.empty? && !@error && !@dynamic_failure
+    ensure
+      @shutdown_thread&.kill
+      @work_queue&.close
+      if @work_queue
+        signal_subprocesses("KILL", groups: true)
+        @threads.each { |thread| thread.join(2) }
+      end
     end
 
     protected
@@ -141,13 +174,13 @@ module TurboTests
     end
 
     def start_regular_subprocess(tests, process_id, **opts)
-      start_subprocess(
-        { "TEST_ENV_NUMBER" => process_id.to_s },
-        %w[--tag ~type:multisite],
-        tests,
-        process_id,
-        **opts,
-      )
+      env = { "TEST_ENV_NUMBER" => process_id.to_s }
+      extra_args = %w[--tag ~type:multisite]
+      if @work_queue
+        env["DISCOURSE_TURBO_RSPEC_WORK_QUEUE"] = @work_queue.path
+        extra_args += %w[--require ./lib/turbo_tests/leased_examples]
+      end
+      start_subprocess(env, extra_args, tests, process_id, **opts)
     end
 
     def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
@@ -201,27 +234,51 @@ module TurboTests
           STDOUT.puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
         end
 
-        stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
+        if @work_queue
+          wait_thr = WorkerProcess.new(environment: env, command: command)
+          stdin, stdout, stderr = wait_thr.stdin, wait_thr.stdout, wait_thr.stderr
+        else
+          stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)
+        end
+        @subprocesses[process_id] = wait_thr
         stdin.close
 
         @threads << Thread.new do
-          File.open(tmp_filename) do |fd|
-            fd.each_line do |line|
-              message = JSON.parse(line)
-              message = message.symbolize_keys
-              message[:process_id] = process_id
-              message[:command_string] = command_string
-              @messages << message
+          if @work_queue
+            read_dynamic_messages(
+              filename: tmp_filename,
+              wait_thread: wait_thr,
+              process_id: process_id,
+              command_string: command_string,
+            )
+          else
+            File.open(tmp_filename) do |fd|
+              fd.each_line do |line|
+                message = JSON.parse(line)
+                message = message.symbolize_keys
+                message[:process_id] = process_id
+                message[:command_string] = command_string
+                @messages << message
+              end
             end
           end
-
+        ensure
           @messages << exit_message
         end
 
         @threads << start_copy_thread(stdout, STDOUT)
         @threads << start_copy_thread(stderr, STDERR)
 
-        @threads << Thread.new { @messages << { type: "error" } if wait_thr.value.exitstatus != 0 }
+        @threads << Thread.new do
+          status = wait_thr.value
+          if @work_queue && process_id != "multisite"
+            @work_queue.worker_exited(
+              worker: process_id,
+              status: status.exitstatus || 128 + status.termsig,
+            )
+          end
+          @messages << { type: "error" } unless status.success?
+        end
       end
     end
 
@@ -276,8 +333,12 @@ module TurboTests
             @reporter.example_failed(example)
             @failure_count += 1
             if fail_fast_met
-              @threads.each(&:kill)
-              break
+              if @work_queue
+                cancel_dynamic_workers
+              else
+                @threads.each(&:kill)
+                break
+              end
             end
           when "message"
             @reporter.message(message[:message])
@@ -286,6 +347,13 @@ module TurboTests
           when "error"
             @reporter.error_outside_of_examples
             @error = true
+          when "dynamic_error"
+            @dynamic_failure = true
+            @reporter.message("Dynamic scheduling failed: #{message[:message]}")
+            cancel_dynamic_workers
+          when "dynamic_cancelled"
+            @dynamic_failure = true
+            cancel_dynamic_workers
           when "exit"
             exited += 1
 
@@ -305,7 +373,63 @@ module TurboTests
           STDOUT.flush
         end
       rescue Interrupt
+        cancel_dynamic_workers if @work_queue
       end
+    end
+
+    def cancel_dynamic_workers
+      return if @shutdown_thread
+      @work_queue.stop
+      signal_subprocesses("INT", groups: false)
+      @shutdown_thread =
+        Thread.new do
+          sleep 30
+          signal_subprocesses("TERM", groups: true)
+          sleep 5
+          signal_subprocesses("KILL", groups: true)
+        end
+    end
+
+    def read_dynamic_messages(filename:, wait_thread:, process_id:, command_string:)
+      File.open(filename, File::RDONLY | File::NONBLOCK) do |fd|
+        buffer = +""
+        loop do
+          chunk = fd.read_nonblock(65_536, exception: false)
+          if chunk.is_a?(String)
+            buffer << chunk
+            while (newline = buffer.index("\n"))
+              message = JSON.parse(buffer.slice!(0..newline), symbolize_names: true)
+              @messages << message.merge(process_id: process_id, command_string: command_string)
+            end
+          elsif chunk == :wait_readable
+            IO.select([fd], nil, nil, 0.25)
+          elsif chunk.nil? && !wait_thread.alive?
+            raise "Incomplete formatter output" unless buffer.empty?
+            break
+          else
+            sleep 0.01
+          end
+        end
+      end
+    rescue StandardError
+      @messages << { type: "dynamic_error", message: "worker formatter stream failed" }
+    end
+
+    def finish_dynamic_subprocesses
+      deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 30
+      @threads.each do |thread|
+        remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        thread.join(remaining) if remaining > 0
+      end
+      if @threads.any?(&:alive?)
+        @dynamic_failure = true
+        signal_subprocesses("KILL", groups: true)
+        @threads.each { |thread| thread.join(2) }
+      end
+    end
+
+    def signal_subprocesses(signal, groups:)
+      @subprocesses.each_value { |wait_thread| wait_thread.signal(signal, groups: groups) }
     end
 
     def fail_fast_met
