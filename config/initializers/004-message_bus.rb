@@ -34,11 +34,11 @@ def setup_message_bus_env(env)
     end
 
     extra_headers = {
-      "Access-Control-Allow-Origin" => cors_origin,
-      "Access-Control-Allow-Methods" => "GET, POST",
-      "Access-Control-Allow-Headers" =>
+      "access-control-allow-origin" => cors_origin,
+      "access-control-allow-methods" => "GET, POST",
+      "access-control-allow-headers" =>
         "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present, Discourse-Deferred-Track-View",
-      "Access-Control-Max-Age" => "7200",
+      "access-control-max-age" => "7200",
     }
 
     user = nil
@@ -47,7 +47,7 @@ def setup_message_bus_env(env)
     rescue Discourse::InvalidAccess => e
       # this is bad we need to remove the cookie
       if e.opts[:delete_cookie].present?
-        extra_headers["Set-Cookie"] = "_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
+        extra_headers["set-cookie"] = "_t=del; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
       end
     rescue => e
       Discourse.warn_exception(e, message: "Unexpected error in Message Bus", env: env)
@@ -76,11 +76,11 @@ def setup_message_bus_env(env)
         [Group::AUTO_GROUPS[:anonymous_users]]
       end
 
-    extra_headers["Discourse-Logged-Out"] = "1" if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
+    extra_headers["discourse-logged-out"] = "1" if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
 
     if Rails.env.development?
       # Adding no-transform prevents the expressjs ember-cli proxy buffering/compressing the response
-      extra_headers["Cache-Control"] = "no-transform, must-revalidate, private, max-age=0"
+      extra_headers["cache-control"] = "no-transform, must-revalidate, private, max-age=0"
     end
 
     hash = {
@@ -100,8 +100,8 @@ MessageBus.extra_response_headers_lookup do |env|
   setup_message_bus_env(env)
   headers = env["__mb"][:extra_headers]
   if view_tracking_data = env["discourse.view_tracking_data"]
-    headers["X-Discourse-TrackView"] = "1" if view_tracking_data[:track_view]
-    headers["X-Discourse-BrowserPageView"] = "1" if view_tracking_data[:browser_page_view]
+    headers["x-discourse-trackview"] = "1" if view_tracking_data[:track_view]
+    headers["x-discourse-browserpageview"] = "1" if view_tracking_data[:browser_page_view]
   end
   headers
 end
@@ -125,7 +125,7 @@ MessageBus.on_middleware_error do |env, e|
   if Discourse::InvalidAccess === e
     [403, {}, ["Invalid Access"]]
   elsif RateLimiter::LimitExceeded === e
-    [429, { "Retry-After" => e.available_in.to_s }, [e.description]]
+    [429, { "retry-after" => e.available_in.to_s }, [e.description]]
   end
 end
 

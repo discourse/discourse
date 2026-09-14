@@ -260,7 +260,7 @@ class Middleware::RequestTracker
       request_data[:user_agent] = user_agent
     end
 
-    if cache = headers["X-Discourse-Cached"]
+    if cache = headers["x-discourse-cached"]
       request_data[:cache] = cache
     end
 
@@ -283,8 +283,8 @@ class Middleware::RequestTracker
 
     if data
       if result && (headers = result[1])
-        headers["X-Discourse-TrackView"] = "1" if data[:track_view]
-        headers["X-Discourse-BrowserPageView"] = "1" if data[:browser_page_view]
+        headers["x-discourse-trackview"] = "1" if data[:track_view]
+        headers["x-discourse-browserpageview"] = "1" if data[:browser_page_view]
       end
 
       if @@detailed_request_loggers
@@ -319,13 +319,13 @@ class Middleware::RequestTracker
       TEXT
 
       headers = {
-        "Content-Type" => "text/plain",
-        "Retry-After" => available_in.to_s,
-        "Discourse-Rate-Limit-Error-Code" => error_code,
+        "content-type" => "text/plain",
+        "retry-after" => available_in.to_s,
+        "discourse-rate-limit-error-code" => error_code,
       }
 
       if username = cookie&.[](:username)
-        headers["X-Discourse-Username"] = username
+        headers["x-discourse-username"] = username
       end
 
       return 429, headers, [message]
@@ -337,9 +337,9 @@ class Middleware::RequestTracker
         message = "Too many crawling requests. Error code: #{error_code}."
 
         headers = {
-          "Content-Type" => "text/plain",
-          "Retry-After" => available_in.to_s,
-          "Discourse-Rate-Limit-Error-Code" => error_code,
+          "content-type" => "text/plain",
+          "retry-after" => available_in.to_s,
+          "discourse-rate-limit-error-code" => error_code,
         }
 
         return 429, headers, [message]
@@ -385,27 +385,27 @@ class Middleware::RequestTracker
 
     # possibly transferred?
     if info && (headers = result[1])
-      headers["X-Runtime"] = "%0.6f" % info[:total_duration]
+      headers["x-runtime"] = "%0.6f" % info[:total_duration]
 
       if GlobalSetting.enable_performance_http_headers
         if redis = info[:redis]
-          headers["X-Redis-Calls"] = redis[:calls].to_s
-          headers["X-Redis-Time"] = "%0.6f" % redis[:duration]
+          headers["x-redis-calls"] = redis[:calls].to_s
+          headers["x-redis-time"] = "%0.6f" % redis[:duration]
         end
 
         if sql = info[:sql]
-          headers["X-Sql-Calls"] = sql[:calls].to_s
-          headers["X-Sql-Time"] = "%0.6f" % sql[:duration]
+          headers["x-sql-calls"] = sql[:calls].to_s
+          headers["x-sql-time"] = "%0.6f" % sql[:duration]
         end
 
         if queue = env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]
-          headers["X-Queue-Time"] = "%0.6f" % queue
+          headers["x-queue-time"] = "%0.6f" % queue
         end
       end
     end
 
     if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN] && (headers = result[1])
-      headers["Discourse-Logged-Out"] = "1"
+      headers["discourse-logged-out"] = "1"
     end
 
     result
@@ -582,7 +582,7 @@ class Middleware::RequestTracker
 
     return extract_beacon_view_tracking_data(env) if is_beacon_tracking_request?(request)
 
-    is_html_request = headers["Content-Type"]&.include?("text/html")
+    is_html_request = headers["content-type"]&.include?("text/html")
     is_ajax_request = request.xhr?
 
     # This Discourse-Track-View request header is set in `lib/ajax.js`,

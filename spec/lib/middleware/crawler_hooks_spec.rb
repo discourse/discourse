@@ -16,8 +16,8 @@ describe Middleware::CrawlerHooks do
   let(:middleware) { Middleware::CrawlerHooks.new(app) }
   let(:app) do
     lambda do |env|
-      headers = { "Content-Type" => "text/html; charset=utf-8" }
-      headers["X-Discourse-Crawler-View"] = "true" if env["X-Discourse-Crawler-View"]
+      headers = { "content-type" => "text/html; charset=utf-8" }
+      headers["x-discourse-crawler-view"] = "true" if env["X-Discourse-Crawler-View"]
       [200, headers, html_response]
     end
   end
@@ -27,8 +27,8 @@ describe Middleware::CrawlerHooks do
         [
           200,
           {
-            "Content-Type" => "application/json; charset=utf-8",
-            "X-Discourse-Crawler-View" => "true",
+            "content-type" => "application/json; charset=utf-8",
+            "x-discourse-crawler-view" => "true",
           },
           ['{ "key": "value" }'],
         ]
@@ -41,9 +41,9 @@ describe Middleware::CrawlerHooks do
         [
           200,
           {
-            "Content-Type" => "application/zip",
-            "Content-Disposition" => "attachment; filename=\"file.zip\"",
-            "X-Discourse-Crawler-View" => "true",
+            "content-type" => "application/zip",
+            "content-disposition" => "attachment; filename=\"file.zip\"",
+            "x-discourse-crawler-view" => "true",
           },
           ["PK\x03\x04binarydata".b],
         ]
@@ -55,7 +55,7 @@ describe Middleware::CrawlerHooks do
       lambda do |_|
         [
           404,
-          { "Content-Type" => "text/html; charset=utf-8" },
+          { "content-type" => "text/html; charset=utf-8" },
           ["<html><body>Not found</body></html>"],
         ]
       end,
@@ -80,7 +80,7 @@ describe Middleware::CrawlerHooks do
       status, headers, response = middleware.call(env("HTTP_USER_AGENT" => regular_user_agent))
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(html_response)
     end
   end
@@ -90,7 +90,7 @@ describe Middleware::CrawlerHooks do
       status, headers, response = middleware.call(env("HTTP_USER_AGENT" => crawler_user_agent))
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(html_response)
     end
 
@@ -110,7 +110,7 @@ describe Middleware::CrawlerHooks do
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("application/json")
+      expect(headers["content-type"]).to include("application/json")
       expect(response).to eq(['{ "key": "value" }'])
     end
 
@@ -130,7 +130,7 @@ describe Middleware::CrawlerHooks do
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to eq("application/zip")
+      expect(headers["content-type"]).to eq("application/zip")
       expect(response).to eq(["PK\x03\x04binarydata".b])
     end
 
@@ -149,8 +149,8 @@ describe Middleware::CrawlerHooks do
             [
               200,
               {
-                "Content-Type" => "text/html; charset=utf-8",
-                "X-Discourse-Crawler-View" => "true",
+                "content-type" => "text/html; charset=utf-8",
+                "x-discourse-crawler-view" => "true",
               },
               response_body,
             ]
@@ -169,7 +169,7 @@ describe Middleware::CrawlerHooks do
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(response_body)
     end
 
@@ -189,8 +189,8 @@ describe Middleware::CrawlerHooks do
             [
               200,
               {
-                "Content-Type" => "text/html; charset=utf-8",
-                "X-Discourse-Crawler-View" => "true",
+                "content-type" => "text/html; charset=utf-8",
+                "x-discourse-crawler-view" => "true",
               },
               response_body,
             ]
@@ -209,7 +209,7 @@ describe Middleware::CrawlerHooks do
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(response_body)
     end
 
@@ -233,12 +233,12 @@ describe Middleware::CrawlerHooks do
               "locale" => "fr",
             },
             "HTTP_USER_AGENT" => crawler_user_agent,
-            "X-Discourse-Crawler-View" => true,
+            "x-discourse-crawler-view" => true,
           ),
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(html_response)
     end
 
@@ -254,12 +254,12 @@ describe Middleware::CrawlerHooks do
               "locale" => "fr",
             },
             "HTTP_USER_AGENT" => crawler_user_agent,
-            "X-Discourse-Crawler-View" => true,
+            "x-discourse-crawler-view" => true,
           ),
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(html_response)
     end
 
@@ -276,12 +276,12 @@ describe Middleware::CrawlerHooks do
               Discourse::LOCALE_PARAM => "fr",
             },
             "HTTP_USER_AGENT" => crawler_user_agent,
-            "X-Discourse-Crawler-View" => true,
+            "x-discourse-crawler-view" => true,
           ),
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(html_response)
     end
 
@@ -302,7 +302,7 @@ describe Middleware::CrawlerHooks do
       # Create our middleware and test response transformation
       middleware_instance =
         Middleware::CrawlerHooks.new(
-          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+          lambda { |_| [200, { "x-discourse-crawler-view" => "true" }, []] },
         )
       response = html_response
 
@@ -324,12 +324,12 @@ describe Middleware::CrawlerHooks do
           env(
             :path => "https://discourse.site",
             "HTTP_USER_AGENT" => crawler_user_agent,
-            "X-Discourse-Crawler-View" => true,
+            "x-discourse-crawler-view" => true,
           ),
         )
 
       expect(status).to eq(200)
-      expect(headers["Content-Type"]).to include("text/html")
+      expect(headers["content-type"]).to include("text/html")
       expect(response).to eq(html_response)
     end
 
@@ -362,7 +362,7 @@ describe Middleware::CrawlerHooks do
 
       middleware_instance =
         Middleware::CrawlerHooks.new(
-          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+          lambda { |_| [200, { "x-discourse-crawler-view" => "true" }, []] },
         )
 
       transformed_response =
@@ -397,7 +397,7 @@ describe Middleware::CrawlerHooks do
 
       middleware_instance =
         Middleware::CrawlerHooks.new(
-          lambda { |_| [200, { "X-Discourse-Crawler-View" => "true" }, []] },
+          lambda { |_| [200, { "x-discourse-crawler-view" => "true" }, []] },
         )
 
       transformed_response =

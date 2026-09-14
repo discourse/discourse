@@ -12,8 +12,8 @@ module Middleware
       request = Rack::Request.new(env)
       status, headers, response = @app.call(env)
 
-      if status == 200 && headers["X-Discourse-Crawler-View"] &&
-           headers["Content-Type"]&.include?("text/html") &&
+      if status == 200 && headers["x-discourse-crawler-view"] &&
+           headers["content-type"]&.include?("text/html") &&
            !non_localizable_path?(request_path_without_base_path(request)) &&
            ContentLocalization.crawler_locale_param_enabled?
         response = transform_response(request:, response:)

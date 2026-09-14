@@ -44,7 +44,7 @@ module Middleware
           rescue Mime::Type::InvalidMimeType
             return [
               400,
-              { "Cache-Control" => "private, max-age=0, must-revalidate" },
+              { "cache-control" => "private, max-age=0, must-revalidate" },
               ["Invalid MIME type"]
             ]
           end
@@ -56,7 +56,7 @@ module Middleware
             if error.cause.is_a?(EOFError)
               return [
                 400,
-                { "Cache-Control" => "private, max-age=0, must-revalidate" },
+                { "cache-control" => "private, max-age=0, must-revalidate" },
                 ["Invalid request"]
               ]
             else

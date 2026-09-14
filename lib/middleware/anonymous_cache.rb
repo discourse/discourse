@@ -94,7 +94,7 @@ module Middleware
         return false if @request.path.ends_with?("robots.txt")
         return false if @request.path.ends_with?("llms.txt")
         return false if @request.path.ends_with?("srv/status")
-        return false if @request[Auth::DefaultCurrentUserProvider::API_KEY]
+        return false if @request.GET[Auth::DefaultCurrentUserProvider::API_KEY]
         return false if @env[Auth::DefaultCurrentUserProvider::USER_API_KEY]
         return false if @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
 
@@ -237,7 +237,7 @@ module Middleware
       def no_cache_bypass
         request = Rack::Request.new(@env)
         request.cookies["_bypass_cache"].nil? && (request.path != "/srv/status") &&
-          request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          request.GET[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
       end
@@ -316,7 +316,7 @@ module Middleware
             if req_params = other[1].delete(ADP)
               env[ADP] = req_params
             end
-            [other[0], other[1], [body]]
+            [other[0], Rack::Headers[other[1]], [body]]
           end
         end
       end
@@ -341,14 +341,14 @@ module Middleware
             # technically lua will cast for us, but might as well be
             # prudent here, hence the to_i
             if count.to_i < GlobalSetting.anon_cache_store_threshold
-              headers["X-Discourse-Cached"] = "skip"
+              headers["x-discourse-cached"] = "skip"
               return status, headers, response
             end
           end
 
           headers_stripped =
-            headers.dup.delete_if { |k, _| %w[Set-Cookie X-MiniProfiler-Ids].include? k }
-          headers_stripped["X-Discourse-Cached"] = "true"
+            Rack::Headers[headers].delete_if { |k, _| %w[set-cookie x-miniprofiler-ids].include? k }
+          headers_stripped["x-discourse-cached"] = "true"
           parts = []
           response.each { |part| parts << part }
 
@@ -362,7 +362,7 @@ module Middleware
           Discourse.redis.setex(cache_key_body, cache_duration, compress(parts.join))
           Discourse.redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
 
-          headers["X-Discourse-Cached"] = "store"
+          headers["x-discourse-cached"] = "store"
         else
           parts = response
         end
@@ -387,8 +387,8 @@ module Middleware
       return @app.call(env) if defined?(@@disabled) && @@disabled
 
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
-           env[Rack::RACK_INPUT].read(1).present?
-        return 413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []
+           env[Rack::RACK_INPUT]&.read(1).present?
+        return 413, { "cache-control" => "private, max-age=0, must-revalidate" }, []
       end
 
       helper = Helper.new(env)
@@ -431,7 +431,7 @@ module Middleware
           @app.call(env)
         end
 
-      result[1]["Set-Cookie"] = "dosp=1; Path=/" if force_anon
+      result[1]["set-cookie"] = "dosp=1; Path=/" if force_anon
 
       result
     end

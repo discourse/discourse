@@ -1939,7 +1939,7 @@ RSpec.describe CookedPostProcessor do
     let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~RAW) }
         link to a topic: #{topic.url}?u=foo
 
-        a tricky link to a topic: #{topic.url}?bob=bob;u=sam&jane=jane
+        a tricky link to a topic: #{topic.url}?bob=bob&u=sam&jane=jane
 
         link to an external topic: https://google.com/?u=bar
 
