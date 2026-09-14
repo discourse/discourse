@@ -326,6 +326,7 @@ end
 #  enable_quoting                                 :boolean          default(TRUE), not null
 #  enable_smart_lists                             :boolean          default(TRUE), not null
 #  enable_upcoming_change_available_notifications :boolean          default(TRUE), not null
+#  event_reminder_preference                      :integer          default("notification"), not null
 #  external_links_in_new_tab                      :boolean          default(FALSE), not null
 #  hide_presence                                  :boolean          default(FALSE), not null
 #  hide_profile                                   :boolean          default(FALSE), not null

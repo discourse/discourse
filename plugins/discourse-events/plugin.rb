@@ -18,6 +18,7 @@ require_relative "lib/discourse_events/configuration/upcoming_events_default_vie
 enabled_site_setting :discourse_events_enabled
 
 register_svg_icon "calendar-days"
+register_asset "stylesheets/common/event-calendar-prompt.scss"
 register_asset "stylesheets/common/full-calendar-ext.scss"
 register_asset "stylesheets/common/discourse-calendar.scss"
 register_asset "stylesheets/common/discourse-calendar-holidays.scss"
@@ -232,6 +233,10 @@ Dir
   .each { |f| require(f) }
 
 after_initialize do
+  UserOption.prepend DiscourseEvents::UserOptionExtension
+  UserUpdater::OPTION_ATTR.push(:event_reminder_preference)
+  add_to_serializer(:user_option, :event_reminder_preference) { object.event_reminder_preference }
+
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node do
       [
@@ -242,6 +247,7 @@ after_initialize do
   end
 
   reloadable_patch do
+    UserNotifications.prepend DiscourseEvents::UserNotificationsExtension
     register_category_type(DiscourseEvents::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
     Category.register_custom_field_type("disable_topic_resorting", :boolean)

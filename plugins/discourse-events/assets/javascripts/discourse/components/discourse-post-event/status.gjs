@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import DButton from "discourse/ui-kit/d-button";
@@ -12,6 +14,7 @@ import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import CalendarPrompt from "./calendar-prompt";
 
 const statusButtonClass = (selected) =>
   selected ? "btn-primary" : "btn-default";
@@ -64,6 +67,8 @@ export default class DiscoursePostEventStatus extends Component {
   @service discoursePostEventApi;
   @service site;
   @service siteSettings;
+
+  @tracked calendarPrompt = null;
 
   goingMenu = null;
 
@@ -136,6 +141,7 @@ export default class DiscoursePostEventStatus extends Component {
   async leaveEvent() {
     try {
       const invitee = this.args.event.watchingInvitee;
+      this.calendarPrompt = null;
 
       await this.discoursePostEventApi.leaveEvent(this.args.event, invitee);
 
@@ -151,13 +157,13 @@ export default class DiscoursePostEventStatus extends Component {
   @action
   async goingThisEvent() {
     this.goingMenu?.close();
-    await this._setAttendance({ status: "going", recurring: false });
+    await this.#setAttendance({ status: "going", recurring: false });
   }
 
   @action
   async goingAllFollowing() {
     this.goingMenu?.close();
-    await this._setAttendance({ status: "going", recurring: true });
+    await this.#setAttendance({ status: "going", recurring: true });
   }
 
   @action
@@ -171,21 +177,38 @@ export default class DiscoursePostEventStatus extends Component {
     const watching = this.args.event.watchingInvitee;
 
     if (!watching) {
-      await this._setAttendance({ status });
+      await this.#setAttendance({ status });
       return;
     }
 
     if (status === watching.status) {
       await (this.canLeave
         ? this.leaveEvent()
-        : this._setAttendance({ status: null }));
+        : this.#setAttendance({ status: null }));
       return;
     }
 
-    await this._setAttendance({ status });
+    await this.#setAttendance({ status });
   }
 
-  async _setAttendance(payload) {
+  #changingToPositiveRSVP(previousStatus) {
+    return (
+      ["going", "interested"].includes(
+        this.args.event.watchingInvitee?.status
+      ) && !["going", "interested"].includes(previousStatus)
+    );
+  }
+
+  async #hasCalendarSubscription() {
+    const result = await ajax("/calendar-subscriptions.json");
+    return (
+      result.subscribed_feeds?.includes("my_events") ||
+      result.subscribed_feeds?.includes("all_events") ||
+      false
+    );
+  }
+
+  async #setAttendance(payload) {
     if (!this.currentUser) {
       if (!payload.status) {
         return;
@@ -197,9 +220,12 @@ export default class DiscoursePostEventStatus extends Component {
       });
     }
 
+    const event = this.args.event;
+    const previousStatus = event.watchingInvitee?.status;
+    let rsvpSuccess = false;
     try {
-      const event = this.args.event;
       const data = { status: payload.status, postId: event.id };
+      this.calendarPrompt = null;
 
       if (event.watchingInvitee) {
         await this.discoursePostEventApi.updateEventAttendance(event, payload);
@@ -208,8 +234,26 @@ export default class DiscoursePostEventStatus extends Component {
         await this.discoursePostEventApi.joinEvent(event, payload);
         this.appEvents.trigger("calendar:create-invitee-status", data);
       }
-    } catch (e) {
-      popupAjaxError(e);
+
+      rsvpSuccess = true;
+    } catch (err) {
+      popupAjaxError(err);
+    }
+
+    if (rsvpSuccess) {
+      if (this.#changingToPositiveRSVP(previousStatus)) {
+        try {
+          const hasSubscription = await this.#hasCalendarSubscription();
+          if (
+            !this.isDestroying &&
+            this.args.event.watchingInvitee?.status === payload.status
+          ) {
+            this.calendarPrompt = { hasSubscription };
+          }
+        } catch {
+          // Don't worry about showing the prompt if the subscription check fails, it's nonessential.
+        }
+      }
     }
   }
 
@@ -349,5 +393,11 @@ export default class DiscoursePostEventStatus extends Component {
         {{/if}}
       </PluginOutlet>
     </section>
+    {{#if this.calendarPrompt}}
+      <CalendarPrompt
+        @event={{@event}}
+        @hasSubscription={{this.calendarPrompt.hasSubscription}}
+      />
+    {{/if}}
   </template>
 }

@@ -21,6 +21,7 @@ module Jobs
           ::Jobs.enqueue(
             :discourse_post_event_send_reminder,
             event_id: event_date.event.id,
+            event_date_id: event_date.id,
             reminder: reminder[:description],
           )
           event_date.update!(reminder_counter: event_date.reminder_counter + 1)

@@ -55,14 +55,11 @@ describe Jobs::DiscoursePostEventSendReminder do
 
   describe "#execute" do
     context "with invalid params" do
-      it "raises an invalid parameters errors" do
-        expect { Jobs::DiscoursePostEventSendReminder.new.execute(event_id: 1) }.to raise_error(
-          Discourse::InvalidParameters,
-        )
-
-        expect { Jobs::DiscoursePostEventSendReminder.new.execute(reminder: "foo") }.to raise_error(
-          Discourse::InvalidParameters,
-        )
+      it "skips incomplete jobs without notifying or emailing anyone" do
+        expect {
+          described_class.new.execute(event_id: 1)
+          described_class.new.execute(reminder: "foo")
+        }.not_to change { [Notification.count, ActionMailer::Base.deliveries.size] }
       end
     end
 
