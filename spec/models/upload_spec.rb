@@ -1216,17 +1216,17 @@ RSpec.describe Upload do
         expect(upload.target_image_quality("/missing-quality-input.jpg", 90)).to eq(nil)
       end
 
-      it "returns nil for unknown JPEG quality when the requested quality is 100" do
+      it "returns nil when a custom-table JPEG is below the requested quality" do
         expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 100)).to eq(nil)
       end
 
-      it "returns nil when the JPEG quality is unknown" do
-        expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(nil)
+      it "returns the requested quality when a custom-table JPEG is above it" do
+        expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(90)
       end
 
       it "returns the requested quality when unknown JPEG quality is allowed" do
         expect(
-          upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90, allow_unknown: true),
+          upload.target_image_quality("/missing-quality-input.jpg", 90, allow_unknown: true),
         ).to eq(90)
       end
     end

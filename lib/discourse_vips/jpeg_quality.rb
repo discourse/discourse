@@ -464,7 +464,6 @@ module DiscourseVips
       ].freeze
 
       BASE_TABLES = [LUMINANCE_BASE, CHROMINANCE_BASE].freeze
-      MAX_APPROXIMATE_LOG_RMSE = Math.log(1.20)
 
       CANDIDATE_TABLES =
         (1..100)
@@ -531,11 +530,7 @@ module DiscourseVips
 
         quality, score =
           (1..100).map { |candidate| [candidate, score(role_tables, candidate)] }.min_by(&:last)
-        if score <= MAX_APPROXIMATE_LOG_RMSE
-          result(:approximate, quality, Math.exp(score) - 1, tables)
-        else
-          unknown("DQT tables are not close to a single IJG/libjpeg quality", tables)
-        end
+        result(:approximate, quality, Math.exp(score) - 1, tables)
       end
 
       private
@@ -579,8 +574,6 @@ module DiscourseVips
         total = 0.0
         table.values.each_with_index do |actual, index|
           ratio = actual.to_f / candidate[index]
-          return Float::INFINITY if ratio < 1.0 / 1.20 || ratio > 1.20
-
           total += Math.log(ratio)**2
         end
         total / 64.0

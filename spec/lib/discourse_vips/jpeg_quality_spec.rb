@@ -87,11 +87,11 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(result.quality).to eq(95)
     end
 
-    it "reports unknown for custom quantization tables outside its approximation range" do
+    it "returns the closest standard quality for custom quantization tables" do
       result = described_class.estimate(file_from_fixtures("logo.jpg").path)
 
-      expect(result.status).to eq(:unknown)
-      expect(result.quality).to eq(nil)
+      expect(result.status).to eq(:approximate)
+      expect(result.quality).to eq(93)
     end
 
     it "approximates a table close to standard JPEG quantization" do
@@ -105,21 +105,27 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(result.quality).to eq(95)
     end
 
-    it "reports unknown when luminance quantization is also used for chroma" do
+    it "accounts for chroma when a luminance table is shared by all components" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
       frame_offset = original.index("\xFF\xC0".b)
       original.setbyte(frame_offset + 15, 0)
       original.setbyte(frame_offset + 18, 0)
 
-      expect(described_class.estimate(StringIO.new(original)).status).to eq(:unknown)
+      result = described_class.estimate(StringIO.new(original))
+
+      expect(result.status).to eq(:approximate)
+      expect(result.quality).not_to eq(95)
     end
 
-    it "reports unknown when one coefficient is far from standard quantization" do
+    it "returns the closest quality when one coefficient is far from standard quantization" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
       coefficient_offset = original.index("\xFF\xDB".b) + 5
       original.setbyte(coefficient_offset, original.getbyte(coefficient_offset) * 4)
 
-      expect(described_class.estimate(StringIO.new(original)).status).to eq(:unknown)
+      result = described_class.estimate(StringIO.new(original))
+
+      expect(result.status).to eq(:approximate)
+      expect(result.quality).to eq(95)
     end
 
     it "reports unknown when component identifiers do not establish luminance and chroma roles" do
