@@ -395,7 +395,12 @@ class UploadCreator
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
 
-    target_quality = @upload.target_image_quality(@file.path, desired_quality, allow_unknown: true)
+    target_quality =
+      if @image_info.type == :jpeg
+        @upload.target_image_quality(@file.path, desired_quality, operation: :encoding)
+      else
+        desired_quality
+      end
     opts = { quality: target_quality } if target_quality
 
     read = [@file.path]
@@ -472,7 +477,6 @@ class UploadCreator
   end
 
   def should_alter_quality?
-    return false if @image_info.type != :jpeg
     return false if animated?
 
     desired_quality = SiteSetting.ImageQuality.recompress_original_jpg_quality

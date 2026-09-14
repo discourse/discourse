@@ -448,10 +448,14 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, test_quality, allow_unknown: false)
+  def target_image_quality(local_path, requested_quality, operation: :recompression)
+    if %i[recompression encoding].exclude?(operation)
+      raise ArgumentError, "Unknown image quality operation: #{operation}"
+    end
+
     @file_quality ||=
       begin
-        return test_quality if File.open(local_path, "rb") { |file| FastImage.type(file) } != :jpeg
+        return if File.open(local_path, "rb") { |file| FastImage.type(file) } != :jpeg
 
         if GlobalSetting.enable_vips_image_processing
           DiscourseVips.jpeg_quality(input_path: local_path, timeout: MAX_IDENTIFY_SECONDS).to_i
@@ -470,7 +474,11 @@ class Upload < ActiveRecord::Base
         0
       end
 
-    test_quality if (@file_quality == 0 && allow_unknown) || @file_quality > test_quality
+    if operation == :encoding
+      @file_quality == 0 ? requested_quality : [@file_quality, requested_quality].min
+    elsif @file_quality > requested_quality
+      requested_quality
+    end
   end
 
   def self.sha1_from_short_path(path)
