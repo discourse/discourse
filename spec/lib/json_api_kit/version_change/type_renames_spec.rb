@@ -64,20 +64,20 @@ RSpec.describe JsonApiKit::VersionChange do
     end
   end
 
-  describe "#current" do
-    subject(:current_name) { version_change.current(name) }
+  describe "#current_names" do
+    subject(:current_names) { version_change.current_names(name) }
 
     let(:name) { field }
 
     it "changes the owning type before the field name" do
-      expect(current_name).to eq(field.with(value: "name", type: "items"))
+      expect(current_names).to eq([field.with(value: "name", type: "items")])
     end
 
     context "when the name is a type" do
       let(:name) { JsonApiKit::Name::Type.new(value: "things") }
 
       it "changes the type value" do
-        expect(current_name).to eq(name.with(value: "items"))
+        expect(current_names).to eq([name.with(value: "items")])
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:name) { JsonApiKit::Name::Member.new(value: "things") }
 
       it "preserves the member name" do
-        expect(current_name).to eq(name)
+        expect(current_names).to eq([name])
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:name) { field.with(type: "people") }
 
       it "preserves the field name" do
-        expect(current_name).to eq(name)
+        expect(current_names).to eq([name])
       end
     end
 
@@ -101,7 +101,7 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:name) { JsonApiKit::Name::Relationship.new(value: "things", type: "things") }
 
       it "changes only the owning type" do
-        expect(current_name).to eq(name.with(type: "items"))
+        expect(current_names).to eq([name.with(type: "items")])
       end
     end
 
@@ -109,7 +109,7 @@ RSpec.describe JsonApiKit::VersionChange do
       let(:name) { JsonApiKit::Name::Sort.new(value: "things.first", type: "things") }
 
       it "preserves the path" do
-        expect(current_name).to eq(name.with(type: "items"))
+        expect(current_names).to eq([name.with(type: "items")])
       end
     end
   end
@@ -148,31 +148,21 @@ RSpec.describe JsonApiKit::VersionChange do
     end
   end
 
-  describe "#previous" do
-    subject(:previous_name) { version_change.previous(name) }
+  describe "#previous_names" do
+    subject(:previous_names) { version_change.previous_names(name) }
 
     let(:name) { field.with(value: "name", type: "items") }
 
-    it "changes the field before its owning type" do
-      expect(previous_name).to eq(field)
+    it "reverses the type change for each merge component" do
+      expect(previous_names).to eq([field, field.with(value: "last")])
     end
 
     context "when the name is a type" do
       let(:name) { JsonApiKit::Name::Type.new(value: "items") }
 
       it "reverses the type change" do
-        expect(previous_name).to eq(name.with(value: "things"))
+        expect(previous_names).to eq([name.with(value: "things")])
       end
-    end
-  end
-
-  describe "#previous_names" do
-    subject(:previous_names) do
-      version_change.previous_names(field.with(value: "name", type: "items"))
-    end
-
-    it "reverses the type change for each merge component" do
-      expect(previous_names).to eq([field, field.with(value: "last")])
     end
   end
 

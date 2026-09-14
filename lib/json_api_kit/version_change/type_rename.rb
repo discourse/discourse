@@ -6,6 +6,8 @@ module JsonApiKit
       Data.define(:from, :to) do
         def current = to
 
+        def current_names = [current]
+
         def previous_names = [from]
       end
   end

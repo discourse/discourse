@@ -5,6 +5,8 @@ module JsonApiKitSpec
     Struct.new(:mark) do
       def declared_name(name) = name.convert { "#{it}<#{mark}" }
 
+      def declared_names(name) = [declared_name(name)]
+
       def member_name(name) = name.convert { "#{it}>#{mark}" }
 
       def declared_attributes(attributes) = attributes.transform_keys { declared_name(it) }
@@ -14,6 +16,8 @@ module JsonApiKitSpec
 
   module BrokenRule
     def self.declared_name(name) = name
+
+    def self.declared_names(name) = [name]
 
     def self.declared_attributes(_attributes) = raise NoMethodError, "a fault in the kit"
   end
@@ -158,6 +162,8 @@ RSpec.describe JsonApiKit::Glossary do
         Class
           .new do
             def declared_name(name) = name
+
+            def declared_names(name) = [name]
 
             def declared_attributes(attributes)
               raise JsonApiKit::VersionChange::Converter::Failure.new(attributes.keys)

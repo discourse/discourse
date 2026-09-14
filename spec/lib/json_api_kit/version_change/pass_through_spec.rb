@@ -25,7 +25,7 @@ RSpec.describe JsonApiKit::VersionChange::PassThrough do
 
   describe "#previous_pairs" do
     it "returns the name with the value" do
-      expect(pass_through.previous_pairs("A")).to eq([[name, "A"]])
+      expect(pass_through.previous_pairs(name => "A")).to eq([[name, "A"]])
     end
   end
 end

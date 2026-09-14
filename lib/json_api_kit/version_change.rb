@@ -40,9 +40,9 @@ module JsonApiKit
     def initialize(source)
       @source = source
       @upward = index_by(transformations, &:previous_names)
-      @downward = index_by(transformations) { [it.current] }
+      @downward = index_by(transformations, &:current_names)
       @type_upward = index_by(type_renames, &:previous_names)
-      @type_downward = index_by(type_renames) { [it.current] }
+      @type_downward = index_by(type_renames, &:current_names)
     end
 
     def verify!
@@ -53,14 +53,14 @@ module JsonApiKit
       end
       raise ArgumentError, "#{source} has no description." if description.blank?
       duplicate_name(&:previous_names).try { raise ArgumentError, "#{source} changes #{it} twice." }
-      duplicate_name { [it.current] }.try do
+      duplicate_name(&:current_names).try do
         raise ArgumentError, "#{source} changes two names into #{it}."
       end
       return if File.basename(source).start_with?(version.to_s)
       raise ArgumentError, "The file name must start with the version #{version}: #{source}."
     end
 
-    def current(name) = upward[current_type(name)].current
+    def current_names(name) = upward[current_type(name)].current_names
 
     def current_attributes(attributes)
       current_values(attributes.transform_keys { current_type(it) })
@@ -68,15 +68,10 @@ module JsonApiKit
       raise failure.convert_names { previous_type(it) }
     end
 
-    def previous(name) = previous_names(name).first
-
     def previous_names(name) = downward[name].previous_names.map { previous_type(it) }
 
     def previous_attributes(attributes)
-      attributes
-        .flat_map { |name, value| downward[name].previous_pairs(value) }
-        .to_h
-        .transform_keys { previous_type(it) }
+      previous_values(attributes).transform_keys { previous_type(it) }
     end
 
     private
@@ -93,6 +88,10 @@ module JsonApiKit
 
     def current_values(attributes)
       attributes.keys.map { upward[it] }.uniq.flat_map { it.current_pairs(attributes) }.to_h
+    end
+
+    def previous_values(attributes)
+      attributes.keys.map { downward[it] }.uniq.flat_map { it.previous_pairs(attributes) }.to_h
     end
 
     def index_by(transformations, &names)

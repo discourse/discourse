@@ -5,7 +5,7 @@ module JsonApiKit
     class Declaration
       class Fault < ArgumentError
         def initialize(message, from:, to:)
-          super("#{message}, to change #{Array(from).join(", ")} into #{to}.")
+          super("#{message}, to change #{Array(from).join(", ")} into #{Array(to).join(", ")}.")
         end
       end
 

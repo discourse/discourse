@@ -9,9 +9,9 @@ RSpec.describe JsonApiKit::VersionChange::Merge do
   let(:time_name) { JsonApiKit::Name::Field.new(value: "posted_time", type: "topics") }
   let(:new_name) { JsonApiKit::Name::Field.new(value: "posted_at", type: "topics") }
 
-  describe "#current" do
+  describe "#current_names" do
     it "returns the new name" do
-      expect(merge.current).to eq(new_name)
+      expect(merge.current_names).to eq([new_name])
     end
   end
 
@@ -40,7 +40,7 @@ RSpec.describe JsonApiKit::VersionChange::Merge do
   end
 
   describe "#previous_pairs" do
-    subject(:previous_pairs) { merge.previous_pairs("2026-08-01 00:00:00") }
+    subject(:previous_pairs) { merge.previous_pairs(new_name => "2026-08-01 00:00:00") }
 
     it "returns one pair per old name, in the order of the declaration" do
       expect(previous_pairs).to eq([[date_name, "2026-08-01"], [time_name, "00:00:00"]])
