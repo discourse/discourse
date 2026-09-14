@@ -1,11 +1,11 @@
 {
-  "source_head": "4bf3ad7b965bb63546d27fca2bd63e7ebfebaf75",
+  "source_head": "9f58c42912d75d823fa99c832599534c4eb660b4",
   "production_image": "discourse/base:2.0.20260812-0036@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
   "source_sha256": {
     "lib/discourse_vips.rb": "b456937d58932af1254bc47084e53c6a143a21dbcb3c3c7b4311529acdc534c9",
     "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
     "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
-    "lib/discourse_vips/jpeg_quality.rb": "205c1952515e6a3a8b617c559d075edaab43658cf9f4f163676ffeca3278f864",
+    "lib/discourse_vips/jpeg_quality.rb": "ae9b70b74bbcc3ac8a9bb4235b33584e5d4dff42f96fa1c0ad28e0ffcf9a5c74",
     "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
     "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
     "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
@@ -13,8 +13,6 @@
     "app/models/upload.rb": "0985c22a5561923f5566282146a4bada99ee04f6401938a44f3e91f73585b7aa",
     "lib/upload_creator.rb": "18d65cb889b08cdc73efe05b384fd5d63385e977650a81a585e4a5d700c47807",
     "app/models/optimized_image.rb": "b5ceadcd2820a16942ca9b60288228037e6c6185126e0d8d711b2934a6ef913e",
-    "lib/discourse_vips/jpeg_quality.LICENSE": "131447ad0099069beaa32acf1700716eea294a5bdf936d8211d7026b1849e5d4",
-    "lib/discourse_vips/jpeg_quality.NOTICE": "a58570cb757bd9223bed229f74cd85c3117c622d23553766427b4e816e65e1e1",
     "spec/fixtures/images/jpegli_quality_90.jpg": "c8cc2a25e9eae6f062d0896fd7d1427f83340255d3888bdb9bfb7f4f56bcaaac"
   },
   "benchmark_sha256": "0965a2085b86fa4e764993222c08d63d14c913669cfe0fd8d138b0e4f9be65a6",
@@ -202,5 +200,8 @@
       }
     }
   ],
-  "header_edge_probe_note": "Bounded header variants of an existing JPEG, not claims of valid lossless encoded scan data."
+  "header_edge_probe_note": "Bounded header variants of an existing JPEG, not claims of valid lossless encoded scan data.",
+  "measurement_compatibility": "Only attribution comments and local license/notice files changed after measurement_source_head. Executable estimator and worker behavior are unchanged. The comment update passed25 estimator examples and changed-file lint.",
+  "upstream_commit": "b661ac969aa3a0d326690f95830aab246569f090",
+  "upstream_license": "https://github.com/ImageMagick/ImageMagick/blob/b661ac969aa3a0d326690f95830aab246569f090/LICENSE"
 }
