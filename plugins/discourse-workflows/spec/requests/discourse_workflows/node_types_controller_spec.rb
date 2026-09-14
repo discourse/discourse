@@ -40,5 +40,33 @@ RSpec.describe DiscourseWorkflows::NodeTypesController do
       )
       expect(topic_node.fetch("metadata", {})).not_to have_key("topic_custom_fields")
     end
+
+    it "returns Site setting action metadata without hidden or secret settings" do
+      get "/admin/plugins/discourse-workflows/node-types.json"
+
+      node =
+        response.parsed_body["node_types"].find do |node_type|
+          node_type["identifier"] == "action:site_setting"
+        end
+      properties = node["properties"]
+
+      expect(properties["name"]).to include(
+        "type" => "string",
+        "required" => true,
+        "type_options" => include("load_options_method" => "site_settings"),
+        "ui" => include("control" => "combo_box"),
+      )
+      expect(properties["value"]).to include("type" => "string")
+      expect(properties["actor_username"]).to include("ui" => include("control" => "actor"))
+
+      option_ids = node.dig("metadata", "site_settings").map { |option| option["id"] }
+      expect(option_ids).to include("site_description")
+      expect(option_ids).not_to include(SiteSetting.secret_settings.first.to_s)
+      expect(option_ids).not_to include(SiteSetting.hidden_settings.first.to_s)
+      expect(node.dig("output_contracts", 0, "schema", "properties")).to include(
+        "name" => include("type" => "string"),
+        "changed" => include("type" => "boolean"),
+      )
+    end
   end
 end

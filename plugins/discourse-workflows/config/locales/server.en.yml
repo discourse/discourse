@@ -129,6 +129,13 @@ en:
         no_tag_names: "No tag names provided."
         no_valid_tag_names: "No valid tag names provided."
         operation_failed: "Tag group operation failed: %{errors}"
+      site_setting:
+        name_required: "No site setting name provided."
+        unknown_setting: "Unknown site setting '%{name}'."
+        secret_setting: "Site setting '%{name}' holds a secret and cannot be changed by a workflow."
+        actor_not_admin: "'%{username}' must be an admin to change site settings."
+        update_failed: "Site setting '%{name}' could not be updated: %{errors}"
+        unknown_error: "unknown error"
       topic_category:
         operation_failed: "Category change failed."
         private_message: "Personal messages cannot have a category."
