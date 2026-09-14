@@ -10,6 +10,19 @@ th:
       yaxis: "วันที่"
   discourse_ai:
     ai_bot:
+      navigation:
+        users:
+          title: "ผู้ใช้"
+        groups:
+          title: "กลุ่ม"
+        categories:
+          title: "หมวดหมู่"
+        tags:
+          title: "ป้าย"
+        themes:
+          title: "ธีม"
+        backups:
+          title: "สำรอง"
       read_post:
         unknown_post: "โพส"
       tool_summary:

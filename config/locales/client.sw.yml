@@ -2154,6 +2154,7 @@ sw:
       with_topics: "mada %{filter}"
       with_category: "mada %{filter}%{category}"
       filter:
+        reset: "weka au anza upya"
         button:
           label: "Chuja"
       latest:

@@ -376,6 +376,7 @@ fr:
     notifications_tracking:
       tooltip: "Niveau de notification : %{level}"
     back_button: "Retour"
+    confirm_button: "Confirmer"
     welcome_banner:
       header:
         new_members: "Bienvenue, %{preferred_display_name}!"
@@ -5298,6 +5299,7 @@ fr:
       with_category: "Sujets %{filter} sur %{category}"
       filter:
         title: "Résultats filtrés pour %{filter}"
+        reset: "rétablir"
         button:
           label: "Filtrer"
       latest:

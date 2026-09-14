@@ -379,6 +379,7 @@ ur:
     notifications_tracking:
       tooltip: "اطلاع کی سطح: %{level}"
     back_button: "واپس"
+    confirm_button: "تصدیق کریں"
     welcome_banner:
       header:
         new_members: "خوش آمدید، %{preferred_display_name}!"
@@ -5267,6 +5268,7 @@ ur:
       with_category: "%{filter} %{category} ٹاپک"
       filter:
         title: "%{filter}کے لیے فلٹر شدہ نتائج"
+        reset: "ری سیٹ"
         button:
           label: "فِلٹر"
       latest:

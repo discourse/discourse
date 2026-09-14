@@ -349,6 +349,7 @@ es:
     notifications_tracking:
       tooltip: "Nivel de notificación: %{level}"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "¡Hola, %{preferred_display_name}!"
@@ -4902,6 +4903,7 @@ es:
       with_category: "%{filter} Foro de %{category}"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "restablecer"
         button:
           label: "Filtrar"
       latest:

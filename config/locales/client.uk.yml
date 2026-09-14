@@ -439,6 +439,7 @@ uk:
     notifications_tracking:
       tooltip: "Рівень сповіщень: %{level}"
     back_button: "Назад"
+    confirm_button: "Підтвердити"
     welcome_banner:
       header:
         new_members: "Ласкаво просимо, %{preferred_display_name}!"
@@ -6017,6 +6018,7 @@ uk:
       with_category: "%{filter}%{category} теми"
       filter:
         title: "Відфільтровані результати для %{filter}"
+        reset: "скинути"
         button:
           label: "Filter"
       latest:

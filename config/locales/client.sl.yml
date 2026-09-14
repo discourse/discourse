@@ -224,6 +224,7 @@ sl:
     software_update_prompt:
       dismiss: "Opusti"
     back_button: "Nazaj"
+    confirm_button: "Potrdi"
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
@@ -3307,6 +3308,7 @@ sl:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "ponastavi"
         button:
           label: "Filter"
       latest:

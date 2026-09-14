@@ -218,6 +218,7 @@ nb_NO:
       message: "Vi har oppdatert denne siden, <span>vennligst oppdater siden</span> for å sikre at alt fungerer som det skal."
       dismiss: "Avslå"
     back_button: "Forrige"
+    confirm_button: "Bekreft"
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
@@ -3932,6 +3933,7 @@ nb_NO:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "tilbakestill"
         button:
           label: "Filtrer"
       latest:

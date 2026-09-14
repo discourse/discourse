@@ -7,6 +7,9 @@
 nb_NO:
   js:
     boards:
+      status:
+        all: "Alle"
+        open: "Åpne"
       board:
         remove_card: "Fjern"
         title: "Tittel"

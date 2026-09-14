@@ -220,6 +220,7 @@ ca:
       message: "Hem actualitzat aquest lloc, <span>si us plau, refresqueu</span> per mantenir les coses funcionant sense problemes."
       dismiss: "Descarta-ho"
     back_button: "Enrere"
+    confirm_button: "Confirma"
     welcome_banner:
       header:
         logged_in_members: "Benvingut de nou, %{preferred_display_name}!"
@@ -2774,6 +2775,7 @@ ca:
       with_topics: "%{filter} temes"
       with_category: "%{filter} %{category} temes"
       filter:
+        reset: "restableix"
         button:
           label: "Filtre"
       latest:

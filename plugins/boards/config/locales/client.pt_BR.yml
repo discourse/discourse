@@ -7,6 +7,10 @@
 pt_BR:
   js:
     boards:
+      status:
+        all: "Todas"
+        open: "Aberto (open)"
+        archived: "Arquivados"
       board:
         remove_card: "Remover"
         new_topic: "Novo tópico..."

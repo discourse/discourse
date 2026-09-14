@@ -7,6 +7,9 @@
 ca:
   js:
     boards:
+      status:
+        all: "Tots"
+        open: "Obre"
       board:
         remove_card: "Elimina"
         title: "Títol"

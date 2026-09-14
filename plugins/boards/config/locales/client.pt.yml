@@ -7,6 +7,9 @@
 pt:
   js:
     boards:
+      status:
+        all: "Todos"
+        open: "Abrir"
       board:
         remove_card: "Remover"
         new_topic: "Novo tópico..."

@@ -211,6 +211,7 @@ hy:
       message: "Մենք թարմացրել ենք այս կայքը, <span>խնդրում ենք թարմացնել էջը</span>, որպեսզի ամեն ինչ սահուն աշխատի:"
       dismiss: "Չեղարկել"
     back_button: "Ետ"
+    confirm_button: "Հաստատել"
     welcome_banner:
       header:
         anonymous_members: "Բարի գալուստ %{site_name}!"
@@ -3437,6 +3438,7 @@ hy:
       with_topics: "%{filter} թեմա"
       with_category: "%{filter} %{category} թեմա"
       filter:
+        reset: "վերահաստատել"
         button:
           label: "Ֆիլտր"
       latest:
