@@ -11,6 +11,7 @@ import {
   triggerKeyEvent,
   visit,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -544,6 +545,36 @@ acceptance(`Composer`, function (needs) {
     assert.true(resizedTriggered, "composer:resized is triggered");
   });
 
+  test("preview scroll catches up when re-shown without animation", async function (assert) {
+    // mirrors the prefers-reduced-motion behavior, where no transitionend
+    // fires for the toggle
+    const style = document.createElement("style");
+    style.innerHTML =
+      "#reply-control .d-editor-preview-wrapper { transition: none !important; }";
+    document.head.appendChild(style);
+
+    try {
+      await visit("/");
+      await click("#create-topic");
+      await fillIn(".d-editor-input", "line\n\n".repeat(200));
+
+      const preview = find(".d-editor-preview-wrapper");
+      preview.scrollTop = 500;
+
+      await click(".toggle-preview");
+      await click(".toggle-preview");
+      await waitUntil(() => preview.scrollTop === 0);
+
+      assert.strictEqual(
+        preview.scrollTop,
+        0,
+        "the preview position syncs to the editor when shown again"
+      );
+    } finally {
+      style.remove();
+    }
+  });
+
   test("composer controls", async function (assert) {
     await visit("/");
     assert.dom("#create-topic").exists("the create button is visible");
@@ -559,11 +590,17 @@ acceptance(`Composer`, function (needs) {
       .exists("body errors are hidden by default");
 
     await click(".toggle-preview");
+    // the preview collapses with a transition; hidden state applies at the end
+    await waitUntil(() => {
+      const style = getComputedStyle(find(".d-editor-preview-wrapper"));
+      return style.visibility === "hidden" || style.display === "none";
+    });
     assert
       .dom(".d-editor-preview")
       .isNotVisible("clicking the toggle hides the preview");
 
     await click(".toggle-preview");
+    await waitUntil(() => find(".d-editor-preview").offsetWidth > 0);
     assert
       .dom(".d-editor-preview")
       .isVisible("clicking the toggle shows the preview again");
