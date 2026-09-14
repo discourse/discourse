@@ -129,7 +129,7 @@ module Jobs
             next
           end
 
-          new_post = post.created_at == post.updated_at
+          new_post = post.previously_new_record?
           item_status = new_post ? :imported : :updated
           outcomes << feed_item.outcome(status: item_status, topic_url: post.topic&.relative_url)
 
