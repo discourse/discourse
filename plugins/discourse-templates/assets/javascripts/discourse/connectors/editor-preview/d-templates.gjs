@@ -1,15 +1,13 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/ui-kit/d-button";
 import FilterableList from "../../components/d-templates/filterable-list";
 
 const SELECTOR_EDITOR_PREVIEW =
   "#reply-control .d-editor-preview-wrapper > .d-editor-preview";
 
-@tagName("")
 export default class DTemplatesEditorPreview extends Component {
   static shouldRender(args, context) {
     return !context.site.mobileView;
@@ -17,8 +15,8 @@ export default class DTemplatesEditorPreview extends Component {
 
   @service appEvents;
 
-  templatesVisible = false;
-  onInsertTemplate;
+  @tracked templatesVisible = false;
+  @tracked onInsertTemplate;
 
   constructor() {
     super(...arguments);
@@ -41,8 +39,8 @@ export default class DTemplatesEditorPreview extends Component {
       elemEditorPreview.style.display = "none";
     }
 
-    this.set("onInsertTemplate", onInsertTemplate);
-    this.set("templatesVisible", true);
+    this.onInsertTemplate = onInsertTemplate;
+    this.templatesVisible = true;
   }
 
   @action
@@ -52,7 +50,7 @@ export default class DTemplatesEditorPreview extends Component {
       elemEditorPreview.style.display = "";
     }
 
-    this.set("templatesVisible", false);
+    this.templatesVisible = false;
   }
 
   <template>
