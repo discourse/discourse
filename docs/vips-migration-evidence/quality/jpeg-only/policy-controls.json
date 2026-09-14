@@ -1,0 +1,20 @@
+[
+  {
+    "source": "photo",
+    "legacy": 95,
+    "estimated": 95,
+    "bytes": 508005,
+    "candidate_bytes": 22353,
+    "kept": true,
+    "metadata_bytes": 480032
+  },
+  {
+    "source": "noise",
+    "legacy": 95,
+    "estimated": 95,
+    "bytes": 553995,
+    "candidate_bytes": 59024,
+    "kept": true,
+    "metadata_bytes": 480032
+  }
+]

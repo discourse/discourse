@@ -1,0 +1,1370 @@
+[
+  {
+    "source": "photo",
+    "mode": "color-base-444",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-444-q25.jpg",
+    "bytes": 69589,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-444",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-444-q50.jpg",
+    "bytes": 83152,
+    "candidate_bytes": 115382,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.165561063790027,
+        "rms": 1.6454776141642766
+      },
+      "candidate": {
+        "mae": 1.2102674319420332,
+        "rms": 1.6720286266060471
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-444",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-444-q80.jpg",
+    "bytes": 115172,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-444",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-444-q89.jpg",
+    "bytes": 150342,
+    "candidate_bytes": 164334,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.5654716962649499,
+        "rms": 0.8818336877838119
+      },
+      "candidate": {
+        "mae": 0.6551012580777392,
+        "rms": 0.9743068084503309
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-444",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-444-q90.jpg",
+    "bytes": 156735,
+    "candidate_bytes": 170244,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.5297497407889661,
+        "rms": 0.8337466874859003
+      },
+      "candidate": {
+        "mae": 0.6132121144989391,
+        "rms": 0.9190924301954474
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-444",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-444-q91.jpg",
+    "bytes": 170300,
+    "candidate_bytes": 174526,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.4874710271387924,
+        "rms": 0.7859157311968807
+      },
+      "candidate": {
+        "mae": 0.6004335379894868,
+        "rms": 0.9053192100682156
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-progressive-444",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/photo-color-progressive-444-q25.jpg",
+    "bytes": 63205,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "color-progressive-444",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/photo-color-progressive-444-q50.jpg",
+    "bytes": 77045,
+    "candidate_bytes": 115382,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.165561063790027,
+        "rms": 1.6454776141642766
+      },
+      "candidate": {
+        "mae": 1.2102674319420332,
+        "rms": 1.6720286266060471
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-progressive-444",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/photo-color-progressive-444-q80.jpg",
+    "bytes": 111012,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "color-progressive-444",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-progressive-444-q89.jpg",
+    "bytes": 147708,
+    "candidate_bytes": 164334,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.5654716962649499,
+        "rms": 0.8818336877838119
+      },
+      "candidate": {
+        "mae": 0.6551012580777392,
+        "rms": 0.9743068084503309
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-progressive-444",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-progressive-444-q90.jpg",
+    "bytes": 154763,
+    "candidate_bytes": 170244,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.5297497407889661,
+        "rms": 0.8337466874859003
+      },
+      "candidate": {
+        "mae": 0.6132121144989391,
+        "rms": 0.9190924301954474
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-progressive-444",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-progressive-444-q91.jpg",
+    "bytes": 167004,
+    "candidate_bytes": 174526,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.4874710271387924,
+        "rms": 0.7859157311968807
+      },
+      "candidate": {
+        "mae": 0.6004335379894868,
+        "rms": 0.9053192100682156
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-420",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-420-q25.jpg",
+    "bytes": 55477,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-420",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-420-q50.jpg",
+    "bytes": 66299,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-420",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-420-q80.jpg",
+    "bytes": 90913,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-420",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-420-q89.jpg",
+    "bytes": 115720,
+    "candidate_bytes": 131965,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.6325333206741898,
+        "rms": 0.9569998538248958
+      },
+      "candidate": {
+        "mae": 0.7361862747757523,
+        "rms": 1.1056289214003503
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-420",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-420-q90.jpg",
+    "bytes": 121512,
+    "candidate_bytes": 137277,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.5937908784842786,
+        "rms": 0.9043459062064882
+      },
+      "candidate": {
+        "mae": 0.6908105920862269,
+        "rms": 1.0451846698860148
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "color-base-420",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/photo-color-base-420-q91.jpg",
+    "bytes": 131841,
+    "candidate_bytes": 141254,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.5534264835310571,
+        "rms": 0.8574697419514397
+      },
+      "candidate": {
+        "mae": 0.6784664201147762,
+        "rms": 1.0325027317908066
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "gray-base",
+    "quality": 25,
+    "legacy": 59,
+    "estimated": 51,
+    "input": "/benchmark/source/policy-outcomes/photo-gray-base-q25.jpg",
+    "bytes": 49409,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "gray-base",
+    "quality": 50,
+    "legacy": 74,
+    "estimated": 69,
+    "input": "/benchmark/source/policy-outcomes/photo-gray-base-q50.jpg",
+    "bytes": 59332,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "gray-base",
+    "quality": 80,
+    "legacy": 89,
+    "estimated": 87,
+    "input": "/benchmark/source/policy-outcomes/photo-gray-base-q80.jpg",
+    "bytes": 80439,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "photo",
+    "mode": "gray-base",
+    "quality": 89,
+    "legacy": 94,
+    "estimated": 92,
+    "input": "/benchmark/source/policy-outcomes/photo-gray-base-q89.jpg",
+    "bytes": 106635,
+    "candidate_bytes": 121079,
+    "legacy_attempted": true,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.40380463776765047,
+        "rms": 0.6733449648281576
+      },
+      "candidate": {
+        "mae": 0.4609900580512153,
+        "rms": 0.7310000667221195
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "gray-base",
+    "quality": 90,
+    "legacy": 94,
+    "estimated": 92,
+    "input": "/benchmark/source/policy-outcomes/photo-gray-base-q90.jpg",
+    "bytes": 108841,
+    "candidate_bytes": 122165,
+    "legacy_attempted": true,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.3881208631727431,
+        "rms": 0.656140192119344
+      },
+      "candidate": {
+        "mae": 0.45445986147280093,
+        "rms": 0.7235257375594041
+      }
+    }
+  },
+  {
+    "source": "photo",
+    "mode": "gray-base",
+    "quality": 91,
+    "legacy": 95,
+    "estimated": 93,
+    "input": "/benchmark/source/policy-outcomes/photo-gray-base-q91.jpg",
+    "bytes": 115286,
+    "candidate_bytes": 127565,
+    "legacy_attempted": true,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.36423859772858797,
+        "rms": 0.6288141359100117
+      },
+      "candidate": {
+        "mae": 0.43054820873119215,
+        "rms": 0.6979559385976087
+      }
+    }
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-444",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-444-q25.jpg",
+    "bytes": 21142,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-444",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-444-q50.jpg",
+    "bytes": 21142,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-444",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-444-q80.jpg",
+    "bytes": 21142,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-444",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-444-q89.jpg",
+    "bytes": 21143,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-444",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-444-q90.jpg",
+    "bytes": 21143,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-444",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-444-q91.jpg",
+    "bytes": 21143,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-progressive-444",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/flat-color-progressive-444-q25.jpg",
+    "bytes": 10918,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-progressive-444",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/flat-color-progressive-444-q50.jpg",
+    "bytes": 10918,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-progressive-444",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/flat-color-progressive-444-q80.jpg",
+    "bytes": 10918,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-progressive-444",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-progressive-444-q89.jpg",
+    "bytes": 10919,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-progressive-444",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-progressive-444-q90.jpg",
+    "bytes": 10919,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-progressive-444",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-progressive-444-q91.jpg",
+    "bytes": 10919,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-420",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-420-q25.jpg",
+    "bytes": 10774,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-420",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-420-q50.jpg",
+    "bytes": 10774,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-420",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-420-q80.jpg",
+    "bytes": 10774,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-420",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-420-q89.jpg",
+    "bytes": 10775,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-420",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-420-q90.jpg",
+    "bytes": 10775,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "color-base-420",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/flat-color-base-420-q91.jpg",
+    "bytes": 10775,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "gray-base",
+    "quality": 25,
+    "legacy": 59,
+    "estimated": 51,
+    "input": "/benchmark/source/policy-outcomes/flat-gray-base-q25.jpg",
+    "bytes": 7240,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "gray-base",
+    "quality": 50,
+    "legacy": 74,
+    "estimated": 69,
+    "input": "/benchmark/source/policy-outcomes/flat-gray-base-q50.jpg",
+    "bytes": 7240,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "gray-base",
+    "quality": 80,
+    "legacy": 89,
+    "estimated": 87,
+    "input": "/benchmark/source/policy-outcomes/flat-gray-base-q80.jpg",
+    "bytes": 7240,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "gray-base",
+    "quality": 89,
+    "legacy": 94,
+    "estimated": 92,
+    "input": "/benchmark/source/policy-outcomes/flat-gray-base-q89.jpg",
+    "bytes": 7240,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "gray-base",
+    "quality": 90,
+    "legacy": 94,
+    "estimated": 92,
+    "input": "/benchmark/source/policy-outcomes/flat-gray-base-q90.jpg",
+    "bytes": 7240,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "flat",
+    "mode": "gray-base",
+    "quality": 91,
+    "legacy": 95,
+    "estimated": 93,
+    "input": "/benchmark/source/policy-outcomes/flat-gray-base-q91.jpg",
+    "bytes": 7240,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-444",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-444-q25.jpg",
+    "bytes": 276004,
+    "candidate_bytes": 385165,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 2.96925429355951,
+        "rms": 3.875099779406884
+      },
+      "candidate": {
+        "mae": 3.0442082911361883,
+        "rms": 3.9481571496677055
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-444",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-444-q50.jpg",
+    "bytes": 327131,
+    "candidate_bytes": 420082,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 2.4026084240571954,
+        "rms": 3.1437844178692225
+      },
+      "candidate": {
+        "mae": 2.474169507438754,
+        "rms": 3.217067029330766
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-444",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-444-q80.jpg",
+    "bytes": 451818,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-444",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-444-q89.jpg",
+    "bytes": 578195,
+    "candidate_bytes": 554445,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.145784166124132,
+        "rms": 1.5351666803748323
+      },
+      "candidate": {
+        "mae": 1.4978728117766205,
+        "rms": 1.975835269616155
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-444",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-444-q90.jpg",
+    "bytes": 609834,
+    "candidate_bytes": 570706,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.0505041428554205,
+        "rms": 1.4155458491970894
+      },
+      "candidate": {
+        "mae": 1.3777544939959492,
+        "rms": 1.8182871521515511
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-444",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-444-q91.jpg",
+    "bytes": 640240,
+    "candidate_bytes": 574062,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.9814609480492863,
+        "rms": 1.331406720198091
+      },
+      "candidate": {
+        "mae": 1.3658588550708912,
+        "rms": 1.8063059233881695
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-progressive-444",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/noise-color-progressive-444-q25.jpg",
+    "bytes": 258345,
+    "candidate_bytes": 385165,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 2.96925429355951,
+        "rms": 3.875099779406884
+      },
+      "candidate": {
+        "mae": 3.0442082911361883,
+        "rms": 3.9481571496677055
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-progressive-444",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/noise-color-progressive-444-q50.jpg",
+    "bytes": 306863,
+    "candidate_bytes": 420082,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 2.4026084240571954,
+        "rms": 3.1437844178692225
+      },
+      "candidate": {
+        "mae": 2.474169507438754,
+        "rms": 3.217067029330766
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-progressive-444",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/noise-color-progressive-444-q80.jpg",
+    "bytes": 420681,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "noise",
+    "mode": "color-progressive-444",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-progressive-444-q89.jpg",
+    "bytes": 535073,
+    "candidate_bytes": 554445,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.145784166124132,
+        "rms": 1.5351666803748323
+      },
+      "candidate": {
+        "mae": 1.4978728117766205,
+        "rms": 1.975835269616155
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-progressive-444",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-progressive-444-q90.jpg",
+    "bytes": 564657,
+    "candidate_bytes": 570706,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.0505041428554205,
+        "rms": 1.4155458491970894
+      },
+      "candidate": {
+        "mae": 1.3777544939959492,
+        "rms": 1.8182871521515511
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-progressive-444",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-progressive-444-q91.jpg",
+    "bytes": 591592,
+    "candidate_bytes": 574062,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.9814609480492863,
+        "rms": 1.331406720198091
+      },
+      "candidate": {
+        "mae": 1.3658588550708912,
+        "rms": 1.8063059233881695
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-420",
+    "quality": 25,
+    "legacy": 92,
+    "estimated": 62,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-420-q25.jpg",
+    "bytes": 163187,
+    "candidate_bytes": 240057,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 3.792089014877508,
+        "rms": 4.904279469877137
+      },
+      "candidate": {
+        "mae": 4.09142067991657,
+        "rms": 5.35233008978202
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-420",
+    "quality": 50,
+    "legacy": 92,
+    "estimated": 76,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-420-q50.jpg",
+    "bytes": 192320,
+    "candidate_bytes": 260732,
+    "legacy_attempted": true,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 3.09215008770978,
+        "rms": 4.013361408167833
+      },
+      "candidate": {
+        "mae": 3.4811815803433643,
+        "rms": 4.587513835189447
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-420",
+    "quality": 80,
+    "legacy": 61,
+    "estimated": 89,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-420-q80.jpg",
+    "bytes": 270008,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-420",
+    "quality": 89,
+    "legacy": 78,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-420-q89.jpg",
+    "bytes": 347868,
+    "candidate_bytes": 339341,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.5928941891517168,
+        "rms": 2.1355963130876296
+      },
+      "candidate": {
+        "mae": 2.6085926573953513,
+        "rms": 3.5418636491636
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-420",
+    "quality": 90,
+    "legacy": 80,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-420-q90.jpg",
+    "bytes": 366824,
+    "candidate_bytes": 348131,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.5049947102864583,
+        "rms": 2.0317865284410925
+      },
+      "candidate": {
+        "mae": 2.549286077051987,
+        "rms": 3.481953134294698
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "color-base-420",
+    "quality": 91,
+    "legacy": 82,
+    "estimated": 94,
+    "input": "/benchmark/source/policy-outcomes/noise-color-base-420-q91.jpg",
+    "bytes": 388141,
+    "candidate_bytes": 354875,
+    "legacy_attempted": false,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 1.4476437038845487,
+        "rms": 1.9652847271943532
+      },
+      "candidate": {
+        "mae": 2.5396027741608798,
+        "rms": 3.485162843272342
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "gray-base",
+    "quality": 25,
+    "legacy": 59,
+    "estimated": 51,
+    "input": "/benchmark/source/policy-outcomes/noise-gray-base-q25.jpg",
+    "bytes": 108082,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "noise",
+    "mode": "gray-base",
+    "quality": 50,
+    "legacy": 74,
+    "estimated": 69,
+    "input": "/benchmark/source/policy-outcomes/noise-gray-base-q50.jpg",
+    "bytes": 128677,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "noise",
+    "mode": "gray-base",
+    "quality": 80,
+    "legacy": 89,
+    "estimated": 87,
+    "input": "/benchmark/source/policy-outcomes/noise-gray-base-q80.jpg",
+    "bytes": 175939,
+    "candidate_bytes": null,
+    "legacy_attempted": false,
+    "new_attempted": false,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {}
+  },
+  {
+    "source": "noise",
+    "mode": "gray-base",
+    "quality": 89,
+    "legacy": 94,
+    "estimated": 92,
+    "input": "/benchmark/source/policy-outcomes/noise-gray-base-q89.jpg",
+    "bytes": 230589,
+    "candidate_bytes": 256848,
+    "legacy_attempted": true,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.6671628598813657,
+        "rms": 0.942732312463598
+      },
+      "candidate": {
+        "mae": 0.7542769820601852,
+        "rms": 1.0389825444383411
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "gray-base",
+    "quality": 90,
+    "legacy": 94,
+    "estimated": 92,
+    "input": "/benchmark/source/policy-outcomes/noise-gray-base-q90.jpg",
+    "bytes": 236242,
+    "candidate_bytes": 260503,
+    "legacy_attempted": true,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.6408143220124422,
+        "rms": 0.9126563926696231
+      },
+      "candidate": {
+        "mae": 0.7412431504991319,
+        "rms": 1.0237419920060278
+      }
+    }
+  },
+  {
+    "source": "noise",
+    "mode": "gray-base",
+    "quality": 91,
+    "legacy": 95,
+    "estimated": 93,
+    "input": "/benchmark/source/policy-outcomes/noise-gray-base-q91.jpg",
+    "bytes": 251670,
+    "candidate_bytes": 272794,
+    "legacy_attempted": true,
+    "new_attempted": true,
+    "legacy_kept": false,
+    "new_kept": false,
+    "metrics": {
+      "original": {
+        "mae": 0.586385656286169,
+        "rms": 0.8504332126185516
+      },
+      "candidate": {
+        "mae": 0.6937781439887153,
+        "rms": 0.9691696443053701
+      }
+    }
+  }
+]
