@@ -23,7 +23,6 @@ require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
-require "minio_runner"
 
 CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
 CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "127.0.0.1"
@@ -363,46 +362,19 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    # Used for S3 system specs, see also setup_s3_system_test.
-    MinioRunner.config do |minio_runner_config|
-      minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
-      minio_runner_config.buckets =
-        (
-          if ENV["MINIO_RUNNER_BUCKETS"]
-            ENV["MINIO_RUNNER_BUCKETS"].split(",")
-          else
-            ["discoursetest"]
-          end
-        )
-      minio_runner_config.public_buckets =
-        (
-          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]
-            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].split(",")
-          else
-            ["discoursetest"]
-          end
-        )
-
-      test_i = ENV["TEST_ENV_NUMBER"].to_i
-
-      data_dir = "#{Rails.root}/tmp/test_data_#{test_i}/minio"
-      FileUtils.rm_rf(data_dir)
-      FileUtils.mkdir_p(data_dir)
-      minio_runner_config.minio_data_directory = data_dir
-
-      minio_runner_config.minio_port = 9_000 + 2 * test_i
-      minio_runner_config.minio_console_port = 9_001 + 2 * test_i
-    end
-
     DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
+
+    s3_system_test_urls = []
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].present?
+      s3_endpoint = URI(ENV.fetch("S3_SYSTEM_TEST_ENDPOINT"))
+      s3_bucket_endpoint = s3_endpoint.dup
+      s3_bucket_endpoint.host = "#{ENV.fetch("S3_SYSTEM_TEST_BUCKET")}.#{s3_endpoint.host}"
+      s3_system_test_urls = [s3_endpoint.to_s, s3_bucket_endpoint.to_s]
+    end
 
     WebMock.disable_net_connect!(
       allow_localhost: true,
-      allow: [
-        *MinioRunner.config.minio_urls,
-        URI(MinioRunner::MinioBinary.platform_binary_url).host,
-        ENV["CAPYBARA_REMOTE_DRIVER_URL"],
-      ].compact,
+      allow: [*s3_system_test_urls, ENV["CAPYBARA_REMOTE_DRIVER_URL"]].compact,
     )
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
@@ -658,7 +630,6 @@ RSpec.configure do |config|
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
     Downloads.clear
-    MinioRunner.stop
   end
 
   config.around :each do |example|
