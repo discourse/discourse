@@ -133,14 +133,15 @@ module SystemDrivers
     # requests. Unlike Playwright request interception it leaves the HTTP cache
     # enabled. Rules are first-match-wins, so the excludes and the MAPs above
     # take precedence.
-    minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"].presence || "minio.local"
     resolver_rules.push(
       "EXCLUDE localhost",
       "EXCLUDE *.localhost",
       "EXCLUDE #{Capybara.server_host}",
-      "EXCLUDE #{minio_domain}",
-      "EXCLUDE *.#{minio_domain}",
     )
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].present?
+      s3_system_test_domain = URI(ENV.fetch("S3_SYSTEM_TEST_ENDPOINT")).host
+      resolver_rules.push("EXCLUDE #{s3_system_test_domain}", "EXCLUDE *.#{s3_system_test_domain}")
+    end
     # Hosts a spec opted into via `allow_network:` resolve normally; everything
     # else falls through to NXDOMAIN.
     allow_network.each { |host| resolver_rules.push("EXCLUDE #{host}") }
