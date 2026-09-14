@@ -51,6 +51,36 @@ RSpec.describe Voice::AgentManager do
       expect(Voice::Session.where(user_id: integration.bot_user_id)).to be_empty
     end
 
+    it "rejects a snapshot whose session is excluded before presence is committed" do
+      provider_participants([participant])
+      Voice::ParticipantTracker
+        .stubs(:get_metadata)
+        .with do |room_id, user_id|
+          described_class.exclude!(room: room, user_id: user_id)
+          room_id == room.id
+        end
+        .returns({})
+
+      described_class.reconcile(room)
+
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
+      expect(Voice::ParticipantTracker.get_all_metadata(room.id)).to be_empty
+      expect(
+        a_request(:post, "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant"),
+      ).to have_been_made
+    end
+
+    it "removes committed presence when the session is revoked" do
+      provider_participants([participant])
+      described_class.reconcile(room)
+
+      described_class.exclude!(room:, user_id: integration.bot_user_id)
+
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
+      expect(Voice::ParticipantTracker.get_all_metadata(room.id)).to be_empty
+      expect(Voice::ParticipantTracker.livekit_sid(room.id, integration.bot_user_id)).to be_nil
+    end
+
     it "rejects a superseded token and expires previously visible media" do
       provider_participants([participant])
       described_class.reconcile(room)
@@ -127,6 +157,52 @@ RSpec.describe Voice::AgentManager do
   end
 
   describe ".evict_agents_in_room!" do
+    it "retries provider cleanup after both the human presence and transport pin expire" do
+      provider_participants([participant])
+      described_class.reconcile(room)
+      Voice::ParticipantTracker.clear_transport_pin(room.id)
+      freeze_time(31.minutes.from_now)
+      cleanup =
+        stub_request(:post, "https://livekit.example.com/twirp/livekit.RoomService/DeleteRoom")
+          .to_return(status: 503)
+          .then
+          .to_return(status: 200, body: "{}")
+
+      Jobs::PublishRoomParticipants.new.execute({})
+      expect(described_class.provider_room_ids).to include(room.id)
+      Jobs::PublishRoomParticipants.new.execute({})
+
+      expect(cleanup).to have_been_requested.twice
+      expect(described_class.provider_room_ids).to be_empty
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
+    end
+
+    it "preserves a new human call while an earlier cleanup is pending" do
+      session_id
+      Voice::ParticipantTracker.clear_transport_pin(room.id)
+      Voice::ParticipantTracker.pin_transport!(room.id, "mesh")
+      provider_participants([])
+
+      Jobs::PublishRoomParticipants.new.execute({})
+
+      expect(
+        a_request(:post, "https://livekit.example.com/twirp/livekit.RoomService/DeleteRoom"),
+      ).not_to have_been_made
+      expect(Voice::ParticipantTracker.human_user_ids(room.id)).to eq([user.id])
+    end
+
+    it "does not contact the provider for a mesh room without an agent cleanup obligation" do
+      Voice::ParticipantTracker.clear_transport_pin(room.id)
+      Voice::ParticipantTracker.pin_transport!(room.id, "mesh")
+      Voice::ParticipantTracker.remove(room.id, user.id)
+
+      Jobs::PublishRoomParticipants.new.execute({})
+
+      expect(
+        a_request(:post, "https://livekit.example.com/twirp/livekit.RoomService/DeleteRoom"),
+      ).not_to have_been_made
+    end
+
     it "ends agent participation and revokes pending tokens while preserving integration configuration" do
       provider_participants([participant])
       described_class.reconcile(room)

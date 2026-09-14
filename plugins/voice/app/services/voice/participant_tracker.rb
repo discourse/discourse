@@ -44,7 +44,51 @@ module Voice
       return 2
     LUA
 
+    COMMIT_AGENT = DiscourseRedis::EvalHelper.new <<~LUA
+      if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
+      redis.call('EXPIRE', KEYS[1], ARGV[2])
+      redis.call('ZADD', KEYS[2], ARGV[3], ARGV[4])
+      redis.call('HSET', KEYS[3], ARGV[4], ARGV[5])
+      redis.call('HSET', KEYS[4], ARGV[4], ARGV[6])
+      for index = 2, 4 do redis.call('EXPIRE', KEYS[index], ARGV[7]) end
+      return 1
+    LUA
+
+    REVOKE_AGENT = DiscourseRedis::EvalHelper.new <<~LUA
+      redis.call('DEL', KEYS[1])
+      redis.call('ZREM', KEYS[2], ARGV[1])
+      redis.call('HDEL', KEYS[3], ARGV[1])
+      redis.call('HDEL', KEYS[4], ARGV[1])
+      return 1
+    LUA
+
     class << self
+      # Admission and invalidation share an atomic boundary so a stale provider
+      # snapshot cannot restore presence after a moderator has revoked it.
+      def commit_agent(room_id, user_id, session_key:, proof:, ttl:, metadata:, sid:)
+        score =
+          Time.now.to_f + [AGENT_PRESENCE_TTL - SiteSetting.voice_participant_ttl_seconds, 0].max
+        keys = [session_key, key(room_id), metadata_key(room_id), livekit_sid_key(room_id)]
+        committed =
+          COMMIT_AGENT.eval(
+            redis.without_namespace,
+            keys.map { |name| redis.namespace_key(name) },
+            [proof, ttl, score, user_id, metadata.to_json, sid.to_s, SAFETY_TTL],
+          ) == 1
+        touch_recently_active(room_id) if committed
+        committed
+      end
+
+      def revoke_agent(room_id, user_id, session_key:)
+        keys = [session_key, key(room_id), metadata_key(room_id), livekit_sid_key(room_id)]
+        REVOKE_AGENT.eval(
+          redis.without_namespace,
+          keys.map { |name| redis.namespace_key(name) },
+          [user_id],
+        )
+        touch_recently_active(room_id)
+      end
+
       def add(room_id, user_id, migrated: false)
         return if user_id.to_i.zero?
 

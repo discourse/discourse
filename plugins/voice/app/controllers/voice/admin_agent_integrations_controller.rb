@@ -24,10 +24,12 @@ module Voice
 
     def update
       integration = integrations.find(params[:id])
-      integration.assign_attributes(integration_params)
-      raise Discourse::InvalidParameters.new(:bot_user_id) if integration.bot_user_id_changed?
-      validate_bot!(integration)
-      integration.save!
+      AgentIntegration.transaction do
+        integration.assign_attributes(integration_params)
+        raise Discourse::InvalidParameters.new(:bot_user_id) if integration.bot_user_id_changed?
+        validate_bot!(integration)
+        integration.save!
+      end
       AgentManager.evict_integration!(integration)
       render json: { integration: serialize(integration) }
     end

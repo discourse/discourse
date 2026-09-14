@@ -314,7 +314,15 @@ export default class LivekitRoomSession {
   restoreParticipant(userId) {
     const participant = this.#room?.remoteParticipants?.get(String(userId));
     participant?.trackPublications?.forEach((publication) => {
-      this.#applyDesiredSubscription(publication);
+      if (this.#isWatchGatedSource(publication.source)) {
+        this.#applyDesiredSubscription(publication);
+      } else {
+        try {
+          publication.setSubscribed(true);
+        } catch {
+          // The publication is tearing down.
+        }
+      }
       if (
         !publication.track ||
         (this.#isWatchGatedSource(publication.source) && !this.#watchingVideo)

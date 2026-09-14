@@ -796,7 +796,21 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       mediaStreamTrack: createFakeTrack("agent-mic"),
       mediaStream: null,
     };
-    const publication = { source: "microphone", track, setSubscribed() {} };
+    const publication = {
+      source: "microphone",
+      track,
+      setSubscribed(value) {
+        if (!value) {
+          this.track = null;
+          lkRoom.emit("trackUnsubscribed", track, this, { identity: "-1400" });
+        } else if (!this.track) {
+          Promise.resolve().then(() => {
+            this.track = track;
+            lkRoom.emit("trackSubscribed", track, this, { identity: "-1400" });
+          });
+        }
+      },
+    };
     lkRoom.remoteParticipants.set("-1400", {
       identity: "-1400",
       trackPublications: new Map([["mic", publication]]),
@@ -832,6 +846,11 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       !!this.subject.remoteStreamFor(1, -1400),
       "listener agents cannot play audio even in open rooms"
     );
+    assert.strictEqual(
+      publication.track,
+      null,
+      "demotion unsubscribes the microphone"
+    );
 
     this.rooms.emit(1, {
       type: "participants",
@@ -853,6 +872,18 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
     assert.false(
       !!this.subject.remoteStreamFor(1, -1400),
       "exclusion removes agent audio"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "speaker", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "readmission subscribes to the retained microphone publication"
     );
   });
 

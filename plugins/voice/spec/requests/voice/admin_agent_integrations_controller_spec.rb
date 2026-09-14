@@ -48,6 +48,33 @@ RSpec.describe Voice::AdminAgentIntegrationsController do
     end
   end
 
+  describe "#update" do
+    it "preserves room authorization and the admitted session when validation fails" do
+      sign_in(admin)
+      other_room = Fabricate(:voice_room)
+      integration = Fabricate(:voice_agent_integration, bot_user: bot, rooms: [room])
+      SiteSetting.voice_livekit_url = "wss://livekit.example.com"
+      SiteSetting.voice_livekit_api_key = "key"
+      SiteSetting.voice_livekit_api_secret = "secret"
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, admin.id)
+      session_id = Voice::AgentManager.authorize_session!(integration:, room:)
+
+      [[{ name: "" }, 422], [{ bot_user_id: admin.id }, 400]].each do |invalid_attributes, status|
+        put "/admin/plugins/voice/agent-integrations/#{integration.id}.json",
+            params: {
+              integration: attributes.merge(room_ids: [other_room.id]).merge(invalid_attributes),
+            }
+
+        expect(response.status).to eq(status)
+        expect(integration.reload.rooms).to contain_exactly(room)
+        expect(
+          Voice::AgentManager.authorized_session?(room:, user_id: bot.id, metadata: session_id),
+        ).to eq(true)
+      end
+    end
+  end
+
   describe "#rotate" do
     it "replaces credentials without exposing the previous secret" do
       sign_in(admin)
