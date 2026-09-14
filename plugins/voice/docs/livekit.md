@@ -266,6 +266,43 @@ side, but this is not a guarantee of immediate transport-level revocation.
 See the [implementation decisions](./roadmap/agent-participation.md) for scope,
 historical rationale, and the review checklist.
 
+### Testing external agents
+
+Use a development or staging site with LiveKit configured, scheduled jobs running,
+and an existing eligible bot account. Start with a human-only call and confirm
+the join response reports `transport: "livekit"` and audio works between browsers.
+
+1. Create an integration in **Admin → Plugins → Voice → External agents**, scoped
+   to your test room with the speaker role. Copy its credential.
+2. Join the room as a human, exchange the integration credential using the request
+   above, and connect an external RTC worker with the returned URL and token within
+   two minutes. The credential exchange alone does not connect an agent; the worker
+   must publish an audio track to test speaking. A repeating test tone is sufficient.
+3. Verify the bot appears in the roster and its audio is audible. Without webhooks,
+   allow the next one-minute reconciliation sweep to establish presence.
+4. Demote the agent and verify its audio stops; promote it and verify audio returns.
+   Exclude it and verify it disappears and loses audio. A fresh token exchange must
+   return 403 until the exclusion is restored or expires.
+5. Try an invalid credential, a room outside the integration's scope, an empty room,
+   and a mesh room. Each token request must return 403. Rotate or revoke the
+   credential and verify the old credential also returns 403.
+6. Have the last human leave normally, then repeat by abruptly closing the browser.
+   Verify both the Discourse roster and the provider connection are cleaned up
+   after presence expiry and reconciliation. Repeat with the provider temporarily
+   unavailable and confirm cleanup retries once it recovers.
+7. Submit an invalid integration edit together with a changed room selection.
+   Verify the rejected edit preserves the original room scope and admitted session.
+
+For automated coverage, run these sequentially from the repository root:
+
+```bash
+LOAD_PLUGINS=1 bin/rspec plugins/voice/spec --exclude-pattern 'plugins/voice/spec/system/**/*_spec.rb'
+CI=true bin/qunit --standalone --target voice --filter 'voice-webrtc-livekit'
+```
+
+The gated LiveKit system spec above verifies human media through a real SFU; it
+does not replace the external-worker checks in this section.
+
 ## Manual browser checklist
 
 `livekit-client` has real platform nuances the automated Chromium-only spec
