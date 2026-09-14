@@ -1180,51 +1180,51 @@ RSpec.describe Upload do
 
       before { global_setting :enable_vips_image_processing, true }
 
-      it "preserves a JPEG already below the requested quality" do
+      it "returns nil when the JPEG quality is below the requested quality" do
         expect(upload.target_image_quality(local_path, 100)).to eq(nil)
       end
 
-      it "reduces a JPEG above the requested quality" do
+      it "returns the requested quality when the JPEG quality is higher" do
         expect(upload.target_image_quality(local_path, 90)).to eq(90)
       end
 
-      it "uses the configured PNG conversion quality without estimating the source" do
+      it "returns the requested quality for a PNG" do
         path = file_from_fixtures("logo.png").path
 
         expect(upload.target_image_quality(path, 100)).to eq(100)
       end
 
-      it "uses the configured GIF preview quality" do
+      it "returns the requested quality for an animated GIF" do
         path = file_from_fixtures("tiny_animated.gif").path
 
         expect(upload.target_image_quality(path, 95)).to eq(95)
       end
 
-      it "uses the configured quality for a static GIF preview" do
+      it "returns the requested quality for a static GIF" do
         path = file_from_fixtures("static.gif").path
 
         expect(upload.target_image_quality(path, 90)).to eq(90)
       end
 
-      it "uses the configured quality for a static WebP preview" do
+      it "returns the requested quality for a static WebP" do
         path = file_from_fixtures("static.webp").path
 
         expect(upload.target_image_quality(path, 90)).to eq(90)
       end
 
-      it "preserves a JPEG when its quality cannot be read" do
+      it "returns nil when the JPEG quality cannot be read" do
         expect(upload.target_image_quality("/missing-quality-input.jpg", 90)).to eq(nil)
       end
 
-      it "preserves a custom-table JPEG when recompression is disabled" do
+      it "returns nil for unknown JPEG quality when the requested quality is 100" do
         expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 100)).to eq(nil)
       end
 
-      it "preserves a custom-table JPEG when its quality is unknown" do
+      it "returns nil when the JPEG quality is unknown" do
         expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(nil)
       end
 
-      it "uses the configured quality for a required conversion of an unknown-quality JPEG" do
+      it "returns the requested quality when unknown JPEG quality is allowed" do
         expect(
           upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90, allow_unknown: true),
         ).to eq(90)

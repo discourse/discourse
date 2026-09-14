@@ -31,7 +31,7 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(described_class.estimate(StringIO.new(input)).quality).to eq(1)
     end
 
-    it "uses multiple active quantization tables" do
+    it "reports every quantization table referenced by the frame" do
       table = Array.new(64, 1).pack("C*")
       input = jpeg_header(tables: "\x00".b + table + "\x01".b + table, table_ids: [0, 1])
 
@@ -69,7 +69,7 @@ RSpec.describe DiscourseVips::JpegQuality do
       )
     end
 
-    it "rejects headers that exceed the byte budget" do
+    it "rejects JPEG headers larger than the maximum allowed size" do
       input = StringIO.new(jpeg_header(tables: "\x00".b + Array.new(64, 1).pack("C*")))
 
       stub_const(described_class::Parser, :MAX_HEADER_BYTES, 32) do
@@ -117,7 +117,7 @@ RSpec.describe DiscourseVips::JpegQuality do
       )
     end
 
-    it "skips large metadata before estimating JPEG quality" do
+    it "estimates quality when the JPEG contains large metadata segments" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
       metadata = [0xFF, 0xEF, 60_002].pack("CCn") + "x" * 60_000
       input = StringIO.new(original.byteslice(0, 2) + metadata * 8 + original.byteslice(2..))
@@ -132,7 +132,7 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(described_class.estimate(input).quality).to eq(95)
     end
 
-    it "rejects a segment length shorter than its length field" do
+    it "rejects a segment whose declared length is less than two bytes" do
       input = StringIO.new([0xFF, 0xD8, 0xFF, 0xDB, 0, 1].pack("C*"))
 
       expect { described_class.estimate(input) }.to raise_error(described_class::InvalidJPEG)

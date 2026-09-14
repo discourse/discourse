@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseVips do
   describe ".jpeg_quality" do
-    it "estimates JPEG quality in the image worker" do
+    it "returns the estimated JPEG quality" do
       result =
         described_class.jpeg_quality(
           input_path: file_from_fixtures("exif_orientation.jpg").path,

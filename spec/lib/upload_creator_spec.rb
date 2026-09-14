@@ -466,7 +466,7 @@ RSpec.describe UploadCreator do
           )
         end
 
-        it "preserves PNG format when conversion is not independently requested" do
+        it "does not convert a PNG that does not meet the JPEG conversion criteria" do
           global_setting :enable_vips_image_processing, true
 
           upload = described_class.new(file, filename, force_optimize: true).create_for(user.id)
@@ -475,7 +475,7 @@ RSpec.describe UploadCreator do
           expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
         end
 
-        it "preserves a large custom-table JPEG when its quality is unknown" do
+        it "preserves the bytes of a large custom-table JPEG when its quality is unknown" do
           global_setting :enable_vips_image_processing, true
           FileHelper.stubs(:optimize_image!)
           jpeg = file_from_fixtures("logo.jpg")
@@ -491,7 +491,7 @@ RSpec.describe UploadCreator do
           expect(File.binread(Discourse.store.path_for(upload))).to eq(original)
         end
 
-        it "uses the configured preview quality for a custom-table JPEG" do
+        it "creates a custom-table JPEG preview at the configured quality" do
           global_setting :enable_vips_image_processing, true
           jpeg = file_from_fixtures("logo.jpg")
           upload = described_class.new(jpeg, "custom.jpg").create_for(user.id)
