@@ -32,13 +32,22 @@ module DiscourseVips
       end
 
     QuantizationTable = Struct.new(:id, :precision, :values, keyword_init: true)
-    ParsedJPEG = Struct.new(:tables, :used_table_ids, :lossless, keyword_init: true)
+    ParsedJPEG =
+      Struct.new(
+        :tables,
+        :used_table_ids,
+        :components,
+        :adobe_transform,
+        :lossless,
+        keyword_init: true,
+      )
 
     class Parser
       TEM = 0x01
       DQT = 0xDB
       EOI = 0xD9
       SOS = 0xDA
+      APP14 = 0xEE
 
       SOF_MARKERS = [
         0xC0,
@@ -67,6 +76,8 @@ module DiscourseVips
         @lossless = false
         @header_bytes = 0
         @frame_seen = false
+        @components = []
+        @adobe_transform = nil
       end
 
       def parse
@@ -83,6 +94,12 @@ module DiscourseVips
             next
           when DQT
             parse_dqt(read_segment(marker))
+          when APP14
+            payload = read_segment(marker)
+            if payload.start_with?("Adobe")
+              raise InvalidJPEG, "truncated Adobe marker" if payload.bytesize < 12
+              @adobe_transform = payload.getbyte(11)
+            end
           when *SOF_MARKERS
             parse_sof(marker, read_segment(marker))
           when SOS
@@ -101,7 +118,13 @@ module DiscourseVips
           end
         end
 
-        ParsedJPEG.new(tables: @tables, used_table_ids: @used_table_ids.uniq, lossless: @lossless)
+        ParsedJPEG.new(
+          tables: @tables,
+          used_table_ids: @used_table_ids,
+          components: @components,
+          adobe_transform: @adobe_transform,
+          lossless: @lossless,
+        )
       end
 
       private
@@ -178,6 +201,7 @@ module DiscourseVips
         component_count.times do |index|
           table_id = payload.getbyte(8 + (index * 3))
           raise InvalidJPEG, "invalid frame DQT table id #{table_id}" if table_id > 3
+          @components << [payload.getbyte(6 + (index * 3)), table_id]
 
           next if @used_table_ids.include?(table_id)
 
@@ -448,24 +472,31 @@ module DiscourseVips
           .to_h do |quality|
             scale = quality < 50 ? 5000 / quality : 200 - quality * 2
             candidates =
-              BASE_TABLES.flat_map do |base|
+              BASE_TABLES.map do |base|
                 [255, 32_767].map do |maximum|
-                  natural =
-                    base.map { |coefficient| ((coefficient * scale + 50) / 100).clamp(1, maximum) }
-                  ZIGZAG_ORDER.map { |index| natural[index] }.freeze
-                end
+                    natural =
+                      base.map do |coefficient|
+                        ((coefficient * scale + 50) / 100).clamp(1, maximum)
+                      end
+                    ZIGZAG_ORDER.map { |index| natural[index] }.freeze
+                  end
+                  .uniq
+                  .freeze
               end
-            [quality, candidates.uniq.freeze]
+            [quality, candidates.freeze]
           end
           .freeze
       private_constant :CANDIDATE_TABLES
 
       EXACT_QUALITIES =
-        CANDIDATE_TABLES
-          .each_with_object({}) do |(quality, candidates), index|
-            candidates.each { |candidate| (index[candidate] ||= []) << quality }
+        [0, 1].map do |role|
+            CANDIDATE_TABLES
+              .each_with_object({}) do |(quality, candidates), index|
+                candidates[role].each { |candidate| (index[candidate] ||= []) << quality }
+              end
+              .transform_values(&:freeze)
+              .freeze
           end
-          .transform_values(&:freeze)
           .freeze
       private_constant :EXACT_QUALITIES
 
@@ -488,12 +519,19 @@ module DiscourseVips
           )
         end
 
+        roles = component_roles
+        return unknown("JPEG component roles are ambiguous", tables) unless roles
+
+        role_tables = roles.map { |id, role| [@parsed_jpeg.tables.fetch(id), role] }
         exact_quality =
-          tables.map { |table| EXACT_QUALITIES.fetch(table.values, []) }.reduce(&:&).min
+          role_tables
+            .map { |table, role| EXACT_QUALITIES[role].fetch(table.values, []) }
+            .reduce(&:&)
+            .min
         return result(:exact, exact_quality, 0.0, tables) if exact_quality
 
         quality, score =
-          (1..100).map { |candidate| [candidate, score(tables, candidate)] }.min_by(&:last)
+          (1..100).map { |candidate| [candidate, score(role_tables, candidate)] }.min_by(&:last)
         if score <= MAX_APPROXIMATE_LOG_RMSE
           result(:approximate, quality, Math.exp(score) - 1, tables)
         else
@@ -502,6 +540,15 @@ module DiscourseVips
       end
 
       private
+
+      def component_roles
+        components = @parsed_jpeg.components
+        return [[components.first.last, 0]] if components.length == 1
+        return unless components.map(&:first) == [1, 2, 3]
+        return if @parsed_jpeg.adobe_transform && @parsed_jpeg.adobe_transform != 1
+
+        components.each_with_index.map { |(_, id), index| [id, index.zero? ? 0 : 1] }.uniq
+      end
 
       def active_tables
         ids = @parsed_jpeg.used_table_ids
@@ -522,18 +569,22 @@ module DiscourseVips
       def score(tables, quality)
         candidates = CANDIDATE_TABLES.fetch(quality)
         total =
-          tables.sum do |table|
-            candidates
-              .map do |candidate|
-                table
-                  .values
-                  .zip(candidate)
-                  .sum { |actual, expected| Math.log(actual.to_f / expected)**2 } / 64.0
-              end
-              .min
+          tables.sum do |table, role|
+            candidates[role].map { |candidate| table_score(table, candidate) }.min
           end
 
         Math.sqrt(total / tables.length)
+      end
+
+      def table_score(table, candidate)
+        total = 0.0
+        table.values.each_with_index do |actual, index|
+          ratio = actual.to_f / candidate[index]
+          return Float::INFINITY if ratio < 1.0 / 1.20 || ratio > 1.20
+
+          total += Math.log(ratio)**2
+        end
+        total / 64.0
       end
 
       def unknown(reason, tables = [])

@@ -33,7 +33,7 @@ RSpec.describe DiscourseVips::JpegQuality do
 
     it "reports every quantization table referenced by the frame" do
       table = Array.new(64, 1).pack("C*")
-      input = jpeg_header(tables: "\x00".b + table + "\x01".b + table, table_ids: [0, 1])
+      input = jpeg_header(tables: "\x00".b + table + "\x01".b + table, table_ids: [0, 1, 1])
 
       result = described_class.estimate(StringIO.new(input))
 
@@ -42,7 +42,7 @@ RSpec.describe DiscourseVips::JpegQuality do
     end
 
     it "reports unknown when a referenced quantization table is missing" do
-      input = jpeg_header(tables: "\x00".b + Array.new(64, 1).pack("C*"), table_ids: [0, 1])
+      input = jpeg_header(tables: "\x00".b + Array.new(64, 1).pack("C*"), table_ids: [0, 1, 1])
 
       expect(described_class.estimate(StringIO.new(input)).status).to eq(:unknown)
     end
@@ -96,13 +96,49 @@ RSpec.describe DiscourseVips::JpegQuality do
 
     it "approximates a table close to standard JPEG quantization" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
-      coefficient_offset = original.index("\xFF\xDB".b) + 5
+      coefficient_offset = original.index("\xFF\xDB".b) + 5 + 63
       original.setbyte(coefficient_offset, original.getbyte(coefficient_offset) + 1)
 
       result = described_class.estimate(StringIO.new(original))
 
       expect(result.status).to eq(:approximate)
       expect(result.quality).to eq(95)
+    end
+
+    it "reports unknown when luminance quantization is also used for chroma" do
+      original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
+      frame_offset = original.index("\xFF\xC0".b)
+      original.setbyte(frame_offset + 15, 0)
+      original.setbyte(frame_offset + 18, 0)
+
+      expect(described_class.estimate(StringIO.new(original)).status).to eq(:unknown)
+    end
+
+    it "reports unknown when one coefficient is far from standard quantization" do
+      original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
+      coefficient_offset = original.index("\xFF\xDB".b) + 5
+      original.setbyte(coefficient_offset, original.getbyte(coefficient_offset) * 4)
+
+      expect(described_class.estimate(StringIO.new(original)).status).to eq(:unknown)
+    end
+
+    it "reports unknown when component identifiers do not establish luminance and chroma roles" do
+      original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
+      frame_offset = original.index("\xFF\xC0".b)
+      original.setbyte(frame_offset + 10, 82)
+      original.setbyte(frame_offset + 13, 71)
+      original.setbyte(frame_offset + 16, 66)
+
+      expect(described_class.estimate(StringIO.new(original)).status).to eq(:unknown)
+    end
+
+    it "reports unknown when the Adobe marker identifies RGB components" do
+      original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
+      adobe = "Adobe" + [100, 0, 0, 0].pack("nnnC")
+      marker = [0xFF, 0xEE, adobe.bytesize + 2].pack("CCn") + adobe
+      input = StringIO.new(original.byteslice(0, 2) + marker + original.byteslice(2..))
+
+      expect(described_class.estimate(input).status).to eq(:unknown)
     end
 
     it "rejects non-JPEG input" do
