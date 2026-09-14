@@ -423,8 +423,7 @@ class UploadCreator
 
   MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {}, read: [], write: [])
-    command = [from, "-auto-orient", "-background", "white", "-interlace", "none"]
-    command << "-flatten" unless opts[:flatten] == false
+    command = [from, "-auto-orient", "-background", "white", "-interlace", "none", "-flatten"]
     command << "-debug" << "all" if opts[:debug]
     command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
