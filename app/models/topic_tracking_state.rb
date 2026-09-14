@@ -351,16 +351,19 @@ class TopicTrackingState
 
   def self.tags_included_wrapped_sql(sql)
     return <<~SQL if include_tags_in_report?
-        WITH tags_included_cte AS (
+        WITH tracked_topics AS (
           #{sql}
-        )
-        SELECT *, (
-          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id))
-          FROM topic_tags
+        ), topic_tag_ids AS (
+          -- topic_tags has no foreign key, so the join to tags drops orphaned rows
+          SELECT topic_tags.topic_id, JSON_AGG(JSON_BUILD_OBJECT('id', tags.id)) AS tags
+          FROM tracked_topics
+          JOIN topic_tags ON topic_tags.topic_id = tracked_topics.topic_id
           JOIN tags ON tags.id = topic_tags.tag_id
-          WHERE topic_id = tags_included_cte.topic_id
-          ) tags
-        FROM tags_included_cte
+          GROUP BY topic_tags.topic_id
+        )
+        SELECT tracked_topics.*, topic_tag_ids.tags
+        FROM tracked_topics
+        LEFT JOIN topic_tag_ids ON topic_tag_ids.topic_id = tracked_topics.topic_id
       SQL
 
     sql
