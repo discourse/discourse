@@ -1,11 +1,11 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import { tagName } from "@ember-decorators/component";
+import { service } from "@ember/service";
 import fullnumber from "../helpers/fullnumber";
 
-@tagName("")
 export default class GamificationScore extends Component {
+  @service site;
+
   <template>
     <span class="gamification-score" ...attributes>
       {{#if this.site.default_gamification_leaderboard_id}}
@@ -14,10 +14,10 @@ export default class GamificationScore extends Component {
           @model={{this.site.default_gamification_leaderboard_id}}
           @route="gamificationLeaderboard.byName"
         >
-          {{fullnumber this.model.gamification_score}}
+          {{fullnumber @model.gamification_score}}
         </LinkTo>
       {{else}}
-        {{fullnumber this.model.gamification_score}}
+        {{fullnumber @model.gamification_score}}
       {{/if}}
     </span>
   </template>
