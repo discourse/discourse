@@ -234,7 +234,7 @@ RSpec.describe FileHelper do
     describe ".inline_safe_files" do
       it "includes non-SVG images" do
         safe_files = FileHelper.inline_safe_files
-        expect(safe_files).to include("png", "jpg", "jpeg", "gif", "webp", "avif", "ico")
+        expect(safe_files).to include("png", "jpg", "jpeg", "gif", "webp", "avif")
       end
 
       it "includes PDF" do

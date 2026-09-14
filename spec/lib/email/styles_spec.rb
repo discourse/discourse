@@ -432,13 +432,13 @@ RSpec.describe Email::Styles do
     context "when inlining an originally oneboxed image" do
       before { SiteSetting.authorized_extensions = "*" }
 
-      let(:siteicon) { Fabricate(:upload, original_filename: "siteicon.ico") }
-      let(:attachments) { [stub(url: "cid:email/test.png"), stub(url: "cid:email/test2.ico")] }
+      let(:siteicon) { Fabricate(:upload, original_filename: "siteicon.png") }
+      let(:attachments) { [stub(url: "cid:email/test.png"), stub(url: "cid:email/test2.png")] }
       let(:attachments_index) { { upload.sha1 => 0, siteicon.sha1 => 1 } }
       let(:html) { <<~HTML }
 <aside class="onebox allowlistedgeneric">
   <header class="source">
-      <img src="#{Discourse.base_url}/secure-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <img src="#{Discourse.base_url}/secure-uploads/original/1X/#{siteicon.sha1}.png" class="site-icon" width="64" height="64">
       <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
   </header>
   <article class="onebox-body">
@@ -459,7 +459,7 @@ RSpec.describe Email::Styles do
         optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
         strip_and_inline
         expect(@frag.to_s).to include("cid:email/test.png")
-        expect(@frag.to_s).to include("cid:email/test2.ico")
+        expect(@frag.to_s).to include("cid:email/test2.png")
         expect(@frag.css("[data-stripped-secure-upload]")).not_to be_present
         expect(@frag.css("[data-embedded-secure-image]")[0].attr("style")).to eq(
           "width: 16px; height: 16px;",
@@ -473,7 +473,7 @@ RSpec.describe Email::Styles do
         let(:html) { <<~HTML }
 <aside class="onebox allowlistedgeneric">
   <header class="source">
-      <img src="#{Discourse.base_url}/secure-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <img src="#{Discourse.base_url}/secure-uploads/original/1X/#{siteicon.sha1}.png" class="site-icon" width="64" height="64">
       <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
   </header>
   <article class="onebox-body">
@@ -493,7 +493,7 @@ RSpec.describe Email::Styles do
         it "keeps the special onebox styles" do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")
-          expect(@frag.to_s).to include("cid:email/test2.ico")
+          expect(@frag.to_s).to include("cid:email/test2.png")
           expect(@frag.css("[data-stripped-secure-upload]")).not_to be_present
           expect(@frag.css("[data-embedded-secure-image]")[1].attr("style")).to eq(
             "width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;",
