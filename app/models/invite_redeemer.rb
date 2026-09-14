@@ -306,18 +306,21 @@ class InviteRedeemer
     # Should not happen because of ensure_email_is_present!, but better to cover bases.
     return if email.blank?
 
-    topic_ids =
-      TopicInvite
-        .joins(:invite)
-        .joins(:topic)
-        .where("topics.archetype = ?", Archetype.private_message)
-        .where("invites.email = ?", email)
-        .pluck(:topic_id)
-    topic_ids.each do |id|
-      if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
-        TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id)
+    TopicInvite
+      .includes(:topic, invite: :invited_by)
+      .joins(:invite)
+      .joins(:topic)
+      .where("topics.archetype = ?", Archetype.private_message)
+      .where("invites.email = ?", email)
+      .find_each do |topic_invite|
+        topic = topic_invite.topic
+        inviter = topic_invite.invite.invited_by
+        next if inviter.blank? || !inviter.guardian.can_invite_to?(topic)
+
+        if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: topic.id)
+          TopicAllowedUser.create!(user_id: invited_user.id, topic_id: topic.id)
+        end
       end
-    end
   end
 
   def add_user_to_groups

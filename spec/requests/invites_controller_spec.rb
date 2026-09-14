@@ -1916,7 +1916,8 @@ RSpec.describe InvitesController do
         end
 
         it "adds the user to the private topic" do
-          topic = Fabricate(:private_message_topic)
+          Group.refresh_automatic_groups_for_user!(invite.invited_by)
+          topic = Fabricate(:private_message_topic, user: invite.invited_by)
           TopicInvite.create!(invite: invite, topic: topic)
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
           expect(response.status).to eq(200)
