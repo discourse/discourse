@@ -262,6 +262,57 @@ RSpec.describe Upload do
     expect(upload.thumbnail_height).to eq(500)
   end
 
+  describe "#fix_dimensions!" do
+    shared_examples "SVG dimension repair" do |expected_zero_dimensions|
+      it "persists SVG dimensions and thumbnail dimensions" do
+        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+        file = file_from_fixtures("tiny.svg")
+        upload.update!(url: Discourse.store.store_upload(file, upload))
+
+        upload.fix_dimensions!
+
+        expect(
+          upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
+        ).to eq("width" => 115, "height" => 86, "thumbnail_width" => 115, "thumbnail_height" => 86)
+      end
+
+      it "stores the detected dimensions for a zero-sized SVG" do
+        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+        file = file_from_fixtures("zero_sized.svg")
+        upload.update!(url: Discourse.store.store_upload(file, upload))
+
+        upload.fix_dimensions!
+
+        expect([upload.reload.width, upload.height]).to eq(expected_zero_dimensions)
+        expect([upload.thumbnail_width, upload.thumbnail_height]).to eq(expected_zero_dimensions)
+      end
+
+      it "stores zero dimensions when SVG dimension detection fails" do
+        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+        file = file_from_contents("invalid SVG", "invalid.svg")
+        upload.update!(url: Discourse.store.store_upload(file, upload))
+
+        upload.fix_dimensions!
+
+        expect(
+          upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
+        ).to eq("width" => 0, "height" => 0, "thumbnail_width" => 0, "thumbnail_height" => 0)
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "SVG dimension repair", [120, 90]
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "SVG dimension repair", [0, 0]
+    end
+  end
+
   it "dimension calculation returns nil on missing image" do
     SiteSetting.max_image_megapixels = 85
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)

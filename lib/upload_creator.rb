@@ -190,24 +190,31 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           w, h = [0, 0]
 
-          # identify can behave differently depending on how it's compiled and
-          # what programs (e.g. inkscape) are installed on your system.
-          # 'MSVG:' forces ImageMagick to use internal routines and behave
-          # consistently whether it's running from our docker container or not
           begin
             w, h =
-              ImageMagick
-                .identify(
-                  "-ping",
-                  "-format",
-                  "%w %h",
-                  "MSVG:#{@file.path}",
-                  operation: :upload_svg_dimensions,
-                  read: [@file.path],
+              if GlobalSetting.enable_vips_image_processing
+                DiscourseVips.svg_dimensions(
+                  input_path: @file.path,
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
-                .split(" ")
-                .map(&:to_i)
+              else
+                # identify can behave differently depending on how it's compiled and
+                # what programs (e.g. inkscape) are installed on your system.
+                # 'MSVG:' forces ImageMagick to use internal routines and behave
+                # consistently whether it's running from our docker container or not
+                ImageMagick
+                  .identify(
+                    "-ping",
+                    "-format",
+                    "%w %h",
+                    "MSVG:#{@file.path}",
+                    operation: :upload_svg_dimensions,
+                    read: [@file.path],
+                    timeout: Upload::MAX_IDENTIFY_SECONDS,
+                  )
+                  .split(" ")
+                  .map(&:to_i)
+              end
           rescue StandardError
             # use default 0, 0
           end
