@@ -31,6 +31,8 @@ class DiscourseVipsWorker
     private_constant :SVG_DIMENSIONS_RLIMITS
 
     def self.warm
+      require "discourse_vips/jpeg_quality"
+
       WARM_OPERATIONS.each do |name|
         operation = Vips.vips_operation_new(name)
         raise "unable to initialize libvips operation #{name}" if operation.null?
@@ -90,8 +92,6 @@ class DiscourseVipsWorker
     private_class_method :version
 
     def self.jpeg_quality(input_path:)
-      require "discourse_vips/jpeg_quality"
-
       new(read_paths: [input_path]) do
         DiscourseVips::JpegQuality.estimate(input_path).quality
       rescue DiscourseVips::JpegQuality::Error => error

@@ -433,6 +433,32 @@ module DiscourseVips
       BASE_TABLES = [LUMINANCE_BASE, CHROMINANCE_BASE].freeze
       MAX_APPROXIMATE_LOG_RMSE = Math.log(1.20)
 
+      CANDIDATE_TABLES =
+        (1..100)
+          .to_h do |quality|
+            scale = quality < 50 ? 5000 / quality : 200 - quality * 2
+            candidates =
+              BASE_TABLES.flat_map do |base|
+                [255, 32_767].map do |maximum|
+                  natural =
+                    base.map { |coefficient| ((coefficient * scale + 50) / 100).clamp(1, maximum) }
+                  ZIGZAG_ORDER.map { |index| natural[index] }.freeze
+                end
+              end
+            [quality, candidates.uniq.freeze]
+          end
+          .freeze
+      private_constant :CANDIDATE_TABLES
+
+      EXACT_QUALITIES =
+        CANDIDATE_TABLES
+          .each_with_object({}) do |(quality, candidates), index|
+            candidates.each { |candidate| (index[candidate] ||= []) << quality }
+          end
+          .transform_values(&:freeze)
+          .freeze
+      private_constant :EXACT_QUALITIES
+
       def initialize(parsed_jpeg)
         @parsed_jpeg = parsed_jpeg
       end
@@ -453,7 +479,7 @@ module DiscourseVips
         end
 
         exact_quality =
-          (1..100).find { |quality| tables.all? { |table| exact_match?(table, quality) } }
+          tables.map { |table| EXACT_QUALITIES.fetch(table.values, []) }.reduce(&:&).min
         return result(:exact, exact_quality, 0.0, tables) if exact_quality
 
         quality, score =
@@ -473,18 +499,6 @@ module DiscourseVips
         ids.uniq.filter_map { |id| @parsed_jpeg.tables[id] }
       end
 
-      def candidate_tables(quality)
-        BASE_TABLES
-          .flat_map do |base|
-            [scaled_table(base, quality, 255), scaled_table(base, quality, 32_767)]
-          end
-          .uniq
-      end
-
-      def exact_match?(table, quality)
-        candidate_tables(quality).include?(table.values)
-      end
-
       def result(status, quality, deviation, tables)
         Estimate.new(
           status: status,
@@ -495,14 +509,8 @@ module DiscourseVips
         )
       end
 
-      def scaled_table(base, quality, maximum)
-        scale = quality < 50 ? 5000 / quality : 200 - (quality * 2)
-        natural = base.map { |coefficient| ((coefficient * scale + 50) / 100).clamp(1, maximum) }
-        ZIGZAG_ORDER.map { |index| natural[index] }
-      end
-
       def score(tables, quality)
-        candidates = candidate_tables(quality)
+        candidates = CANDIDATE_TABLES.fetch(quality)
         total =
           tables.sum do |table|
             candidates

@@ -18,6 +18,17 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(result.quality).to eq(nil)
     end
 
+    it "approximates a table close to standard JPEG quantization" do
+      original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
+      coefficient_offset = original.index("\xFF\xDB".b) + 5
+      original.setbyte(coefficient_offset, original.getbyte(coefficient_offset) + 1)
+
+      result = described_class.estimate(StringIO.new(original))
+
+      expect(result.status).to eq(:approximate)
+      expect(result.quality).to eq(95)
+    end
+
     it "rejects non-JPEG input" do
       expect { described_class.estimate(file_from_fixtures("logo.png").path) }.to raise_error(
         described_class::InvalidJPEG,
