@@ -18,6 +18,13 @@ class SessionController < ApplicationController
   allow_in_readonly_mode :email_login
   allow_in_staff_writes_only_mode :create, :forgot_password, :create_login_code, :verify_login_code
 
+  # Every SessionController action is part of auth. An archived site permits
+  # all of them so existing users can log in, log out, and reset passwords.
+  # New account creation via these actions (SSO first-login, invite login code)
+  # is blocked at the model layer by guards in DiscourseConnect and
+  # InviteRedeemer.
+  skip_before_action :block_if_archived
+
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
 
@@ -896,6 +903,12 @@ class SessionController < ApplicationController
   end
 
   def process_verified_login_code(matched_user)
+    # Existing-user login is allowed while archived; account creation is not.
+    # The model-layer guard in CreateFromVerifiedEmail exists too, but the
+    # Service framework swallows exceptions inside ModelStep, so raising here
+    # is what actually surfaces the 503 archive response.
+    raise Discourse::SiteArchived if SiteSetting.site_archived && matched_user.nil?
+
     if matched_user &&
          (matched_user.totp_or_backup_codes_enabled? || matched_user.security_keys_enabled?)
       if missing_second_factor_params?

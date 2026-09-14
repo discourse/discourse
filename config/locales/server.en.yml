@@ -591,6 +591,7 @@ en:
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  site_archived_error: "This site is archived. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
@@ -2362,6 +2363,7 @@ en:
     linkedin_oidc_client_id: "Client ID for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     linkedin_oidc_client_secret: "Client secret for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
 
+    site_archived: "Permanently freeze the site as an archive. Reads and login remain available; new content, likes, and other write actions are disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
