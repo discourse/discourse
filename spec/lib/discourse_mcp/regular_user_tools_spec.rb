@@ -27,7 +27,13 @@ describe DiscourseMcp::Tools do
             "query" => "regular parity search needle",
             "max_results" => 1,
           },
-          request_context: request_context(user),
+          request_context:
+            instance_double(
+              DiscourseMcp::RequestContext,
+              user:,
+              guardian: user.guardian,
+              has_scopes?: true,
+            ),
         ).fetch(:structuredContent)
 
       expect(result[:results].sole).to eq(

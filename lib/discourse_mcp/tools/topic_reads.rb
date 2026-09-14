@@ -25,6 +25,7 @@ module DiscourseMcp
         if topic.blank? || !guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
 
         selection_mode = arguments.fetch("selection_mode")
         limit = arguments.fetch("limit", 20)
@@ -151,7 +152,7 @@ module DiscourseMcp
 
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
-        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), guardian)
+        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), request_context)
         mode = arguments.fetch("mode", "reply_ids")
         if MODES.exclude?(mode)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.invalid_reply_mode")
@@ -309,6 +310,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
 
         from = arguments["from"] ? parse_date(arguments["from"]) : 30.days.ago.to_date
         to = arguments["to"] ? parse_date(arguments["to"]) : Date.current
@@ -365,12 +367,17 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
 
         limit = arguments.fetch("post_limit", 5)
         start_post_number = arguments.fetch("start_post_number", 1)
         posts =
-          Post
-            .secured(request_context.guardian)
+          request_context
+            .guardian
+            .filter_hidden_posts(
+              Post.secured(request_context.guardian).joins(:topic),
+              category: topic.category,
+            )
             .where(topic_id: topic.id)
             .where(post_number: start_post_number..)
             .order(:post_number)
@@ -410,7 +417,7 @@ module DiscourseMcp
         )
 
       def self.call(arguments:, request_context:)
-        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), request_context.guardian)
+        post = ToolHelpers.visible_post!(arguments.fetch("post_id"), request_context)
         result =
           ToolHelpers.evidence_post_json(post, include_raw: true).slice(
             :id,

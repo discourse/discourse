@@ -172,7 +172,12 @@ describe DiscourseMcp::Tools::SearchPosts do
 
     expectations.each do |user, expected_ids|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          user:,
+          guardian: user.guardian,
+          has_scopes?: true,
+        )
       result =
         described_class.call(
           arguments: {
@@ -191,7 +196,12 @@ describe DiscourseMcp::Tools::SearchPosts do
   it "honors the setting that removes automatic admin access to secured categories" do
     SiteSetting.suppress_secured_categories_from_admin = true
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: admin, guardian: admin.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        user: admin,
+        guardian: admin.guardian,
+        has_scopes?: true,
+      )
 
     result =
       described_class.call(arguments: { "query" => "parityneedle", "page" => 1 }, request_context:)
@@ -205,7 +215,12 @@ describe DiscourseMcp::Tools::SearchPosts do
     first_post = Fabricate(:post, raw: "paginationneedle first evidence")
     [first_post, second_post].each { |post| SearchIndexer.index(post, force: true) }
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        user: viewer,
+        guardian: viewer.guardian,
+        has_scopes?: true,
+      )
 
     first_page =
       described_class.call(
@@ -251,7 +266,12 @@ describe DiscourseMcp::Tools::SearchPosts do
 
     expectations.each do |user, expected_ids|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          user:,
+          guardian: user.guardian,
+          has_scopes?: true,
+        )
       result =
         described_class.call(
           arguments: {
@@ -266,7 +286,12 @@ describe DiscourseMcp::Tools::SearchPosts do
 
   it "rejects a search term that Discourse cannot execute" do
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        user: viewer,
+        guardian: viewer.guardian,
+        has_scopes?: true,
+      )
 
     expect do
       described_class.call(arguments: { "query" => "x" }, request_context:)
@@ -336,7 +361,12 @@ describe DiscourseMcp::Tools::ReadTopicPosts do
 
     expectations.each do |user, allowed|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          user:,
+          guardian: user.guardian,
+          ensure_scopes!: nil,
+        )
       operation =
         lambda do
           described_class.call(
@@ -564,7 +594,12 @@ describe DiscourseMcp::Tools::GetPostReplies do
 
     expectations.each do |user, allowed|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          user:,
+          guardian: user.guardian,
+          ensure_scopes!: nil,
+        )
       operation =
         lambda do
           described_class.call(
@@ -811,7 +846,12 @@ describe DiscourseMcp::Tools::GetTopicViewStats do
 
     expectations.each do |user, allowed|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          user:,
+          guardian: user.guardian,
+          ensure_scopes!: nil,
+        )
       operation =
         lambda do
           described_class.call(arguments: { "topic_id" => message.topic_id }, request_context:)

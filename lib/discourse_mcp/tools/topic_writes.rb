@@ -52,6 +52,11 @@ module DiscourseMcp
 
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
+        topic = Topic.find_by(id: arguments.fetch("topic_id"))
+        if topic.blank? || !request_context.guardian.can_see?(topic)
+          raise ToolError, I18n.t("mcp.errors.topic_not_found")
+        end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
         post =
           PostCreator.create!(
             request_context.user,
@@ -89,6 +94,7 @@ module DiscourseMcp
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.post_not_found")
         end
 
+        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :write)
         fields = { raw: arguments.fetch("raw") }
         fields[:edit_reason] = arguments["edit_reason"] if arguments["edit_reason"].present?
         success = PostRevisor.new(post, post.topic).revise!(request_context.user, fields)
@@ -121,6 +127,7 @@ module DiscourseMcp
 
         guardian = request_context.guardian
         guardian.ensure_can_edit!(topic)
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
         verify_original_values!(topic, arguments, guardian)
         changes = requested_changes(topic, arguments, guardian)
         shared_draft = topic.shared_draft
@@ -222,9 +229,14 @@ module DiscourseMcp
 
         if arguments.fetch("deleted")
           raise Discourse::InvalidAccess if !request_context.guardian.can_delete_post?(post)
-          PostDestroyer.new(request_context.user, post).destroy
         else
           raise Discourse::InvalidAccess if !request_context.guardian.can_recover_post?(post)
+        end
+        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :write)
+
+        if arguments.fetch("deleted")
+          PostDestroyer.new(request_context.user, post).destroy
+        else
           PostDestroyer.new(request_context.user, post).recover
         end
         ToolHelpers.text_and_structured(post_id: post.id, deleted: arguments.fetch("deleted"))
