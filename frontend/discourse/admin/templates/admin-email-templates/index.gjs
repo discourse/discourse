@@ -8,25 +8,25 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <PluginOutlet @name="admin-email-templates-index" @connectorTagName="div">
+  <PluginOutlet @connectorTagName="div" @name="admin-email-templates-index">
     <DFilterControls
       @array={{@controller.shownTemplates}}
-      @searchableProps={{array "title" "id"}}
-      @textFilterQueryParam="filter"
-      @showDropdownFilter={{false}}
       @inputPlaceholder={{i18n
         "admin.customize.email_templates.search_templates"
       }}
       @noResultsMessage={{i18n
         "admin.customize.email_templates.no_templates_found"
       }}
+      @searchableProps={{array "title" "id"}}
+      @showDropdownFilter={{false}}
+      @textFilterQueryParam="filter"
     >
       <:aboveContent>
         <label class="checkbox-label">
           <input
-            type="checkbox"
             checked={{@controller.showOverridenOnly}}
             id="toggle-overridden"
+            type="checkbox"
             {{on "click" @controller.toggleOverridenOnly}}
           />
           {{i18n "admin.site_text.show_overriden"}}
@@ -54,9 +54,9 @@ export default <template>
               >
                 <td class="d-table__cell --overview">
                   <LinkTo
-                    @route="adminEmailTemplates.edit"
-                    @model={{template.id}}
                     class="d-table__overview-name admin-email-templates__name"
+                    @model={{template.id}}
+                    @route="adminEmailTemplates.edit"
                   >
                     {{template.title}}
                   </LinkTo>

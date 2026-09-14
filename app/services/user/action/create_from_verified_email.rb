@@ -7,6 +7,8 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :name, optional: true
 
   def call
+    raise Discourse::SiteArchived if SiteSetting.site_archived
+
     # A random name beats the generic "userN" fallback here: there is no
     # signup form where the user could pick one before the account exists.
     # Sites that turn random names off fall through to that generic name.

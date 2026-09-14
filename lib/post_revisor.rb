@@ -244,7 +244,10 @@ class PostRevisor
   end
 
   def self.tag_list_to_raw(tag_list)
-    tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
+    HashtagAutocompleteService
+      .new(Discourse.system_user.guardian)
+      .hashtags_for("tag", tag_list.sort)
+      .join(", ")
   end
 
   def self.tag_change_noop?(topic, incoming)

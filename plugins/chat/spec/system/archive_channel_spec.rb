@@ -53,7 +53,7 @@ RSpec.describe "Archive channel" do
       end
 
       context "when archiving" do
-        it "works" do
+        it "archives the channel and creates a topic" do
           SiteSetting.tagging_enabled = true
           tag = Fabricate(:tag, name: "archived")
           Jobs.run_immediately!

@@ -148,7 +148,7 @@ export default class ReviewableIpLookup extends Component {
   <template>
     {{#if this.showIpLookup}}
       {{#if this.loading}}
-        <DConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
       {{else if this.location}}
         <div class="reviewable-ip-lookup">
           <div class="review-insight__item">
@@ -183,9 +183,9 @@ export default class ReviewableIpLookup extends Component {
               {{#if this.totalOthersWithSameIP}}
                 <div class="review-insight__description">
                   <button
+                    class="btn-link ip-lookup-other-accounts-link"
                     type="button"
                     {{on "click" this.showOtherAccountsModal}}
-                    class="btn-link ip-lookup-other-accounts-link"
                   >
                     {{i18n
                       "ip_lookup.other_accounts_with_ip"
@@ -204,18 +204,18 @@ export default class ReviewableIpLookup extends Component {
 
 const OtherAccountsModal = <template>
   <DModal
+    class="ip-lookup-other-accounts-modal"
+    @closeModal={{@closeModal}}
     @title={{i18n
       "ip_lookup.other_accounts_with_ip"
       count=@model.totalOthersWithSameIP
     }}
-    @closeModal={{@closeModal}}
-    class="ip-lookup-other-accounts-modal"
   >
     <:body>
       {{#if @model.otherAccountsLoading}}
         <DConditionalLoadingSpinner
-          @size="small"
           @condition={{@model.otherAccountsLoading}}
+          @size="small"
         />
       {{else if @model.otherAccounts}}
         <IpLookupAccountsTable @accounts={{@model.otherAccounts}} />
@@ -224,13 +224,13 @@ const OtherAccountsModal = <template>
     <:footer>
       {{#if @model.canDeleteOtherAccounts}}
         <DButton
+          class="btn-danger"
           @action={{@model.deleteOtherAccounts}}
           @icon="triangle-exclamation"
           @translatedLabel={{i18n
             "ip_lookup.delete_other_accounts"
             count=@model.otherAccountsToDelete
           }}
-          class="btn-danger"
         />
       {{/if}}
     </:footer>

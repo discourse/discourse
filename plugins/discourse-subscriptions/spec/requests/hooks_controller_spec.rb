@@ -475,7 +475,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
       end
 
       describe "completing the subscription" do
-        it "does not add the user to the group" do
+        it "does not add the user to the group when the status remains incomplete" do
           event_data[:object][:status] = "incomplete"
           event_data[:previous_attributes] = { status: "incomplete" }
 
@@ -484,7 +484,7 @@ RSpec.describe DiscourseSubscriptions::HooksController do
           expect(response.status).to eq 200
         end
 
-        it "does not add the user to the group" do
+        it "does not add the user to the group when the status becomes incomplete" do
           event_data[:object][:status] = "incomplete"
           event_data[:previous_attributes] = { status: "something-else" }
 

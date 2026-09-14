@@ -159,11 +159,11 @@ module("Integration | ui-kit | DOtp", function (hooks) {
     await render(
       <template>
         <DOtp
-          @slots={{8}}
+          @autocomplete="off"
           @groupSize={{4}}
           @inputMode="text"
-          @autocomplete="off"
           @normalizeInput={{this.normalizeInput}}
+          @slots={{8}}
         />
       </template>
     );

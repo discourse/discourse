@@ -16,6 +16,22 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
     this.runParallel = opts.runParallel || false;
   }
 
+  install() {
+    if (this.runParallel) {
+      this._install(this._optimizeParallel);
+    } else {
+      this._install(this._optimizeSerial);
+    }
+  }
+
+  uninstall() {
+    if (this.runParallel) {
+      this._uninstall(this._optimizeParallel);
+    } else {
+      this._uninstall(this._optimizeSerial);
+    }
+  }
+
   @bind
   _optimizeFile(fileId) {
     let file = this._getFile(fileId);
@@ -57,22 +73,6 @@ export default class UppyMediaOptimization extends UploadPreProcessorPlugin {
 
     for (const task of optimizeTasks) {
       await task();
-    }
-  }
-
-  install() {
-    if (this.runParallel) {
-      this._install(this._optimizeParallel);
-    } else {
-      this._install(this._optimizeSerial);
-    }
-  }
-
-  uninstall() {
-    if (this.runParallel) {
-      this._uninstall(this._optimizeParallel);
-    } else {
-      this._uninstall(this._optimizeSerial);
     }
   }
 }

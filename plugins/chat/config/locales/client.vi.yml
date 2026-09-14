@@ -51,8 +51,6 @@ vi:
       muted: "im lặng"
       joined: "đã tham gia"
       empty_state:
-        direct_message_cta: "Bắt đầu một cuộc chat cá nhân"
-        direct_message: "Bạn cũng có thể bắt đầu cuộc chat cá nhân với một hoặc nhiều thành viên khác."
         title: "Không tìm thấy kênh nào"
         my_threads: "Bạn chưa có chủ đề nào. Các chủ đề bạn tham gia sẽ được hiển thị ở đây."
       email_frequency:
@@ -215,8 +213,13 @@ vi:
           latest: "Gần đây"
       direct_messages:
         title: "Tin nhắn"
+        new_group: "Nhóm chat mới"
       channel_list:
         title: "Các kênh"
+        options:
+          filter: "Lọc"
+        filter:
+          mentions: "Các lượt nhắc đến"
       incoming_webhooks:
         back: "Quay lại"
         description: "Mô tả"

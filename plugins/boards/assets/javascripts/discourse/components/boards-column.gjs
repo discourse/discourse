@@ -121,7 +121,7 @@ export default class BoardsColumn extends Component {
       model: {
         card: {},
         isNew: true,
-        canWrite: true,
+        board: this.args.board,
         onCreateCard: (data) =>
           this.args.onAddCard({ ...data, columnId: this.args.column.id }),
       },
@@ -492,10 +492,10 @@ export default class BoardsColumn extends Component {
             {{this.cardCount}}
           </span>
         </span>
-        {{#if @canManage}}
+        {{#if @board.canManage}}
           <DMenu
-            @identifier="boards-column-controls"
             @icon="ellipsis"
+            @identifier="boards-column-controls"
             @title="boards.board.column_controls"
             @triggerClass="btn-flat btn-small discourse-boards-column__menu-trigger"
           >
@@ -503,45 +503,45 @@ export default class BoardsColumn extends Component {
               <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent discourse-boards-column__menu-edit"
                     @action={{fn this.editColumn args.close}}
                     @icon="pencil"
                     @label="boards.board.edit_column"
-                    class="btn-transparent discourse-boards-column__menu-edit"
                   />
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent discourse-boards-column__menu-move-left"
                     @action={{fn this.moveLeft args.close}}
+                    @disabled={{eq this.columnIndex 0}}
                     @icon="arrow-left"
                     @label="boards.board.move_left"
-                    @disabled={{eq this.columnIndex 0}}
-                    class="btn-transparent discourse-boards-column__menu-move-left"
                   />
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent discourse-boards-column__menu-move-right"
                     @action={{fn this.moveRight args.close}}
+                    @disabled={{eq this.columnIndex this.lastColumnIndex}}
                     @icon="arrow-right"
                     @label="boards.board.move_right"
-                    @disabled={{eq this.columnIndex this.lastColumnIndex}}
-                    class="btn-transparent discourse-boards-column__menu-move-right"
                   />
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent discourse-boards-column__menu-clear"
                     @action={{fn this.clearColumn args.close}}
+                    @disabled={{eq this.cardCount 0}}
                     @icon="xmark"
                     @label="boards.board.clear_column"
-                    @disabled={{eq this.cardCount 0}}
-                    class="btn-transparent discourse-boards-column__menu-clear"
                   />
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent btn-danger discourse-boards-column__menu-delete"
                     @action={{fn this.deleteColumn args.close}}
                     @icon="trash-can"
                     @label="boards.board.delete_column"
-                    class="btn-transparent btn-danger discourse-boards-column__menu-delete"
                   />
                 </dropdown.item>
               </DDropdownMenu>
@@ -554,22 +554,21 @@ export default class BoardsColumn extends Component {
         {{#if this.visibleCards.length}}
           {{#each this.visibleCards key="id" as |card|}}
             <BoardsCard
-              @card={{card}}
-              @board={{@board}}
-              @columnTitle={{@column.fancyTitle}}
-              @columnIcon={{@column.icon}}
-              @columnColor={{@column.color}}
-              @canWrite={{@canWrite}}
               @allSameCategory={{@allSameCategory}}
+              @board={{@board}}
+              @card={{card}}
+              @columnColor={{@column.color}}
+              @columnIcon={{@column.icon}}
+              @columnTags={{this.columnTags}}
+              @columnTitle={{@column.fancyTitle}}
               @isDropHighlighted={{eq @dropHighlightCardId card.id}}
               @isLinkHighlighted={{eq @linkHighlightCardId card.id}}
-              @onDragStart={{@onDragStart}}
-              @onDragEnd={{@onDragEnd}}
-              @onUpdateCard={{@onUpdateCard}}
               @onDeleteCard={{@onDeleteCard}}
+              @onDragEnd={{@onDragEnd}}
+              @onDragStart={{@onDragStart}}
               @onPromoteToTopic={{fn @onPromoteToTopic card.id}}
               @onRefreshBoard={{@onRefreshBoard}}
-              @columnTags={{this.columnTags}}
+              @onUpdateCard={{@onUpdateCard}}
             />
           {{/each}}
         {{else if (eq this.cardCount 0)}}
@@ -580,8 +579,8 @@ export default class BoardsColumn extends Component {
 
         {{#if this.hiddenCardCount}}
           <button
-            type="button"
             class="discourse-boards-column__show-all"
+            type="button"
             {{on "click" this.showAllOlderCards}}
           >
             {{i18n "boards.board.show_older_cards" count=this.hiddenCardCount}}
@@ -589,11 +588,11 @@ export default class BoardsColumn extends Component {
         {{/if}}
       </div>
 
-      {{#if @canWrite}}
+      {{#if @board.canWrite}}
         <div class="discourse-boards-column__footer">
           <DMenu
-            @identifier="boards-column-add"
             @icon="plus"
+            @identifier="boards-column-add"
             @label={{i18n "boards.board.add_card"}}
             @triggerClass="discourse-boards-column__add-btn"
           >
@@ -601,18 +600,18 @@ export default class BoardsColumn extends Component {
               <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent"
                     @action={{fn this.startAddCard args.close}}
                     @icon="plus"
                     @label="boards.board.add_card"
-                    class="btn-transparent"
                   />
                 </dropdown.item>
                 <dropdown.item>
                   <DButton
+                    class="btn-transparent"
                     @action={{fn this.addTopicAsCard args.close}}
                     @icon="link"
                     @label="boards.board.add_topic_as_card"
-                    class="btn-transparent"
                   />
                 </dropdown.item>
               </DDropdownMenu>

@@ -60,6 +60,8 @@ gem "message_bus"
 gem "rails_multisite"
 
 gem "fastimage"
+gem "msgpack"
+gem "ruby-vips", "~> 2.3", require: false
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
@@ -128,7 +130,6 @@ group :test do
   gem "simplecov", require: false
   gem "test-prof", require: false
   gem "rails-dom-testing", require: false
-  gem "minio_runner", require: false
   gem "capybara-playwright-driver", require: false
   gem "puma", require: false
 end
@@ -232,7 +233,6 @@ gem "landlock", require: false
 
 gem "sshkey", require: false
 
-gem "rchardet", require: false
 gem "lz4-ruby", require: false, platform: :ruby
 
 gem "sanitize"

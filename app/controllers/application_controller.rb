@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyMixin
+  include ArchivedSiteMixin
   include ThemeResolver
   include VaryHeader
 
@@ -41,6 +42,7 @@ class ApplicationController < ActionController::Base
   before_action :clear_notifications
   around_action :with_resolved_locale
   before_action :block_if_readonly_mode
+  before_action :block_if_archived
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
@@ -270,6 +272,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  rescue_from Discourse::SiteArchived do
+    unless response_body
+      respond_to do |format|
+        format.json do
+          render_json_error I18n.t("site_archived_error"), type: :site_archived, status: 503
+        end
+        format.html do
+          render status: :service_unavailable,
+                 layout: "no_ember",
+                 template: "exceptions/site_archived"
+        end
+      end
+    end
+  end
+
   rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
     if request.xhr?
       render json: { second_factor_challenge_nonce: e.nonce }, status: :forbidden
@@ -380,10 +397,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_user_for_logs
-    if current_user
-      Logster.add_to_env(request.env, "username", current_user.username)
-      response.headers["X-Discourse-Username"] = current_user.username
-    end
+    Logster.add_to_env(request.env, "username", current_user.username) if current_user
     response.headers["X-Discourse-Route"] = "#{controller_path}/#{action_name}"
   end
 
@@ -948,7 +962,7 @@ class ApplicationController < ActionController::Base
       end
     @subtitle = opts[:subtitle] || I18n.t("page_not_found.subtitle")
     @group = opts[:group]
-    @hide_search = true if SiteSetting.login_required
+    @hide_search = true if SiteSetting.login_required || !guardian.can_search?
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)
@@ -1126,6 +1140,24 @@ class ApplicationController < ActionController::Base
     yield
   ensure
     dont_cache_page
+    set_current_user_header_for_logs
+  end
+
+  def set_current_user_header_for_logs
+    return if !current_user
+
+    cache_control = response.cache_control
+    extras = cache_control[:extras]
+    # `dont_cache_page` sets both of these through `extras` rather than as
+    # their own keys, and Rails only populates `cache_control[:private]` when
+    # the directive was set that way, so both spellings have to be checked.
+    no_store = cache_control[:no_store] || extras&.include?("no-store")
+    private_response =
+      cache_control[:private] || extras&.include?("private") ||
+        (cache_control[:max_age] && !cache_control[:public])
+    return if !private_response && !no_store
+
+    response.headers["X-Discourse-Username"] = current_user.username
   end
 
   def persist_locale_param_to_cookie

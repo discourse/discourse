@@ -6,35 +6,35 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="admin-permalinks admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.permalinks.title"}}
       @descriptionLabel={{i18n "admin.config.permalinks.header_description"}}
       @learnMoreUrl="https://meta.discourse.org/t/20930"
+      @titleLabel={{i18n "admin.config.permalinks.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/config/permalinks"
           @label={{i18n "admin.config.permalinks.title"}}
+          @path="/admin/config/permalinks"
         />
       </:breadcrumbs>
       <:actions as |actions|>
         <actions.Primary
+          class="admin-permalinks__header-add-permalink"
+          @label="admin.permalink.add"
           @route="adminPermalinks.new"
           @title="admin.permalink.add"
-          @label="admin.permalink.add"
-          class="admin-permalinks__header-add-permalink"
         />
       </:actions>
       <:tabs>
         <DNavItem
-          @route="adminPermalinks.settings"
-          @label="admin.permalink.nav.settings"
           class="admin-permalinks-tabs__settings"
+          @label="admin.permalink.nav.settings"
+          @route="adminPermalinks.settings"
         />
         <DNavItem
-          @route="adminPermalinks.index"
-          @label="admin.permalink.nav.permalinks"
           class="admin-permalins-permalinks"
+          @label="admin.permalink.nav.permalinks"
+          @route="adminPermalinks.index"
         />
       </:tabs>
     </DPageHeader>

@@ -68,11 +68,11 @@ module("Integration | ui-kit | DVirtualList | deep scroll", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
+          @itemRole="listitem"
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @role="list"
-          @itemRole="listitem"
           as |row|
         >
           <div style="height: 44px">{{row.text}}</div>

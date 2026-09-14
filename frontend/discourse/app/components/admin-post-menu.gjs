@@ -84,10 +84,10 @@ export default class AdminPostMenu extends Component {
       {{#if this.currentUser.staff}}
         <dropdown.item>
           <DButton
-            @label="review.moderation_history"
-            @icon="list"
             class="btn btn-transparent moderation-history"
             @href={{this.reviewUrl}}
+            @icon="list"
+            @label="review.moderation_history"
           />
         </dropdown.item>
       {{/if}}
@@ -95,6 +95,12 @@ export default class AdminPostMenu extends Component {
       {{#if (and this.currentUser.staff (not @data.post.isWhisper))}}
         <dropdown.item>
           <DButton
+            class={{dConcatClass
+              "btn btn-transparent toggle-post-type"
+              (if @data.post.isModeratorAction "btn-success")
+            }}
+            @action={{fn this.topicAction "togglePostType"}}
+            @icon="shield-halved"
             @label={{if
               @data.post.isModeratorAction
               "post.controls.revert_to_regular"
@@ -105,12 +111,6 @@ export default class AdminPostMenu extends Component {
               ""
               "post.controls.convert_to_moderator_description"
             }}
-            @icon="shield-halved"
-            class={{dConcatClass
-              "btn btn-transparent toggle-post-type"
-              (if @data.post.isModeratorAction "btn-success")
-            }}
-            @action={{fn this.topicAction "togglePostType"}}
           />
         </dropdown.item>
       {{/if}}
@@ -118,6 +118,12 @@ export default class AdminPostMenu extends Component {
       {{#if @data.post.canEditStaffNotes}}
         <dropdown.item>
           <DButton
+            class={{dConcatClass
+              "btn btn-transparent"
+              (if @data.post.notice "change-notice" "add-notice")
+              (if @data.post.notice "btn-success")
+            }}
+            @action={{fn this.topicAction "changeNotice"}}
             @icon="user-shield"
             @label={{if
               @data.post.notice
@@ -125,12 +131,6 @@ export default class AdminPostMenu extends Component {
               "post.controls.add_post_notice"
             }}
             @title="post.controls.add_post_notice_description"
-            class={{dConcatClass
-              "btn btn-transparent"
-              (if @data.post.notice "change-notice" "add-notice")
-              (if @data.post.notice "btn-success")
-            }}
-            @action={{fn this.topicAction "changeNotice"}}
           />
         </dropdown.item>
       {{/if}}
@@ -138,10 +138,10 @@ export default class AdminPostMenu extends Component {
       {{#if (and this.currentUser.staff @data.post.hidden)}}
         <dropdown.item>
           <DButton
-            @label="post.controls.unhide"
-            @icon="far-eye"
             class="btn btn-transparent unhide-post"
             @action={{fn this.topicAction "unhidePost"}}
+            @icon="far-eye"
+            @label="post.controls.unhide"
           />
         </dropdown.item>
       {{/if}}
@@ -149,10 +149,10 @@ export default class AdminPostMenu extends Component {
       {{#if this.canChangePostOwner}}
         <dropdown.item>
           <DButton
-            @label="post.controls.change_owner"
-            @icon="user"
             class="btn btn-transparent change-owner"
             @action={{fn this.topicAction "changePostOwner"}}
+            @icon="user"
+            @label="post.controls.change_owner"
           />
         </dropdown.item>
       {{/if}}
@@ -161,10 +161,10 @@ export default class AdminPostMenu extends Component {
         {{#if this.siteSettings.enable_badges}}
           <dropdown.item>
             <DButton
-              @label="post.controls.grant_badge"
-              @icon="certificate"
               class="btn btn-transparent grant-badge"
               @action={{fn this.topicAction "grantBadge"}}
+              @icon="certificate"
+              @label="post.controls.grant_badge"
             />
           </dropdown.item>
         {{/if}}
@@ -172,24 +172,24 @@ export default class AdminPostMenu extends Component {
         {{#if @data.post.locked}}
           <dropdown.item>
             <DButton
-              @label="post.controls.unlock_post"
-              @icon="unlock"
-              @title="post.controls.unlock_post_description"
               class={{dConcatClass
                 "btn btn-transparent unlock-post"
                 (if @data.post.locked "btn-success")
               }}
               @action={{fn this.topicAction "unlockPost"}}
+              @icon="unlock"
+              @label="post.controls.unlock_post"
+              @title="post.controls.unlock_post_description"
             />
           </dropdown.item>
         {{else}}
           <dropdown.item>
             <DButton
-              @label="post.controls.lock_post"
-              @icon="lock"
-              @title="post.controls.lock_post_description"
               class="btn btn-transparent lock-post"
               @action={{fn this.topicAction "lockPost"}}
+              @icon="lock"
+              @label="post.controls.lock_post"
+              @title="post.controls.lock_post_description"
             />
           </dropdown.item>
         {{/if}}
@@ -198,10 +198,10 @@ export default class AdminPostMenu extends Component {
       {{#if @data.post.canPermanentlyDelete}}
         <dropdown.item>
           <DButton
-            @label="post.controls.permanently_delete"
-            @icon="trash-can"
             class="btn btn-transparent permanently-delete"
             @action={{fn this.topicAction "permanentlyDeletePost"}}
+            @icon="trash-can"
+            @label="post.controls.permanently_delete"
           />
         </dropdown.item>
       {{/if}}
@@ -210,23 +210,23 @@ export default class AdminPostMenu extends Component {
         {{#if @data.post.wiki}}
           <dropdown.item>
             <DButton
-              @label="post.controls.unwiki"
-              @icon="far-pen-to-square"
               class={{dConcatClass
                 "btn btn-transparent wiki wikied"
                 (if @data.post.wiki "btn-success")
               }}
               @action={{fn this.topicAction "toggleWiki"}}
+              @icon="far-pen-to-square"
+              @label="post.controls.unwiki"
             />
           </dropdown.item>
         {{else}}
           <dropdown.item>
             <DButton
-              @label="post.controls.wiki"
-              @title="post.controls.wiki_description"
-              @icon="far-pen-to-square"
               class="btn btn-transparent wiki"
               @action={{fn this.topicAction "toggleWiki"}}
+              @icon="far-pen-to-square"
+              @label="post.controls.wiki"
+              @title="post.controls.wiki_description"
             />
           </dropdown.item>
         {{/if}}
@@ -235,11 +235,11 @@ export default class AdminPostMenu extends Component {
       {{#if @data.post.canPublishPage}}
         <dropdown.item>
           <DButton
-            @label="post.controls.publish_page"
-            @title="post.controls.publish_page_description"
-            @icon="file"
             class="btn btn-transparent publish-page"
             @action={{fn this.topicAction "showPagePublish"}}
+            @icon="file"
+            @label="post.controls.publish_page"
+            @title="post.controls.publish_page_description"
           />
         </dropdown.item>
       {{/if}}
@@ -247,11 +247,11 @@ export default class AdminPostMenu extends Component {
       {{#if @data.post.canManage}}
         <dropdown.item>
           <DButton
-            @label="post.controls.rebake"
-            @title="post.controls.rebake_description"
-            @icon="rotate"
             class="btn btn-transparent rebuild-html"
             @action={{fn this.topicAction "rebakePost"}}
+            @icon="rotate"
+            @label="post.controls.rebake"
+            @title="post.controls.rebake_description"
           />
         </dropdown.item>
       {{/if}}
@@ -259,10 +259,10 @@ export default class AdminPostMenu extends Component {
       {{#if this.nestedPinButton}}
         <dropdown.item>
           <DButton
-            @label={{this.nestedPinButton.label}}
-            @icon="thumbtack"
             class="btn btn-transparent pin-reply"
             @action={{fn this.extraAction this.nestedPinButton}}
+            @icon="thumbtack"
+            @label={{this.nestedPinButton.label}}
           />
         </dropdown.item>
       {{/if}}
@@ -270,13 +270,13 @@ export default class AdminPostMenu extends Component {
       {{#each this.extraButtons as |button|}}
         <dropdown.item>
           <DButton
-            @label={{button.label}}
-            @translatedLabel={{button.translatedLabel}}
-            @title={{button.title}}
-            @translatedTitle={{button.translatedTitle}}
-            @icon={{button.icon}}
             class={{dConcatClass "btn btn-transparent" button.className}}
             @action={{fn this.extraAction button}}
+            @icon={{button.icon}}
+            @label={{button.label}}
+            @title={{button.title}}
+            @translatedLabel={{button.translatedLabel}}
+            @translatedTitle={{button.translatedTitle}}
           />
         </dropdown.item>
       {{/each}}

@@ -408,6 +408,8 @@ module ApplicationHelper
   end
 
   def render_sitelinks_search_tag
+    return if !guardian.can_search?
+
     if current_page?("/") || current_page?(Discourse.base_path)
       json = {
         "@context" => "http://schema.org",

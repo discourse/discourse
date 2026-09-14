@@ -112,32 +112,32 @@ export default class VirtualListExample extends Component {
     </div>
 
     <DVirtualList
+      aria-label="Virtual list"
+      @as="ul"
+      @estimateSize={{this.estimateSize}}
+      @initialAlign="center"
+      @initialIndex={{this.selectedIndex}}
+      @itemRole="option"
       @items={{this.rows}}
       @key="id"
-      @as="ul"
-      @role="listbox"
-      @itemRole="option"
-      @ownedRow={{true}}
-      @estimateSize={{this.estimateSize}}
-      @initialIndex={{this.selectedIndex}}
-      @initialAlign="center"
-      @pinnedIndices={{this.selectedPins}}
-      @onVisibleRangeChange={{this.trackRange}}
       @onRegisterApi={{this.registerApi}}
-      aria-label="Virtual list"
+      @onVisibleRangeChange={{this.trackRange}}
+      @ownedRow={{true}}
+      @pinnedIndices={{this.selectedPins}}
+      @role="listbox"
       as |item row|
     >
 
       <li
+        aria-posinset={{row.posinset}}
+        aria-selected={{if (eq row.index this.selectedIndex) "true" "false"}}
+        aria-setsize={{row.setSize}}
         class="styleguide-virtual-list__row
           {{if
             (eq row.index this.selectedIndex)
             'styleguide-virtual-list__row--selected'
           }}"
         role="option"
-        aria-selected={{if (eq row.index this.selectedIndex) "true" "false"}}
-        aria-posinset={{row.posinset}}
-        aria-setsize={{row.setSize}}
         {{row.place row.start row.index}}
         {{row.measure}}
       >

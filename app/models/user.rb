@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
   has_many :category_users, dependent: :destroy
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
+  has_many :mcp_oauth_authorizations, dependent: :destroy
+  has_many :mcp_oauth_access_tokens, dependent: :destroy
   has_many :topic_allowed_users, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
@@ -1523,6 +1525,10 @@ class User < ActiveRecord::Base
     if reviewable = ReviewableUser.pending.find_by(target: self)
       reviewable.perform(performed_by, :delete_user)
     end
+  end
+
+  def revoke_approval!
+    update!(approved: false, approved_by: nil, approved_at: nil)
   end
 
   def change_trust_level!(level, opts = nil)

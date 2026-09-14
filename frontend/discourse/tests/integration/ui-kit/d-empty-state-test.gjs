@@ -9,7 +9,7 @@ module("Integration | ui-kit | DEmptyState", function (hooks) {
   test("it renders", async function (assert) {
     await render(
       <template>
-        <DEmptyState @title="user.no_bookmarks_title" @body="body" />
+        <DEmptyState @body="body" @title="user.no_bookmarks_title" />
       </template>
     );
 

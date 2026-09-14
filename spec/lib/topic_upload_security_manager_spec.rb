@@ -41,6 +41,7 @@ RSpec.describe TopicUploadSecurityManager do
 
         context "when changing the topic to a non-private category" do
           before { topic.update(category: Fabricate(:category)) }
+
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
           end
@@ -71,6 +72,7 @@ RSpec.describe TopicUploadSecurityManager do
 
         context "when making the PM into a public topic" do
           before { topic.update(archetype: Archetype.default) }
+
           it "changes the upload secure statuses to false and updates ACLs and rebakes" do
             expect_upload_status_to_change_and_rebake
           end

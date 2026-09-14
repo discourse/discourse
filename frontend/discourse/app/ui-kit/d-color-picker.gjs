@@ -26,17 +26,17 @@ export default class DColorPicker extends Component {
 
   <template>
     <div
-      role={{this.role}}
       aria-label={{this.ariaLabel}}
       class="colors-container"
+      role={{this.role}}
       ...attributes
     >
       {{#each this.colors as |c|}}
         <DColorPickerChoice
-          @color={{c}}
-          @usedColors={{this.usedColors}}
-          @selectColor={{this.selectColor}}
           @ariaLabel={{this.getColorLabel c}}
+          @color={{c}}
+          @selectColor={{this.selectColor}}
+          @usedColors={{this.usedColors}}
         >
           {{dIcon "check"}}
         </DColorPickerChoice>

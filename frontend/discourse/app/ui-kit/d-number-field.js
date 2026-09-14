@@ -18,24 +18,6 @@ export default class DNumberField extends DTextField {
     );
   }
 
-  keyDown(event) {
-    allowOnlyNumericInput(event, this._minNumber && this._minNumber < 0);
-  }
-
-  get _minNumber() {
-    if (!this.get("min")) {
-      return;
-    }
-    return parseInt(this.get("min"), 10);
-  }
-
-  get _maxNumber() {
-    if (!this.get("max")) {
-      return;
-    }
-    return parseInt(this.get("max"), 10);
-  }
-
   @computed("number")
   get value() {
     if (this.number === null) {
@@ -55,8 +37,26 @@ export default class DNumberField extends DTextField {
     }
   }
 
+  get _minNumber() {
+    if (!this.get("min")) {
+      return;
+    }
+    return parseInt(this.get("min"), 10);
+  }
+
+  get _maxNumber() {
+    if (!this.get("max")) {
+      return;
+    }
+    return parseInt(this.get("max"), 10);
+  }
+
   @computed("placeholderKey")
   get placeholder() {
     return this.placeholderKey ? i18n(this.placeholderKey) : "";
+  }
+
+  keyDown(event) {
+    allowOnlyNumericInput(event, this._minNumber && this._minNumber < 0);
   }
 }

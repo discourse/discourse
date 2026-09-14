@@ -122,6 +122,7 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
 
       context "with rss polling set to true" do
         before { SiteSetting.rss_polling_update_tags = true }
+
         it "updates tags by default" do
           topic = author.topics.last
           job.execute(

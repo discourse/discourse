@@ -69,8 +69,8 @@ module("Component | <ChatUserAvatar />", function (hooks) {
     await render(
       <template>
         <ChatUserAvatar
-          @showPresence={{false}}
           @chat={{this.chat}}
+          @showPresence={{false}}
           @user={{this.user}}
         />
       </template>

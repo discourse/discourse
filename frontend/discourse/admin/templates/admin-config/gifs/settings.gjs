@@ -5,26 +5,26 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
+    @descriptionLabel={{i18n "admin.config.gifs.header_description"}}
     @hideTabs={{true}}
     @titleLabel={{i18n "admin.config.gifs.title"}}
-    @descriptionLabel={{i18n "admin.config.gifs.header_description"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/gifs"
         @label={{i18n "admin.config.gifs.title"}}
+        @path="/admin/config/gifs"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
-      @showBreadcrumb={{false}}
-      @area="gifs"
-      @path="/admin/config/gifs"
-      @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+      @area="gifs"
+      @filter={{@controller.filter}}
+      @path="/admin/config/gifs"
+      @showBreadcrumb={{false}}
     />
   </div>
 </template>

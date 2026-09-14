@@ -44,7 +44,7 @@ export default class AssignedToPost extends Component {
       {{i18n "discourse_assign.assigned_to"}}
     </span>
 
-    <a href={{@href}} class="assigned-to-username">
+    <a class="assigned-to-username" href={{@href}}>
       {{#if @assignedToUser}}
         {{this.nameOrUsername}}
       {{else}}
@@ -54,26 +54,26 @@ export default class AssignedToPost extends Component {
 
     {{#if this.canAssign}}
       <DMenu
-        @identifier="post-assign-menu"
-        @icon="ellipsis"
         class="btn-transparent more-button"
         @autofocus={{true}}
+        @icon="ellipsis"
+        @identifier="post-assign-menu"
       >
         <DDropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
+              class="btn-transparent unassign-btn"
               @action={{this.unassign}}
               @icon="user-plus"
               @label="discourse_assign.unassign.title"
-              class="btn-transparent unassign-btn"
             />
           </dropdown.item>
           <dropdown.item>
             <DButton
+              class="btn-transparent edit-assignment-btn"
               @action={{this.editAssignment}}
               @icon="group-plus"
               @label="discourse_assign.reassign.title_w_ellipsis"
-              class="btn-transparent edit-assignment-btn"
             />
           </dropdown.item>
         </DDropdownMenu>

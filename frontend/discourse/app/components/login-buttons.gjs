@@ -46,21 +46,21 @@ export default class LoginButtons extends Component {
 
   <template>
     <div
-      id="login-buttons"
       class={{dConcatClass
         (if this.hidden "hidden")
         (if this.multiple "multiple")
       }}
+      id="login-buttons"
       ...attributes
     >
       {{#each this.buttons as |b|}}
         {{#if b.isDiscourseID}}
           <div class="discourse-id__wrapper">
             <button
-              type="button"
-              class="btn btn-social {{b.name}}"
-              {{on "click" (fn this.externalLogin b)}}
               aria-label={{b.screenReaderTitle}}
+              class="btn btn-social {{b.name}}"
+              type="button"
+              {{on "click" (fn this.externalLogin b)}}
             >
               {{dIcon b.icon}}
               <span class="btn-social-title">{{b.title}}</span>
@@ -76,10 +76,10 @@ export default class LoginButtons extends Component {
           </div>
         {{else}}
           <button
-            type="button"
-            class="btn btn-social {{b.name}}"
-            {{on "click" (fn this.externalLogin b)}}
             aria-label={{b.screenReaderTitle}}
+            class="btn btn-social {{b.name}}"
+            type="button"
+            {{on "click" (fn this.externalLogin b)}}
           >
             {{#if b.isGoogle}}
               <GoogleIcon />

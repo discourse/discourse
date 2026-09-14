@@ -9,6 +9,9 @@ pl_PL:
     boards:
       filter_boards: "Filtruj tablice"
       filter_boards_no_results: "Brak tablic odpowiadających wyszukiwaniu"
+      status:
+        all: "Wszystkie"
+        open: "Otwórz"
       topic_footer:
         add_to_board: "Dodaj do tablicy"
         already_added: "Już dodano"

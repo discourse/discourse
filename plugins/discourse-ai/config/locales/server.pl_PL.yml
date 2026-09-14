@@ -305,6 +305,14 @@ pl_PL:
           locked_default_llm_missing: "Agent „%{agent}” jest zablokowany na swoim domyślnym LLM, ale nie skonfigurowano żadnego prawidłowego domyślnego LLM"
           llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
           no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
+          uploads_not_sent: "Agent „%{agent}” nie otrzymał wszystkich przesłanych plików"
+          upload_not_found: "Nie znaleziono przesłania %{upload_id}"
+          upload_not_visible: "%{username} nie można zobaczyć przesłania %{upload_id}"
+          agent_cannot_see_images: "Prześlij %{upload_id} to obraz, a agent „%{agent}” ma wyłączoną widoczność"
+          llm_cannot_see_images: "Prześlij %{upload_id} to obraz, a LLM '%{llm}' ma wyłączoną widoczność"
+          llm_cannot_read_documents: "Prześlij %{upload_id} to dokument, a LLM '%{llm}' nie akceptuje żadnych załączników"
+          unsupported_image_format: "Prześlij %{upload_id} nie jest obsługiwanym formatem obrazu (%{formats})"
+          upload_skipped: "Przesłanie %{upload_id} (%{filename}) nie zostało wysłane: %{message}"
     tools:
       custom_name: "%{name} (niestandardowe)"
       presets:
@@ -439,6 +447,42 @@ pl_PL:
       configuration_missing: "Brakuje konfiguracji wykrywania spamu przez AI. Dodaj konfigurację w sekcji „Administrator > Wtyczki > Discourse AI > Spam” przed włączeniem."
       logging_subject: "Wykrywanie spamu"
     ai_bot:
+      search_discourse_navigation:
+        not_allowed: "Nie masz uprawnień do wyszukiwania w celach administracyjnych."
+        invalid_query: "Wprowadź zapytanie wyszukiwania składające się z 1 do %{max} znaków."
+      navigation:
+        settings:
+          title: "Ustawienia witryny"
+          description: "Wyszukaj i zmień wszystkie ustawienia konfiguracji witryny."
+        users:
+          title: "Użytkownicy"
+          description: "Znajdź i zarządzaj kontami członków i uprawnieniami użytkowników."
+        groups:
+          title: "Grupy"
+          description: "Zarządzaj grupami i członkostwem w grupach."
+        review:
+          title: "Kolejka do przeglądu"
+          description: "Moderuj oznaczone wpisy i zatwierdzaj oczekujących użytkowników i treści."
+        invites:
+          title: "Utwórz zaproszenie"
+          description: "Zaproś ludzi do dołączenia do tej społeczności."
+        categories:
+          title: "Kategorie"
+          description: "Przeglądaj, twórz i zarządzaj kategoriami dyskusji."
+        tags:
+          title: "Tagi"
+          description: "Przeglądaj i zarządzaj tagami tematów."
+        themes:
+          title: "Motywy"
+          description: "Zainstaluj i dostosuj motywy, aby zmienić wygląd i projekt witryny."
+        authentication:
+          title: "Logowanie i uwierzytelnianie"
+          description: "Skonfiguruj logowanie, rejestrację, uwierzytelnianie i logowanie jednokrotne."
+        backups:
+          title: "Kopie zapasowe"
+          description: "Twórz, pobieraj i przywracaj kopie zapasowe witryn."
+      ai_users: "Użytkownicy AI"
+      ai_users_bio: "Automatyczna grupa kont botów AI"
       errors:
         invalid_agent_id: "Określony agent AI nie istnieje lub nie masz do niego dostępu"
         cannot_send_pm_to_agent: "Nie możesz wysyłać wiadomości osobistych do tego agenta AI"
@@ -700,6 +744,7 @@ pl_PL:
           name: "Wykonywanie kodu (natywne)"
           help: "Umożliwia modelowi pisanie i uruchamianie kodu Python w piaskownicy dostawcy, gdy agent jest wymuszony do obsługiwanego Gemini LLM."
       tool_summary:
+        load_discourse_website_page: "Załaduj stronę internetową Discourse"
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
         view_image: "Sprawdź obraz"
@@ -748,6 +793,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukiwanie ustawień witryny"
+        search_discourse_navigation: "Przeszukiwanie nawigacji witryny"
         read_site_setting: "Odczytaj ustawienia witryny"
         change_site_setting: "Zmień ustawienia witryny"
         dall_e: "Wygeneruj obraz"
@@ -758,6 +804,7 @@ pl_PL:
         researcher: "Badanie"
         researcher_dry_run: "Przygotowywanie badań"
       tool_help:
+        load_discourse_website_page: "Załaduj nazwaną stronę z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         search_uploaded_documents: "Wyszukaj dokumenty przesłane do tego agenta"
         view_image: "Sprawdź obraz dostępny podczas tego zadania"
@@ -808,6 +855,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukaj ustawienia witryny"
+        search_discourse_navigation: "Znajdź zweryfikowane linki do dostępnych stron w tej witrynie"
         read_site_setting: "Odczytaj aktualną wartość ustawienia witryny"
         change_site_setting: "Zmień wartość ustawienia witryny"
         dall_e: "Wygeneruj obraz za pomocą DALL-E 3"
@@ -815,6 +863,7 @@ pl_PL:
         javascript_evaluator: "Oceń JavaScript"
         researcher: "Informacje o forum badawczym z wykorzystaniem bota AI"
       tool_description:
+        load_discourse_website_page: "Załadowano stronę %{page_name} z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
         view_image: "Przeanalizowano obraz dostępny podczas tego zadania"
         search_uploaded_documents:
@@ -909,6 +958,11 @@ pl_PL:
           few: "Znaleziono %{count} wyniki dla '%{query}'"
           many: "Znaleziono %{count} wyników dla '%{query}'"
           other: "Znaleziono %{count} wyników dla '%{query}'"
+        search_discourse_navigation:
+          one: "Znaleziono %{count} miejsce docelowe"
+          few: "Znaleziono %{count} miejsca docelowe"
+          many: "Znaleziono %{count} miejsc docelowych"
+          other: "Znaleziono %{count} miejsc docelowych"
         read_site_setting: "Ustawienia witryny do odczytania %{setting_name}"
         change_site_setting: "Zmiana ustawień witryny %{setting_name} na '%{value}'"
       discoveries:
@@ -1125,6 +1179,10 @@ pl_PL:
           hidden: "Ustawienie witryny '%{setting_name}' jest ukryte i nie można go tutaj odczytać."
           secret: "Ustawienie witryny '%{setting_name}' zawiera klucz tajny i nie można go tutaj odczytać."
           themeable: "Ustawienia witryny '%{setting_name}' wymagają motywu i nie można ich tutaj odczytać."
+      load_discourse_website_page:
+        errors:
+          page_not_found: "Strona internetowa Discourse '%{page_name}' jest niedostępna."
+          fetch_failed: "Nie udało się załadować strony „%{page_name}” z oficjalnej witryny Discourse."
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"

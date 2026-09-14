@@ -68,6 +68,26 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
     return model;
   }
 
+  titleToken() {
+    if (defaultHomepage() === "categories") {
+      return;
+    }
+    return i18n("filters.categories.title");
+  }
+
+  setupController(controller) {
+    controller.setProperties({
+      discovery: this.controllerFor("discovery"),
+    });
+
+    super.setupController(...arguments);
+  }
+
+  @action
+  triggerRefresh() {
+    this.refresh();
+  }
+
   _loadBefore(store) {
     const session = this.session;
 
@@ -138,25 +158,5 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
           loadBefore: this._loadBefore(this.store),
         });
       });
-  }
-
-  titleToken() {
-    if (defaultHomepage() === "categories") {
-      return;
-    }
-    return i18n("filters.categories.title");
-  }
-
-  setupController(controller) {
-    controller.setProperties({
-      discovery: this.controllerFor("discovery"),
-    });
-
-    super.setupController(...arguments);
-  }
-
-  @action
-  triggerRefresh() {
-    this.refresh();
   }
 }

@@ -12,7 +12,13 @@ module DiscourseAi
       ].freeze
 
       Result =
-        Struct.new(:keyword_query, :semantic_query, :original_query_locale, keyword_init: true)
+        Struct.new(
+          :keyword_query,
+          :semantic_query,
+          :original_query_locale,
+          :failed,
+          keyword_init: true,
+        )
 
       def initialize(user:, ai_agent:, llm_model:, cancel_manager: nil)
         @user = user
@@ -71,6 +77,7 @@ module DiscourseAi
           keyword_query: original_query,
           semantic_query: original_query,
           original_query_locale: @user.effective_locale,
+          failed: true,
         )
       end
 

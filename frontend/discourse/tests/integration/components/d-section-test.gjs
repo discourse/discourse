@@ -11,7 +11,7 @@ module("Integration | Component | DSection", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.d-section", async () => {
       await render(
         <template>
-          <DSection @pageClass="test" @bodyClass="foo bar" class="special">
+          <DSection class="special" @bodyClass="foo bar" @pageClass="test">
             testing!
           </DSection>
         </template>

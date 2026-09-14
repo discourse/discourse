@@ -19,6 +19,14 @@ ru:
         categories:
           discourse_ai: "AI для Discourse"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Спросить AI"
+        ask_ai:
+          title: "Спросить AI"
+          date: "Дата"
+          outcomes:
+            failed: "Не удалась"
         emotion:
           title: "Эмоция"
         reports:

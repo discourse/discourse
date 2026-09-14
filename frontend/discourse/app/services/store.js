@@ -98,15 +98,6 @@ export default class StoreService extends Service {
       });
   }
 
-  _hydrateFindResults(result, type, findArgs) {
-    if (typeof findArgs === "object") {
-      return this._resultSet(type, result, findArgs);
-    } else {
-      const apiName = this.adapterFor(type).apiNameFor(type);
-      return this._hydrate(type, result[underscore(apiName)], result);
-    }
-  }
-
   // See if the store can find stale data. We sometimes prefer to show stale data and
   // refresh it in the background.
   findStale(type, findArgs, opts) {
@@ -141,36 +132,6 @@ export default class StoreService extends Service {
       }
       return hydrated;
     });
-  }
-
-  _updateStale(stale, hydrated, primaryKey) {
-    if (!stale) {
-      return hydrated;
-    }
-
-    const newValues = hydrated.get("content").map((item) => {
-      let staleItem = stale.content.find(
-        (i) => i.primaryKey === item.get(primaryKey)
-      );
-      if (staleItem) {
-        for (const [key, value] of Object.entries(
-          Object.getOwnPropertyDescriptors(staleItem)
-        )) {
-          if (value.writable && value.enumerable) {
-            staleItem.set(key, value.value);
-          }
-        }
-      } else {
-        staleItem = item;
-      }
-      return staleItem;
-    });
-
-    hydrated instanceof ResultSet
-      ? hydrated.content.splice(0, Infinity, ...newValues)
-      : hydrated.set("content", newValues);
-
-    return hydrated;
   }
 
   refreshResults(resultSet, type, url) {
@@ -247,6 +208,52 @@ export default class StoreService extends Service {
     });
   }
 
+  adapterFor(type) {
+    return (
+      this.register.lookup("adapter:" + type) ||
+      this.register.lookup("adapter:rest")
+    );
+  }
+
+  _hydrateFindResults(result, type, findArgs) {
+    if (typeof findArgs === "object") {
+      return this._resultSet(type, result, findArgs);
+    } else {
+      const apiName = this.adapterFor(type).apiNameFor(type);
+      return this._hydrate(type, result[underscore(apiName)], result);
+    }
+  }
+
+  _updateStale(stale, hydrated, primaryKey) {
+    if (!stale) {
+      return hydrated;
+    }
+
+    const newValues = hydrated.get("content").map((item) => {
+      let staleItem = stale.content.find(
+        (i) => i.primaryKey === item.get(primaryKey)
+      );
+      if (staleItem) {
+        for (const [key, value] of Object.entries(
+          Object.getOwnPropertyDescriptors(staleItem)
+        )) {
+          if (value.writable && value.enumerable) {
+            staleItem.set(key, value.value);
+          }
+        }
+      } else {
+        staleItem = item;
+      }
+      return staleItem;
+    });
+
+    hydrated instanceof ResultSet
+      ? hydrated.content.splice(0, Infinity, ...newValues)
+      : hydrated.set("content", newValues);
+
+    return hydrated;
+  }
+
   _resultSet(type, result, findArgs) {
     const adapter = this.adapterFor(type);
     const typeName = underscore(this.pluralize(adapter.apiNameFor(type)));
@@ -309,13 +316,6 @@ export default class StoreService extends Service {
 
     storeMap(type, obj[adapter.primaryKey], model);
     return model;
-  }
-
-  adapterFor(type) {
-    return (
-      this.register.lookup("adapter:" + type) ||
-      this.register.lookup("adapter:rest")
-    );
   }
 
   _lookupSubType(subType, type, id, root) {

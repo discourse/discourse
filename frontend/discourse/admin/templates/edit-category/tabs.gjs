@@ -67,17 +67,17 @@ export default class Tabs extends Component {
       class="edit-category-page {{if @controller.expandedMenu 'expanded-menu'}}"
     >
       <EditCategoryTabsHorizontal
-        @controller={{@controller}}
         class="edit-category-page-header"
+        @controller={{@controller}}
       />
 
       <Form
         @data={{@controller.formData}}
         @onDirtyCheck={{@controller.isLeavingForm}}
-        @onSubmit={{@controller.saveCategory}}
-        @validate={{@controller.validateForm}}
         @onRegisterApi={{@controller.onRegisterFormApi}}
         @onReset={{@controller.onFormReset}}
+        @onSubmit={{@controller.saveCategory}}
+        @validate={{@controller.validateForm}}
         as |form transientData|
       >
         <form.Section
@@ -90,19 +90,19 @@ export default class Tabs extends Component {
             as |Tab|
           }}
             <Tab
-              @selectedTab={{@controller.selectedTab}}
-              @categoryType={{@controller.selectedTab}}
-              @category={{@controller.model}}
-              @showAdvancedTabs={{@controller.showAdvancedTabs}}
-              @registerValidator={{@controller.registerValidator}}
-              @registerAfterReset={{@controller.registerAfterReset}}
-              @transientData={{transientData}}
-              @form={{form}}
-              @setSelectedTab={{@controller.setSelectedTab}}
               @availableLocales={{@controller.availableLocales}}
+              @category={{@controller.model}}
+              @categoryType={{@controller.selectedTab}}
+              @form={{form}}
+              @isLoadingSiteTextsLocale={{@controller.isLoadingSiteTextsLocale}}
+              @registerAfterReset={{@controller.registerAfterReset}}
+              @registerValidator={{@controller.registerValidator}}
+              @selectedTab={{@controller.selectedTab}}
+              @setSelectedTab={{@controller.setSelectedTab}}
+              @showAdvancedTabs={{@controller.showAdvancedTabs}}
               @siteTextsLocale={{@controller.siteTextsLocale}}
               @switchSiteTextsLocale={{@controller.switchSiteTextsLocale}}
-              @isLoadingSiteTextsLocale={{@controller.isLoadingSiteTextsLocale}}
+              @transientData={{transientData}}
             />
           {{/let}}
         </form.Section>
@@ -110,8 +110,8 @@ export default class Tabs extends Component {
         {{#if (eq @controller.selectedTab "settings")}}
           {{#if (or @controller.model.can_delete @controller.model.id)}}
             <form.Section
-              @title={{i18n "category.danger_zone.title"}}
               class="edit-category__footer"
+              @title={{i18n "category.danger_zone.title"}}
             >
               {{#if @controller.model.can_delete}}
                 <div class="edit-category__delete">
@@ -125,10 +125,10 @@ export default class Tabs extends Component {
                   </div>
                   <div class="edit-category__delete-actions">
                     <form.Button
+                      class="btn-danger btn-small"
                       @action={{@controller.deleteCategory}}
                       @icon="trash-can"
                       @label="category.delete"
-                      class="btn-danger btn-small"
                     />
 
                   </div>
@@ -154,15 +154,15 @@ export default class Tabs extends Component {
       {{#if (or @controller.model.isNew @controller.isFormDirty)}}
         <ChangesBanner
           @bannerLabel={{i18n "category.unsaved_changes"}}
+          @discard={{@controller.formApi.reset}}
+          @discardLabel={{i18n "form_kit.reset"}}
+          @save={{@controller.formApi.submit}}
+          @saveButtonId="save-category"
           @saveLabel={{if
             @controller.model.id
             (i18n "category.save")
             (i18n "category.create_category")
           }}
-          @saveButtonId="save-category"
-          @discardLabel={{i18n "form_kit.reset"}}
-          @save={{@controller.formApi.submit}}
-          @discard={{@controller.formApi.reset}}
         />
       {{/if}}
     </div>

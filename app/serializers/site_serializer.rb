@@ -22,6 +22,7 @@ class SiteSerializer < ApplicationSerializer
     :post_action_types,
     :topic_flag_types,
     :can_create_tag,
+    :can_search,
     :can_tag_topics,
     :can_tag_pms,
     :tags_filter_regexp,
@@ -260,6 +261,10 @@ class SiteSerializer < ApplicationSerializer
 
   def can_create_tag
     scope.can_create_tag?
+  end
+
+  def can_search
+    scope.can_search?
   end
 
   def can_tag_topics

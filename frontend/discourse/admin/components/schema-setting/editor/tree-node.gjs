@@ -49,12 +49,12 @@ export default class SchemaSettingNewEditorTreeNode extends Component {
 
   <template>
     <li
-      {{on "click" @onClick}}
-      role="link"
       class={{dConcatClass
         "schema-setting-editor__tree-node --parent"
         (if @active "--active")
       }}
+      role="link"
+      {{on "click" @onClick}}
     >
       <div class="schema-setting-editor__tree-node-text">
         <span>{{this.text}}</span>
@@ -69,14 +69,14 @@ export default class SchemaSettingNewEditorTreeNode extends Component {
       {{#if @active}}
         {{#each this.childObjectsProperties as |childObjectsProperty|}}
           <ChildTree
-            @name={{childObjectsProperty.name}}
-            @schema={{childObjectsProperty.schema}}
-            @objects={{get @object childObjectsProperty.name}}
-            @parentNodeText={{this.text}}
-            @parentNodeIndex={{@index}}
-            @onChildClick={{@onChildClick}}
             @addChildItem={{@addChildItem}}
             @generateSchemaTitle={{@generateSchemaTitle}}
+            @name={{childObjectsProperty.name}}
+            @objects={{get @object childObjectsProperty.name}}
+            @onChildClick={{@onChildClick}}
+            @parentNodeIndex={{@index}}
+            @parentNodeText={{this.text}}
+            @schema={{childObjectsProperty.schema}}
           />
         {{/each}}
       {{/if}}

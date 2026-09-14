@@ -555,10 +555,10 @@ export default class DResizeHandles<
       leaves the handles after the gap bound to descriptors nobody pressed. }}
     {{#each this.handles key="key" as |handle|}}
       <span
-        class={{handle.class}}
-        style={{handle.style}}
-        data-resize-handle={{handle.payload}}
         aria-hidden="true"
+        class={{handle.class}}
+        data-resize-handle={{handle.payload}}
+        style={{handle.style}}
         {{willDestroy this.onHandleTeardown}}
         {{dPointerDrag
           onDragStart=(fn this.onHandleDown handle.payload)

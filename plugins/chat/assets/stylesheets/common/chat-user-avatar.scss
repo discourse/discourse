@@ -28,11 +28,16 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: contain;
+      color: var(--primary);
+
+      &.rounded {
+        border-radius: 50%;
+      }
 
       .d-icon {
         width: 100%;
         height: 100%;
-        color: var(--primary);
+        color: inherit;
       }
     }
 

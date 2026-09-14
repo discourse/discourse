@@ -141,6 +141,7 @@ RSpec.describe "Managing LLM configurations" do
       reasoning = form.field("provider_params.enable_reasoning")
       expect(reasoning).to be_checked
     end
+
     it "correctly changes the provider params" do
       visit "/admin/plugins/discourse-ai/ai-llms"
       find("[data-llm-id='none'] button").click()

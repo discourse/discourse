@@ -122,7 +122,7 @@ RSpec.describe Site do
       expect(Site.new(guardian).categories).not_to include(sub_category)
     end
 
-    it "should clear the cache when custom fields are updated" do
+    it "clears the cache when custom fields change" do
       Site.preloaded_category_custom_fields << "enable_marketplace"
       categories = Site.new(Guardian.new).categories
 
@@ -276,15 +276,33 @@ RSpec.describe Site do
   end
 
   it "includes all enabled authentication providers" do
+    SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+    SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
     SiteSetting.enable_twitter_logins = true
+    SiteSetting.facebook_app_id = "432489234823984"
+    SiteSetting.facebook_app_secret = "adddcccdddd99922"
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
 
+  it "excludes enabled authentication providers that are missing credentials" do
+    SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+    SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
+    SiteSetting.enable_twitter_logins = true
+    SiteSetting.twitter_consumer_secret = ""
+
+    data = JSON.parse(Site.json_for(Guardian.new))
+    expect(data["auth_providers"].map { |a| a["name"] }).to be_empty
+  end
+
   it "includes all enabled authentication providers for anon when login_required" do
     SiteSetting.login_required = true
+    SiteSetting.twitter_consumer_key = "twitter_consumer_key"
+    SiteSetting.twitter_consumer_secret = "twitter_consumer_secret"
     SiteSetting.enable_twitter_logins = true
+    SiteSetting.facebook_app_id = "432489234823984"
+    SiteSetting.facebook_app_secret = "adddcccdddd99922"
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")

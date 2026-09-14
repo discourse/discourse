@@ -395,12 +395,12 @@ export default class DockedComposer extends Component {
           <DResizeSeparator
             class="docked-composer__resize-handle"
             @axis="vertical"
+            @label={{i18n "composer.resize"}}
+            @max={{this.resizeAriaMax}}
+            @min={{0}}
+            @onResize={{this.onResize}}
             @side="end"
             @value={{this.dragOffset}}
-            @min={{0}}
-            @max={{this.resizeAriaMax}}
-            @label={{i18n "composer.resize"}}
-            @onResize={{this.onResize}}
           />
         {{/if}}
         {{#if (has-block "header")}}
@@ -411,15 +411,15 @@ export default class DockedComposer extends Component {
         <div class="docked-composer__inner">
           <div class="docked-composer__editor">
             <DEditor
-              @value={{this.reply}}
-              @change={{this.onReplyChange}}
-              @onSetup={{this.setupEditor}}
-              @extraButtons={{this.addToolbarButtons}}
-              @composerEvents={{this.composerEvents}}
-              @topicId={{@topicId}}
               @categoryId={{@categoryId}}
-              @processPreview={{false}}
+              @change={{this.onReplyChange}}
+              @composerEvents={{this.composerEvents}}
+              @extraButtons={{this.addToolbarButtons}}
+              @onSetup={{this.setupEditor}}
               @placeholder={{@placeholder}}
+              @processPreview={{false}}
+              @topicId={{@topicId}}
+              @value={{this.reply}}
             >
               {{#if (has-block "submit")}}
                 {{yield
@@ -432,22 +432,22 @@ export default class DockedComposer extends Component {
                 }}
               {{else}}
                 <DButton
-                  @icon="reply"
+                  class="docked-composer__submit-btn"
                   @action={{this.submit}}
                   @disabled={{this.submitDisabled}}
+                  @icon="reply"
                   @isLoading={{@isSubmitting}}
                   @title={{@submitTitle}}
-                  class="docked-composer__submit-btn"
                 />
               {{/if}}
             </DEditor>
           </div>
 
           <input
-            type="file"
-            id={{this.uploaderId}}
             class="hidden-upload-field"
+            id={{this.uploaderId}}
             multiple="multiple"
+            type="file"
             {{didInsert this.registerFileInput}}
           />
         </div>
@@ -460,9 +460,9 @@ export default class DockedComposer extends Component {
                   {{upload.original_filename}}
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.removeUpload upload}}
                   class="btn-transparent docked-composer__upload-remove"
+                  @action={{fn this.removeUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}
@@ -477,9 +477,9 @@ export default class DockedComposer extends Component {
                   {{upload.progress}}%
                 </span>
                 <DButton
-                  @icon="xmark"
-                  @action={{fn this.cancelUpload upload}}
                   class="btn-flat docked-composer__upload-cancel"
+                  @action={{fn this.cancelUpload upload}}
+                  @icon="xmark"
                 />
               </div>
             {{/each}}

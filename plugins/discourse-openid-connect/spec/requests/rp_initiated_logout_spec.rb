@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 describe "OIDC RP-Initiated Logout" do
-  let(:document_url) do
-    SiteSetting.openid_connect_discovery_document =
-      "https://id.example.com/.well-known/openid-configuration"
-  end
+  let(:document_url) { "https://id.example.com/.well-known/openid-configuration" }
   let(:document) do
     {
       issuer: "https://id.example.com/",
@@ -14,9 +11,13 @@ describe "OIDC RP-Initiated Logout" do
       end_session_endpoint: "https://id.example.com/endsession",
     }
   end
+
   fab!(:user)
 
   before do
+    SiteSetting.openid_connect_discovery_document = document_url
+    SiteSetting.openid_connect_client_id = "my-client-id"
+    SiteSetting.openid_connect_client_secret = "my-client-secret"
     SiteSetting.openid_connect_enabled = true
     SiteSetting.openid_connect_rp_initiated_logout = true
     stub_request(:get, document_url).to_return(body: lambda { |r| document.to_json })

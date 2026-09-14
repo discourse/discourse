@@ -11,6 +11,10 @@ fa_IR:
         categories:
           discourse_ai: "هوش مصنوعی دیسکورس"
       dashboard:
+        ask_ai:
+          date: "تاریخ"
+          outcomes:
+            failed: "ناموفق"
         reports:
           filters:
             sort_by:

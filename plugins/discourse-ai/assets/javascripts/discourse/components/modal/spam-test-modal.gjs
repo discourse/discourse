@@ -56,20 +56,20 @@ export default class SpamTestModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "discourse_ai.spam.test_modal.title"}}
-      @closeModal={{@closeModal}}
-      @bodyClass="spam-test-modal__body"
       class="spam-test-modal"
+      @bodyClass="spam-test-modal__body"
+      @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.spam.test_modal.title"}}
     >
       <:body>
         <div class="control-group">
           <label>{{i18n "discourse_ai.spam.test_modal.post_url_label"}}</label>
           <input
-            {{on "input" (withEventValue (fn (mut this.postUrl)))}}
-            type="text"
             placeholder={{i18n
               "discourse_ai.spam.test_modal.post_url_placeholder"
             }}
+            type="text"
+            {{on "input" (withEventValue (fn (mut this.postUrl)))}}
           />
         </div>
 
@@ -154,10 +154,10 @@ export default class SpamTestModal extends Component {
 
       <:footer>
         <DButton
-          @action={{this.runTest}}
-          @label="discourse_ai.spam.test_modal.run"
-          @disabled={{this.isLoading}}
           class="btn-primary spam-test-modal__run-button"
+          @action={{this.runTest}}
+          @disabled={{this.isLoading}}
+          @label="discourse_ai.spam.test_modal.run"
         >
           <AiIndicatorWave @loading={{this.isLoading}} />
         </DButton>

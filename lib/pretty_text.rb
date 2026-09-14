@@ -275,6 +275,14 @@ module PrettyText
     protect { v8.call("__PrettyText.sanitize", html.to_s, opts) }
   end
 
+  def self.scan_hashtags(raw)
+    protect { v8.call("__PrettyText.scanHashtags", raw.to_s) }
+  end
+
+  def self.splice_hashtags(raw, replacements)
+    protect { v8.call("__PrettyText.spliceHashtags", raw.to_s, replacements) }
+  end
+
   def self.unescape_emoji(title)
     return title unless SiteSetting.enable_emoji? && title
 
@@ -459,6 +467,21 @@ module PrettyText
             "data-video-base62-sha1"
           ] = "#{Upload.base62_sha1(video_sha1)}#{File.extname(video_src)}"
         end
+      end
+  end
+
+  def self.extract_hashtags(html)
+    return [] if html.blank?
+
+    Nokogiri::HTML5
+      .fragment(html)
+      .css("a.hashtag-cooked")
+      .map do |anchor|
+        {
+          type: anchor["data-type"],
+          id: anchor["data-id"],
+          ref: anchor["data-ref"] || anchor["data-slug"],
+        }
       end
   end
 

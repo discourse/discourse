@@ -47,6 +47,7 @@ import type Site from "discourse/models/site";
 import type User from "discourse/models/user";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
@@ -148,6 +149,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
   @service declare siteSettings: SiteSettings;
 
   @service declare appEvents: AppEventsService;
+  @service declare a11y: A11yService;
   @service declare currentUser: User;
 
   schema: Schema = createSchema(this.extensions, this.args.includeDefault);
@@ -190,6 +192,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         site: this.site,
         siteSettings: this.siteSettings,
         appEvents: this.appEvents,
+        a11y: this.a11y,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
         markdownOptions: this.args.markdownOptions,
@@ -490,14 +493,14 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
       {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
-          @node={{nodeView.node}}
-          @view={{nodeView.view}}
-          @getPos={{nodeView.getPos}}
-          @dom={{nodeView.dom}}
           @contentDOM={{nodeView.contentDOM}}
-          @pluginParams={{nodeView.pluginParams}}
-          @options={{nodeView.options}}
+          @dom={{nodeView.dom}}
+          @getPos={{nodeView.getPos}}
+          @node={{nodeView.node}}
           @onSetup={{nodeView.setComponentInstance}}
+          @options={{nodeView.options}}
+          @pluginParams={{nodeView.pluginParams}}
+          @view={{nodeView.view}}
         />
       {{~/in-element~}}
     {{/each}}

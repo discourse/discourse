@@ -827,3 +827,14 @@ acceptance(`Topic stats update automatically`, function () {
     );
   });
 });
+
+acceptance(`Topic - Anonymous search disabled`, function (needs) {
+  needs.site({ can_search: false });
+
+  test("shows the likes count without opening search-backed details", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    assert.dom("#post_1 .topic-map .topic-map__likes").exists();
+    assert.dom("#post_1 .topic-map .topic-map__likes-trigger").doesNotExist();
+  });
+});

@@ -4,14 +4,14 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/config/customize/themes"
     @label={{i18n "admin.config_areas.themes_and_components.themes.title"}}
+    @path="/admin/config/customize/themes"
   />
 
   <Themes
-    @repoUrl={{@controller.model.repoUrl}}
-    @repoName={{@controller.model.repoName}}
-    @themes={{@controller.model.themes}}
     @clearParams={{this.clearParams}}
+    @repoName={{@controller.model.repoName}}
+    @repoUrl={{@controller.model.repoUrl}}
+    @themes={{@controller.model.themes}}
   />
 </template>

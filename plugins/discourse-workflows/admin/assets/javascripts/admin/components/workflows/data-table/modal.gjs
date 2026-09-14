@@ -34,28 +34,28 @@ export default class DataTableModal extends Component {
 
   <template>
     <DModal
+      class="data-table-modal"
+      @closeModal={{@closeModal}}
       @title={{if
         @model.dataTable
         (i18n "discourse_workflows.data_tables.edit")
         (i18n "discourse_workflows.data_tables.add")
       }}
-      @closeModal={{@closeModal}}
-      class="data-table-modal"
     >
       <:body>
         <Form
+          class="workflows-configurator-form"
           @data={{this.formData}}
           @onSubmit={{this.handleSubmit}}
-          class="workflows-configurator-form"
           as |form|
         >
           <form.Field
+            @format="full"
             @name="name"
             @title={{i18n "discourse_workflows.data_tables.name"}}
             @type="input"
-            @format="full"
-            @validation="required"
             @validate={{this.validateName}}
+            @validation="required"
             as |field|
           >
             <field.Control

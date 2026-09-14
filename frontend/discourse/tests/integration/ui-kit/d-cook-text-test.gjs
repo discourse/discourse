@@ -14,7 +14,7 @@ module("Integration | ui-kit | DCookText", function (hooks) {
 
   test("renders markdown", async function (assert) {
     await render(
-      <template><DCookText @rawText="_foo_" class="post-body" /></template>
+      <template><DCookText class="post-body" @rawText="_foo_" /></template>
     );
 
     assert.dom(".post-body").hasHtml("<p><em>foo</em></p>");
@@ -33,7 +33,7 @@ module("Integration | ui-kit | DCookText", function (hooks) {
 
     await render(
       <template>
-        <DCookText @rawText="![an image](upload://a.png)" class="post-body" />
+        <DCookText class="post-body" @rawText="![an image](upload://a.png)" />
       </template>
     );
 

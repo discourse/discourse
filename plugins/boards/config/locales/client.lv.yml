@@ -7,6 +7,9 @@
 lv:
   js:
     boards:
+      status:
+        all: "Visi"
+        open: "Atvērt"
       board:
         remove_card: "Atcelt"
         title: "Virsraksts"

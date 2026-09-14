@@ -8,9 +8,9 @@ export default class PlaceholdersList extends Component {
     <div class="placeholders-list">
       {{#each @placeholders as |placeholder|}}
         <DButton
-          @translatedLabel={{placeholder}}
           class="placeholder-item"
           @action={{fn this.copyPlaceholder placeholder}}
+          @translatedLabel={{placeholder}}
         />
       {{/each}}
     </div>

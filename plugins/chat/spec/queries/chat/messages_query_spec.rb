@@ -134,6 +134,7 @@ RSpec.describe Chat::MessagesQuery do
 
       context "when thread_id is provided" do
         let(:thread_id) { thread.id }
+
         it "does include messages which are part of a thread" do
           message_3.update!(
             thread: thread,

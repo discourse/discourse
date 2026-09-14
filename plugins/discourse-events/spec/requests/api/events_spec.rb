@@ -132,15 +132,6 @@ RSpec.describe "events" do
                 },
                 description: "Filter by event attendance status"
 
-      parameter name: :event_format,
-                in: :query,
-                required: false,
-                schema: {
-                  type: :string,
-                  enum: %w[virtual in_person hybrid],
-                },
-                description: "Filter by whether the event has a URL, location, or both"
-
       produces "application/json"
 
       response "200", "success response (basic)" do

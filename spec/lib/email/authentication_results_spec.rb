@@ -210,16 +210,19 @@ RSpec.describe Email::AuthenticationResults do
     context "with a single authentication-results header" do
       context "with a valid fail" do
         let(:headers) { "valid.com; dmarc=fail" }
+
         include_examples "is verdict", :fail
       end
 
       context "with a valid pass" do
         let(:headers) { "valid.com; dmarc=pass" }
+
         include_examples "is verdict", :pass
       end
 
       context "with a valid error" do
         let(:headers) { "valid.com; dmarc=error" }
+
         include_examples "is verdict", :gray
       end
 
@@ -228,11 +231,13 @@ RSpec.describe Email::AuthenticationResults do
 
         context "with a fail" do
           let(:headers) { "foobar.com; dmarc=fail" }
+
           include_examples "is verdict", :gray
         end
 
         context "with a pass" do
           let(:headers) { "foobar.com; dmarc=pass" }
+
           include_examples "is verdict", :gray
         end
       end
@@ -241,16 +246,19 @@ RSpec.describe Email::AuthenticationResults do
     context "with multiple authentication-results headers" do
       context "with a valid fail, and an invalid pass" do
         let(:headers) { ["valid.com; dmarc=fail", "invalid.com; dmarc=pass"] }
+
         include_examples "is verdict", :fail
       end
 
       context "with a valid fail, and a valid pass" do
         let(:headers) { ["valid.com; dmarc=fail", "valid.com; dmarc=pass"] }
+
         include_examples "is verdict", :fail
       end
 
       context "with a valid error, and a valid pass" do
         let(:headers) { ["valid.com; dmarc=foobar", "valid.com; dmarc=pass"] }
+
         include_examples "is verdict", :pass
       end
 
@@ -259,6 +267,7 @@ RSpec.describe Email::AuthenticationResults do
 
         context "with an error, and a pass" do
           let(:headers) { ["foobar.com; dmarc=foobar", "foobar.com; dmarc=pass"] }
+
           include_examples "is verdict", :gray
         end
       end

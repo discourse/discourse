@@ -56,9 +56,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
             @initialFilterQueryString={{this.query}}
             @onChange={{this.update}}
+            @tips={{this.tips}}
           />
           <DMenus />
         </template>
@@ -103,9 +103,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
             @initialFilterQueryString={{this.query}}
             @onChange={{this.update}}
+            @tips={{this.tips}}
           />
 
           <DMenus />
@@ -134,9 +134,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
             @initialFilterQueryString={{this.query}}
             @onChange={{this.update}}
+            @tips={{this.tips}}
           />
           <DMenus />
         </template>
@@ -167,9 +167,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
             @initialFilterQueryString={{this.query}}
             @onChange={{this.update}}
+            @tips={{this.tips}}
           />
           <DMenus />
         </template>
@@ -204,9 +204,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
             @initialFilterQueryString={{this.query}}
             @onChange={{this.update}}
+            @tips={{this.tips}}
           />
           <DMenus />
         </template>

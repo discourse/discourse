@@ -294,11 +294,11 @@ export default class DNavigation extends Component {
 
   <template>
     <BreadCrumbs
+      @additionalTags={{this.additionalTags}}
       @categories={{this.categories}}
       @category={{this.category}}
       @noSubcategories={{this.noSubcategories}}
       @tag={{this.tag}}
-      @additionalTags={{this.additionalTags}}
     />
 
     <PluginOutlet
@@ -314,9 +314,9 @@ export default class DNavigation extends Component {
     {{#unless this.additionalTags}}
       {{! nav bar doesn't work with tag intersections }}
       <NavigationBar
-        @navItems={{this.navItems}}
-        @filterMode={{this.filterMode}}
         @category={{this.category}}
+        @filterMode={{this.filterMode}}
+        @navItems={{this.navItems}}
         @tag={{this.tag}}
       />
     {{/unless}}
@@ -327,14 +327,14 @@ export default class DNavigation extends Component {
       {{/if}}
 
       <TopicDismissButtons
-        @position="top"
-        @selectedTopics={{@bulkSelectHelper.selected}}
-        @model={{@model}}
-        @showResetNew={{@showResetNew}}
-        @showNewDismissCombo={{this.showNewDismissCombo}}
-        @showDismissRead={{@showDismissRead}}
-        @resetNew={{@resetNew}}
         @dismissRead={{@dismissRead}}
+        @model={{@model}}
+        @position="top"
+        @resetNew={{@resetNew}}
+        @selectedTopics={{@bulkSelectHelper.selected}}
+        @showDismissRead={{@showDismissRead}}
+        @showNewDismissCombo={{this.showNewDismissCombo}}
+        @showResetNew={{@showResetNew}}
       />
 
       {{#if this.showCategoryAdmin}}
@@ -345,6 +345,8 @@ export default class DNavigation extends Component {
           />
         {{else}}
           <DButton
+            class="btn-default"
+            id="create-category"
             @action={{this.createCategory}}
             @icon="plus"
             @label={{if
@@ -352,8 +354,6 @@ export default class DNavigation extends Component {
               "categories.category"
               "category.create"
             }}
-            class="btn-default"
-            id="create-category"
           />
         {{/if}}
       {{/if}}
@@ -361,37 +361,37 @@ export default class DNavigation extends Component {
       {{#if this.showCombinedAdminDropdown}}
         <TagCategoryAdminDropdown
           @category={{this.category}}
-          @tag={{this.tag}}
           @onChange={{this.handleTagCategoryAdmin}}
           @options={{hash triggerOnChangeOnTab=false}}
+          @tag={{this.tag}}
         />
       {{else}}
         {{#if (and this.category this.showCategoryEdit)}}
           <DButton
+            class="btn-default edit-category"
             @action={{this.editCategory}}
             @icon="wrench"
             @title="category.edit_title"
-            class="btn-default edit-category"
           />
         {{/if}}
 
         {{#if this.showTagEdit}}
           <DButton
-            @action={{this.editTag}}
-            @icon="wrench"
-            @ariaLabel="tagging.edit"
-            @title="tagging.edit"
-            id="edit-tag"
             class="btn-default"
+            id="edit-tag"
+            @action={{this.editTag}}
+            @ariaLabel="tagging.edit"
+            @icon="wrench"
+            @title="tagging.edit"
           />
         {{/if}}
       {{/if}}
 
       {{#if this.showTagInfoButton}}
         <TagInfoButton
-          @toggleInfo={{@toggleTagInfo}}
           @active={{@showTagInfo}}
           @loading={{@loadingTagInfo}}
+          @toggleInfo={{@toggleTagInfo}}
         />
       {{/if}}
 
@@ -408,14 +408,14 @@ export default class DNavigation extends Component {
       />
 
       <CreateTopicButton
-        @canCreateTopic={{this.canCreateTopic}}
         @action={{this.clickCreateTopicButton}}
-        @label={{this.createTopicLabel}}
-        @icon={{this.createTopicIcon}}
         @btnTypeClass={{if
           this.siteSettings.modernize_foundation_theme
           "btn-primary"
         }}
+        @canCreateTopic={{this.canCreateTopic}}
+        @icon={{this.createTopicIcon}}
+        @label={{this.createTopicLabel}}
         @showDrafts={{if (gt this.draftCount 0) true false}}
       />
 
@@ -437,9 +437,9 @@ export default class DNavigation extends Component {
             {{#unless this.category.deleted}}
               <CategoryNotificationsTracking
                 @levelId={{this.categoryNotificationLevel}}
-                @showFullTitle={{false}}
-                @showCaret={{false}}
                 @onChange={{this.changeCategoryNotificationLevel}}
+                @showCaret={{false}}
+                @showFullTitle={{false}}
               />
             {{/unless}}
           {{/if}}
@@ -451,8 +451,8 @@ export default class DNavigation extends Component {
           {{! don't show tag notification menu on category pages }}
           {{#if this.showTagNotifications}}
             <TagNotificationsTracking
-              @onChange={{this.changeTagNotificationLevel}}
               @levelId={{this.tagNotification.notification_level}}
+              @onChange={{this.changeTagNotificationLevel}}
             />
           {{/if}}
         {{/unless}}

@@ -395,6 +395,23 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("mcp", function () {
+          this.route("index", { path: "/" });
+          this.route("access", function () {
+            this.route("index", { path: "/" });
+            this.route("new");
+            this.route("edit", { path: "/:group_id/edit" });
+          });
+          this.route("capabilities");
+          this.route("clients", function () {
+            this.route("index", { path: "/" });
+            this.route("new");
+            this.route("show", { path: "/:id" });
+          });
+          this.route("authorizations");
+          this.route("activity");
+          this.route("settings");
+        });
         this.route("logo");
         this.route("fonts");
         this.route("gifs", function () {

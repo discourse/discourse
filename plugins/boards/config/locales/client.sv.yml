@@ -7,6 +7,9 @@
 sv:
   js:
     boards:
+      status:
+        all: "Alla"
+        open: "Öppen"
       board:
         remove_card: "Ta bort"
         title: "Rubrik"

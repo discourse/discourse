@@ -169,6 +169,10 @@ describe TagSettingsUpdater do
 
         expect(TagLocalization.find_by(tag_id: tag.id, locale: "es")).to be_present
         expect(TagLocalization.find_by(tag_id: tag.id, locale: "it")).to be_nil
+
+        TagSettingsUpdater.update(tag, admin, { localizations: [] })
+
+        expect(TagLocalization.where(tag_id: tag.id)).to be_empty
       end
     end
   end

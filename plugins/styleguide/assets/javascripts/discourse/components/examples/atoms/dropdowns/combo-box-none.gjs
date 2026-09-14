@@ -22,9 +22,9 @@ export default class ComboBoxNoneExample extends Component {
   <template>
     <ComboBox
       @content={{OPTIONS}}
-      @value={{this.value}}
-      @options={{hash none="category.none"}}
       @onChange={{this.onChange}}
+      @options={{hash none="category.none"}}
+      @value={{this.value}}
     />
   </template>
 }

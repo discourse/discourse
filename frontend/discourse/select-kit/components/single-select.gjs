@@ -67,25 +67,25 @@ export default class SingleSelect extends SelectKitComponent {
         as |HeaderComponent|
       }}
         <HeaderComponent
-          @tabindex={{this.tabindex}}
-          @value={{this.value}}
+          @id={{concat this.selectKit.uniqueID "-header"}}
           @selectedContent={{this.selectedContent}}
           @selectKit={{this.selectKit}}
-          @id={{concat this.selectKit.uniqueID "-header"}}
+          @tabindex={{this.tabindex}}
+          @value={{this.value}}
         />
       {{/let}}
 
       <SelectKitBody
-        @selectKit={{this.selectKit}}
         @id={{concat this.selectKit.uniqueID "-body"}}
+        @selectKit={{this.selectKit}}
       >
         {{#let
           (resolveComponent this this.selectKit.options.filterComponent)
           as |FilterComponent|
         }}
           <FilterComponent
-            @selectKit={{this.selectKit}}
             @id={{concat this.selectKit.uniqueID "-filter"}}
+            @selectKit={{this.selectKit}}
           />
         {{/let}}
 

@@ -214,6 +214,7 @@ sq:
       message: "Ne e kemi përditësuar këtë faqe, <span>ju lutemi rifreskoni</span> për të mos patur probleme në funksionim."
       dismiss: "Hiqe"
     back_button: "Kthehu mbrapa"
+    confirm_button: "Konfirmoni"
     welcome_banner:
       header:
         anonymous_members: "Mirë se vini tek %{site_name}!"
@@ -723,6 +724,9 @@ sq:
       user_label: "User"
       timeline:
         target_deleted: "Postimi u fshi"
+      author_penalty:
+        toast:
+          undo: "Zhbëj"
       notes:
         delete: "Fshij"
       topic_label: "Topic"
@@ -1303,7 +1307,6 @@ sq:
       admin: "%{user} është admin"
       moderator_tooltip: "Ky anëtar është moderator"
       admin_tooltip: "Ky anëtar është administrator"
-      silenced_tooltip: "Ky përdorues është heshtur"
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_permanently: "Ky përdorues është pezulluar."
       suspended_reason: "Arsyeja:"
@@ -1361,6 +1364,12 @@ sq:
       tracked_topics_link: "Shfaq"
       automatically_unpin_topics: "Çngjiti temat automatikisht kur arrij fundin e faqes"
       apps: "Aplikimet"
+      mcp_authorizations:
+        details: "Detaje"
+        never: "Asnjëherë"
+        status: "Status"
+        statuses:
+          active: "Aktiv"
       revoke_access: "Hiqi aksesin"
       undo_revoke_access: "Anullo heqjen e aksesit"
       api_approved: "Aprovuar më:"
@@ -3692,6 +3701,7 @@ sq:
       with_topics: "Temat nga %{filter}"
       with_category: "Temat nga: %{filter}, %{category}"
       filter:
+        reset: "rivendosni"
         button:
           label: "Filtro"
       latest:
@@ -4057,6 +4067,55 @@ sq:
       config:
         developer:
           title: "Developer"
+        mcp:
+          tabs:
+            access: "Lejimi"
+            activity: "Aktiviteti"
+          overview:
+            status: "Status"
+          access:
+            title: "Lejimi"
+            group: "Grupi"
+            groups: "Grupet"
+            actions: "Veprimet"
+            edit: "Redaktoni"
+            delete: "Fshij"
+          primitives:
+            group_by_options:
+              kind: "Lloji"
+            kind: "Lloji"
+          clients:
+            actions: "Veprimet"
+            block: "Blloko"
+            presets:
+              custom: "Grupet e krijuara"
+          authorizations:
+            user: "User"
+            status: "Status"
+            actions: "Veprimet"
+          activity:
+            time: "Koha"
+            user: "User"
+            duration: "Kohëzgjatja"
+          values:
+            server_status:
+              disabled: "E çaktivizuar"
+            client_trust:
+              approved: "Aprovuar"
+            authorization_status:
+              active: "Aktiv"
+            activity_outcome:
+              error: "Gabim"
+            primitive_state:
+              enabled: "Aktivizuar"
+              disabled: "E çaktivizuar"
+            primitive_kind:
+              all: "Të gjitha llojet"
+            filter:
+              all: "Të gjitha"
+          never: "Asnjëherë"
+          actions:
+            revoke: "Revoko"
         emojis:
           title: "Emoji"
         files:

@@ -10,7 +10,7 @@ RSpec.describe TopicRetriever do
   end
 
   describe "#retrieve" do
-    context "when host is invalid" do
+    context "when the URL itself is invalid" do
       before { topic_retriever.stubs(:invalid_url?).returns(true) }
 
       it "does not perform_retrieve" do

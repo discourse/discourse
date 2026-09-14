@@ -69,9 +69,7 @@ module Email
 
       @message.charset = "UTF-8"
 
-      opts = {}
-
-      renderer = Email::Renderer.new(@message, opts)
+      renderer = Email::Renderer.new(@message, user_id: @user&.id)
 
       if @message.html_part
         @message.html_part.body = renderer.html

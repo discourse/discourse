@@ -35,12 +35,23 @@ RSpec.describe DiscourseWorkflows::DataTablesController do
                      :get,
                      -> { "/admin/plugins/discourse-workflows/data-tables.json" }
 
-    it "lists data tables" do
+    it "lists data tables with their row counts" do
+      empty_data_table = Fabricate(:discourse_workflows_data_table)
+      2.times { insert_data_table_row(data_table) }
+
       get "/admin/plugins/discourse-workflows/data-tables.json"
+
       expect(response).to have_http_status(:ok)
       json = response.parsed_body
-      expect(json["data_tables"].length).to eq(1)
-      expect(json["data_tables"][0]["name"]).to eq(data_table.name)
+      expect(json["data_tables"]).to contain_exactly(
+        include(
+          "id" => data_table.id,
+          "name" => data_table.name,
+          "column_count" => 4,
+          "row_count" => 2,
+        ),
+        include("id" => empty_data_table.id, "column_count" => 4, "row_count" => 0),
+      )
       expect(json["data_tables"][0]["size"]).to be > 0
     end
 

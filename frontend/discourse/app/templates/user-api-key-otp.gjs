@@ -22,11 +22,11 @@ export default <template>
 
     <form {{on "submit" @controller.authorize}}>
       <DButton
-        @isLoading={{@controller.isLoading}}
-        @action={{@controller.authorize}}
-        @label="user_api_key.authorize"
-        type="submit"
         class="btn-primary"
+        type="submit"
+        @action={{@controller.authorize}}
+        @isLoading={{@controller.isLoading}}
+        @label="user_api_key.authorize"
       />
     </form>
   </div>

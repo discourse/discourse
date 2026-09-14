@@ -55,6 +55,24 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_search?" do
+    it "allows anonymous and logged-in users by default" do
+      expect(Guardian.new.can_search?).to eq(true)
+      expect(Guardian.new(user).can_search?).to eq(true)
+    end
+
+    it "only blocks anonymous users when anonymous search is disabled" do
+      SiteSetting.allow_anonymous_search = false
+
+      [false, true].each do |granular_permissions|
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
+
+        expect(Guardian.new.can_search?).to eq(false)
+        expect(Guardian.new(user).can_search?).to eq(true)
+      end
+    end
+  end
+
   describe "acl permissions" do
     fab!(:acl_user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:acl_group) { Fabricate(:group).tap { |group| group.add(acl_user) } }
@@ -243,6 +261,7 @@ RSpec.describe Guardian do
 
     context "when personal_message_enabled_groups does not contain the user" do
       let(:group) { Fabricate(:group) }
+
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "returns false if user is not staff member" do
@@ -354,13 +373,13 @@ RSpec.describe Guardian do
       before { another_user.user_option.update!(allow_private_messages: false) }
 
       context "for a normal user" do
-        it "should return false" do
+        it "prevents the user from sending a private message" do
           expect(Guardian.new(user).can_send_private_message?(another_user)).to eq(false)
         end
       end
 
       context "for a staff user" do
-        it "should return true" do
+        it "allows staff to send private messages" do
           [admin, moderator].each do |staff_user|
             expect(Guardian.new(staff_user).can_send_private_message?(another_user)).to eq(true)
           end
@@ -392,6 +411,7 @@ RSpec.describe Guardian do
 
     context "when personal_message_enabled_groups does contain the user" do
       let(:group) { Fabricate(:group) }
+
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "returns true" do
@@ -404,6 +424,7 @@ RSpec.describe Guardian do
 
     context "when personal_message_enabled_groups does not contain the user" do
       let(:group) { Fabricate(:group) }
+
       before { SiteSetting.personal_message_enabled_groups = group.id }
 
       it "returns false if user is not staff member" do
@@ -470,6 +491,7 @@ RSpec.describe Guardian do
       global_setting :allow_impersonation, false
       expect(Guardian.new(admin).can_impersonate?(moderator)).to be_falsey
     end
+
     it "allows impersonation correctly" do
       expect(Guardian.new(admin).can_impersonate?(nil)).to be_falsey
       expect(Guardian.new.can_impersonate?(user)).to be_falsey
@@ -768,7 +790,7 @@ RSpec.describe Guardian do
         expect(Guardian.new(moderator).can_create?(Topic, category)).to be_falsey
       end
 
-      it "should check for full permissions" do
+      it "checks for full category permissions" do
         category = plain_category
         category.set_permissions(everyone: :create_post)
         category.save
@@ -864,7 +886,7 @@ RSpec.describe Guardian do
 
     context "as a moderator" do
       describe "when post has been deleted" do
-        it "should return the right value" do
+        it "allows recovery only after the topic is deleted" do
           expect(Guardian.new(moderator).can_recover_topic?(topic)).to be_falsey
 
           PostDestroyer.new(moderator, topic.first_post).destroy
@@ -874,7 +896,7 @@ RSpec.describe Guardian do
       end
 
       describe "when post's user has been deleted" do
-        it "should return the right value" do
+        it "allows recovery after the topic's author is deleted" do
           PostDestroyer.new(moderator, topic.first_post).destroy
           topic.first_post.user.destroy!
 
@@ -1251,6 +1273,7 @@ RSpec.describe Guardian do
       context "with first post of a static page doc" do
         let!(:tos_topic) { Fabricate(:topic, user: Discourse.system_user) }
         let!(:tos_first_post) { Fabricate(:post, topic: tos_topic, user: tos_topic.user) }
+
         before { SiteSetting.tos_topic_id = tos_topic.id }
 
         it "restricts static doc posts" do
@@ -1495,7 +1518,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(moderator).can_see_flags?(post)).to be_truthy
     end
 
-    it "allows moderators to see flags" do
+    it "allows admins to see flags" do
       expect(Guardian.new(admin).can_see_flags?(post)).to be_truthy
     end
   end
@@ -1981,7 +2004,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_grant_admin?(user)).to be_truthy
     end
 
-    it "should not allow an admin to grant admin access to a non real user" do
+    it "prevents granting admin access to a system user" do
       Discourse.system_user.update!(admin: false)
       expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
     ensure
@@ -2009,7 +2032,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_revoke_admin?(another_admin)).to be_truthy
     end
 
-    it "should not allow an admin to revoke a no real user's admin access" do
+    it "prevents revoking a system user's admin access" do
       expect(Guardian.new(admin).can_revoke_admin?(Discourse.system_user)).to be(false)
     end
   end
@@ -2023,7 +2046,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_grant_moderation?(moderator)).to be_falsey
     end
 
-    it "will allow an admin to grant their own moderator access" do
+    it "allows admins to grant themselves moderator access" do
       expect(Guardian.new(admin).can_grant_moderation?(admin)).to be_truthy
     end
 
@@ -2035,7 +2058,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_grant_moderation?(user)).to be_truthy
     end
 
-    it "should not allow an admin to grant moderation to a non real user" do
+    it "prevents granting moderation to a system user" do
       Discourse.system_user.update!(moderator: false)
       expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
     ensure
@@ -2069,7 +2092,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_revoke_moderation?(admin)).to be_falsey
     end
 
-    it "should not allow an admin to revoke moderation from a non real user" do
+    it "prevents revoking moderation from a system user" do
       expect(Guardian.new(admin).can_revoke_moderation?(Discourse.system_user)).to be(false)
     end
   end
@@ -2387,6 +2410,7 @@ RSpec.describe Guardian do
 
       context "with posts" do
         before { target_user.stubs(:post_count).returns(1) }
+
         include_examples "staff can always change usernames"
         it "is false for the user to change their own username" do
           expect(Guardian.new(target_user).can_edit_username?(target_user)).to be_falsey
@@ -2720,6 +2744,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is staff" do
       let(:guardian) { Guardian.new(admin) }
+
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
@@ -2727,6 +2752,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is not in required trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
+
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)
       end
@@ -2734,6 +2760,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is in the required trust level group" do
       let(:guardian) { Guardian.new(trust_level_1) }
+
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
@@ -2741,6 +2768,7 @@ RSpec.describe Guardian do
 
     context "when ignorer is in a higher than required trust level group" do
       let(:guardian) { Guardian.new(trust_level_3) }
+
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
@@ -2772,6 +2800,7 @@ RSpec.describe Guardian do
 
     context "when muter's trust level is below tl1" do
       let(:guardian) { Guardian.new(trust_level_0) }
+
       fab!(:trust_level_0)
 
       it "does not allow muting user" do
@@ -2805,7 +2834,7 @@ RSpec.describe Guardian do
         global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
-      it "should respect theme allowlisting" do
+      it "respects theme allowlisting" do
         r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
         theme.update!(remote_theme_id: r.id)
 
@@ -2896,6 +2925,7 @@ RSpec.describe Guardian do
 
     context "when post is older than post_edit_time_limit" do
       let(:old_post) { Fabricate(:post, user: trust_level_2, created_at: 6.minutes.ago) }
+
       before do
         SiteSetting.self_wiki_allowed_groups = "1|2|12"
         SiteSetting.tl2_post_edit_time_limit = 5
@@ -3224,6 +3254,7 @@ RSpec.describe Guardian do
 
   describe "topic featured link category restriction" do
     before { SiteSetting.topic_featured_link_enabled = true }
+
     let(:guardian) { Guardian.new(user) }
     let(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
 
@@ -3258,14 +3289,14 @@ RSpec.describe Guardian do
   end
 
   describe "suspension reasons" do
-    it "will be shown by default" do
+    it "shows suspension reasons by default" do
       expect(Guardian.new.can_see_suspension_reason?(user)).to eq(true)
     end
 
     context "with hide suspension reason enabled" do
       before { SiteSetting.hide_suspension_reasons = true }
 
-      it "will not be shown to anonymous users" do
+      it "hides suspension reasons from anonymous users" do
         expect(Guardian.new.can_see_suspension_reason?(user)).to eq(false)
       end
 
@@ -3280,14 +3311,14 @@ RSpec.describe Guardian do
   end
 
   describe "silencing reasons" do
-    it "will be shown by default" do
+    it "shows silencing reasons by default" do
       expect(Guardian.new.can_see_silencing_reason?(user)).to eq(true)
     end
 
     context "with hide silencing reason enabled" do
       before { SiteSetting.hide_silencing_reasons = true }
 
-      it "will not be shown to anonymous users" do
+      it "hides silencing reasons from anonymous users" do
         expect(Guardian.new.can_see_silencing_reason?(user)).to eq(false)
       end
 
@@ -3329,7 +3360,7 @@ RSpec.describe Guardian do
 
   describe "#can_remove_allowed_users?" do
     context "with staff users" do
-      it "should be true" do
+      it "allows moderators to remove allowed users" do
         expect(Guardian.new(moderator).can_remove_allowed_users?(topic)).to eq(true)
       end
     end
@@ -3343,7 +3374,7 @@ RSpec.describe Guardian do
         topic.allowed_users << another_user
       end
 
-      it "should be true" do
+      it "allows the topic creator to remove allowed users" do
         expect(Guardian.new(topic_creator).can_remove_allowed_users?(topic)).to eq(true)
       end
     end
@@ -3356,19 +3387,19 @@ RSpec.describe Guardian do
         topic.allowed_users << another_user
       end
 
-      it "should be false" do
+      it "prevents regular users from removing allowed users" do
         expect(Guardian.new(user).can_remove_allowed_users?(topic)).to eq(false)
       end
 
       describe "target_user is the user" do
         describe "when user is in a pm with another user" do
-          it "should return true" do
+          it "allows the user to leave the PM" do
             expect(Guardian.new(user).can_remove_allowed_users?(topic, user)).to eq(true)
           end
         end
 
         describe "when user is the creator of the topic" do
-          it "should return false" do
+          it "prevents the topic creator from leaving" do
             expect(Guardian.new(topic.user).can_remove_allowed_users?(topic, topic.user)).to eq(
               false,
             )
@@ -3376,7 +3407,7 @@ RSpec.describe Guardian do
         end
 
         describe "when user is the only user in the topic" do
-          it "should return false" do
+          it "prevents the last user from leaving" do
             topic.remove_allowed_user(Discourse.system_user, another_user.username)
 
             expect(Guardian.new(user).can_remove_allowed_users?(topic, user)).to eq(false)
@@ -3385,7 +3416,7 @@ RSpec.describe Guardian do
       end
 
       describe "target_user is not the user" do
-        it "should return false" do
+        it "prevents removing another user" do
           expect(Guardian.new(user).can_remove_allowed_users?(topic, moderator)).to eq(false)
         end
       end
@@ -3394,11 +3425,11 @@ RSpec.describe Guardian do
     context "with anonymous users" do
       fab!(:topic)
 
-      it "should be false" do
+      it "prevents anonymous users from removing allowed users" do
         expect(Guardian.new.can_remove_allowed_users?(topic)).to eq(false)
       end
 
-      it "should be false when the topic does not have a user (for example because the user was removed)" do
+      it "prevents removing allowed users when the topic has no author" do
         DB.exec("UPDATE topics SET user_id=NULL WHERE id=#{topic.id}")
         topic.reload
 
@@ -3504,12 +3535,12 @@ RSpec.describe Guardian do
   end
 
   describe "#can_mention_here?" do
-    it "returns false if disabled" do
+    it "returns false when the maximum here mentions is zero" do
       SiteSetting.max_here_mentioned = 0
       expect(admin.guardian.can_mention_here?).to eq(false)
     end
 
-    it "returns false if disabled" do
+    it "returns false when the here mention is blank" do
       SiteSetting.here_mention = ""
       expect(admin.guardian.can_mention_here?).to eq(false)
     end
@@ -3548,7 +3579,7 @@ RSpec.describe Guardian do
 
     fab!(:category)
 
-    it "should correctly detect category moderation" do
+    it "detects category moderation" do
       group.add(user)
       Fabricate(:category_moderation_group, category:, group:)
       guardian = Guardian.new(user)

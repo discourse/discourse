@@ -110,6 +110,9 @@ th:
         sort:
           relevance: "เกี่ยวข้อง"
           latest: "ล่าสุด"
+      channel_list:
+        filter:
+          mentions: "กล่าวถึง"
       incoming_webhooks:
         back: "กลับ"
         description: "รายละเอียด"

@@ -31,10 +31,10 @@ export default class SidebarSectionLinkButton extends Component {
   <template>
     <div class="sidebar-section-link-wrapper">
       <button
-        {{on "click" this.handleClick}}
-        type="button"
         class="sidebar-section-link sidebar-row --link-button"
         data-list-item-name={{@text}}
+        type="button"
+        {{on "click" this.handleClick}}
       >
         <span class="sidebar-section-link-prefix icon">
           {{dIcon @icon}}

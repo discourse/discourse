@@ -54,24 +54,6 @@ export default class QuoteState {
     };
   }
 
-  async #computeMarkdown() {
-    try {
-      const promises = [toMarkdown(this.#selectedHtml)];
-      if (this.#cookedHtml) {
-        promises.push(toMarkdown(this.#cookedHtml));
-      }
-
-      const [selectedMd, cookedMd] = await Promise.all(promises);
-
-      return {
-        markdown: selectedMd || this.buffer,
-        full: !!(cookedMd && selectedMd === cookedMd),
-      };
-    } catch {
-      return { markdown: this.buffer, full: false };
-    }
-  }
-
   copyFrom(other) {
     this.selected(
       other.postId,
@@ -88,5 +70,23 @@ export default class QuoteState {
     this.#selectedHtml = null;
     this.#cookedHtml = null;
     this.#markdownPromise = null;
+  }
+
+  async #computeMarkdown() {
+    try {
+      const promises = [toMarkdown(this.#selectedHtml)];
+      if (this.#cookedHtml) {
+        promises.push(toMarkdown(this.#cookedHtml));
+      }
+
+      const [selectedMd, cookedMd] = await Promise.all(promises);
+
+      return {
+        markdown: selectedMd || this.buffer,
+        full: !!(cookedMd && selectedMd === cookedMd),
+      };
+    } catch {
+      return { markdown: this.buffer, full: false };
+    }
   }
 }

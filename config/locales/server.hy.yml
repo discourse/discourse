@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 hy:
+  mcp:
+    errors:
+      topic_not_found: "Թեման չի գտնվել"
+    oauth:
+      deny: "Մերժել"
+      approve: "Նույնականացնել"
   llms_txt:
     sections:
       optional: "Ընտրովի"
@@ -1110,8 +1116,6 @@ hy:
       host_names: "Ձեր config/database.yml ֆայլը օգտագործում է լռելյայն localhost հոսթի անուն: Թարմացրեք այն Ձեր կայքի հոսթի անունով:"
       queue_size: "Սպասող job-երի քանակը %{queue_size} է, ինչը բարձր է: Սա կարող է խնդիր առաջացնել Sidekiq գործընթաց(ներ)ի հետ, կամ հնարավոր է՝ կարիք լինի ավելացնելու ավելի շատ Sidekiq աշխատողների:"
       ram: "Ձեր սերվերն աշխատում է 1 ԳԲ-ից քիչ ընդհանուր հիշողությամբ: Խորհուրդ է տրվում առնվազն 1 ԳԲ հիշողություն:"
-      s3_upload_config: 'Սերվերը կարգավորված է վերբեռնել ֆայլեր S3-ում, բայց հետևյալ կարգավորումներից առնվազն մեկը սահմանված չէ. s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, կամ s3_upload_bucket: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Դիտեք "Ինչպես կարգավորել նկարի վերբեռնումը S3-ում" ՝ ավելին իամնալու համար</a>:'
-      s3_backup_config: 'Սերվերը կարգավորված է վերբեռնել պահուստներ S3-ում, բայց հետևյալ կարգավորումներից առնվազն մեկը սահմանված չէ. s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, կամ s3_upload_bucket: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Դիտեք "Ինչպես կարգավորել նկարի վերբեռնումը S3-ում" ՝ ավելին իամնալու համար</a>:'
       image_magick: 'Սերվերը կարգավորված է ստեղծելու մեծ նկարների փոքրապատկերներ, սակայն ImageMagick -ը տեղադրված չէ: Տեղադրեք ImageMagick՝ օգտագործելով Ձեր նախընտրելի package manager-ը կամ <a href="https://www.imagemagick.org/script/download.php" target="_blank">ներբեռնեք վերջին թողարկումը</a>:'
       failing_emails: 'Կան %{num_failed_jobs}էլ. հասցեի ձախողված job-եր: Ստուգեք Ձեր app.yml -ը և համոզվեք, որ փոստի սերվերի կարգավորումները ճիշտ են: <a href="%{base_path}/sidekiq/retries" target="_blank">Դիտեք ձախողված job-երը Sidekiq-ում</a>:'
       subfolder_ends_in_slash: "Ձեր ենթաթղթապանակի տեղակայումը սխալ է; DISCOURSE_RELATIVE_URL_ROOT -ը վերջանում է թեք գծով (slash):"
@@ -2894,8 +2898,6 @@ hy:
         title: "Այո"
       approve_and_unhide:
         title: "Այո"
-      delete_post:
-        complete: "Գրառումը ջնջված է"
       delete_user:
         complete: "Օգտատերը ջնջված է"
   fallback_username: "օգտատեր"

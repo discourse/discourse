@@ -8,6 +8,9 @@ be:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          outcomes:
+            failed: "Няўдалыя"
         reports:
           filters:
             sort_by:

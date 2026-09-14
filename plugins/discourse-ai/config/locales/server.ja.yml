@@ -286,6 +286,25 @@ ja:
       configuration_missing: "AI 迷惑行為検出の構成が見つかりません。有効にする前に、「管理者」>「プラグイン」>「Discourse AI」>「迷惑行為」で構成を追加してください。"
       logging_subject: "迷惑行為の検出"
     ai_bot:
+      navigation:
+        settings:
+          title: "サイトの設定"
+        users:
+          title: "ユーザー"
+        groups:
+          title: "グループ"
+        review:
+          title: "レビューキュー"
+        categories:
+          title: "カテゴリ"
+        tags:
+          title: "タグ"
+        themes:
+          title: "テーマ"
+        authentication:
+          title: "ログインと認証"
+        backups:
+          title: "バックアップ"
       reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
       default_pm_prefix: "[無題の AI ボット PM]"
       thinking: "思考中"

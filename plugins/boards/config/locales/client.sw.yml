@@ -7,6 +7,9 @@
 sw:
   js:
     boards:
+      status:
+        all: "Yote"
+        open: "Fungua"
       board:
         remove_card: "Ondoa"
         title: "Kichwa cha Habari"

@@ -33,6 +33,10 @@ vi:
           title: "Ngày/giờ nhập"
         menus:
           title: "Trình đơn (Menus)"
+        context_menu:
+          actions:
+            duplicate: "Nhân bản"
+            delete: "Xóa"
         multi_select:
           title: "Chọn nhiều mục"
         toasts:

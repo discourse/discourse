@@ -35,6 +35,30 @@ en:
           title: "Date/Time inputs"
         menus:
           title: "Menus"
+        context_menu:
+          title: "Context menu"
+          description: "A right-click opens a menu at the pointer instead of the browser's own. The surfaces below are plain regions rather than real components, so anything that misbehaves here is the modifier."
+          actions:
+            duplicate: "Duplicate"
+            delete: "Delete"
+            rename: "Rename row"
+          nesting:
+            example: "dContextMenu"
+            example_description: "Opens a menu where the pointer is. The reference it anchors to is the menu's own trigger, so nothing else has to know the menu was opened from a right-click."
+            try_this: "Right-click the outer surface, then right-click the inner one. Both are focusable, so Tab to one and press the context-menu key or Shift+F10 to open the same menu without a mouse."
+            note: "Both surfaces carry their own menu and the event bubbles through both. Accepting stops propagation, so the innermost handler opens its menu alone instead of alongside its parent's. The keyboard route is the browser's own: it dispatches the same event to the focused element, which is why the target has to be focusable and why each surface names itself as the focus target so closing gives focus back."
+            outer: "Outer surface"
+            inner: "Inner surface"
+          declining:
+            example: "Declining a right-click"
+            example_description: "A handler decides, synchronously, whether to replace the native menu. Declining leaves the event completely untouched, so an outer handler or the browser still gets it."
+            try_this: "Right-click the surface, then right-click inside the text field."
+            note: "A target that owns a text caret keeps the browser's own menu by default, so spelling and clipboard commands still work without a consumer opting out. The hook here only reports the decision so it is visible."
+            surface: "Outer surface"
+            field: "Right-click me for the browser's own menu"
+            untouched: "No right-click yet"
+            accepted: "Last right-click: accepted"
+            declined: "Last right-click: declined, the browser took it"
         multi_select:
           title: "Multi select"
         toasts:
@@ -423,3 +447,7 @@ en:
           title: "Segmented Control (Button toggle group)"
         virtual_list:
           title: "Virtual list"
+        tabs:
+          title: "Tabs"
+        overflow_controls:
+          title: "Overflow controls"

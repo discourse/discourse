@@ -23,6 +23,33 @@ export default class DTextField extends TextField {
   _prevValue = null;
   _timer = null;
 
+  @computed("siteSettings.support_mixed_text_direction", "value")
+  get dir() {
+    if (this.siteSettings.support_mixed_text_direction) {
+      const value = this.value?.toString() || "";
+
+      if (value) {
+        return "auto";
+      }
+
+      return siteDir();
+    }
+  }
+
+  /**
+   * The bound `placeholder` attribute, derived from both arguments. This is
+   * a separate computed rather than a setter on `placeholder`: Ember caches
+   * what a computed setter returns at assignment time, so the result would
+   * depend on which argument the caller passes first.
+   */
+  @computed("placeholder", "placeholderKey")
+  get resolvedPlaceholder() {
+    if (this.placeholder) {
+      return this.placeholder;
+    }
+    return this.placeholderKey ? i18n(this.placeholderKey) : "";
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
 
@@ -47,39 +74,12 @@ export default class DTextField extends TextField {
     }
   }
 
-  _debouncedChange() {
-    next(() => this.onChange(this.value));
-  }
-
-  @computed("siteSettings.support_mixed_text_direction", "value")
-  get dir() {
-    if (this.siteSettings.support_mixed_text_direction) {
-      const value = this.value?.toString() || "";
-
-      if (value) {
-        return "auto";
-      }
-
-      return siteDir();
-    }
-  }
-
   willDestroyElement() {
     super.willDestroyElement(...arguments);
     cancel(this._timer);
   }
 
-  /**
-   * The bound `placeholder` attribute, derived from both arguments. This is
-   * a separate computed rather than a setter on `placeholder`: Ember caches
-   * what a computed setter returns at assignment time, so the result would
-   * depend on which argument the caller passes first.
-   */
-  @computed("placeholder", "placeholderKey")
-  get resolvedPlaceholder() {
-    if (this.placeholder) {
-      return this.placeholder;
-    }
-    return this.placeholderKey ? i18n(this.placeholderKey) : "";
+  _debouncedChange() {
+    next(() => this.onChange(this.value));
   }
 }

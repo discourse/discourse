@@ -18,20 +18,20 @@ export default class DateSetting extends Component {
   <template>
     <div class="date-time-setting">
       <Input
+        class="input-setting-date"
+        @disabled={{@disabled}}
         @type="date"
         @value={{@value}}
-        @disabled={{@disabled}}
-        class="input-setting-date"
         {{on "input" this.changeValue}}
       />
 
       {{#if @value}}
         <DButton
-          @icon="trash-can"
-          @action={{this.reset}}
-          @disabled={{@disabled}}
-          @ariaLabel="admin.settings.reset"
           class="btn-small"
+          @action={{this.reset}}
+          @ariaLabel="admin.settings.reset"
+          @disabled={{@disabled}}
+          @icon="trash-can"
         />
       {{/if}}
     </div>

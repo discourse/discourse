@@ -21,7 +21,7 @@ module JsonApiKit
         def paginate(scope, order:, limits:, anchors:)
           row = anchors.locate(anchoring, scope:, order:)
           return window(limits).paginate(scope, order:, row:) if row
-          return Pagination::EmptyPage.new unless anchoring.computed?
+          return Pagination::EmptyPage.new unless anchoring.without_value?
           First.new(size:).paginate(scope, order:, limits:)
         end
 

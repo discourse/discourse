@@ -116,6 +116,11 @@ sw:
         sort:
           relevance: "Umuhimu"
           latest: "Hivi Karibuni"
+      channel_list:
+        options:
+          filter: "Ichujwe"
+        filter:
+          mentions: "Kutajwa"
       incoming_webhooks:
         back: "Iliyopita"
         description: "Elezo"

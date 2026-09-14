@@ -1,6 +1,6 @@
 # Voice
 
-Voice is a Discourse plugin that adds Discord-style voice rooms powered by WebRTC. Rooms appear in the sidebar; users join or leave with a single click and talk peer-to-peer — no media goes through the Discourse server. Sites that need bigger calls can optionally route rooms through a self-hosted [LiveKit](https://livekit.io) media server.
+Voice is a Discourse plugin that adds Discord-style voice rooms powered by WebRTC. Rooms appear in the sidebar; users join or leave with a single click and talk peer-to-peer — no media goes through the Discourse server. Sites that need bigger calls can optionally route rooms through a hosted or self-hosted [LiveKit](https://livekit.io) media server.
 
 > **Status:** early alpha — test with small groups before opening to a full community.
 

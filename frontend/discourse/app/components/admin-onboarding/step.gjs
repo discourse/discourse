@@ -88,12 +88,12 @@ export default class OnboardingStep extends Component {
       </div>
       <div class="onboarding-step__action">
         <DButton
-          @label={{this.buttonLabel}}
-          @action={{this.performAction}}
           class={{dConcatClass
             "btn-transparent btn-small btn-link"
             (if this.completed "--completed")
           }}
+          @action={{this.performAction}}
+          @label={{this.buttonLabel}}
           {{on "pointerenter" this.prefetch}}
           {{on "focus" this.prefetch}}
         />

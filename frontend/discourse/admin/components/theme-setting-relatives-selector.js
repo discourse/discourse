@@ -3,12 +3,6 @@ import SiteSettingComponent from "./site-setting";
 export default class ThemeSettingRelativesSelectorComponent extends SiteSettingComponent {
   trackChanges = false;
 
-  _save() {
-    return this.args.model.save({
-      [this.args.setting.setting]: this.convertNamesToIds(),
-    });
-  }
-
   convertNamesToIds() {
     return this.buffered
       .get("value")
@@ -22,5 +16,11 @@ export default class ThemeSettingRelativesSelectorComponent extends SiteSettingC
         }
         return themeName;
       });
+  }
+
+  _save() {
+    return this.args.model.save({
+      [this.args.setting.setting]: this.convertNamesToIds(),
+    });
   }
 }

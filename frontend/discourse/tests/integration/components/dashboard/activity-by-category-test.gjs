@@ -59,8 +59,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -73,8 +73,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -90,8 +90,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -106,8 +106,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -143,8 +143,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -164,8 +164,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{empty}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -179,8 +179,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -193,8 +193,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );
@@ -210,8 +210,8 @@ module(
         <template>
           <ActivityByCategory
             @activity={{activity}}
-            @startDate={{start}}
             @endDate={{end}}
+            @startDate={{start}}
           />
         </template>
       );

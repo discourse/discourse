@@ -387,8 +387,8 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
         "create-invite-admin-mode",
         <template>
           <button
-            type="button"
             class="test-disable-submit"
+            type="button"
             {{on "click" (fn @outletArgs.setSubmitDisabled true)}}
           >disable</button>
         </template>

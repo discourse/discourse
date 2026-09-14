@@ -19,7 +19,7 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
   test("renders @description when provided", async function (assert) {
     await render(
       <template>
-        <DashboardSection @title="Reports" @description="Last 30 days">
+        <DashboardSection @description="Last 30 days" @title="Reports">
           content
         </DashboardSection>
       </template>
@@ -72,9 +72,9 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
     await render(
       <template>
         <DashboardSection
-          @title="Reports"
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
+          @title="Reports"
         >
           <:default as |section|>
             <span class="start">{{section.startDate}}</span>
@@ -101,7 +101,7 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
   test("adds --no-border modifier when @bordered is false", async function (assert) {
     await render(
       <template>
-        <DashboardSection @title="Reports" @bordered={{false}}>
+        <DashboardSection @bordered={{false}} @title="Reports">
           content
         </DashboardSection>
       </template>
@@ -123,7 +123,7 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
   test("applies the @layout modifier when set", async function (assert) {
     await render(
       <template>
-        <DashboardSection @title="Reports" @layout="grid">
+        <DashboardSection @layout="grid" @title="Reports">
           content
         </DashboardSection>
       </template>
@@ -136,7 +136,7 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
   test("falls back to --column when @layout is unrecognized", async function (assert) {
     await render(
       <template>
-        <DashboardSection @title="Reports" @layout="bogus">
+        <DashboardSection @layout="bogus" @title="Reports">
           content
         </DashboardSection>
       </template>
@@ -158,7 +158,7 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
   test("renders a header action button when @headerActionIcon is set", async function (assert) {
     await render(
       <template>
-        <DashboardSection @title="Reports" @headerActionIcon="gear">
+        <DashboardSection @headerActionIcon="gear" @title="Reports">
           content
         </DashboardSection>
       </template>
@@ -175,9 +175,9 @@ module("Integration | Component | Dashboard | Section", function (hooks) {
     await render(
       <template>
         <DashboardSection
-          @title="Reports"
-          @headerActionIcon="gear"
           @headerAction={{handler}}
+          @headerActionIcon="gear"
+          @title="Reports"
         >
           content
         </DashboardSection>

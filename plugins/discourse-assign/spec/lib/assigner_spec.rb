@@ -1079,7 +1079,7 @@ RSpec.describe Assigner do
       }
     end
 
-    it "doesn't send an email if the assigner and assignee are not different" do
+    it "doesn't send an email when assigning a user to themself" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { described_class.new(topic, moderator).assign(moderator_2) }.to change {
@@ -1087,7 +1087,7 @@ RSpec.describe Assigner do
       }.by(1)
     end
 
-    it "doesn't send an email if the assigner and assignee are not different" do
+    it "doesn't send an email when assigning a group to one of its members" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { described_class.new(topic, moderator).assign(moderator) }.not_to change {

@@ -12,13 +12,13 @@ const COMPONENT_DICT = {
 export default class ChatNotices extends Component {
   @service("chat-channel-notices-manager") noticesManager;
 
+  get component() {
+    return COMPONENT_DICT[this.args.notice.type];
+  }
+
   @action
   clearNotice() {
     this.noticesManager.clearNotice(this.args.notice);
-  }
-
-  get component() {
-    return COMPONENT_DICT[this.args.notice.type];
   }
 
   <template>
@@ -30,15 +30,15 @@ export default class ChatNotices extends Component {
       {{else}}
         <this.component
           @channel={{@channel}}
-          @notice={{@notice}}
           @clearNotice={{this.clearNotice}}
+          @notice={{@notice}}
         />
       {{/if}}
 
       <DButton
-        @icon="xmark"
-        @action={{this.clearNotice}}
         class="btn-transparent chat-notices__notice__clear"
+        @action={{this.clearNotice}}
+        @icon="xmark"
       />
     </div>
   </template>

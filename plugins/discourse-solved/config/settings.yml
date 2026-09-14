@@ -82,15 +82,6 @@ discourse_solved:
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402498"
       permanent_warning: false
-  enable_solved_badges:
-    default: false
-    hidden: true
-    client: true
-    upcoming_change:
-      status: "stable"
-      impact: "site_setting_default,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/406386"
-      permanent_warning: false
   discourse_solved_admin_dashboard_seeded:
     default: false
     hidden: true

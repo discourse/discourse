@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 es:
+  mcp:
+    errors:
+      draft_too_long: "El borrador es demasiado largo"
+      post_not_found: "Publicación no encontrada"
+      topic_not_found: "Tema no encontrado"
+      user_not_found: "Usuario no encontrado"
+    oauth:
+      resource: "Servidor MCP"
+      deny: "Denegar"
+      approve: "Autorizar"
   llms_txt:
     sections:
       optional: "Opcional"
@@ -1680,12 +1690,6 @@ es:
       host_names: "Tu archivo config/database.yml está utilizando el hostname localhost predeterminado. Actualízalo para usar el hostname de tu sitio."
       queue_size: "El número de tareas en cola es %{queue_size}, que es una cifra alta. Esto podría indicar un problema en el proceso (o procesos) de Sidekiq, o tal vez deberías añadir más trabajadores de Sidekiq."
       ram: "Tu servidor está funcionando con menos de 1 GB de memoria total. Se recomienda una memoria de al menos 1 GB de capacidad."
-      google_oauth2_config: 'El servidor está configurado para permitir el registro y el inicio de sesión con Google OAuth2 (enable_google_oauth2_logins), pero los valores de ID de cliente y secreto de cliente no están configurados. Ve a <a href="%{base_path}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulta esta guía para obtener más información</a>.'
-      facebook_config: 'El servidor está configurado para permitir el registro y el inicio de sesión con Facebook (enable_facebook_logins), pero los valores de ID de la aplicación y secreto de la aplicación no están configurados. Ve a <a href="%{base_path}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consulta esta guía para obtener más información</a>.'
-      twitter_config: 'El servidor está configurado para permitir el registro y el inicio de sesión con Twitter (enable_twitter_logins), pero los valores de clave y secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consulta esta guía para obtener más información</a>.'
-      github_config: 'El servidor está configurado para permitir el registro y el inicio de sesión con GitHub (enable_github_logins), pero los valores de ID de cliente y secreto no están configurados. Ve a <a href="%{base_path}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulta esta guía para obtener más información</a>.'
-      s3_upload_config: 'El servidor está configurado para subir archivos a S3, pero al menos uno de los siguientes ajustes no está establecido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Ve a los <a href="%{base_path}/admin/site_settings">Ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Ve a «¿Cómo configurar la subida de imágenes a S3?» para obtener más información</a>.'
-      s3_backup_config: 'El servidor está configurado para permitir subir copias de seguridad a S3, pero al menos una de las siguientes configuraciones no se ha establecido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, o s3_backup_bucket. Ve a <a href="%{base_path}/admin/site_settings">los ajustes del sitio</a> y actualiza la configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta «How to set up image uploads to S3?» para obtener más información</a>.'
       s3_cdn: 'El servidor está configurado para subir los archivos a S3, pero no hay CDN de S3 configurado. Esto puede llevar a grandes costes de S3 y mal rendimiento del sitio. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consulta «Using Object Storage for Uploads» para obtener más detalles</a>.'
       image_magick: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="https://www.imagemagick.org/script/download.php" target="_blank">descarga la última versión</a>.'
       failing_emails: 'Hay %{num_failed_jobs} tareas de correo electrónico que fallaron. Revisa tu app.yml y asegúrate de que los ajustes del servidor de correo es correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Consulta las tareas que fallaron en Sidekiq</a>.'
@@ -2547,7 +2551,6 @@ es:
       markdown_linkify_tlds: "No puedes incluir el valor «*»"
       google_oauth2_hd_groups: "Debes configurar todos los ajustes de «google oauth2 hd» antes de activar este ajuste."
       discourse_id_registration: "No se ha podido registrar automáticamente con Discourse ID. Esto podría deberse a problemas de conectividad de red, restricciones del cortafuegos o a que no se puede acceder al servicio de Discourse ID. Comprueba los registros del servidor para obtener más información o ponte en contacto con el servicio de asistencia."
-      linkedin_oidc_credentials: "Debes configurar las credenciales OIDC de LinkedIn («linkedin_oidc_client_id» y «linkedin_oidc_client_secret») antes de activar este ajuste."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
       search_tokenize_japanese_enabled: "Debes desactivar el ajuste «search_tokenize_japanese» antes de activar este."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "No puedes activar DiscourseConnect si la autenticación de dos factores (2FA) es obligatoria."
@@ -4754,6 +4757,10 @@ es:
   performance_report:
     initial_post_raw: Este tema contiene informes diarios sobre el rendimiento de tu sito.
     initial_topic_title: Informe sobre el rendimiento del sitio
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "El archivo CSV tiene demasiadas líneas. Incluye un archivo CSV con no más de %{count} línea."
+      other: "El archivo CSV tiene demasiadas líneas. Incluye un archivo CSV con no más de %{count} líneas."
   tags:
     title: "Etiquetas"
     restricted_tag_disallowed: 'No puedes aplicar la etiqueta "%{tag}".'
@@ -5021,8 +5028,6 @@ es:
         complete: "Publicación oculta, se ha notificado al usuario."
       agree_and_edit:
         title: "Editar publicación"
-        description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
-        complete: "Denuncia reconocida, ahora puedes editar la publicación."
       delete:
         title: "Eliminar"
         complete: "Publicación eliminada."
@@ -5126,30 +5131,6 @@ es:
       approve_and_unhide:
         title: "Sí"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
-      post_actions:
-        bundle_title: "¿Qué quieres hacer con la publicación?"
-      delete_post:
-        title: "Eliminar publicación"
-        description: "Eliminar esta publicación"
-        complete: "Publicación eliminada"
-      hide_post:
-        title: "Ocultar publicación"
-        description: "Ocultar esta publicación de la vista pública"
-        complete: "Publicación ocultada"
-      unhide_post:
-        title: "Dejar de ocultar la publicación"
-        description: "Volver que esta publicación sea visible para todos los usuarios"
-        complete: "La publicación ya no está oculta"
-      restore_post:
-        title: "Restaurar publicación"
-        description: "Restaurar la publicación eliminada"
-        complete: "Publicación restaurada"
-      edit_post:
-        title: "Editar publicación"
-        description: "Editar el contenido de esta publicación"
-        complete: "Publicación editada"
-      user_actions:
-        bundle_title: "¿Qué quieres hacer con el usuario?"
       silence_user:
         title: "Silenciar al usuario"
         complete: "Usuario silenciado"

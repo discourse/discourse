@@ -41,10 +41,10 @@ export default class DirectoryItemUserFieldValueComponent extends Component {
         {{#if this.isSearchable}}
           {{#each this.values as |value|}}
             <LinkTo
-              @route="users"
-              @query={{hash name=value}}
-              {{on "click" (fn this.refreshRoute value)}}
               class="directory-value-list-item"
+              @query={{hash name=value}}
+              @route="users"
+              {{on "click" (fn this.refreshRoute value)}}
             >{{value}}</LinkTo>
           {{/each}}
         {{else}}

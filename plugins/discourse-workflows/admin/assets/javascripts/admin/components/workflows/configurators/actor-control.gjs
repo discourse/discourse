@@ -56,29 +56,29 @@ export default class ActorControl extends Component {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <div class="workflows-actor-control">
         <ComboBox
-          @content={{KIND_OPTIONS}}
-          @value={{this.kind}}
-          @nameProperty="name"
-          @valueProperty="id"
-          @onChange={{this.handleKindChange}}
           class="workflows-actor-control__kind"
+          @content={{KIND_OPTIONS}}
+          @nameProperty="name"
+          @onChange={{this.handleKindChange}}
+          @value={{this.kind}}
+          @valueProperty="id"
         />
 
         {{#if this.showUserChooser}}
           <UserChooser
-            @value={{this.username}}
+            class="workflows-actor-control__user"
             @onChange={{this.handleUserChange}}
             @options={{hash maximum=1 excludeCurrentUser=false}}
-            class="workflows-actor-control__user"
+            @value={{this.username}}
           />
         {{/if}}
       </div>

@@ -79,55 +79,6 @@ export default class ChatMessageInteractor {
     );
   }
 
-  #computeQuickReactionEmojis() {
-    const userQuickReactionsCustom = (
-      (this.currentUser.user_option.chat_quick_reaction_type === "custom" &&
-        this.currentUser.user_option.chat_quick_reactions_custom) ||
-      ""
-    )
-      .split("|")
-      .filter(Boolean);
-
-    const frequentReactions = this.emojiStore.favoritesForContext("chat");
-
-    const defaultReactions = this.siteSettings.default_emoji_reactions
-      .split("|")
-      .map((emoji) => {
-        if (
-          this.emojiStore.diversity !== DEFAULT_DIVERSITY &&
-          isSkinTonableEmoji(emoji)
-        ) {
-          return `${emoji}:t${this.emojiStore.diversity}`;
-        }
-
-        return emoji;
-      });
-
-    const allReactionsInOrder = userQuickReactionsCustom
-      .concat(frequentReactions)
-      .concat(defaultReactions);
-
-    return allReactionsInOrder
-      .filter((item, index) => {
-        return allReactionsInOrder.indexOf(item) === index;
-      })
-      .filter(Boolean)
-      .slice(0, 3);
-  }
-
-  // An emoji with no reaction yet still needs a model to render against, and it has to
-  // keep its identity across re-renders or the control it backs is torn down.
-  #placeholderReaction(emoji) {
-    let reaction = this.#placeholderReactions.get(emoji);
-
-    if (!reaction) {
-      reaction = ChatMessageReactionModel.create({ emoji });
-      this.#placeholderReactions.set(emoji, reaction);
-    }
-
-    return reaction;
-  }
-
   get pane() {
     return this.context === MESSAGE_CONTEXT_THREAD
       ? this.chatThreadPane
@@ -555,5 +506,54 @@ export default class ChatMessageInteractor {
   @action
   handleSecondaryActions(id) {
     this[id](this.message);
+  }
+
+  #computeQuickReactionEmojis() {
+    const userQuickReactionsCustom = (
+      (this.currentUser.user_option.chat_quick_reaction_type === "custom" &&
+        this.currentUser.user_option.chat_quick_reactions_custom) ||
+      ""
+    )
+      .split("|")
+      .filter(Boolean);
+
+    const frequentReactions = this.emojiStore.favoritesForContext("chat");
+
+    const defaultReactions = this.siteSettings.default_emoji_reactions
+      .split("|")
+      .map((emoji) => {
+        if (
+          this.emojiStore.diversity !== DEFAULT_DIVERSITY &&
+          isSkinTonableEmoji(emoji)
+        ) {
+          return `${emoji}:t${this.emojiStore.diversity}`;
+        }
+
+        return emoji;
+      });
+
+    const allReactionsInOrder = userQuickReactionsCustom
+      .concat(frequentReactions)
+      .concat(defaultReactions);
+
+    return allReactionsInOrder
+      .filter((item, index) => {
+        return allReactionsInOrder.indexOf(item) === index;
+      })
+      .filter(Boolean)
+      .slice(0, 3);
+  }
+
+  // An emoji with no reaction yet still needs a model to render against, and it has to
+  // keep its identity across re-renders or the control it backs is torn down.
+  #placeholderReaction(emoji) {
+    let reaction = this.#placeholderReactions.get(emoji);
+
+    if (!reaction) {
+      reaction = ChatMessageReactionModel.create({ emoji });
+      this.#placeholderReactions.set(emoji, reaction);
+    }
+
+    return reaction;
   }
 }

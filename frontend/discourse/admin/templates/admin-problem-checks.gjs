@@ -5,16 +5,16 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="admin-problem-checks admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.problem_checks.title"}}
       @descriptionLabel={{i18n
         "admin.config.problem_checks.header_description"
       }}
+      @titleLabel={{i18n "admin.config.problem_checks.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/problem-checks"
           @label={{i18n "admin.config.problem_checks.title"}}
+          @path="/admin/problem-checks"
         />
       </:breadcrumbs>
     </DPageHeader>

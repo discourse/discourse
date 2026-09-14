@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 fi:
+  mcp:
+    errors:
+      draft_too_long: "Luonnos on liian pitkä"
+      topic_not_found: "Ketjua ei löytynyt"
+    oauth:
+      deny: "Hylkää"
+      approve: "Anna käyttöoikeus"
   llms_txt:
     sections:
       optional: "Valinnainen"
@@ -1640,12 +1647,6 @@ fi:
       host_names: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
       queue_size: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq-prosesseissa, tai sinun voi täytyä lisätä Sidekiqin workerien määrää."
       ram: "Palvelimella on alle 1 Gt muistia. Vähintään 1 Gt muistia on suositeltavaa."
-      google_oauth2_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lue lisää tästä oppaasta</a>.'
-      facebook_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Lue lisää tästä oppaasta</a>.'
-      twitter_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Lue lisää tästä oppaasta</a>.'
-      github_config: 'Palvelin on määritetty hyväksymään rekisteröityminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Aseta arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Lue lisää tästä oppaasta</a>.'
-      s3_upload_config: 'Palvelin on määritetty tallentamaan sivustolle ladatut tiedostot S3:een, mutta ainakin yksi seuraavista asetuksista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
-      s3_backup_config: 'Palvelin on määritetty tallentamaan varmuuskopiot S3:een, mutta ainakin yksi seuraavista asetuksista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="<a href="%{base_path}/admin/site_settings">/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa saat englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
       s3_cdn: 'Palvelin on määritetty siirtämään ladatut tiedostot S3:een, mutta S3:n CDN-asetuksia ei ole määritelty. Tämä voi johtaa kalliisiin S3-kustannuksiin ja hitaampaan sivuston suorituskykyyn. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Lue lisätietoja objektitallennustilan käytöstä tiedostojen lataamisessa palvelimeen</a>.'
       image_magick: 'Palvelin on määritetty luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="https://www.imagemagick.org/script/download.php" target="_blank">lataa uusin versio</a>.'
       failing_emails: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="%{base_path}/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
@@ -2448,7 +2449,6 @@ fi:
         other: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
       markdown_linkify_tlds: "Et voi lisätä arvoa \"*\"."
       google_oauth2_hd_groups: "Sinun täytyy määrittää kaikki \"google oauth2 hd\" -asetukset ennen kuin otat tämän asetuksen käyttöön."
-      linkedin_oidc_credentials: "Sinun täytyy määrittää LinkedIn OIDC -tunnistetiedot (\"linkedin_oidc_client_id\" ja \"linkedin_oidc_client_secret\") ennen tämän asetuksen käyttöönottoa."
       search_tokenize_chinese_enabled: "\"search_tokenize_chinese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Et voi ottaa DiscourseConnectia käyttöön, jos 2FA on pakotettu."
@@ -4406,6 +4406,10 @@ fi:
   performance_report:
     initial_post_raw: Tämä ketju sisältää päivittäisiä suorituskykyrapotteja sivustoltasi
     initial_topic_title: Sivuston suorituskykyraportit
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Liian monta merkintää CSV-tiedostossa. Anna CSV-tiedosto, jossa on enintään %{count} merkintä."
+      other: "Liian monta merkintää CSV-tiedostossa. Anna CSV-tiedosto, jossa on enintään %{count} merkintää."
   tags:
     title: "Tunnisteet"
     restricted_tag_disallowed: 'Et voi käyttää tunnistetta "%{tag}".'
@@ -4630,9 +4634,6 @@ fi:
         title: "Piilota viesti"
         description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
         complete: "Viesti piilotettu, käyttäjälle on ilmoitettu."
-      agree_and_edit:
-        description: "Hyväksy lipulla ja avaa kirjoitusikkuna viestin muokkaamiseksi."
-        complete: "Lippu vahvistettu, voit nyt muokata viestiä."
       delete:
         title: "Poista"
         complete: "Viesti poistettu."
@@ -4723,14 +4724,6 @@ fi:
       approve_and_unhide:
         title: "Kyllä"
         complete: "Viesti hyväksytty ja näkyvissä"
-      delete_post:
-        title: "Poista viesti"
-        complete: "Viesti poistettu"
-      hide_post:
-        title: "Piilota viesti"
-      restore_post:
-        title: "Palauta viesti"
-        complete: "Viesti palautettu"
       silence_user:
         title: "Hiljennä käyttäjä"
         complete: "Käyttäjä hiljennetty"

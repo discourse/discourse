@@ -7,6 +7,10 @@
 es:
   js:
     boards:
+      status:
+        all: "Todo"
+        open: "Abierto"
+        archived: "Archivado"
       board:
         remove_card: "Eliminar"
         new_topic: "Nuevo tema..."

@@ -78,17 +78,17 @@ export default class EditRule extends Component {
 
   <template>
     <DModal
-      @title={{this.title}}
-      @closeModal={{@closeModal}}
-      id="chat-integration-edit-rule-modal"
       class="chat-integration-modal"
+      id="chat-integration-edit-rule-modal"
+      @closeModal={{@closeModal}}
+      @title={{this.title}}
     >
       <:body>
         <Form as |form|>
           <form.Field
-            @type="custom"
             @name="provider"
             @title={{i18n "chat_integration.edit_rule_modal.provider"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
@@ -105,90 +105,90 @@ export default class EditRule extends Component {
           </form.Field>
 
           <form.Field
-            @type="custom"
             @name="channel"
             @title={{i18n "chat_integration.edit_rule_modal.channel"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
               <ChannelData
-                @provider={{@model.provider}}
                 @channel={{@model.channel}}
+                @provider={{@model.provider}}
               />
             </field.Control>
           </form.Field>
 
           <form.Field
-            @type="custom"
-            @name="type"
-            @title={{i18n "chat_integration.edit_rule_modal.type"}}
             @description={{i18n
               "chat_integration.edit_rule_modal.instructions.type"
             }}
+            @name="type"
+            @title={{i18n "chat_integration.edit_rule_modal.type"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
               <ComboBox
                 @content={{@model.rule.available_types}}
-                @value={{this.type}}
                 @onChange={{this.onTypeChange}}
+                @value={{this.type}}
               />
             </field.Control>
           </form.Field>
 
           <form.Field
-            @type="custom"
-            @name="filter"
-            @title={{i18n "chat_integration.edit_rule_modal.filter"}}
             @description={{i18n
               "chat_integration.edit_rule_modal.instructions.filter"
             }}
+            @name="filter"
+            @title={{i18n "chat_integration.edit_rule_modal.filter"}}
+            @type="custom"
             as |field|
           >
             <field.Control>
               <ComboBox
                 @content={{@model.rule.available_filters}}
-                @value={{this.filter}}
                 @onChange={{this.onFilterChange}}
+                @value={{this.filter}}
               />
             </field.Control>
           </form.Field>
 
           {{#if this.isNormalType}}
             <form.Field
-              @type="custom"
-              @name="category_id"
-              @title={{i18n "chat_integration.edit_rule_modal.category"}}
               @description={{i18n
                 "chat_integration.edit_rule_modal.instructions.category"
               }}
+              @name="category_id"
+              @title={{i18n "chat_integration.edit_rule_modal.category"}}
+              @type="custom"
               as |field|
             >
               <field.Control>
                 <CategoryChooser
-                  @value={{this.category_id}}
                   @onChange={{this.onCategoryChange}}
                   @options={{hash none="chat_integration.all_categories"}}
+                  @value={{this.category_id}}
                 />
               </field.Control>
             </form.Field>
           {{else}}
             <form.Field
-              @type="custom"
-              @name="group_id"
-              @title={{i18n "chat_integration.edit_rule_modal.group"}}
               @description={{i18n
                 "chat_integration.edit_rule_modal.instructions.group"
               }}
+              @name="group_id"
+              @title={{i18n "chat_integration.edit_rule_modal.group"}}
+              @type="custom"
               as |field|
             >
               <field.Control>
                 <ComboBox
                   @content={{@model.groups}}
-                  @valueProperty="id"
-                  @value={{this.group_id}}
                   @onChange={{this.onGroupChange}}
                   @options={{hash none="chat_integration.choose_group"}}
+                  @value={{this.group_id}}
+                  @valueProperty="id"
                 />
               </field.Control>
             </form.Field>
@@ -196,20 +196,20 @@ export default class EditRule extends Component {
 
           {{#if this.siteSettings.tagging_enabled}}
             <form.Field
-              @type="custom"
-              @name="tags"
-              @title={{i18n "chat_integration.edit_rule_modal.tags"}}
               @description={{i18n
                 "chat_integration.edit_rule_modal.instructions.tags"
               }}
+              @name="tags"
+              @title={{i18n "chat_integration.edit_rule_modal.tags"}}
+              @type="custom"
               as |field|
             >
               <field.Control>
                 <TagChooser
-                  @tags={{this.tags}}
                   @everyTag="true"
                   @onChange={{this.onTagsChange}}
                   @options={{hash placeholderKey="chat_integration.all_tags"}}
+                  @tags={{this.tags}}
                 />
               </field.Control>
             </form.Field>
@@ -217,15 +217,15 @@ export default class EditRule extends Component {
 
           <form.Actions>
             <form.Button
-              @label="chat_integration.edit_rule_modal.save"
-              @action={{this.save}}
               class="btn-primary"
               id="save-rule"
+              @action={{this.save}}
+              @label="chat_integration.edit_rule_modal.save"
             />
             <form.Button
-              @label="chat_integration.edit_rule_modal.cancel"
-              @action={{@closeModal}}
               class="btn-default"
+              @action={{@closeModal}}
+              @label="chat_integration.edit_rule_modal.cancel"
             />
           </form.Actions>
         </Form>

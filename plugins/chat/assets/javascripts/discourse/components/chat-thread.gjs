@@ -64,11 +64,6 @@ export default class ChatThread extends Component {
     onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
 
-  @action
-  registerScroller(element) {
-    this.scroller = element;
-  }
-
   @cached
   get messagesLoader() {
     return new ChatMessagesLoader(getOwner(this), this.args.thread);
@@ -85,6 +80,11 @@ export default class ChatThread extends Component {
 
   get pendingContextKey() {
     return this.args.thread?.id ? `thread:${this.args.thread.id}` : null;
+  }
+
+  @action
+  registerScroller(element) {
+    this.scroller = element;
   }
 
   @action
@@ -465,6 +465,25 @@ export default class ChatThread extends Component {
     );
   }
 
+  @action
+  async scrollToBottom() {
+    this._ignoreNextScroll = true;
+    await scrollListToBottom(this.scroller);
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
+    this.paneState.clearPendingMessages();
+  }
+
+  @action
+  async scrollToTop() {
+    this._ignoreNextScroll = true;
+    await scrollListToTop(this.scroller);
+  }
+
+  @action
+  resendStagedMessage() {}
+
   async #sendNewMessage(message) {
     if (this.chatThreadPane.sending) {
       return;
@@ -538,25 +557,6 @@ export default class ChatThread extends Component {
     }
   }
 
-  @action
-  async scrollToBottom() {
-    this._ignoreNextScroll = true;
-    await scrollListToBottom(this.scroller);
-    if (this.paneState.shouldMarkRead()) {
-      this.debouncedUpdateLastReadMessage();
-    }
-    this.paneState.clearPendingMessages();
-  }
-
-  @action
-  async scrollToTop() {
-    this._ignoreNextScroll = true;
-    await scrollListToTop(this.scroller);
-  }
-
-  @action
-  resendStagedMessage() {}
-
   #onSendError(stagedId, error) {
     const stagedMessage =
       this.args.thread.messagesManager.findStagedMessage(stagedId);
@@ -596,11 +596,11 @@ export default class ChatThread extends Component {
         <ChatMessagesContainer @didResizePane={{this.didResizePane}}>
           {{#each this.messagesManager.messages key="id" as |message|}}
             <Message
-              @message={{message}}
-              @disableMouseEvents={{this.isScrolling}}
-              @resendStagedMessage={{this.resendStagedMessage}}
-              @fetchMessagesByDate={{this.fetchMessagesByDate}}
               @context="thread"
+              @disableMouseEvents={{this.isScrolling}}
+              @fetchMessagesByDate={{this.fetchMessagesByDate}}
+              @message={{message}}
+              @resendStagedMessage={{this.resendStagedMessage}}
             />
           {{/each}}
 
@@ -615,15 +615,15 @@ export default class ChatThread extends Component {
       </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
-        @onScrollToBottom={{this.scrollToLatestMessage}}
         @isVisible={{this.paneState.hasPendingContentBelow}}
+        @onScrollToBottom={{this.scrollToLatestMessage}}
       />
 
       {{#if this.chatThreadPane.selectingMessages}}
         <ChatSelectionManager
           @channel={{@thread.channel}}
-          @pane={{this.chatThreadPane}}
           @messagesManager={{this.messagesManager}}
+          @pane={{this.chatThreadPane}}
         />
       {{else}}
         {{#if this.showChannelPreview}}
@@ -631,10 +631,10 @@ export default class ChatThread extends Component {
         {{else}}
           <ChatComposerThread
             @channel={{@channel}}
-            @thread={{@thread}}
             @onSendMessage={{this.onSendMessage}}
-            @uploadDropZone={{this.uploadDropZone}}
             @scroller={{this.scroller}}
+            @thread={{@thread}}
+            @uploadDropZone={{this.uploadDropZone}}
           />
         {{/if}}
       {{/if}}

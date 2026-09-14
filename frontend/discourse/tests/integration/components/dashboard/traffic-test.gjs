@@ -24,9 +24,9 @@ module("Integration | Component | Dashboard | Traffic", function (hooks) {
     await render(
       <template>
         <DashboardTraffic
-          @traffic={{null}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
+          @traffic={{null}}
         />
       </template>
     );
@@ -48,9 +48,9 @@ module("Integration | Component | Dashboard | Traffic", function (hooks) {
     await render(
       <template>
         <DashboardTraffic
-          @traffic={{traffic}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
+          @traffic={{traffic}}
         />
       </template>
     );
@@ -72,9 +72,9 @@ module("Integration | Component | Dashboard | Traffic", function (hooks) {
     await render(
       <template>
         <DashboardTraffic
-          @traffic={{traffic}}
-          @startDate={{startDate}}
           @endDate={{endDate}}
+          @startDate={{startDate}}
+          @traffic={{traffic}}
         />
       </template>
     );

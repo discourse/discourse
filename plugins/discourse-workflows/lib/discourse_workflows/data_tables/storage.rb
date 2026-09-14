@@ -90,31 +90,28 @@ module DiscourseWorkflows
         end
 
         def size_bytes(data_table_id)
-          batch_size_bytes([data_table_id]).fetch(data_table_id, 0)
+          DB
+            .query_single(
+              "SELECT pg_total_relation_size(to_regclass(:table_name))",
+              table_name: quoted_table(data_table_id),
+            )
+            .first
+            .to_i
         end
 
-        def batch_size_bytes(data_table_ids)
+        def batch_stats(data_table_ids)
           return {} if data_table_ids.empty?
 
-          names = data_table_ids.map { |id| table_name(id) }
-          DB
-            .query(<<~SQL, names: names)
-            SELECT c.relname, pg_total_relation_size(c.oid) AS size_bytes
-            FROM pg_class c
-            JOIN pg_namespace n ON n.oid = c.relnamespace
-            WHERE n.nspname = current_schema()
-              AND c.relname = ANY(ARRAY[:names])
-              AND c.relkind = 'r'
+          queries = data_table_ids.map { |id| <<~SQL }
+            SELECT #{Integer(id)} AS data_table_id,
+                   COUNT(*) AS row_count,
+                   pg_total_relation_size(#{connection.quote(quoted_table(id))}::regclass) AS size
+            FROM #{quoted_table(id)}
           SQL
-            .to_h do |row|
-              id =
-                row
-                  .relname
-                  .delete_prefix("discourse_workflows_data_table_")
-                  .delete_suffix("_rows")
-                  .to_i
-              [id, row.size_bytes.to_i]
-            end
+
+          DB
+            .query(queries.join(" UNION ALL "))
+            .to_h { |row| [row.data_table_id, { size: row.size, row_count: row.row_count }] }
         end
 
         def quoted_table(data_table_id)

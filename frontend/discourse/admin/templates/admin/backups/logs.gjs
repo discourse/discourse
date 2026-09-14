@@ -4,8 +4,8 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DBreadcrumbsItem
-    @path="/admin/backups/logs"
     @label={{i18n "admin.backups.menu.logs"}}
+    @path="/admin/backups/logs"
   />
 
   <AdminBackupsLogs @logs={{@controller.logs}} @status={{@controller.status}} />

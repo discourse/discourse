@@ -181,11 +181,6 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
-  @action
-  markStepCompleted(name) {
-    this.completedStepNames.add(name);
-  }
-
   get shouldDisplay() {
     if (this.dismissed) {
       return false;
@@ -201,6 +196,11 @@ export default class AdminOnboardingBanner extends Component {
 
   get completedSteps() {
     return this.completedStepNames.size;
+  }
+
+  @action
+  markStepCompleted(name) {
+    this.completedStepNames.add(name);
   }
 
   @action
@@ -262,20 +262,20 @@ export default class AdminOnboardingBanner extends Component {
             </div>
             <div class="admin-onboarding-banner__header-actions">
               <DButton
+                class="btn no-text btn-transparent btn-minimize"
                 @action={{this.minimize}}
-                @icon={{if this.minimized "angle-down" "angle-up"}}
                 @ariaLabel={{if
                   this.minimized
                   "admin_onboarding_banner.expand"
                   "admin_onboarding_banner.collapse"
                 }}
-                class="btn no-text btn-transparent btn-minimize"
+                @icon={{if this.minimized "angle-down" "angle-up"}}
               />
               <DButton
-                @action={{this.endOnboarding}}
-                @icon="xmark"
-                @ariaLabel="admin_onboarding_banner.dismiss"
                 class="btn no-text btn-transparent btn-close"
+                @action={{this.endOnboarding}}
+                @ariaLabel="admin_onboarding_banner.dismiss"
+                @icon="xmark"
               />
             </div>
           </div>

@@ -3,6 +3,7 @@
 class TagSettingsSerializer < ApplicationSerializer
   attributes :id,
              :name,
+             :locale,
              :slug,
              :description,
              :description_cooked,

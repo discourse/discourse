@@ -72,7 +72,6 @@ da:
           raw_invitees_length: "En begivenhed er begrænset til %{count} brugere/grupper."
           raw_invitees:
             only_group: "En begivenhed accepterer kun gruppenavne."
-          ends_at_before_starts_at: "En begivenhed kan ikke slutte, før den starter."
           start_must_be_present_and_a_valid_date: "En begivenhed kræver en gyldig startdato."
           end_must_be_a_valid_date: "Slutdato skal være en gyldig dato."
           acting_user_not_allowed_to_create_event: "Aktuel bruger har ikke lov til at oprette begivenheder."

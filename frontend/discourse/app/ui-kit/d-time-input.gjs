@@ -58,28 +58,6 @@ export default class DTimeInput extends Component {
   minutes = null;
   relativeDate = null;
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (isPresent(this.date)) {
-      this.setProperties({
-        hours: this.date.hours(),
-        minutes: this.date.minutes(),
-      });
-    }
-
-    if (
-      !isPresent(this.date) &&
-      !isPresent(this.hours) &&
-      !isPresent(this.minutes)
-    ) {
-      this.setProperties({
-        hours: null,
-        minutes: null,
-      });
-    }
-  }
-
   @computed("relativeDate", "date")
   get minimumTime() {
     if (this.relativeDate) {
@@ -164,6 +142,28 @@ export default class DTimeInput extends Component {
     }
   }
 
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    if (isPresent(this.date)) {
+      this.setProperties({
+        hours: this.date.hours(),
+        minutes: this.date.minutes(),
+      });
+    }
+
+    if (
+      !isPresent(this.date) &&
+      !isPresent(this.hours) &&
+      !isPresent(this.minutes)
+    ) {
+      this.setProperties({
+        hours: null,
+        minutes: null,
+      });
+    }
+  }
+
   @action
   onFocusIn(value, event) {
     if (value && event.target) {
@@ -219,7 +219,6 @@ export default class DTimeInput extends Component {
   <template>
     <div class="d-time-input" ...attributes>
       <ComboBox
-        @value={{this.time}}
         @content={{this.timeOptions}}
         @onChange={{this.onChangeTime}}
         @options={{hash
@@ -229,6 +228,7 @@ export default class DTimeInput extends Component {
           autoInsertNoneItem=false
           translatedFilterPlaceholder="--:--"
         }}
+        @value={{this.time}}
       />
     </div>
   </template>

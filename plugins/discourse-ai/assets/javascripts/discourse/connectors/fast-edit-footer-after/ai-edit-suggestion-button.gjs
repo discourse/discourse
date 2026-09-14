@@ -58,10 +58,10 @@ export default class AiEditSuggestionButton extends Component {
       <DButton
         class="btn-default btn-small btn-ai-suggest-edit"
         @action={{this.suggest}}
-        @icon="discourse-sparkles"
-        @label="discourse_ai.ai_helper.fast_edit.suggest_button"
-        @isLoading={{this.loading}}
         @disabled={{this.disabled}}
+        @icon="discourse-sparkles"
+        @isLoading={{this.loading}}
+        @label="discourse_ai.ai_helper.fast_edit.suggest_button"
       />
     {{/unless}}
   </template>

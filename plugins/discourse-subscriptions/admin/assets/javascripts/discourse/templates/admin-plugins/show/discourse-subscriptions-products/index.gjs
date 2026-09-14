@@ -12,9 +12,9 @@ export default <template>
   {{else}}
     <p class="btn-right">
       <LinkTo
-        @route="adminPlugins.show.discourse-subscriptions-products.show"
-        @model="new"
         class="btn btn-primary"
+        @model="new"
+        @route="adminPlugins.show.discourse-subscriptions-products.show"
       >
         {{dIcon "plus"}}
         <span>
@@ -51,18 +51,18 @@ export default <template>
               <td class="td-right">
                 <div class="align-buttons">
                   <LinkTo
-                    @route="adminPlugins.show.discourse-subscriptions-products.show"
-                    @model={{product.id}}
                     class="btn no-text btn-icon"
+                    @model={{product.id}}
+                    @route="adminPlugins.show.discourse-subscriptions-products.show"
                   >
                     {{dIcon "far-pen-to-square"}}
                   </LinkTo>
 
                   <DButton
+                    class="btn-danger btn no-text btn-icon"
                     @action={{routeAction "destroyProduct"}}
                     @actionParam={{product}}
                     @icon="trash-can"
-                    class="btn-danger btn no-text btn-icon"
                   />
                 </div>
               </td>

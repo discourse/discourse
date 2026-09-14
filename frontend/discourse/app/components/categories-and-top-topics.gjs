@@ -15,13 +15,13 @@ export default class CategoriesAndTopTopics extends Component {
 
       <div class="column">
         <CategoriesTopicList
-          @topics={{this.topics}}
-          @filter="top"
           class="top-topic-list"
+          @filter="top"
+          @topics={{this.topics}}
         />
       </div>
 
-      <PluginOutlet @name="extra-categories-column" @connectorTagName="div" />
+      <PluginOutlet @connectorTagName="div" @name="extra-categories-column" />
     </div>
   </template>
 }

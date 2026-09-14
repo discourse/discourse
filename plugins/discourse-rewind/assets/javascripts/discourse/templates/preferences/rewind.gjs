@@ -12,8 +12,8 @@ export default <template>
     <label class="controls">
       <Input
         id="user_discourse_rewind_enabled"
-        @type="checkbox"
         @checked={{@controller.model.user_option.discourse_rewind_enabled}}
+        @type="checkbox"
       />
       {{i18n "discourse_rewind.preferences.enable_rewind"}}
     </label>
@@ -25,21 +25,21 @@ export default <template>
   >
     <label class="controls">
       <Input
-        id="user_discourse_rewind_share_publicly"
         disabled={{@controller.model.user_option.hide_profile}}
+        id="user_discourse_rewind_share_publicly"
         title={{i18n
           "discourse_rewind.preferences.cannot_share_when_profile_hidden"
         }}
-        @type="checkbox"
         @checked={{@controller.model.user_option.discourse_rewind_share_publicly}}
+        @type="checkbox"
       />
       {{i18n "discourse_rewind.preferences.share_publicly"}}
     </label>
   </div>
 
   <DSaveControls
-    @model={{@controller.model}}
     @action={{@controller.save}}
+    @model={{@controller.model}}
     @saved={{@controller.saved}}
   />
 </template>

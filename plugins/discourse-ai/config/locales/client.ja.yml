@@ -16,6 +16,14 @@ ja:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "AI に尋ねる"
+        ask_ai:
+          title: "AI に尋ねる"
+          date: "日付"
+          outcomes:
+            failed: "失敗しました"
         emotion:
           title: "感情"
         reports:

@@ -59,6 +59,10 @@ export default class SidebarUserSections extends Component {
     cancel(this.#armTimer);
   }
 
+  get mainPanel() {
+    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
+  }
+
   /**
    * Arms the reveal dwell: only where link drop is enabled at all, and only
    * for a drag that declares a real URL. A drag carrying only text may well
@@ -143,10 +147,6 @@ export default class SidebarUserSections extends Component {
     this.modal.show(SidebarSectionForm, {
       model: { link },
     });
-  }
-
-  get mainPanel() {
-    return this.sidebarState.panels.find((panel) => panel.key === MAIN_PANEL);
   }
 
   /**
@@ -237,9 +237,9 @@ export default class SidebarUserSections extends Component {
       <CustomSections
         @collapsable={{@collapsableSections}}
         @enableLinkDrop={{@enableLinkDrop}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.zoneRevealed}}
@@ -247,12 +247,12 @@ export default class SidebarUserSections extends Component {
             custom section. Pointer-only, like the drag it serves; creating a
             section by keyboard keeps its own path. }}
         <div
+          aria-hidden="true"
           class={{dConcatClass
             "sidebar-link-drop-target"
             (unless this.zoneArmed "is-arming")
             (if this.zoneHovered "is-active")
           }}
-          aria-hidden="true"
           {{dDragAndDropExternalTarget
             accepts=WEB_LINK_KINDS
             canDrop=this.canDropLink
@@ -282,9 +282,9 @@ export default class SidebarUserSections extends Component {
 
       <CategoriesSection
         @collapsable={{@collapsableSections}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
 
       {{#if this.currentUser.display_sidebar_tags}}

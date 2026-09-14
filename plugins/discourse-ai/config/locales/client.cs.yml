@@ -8,6 +8,14 @@ cs:
   admin_js:
     admin:
       dashboard:
+        sections:
+          ask_ai:
+            title: "Zeptejte se AI"
+        ask_ai:
+          title: "Zeptejte se AI"
+          date: "Datum"
+          outcomes:
+            failed: "Neúspěšný"
         reports:
           filters:
             sort_by:

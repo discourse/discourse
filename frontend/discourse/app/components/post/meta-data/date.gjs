@@ -37,13 +37,13 @@ export default class PostMetaDataDate extends Component {
   <template>
     <div class="post-info post-date">
       <a
+        aria-label={{this.srDate}}
         class={{dConcatClass
           "post-date"
           (if (and @post.wiki @post.last_wiki_edit) "last-wiki-edit")
         }}
         href={{@post.shareUrl}}
         title={{i18n "post.sr_date"}}
-        aria-label={{this.srDate}}
         {{on "click" this.showShareModal}}
       >
         <span aria-hidden="true">

@@ -66,48 +66,48 @@ export default class ChatFooter extends Component {
       <nav class="c-footer">
         {{#if this.includeStarred}}
           <DButton
-            @route="chat.starred-channels"
-            @icon="star"
-            @label="chat.starred"
             aria-label={{i18n "chat.starred"}}
-            id="c-footer-starred"
             class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.starred-channels") "--active")
             }}
+            id="c-footer-starred"
+            @icon="star"
+            @label="chat.starred"
+            @route="chat.starred-channels"
           >
             <UnreadStarredIndicator />
           </DButton>
         {{/if}}
 
         <DButton
-          @route="chat.channels"
-          @icon="comments"
-          @label="chat.channel_list.title"
           aria-label={{i18n "chat.channel_list.aria_label"}}
-          id="c-footer-channels"
           class={{dConcatClass
             "btn-transparent"
             "c-footer__item"
             (if (eq this.currentRouteName "chat.channels") "--active")
           }}
+          id="c-footer-channels"
+          @icon="comments"
+          @label="chat.channel_list.title"
+          @route="chat.channels"
         >
           <UnreadChannelsIndicator />
         </DButton>
 
         {{#if this.directMessagesEnabled}}
           <DButton
-            @route="chat.direct-messages"
-            @icon="users"
-            @label="chat.direct_messages.title"
             aria-label={{i18n "chat.direct_messages.aria_label"}}
-            id="c-footer-direct-messages"
             class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.direct-messages") "--active")
             }}
+            id="c-footer-direct-messages"
+            @icon="users"
+            @label="chat.direct_messages.title"
+            @route="chat.direct-messages"
           >
             <UnreadDirectMessagesIndicator />
           </DButton>
@@ -115,16 +115,16 @@ export default class ChatFooter extends Component {
 
         {{#if this.includeThreads}}
           <DButton
-            @route="chat.threads"
-            @icon="discourse-threads"
-            @label="chat.my_threads.title"
             aria-label={{i18n "chat.my_threads.aria_label"}}
-            id="c-footer-threads"
             class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.threads") "--active")
             }}
+            id="c-footer-threads"
+            @icon="discourse-threads"
+            @label="chat.my_threads.title"
+            @route="chat.threads"
           >
             <UnreadThreadsIndicator />
           </DButton>
@@ -132,16 +132,16 @@ export default class ChatFooter extends Component {
 
         {{#if this.includeSearch}}
           <DButton
-            @route="chat.search"
-            @icon="magnifying-glass"
-            @label="chat.search.short_title"
             aria-label={{i18n "chat.search.aria_label"}}
-            id="c-footer-search"
             class={{dConcatClass
               "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.search") "--active")
             }}
+            id="c-footer-search"
+            @icon="magnifying-glass"
+            @label="chat.search.short_title"
+            @route="chat.search"
           />
         {{/if}}
       </nav>

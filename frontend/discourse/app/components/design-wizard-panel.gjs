@@ -83,18 +83,18 @@ export default class DesignWizardPanel extends Component {
   <template>
     {{#if this.designWizard.active}}
       <aside
+        aria-labelledby="design-wizard-title"
         class="design-wizard
           {{unless this.designWizard.animateEntrance '--no-entrance'}}
           {{if this.designWizard.applyingTheme '--busy'}}"
-        aria-labelledby="design-wizard-title"
-        {{didInsert this.registerElement}}
         ...attributes
+        {{didInsert this.registerElement}}
       >
         <DButton
+          class="btn-transparent design-wizard__close"
           @action={{this.close}}
           @icon="xmark"
           @title="modal.close"
-          class="btn-transparent design-wizard__close"
         />
         <DesignWizardControls />
       </aside>

@@ -28,7 +28,7 @@ module(
       await render(
         <template>
           <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
-            <form.Field @type="emoji" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="emoji" as |field|>
               <field.Control />
             </form.Field>
           </Form>

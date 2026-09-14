@@ -169,7 +169,6 @@ export default class PostQuotedContent extends Component {
   <template>
     <this.OptionalWrapperComponent
       ...attributes
-      role="none"
       class={{dConcatClass
         "quote"
         (if @quotedPostNotFound "quote-post-not-found")
@@ -183,6 +182,7 @@ export default class PostQuotedContent extends Component {
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
       data-username={{@quotedUsername}}
+      role="none"
     >
       {{#if @wrapperElement}}
         {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
@@ -194,9 +194,9 @@ export default class PostQuotedContent extends Component {
       {{/if}}
       <div
         class="title"
-        data-has-quote-controls={{this.shouldDisplayQuoteControls}}
-        data-can-toggle-quote={{this.shouldDisplayToggleButton}}
         data-can-navigate-to-post={{this.shouldDisplayNavigateToPostButton}}
+        data-can-toggle-quote={{this.shouldDisplayToggleButton}}
+        data-has-quote-controls={{this.shouldDisplayQuoteControls}}
         {{(if
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
@@ -237,9 +237,9 @@ export default class PostQuotedContent extends Component {
             {{~#if this.shouldDisplayNavigateToPostButton~}}
               <DButton
                 class="btn-flat back"
+                @ariaLabel="post.follow_quote"
                 @href={{this.quotedPostUrl}}
                 @title="post.follow_quote"
-                @ariaLabel="post.follow_quote"
               >
                 {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                     extra whitespace that will interfere with the text captured when quoting a quoted content }}
@@ -264,10 +264,10 @@ export default class PostQuotedContent extends Component {
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
                     @className="post__contents-cooked-quote"
-                    @post={{expandedPost}}
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
+                    @post={{expandedPost}}
                     @selectionBarrier={{false}}
                     @streamElement={{@streamElement}}
                   />
@@ -292,11 +292,11 @@ export default class PostQuotedContent extends Component {
           {{~else~}}
             <PostCookedHtml
               @className="post__contents-cooked-quote"
-              @post={{@post}}
               @cooked={{@collapsedContent}}
               @decoratorState={{@decoratorState}}
               @extraDecorators={{this.extraDecorators}}
               @highlightTerm={{@highlightTerm}}
+              @post={{@post}}
               @selectionBarrier={{false}}
               @streamElement={{@streamElement}}
             />

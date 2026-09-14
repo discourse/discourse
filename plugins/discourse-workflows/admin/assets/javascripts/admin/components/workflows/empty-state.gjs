@@ -10,11 +10,11 @@ export default <template>
     <p class="workflows-empty-state__description">{{@description}}</p>
     {{#if @onAction}}
       <DButton
+        class="btn-primary"
         @action={{@onAction}}
+        @icon={{@buttonIcon}}
         @label={{@buttonLabel}}
         @translatedLabel={{@translatedButtonLabel}}
-        @icon={{@buttonIcon}}
-        class="btn-primary"
       />
     {{/if}}
   </div>

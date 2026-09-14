@@ -8,6 +8,10 @@ ro:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Dată"
+          outcomes:
+            failed: "Eșuată"
         reports:
           filters:
             sort_by:

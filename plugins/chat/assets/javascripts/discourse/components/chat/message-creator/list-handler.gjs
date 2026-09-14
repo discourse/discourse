@@ -39,7 +39,7 @@ export default class ListHandler extends Component {
   });
 
   <template>
-    <span style="display: contents" {{this.handleKeydown}} ...attributes>
+    <span style="display: contents" ...attributes {{this.handleKeydown}}>
       {{yield}}
     </span>
   </template>

@@ -15,6 +15,11 @@
   &__table {
     overflow: auto;
     font-size: var(--font-down-2);
+
+    th,
+    td {
+      white-space: nowrap;
+    }
   }
 
   &__empty {
@@ -1056,6 +1061,10 @@ table.group-reports {
 
 .result-json {
   display: flex;
+}
+
+.query-result-hidden {
+  color: var(--primary-medium);
 }
 
 .result-json-value {

@@ -13,7 +13,7 @@ module("Integration | lib | load-accessible-name", function (hooks) {
   test("prefers aria-label over content, as assistive tech does", async function (assert) {
     await render(
       <template>
-        <button class="a" aria-label="Save changes">Save</button>
+        <button aria-label="Save changes" class="a">Save</button>
       </template>
     );
 
@@ -29,7 +29,7 @@ module("Integration | lib | load-accessible-name", function (hooks) {
       <template>
         <span id="an-label">Orange</span>
         <span id="an-hint">Press Backspace to remove</span>
-        <button class="a" aria-labelledby="an-label an-hint">x</button>
+        <button aria-labelledby="an-label an-hint" class="a">x</button>
       </template>
     );
 

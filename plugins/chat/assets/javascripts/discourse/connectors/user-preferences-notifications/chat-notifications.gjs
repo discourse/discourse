@@ -99,29 +99,29 @@ export default class ChatNotifications extends Component {
         }}</label>
 
       <PreferenceCheckbox
-        @labelKey="chat.ignore_channel_wide_mention.title"
-        @checked={{this.userOption.ignore_channel_wide_mention}}
-        data-setting-name="chat-ignore-channel-wide-mention"
         class="pref-chat-ignore-channel-wide-mention"
+        data-setting-name="chat-ignore-channel-wide-mention"
+        @checked={{this.userOption.ignore_channel_wide_mention}}
+        @labelKey="chat.ignore_channel_wide_mention.title"
       />
 
       <div class="controls controls-dropdown">
         <label>{{i18n "chat.sound.title"}}</label>
         <div class="chat-sound-controls">
           <ComboBox
-            @valueProperty="value"
-            @content={{this.chatSounds}}
-            @value={{this.chatSound}}
-            @options={{hash none="chat.sounds.none"}}
-            @onChange={{this.setChatSound}}
             class="chat-sound"
+            @content={{this.chatSounds}}
+            @onChange={{this.setChatSound}}
+            @options={{hash none="chat.sounds.none"}}
+            @value={{this.chatSound}}
+            @valueProperty="value"
           />
           {{#if this.chatSound}}
             <DButton
-              @icon="play"
-              @action={{this.previewChatSound}}
-              @title="chat.sound.preview"
               class="btn-flat chat-sound-preview"
+              @action={{this.previewChatSound}}
+              @icon="play"
+              @title="chat.sound.preview"
             />
           {{/if}}
         </div>
@@ -130,11 +130,11 @@ export default class ChatNotifications extends Component {
       <div class="controls controls-dropdown">
         <label>{{i18n "chat.header_indicator_preference.title"}}</label>
         <ComboBox
-          @valueProperty="value"
-          @content={{this.headerIndicatorOptions}}
-          @value={{this.headerIndicatorPreference}}
-          @onChange={{this.setHeaderIndicatorPreference}}
           class="chat-header-indicator-preference"
+          @content={{this.headerIndicatorOptions}}
+          @onChange={{this.setHeaderIndicatorPreference}}
+          @value={{this.headerIndicatorPreference}}
+          @valueProperty="value"
         />
       </div>
     </div>

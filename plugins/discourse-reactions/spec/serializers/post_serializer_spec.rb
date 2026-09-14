@@ -26,6 +26,7 @@ describe PostSerializer do
       created_at: 20.minutes.ago,
     )
   end
+
   fab!(:like) do
     Fabricate(
       :post_action,

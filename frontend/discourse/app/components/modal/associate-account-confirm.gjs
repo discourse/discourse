@@ -39,13 +39,13 @@ export default class AssociateAccountConfirm extends Component {
 
   <template>
     <DModal
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @flashType="error"
       @title={{i18n
         "user.associated_accounts.confirm_modal_title"
         provider=(i18n (concat "login." @model.provider_name ".name"))
       }}
-      @closeModal={{@closeModal}}
-      @flash={{this.flash}}
-      @flashType="error"
     >
       <:body>
         {{#if @model.existing_account_description}}
@@ -76,14 +76,14 @@ export default class AssociateAccountConfirm extends Component {
 
       <:footer>
         <DButton
-          @label="user.associated_accounts.connect"
+          class="btn-primary"
           @action={{this.finishConnect}}
           @icon="plug"
-          class="btn-primary"
+          @label="user.associated_accounts.connect"
         />
         <DButton
-          @label="user.associated_accounts.cancel"
           @action={{@closeModal}}
+          @label="user.associated_accounts.cancel"
         />
       </:footer>
     </DModal>

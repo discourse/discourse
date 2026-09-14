@@ -49,7 +49,7 @@ export default class Patreon extends Component {
   <template>
     {{#if this.showDonationPrompt}}
       <div class="patreon-donation-prompt">
-        <span {{on "click" this.close}} role="button" class="close">
+        <span class="close" role="button" {{on "click" this.close}}>
           {{dIcon "xmark"}}
         </span>
 

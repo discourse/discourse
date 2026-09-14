@@ -32,6 +32,10 @@ cs:
           title: "Vstupy data/času"
         menus:
           title: "Menu"
+        context_menu:
+          actions:
+            duplicate: "Duplikovat"
+            delete: "Smazat"
         multi_select:
           title: "Vícenásobný výběr"
         toasts:

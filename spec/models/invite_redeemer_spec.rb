@@ -99,7 +99,7 @@ RSpec.describe InviteRedeemer do
   end
 
   describe ".create_user_from_invite" do
-    it "should be created correctly" do
+    it "creates the user correctly" do
       invite = Fabricate(:invite, email: "walter.white@email.com")
       user =
         InviteRedeemer.create_user_from_invite(
@@ -153,7 +153,7 @@ RSpec.describe InviteRedeemer do
       expect(error.record.errors.errors[0].attribute).to eq :"user_password.password"
     end
 
-    it "should unstage user" do
+    it "unstages the user" do
       staged_user =
         Fabricate(
           :staged,
@@ -300,12 +300,52 @@ RSpec.describe InviteRedeemer do
       InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
     end
 
+    it "rejects an unverified supplied email when the user's primary email does not match the invite" do
+      invite = Fabricate(:invite, email: "invited@example.com")
+      user = Fabricate(:user, email: "other@example.com")
+      redeemer = described_class.new(invite:, email: invite.email, redeeming_user: user)
+
+      expect { redeemer.redeem }.to raise_error(
+        ActiveRecord::RecordNotSaved,
+        I18n.t("invite.not_matching_email"),
+      )
+      expect(invite.reload).not_to be_redeemed
+    end
+
+    it "rejects an unverified supplied email when the user's primary email is outside the invite domain" do
+      invite = Fabricate(:invite, email: nil, domain: "allowed.example")
+      user = Fabricate(:user, email: "person@blocked.example")
+      redeemer = described_class.new(invite:, email: "person@allowed.example", redeeming_user: user)
+
+      expect { redeemer.redeem }.to raise_error(
+        ActiveRecord::RecordNotSaved,
+        I18n.t("invite.domain_not_allowed"),
+      )
+      expect(invite.reload).not_to be_redeemed
+    end
+
+    it "redeems an invite for an existing user's verified secondary email" do
+      invite = Fabricate(:invite, email: "invited@example.com")
+      user = Fabricate(:user, email: "other@example.com")
+      Fabricate(:secondary_email, user:, email: invite.email)
+      redeemer =
+        described_class.new(
+          invite:,
+          email: invite.email,
+          email_verified: true,
+          redeeming_user: user,
+        )
+
+      expect(redeemer.redeem).to eq(user)
+      expect(invite.reload).to be_redeemed
+    end
+
     context "with email" do
       fab!(:invite) { Fabricate(:invite, email: "foobar@example.com") }
       context "when must_approve_users setting is enabled" do
         before { SiteSetting.must_approve_users = true }
 
-        it "should redeem an invite but not approve the user when invite is created by a staff user" do
+        it "redeems a staff invite without approving the user" do
           inviter = invite.invited_by
           inviter.update!(admin: true)
           user = invite_redeemer.redeem
@@ -318,7 +358,7 @@ RSpec.describe InviteRedeemer do
           expect(inviter.notifications.count).to eq(1)
         end
 
-        it "should redeem the invite but not approve the user when invite is created by a regular user" do
+        it "redeems a regular-user invite without approving the user" do
           inviter = invite.invited_by
           user = invite_redeemer.redeem
 
@@ -330,7 +370,7 @@ RSpec.describe InviteRedeemer do
           expect(inviter.notifications.count).to eq(1)
         end
 
-        it "should redeem the invite and approve the user when user email is in auto_approve_email_domains setting" do
+        it "redeems the invite and approves an email from an auto-approved domain" do
           SiteSetting.auto_approve_email_domains = "example.com"
           user = invite_redeemer.redeem
 
@@ -341,7 +381,7 @@ RSpec.describe InviteRedeemer do
         end
       end
 
-      it "should redeem the invite if invited by non staff and approve if staff not required to approve" do
+      it "redeems and approves a non-staff invite when staff approval is not required" do
         inviter = invite.invited_by
         user = invite_redeemer.redeem
 
@@ -352,7 +392,7 @@ RSpec.describe InviteRedeemer do
         expect(user.approved).to eq(false)
       end
 
-      it "should delete invite if invited_by user has been removed" do
+      it "deletes the invite when its inviter has been removed" do
         invite.invited_by.destroy!
         expect { invite.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
@@ -491,7 +531,7 @@ RSpec.describe InviteRedeemer do
         expect(another_user).to eq(nil)
       end
 
-      it "should correctly update the invite redeemed_at date" do
+      it "updates the invite redeemed_at date" do
         SiteSetting.invite_expiry_days = 2
         invite.update!(created_at: 10.days.ago)
 
@@ -515,7 +555,8 @@ RSpec.describe InviteRedeemer do
       end
 
       it "adds the user to the appropriate private topic and no others" do
-        topic1 = Fabricate(:private_message_topic)
+        invite.invited_by.change_trust_level!(TrustLevel[2])
+        topic1 = Fabricate(:private_message_topic, user: invite.invited_by)
         topic2 = Fabricate(:private_message_topic)
         TopicInvite.create(invite: invite, topic: topic1)
         user =
@@ -528,6 +569,29 @@ RSpec.describe InviteRedeemer do
           ).redeem
         expect(TopicAllowedUser.exists?(topic: topic1, user: user)).to eq(true)
         expect(TopicAllowedUser.exists?(topic: topic2, user: user)).to eq(false)
+      end
+
+      it "does not add the user to a private topic when the inviter can no longer invite to it" do
+        invite.invited_by.change_trust_level!(TrustLevel[2])
+        topic = Fabricate(:private_message_topic, user: invite.invited_by)
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        expect(invite.invited_by.guardian.can_invite_to?(topic)).to eq(true)
+
+        topic.topic_allowed_users.where(user_id: invite.invited_by_id).destroy_all
+
+        expect(invite.invited_by.guardian.can_invite_to?(topic)).to eq(false)
+
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+          ).redeem
+
+        expect(TopicAllowedUser.exists?(topic: topic, user: user)).to eq(false)
       end
 
       context "when a redeeming user is passed in" do
@@ -543,7 +607,8 @@ RSpec.describe InviteRedeemer do
         end
 
         it "adds the user to the appropriate private topic and no others" do
-          topic1 = Fabricate(:private_message_topic)
+          invite.invited_by.change_trust_level!(TrustLevel[2])
+          topic1 = Fabricate(:private_message_topic, user: invite.invited_by)
           topic2 = Fabricate(:private_message_topic)
           TopicInvite.create(invite: invite, topic: topic1)
           InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user).redeem
@@ -552,7 +617,8 @@ RSpec.describe InviteRedeemer do
         end
 
         it "does not create a topic allowed user record if the invited user is already in the topic" do
-          topic1 = Fabricate(:private_message_topic)
+          invite.invited_by.change_trust_level!(TrustLevel[2])
+          topic1 = Fabricate(:private_message_topic, user: invite.invited_by)
           TopicInvite.create(invite: invite, topic: topic1)
           TopicAllowedUser.create(topic: topic1, user: redeeming_user)
           expect {
@@ -626,7 +692,7 @@ RSpec.describe InviteRedeemer do
         )
       end
 
-      it "should redeem the invite if InvitedUser record does not exists for email" do
+      it "redeems the invite without an InvitedUser record for the email" do
         invite_redeemer.redeem
         invite_link.reload
 

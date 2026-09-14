@@ -162,6 +162,122 @@ export default class ChatMessage extends Component {
     );
   }
 
+  get show() {
+    return (
+      !this.args.message?.deletedAt ||
+      this.currentUser?.id === this.args.message?.user?.id ||
+      this.currentUser?.staff ||
+      this.args.message?.channel?.canModerate
+    );
+  }
+
+  get isByCurrentUser() {
+    return this.currentUser?.id === this.args.message?.user?.id;
+  }
+
+  get hasActiveState() {
+    return (
+      this.isActive ||
+      (this.chat.activeMessage?.model?.id === this.args.message.id &&
+        this.chat.activeMessage?.context === this.args.context)
+    );
+  }
+
+  get hasReply() {
+    return this.args.message.inReplyTo && !this.hideReplyToInfo;
+  }
+
+  get hideUserInfo() {
+    const message = this.args.message;
+
+    if (message.isAction) {
+      return true;
+    }
+
+    if (message.pinned) {
+      return false;
+    }
+
+    const previousMessage = message.previousMessage;
+
+    if (!previousMessage) {
+      return false;
+    }
+
+    // this is a micro optimization to avoid layout changes when we load more messages
+    if (message.firstOfResults) {
+      return false;
+    }
+
+    if (message.chatWebhookEvent) {
+      return false;
+    }
+
+    if (previousMessage.deletedAt) {
+      return false;
+    }
+
+    if (previousMessage.isAction) {
+      return false;
+    }
+
+    if (
+      Math.abs(
+        new Date(message.createdAt) - new Date(previousMessage.createdAt)
+      ) > 300000
+    ) {
+      return false;
+    }
+
+    if (message.inReplyTo) {
+      if (message.inReplyTo?.id === previousMessage.id) {
+        return message.user?.id === previousMessage.user?.id;
+      } else {
+        return false;
+      }
+    }
+
+    return message.user?.id === previousMessage.user?.id;
+  }
+
+  get hideReplyToInfo() {
+    return (
+      this.threadContext ||
+      this.args.message?.inReplyTo?.id ===
+        this.args.message?.previousMessage?.id ||
+      this.threadingEnabled
+    );
+  }
+
+  get threadingEnabled() {
+    return (
+      (this.args.message?.channel?.threadingEnabled ||
+        this.args.message?.thread?.force) &&
+      !!this.args.message?.thread
+    );
+  }
+
+  get showThreadIndicator() {
+    return (
+      !this.threadContext &&
+      this.threadingEnabled &&
+      this.args.message?.thread &&
+      this.args.message?.thread.preview.replyCount > 0
+    );
+  }
+
+  get threadContext() {
+    return this.args.context === MESSAGE_CONTEXT_THREAD;
+  }
+
+  get shouldRenderStopMessageStreamingButton() {
+    return (
+      this.args.message.streaming &&
+      (this.currentUser?.admin ||
+        this.args.message.inReplyTo?.user?.id === this.currentUser?.id)
+    );
+  }
+
   @action
   expand() {
     const recursiveExpand = (message) => {
@@ -265,19 +381,6 @@ export default class ChatMessage extends Component {
     _chatMessageDecorators.forEach((decorator) => {
       decorator(element, helper);
     });
-  }
-
-  get show() {
-    return (
-      !this.args.message?.deletedAt ||
-      this.currentUser?.id === this.args.message?.user?.id ||
-      this.currentUser?.staff ||
-      this.args.message?.channel?.canModerate
-    );
-  }
-
-  get isByCurrentUser() {
-    return this.currentUser?.id === this.args.message?.user?.id;
   }
 
   @action
@@ -408,50 +511,6 @@ export default class ChatMessage extends Component {
     this.chat.activeMessage = null;
   }
 
-  @bind
-  _debouncedOnHoverMessage() {
-    this._setActiveMessage();
-  }
-
-  // `disableMouseEvents` suppresses the toolbar while the list is being scrolled with the
-  // pointer. Focus is not a pointer, so the keyboard path opts out of that check.
-  _setActiveMessage({ fromKeyboard = false } = {}) {
-    // A pending clear from focus leaving would otherwise land after this and undo it.
-    cancel(this._clearActiveMessageHandler);
-
-    if (
-      (!fromKeyboard && this.args.disableMouseEvents) ||
-      this.args.interactive === false
-    ) {
-      return;
-    }
-
-    cancel(this._onMouseEnterMessageDebouncedHandler);
-
-    if (!this.chat.userCanInteractWithChat) {
-      return;
-    }
-
-    if (!this.args.message.expanded) {
-      return;
-    }
-
-    // Focus moving between the message's own controls re-reports it as active. Assigning
-    // a fresh hash each time invalidates what render just read from it.
-    if (
-      this.chat.activeMessage?.model?.id === this.args.message.id &&
-      this.chat.activeMessage?.context === this.args.context
-    ) {
-      return;
-    }
-
-    this.chat.activeMessage = {
-      model: this.args.message,
-      hideUserInfo: this.hideUserInfo,
-      context: this.args.context,
-    };
-  }
-
   @action
   onLongPressStart(element, event) {
     if (!this.args.message.expanded || !this.args.message.persisted) {
@@ -513,109 +572,6 @@ export default class ChatMessage extends Component {
     this.modal.show(ChatMessageActionsMobileModal);
   }
 
-  get hasActiveState() {
-    return (
-      this.isActive ||
-      (this.chat.activeMessage?.model?.id === this.args.message.id &&
-        this.chat.activeMessage?.context === this.args.context)
-    );
-  }
-
-  get hasReply() {
-    return this.args.message.inReplyTo && !this.hideReplyToInfo;
-  }
-
-  get hideUserInfo() {
-    const message = this.args.message;
-
-    if (message.isAction) {
-      return true;
-    }
-
-    if (message.pinned) {
-      return false;
-    }
-
-    const previousMessage = message.previousMessage;
-
-    if (!previousMessage) {
-      return false;
-    }
-
-    // this is a micro optimization to avoid layout changes when we load more messages
-    if (message.firstOfResults) {
-      return false;
-    }
-
-    if (message.chatWebhookEvent) {
-      return false;
-    }
-
-    if (previousMessage.deletedAt) {
-      return false;
-    }
-
-    if (previousMessage.isAction) {
-      return false;
-    }
-
-    if (
-      Math.abs(
-        new Date(message.createdAt) - new Date(previousMessage.createdAt)
-      ) > 300000
-    ) {
-      return false;
-    }
-
-    if (message.inReplyTo) {
-      if (message.inReplyTo?.id === previousMessage.id) {
-        return message.user?.id === previousMessage.user?.id;
-      } else {
-        return false;
-      }
-    }
-
-    return message.user?.id === previousMessage.user?.id;
-  }
-
-  get hideReplyToInfo() {
-    return (
-      this.threadContext ||
-      this.args.message?.inReplyTo?.id ===
-        this.args.message?.previousMessage?.id ||
-      this.threadingEnabled
-    );
-  }
-
-  get threadingEnabled() {
-    return (
-      (this.args.message?.channel?.threadingEnabled ||
-        this.args.message?.thread?.force) &&
-      !!this.args.message?.thread
-    );
-  }
-
-  get showThreadIndicator() {
-    return (
-      !this.threadContext &&
-      this.threadingEnabled &&
-      this.args.message?.thread &&
-      this.args.message?.thread.preview.replyCount > 0
-    );
-  }
-
-  get threadContext() {
-    return this.args.context === MESSAGE_CONTEXT_THREAD;
-  }
-
-  get shouldRenderStopMessageStreamingButton() {
-    return (
-      this.args.message.streaming &&
-      (this.currentUser?.admin ||
-        this.args.message.inReplyTo?.user?.id === this.currentUser?.id)
-    );
-  }
-
   @action
   onEmojiPickerClose() {
     this.interactedChatMessage.emojiPickerOpen = false;
@@ -636,6 +592,50 @@ export default class ChatMessage extends Component {
       user.statusManager.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
+  }
+
+  @bind
+  _debouncedOnHoverMessage() {
+    this._setActiveMessage();
+  }
+
+  // `disableMouseEvents` suppresses the toolbar while the list is being scrolled with the
+  // pointer. Focus is not a pointer, so the keyboard path opts out of that check.
+  _setActiveMessage({ fromKeyboard = false } = {}) {
+    // A pending clear from focus leaving would otherwise land after this and undo it.
+    cancel(this._clearActiveMessageHandler);
+
+    if (
+      (!fromKeyboard && this.args.disableMouseEvents) ||
+      this.args.interactive === false
+    ) {
+      return;
+    }
+
+    cancel(this._onMouseEnterMessageDebouncedHandler);
+
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+
+    if (!this.args.message.expanded) {
+      return;
+    }
+
+    // Focus moving between the message's own controls re-reports it as active. Assigning
+    // a fresh hash each time invalidates what render just read from it.
+    if (
+      this.chat.activeMessage?.model?.id === this.args.message.id &&
+      this.chat.activeMessage?.context === this.args.context
+    ) {
+      return;
+    }
+
+    this.chat.activeMessage = {
+      model: this.args.message,
+      hideUserInfo: this.hideUserInfo,
+      context: this.args.context,
+    };
   }
 
   <template>
@@ -679,6 +679,7 @@ export default class ChatMessage extends Component {
         }}
         data-id={{@message.id}}
         data-thread-id={{@message.thread.id}}
+        ...attributes
         {{willDestroy this.willDestroyMessage}}
         {{on "focusin" this.onFocusIn passive=true}}
         {{on "focusout" this.onFocusOut passive=true}}
@@ -693,16 +694,15 @@ export default class ChatMessage extends Component {
           this.onLongPressCancel
           enabled=this.site.mobileView
         }}
-        ...attributes
       >
         {{yield to="top"}}
 
         {{#if this.show}}
           {{#if this.pane.selectingMessages}}
             <Input
-              @type="checkbox"
               class="chat-message-selector"
               @checked={{@message.selected}}
+              @type="checkbox"
               {{on "click" this.toggleChecked}}
             />
           {{/if}}
@@ -710,17 +710,17 @@ export default class ChatMessage extends Component {
           {{#if this.deletedAndCollapsed}}
             <div class="chat-message-text -deleted">
               <DButton
+                class="btn-flat chat-message-expand"
                 @action={{this.expand}}
                 @translatedLabel={{this.deletedMessageLabel}}
-                class="btn-flat chat-message-expand"
               />
             </div>
           {{else if this.hiddenAndCollapsed}}
             <div class="chat-message-text -hidden">
               <DButton
+                class="btn-flat chat-message-expand"
                 @action={{this.expand}}
                 @label="chat.hidden"
-                class="btn-flat chat-message-expand"
               />
             </div>
           {{else}}
@@ -736,47 +736,47 @@ export default class ChatMessage extends Component {
                 />
               {{else}}
                 <ChatMessageAvatar
-                  @message={{@message}}
                   @interactive={{@interactive}}
+                  @message={{@message}}
                 />
               {{/if}}
 
               <div class="chat-message-content">
                 <ChatMessageInfo
+                  @context={{@context}}
+                  @dateMode={{@dateMode}}
+                  @interactive={{@interactive}}
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
-                  @context={{@context}}
-                  @interactive={{@interactive}}
                   @threadContext={{this.threadContext}}
-                  @dateMode={{@dateMode}}
                 />
 
                 <ChatMessageText
                   @cooked={{@message.cooked}}
-                  @uploads={{@message.uploads}}
-                  @edited={{@message.edited}}
                   @decorate={{this.decorateCookedMessage}}
+                  @edited={{@message.edited}}
+                  @uploads={{@message.uploads}}
                 >
                   {{#if @message.reactions.length}}
                     <div class="chat-message-reaction-list">
                       {{#each @message.reactions as |reaction|}}
                         <ChatMessageReaction
-                          @reaction={{reaction}}
-                          @onReaction={{this.messageInteractor.react}}
-                          @message={{@message}}
-                          @showTooltip={{true}}
                           @interactive={{@interactive}}
+                          @message={{@message}}
+                          @onReaction={{this.messageInteractor.react}}
+                          @reaction={{reaction}}
+                          @showTooltip={{true}}
                         />
                       {{/each}}
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
                         <EmojiPicker
+                          class="chat-message-reaction"
+                          @btnClass="btn-flat react-btn chat-message-react-btn"
                           @context="chat"
                           @didSelectEmoji={{this.messageInteractor.selectReaction}}
-                          @btnClass="btn-flat react-btn chat-message-react-btn"
                           @onClose={{this.onEmojiPickerClose}}
                           @onShow={{this.onEmojiPickerShow}}
-                          class="chat-message-reaction"
                         />
                       {{/if}}
                     </div>
@@ -787,9 +787,9 @@ export default class ChatMessage extends Component {
                   <div class="stop-streaming-btn-container">
                     <DButton
                       class="stop-streaming-btn"
+                      @action={{fn this.stopMessageStreaming @message}}
                       @icon="circle-stop"
                       @label="cancel"
-                      @action={{fn this.stopMessageStreaming @message}}
                     />
 
                   </div>
@@ -812,8 +812,8 @@ export default class ChatMessage extends Component {
 
         {{#if this.showActions}}
           <ChatMessageActionsDesktop
-            @message={{@message}}
             @context={{@context}}
+            @message={{@message}}
           />
         {{/if}}
       </div>

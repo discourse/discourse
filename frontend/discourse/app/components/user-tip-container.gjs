@@ -52,17 +52,17 @@ export default class UserTipContainer extends Component {
       <div class="user-tip__buttons">
         <DButton
           class="btn-primary"
-          @translatedLabel={{@data.buttonText}}
           @action={{this.handleDismiss}}
           @forwardEvent={{true}}
+          @translatedLabel={{@data.buttonText}}
         />
 
         {{#if this.showSkipButton}}
           <DButton
             class="btn-flat btn-text"
-            @translatedLabel={{@data.buttonSkipText}}
             @action={{this.handleSkip}}
             @forwardEvent={{true}}
+            @translatedLabel={{@data.buttonSkipText}}
           />
         {{/if}}
       </div>

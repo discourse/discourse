@@ -27,44 +27,12 @@ export default class CategoryCalendar extends Component {
     );
   }
 
-  @action
-  async onDateClick(info) {
-    await openEventComposer({
-      composer: this.composer,
-      currentUser: this.currentUser,
-      siteSettings: this.siteSettings,
-      info,
-      category: this.category,
-    });
-  }
-
   get includeSubcategories() {
     return !this.router.currentRoute?.attributes?.noSubcategories;
   }
 
   get refreshKey() {
     return `${this.category.id}-${this.includeSubcategories}`;
-  }
-
-  @bind
-  async loadEvents(info) {
-    try {
-      const params = {
-        after: info.startStr,
-        before: info.endStr,
-        include_ongoing: true,
-        category_id: this.category.id,
-      };
-
-      if (this.includeSubcategories) {
-        params.include_subcategories = true;
-      }
-
-      const events = await this.discoursePostEventService.fetchEvents(params);
-      return this.formattedEvents(events);
-    } catch (error) {
-      popupAjaxError(error);
-    }
   }
 
   get shouldRender() {
@@ -140,6 +108,38 @@ export default class CategoryCalendar extends Component {
   }
 
   @action
+  async onDateClick(info) {
+    await openEventComposer({
+      composer: this.composer,
+      currentUser: this.currentUser,
+      siteSettings: this.siteSettings,
+      info,
+      category: this.category,
+    });
+  }
+
+  @bind
+  async loadEvents(info) {
+    try {
+      const params = {
+        after: info.startStr,
+        before: info.endStr,
+        include_ongoing: true,
+        category_id: this.category.id,
+      };
+
+      if (this.includeSubcategories) {
+        params.include_subcategories = true;
+      }
+
+      const events = await this.discoursePostEventService.fetchEvents(params);
+      return this.formattedEvents(events);
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
   formattedEvents(events = []) {
     const timezone = this.currentUser?.user_option?.timezone;
     return events.map((event) =>
@@ -154,12 +154,12 @@ export default class CategoryCalendar extends Component {
   <template>
     {{#if this.shouldRender}}
       <FullCalendar
-        @onLoadEvents={{this.loadEvents}}
-        @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @height="650px"
         @initialView={{this.categorySetting.defaultView}}
-        @weekends={{this.renderWeekends}}
+        @onDateClick={{if this.canCreateEvent this.onDateClick}}
+        @onLoadEvents={{this.loadEvents}}
         @refreshKey={{this.refreshKey}}
+        @weekends={{this.renderWeekends}}
       />
     {{/if}}
   </template>

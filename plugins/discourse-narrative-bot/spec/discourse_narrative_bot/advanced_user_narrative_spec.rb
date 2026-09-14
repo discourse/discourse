@@ -37,7 +37,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       narrative.set_data(user, state: :tutorial_poll, topic_id: topic.id, last_post_id: post.id)
     end
 
-    it "should create the right message" do
+    it "posts the timeout reminder" do
       expect { narrative.notify_timeout(user) }.to change { Post.count }.by(1)
 
       expect(Post.last.raw).to eq(
@@ -66,7 +66,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
       let(:post) { Fabricate(:post, topic: topic) }
 
-      it "should reset the bot" do
+      it "resets the bot to the editing tutorial" do
         narrative.reset_bot(user, post)
 
         expected_raw =
@@ -100,7 +100,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     end
 
     context "when trigger is not initiated in a PM" do
-      it "should start the new track in a PM" do
+      it "starts the new track in a PM" do
         narrative.reset_bot(user, other_post)
 
         expected_raw =
@@ -132,7 +132,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         expect(new_post.topic.id).to_not eq(topic.id)
       end
 
-      it "should not explode if title emojis are disabled" do
+      it "creates the tutorial topic when title emojis are disabled" do
         SiteSetting.max_emojis_in_title = 0
         narrative.reset_bot(user, other_post)
 
@@ -158,7 +158,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when post is not in the right topic" do
-        it "should not do anything" do
+        it "leaves the editing tutorial unchanged" do
           other_post
           narrative.expects(:enqueue_timeout_job).with(user).never
 
@@ -168,7 +168,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the post" do
-        it "should create the right reply" do
+        it "reminds the user to edit the post" do
           post
           narrative.expects(:enqueue_timeout_job).with(user).once
 
@@ -184,7 +184,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "posts the deletion tutorial instructions" do
             post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
@@ -207,7 +207,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       context "when user edits the right post" do
         let(:post_2) { Fabricate(:post, user: post.user, topic: post.topic) }
 
-        it "should create the right reply" do
+        it "acknowledges the edit and starts the deletion tutorial" do
           post_2
 
           expect do
@@ -237,7 +237,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the topic" do
-        it "should create the right reply" do
+        it "reminds the user to delete a post" do
           narrative.expects(:enqueue_timeout_job).with(user).once
 
           narrative.input(:reply, user, post: post)
@@ -254,7 +254,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "posts the recovery tutorial instructions" do
             post.update!(raw: skip_trigger.upcase)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
@@ -275,7 +275,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user destroys a post in a different topic" do
-        it "should not do anything" do
+        it "leaves the deletion tutorial unchanged" do
           other_post
           narrative.expects(:enqueue_timeout_job).with(user).never
 
@@ -286,7 +286,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user deletes a post in the right topic" do
-        it "should create the right reply" do
+        it "acknowledges the deletion and starts the recovery tutorial" do
           post
 
           expect { PostDestroyer.new(user, post).destroy }.to change { Post.count }.by(2)
@@ -302,7 +302,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when user is an admin" do
-          it "should create the right reply" do
+          it "reuses the last post to start the recovery tutorial" do
             post
             user.update!(admin: true)
 
@@ -334,7 +334,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       context "when posts are configured to be deleted immediately" do
         before { SiteSetting.delete_removed_posts_after = 0 }
 
-        it "should set up the tutorial correctly" do
+        it "preserves the deleted post stub for the recovery tutorial" do
           narrative.set_data(
             user,
             state: :tutorial_delete,
@@ -355,7 +355,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the topic" do
-        it "should create the right reply" do
+        it "reminds the user to recover a post" do
           narrative.set_data(
             user,
             narrative.get_data(user).merge(tutorial_recover: { post_id: "1" }),
@@ -377,7 +377,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "posts the category hashtag tutorial instructions" do
             parent_category = Fabricate(:category, name: "a")
             _category = Fabricate(:category, parent_category: parent_category, name: "b")
 
@@ -402,7 +402,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user recovers a post in a different topic" do
-        it "should not do anything" do
+        it "leaves the recovery tutorial unchanged" do
           other_post
           narrative.expects(:enqueue_timeout_job).with(user).never
 
@@ -414,7 +414,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user recovers a post in the right topic" do
-        it "should create the right reply" do
+        it "acknowledges recovery and starts the category hashtag tutorial" do
           parent_category = Fabricate(:category, name: "a")
           _category = Fabricate(:category, parent_category: parent_category, name: "b")
           post
@@ -446,7 +446,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when post is not in the right topic" do
-        it "should not do anything" do
+        it "leaves the category hashtag tutorial unchanged" do
           other_post
           narrative.expects(:enqueue_timeout_job).with(user).never
 
@@ -457,7 +457,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the topic" do
-        it "should create the right reply" do
+        it "reminds the user to include a category hashtag" do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
@@ -472,7 +472,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "posts the topic notification tutorial instructions" do
             post.update!(raw: skip_trigger)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
@@ -494,7 +494,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
       end
 
-      it "should create the right reply" do
+      it "acknowledges the hashtag and starts the topic notification tutorial" do
         category = Fabricate(:category)
 
         post.update!(raw: "Check out this ##{category.slug}")
@@ -524,7 +524,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when notification level is changed for another topic" do
-        it "should not do anything" do
+        it "leaves the topic notification tutorial unchanged" do
           other_topic
           user
           narrative.expects(:enqueue_timeout_job).with(user).never
@@ -544,7 +544,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the topic" do
-        it "should create the right reply" do
+        it "reminds the user to change the topic notification level" do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
@@ -561,7 +561,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "posts the poll tutorial instructions" do
             post.update!(raw: skip_trigger)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
@@ -582,7 +582,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user changed the topic notification level" do
-        it "should create the right reply" do
+        it "acknowledges the notification change and starts the poll tutorial" do
           TopicUser.change(
             user.id,
             topic.id,
@@ -601,7 +601,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user cannot create polls" do
-        it "should create the right reply (polls disabled)" do
+        it "starts the details tutorial when polls are disabled" do
           SiteSetting.poll_enabled = false
 
           TopicUser.change(
@@ -620,7 +620,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_details)
         end
 
-        it "should create the right reply (insufficient trust level)" do
+        it "starts the details tutorial when the user's trust level is insufficient" do
           user.change_trust_level!(TrustLevel[0])
 
           TopicUser.change(
@@ -665,7 +665,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when post is not in the right topic" do
-        it "should not do anything" do
+        it "leaves the poll tutorial unchanged" do
           other_post
           narrative.expects(:enqueue_timeout_job).with(user).never
 
@@ -675,7 +675,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the topic" do
-        it "should create the right reply" do
+        it "reminds the user to create a poll" do
           narrative.input(:reply, user, post: post)
           new_post = Post.last
 
@@ -686,7 +686,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "posts the details tutorial instructions" do
             post.update!(raw: skip_trigger)
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
@@ -706,7 +706,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
       end
 
-      it "should create the right reply" do
+      it "acknowledges the poll and starts the details tutorial" do
         post.update!(raw: "[poll]\n* 1\n* 2\n[/poll]\n")
         narrative.input(:reply, user, post: post)
 
@@ -732,7 +732,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when post is not in the right topic" do
-        it "should not do anything" do
+        it "leaves the details tutorial unchanged" do
           other_post
           narrative.expects(:enqueue_timeout_job).with(user).never
 
@@ -742,7 +742,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
 
       context "when user replies to the topic" do
-        it "should create the right reply" do
+        it "reminds the user to include details" do
           narrative.input(:reply, user, post: post)
 
           expect(Post.last.raw).to eq(
@@ -755,7 +755,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         context "when reply contains the skip trigger" do
-          it "should create the right reply" do
+          it "posts the final reply and ends the tutorial" do
             post.update!(raw: skip_trigger)
 
             expect do
@@ -767,7 +767,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
       end
 
-      it "should create the right reply and issue the discobot certificate" do
+      it "acknowledges the details and issues the discobot certificate" do
         post.update!(raw: "[details=\"This is a test\"]\nwooohoo\n[/details]")
         narrative.input(:reply, user, post: post)
 

@@ -56,6 +56,18 @@ export default class AiSummaryModal extends Component {
     return outdatedText;
   }
 
+  get topRepliesSummaryEnabled() {
+    return this.args.model.postStream.summary;
+  }
+
+  get topicId() {
+    return this.args.model.topic.id;
+  }
+
+  get baseSummarizationURL() {
+    return `/discourse-ai/summarization/t/${this.topicId}`;
+  }
+
   resetSummary() {
     this.smoothStreamer.resetStreaming();
     this.currentIndex = 0;
@@ -67,18 +79,6 @@ export default class AiSummaryModal extends Component {
     this.canRegenerate = false;
     this.loading = false;
     this._channel = null;
-  }
-
-  get topRepliesSummaryEnabled() {
-    return this.args.model.postStream.summary;
-  }
-
-  get topicId() {
-    return this.args.model.topic.id;
-  }
-
-  get baseSummarizationURL() {
-    return `/discourse-ai/summarization/t/${this.topicId}`;
   }
 
   @bind
@@ -125,6 +125,17 @@ export default class AiSummaryModal extends Component {
     // ensure summary is reset before requesting a new one:
     this.resetSummary();
     return this._requestSummary(this.baseSummarizationURL, ajaxOpts);
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
+  @action
+  handleClose() {
+    this.modal.triggerElement = null; // prevent refocus of trigger, which changes scroll position
+    this.args.closeModal();
   }
 
   @action
@@ -182,27 +193,16 @@ export default class AiSummaryModal extends Component {
     }
   }
 
-  @action
-  onRegisterApi(api) {
-    this.dMenu = api;
-  }
-
-  @action
-  handleClose() {
-    this.modal.triggerElement = null; // prevent refocus of trigger, which changes scroll position
-    this.args.closeModal();
-  }
-
   <template>
     <DModal
-      @title={{i18n "discourse_ai.summarization.topic.title"}}
-      @closeModal={{this.handleClose}}
-      @bodyClass="ai-summary-modal__body"
       class="ai-summary-modal"
+      @bodyClass="ai-summary-modal__body"
+      @closeModal={{this.handleClose}}
+      @hideFooter={{not this.summarizedOn}}
+      @title={{i18n "discourse_ai.summarization.topic.title"}}
       {{didInsert this.subscribe @model.topic.id}}
       {{didUpdate this.subscribe @model.topic.id}}
       {{willDestroy this.unsubscribe}}
-      @hideFooter={{not this.summarizedOn}}
     >
       <:body>
         {{htmlClass "scrollable-modal"}}
@@ -241,10 +241,10 @@ export default class AiSummaryModal extends Component {
         {{/if}}
         {{#if this.canRegenerate}}
           <DButton
-            @label="summary.buttons.regenerate"
-            @title="summary.buttons.regenerate"
             @action={{this.regenerateSummary}}
             @icon="arrows-rotate"
+            @label="summary.buttons.regenerate"
+            @title="summary.buttons.regenerate"
           />
         {{/if}}
       </:footer>

@@ -19,9 +19,9 @@ export default <template>
   <section class="user-content">
     <div class="group-members-actions">
       <DTextField
-        @value={{@controller.filterInput}}
-        @placeholderKey={{@controller.filterPlaceholder}}
         class="group-username-filter no-blur"
+        @placeholderKey={{@controller.filterPlaceholder}}
+        @value={{@controller.filterInput}}
       />
     </div>
 
@@ -30,21 +30,21 @@ export default <template>
         <DResponsiveTable @className="group-members group-members__requests">
           <:header>
             <DTableHeaderToggle
-              @onToggle={{@controller.updateOrder}}
-              @order={{@controller.order}}
+              class="username"
               @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="username_lower"
               @labelKey="username"
-              @automatic={{true}}
-              class="username"
-            />
-            <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @order={{@controller.order}}
+            />
+            <DTableHeaderToggle
               @asc={{@controller.asc}}
+              @automatic={{true}}
               @field="requested_at"
               @labelKey="groups.member_requested"
-              @automatic={{true}}
+              @onToggle={{@controller.updateOrder}}
+              @order={{@controller.order}}
             />
             <div
               class="directory-table__column-header group-request-reason__column-header"
@@ -55,7 +55,7 @@ export default <template>
             {{#each @controller.model.requesters as |m|}}
               <div class="directory-table__row">
                 <div class="directory-table__cell group-member">
-                  <DUserInfo @user={{m}} @skipName={{@controller.skipName}} />
+                  <DUserInfo @skipName={{@controller.skipName}} @user={{m}} />
                 </div>
                 <div class="directory-table__cell">
                   <span class="directory-table__label">
@@ -88,14 +88,14 @@ export default <template>
                     {{i18n "groups.requests.denied"}}
                   {{else}}
                     <DButton
+                      class="btn-primary"
                       @action={{fn @controller.acceptRequest m}}
                       @label="groups.requests.accept"
-                      class="btn-primary"
                     />
                     <DButton
+                      class="btn-danger"
                       @action={{fn @controller.denyRequest m}}
                       @label="groups.requests.deny"
-                      class="btn-danger"
                     />
                   {{/if}}
                 </div>

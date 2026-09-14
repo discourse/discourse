@@ -126,25 +126,6 @@ export default class DialogService extends Service {
     });
   }
 
-  #promiseDialog(params) {
-    return new Promise((resolve) => {
-      const { didConfirm, didCancel } = params;
-
-      this.dialog({
-        shouldDisplayCancel: true,
-        ...params,
-        didConfirm: () => {
-          didConfirm?.();
-          resolve(true);
-        },
-        didCancel: () => {
-          didCancel?.();
-          resolve(false);
-        },
-      });
-    });
-  }
-
   reset() {
     if (!this._confirming && this.didCancel) {
       this.didCancel();
@@ -202,5 +183,24 @@ export default class DialogService extends Service {
   @bind
   hide() {
     this.reset();
+  }
+
+  #promiseDialog(params) {
+    return new Promise((resolve) => {
+      const { didConfirm, didCancel } = params;
+
+      this.dialog({
+        shouldDisplayCancel: true,
+        ...params,
+        didConfirm: () => {
+          didConfirm?.();
+          resolve(true);
+        },
+        didCancel: () => {
+          didCancel?.();
+          resolve(false);
+        },
+      });
+    });
   }
 }

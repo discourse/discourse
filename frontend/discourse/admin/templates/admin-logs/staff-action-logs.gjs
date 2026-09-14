@@ -19,56 +19,56 @@ export default <template>
       {{#if @controller.filtersExists}}
         <div class="staff-action-logs-filters">
           <DButton
+            class="clear-filters filter btn-default"
             @action={{@controller.clearAllFilters}}
             @label="admin.logs.staff_actions.clear_filters"
-            class="clear-filters filter btn-default"
           />
           {{#if @controller.actionFilter}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "actionFilter"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.action")
                 ": "
                 @controller.actionFilter
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
           {{#if @controller.filters.acting_user}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "acting_user"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.staff_actions.staff_user")
                 ": "
                 @controller.filters.acting_user
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
           {{#if @controller.filters.target_user}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "target_user"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.staff_actions.target_user")
                 ": "
                 @controller.filters.target_user
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
           {{#if @controller.filters.subject}}
             <DButton
+              class="filter btn-default"
               @action={{fn @controller.clearFilter "subject"}}
+              @suffixIcon="xmark"
               @translatedLabel={{concat
                 (i18n "admin.logs.staff_actions.subject")
                 ": "
                 @controller.filters.subject
               }}
-              @suffixIcon="xmark"
-              class="filter btn-default"
             />
           {{/if}}
         </div>
@@ -76,30 +76,30 @@ export default <template>
         {{i18n "admin.logs.staff_actions.filter"}}
         <ComboBox
           @content={{@controller.userHistoryActions}}
-          @value={{@controller.filterActionId}}
+          @id="staff-action-logs-action-filter"
           @onChange={{@controller.filterActionIdChanged}}
           @options={{hash none="admin.logs.staff_actions.all"}}
-          @id="staff-action-logs-action-filter"
+          @value={{@controller.filterActionId}}
         />
       {{/if}}
 
       <div class="date-filter-container">
         <DDateTimeInputRange
           @from={{@controller.startDate}}
-          @to={{@controller.endDate}}
           @onChange={{@controller.onChangeDateRange}}
           @showFromTime={{false}}
           @showToTime={{false}}
+          @to={{@controller.endDate}}
         />
       </div>
     </div>
 
     <div class="staff-action-logs-controls__right">
       <DButton
-        @action={{@controller.exportStaffActionLogs}}
-        @label="admin.export_csv.button_text"
-        @icon="download"
         class="btn-default export-staff-action-logs"
+        @action={{@controller.exportStaffActionLogs}}
+        @icon="download"
+        @label="admin.export_csv.button_text"
       />
     </div>
   </div>
@@ -124,7 +124,7 @@ export default <template>
                 <td class="staff-users">
                   <div class="staff-user">
                     {{#if item.acting_user}}
-                      <LinkTo @route="adminUser" @model={{item.acting_user}}>
+                      <LinkTo @model={{item.acting_user}} @route="adminUser">
                         {{dAvatar item.acting_user imageSize="tiny"}}
                         {{item.acting_user.username}}
                       </LinkTo>
@@ -148,8 +148,8 @@ export default <template>
                   <div class="subject">
                     {{#if item.target_user}}
                       <LinkTo
-                        @route="adminUser"
                         @model={{item.target_user}}
+                        @route="adminUser"
                       >{{dAvatar item.target_user imageSize="tiny"}}</LinkTo>
                       <a
                         href
@@ -162,11 +162,11 @@ export default <template>
                     {{#if item.subject}}
                       <a
                         href
+                        title={{item.subject}}
                         {{on
                           "click"
                           (fn @controller.filterBySubject item.subject)
                         }}
-                        title={{item.subject}}
                       >{{item.subject}}</a>
                     {{/if}}
                   </div>

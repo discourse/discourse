@@ -32,6 +32,10 @@ fi:
           title: "Päivämäärä-/kellonaikakentät"
         menus:
           title: "Valikot"
+        context_menu:
+          actions:
+            duplicate: "Monista"
+            delete: "Poista"
         multi_select:
           title: "Monivalinta"
         toasts:

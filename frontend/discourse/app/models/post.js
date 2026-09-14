@@ -230,6 +230,15 @@ export default class Post extends RestModel {
     this.can_edit = value;
   }
 
+  @computed("topic.details.created_by.id")
+  get topicCreatedById() {
+    return this.topic?.details?.created_by?.id;
+  }
+
+  set topicCreatedById(value) {
+    set(this, "topic.details.created_by.id", value);
+  }
+
   @dependentKeyCompat
   get new_user() {
     return this.trust_level === 0;
@@ -263,15 +272,6 @@ export default class Post extends RestModel {
   @computed("topic.details.created_by.id", "user_id")
   get topicOwner() {
     return deepEqual(this.topic?.details?.created_by?.id, this.user_id);
-  }
-
-  @computed("topic.details.created_by.id")
-  get topicCreatedById() {
-    return this.topic?.details?.created_by?.id;
-  }
-
-  set topicCreatedById(value) {
-    set(this, "topic.details.created_by.id", value);
   }
 
   get shareUrl() {
@@ -313,18 +313,6 @@ export default class Post extends RestModel {
   @computed("username")
   get usernameUrl() {
     return userPath(this.username);
-  }
-
-  updatePostField(field, value) {
-    const data = {};
-    data[field] = value;
-
-    return ajax(`/posts/${this.id}/${field}`, { type: "PUT", data })
-      .then((response) => {
-        this.set(field, value);
-        return response;
-      })
-      .catch(popupAjaxError);
   }
 
   get internalLinks() {
@@ -530,6 +518,77 @@ export default class Post extends RestModel {
       trust_level: this.trust_level,
       custom_fields: this.user_custom_fields,
     });
+  }
+
+  get topicNotificationLevel() {
+    return this.topic.details.notification_level;
+  }
+
+  get userBadges() {
+    if (!this.topic?.user_badges) {
+      return;
+    }
+    const badgeIds = this.topic.user_badges.users[this.user_id]?.badge_ids;
+    if (badgeIds) {
+      return badgeIds.map((badgeId) => this.topic.user_badges.badges[badgeId]);
+    }
+  }
+
+  @cached
+  get badgesGranted() {
+    return this.badges_granted?.map((json) => {
+      const badges = Badge.createFromJson(json);
+      return Array.isArray(badges) ? badges[0] : badges;
+    });
+  }
+
+  get requestedGroupName() {
+    return this.post_number === 1 ? this.topic?.requested_group_name : null;
+  }
+
+  get expandablePost() {
+    return this.post_number === 1 && !!this.topic?.expandable_first_post;
+  }
+
+  get topicUrl() {
+    return this.topic?.url;
+  }
+
+  @cached
+  get actionsSummary() {
+    return this.actions_summary
+      ?.filter((postAction) => {
+        return postAction.actionType.name_key !== "like" && postAction.acted;
+      })
+      ?.map((postAction) => {
+        return {
+          id: postAction.id,
+          postId: this.id,
+          action: postAction.actionType.name_key,
+          canUndo: postAction.can_undo,
+          description: postAction.actionType.translatedDescription,
+        };
+      });
+  }
+
+  get displayDate() {
+    if (this.wiki && this.last_wiki_edit) {
+      return this.last_wiki_edit;
+    } else {
+      return this.created_at;
+    }
+  }
+
+  updatePostField(field, value) {
+    const data = {};
+    data[field] = value;
+
+    return ajax(`/posts/${this.id}/${field}`, { type: "PUT", data })
+      .then((response) => {
+        this.set(field, value);
+        return response;
+      })
+      .catch(popupAjaxError);
   }
 
   afterUpdate(res) {
@@ -837,64 +896,5 @@ export default class Post extends RestModel {
     return ajax(`/posts/${this.id}/revisions/${version}/revert`, {
       type: "PUT",
     });
-  }
-
-  get topicNotificationLevel() {
-    return this.topic.details.notification_level;
-  }
-
-  get userBadges() {
-    if (!this.topic?.user_badges) {
-      return;
-    }
-    const badgeIds = this.topic.user_badges.users[this.user_id]?.badge_ids;
-    if (badgeIds) {
-      return badgeIds.map((badgeId) => this.topic.user_badges.badges[badgeId]);
-    }
-  }
-
-  @cached
-  get badgesGranted() {
-    return this.badges_granted?.map((json) => {
-      const badges = Badge.createFromJson(json);
-      return Array.isArray(badges) ? badges[0] : badges;
-    });
-  }
-
-  get requestedGroupName() {
-    return this.post_number === 1 ? this.topic?.requested_group_name : null;
-  }
-
-  get expandablePost() {
-    return this.post_number === 1 && !!this.topic?.expandable_first_post;
-  }
-
-  get topicUrl() {
-    return this.topic?.url;
-  }
-
-  @cached
-  get actionsSummary() {
-    return this.actions_summary
-      ?.filter((postAction) => {
-        return postAction.actionType.name_key !== "like" && postAction.acted;
-      })
-      ?.map((postAction) => {
-        return {
-          id: postAction.id,
-          postId: this.id,
-          action: postAction.actionType.name_key,
-          canUndo: postAction.can_undo,
-          description: postAction.actionType.translatedDescription,
-        };
-      });
-  }
-
-  get displayDate() {
-    if (this.wiki && this.last_wiki_edit) {
-      return this.last_wiki_edit;
-    } else {
-      return this.created_at;
-    }
   }
 }

@@ -8,7 +8,7 @@ const PostCountOrBadges = <template>
     {{#if @topic.has_new_replies}}
       <NewRepliesDot @topic={{@topic}} />
     {{else}}
-      <ItemRepliesCell @topic={{@topic}} @tagName="div" />
+      <ItemRepliesCell @tagName="div" @topic={{@topic}} />
     {{/if}}
   {{else if (and @postBadgesEnabled @topic.unread_posts)}}
     <TopicPostBadges
@@ -17,7 +17,7 @@ const PostCountOrBadges = <template>
       @url={{@topic.lastUnreadUrl}}
     />
   {{else}}
-    <ItemRepliesCell @topic={{@topic}} @tagName="div" />
+    <ItemRepliesCell @tagName="div" @topic={{@topic}} />
   {{/if}}
 </template>;
 

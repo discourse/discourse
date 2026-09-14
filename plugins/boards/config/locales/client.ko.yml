@@ -7,6 +7,10 @@
 ko:
   js:
     boards:
+      status:
+        all: "모두"
+        open: "열기"
+        archived: "저장됨"
       board:
         remove_card: "제거"
         new_topic: "새 글..."

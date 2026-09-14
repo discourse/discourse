@@ -110,9 +110,9 @@ export default class WorkflowsTemplates extends Component {
     <div class="workflows-templates" {{didInsert this.ensureNodeTypes}}>
       {{#each @templates as |tmpl|}}
         <button
-          type="button"
           class="workflows-templates__tile"
           disabled={{this.creatingTemplateId}}
+          type="button"
           {{on "click" (fn this.useTemplate tmpl)}}
         >
           <span class="workflows-templates__description">

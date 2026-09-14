@@ -5,27 +5,27 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config.groups.title"}}
     @descriptionLabel={{i18n "admin.config.groups.header_description"}}
     @hideTabs={{@controller.hideTabs}}
+    @titleLabel={{i18n "admin.config.groups.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/groups"
         @label={{i18n "admin.config.groups.title"}}
+        @path="/admin/groups"
       />
     </:breadcrumbs>
     <:tabs>
       <DNavItem
-        @route="adminGroups.settings"
-        @label="settings"
         class="admin-groups-tabs__settings"
+        @label="settings"
+        @route="adminGroups.settings"
       />
       <DNavItem
-        @route="adminGroups.index"
-        @label="admin.config.groups.title"
         class="admin-groups-tabs__index"
+        @label="admin.config.groups.title"
+        @route="adminGroups.index"
       />
     </:tabs>
   </DPageHeader>

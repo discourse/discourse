@@ -32,6 +32,10 @@ he:
           title: "קלטי תאריך/שעה"
         menus:
           title: "תפריטים"
+        context_menu:
+          actions:
+            duplicate: "שכפול"
+            delete: "מחיקה"
         multi_select:
           title: "בחירה במרוכז"
         toasts:

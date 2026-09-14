@@ -83,8 +83,8 @@ export default class ChatIncomingWebhookEditForm extends Component {
       <form.Field
         @name="name"
         @title={{i18n "chat.incoming_webhooks.name"}}
-        @validation="required"
         @type="input"
+        @validation="required"
         as |field|
       >
         <field.Control />
@@ -100,9 +100,9 @@ export default class ChatIncomingWebhookEditForm extends Component {
       </form.Field>
 
       <form.Field
+        @description={{i18n "chat.incoming_webhooks.username_instructions"}}
         @name="username"
         @title={{i18n "chat.incoming_webhooks.username"}}
-        @description={{i18n "chat.incoming_webhooks.username_instructions"}}
         @type="input"
         as |field|
       >
@@ -112,24 +112,24 @@ export default class ChatIncomingWebhookEditForm extends Component {
       <form.Field
         @name="chat_channel_id"
         @title={{i18n "chat.incoming_webhooks.post_to"}}
-        @validation="required"
         @type="custom"
+        @validation="required"
         as |field|
       >
         <field.Control>
           <ChatChannelChooser
             @content={{@chatChannels}}
-            @value={{field.value}}
             @onChange={{field.set}}
+            @value={{field.value}}
           />
         </field.Control>
       </form.Field>
 
       <form.Field
-        @name="emoji"
-        @title={{i18n "chat.incoming_webhooks.emoji"}}
         @description={{i18n "chat.incoming_webhooks.emoji_instructions"}}
+        @name="emoji"
         @size="large"
+        @title={{i18n "chat.incoming_webhooks.emoji"}}
         @type="custom"
         as |field|
       >
@@ -148,10 +148,10 @@ export default class ChatIncomingWebhookEditForm extends Component {
             </row.Col>
             <row.Col @size={{6}}>
               <DButton
-                @label="chat.incoming_webhooks.reset_emoji"
+                class="admin-chat-webhooks-clear-emoji"
                 @action={{fn this.resetEmoji form.set}}
                 @disabled={{not field.value}}
-                class="admin-chat-webhooks-clear-emoji"
+                @label="chat.incoming_webhooks.reset_emoji"
               />
             </row.Col>
           </form.Row>
@@ -161,8 +161,8 @@ export default class ChatIncomingWebhookEditForm extends Component {
       {{#if @webhook.url}}
         <form.Container
           @name="url"
-          @title={{i18n "chat.incoming_webhooks.url"}}
           @subtitle={{i18n "chat.incoming_webhooks.url_instructions"}}
+          @title={{i18n "chat.incoming_webhooks.url"}}
         >
           <code>{{@webhook.url}}</code>
         </form.Container>

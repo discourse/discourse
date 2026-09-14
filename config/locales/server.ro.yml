@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ro:
+  mcp:
+    errors:
+      topic_not_found: "Subiectul nu a fost găsit"
+    oauth:
+      deny: "Respinge"
+      approve: "Autorizează"
   llms_txt:
     sections:
       optional: "Opțional"
@@ -2420,12 +2426,6 @@ ro:
       approve_and_unhide:
         title: "Da"
         complete: "Postare aprobată și afișată"
-      delete_post:
-        complete: "Postarea a fost ștearsă"
-      restore_post:
-        complete: "Postarea a fost restaurată"
-      user_actions:
-        bundle_title: "Ce vrei să faci cu utilizatorul?"
       silence_user:
         title: "Redu la tăcere utilizatorul"
         complete: "Utilizatorul a fost redus la tăcere"

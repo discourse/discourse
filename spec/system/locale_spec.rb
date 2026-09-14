@@ -64,6 +64,7 @@ RSpec.describe "Locale choice" do
         },
       )
     end
+
     after { JsLocaleHelper.clear_cache! }
 
     it "handles fallback correctly" do

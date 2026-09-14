@@ -49,7 +49,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=WEB_LINK onDrop=onDrop}}
@@ -75,7 +75,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div id="zone" {{dDragAndDropTarget adopts=WEB_LINK}}>zone</div>
           </template>
         );
@@ -127,7 +127,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=spoofing onDrop=onDrop}}
@@ -160,7 +160,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div id="decoy">decoy</div>
             <div
               id="zone"
@@ -187,7 +187,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="outer"
               {{dDragAndDropTarget adopts=WEB_LINK onDrop=onOuter}}
@@ -218,8 +218,8 @@ module(
         await render(
           <template>
             <a
-              id="anchor"
               href="https://example.com/adopted"
+              id="anchor"
               {{dDragAndDropTarget adopts=WEB_LINK onDrop=onDrop}}
             >a link</a>
           </template>
@@ -243,8 +243,8 @@ module(
         await render(
           <template>
             <a
-              id="anchor"
               href="https://example.com/adopted"
+              id="anchor"
               {{dDragAndDropTarget
                 acceptsSelf=false
                 adopts=WEB_LINK
@@ -274,7 +274,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="adopting"
               {{dDragAndDropTarget adopts=WEB_LINK onDrop=onAdopting}}
@@ -336,7 +336,7 @@ module(
         await render(
           <template>
             <div id="row" {{dDragAndDropSource type="row" data=(hash id=1)}}>
-              <a id="inner" href="https://example.com/adopted">a link</a>
+              <a href="https://example.com/adopted" id="inner">a link</a>
             </div>
             <div
               id="zone"
@@ -362,7 +362,7 @@ module(
           <template>
             {{! A selected URL can produce a dragstart whose payload looks
                 exactly like a dragged link. }}
-            <a id="inner" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="inner">a link</a>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=WEB_LINK onDrop=onDrop}}
@@ -502,7 +502,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=ANY_CONTENT onDrop=onDrop}}
@@ -531,7 +531,7 @@ module(
 
         await render(
           <template>
-            <div id="widget" draggable="true">a widget</div>
+            <div draggable="true" id="widget">a widget</div>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=ANY_CONTENT onDrop=onDrop}}
@@ -567,7 +567,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="first"
               {{dDragAndDropTarget adopts=BOOKMARK onDrop=onFirst}}
@@ -606,8 +606,8 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
-            <a id="other" href="https://example.com/other">another link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
+            <a href="https://example.com/other" id="other">another link</a>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=WEB_LINK onDrop=onDrop}}
@@ -666,7 +666,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div id="broken" {{dDragAndDropTarget adopts=broken}}>broken</div>
             <div
               id="zone"
@@ -716,7 +716,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=clumsy onDrop=onDrop}}
@@ -776,7 +776,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div
               id="zone"
               {{dDragAndDropTarget adopts=clumsy onDrop=onDrop}}
@@ -844,7 +844,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div id="zone" {{dDragAndDropTarget adopts=WEB_LINK}}>zone</div>
             <div id="nowhere">not a drop target</div>
           </template>
@@ -869,7 +869,7 @@ module(
 
         await render(
           <template>
-            <a id="anchor" href="https://example.com/adopted">a link</a>
+            <a href="https://example.com/adopted" id="anchor">a link</a>
             <div id="zone" {{dDragAndDropTarget adopts=WEB_LINK}}>zone</div>
           </template>
         );
@@ -909,7 +909,7 @@ module(
       }
 
       const scroller = <template>
-        <a id="anchor" href="https://example.com/adopted">a link</a>
+        <a href="https://example.com/adopted" id="anchor">a link</a>
         <div id="row" {{dDragAndDropSource type="row"}}>a registered row</div>
         <div
           id="scroller"

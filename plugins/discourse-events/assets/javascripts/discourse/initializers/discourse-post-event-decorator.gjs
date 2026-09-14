@@ -76,8 +76,8 @@ function _decorateEventPreviewOneboxes(cooked, helper) {
         wrapper,
         <template>
           <DiscoursePostEventOneboxPreview
-            @topicId={{topicId}}
             @fallbackHtml={{fallbackHtml}}
+            @topicId={{topicId}}
           />
         </template>
       );
@@ -145,8 +145,8 @@ function initializeDiscoursePostEventDecorator(api) {
           <template>
             <DiscoursePostEvent
               @event={{event}}
-              @post={{post}}
               @hideLivestreamVideo={{hideLivestreamVideo}}
+              @post={{post}}
             />
           </template>
         );

@@ -27,7 +27,7 @@ describe DiscourseDataExplorer::QueryRunner do
     described_class.invalidate(query_with_internal_params.id)
   end
 
-  describe ".run" do
+  describe ".run caching behavior" do
     it "runs the query and returns results" do
       result = described_class.run(query, nil, current_user: admin)
 
@@ -39,7 +39,7 @@ describe DiscourseDataExplorer::QueryRunner do
     it "caches the result after execution" do
       described_class.run(query, nil, current_user: admin)
 
-      cached = described_class.cached_result(query, nil)
+      cached = described_class.cached_result(query, nil, current_user: admin)
       expect(cached).to be_present
       expect(cached[:success]).to eq(true)
     end
@@ -47,13 +47,15 @@ describe DiscourseDataExplorer::QueryRunner do
     it "does not cache when explain is true" do
       described_class.run(query, nil, current_user: admin, explain: true)
 
-      expect(described_class.cached_result(query, nil)).to be_nil
+      expect(described_class.cached_result(query, nil, current_user: admin)).to be_nil
     end
 
     it "does not cache queries with internal params" do
       described_class.run(query_with_internal_params, nil, current_user: admin)
 
-      expect(described_class.cached_result(query_with_internal_params, nil)).to be_nil
+      expect(
+        described_class.cached_result(query_with_internal_params, nil, current_user: admin),
+      ).to be_nil
     end
 
     it "returns error info when query fails" do
@@ -66,55 +68,58 @@ describe DiscourseDataExplorer::QueryRunner do
 
   describe ".cached_result" do
     it "returns nil when no cache exists" do
-      expect(described_class.cached_result(query, nil)).to be_nil
+      expect(described_class.cached_result(query, nil, current_user: admin)).to be_nil
     end
 
     it "returns cached result after execute" do
       described_class.run(query, nil, current_user: admin)
-      cached = described_class.cached_result(query, nil)
+      cached = described_class.cached_result(query, nil, current_user: admin)
 
       expect(cached[:cached_at]).to be_present
       expect(cached[:rows]).to be_present
     end
 
     it "returns nil for queries with internal params" do
-      expect(described_class.cached_result(query_with_internal_params, nil)).to be_nil
+      expect(
+        described_class.cached_result(query_with_internal_params, nil, current_user: admin),
+      ).to be_nil
     end
 
     it "resolves URL params when present" do
       described_class.run(query_with_params, '{"limit":"5"}', current_user: admin)
 
-      cached = described_class.cached_result(query_with_params, '{"limit":"5"}')
+      cached =
+        described_class.cached_result(query_with_params, '{"limit":"5"}', current_user: admin)
       expect(cached).to be_present
 
-      cached_default = described_class.cached_result(query_with_params, nil)
+      cached_default = described_class.cached_result(query_with_params, nil, current_user: admin)
       expect(cached_default).to be_nil
     end
 
     it "falls back to default params when no URL params" do
       described_class.run(query_with_params, '{"limit":"10"}', current_user: admin)
 
-      cached = described_class.cached_result(query_with_params, nil)
+      cached = described_class.cached_result(query_with_params, nil, current_user: admin)
       expect(cached).to be_present
     end
 
     it "returns cached result when run was called with null params" do
       described_class.run(query_with_params, "null", current_user: admin)
 
-      cached = described_class.cached_result(query_with_params, nil)
+      cached = described_class.cached_result(query_with_params, nil, current_user: admin)
       expect(cached).to be_present
     end
 
     it "handles malformed JSON params gracefully" do
-      expect(described_class.cached_result(query, "not-json")).to be_nil
+      expect(described_class.cached_result(query, "not-json", current_user: admin)).to be_nil
     end
   end
 
-  describe ".run" do
+  describe ".run limit handling" do
     it "does not cache when a non-default limit is used" do
       described_class.run(query, nil, current_user: admin, limit: 1)
 
-      expect(described_class.cached_result(query, nil)).to be_nil
+      expect(described_class.cached_result(query, nil, current_user: admin)).to be_nil
     end
 
     it "caches when using the default limit" do
@@ -125,17 +130,38 @@ describe DiscourseDataExplorer::QueryRunner do
         limit: SiteSetting.data_explorer_query_result_limit,
       )
 
-      expect(described_class.cached_result(query, nil)).to be_present
+      expect(described_class.cached_result(query, nil, current_user: admin)).to be_present
+    end
+  end
+
+  describe "per-user caching" do
+    fab!(:moderator)
+    fab!(:pm, :private_message_topic)
+    fab!(:pm_query) { Fabricate(:query, sql: "SELECT #{pm.id} AS topic_id", user: admin) }
+
+    it "does not serve relations resolved under another user's guardian" do
+      described_class.run(pm_query, nil, current_user: admin)
+
+      admin_cached = described_class.cached_result(pm_query, nil, current_user: admin)
+      expect(admin_cached[:relations][:topic]).to include(include(id: pm.id))
+      expect(described_class.cached_result(pm_query, nil, current_user: moderator)).to be_nil
+    end
+
+    it "does not share entries between admins when secured categories are suppressed" do
+      SiteSetting.suppress_secured_categories_from_admin = true
+      described_class.run(query, nil, current_user: admin)
+
+      expect(described_class.cached_result(query, nil, current_user: Fabricate(:admin))).to be_nil
     end
   end
 
   describe ".invalidate" do
     it "removes all cached results for a query" do
       described_class.run(query, nil, current_user: admin)
-      expect(described_class.cached_result(query, nil)).to be_present
+      expect(described_class.cached_result(query, nil, current_user: admin)).to be_present
 
       described_class.invalidate(query.id)
-      expect(described_class.cached_result(query, nil)).to be_nil
+      expect(described_class.cached_result(query, nil, current_user: admin)).to be_nil
     end
   end
 end

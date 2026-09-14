@@ -2,6 +2,9 @@
 
 module JsonApiKit
   class Request
+    LIST = ","
+    SORT_DIRECTIONS = { "-" => :desc, "" => :asc }.freeze
+
     attr_reader :guardian
 
     def initialize(params = {}, guardian:)

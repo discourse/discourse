@@ -282,39 +282,6 @@ export default class TopicRoute extends DiscourseRoute {
     return true;
   }
 
-  // replaceState can be very slow on Android Chrome. This function debounces replaceState
-  // within a topic until scrolling stops
-  _replaceUnlessScrolling(url, topicId) {
-    const { currentRouteName } = this.router;
-
-    const stillOnTopicRoute = currentRouteName?.split(".")[0] === "topic";
-    if (!stillOnTopicRoute) {
-      return;
-    }
-
-    const stillOnSameTopic = this.modelFor("topic").id === topicId;
-    if (!stillOnSameTopic) {
-      return;
-    }
-
-    const currentPos = document.scrollingElement.scrollTop;
-    if (currentPos === this.lastScrollPos) {
-      DiscourseURL.replaceState(`${url}${window.location.hash}`);
-      return;
-    }
-
-    this.setProperties({
-      lastScrollPos: currentPos,
-      scheduledReplace: discourseLater(
-        this,
-        "_replaceUnlessScrolling",
-        url,
-        topicId,
-        SCROLL_DELAY
-      ),
-    });
-  }
-
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
     postStream.filter = get(params, "filter");
@@ -408,5 +375,38 @@ export default class TopicRoute extends DiscourseRoute {
     schedule("afterRender", () =>
       this.appEvents.trigger("header:update-topic", model)
     );
+  }
+
+  // replaceState can be very slow on Android Chrome. This function debounces replaceState
+  // within a topic until scrolling stops
+  _replaceUnlessScrolling(url, topicId) {
+    const { currentRouteName } = this.router;
+
+    const stillOnTopicRoute = currentRouteName?.split(".")[0] === "topic";
+    if (!stillOnTopicRoute) {
+      return;
+    }
+
+    const stillOnSameTopic = this.modelFor("topic").id === topicId;
+    if (!stillOnSameTopic) {
+      return;
+    }
+
+    const currentPos = document.scrollingElement.scrollTop;
+    if (currentPos === this.lastScrollPos) {
+      DiscourseURL.replaceState(`${url}${window.location.hash}`);
+      return;
+    }
+
+    this.setProperties({
+      lastScrollPos: currentPos,
+      scheduledReplace: discourseLater(
+        this,
+        "_replaceUnlessScrolling",
+        url,
+        topicId,
+        SCROLL_DELAY
+      ),
+    });
   }
 }

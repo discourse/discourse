@@ -51,9 +51,9 @@ module(
       await render(
         <template>
           <ThemeSection
-            @themes={{themes}}
-            @selectedThemeId={{-1}}
             @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
           />
         </template>
       );
@@ -92,10 +92,10 @@ module(
       await render(
         <template>
           <ThemeSection
-            @themes={{themes}}
-            @selectedThemeId={{-1}}
             @applying={{true}}
             @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
           />
         </template>
       );
@@ -124,15 +124,15 @@ module(
       await render(
         <template>
           <ColorsSection
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
             @colorMode="light"
             @darkOnly={{false}}
-            @userSelectable={{false}}
             @onSelectMode={{noop}}
             @onSelectPair={{noop}}
             @onToggleUserSelectable={{noop}}
+            @pairs={{PAIRS}}
+            @selectedPairKey="default"
+            @selectedPairName="Default"
+            @userSelectable={{false}}
           />
         </template>
       );
@@ -170,15 +170,15 @@ module(
       await render(
         <template>
           <ColorsSection
-            @pairs={{PAIRS}}
-            @selectedPairKey="default"
-            @selectedPairName="Default"
             @colorMode="light"
             @darkOnly={{false}}
-            @userSelectable={{state.userSelectable}}
             @onSelectMode={{noop}}
             @onSelectPair={{noop}}
             @onToggleUserSelectable={{toggle}}
+            @pairs={{PAIRS}}
+            @selectedPairKey="default"
+            @selectedPairName="Default"
+            @userSelectable={{state.userSelectable}}
           />
         </template>
       );
@@ -215,11 +215,11 @@ module(
       await render(
         <template>
           <HomepageSection
-            @themeId={{-1}}
-            @homepage={{state.homepage}}
             @categoryPageStyle="categories_boxes"
-            @onSelectHomepage={{noop}}
+            @homepage={{state.homepage}}
             @onSelectCategoryPageStyle={{noop}}
+            @onSelectHomepage={{noop}}
+            @themeId={{-1}}
           />
         </template>
       );
@@ -266,8 +266,8 @@ module(
           <WelcomeBannerSection
             @enabled={{state.enabled}}
             @location="above_topic_content"
-            @onToggle={{toggle}}
             @onSelectLocation={{noop}}
+            @onToggle={{toggle}}
           />
         </template>
       );
@@ -306,7 +306,7 @@ module(
 
       await render(
         <template>
-          <SearchSection @searchExperience="search_icon" @onSelect={{select}} />
+          <SearchSection @onSelect={{select}} @searchExperience="search_icon" />
         </template>
       );
 

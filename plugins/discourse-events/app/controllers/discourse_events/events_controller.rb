@@ -200,7 +200,6 @@ module DiscourseEvents
         :tags,
         :search,
         :status,
-        :event_format,
         tags: [],
       )
     end

@@ -33,6 +33,7 @@ en:
         ai: "Generate with AI"
       or: "or"
       admins_only: "The data explorer is only available to admins."
+      hidden_relation: "You do not have access to this content."
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
       create: "Create"

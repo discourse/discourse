@@ -9,6 +9,7 @@ RSpec.describe DiscourseSolved::PostMoverExtension do
   fab!(:destination_topic) { Fabricate(:topic_with_op, category: category) }
 
   let!(:post_ids) { topic.posts.order(:post_number).pluck(:id) }
+
   fab!(:solved) { Fabricate(:solved_topic, topic: topic, answer_post: reply) }
 
   before { SiteSetting.allow_solved_on_all_topics = true }

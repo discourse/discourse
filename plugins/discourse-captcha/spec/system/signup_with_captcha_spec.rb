@@ -7,6 +7,10 @@ RSpec.describe "Signup with captcha" do
   before do
     SiteSetting.enable_local_logins = true
     SiteSetting.discourse_captcha_enabled = true
+
+    # The captcha outlet only exists on the password signup form, which the
+    # code-based form replaces when enable_local_logins_via_code is on.
+    SiteSetting.enable_local_logins_via_code = false
   end
 
   context "with hCaptcha", allow_network: %w[hcaptcha.com *.hcaptcha.com] do
@@ -29,6 +33,18 @@ RSpec.describe "Signup with captcha" do
     it "does not display reCaptcha container" do
       signup_page.open
       expect(captcha).to have_no_recaptcha_container
+    end
+
+    context "with code-based signup" do
+      before { SiteSetting.enable_local_logins_via_code = true }
+
+      it "displays the hCaptcha widget after requesting a signup code" do
+        signup_page.open
+        find(".code-login-form__email-step input[type='email']").fill_in(with: "test@example.com")
+        find(".code-login-form__continue").click
+
+        expect(captcha).to have_hcaptcha_container
+      end
     end
 
     context "when site requires login" do

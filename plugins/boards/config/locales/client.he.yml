@@ -7,6 +7,9 @@
 he:
   js:
     boards:
+      status:
+        all: "הכול"
+        open: "פתוח"
       board:
         remove_card: "הסרה"
         new_topic: "נושא חדש..."

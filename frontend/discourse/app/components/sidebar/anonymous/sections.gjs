@@ -21,9 +21,9 @@ export default class SidebarAnonymousSections extends Component {
 
       <CustomSections
         @collapsable={{@collapsableSections}}
-        @toggleNavigationMenu={{@toggleNavigationMenu}}
         @expandActiveSection={{this.mainPanel.expandActiveSection}}
         @scrollActiveLinkIntoView={{this.mainPanel.scrollActiveLinkIntoView}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
       />
       <CategoriesSection
         @collapsable={{@collapsableSections}}

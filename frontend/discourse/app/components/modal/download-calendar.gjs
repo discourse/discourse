@@ -58,9 +58,9 @@ export default class DownloadCalendar extends Component {
 
   <template>
     <DModal
-      @title={{i18n "download_calendar.title"}}
       class="download-calendar-modal"
       @closeModal={{@closeModal}}
+      @title={{i18n "download_calendar.title"}}
     >
       <:body>
         <div class="control-group">
@@ -69,9 +69,9 @@ export default class DownloadCalendar extends Component {
               <DRadioButton
                 id="ics"
                 @name="select-calendar"
-                @value="ics"
-                @selection={{this.selectedCalendar}}
                 @onChange={{fn this.selectCalendar "ics"}}
+                @selection={{this.selectedCalendar}}
+                @value="ics"
               />
               {{i18n "download_calendar.save_ics"}}
             </label>
@@ -81,9 +81,9 @@ export default class DownloadCalendar extends Component {
               <DRadioButton
                 id="google"
                 @name="select-calendar"
-                @value="google"
-                @selection={{this.selectedCalendar}}
                 @onChange={{fn this.selectCalendar "google"}}
+                @selection={{this.selectedCalendar}}
+                @value="google"
               />
               {{i18n "download_calendar.save_google"}}
             </label>
@@ -93,7 +93,7 @@ export default class DownloadCalendar extends Component {
         {{#if this.currentUser}}
           <div class="control-group remember">
             <label class="checkbox-label">
-              <Input @type="checkbox" @checked={{this.remember}} />
+              <Input @checked={{this.remember}} @type="checkbox" />
               <span>{{i18n "download_calendar.remember"}}</span>
             </label>
             <span>{{i18n "download_calendar.remember_explanation"}}</span>

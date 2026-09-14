@@ -64,12 +64,12 @@ export default class PostLinks extends Component {
             <li>
               <DButton
                 class="btn-transparent expand-links"
+                @action={{this.expandList}}
+                @title="post_links.about"
                 @translatedLabel={{i18n
                   "post_links.title"
                   count=this.remainingCount
                 }}
-                @title="post_links.about"
-                @action={{this.expandList}}
               />
             </li>
           {{/if}}

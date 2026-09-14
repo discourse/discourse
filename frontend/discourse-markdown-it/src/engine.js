@@ -22,6 +22,7 @@ export default function makeEngine(
 
   const tlds = options.discourse.limitedSiteSettings.markdownLinkifyTlds || "";
   engine.linkify.tlds(tlds.split("|"));
+  engine.linkify.set({ fuzzyLink: true });
 
   setupUrlDecoding(engine);
   setupHoister(engine);

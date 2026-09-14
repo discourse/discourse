@@ -35,6 +35,14 @@ jobs:
         || 'ubuntu-latest'
       }}
     container: discourse/discourse_test:release
+    services:
+      minio:
+        image: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'bitnami/minio@sha256:50cec18ac4184af4671a78aedd5554942c8ae105d51a465fa82037949046da01' || '' }}
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+          MINIO_DEFAULT_BUCKETS: discoursetest
+          MINIO_DOMAIN: minio.local
     timeout-minutes: >-
       ${{
         matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
@@ -52,11 +60,13 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
-      MINIO_RUNNER_LOG_LEVEL: WARN
+      S3_SYSTEM_TEST_ENDPOINT: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'http://minio.local:9000' || '' }}
+      S3_SYSTEM_TEST_BUCKET: discoursetest
+      S3_SYSTEM_TEST_ACCESS_KEY_ID: minioadmin
+      S3_SYSTEM_TEST_SECRET_ACCESS_KEY: minioadmin
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
-      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
@@ -172,8 +182,9 @@ jobs:
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
-          echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+          minio_ip="$(getent ahostsv4 minio | awk 'NR == 1 { print $1 }')"
+          echo "$minio_ip minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+          curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://minio.local:9000/minio/health/ready
 
       - name: Create databases
         run: bin/rake db:create
@@ -385,6 +396,7 @@ jobs:
           fi
 
       - name: Merge failed system test artifacts
+        id: merge-failed-system-test-artifacts
         if: steps.check-artifacts.outputs.has_failed_system == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
@@ -393,9 +405,46 @@ jobs:
           delete-merged: true
 
       - name: Merge flaky test reports
+        id: merge-flaky-test-reports
         if: steps.check-artifacts.outputs.has_flaky == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*
           delete-merged: true
+
+      - name: Notify Patch Triage about flaky tests
+        if: steps.merge-flaky-test-reports.outputs.artifact-id != ''
+        continue-on-error: true
+        env:
+          PATCH_TRIAGE_FLAKY_TEST_REPORT_URL: ${{ secrets.PATCH_TRIAGE_FLAKY_TEST_REPORT_URL }}
+          PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET: ${{ secrets.PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET }}
+          REPORT_ARTIFACT_ID: ${{ steps.merge-flaky-test-reports.outputs.artifact-id }}
+          SCREENSHOT_ARTIFACT_ID: ${{ steps.merge-failed-system-test-artifacts.outputs.artifact-id }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL" || -z "$PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" ]]; then
+            echo "::warning::Patch Triage flaky-test delivery secrets are not configured; skipping notification"
+            exit 0
+          fi
+
+          payload=$(jq -nc '
+            {
+              repository: env.GITHUB_REPOSITORY,
+              workflow_run_id: (env.GITHUB_RUN_ID | tonumber),
+              run_attempt: (env.GITHUB_RUN_ATTEMPT | tonumber),
+              report_artifact_id: (env.REPORT_ARTIFACT_ID | tonumber)
+            } + if env.SCREENSHOT_ARTIFACT_ID == "" then {} else {
+              screenshot_artifact_id: (env.SCREENSHOT_ARTIFACT_ID | tonumber)
+            } end')
+
+          curl --fail-with-body \
+            --retry 3 \
+            --retry-all-errors \
+            --connect-timeout 5 \
+            --max-time 30 \
+            --header "Content-Type: application/json" \
+            --header "Authorization: Bearer $PATCH_TRIAGE_FLAKY_TEST_REPORT_SECRET" \
+            --data-binary "$payload" \
+            "$PATCH_TRIAGE_FLAKY_TEST_REPORT_URL"

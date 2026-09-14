@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sq:
+  mcp:
+    errors:
+      draft_too_long: "Mesazhi shembull është shumë i gjatë"
+      topic_not_found: "Tema nuk u gjet"
+    oauth:
+      deny: "Mohoni"
+      approve: "Autorizo"
   llms_txt:
     sections:
       optional: "Fakultative"
@@ -1527,8 +1534,6 @@ sq:
         title: "Po"
       approve_and_unhide:
         title: "Po"
-      delete_post:
-        complete: "Postimi u fshi"
       delete_user:
         complete: "Përdoruesi u fshi"
   fallback_username: "përdorues"

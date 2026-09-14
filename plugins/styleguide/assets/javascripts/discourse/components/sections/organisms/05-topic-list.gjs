@@ -5,13 +5,13 @@ import TopicListWithoutPostersExample from "../../examples/organisms/topic-list-
 import topicListWithoutPostersSource from "../../examples/organisms/topic-list-without-posters?source=file";
 
 export default <template>
-  <StyleguideExample @title="<TopicList>" @code={{topicListSource}}>
+  <StyleguideExample @code={{topicListSource}} @title="<TopicList>">
     <TopicListExample @topics={{@dummy.topics}} />
   </StyleguideExample>
 
   <StyleguideExample
-    @title="<TopicList> - hide posters"
     @code={{topicListWithoutPostersSource}}
+    @title="<TopicList> - hide posters"
   >
     <TopicListWithoutPostersExample @topics={{@dummy.topics}} />
   </StyleguideExample>

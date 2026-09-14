@@ -981,6 +981,7 @@ RSpec.describe Admin::DashboardController do
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
       context "when there are no problems" do
         it "returns an empty array" do
           post "/admin/dashboard/problems.json"

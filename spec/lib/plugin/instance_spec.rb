@@ -21,6 +21,26 @@ TEXT
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe "#register_navigation_destination" do
+    it "namespaces destinations and filters disabled plugins at lookup time" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugin_instance.register_navigation_destination(
+        "example",
+        path: "/admin/example",
+        title: "example.title",
+        description: "example.description",
+      ) { |guardian| guardian.is_admin? }
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.navigation_destinations.map(&:id)).to eq(
+        ["discourse-sample-plugin:example"],
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.navigation_destinations).to eq([])
+    end
+  end
+
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
 
   describe ".humanized_name" do
@@ -486,7 +506,7 @@ TEXT
   end
 
   describe ".register_seedfu_fixtures" do
-    it "should add the new path to SeedFu's fixtures path" do
+    it "adds the new path to SeedFu's fixture paths" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_seedfu_fixtures(["some_path"])
       plugin.register_seedfu_fixtures("some_path2")
@@ -509,7 +529,7 @@ TEXT
       plugin
     end
 
-    it "should add the right callback" do
+    it "adds the expected callback" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_create) { called += 1 }
@@ -523,7 +543,7 @@ TEXT
       expect(called).to eq(1)
     end
 
-    it "should add the right callback with options" do
+    it "adds the expected callback with options" do
       called = 0
 
       plugin_instance.add_model_callback(User, :after_commit, on: :create) { called += 1 }
@@ -947,6 +967,7 @@ TEXT
 
   describe "#register_notification_consolidation_plan" do
     let(:plugin) { Plugin::Instance.new }
+
     fab!(:topic)
 
     after { DiscoursePluginRegistry.reset_register!(:notification_consolidation_plans) }
@@ -1368,7 +1389,7 @@ TEXT
   describe "#add_request_rate_limiter" do
     after { Middleware::RequestTracker.reset_rate_limiters_stack }
 
-    it "should raise an error if `after` and `before` kwarg are provided" do
+    it "raises an error when both `after` and `before` are provided" do
       plugin = Plugin::Instance.new
 
       expect do
@@ -1382,7 +1403,7 @@ TEXT
       end.to raise_error(ArgumentError, "only one of `after` or `before` can be provided")
     end
 
-    it "should raise an error if value of `after` kwarg is invalid" do
+    it "raises an error when `after` is invalid" do
       plugin = Plugin::Instance.new
 
       expect {
@@ -1398,7 +1419,7 @@ TEXT
       )
     end
 
-    it "should raise an error if value of `before` kwarg is invalid" do
+    it "raises an error when `before` is invalid" do
       plugin = Plugin::Instance.new
 
       expect {

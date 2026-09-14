@@ -71,8 +71,8 @@ export default class MobileEmbeddableChatModal extends Component {
     {{bodyClass "livestream-chat-modal-active"}}
 
     <DModal
-      @closeModal={{@closeModal}}
       class="livestream-chat-modal"
+      @closeModal={{@closeModal}}
       @hideHeader={{true}}
       {{didUpdate this.checkAndCloseModal this.capabilities.viewport.lg}}
       {{this.lockChatScroller}}

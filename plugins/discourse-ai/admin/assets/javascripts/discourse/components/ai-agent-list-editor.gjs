@@ -262,64 +262,64 @@ export default class AiAgentListEditor extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-agents"
       @label={{i18n "discourse_ai.ai_agent.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-agents"
     />
     <section class="ai-agent-list-editor__current admin-detail">
       {{#if @currentAgent}}
-        <AiAgentEditor @model={{@currentAgent}} @agents={{@agents}} />
+        <AiAgentEditor @agents={{@agents}} @model={{@currentAgent}} />
       {{else}}
         <DPageSubheader
-          @titleLabel={{i18n "discourse_ai.ai_agent.short_title"}}
           @descriptionLabel={{i18n "discourse_ai.ai_agent.agent_description"}}
           @learnMoreUrl="https://meta.discourse.org/t/ai-bot-agents/306099"
+          @titleLabel={{i18n "discourse_ai.ai_agent.short_title"}}
         >
           <:actions as |actions|>
             <actions.Default
-              @label="discourse_ai.ai_agent.import"
+              class="ai-agent-list-editor__import-button"
               @action={{this.importAgent}}
               @icon="upload"
-              class="ai-agent-list-editor__import-button"
+              @label="discourse_ai.ai_agent.import"
             />
             <actions.Wrapped>
               <DComboButton
-                @hasMenu={{this.hasAgents}}
-                @btnTypeClass={{this.newAgentButtonClasses}}
-                class="ai-agent-list-editor__new-combo"
                 aria-label={{i18n "discourse_ai.ai_agent.new_group"}}
+                class="ai-agent-list-editor__new-combo"
+                @btnTypeClass={{this.newAgentButtonClasses}}
+                @hasMenu={{this.hasAgents}}
                 as |combo|
               >
                 <combo.Button
-                  @label="discourse_ai.ai_agent.new"
-                  @ariaLabel="discourse_ai.ai_agent.new"
-                  @action={{this.newAgent}}
-                  @icon="plus"
                   class="ai-agent-list-editor__new-button"
+                  @action={{this.newAgent}}
+                  @ariaLabel="discourse_ai.ai_agent.new"
+                  @icon="plus"
+                  @label="discourse_ai.ai_agent.new"
                 />
                 <combo.Menu
-                  @identifier="duplicate-agent-menu"
-                  @title={{i18n "discourse_ai.ai_agent.duplicate"}}
-                  @modalForMobile={{true}}
-                  @autofocus={{true}}
-                  @onRegisterApi={{this.registerDuplicateMenu}}
-                  @onClose={{this.clearDuplicateFilter}}
-                  @triggerClass="ai-agent-list-editor__duplicate-menu"
                   aria-label={{i18n "discourse_ai.ai_agent.duplicate"}}
+                  @autofocus={{true}}
+                  @identifier="duplicate-agent-menu"
+                  @modalForMobile={{true}}
+                  @onClose={{this.clearDuplicateFilter}}
+                  @onRegisterApi={{this.registerDuplicateMenu}}
+                  @title={{i18n "discourse_ai.ai_agent.duplicate"}}
+                  @triggerClass="ai-agent-list-editor__duplicate-menu"
                 >
                   <div class="ai-agent-list-editor__duplicate-picker">
                     <DFilterInput
-                      @value={{this.duplicateFilter}}
-                      @filterAction={{this.filterDuplicateAgents}}
-                      @onClearInput={{this.clearDuplicateFilter}}
-                      @icons={{hash left="magnifying-glass"}}
-                      placeholder={{i18n
-                        "discourse_ai.ai_agent.duplicate_search"
-                      }}
                       aria-label={{i18n
                         "discourse_ai.ai_agent.duplicate_search"
                       }}
-                      data-test-duplicate-agent-filter
                       autofocus
+                      data-test-duplicate-agent-filter
+                      placeholder={{i18n
+                        "discourse_ai.ai_agent.duplicate_search"
+                      }}
+                      @filterAction={{this.filterDuplicateAgents}}
+                      @icons={{hash left="magnifying-glass"}}
+                      @onClearInput={{this.clearDuplicateFilter}}
+                      @value={{this.duplicateFilter}}
                     />
                     <DDropdownMenu
                       class="ai-agent-list-editor__duplicate-results"
@@ -328,11 +328,11 @@ export default class AiAgentListEditor extends Component {
                       {{#each this.filteredDuplicateAgents as |agent|}}
                         <dropdown.item>
                           <DButton
-                            @action={{fn this.duplicateAgent agent}}
-                            @translatedLabel={{agent.name}}
-                            @icon="copy"
                             class="btn-transparent"
                             data-test-duplicate-agent-option
+                            @action={{fn this.duplicateAgent agent}}
+                            @icon="copy"
+                            @translatedLabel={{agent.name}}
                           />
                         </dropdown.item>
                       {{else}}
@@ -353,19 +353,19 @@ export default class AiAgentListEditor extends Component {
         {{#if @agents.content}}
           <DFilterControls
             @array={{@agents.content}}
-            @searchableProps={{this.searchableProps}}
             @dropdownOptions={{this.dropdownOptions}}
             @inputPlaceholder={{i18n "discourse_ai.ai_agent.filters.text"}}
             @noResultsMessage={{i18n
               "discourse_ai.ai_agent.filters.no_results"
             }}
+            @searchableProps={{this.searchableProps}}
           >
             <:actions>
               {{#if this.capabilities.viewport.md}}
                 <DMenu
-                  @modalForMobile={{true}}
                   @autofocus={{true}}
                   @identifier="agent-list-layout"
+                  @modalForMobile={{true}}
                   @onRegisterApi={{this.onRegisterApi}}
                   @triggerClass="btn-default btn-icon"
                 >
@@ -377,10 +377,10 @@ export default class AiAgentListEditor extends Component {
                       {{#each LAYOUT_BUTTONS as |button|}}
                         <dropdown.item>
                           <DButton
-                            @label={{button.label}}
-                            @icon={{button.icon}}
                             class="btn-transparent"
                             @action={{fn this.onLayoutSelect button.id}}
+                            @icon={{button.icon}}
+                            @label={{button.label}}
                           />
                         </dropdown.item>
                       {{/each}}
@@ -406,12 +406,12 @@ export default class AiAgentListEditor extends Component {
                 <tbody>
                   {{#each filteredAgents as |agent|}}
                     <tr
-                      data-agent-id={{agent.id}}
                       class={{dConcatClass
                         "ai-agent-list__row d-table__row"
                         (if agent.priority "--priority")
                         (if agent.enabled "--enabled")
                       }}
+                      data-agent-id={{agent.id}}
                     >
                       <td class="d-table__cell --overview">
                         <div class="ai-agent-list__name-with-description">
@@ -433,9 +433,9 @@ export default class AiAgentListEditor extends Component {
                           </span>
                           <DButton
                             class="btn-flat btn-small ai-agent-list__row-item-feature"
-                            @translatedLabel={{agent.default_llm.display_name}}
                             @route="adminPlugins.show.discourse-ai-llms.edit"
                             @routeModels={{agent.default_llm.id}}
+                            @translatedLabel={{agent.default_llm.display_name}}
                           />
                         {{/if}}
                       </td>
@@ -452,6 +452,8 @@ export default class AiAgentListEditor extends Component {
                               {{#if (gt index 0)}}, {{/if}}
                               <DButton
                                 class="btn-flat btn-small ai-agent-list__row-item-feature"
+                                @route="adminPlugins.show.discourse-ai-features.edit"
+                                @routeModels={{feature.id}}
                                 @translatedLabel={{i18n
                                   (concat
                                     "discourse_ai.features."
@@ -459,8 +461,6 @@ export default class AiAgentListEditor extends Component {
                                     ".name"
                                   )
                                 }}
-                                @route="adminPlugins.show.discourse-ai-features.edit"
-                                @routeModels={{feature.id}}
                               />
                             </span>
                           {{/each}}
@@ -468,9 +468,9 @@ export default class AiAgentListEditor extends Component {
                       </td>
                       <td class="d-table__cell --controls">
                         <LinkTo
-                          @route="adminPlugins.show.discourse-ai-agents.edit"
-                          @model={{agent}}
                           class="btn btn-default btn-text btn-small"
+                          @model={{agent}}
+                          @route="adminPlugins.show.discourse-ai-agents.edit"
                         >{{i18n "discourse_ai.ai_agent.edit"}} </LinkTo>
                       </td>
                     </tr>
@@ -481,9 +481,9 @@ export default class AiAgentListEditor extends Component {
           </DFilterControls>
         {{else}}
           <AdminConfigAreaEmptyList
-            @ctaLabel="discourse_ai.ai_agent.new"
             @ctaAction={{this.newAgent}}
             @ctaClass="ai-agent-list-editor__empty-new-button"
+            @ctaLabel="discourse_ai.ai_agent.new"
             @emptyLabel="discourse_ai.ai_agent.no_agents"
           />
         {{/if}}

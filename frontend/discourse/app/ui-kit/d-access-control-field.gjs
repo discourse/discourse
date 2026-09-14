@@ -80,19 +80,19 @@ export default class DAccessControlField extends Component {
 
   <template>
     <@form.Field
-      @name="acl"
-      @title={{@title}}
       @description={{@description}}
       @format="max"
+      @name="acl"
+      @title={{@title}}
       @type="custom"
       @validate={{this.validateAccess}}
       as |field|
     >
       <field.Control>
         <DAccessControl
-          @groups={{this.site.groups}}
           @acl={{field.value}}
           @aclTarget={{@aclTarget}}
+          @groups={{this.site.groups}}
           @onChange={{@onChange}}
           @transformPermissionOptions={{@transformPermissionOptions}}
         />

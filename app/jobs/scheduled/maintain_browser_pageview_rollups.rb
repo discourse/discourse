@@ -139,6 +139,7 @@ module Jobs
             OR normalized_referrer_version < :version
           )
           #{retention_clause}
+        ORDER BY created_at DESC, id DESC
         LIMIT :limit
       SQL
     end
@@ -340,7 +341,7 @@ module Jobs
               normalized_url_version IS NULL
               OR normalized_url_version < :version
             )
-          ORDER BY id
+          ORDER BY created_at DESC, id DESC
           LIMIT :limit
         SQL
         retention_cutoff: BrowserPageviewEvent.retention_cutoff,

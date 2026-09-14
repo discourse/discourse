@@ -19,6 +19,7 @@ import { i18n } from "discourse-i18n";
 export default class InvitesShowController extends Controller {
   @tracked accountPassword;
   @tracked accountUsername;
+  @tracked codeInviteStep = "email";
   @tracked isDeveloper;
   @autoTrackedArray rejectedEmails = [];
 
@@ -31,7 +32,7 @@ export default class InvitesShowController extends Controller {
     getAuthOptionsUsername: () => this.authOptions?.username,
     getForceValidationReason: () => this.forceValidationReason,
     siteSettings: this.siteSettings,
-    isInvalid: () => this.isDestroying || this.isDestroyed,
+    isInvalid: () => this.isDestroying,
     updateIsDeveloper: (isDeveloper) => (this.isDeveloper = isDeveloper),
     updateUsernames: (username) => {
       this.accountUsername = username;
@@ -49,16 +50,6 @@ export default class InvitesShowController extends Controller {
   authOptions = null;
   maskPassword = true;
 
-  @computed("model.is_invite_link")
-  get isInviteLink() {
-    return this.model?.is_invite_link;
-  }
-
-  @computed("model.invited_by")
-  get invitedBy() {
-    return this.model?.invited_by;
-  }
-
   @computed("model.email")
   get email() {
     return this.model?.email;
@@ -75,26 +66,6 @@ export default class InvitesShowController extends Controller {
 
   set accountEmail(value) {
     set(this, "email", value);
-  }
-
-  @computed("model.existing_user_id")
-  get existingUserId() {
-    return this.model?.existing_user_id;
-  }
-
-  @computed("model.existing_user_can_redeem")
-  get existingUserCanRedeem() {
-    return this.model?.existing_user_can_redeem;
-  }
-
-  @computed("model.existing_user_can_redeem_error")
-  get existingUserCanRedeemError() {
-    return this.model?.existing_user_can_redeem_error;
-  }
-
-  @computed("existingUserId")
-  get existingUserRedeeming() {
-    return !!this.existingUserId;
   }
 
   @computed("model.hidden_email")
@@ -124,6 +95,36 @@ export default class InvitesShowController extends Controller {
     set(this, "model.different_external_email", value);
   }
 
+  @computed("model.is_invite_link")
+  get isInviteLink() {
+    return this.model?.is_invite_link;
+  }
+
+  @computed("model.invited_by")
+  get invitedBy() {
+    return this.model?.invited_by;
+  }
+
+  @computed("model.existing_user_id")
+  get existingUserId() {
+    return this.model?.existing_user_id;
+  }
+
+  @computed("model.existing_user_can_redeem")
+  get existingUserCanRedeem() {
+    return this.model?.existing_user_can_redeem;
+  }
+
+  @computed("model.existing_user_can_redeem_error")
+  get existingUserCanRedeemError() {
+    return this.model?.existing_user_can_redeem_error;
+  }
+
+  @computed("existingUserId")
+  get existingUserRedeeming() {
+    return !!this.existingUserId;
+  }
+
   @computed("externalAuthsOnly")
   get passwordRequired() {
     return !this.externalAuthsOnly;
@@ -136,11 +137,6 @@ export default class InvitesShowController extends Controller {
   @dependentKeyCompat
   get userFieldsValidation() {
     return this.userFieldsValidationHelper.userFieldsValidation;
-  }
-
-  @action
-  setAccountUsername(event) {
-    this.accountUsername = event.target.value;
   }
 
   @dependentKeyCompat
@@ -160,20 +156,6 @@ export default class InvitesShowController extends Controller {
   @dependentKeyCompat
   get passwordValidation() {
     return this.passwordValidationHelper.passwordValidation;
-  }
-
-  authenticationComplete(options) {
-    const props = {
-      accountUsername: options.username,
-      accountName: options.name,
-      authOptions: EmberObject.create(options),
-    };
-
-    if (this.isInviteLink) {
-      props.email = options.email;
-    }
-
-    this.setProperties(props);
   }
 
   @computed
@@ -212,9 +194,29 @@ export default class InvitesShowController extends Controller {
     return !this.existingUserId;
   }
 
+  @computed("codeInviteStep", "showCodeInviteForm")
+  get showInviteIntroduction() {
+    return !this.showCodeInviteForm || this.codeInviteStep === "email";
+  }
+
   @computed("externalAuthsOnly", "discourseConnectEnabled")
   get showSignupProgressBar() {
     return !(this.externalAuthsOnly || this.discourseConnectEnabled);
+  }
+
+  @computed("codeInviteStep", "showCodeInviteForm", "successMessage")
+  get progressBarStep() {
+    if (this.showCodeInviteForm) {
+      if (this.codeInviteStep === "complete") {
+        return "login";
+      }
+
+      if (this.codeInviteStep !== "email") {
+        return "activate";
+      }
+    }
+
+    return this.successMessage ? "activate" : "signup";
   }
 
   @computed(
@@ -267,6 +269,15 @@ export default class InvitesShowController extends Controller {
           !this.emailValidation?.failed)) &&
       !this.siteSettings.enable_discourse_connect &&
       !this.existingUserRedeeming
+    );
+  }
+
+  get showCodeInviteForm() {
+    return (
+      this.siteSettings.enable_local_logins_via_code &&
+      this.siteSettings.enable_local_logins_via_email &&
+      this.siteSettings.enable_local_logins &&
+      !this.authOptions
     );
   }
 
@@ -353,13 +364,6 @@ export default class InvitesShowController extends Controller {
     });
   }
 
-  authProviderDisplayName(providerName) {
-    const matchingProvider = findLoginMethods().find((provider) => {
-      return provider.name === providerName;
-    });
-    return matchingProvider ? matchingProvider.get("prettyName") : providerName;
-  }
-
   @computed
   get ssoPath() {
     return getUrl("/session/sso");
@@ -384,6 +388,37 @@ export default class InvitesShowController extends Controller {
       associate_link: this.authOptions?.associate_url,
       provider: i18n(`login.${this.authOptions?.auth_provider}.name`),
     });
+  }
+
+  @action
+  updateCodeInviteStep(step) {
+    this.codeInviteStep = step;
+  }
+
+  @action
+  setAccountUsername(event) {
+    this.accountUsername = event.target.value;
+  }
+
+  authenticationComplete(options) {
+    const props = {
+      accountUsername: options.username,
+      accountName: options.name,
+      authOptions: EmberObject.create(options),
+    };
+
+    if (this.isInviteLink) {
+      props.email = options.email;
+    }
+
+    this.setProperties(props);
+  }
+
+  authProviderDisplayName(providerName) {
+    const matchingProvider = findLoginMethods().find((provider) => {
+      return provider.name === providerName;
+    });
+    return matchingProvider ? matchingProvider.get("prettyName") : providerName;
   }
 
   @action

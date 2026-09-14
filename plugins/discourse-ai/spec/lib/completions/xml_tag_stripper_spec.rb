@@ -5,7 +5,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
   before { enable_current_plugin }
 
-  it "should strip tags correctly in simple cases" do
+  it "strips tags correctly in simple cases" do
     result = tag_stripper << "x<thinking>hello</thinki"
     expect(result).to eq("x")
 

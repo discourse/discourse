@@ -28,11 +28,11 @@ export default class PmsField extends BaseField {
     <section class="field pms-field">
       {{#if @field.metadata.value.length}}
         <section class="actions header">
-          <DAFieldLabel @label={{@label}} @field={{@field}} />
+          <DAFieldLabel @field={{@field}} @label={{@label}} />
           <DButton
-            @icon="plus"
-            @action={{this.insertPM}}
             class="btn-primary insert-pm"
+            @action={{this.insertPM}}
+            @icon="plus"
           />
         </section>
       {{/if}}
@@ -40,23 +40,23 @@ export default class PmsField extends BaseField {
       {{#each @field.metadata.value as |pm|}}
         <div class="pm-field">
           <div class="control-group">
-            <DAFieldLabel @label={{this.pmTitleLabel}} @field={{@field}} />
+            <DAFieldLabel @field={{@field}} @label={{this.pmTitleLabel}} />
             <div class="controls">
               <div class="field-wrapper">
                 <Input
-                  id={{concat @field.targetType @field.name "title"}}
-                  @value={{pm.title}}
                   class="pm-input pm-title"
-                  {{on "input" (fn this.mutPmTitle pm)}}
                   disabled={{@field.isDisabled}}
+                  id={{concat @field.targetType @field.name "title"}}
                   name={{@field.name}}
+                  @value={{pm.title}}
+                  {{on "input" (fn this.mutPmTitle pm)}}
                 />
 
                 {{#if this.displayPlaceholders}}
                   <PlaceholdersList
                     @currentValue={{pm.title}}
-                    @placeholders={{@placeholders}}
                     @onCopy={{fn this.updatePmTitle pm}}
+                    @placeholders={{@placeholders}}
                   />
                 {{/if}}
               </div>
@@ -64,7 +64,7 @@ export default class PmsField extends BaseField {
           </div>
 
           <div class="control-group">
-            <DAFieldLabel @label={{this.rawLabel}} @field={{@field}} />
+            <DAFieldLabel @field={{@field}} @label={{this.rawLabel}} />
             <div class="controls">
               <div class="field-wrapper">
                 <DEditor @value={{pm.raw}} />
@@ -72,8 +72,8 @@ export default class PmsField extends BaseField {
                 {{#if this.displayPlaceholders}}
                   <PlaceholdersList
                     @currentValue={{pm.raw}}
-                    @placeholders={{@placeholders}}
                     @onCopy={{fn this.updatePmRaw pm}}
+                    @placeholders={{@placeholders}}
                   />
                 {{/if}}
               </div>
@@ -87,20 +87,20 @@ export default class PmsField extends BaseField {
 
             <div class="controls">
               <Input
-                @value={{pm.delay}}
                 class="input-large pm-input pm-delay"
-                {{on "input" (fn this.mutPmDelay pm)}}
                 disabled={{@field.isDisabled}}
+                @value={{pm.delay}}
+                {{on "input" (fn this.mutPmDelay pm)}}
               />
             </div>
           </div>
 
           <section class="actions">
             <DButton
-              @icon="trash-can"
-              @action={{fn this.removePM pm}}
               class="btn-danger"
+              @action={{fn this.removePM pm}}
               @disabled={{@field.isDisabled}}
+              @icon="trash-can"
             />
           </section>
         </div>
@@ -108,11 +108,11 @@ export default class PmsField extends BaseField {
         <div class="no-pm">
           <p>{{this.noPmCreatedLabel}}</p>
           <DButton
+            class="btn-primary insert-pm"
+            @action={{this.insertPM}}
+            @disabled={{@field.isDisabled}}
             @icon="plus"
             @label="discourse_automation.fields.pms.add_pm"
-            @action={{this.insertPM}}
-            class="btn-primary insert-pm"
-            @disabled={{@field.isDisabled}}
           />
         </div>
       {{/each}}

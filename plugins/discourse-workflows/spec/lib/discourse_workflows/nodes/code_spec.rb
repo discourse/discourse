@@ -2,6 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Nodes::Code::V1 do
   let(:sandbox) { DiscourseWorkflows::JsSandbox.new({}) }
+
   after { sandbox.dispose }
 
   def build_exec_ctx(items, resolver_context: nil, parameters: {}, **kwargs)

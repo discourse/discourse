@@ -16,6 +16,15 @@ export default class JumpToPost extends Component {
     return this.args.model.topic.postStream.filteredPostsCount;
   }
 
+  @action
+  jump() {
+    if (this.postNumber) {
+      this._jumpToIndex(this.filteredPostsCount, this.postNumber);
+    } else if (this.postDate) {
+      this._jumpToDate(this.postDate);
+    }
+  }
+
   _jumpToIndex(postsCounts, postNumber) {
     const where = Math.min(postsCounts, Math.max(1, parseInt(postNumber, 10)));
     this.args.model.jumpToIndex(where);
@@ -27,30 +36,21 @@ export default class JumpToPost extends Component {
     this.args.closeModal();
   }
 
-  @action
-  jump() {
-    if (this.postNumber) {
-      this._jumpToIndex(this.filteredPostsCount, this.postNumber);
-    } else if (this.postDate) {
-      this._jumpToDate(this.postDate);
-    }
-  }
-
   <template>
     <DModal
+      class="jump-to-post-modal"
       @closeModal={{@closeModal}}
       @title={{i18n "topic.progress.jump_prompt_long"}}
-      class="jump-to-post-modal"
     >
       <:body>
         <div class="jump-to-post-form">
           <div class="jump-to-post-control">
             <span class="index">#</span>
             <Input
-              @value={{this.postNumber}}
-              @type="number"
               autofocus="true"
               id="post-jump"
+              @type="number"
+              @value={{this.postNumber}}
             />
             <span class="input-hint-text post-number">
               {{i18n
@@ -72,10 +72,10 @@ export default class JumpToPost extends Component {
               {{i18n "topic.progress.jump_prompt_to_date"}}
             </span>
             <DDatePicker
-              @value={{this.postDate}}
-              @defaultDate="YYYY-MM-DD"
-              id="post-date"
               class="date-input"
+              id="post-date"
+              @defaultDate="YYYY-MM-DD"
+              @value={{this.postDate}}
             />
           </div>
         </div>
@@ -83,10 +83,10 @@ export default class JumpToPost extends Component {
 
       <:footer>
         <DButton
+          class="btn-primary"
+          type="submit"
           @action={{this.jump}}
           @label="composer.modal_ok"
-          type="submit"
-          class="btn-primary"
         />
         <DModalCancel @close={{@closeModal}} />
       </:footer>

@@ -103,10 +103,10 @@ export default class ChangeThemeSourceModal extends Component {
 
   <template>
     <DModal
-      @bodyClass="change-theme-source"
       class="admin-change-theme-source-modal"
-      @title={{i18n "admin.customize.theme.change_source.title"}}
+      @bodyClass="change-theme-source"
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.customize.theme.change_source.title"}}
     >
       <:body>
         <DConditionalLoadingSection
@@ -115,35 +115,35 @@ export default class ChangeThemeSourceModal extends Component {
         >
           <Form
             @data={{this.data}}
-            @onSubmit={{this.onFormSubmit}}
             @onRegisterApi={{this.registerApi}}
+            @onSubmit={{this.onFormSubmit}}
             as |form|
           >
             <form.Field
+              @format="full"
               @name="remoteUrl"
-              @type="input"
+              @onSet={{this.onRemoteUrlChange}}
               @title={{i18n
                 "admin.customize.theme.change_source.repository_url"
               }}
-              @format="full"
+              @type="input"
               @validation="required"
-              @onSet={{this.onRemoteUrlChange}}
               as |field|
             >
               <field.Control
-                placeholder="https://github.com/user/repo.git"
                 class="repo-url"
+                placeholder="https://github.com/user/repo.git"
               />
             </form.Field>
 
             <form.Field
-              @name="branch"
-              @type="input"
-              @title={{i18n "admin.customize.theme.change_source.branch"}}
               @format="full"
+              @name="branch"
+              @title={{i18n "admin.customize.theme.change_source.branch"}}
+              @type="input"
               as |field|
             >
-              <field.Control placeholder="main" class="branch" />
+              <field.Control class="branch" placeholder="main" />
             </form.Field>
 
             {{#if this.showPublicKey}}
@@ -155,13 +155,13 @@ export default class ChangeThemeSourceModal extends Component {
                     }}
                   </div>
                   <DButton
+                    class="btn-default"
                     @action={{this.toggleGenerateNewKey}}
                     @label={{if
                       this.generateNewKey
                       "admin.customize.theme.change_source.keep_existing_key"
                       "admin.customize.theme.change_source.generate_new_key"
                     }}
-                    class="btn-default"
                   />
                 {{/if}}
 
@@ -187,9 +187,9 @@ export default class ChangeThemeSourceModal extends Component {
       </:body>
       <:footer>
         <DButton
+          class="btn-primary"
           @action={{this.formApi.submit}}
           @disabled={{this.loading}}
-          class="btn-primary"
           @label="admin.customize.theme.change_source.update"
         />
         <DButton

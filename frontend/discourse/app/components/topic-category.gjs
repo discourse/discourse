@@ -37,8 +37,8 @@ export default class TopicCategory extends Component {
 
       <span>
         <PluginOutlet
-          @name="topic-category"
           @connectorTagName="div"
+          @name="topic-category"
           @outletArgs={{lazyHash topic=this.topic category=this.topic.category}}
         />
       </span>

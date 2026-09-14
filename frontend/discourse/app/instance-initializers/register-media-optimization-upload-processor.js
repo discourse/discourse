@@ -28,7 +28,7 @@ export default {
         ({ isMobileDevice }) => {
           return {
             optimizeFn: (data, opts) => {
-              if (owner.isDestroyed || owner.isDestroying) {
+              if (owner.isDestroying) {
                 return Promise.resolve();
               }
 

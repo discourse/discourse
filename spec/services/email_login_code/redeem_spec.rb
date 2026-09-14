@@ -31,6 +31,12 @@ RSpec.describe EmailLoginCode::Redeem do
       it { is_expected.to fail_to_find_a_model(:login_code) }
     end
 
+    context "when the code was issued for password reset" do
+      let(:login_code) { EmailLoginCode.generate!(email:, purpose: :password_reset) }
+
+      it { is_expected.to fail_to_find_a_model(:login_code) }
+    end
+
     context "when the code is wrong" do
       let(:code) { login_code.code == "000000" ? "000001" : "000000" }
 
@@ -140,6 +146,8 @@ RSpec.describe EmailLoginCode::Redeem do
       end
 
       it "enqueues the welcome message" do
+        SiteSetting.send_welcome_message = true
+
         expect { result }.to change {
           Jobs::SendSystemMessage.jobs.count do |job|
             job["args"][0]["message_type"] == "welcome_user"

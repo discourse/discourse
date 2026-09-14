@@ -40,8 +40,8 @@ module("Integration | Component | ColorInput", function (hooks) {
       await render(
         <template>
           <ColorInput
-            @hexValue={{this.hexValue}}
             @fallbackHexValue={{this.fallbackHexValue}}
+            @hexValue={{this.hexValue}}
           />
         </template>
       );
@@ -58,8 +58,8 @@ module("Integration | Component | ColorInput", function (hooks) {
       await render(
         <template>
           <ColorInput
-            @hexValue={{this.hexValue}}
             @fallbackHexValue={{this.fallbackHexValue}}
+            @hexValue={{this.hexValue}}
           />
         </template>
       );

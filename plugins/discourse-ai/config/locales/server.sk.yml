@@ -241,6 +241,25 @@ sk:
       configuration_missing: "Chýba konfigurácia detekcie nevyžiadanej pošty AI. Pred povolením pridajte konfiguráciu do \"Admin > Plugins > Discourse AI > Spam\"."
       logging_subject: "Detekcia spamu"
     ai_bot:
+      navigation:
+        settings:
+          title: "Nastavenia stránky"
+        users:
+          title: "Používatelia"
+        groups:
+          title: "Skupiny"
+        review:
+          title: "Fronta na posúdenie"
+        categories:
+          title: "Kategórie"
+        tags:
+          title: "Značky"
+        themes:
+          title: "Témy"
+        authentication:
+          title: "Prihlásenie a overenie"
+        backups:
+          title: "Zálohy"
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
       read_post:

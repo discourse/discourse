@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sl:
+  mcp:
+    errors:
+      topic_not_found: "Ne najdemo temo."
+    oauth:
+      deny: "Zavrni"
   llms_txt:
     sections:
       optional: "Neobvezno"
@@ -2094,8 +2099,6 @@ sl:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

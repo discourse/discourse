@@ -14,7 +14,7 @@ export default class SiteCustomizationChangeField extends Component {
             count=this.field.length
           }})
           <br />
-          <Textarea @value={{this.field}} class="plain" />
+          <Textarea class="plain" @value={{this.field}} />
         </section>
       {{/if}}
     </div>

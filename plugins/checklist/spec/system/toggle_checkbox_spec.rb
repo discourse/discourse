@@ -5,6 +5,8 @@ RSpec.describe "Checklist toggles" do
   fab!(:topic) { Fabricate(:topic, user:) }
   fab!(:post) { Fabricate(:post, topic:, user:, raw: "- [ ] first") }
 
+  let(:checklist) { PageObjects::Components::CookedChecklist.new }
+
   before do
     SiteSetting.checklist_enabled = true
     sign_in(user)
@@ -13,10 +15,12 @@ RSpec.describe "Checklist toggles" do
   it "hydrates raw and toggles a checklist from the topic stream" do
     page.visit "/t/#{topic.slug}/#{topic.id}"
 
-    find(".chcklst-box").click
+    checklist.click_checkbox
 
-    expect(page).to have_css(".chcklst-box.checked")
-    expect(page).to have_no_css(".chcklst-box.is-saving")
-    expect(post.reload.raw).to eq("- [x] first")
+    expect(checklist).to have_saved_checked
+
+    page.refresh
+
+    expect(checklist).to have_saved_checked
   end
 end

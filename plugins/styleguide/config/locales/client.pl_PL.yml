@@ -38,6 +38,30 @@ pl_PL:
           title: "Data/czas"
         menus:
           title: "Menu"
+        context_menu:
+          title: "Menu kontekstowe"
+          description: "Kliknięcie prawym przyciskiem myszy otwiera menu przy wskaźniku, a nie w przeglądarce. Powierzchnie poniżej to zwykłe obszary, a nie rzeczywiste komponenty, więc wszystko, co się tu źle zachowuje, jest modyfikatorem."
+          actions:
+            duplicate: "Powiel"
+            delete: "Usuń"
+            rename: "Zmień nazwę wiersza"
+          nesting:
+            example: "dContextMenu"
+            example_description: "Otwiera menu, w którym znajduje się wskaźnik. Odniesienie, do którego się ono odwołuje, jest wyzwalaczem tego menu, więc nic innego nie musi wiedzieć, że menu zostało otwarte po kliknięciu prawym przyciskiem myszy."
+            try_this: "Kliknij prawym przyciskiem myszy powierzchnię zewnętrzną, a następnie wewnętrzną. Obie można ustawić w fokusie, więc przejdź do jednej z nich klawiszem Tab i naciśnij klawisz menu kontekstowego lub Shift+F10, aby otworzyć to samo menu bez użycia myszy."
+            note: "Obie powierzchnie posiadają własne menu, a zdarzenie przechodzi przez obie. Akceptacja zatrzymuje propagację, więc najbardziej wewnętrzny handler otwiera swoje menu samodzielnie, a nie obok menu nadrzędnego. Ścieżka klawiatury jest własna przeglądarki: wysyła to samo zdarzenie do elementu fokusowanego, dlatego cel musi być fokusowalny i dlatego każda powierzchnia nazywa siebie celem fokusowania, więc zamknięcie przywraca fokus."
+            outer: "Powierzchnia zewnętrzna"
+            inner: "Powierzchnia wewnętrzna"
+          declining:
+            example: "Odrzucanie prawego przycisku myszy"
+            example_description: "Obsługujący zdarzenie moduł synchronicznie decyduje, czy zastąpić menu natywne. Odrzucenie pozostawia zdarzenie całkowicie nietknięte, więc zewnętrzny moduł obsługujący lub przeglądarka nadal je otrzymuje."
+            try_this: "Kliknij prawym przyciskiem myszy powierzchnię, a następnie kliknij prawym przyciskiem myszy w polu tekstowym."
+            note: "Obiekt docelowy, który posiada kursor tekstowy, domyślnie zachowuje własne menu przeglądarki, dzięki czemu polecenia dotyczące pisowni i schowka nadal działają bez konieczności rezygnacji użytkownika. Hak w tym przypadku tylko zgłasza decyzję, aby była widoczna."
+            surface: "Powierzchnia zewnętrzna"
+            field: "Kliknij mnie prawym przyciskiem myszy, aby wyświetlić własne menu przeglądarki"
+            untouched: "Jeszcze nie ma prawego przycisku myszy"
+            accepted: "Ostatnie kliknięcie prawym przyciskiem myszy: zaakceptowano"
+            declined: "Ostatnie kliknięcie prawym przyciskiem: odrzucone, przeglądarka je przyjęła"
         multi_select:
           title: "Wybór wielokrotny"
         toasts:
@@ -428,3 +452,7 @@ pl_PL:
           title: "Sterowanie segmentowe (grupa przełączników przycisków)"
         virtual_list:
           title: "Lista wirtualna"
+        tabs:
+          title: "Karty"
+        overflow_controls:
+          title: "Sterowanie przepełnieniem"

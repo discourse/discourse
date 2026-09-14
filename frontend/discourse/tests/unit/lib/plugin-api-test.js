@@ -140,12 +140,12 @@ module("Unit | Utility | plugin-api", function (hooks) {
         return "original static method";
       }
 
-      someFunction() {
-        return "original function";
-      }
-
       get someGetter() {
         return "original getter";
+      }
+
+      someFunction() {
+        return "original function";
       }
     }
 
@@ -160,12 +160,12 @@ module("Unit | Utility | plugin-api", function (hooks) {
               return `${super.someStaticMethod()} modified`;
             }
 
-            someFunction() {
-              return `${super.someFunction()} modified`;
-            }
-
             get someGetter() {
               return `${super.someGetter} modified`;
+            }
+
+            someFunction() {
+              return `${super.someFunction()} modified`;
             }
           }
       );

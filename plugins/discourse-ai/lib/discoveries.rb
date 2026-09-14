@@ -53,12 +53,9 @@ module DiscourseAi
         return false if !SiteSetting.discourse_ai_enabled || !SiteSetting.ai_ask_ai_enabled
         return false if !user.in_any_groups?(SiteSetting.ai_ask_ai_allowed_groups_map)
         return false if Guardian.new(user).is_silenced?
-        return false if !retrieval_configured?
 
         agent = discover_agent
-        if agent.nil? || !agent.enabled? || !user.in_any_groups?(agent.allowed_group_ids.to_a)
-          return false
-        end
+        return false if agent.nil? || !user.in_any_groups?(agent.allowed_group_ids.to_a)
 
         llm_model_id = agent.default_llm_id.presence || SiteSetting.ai_default_llm_model
         llm_model_id.present? && LlmModel.exists?(id: llm_model_id)
@@ -110,6 +107,27 @@ module DiscourseAi
           summary_detail: SiteSetting.ai_ask_ai_summary_detail.to_sym,
           related_count: SiteSetting.ai_ask_ai_related_count,
         }
+      end
+
+      def enqueue_reply(user:, request_id:, query:)
+        return if bind_request(user_id: user.id, request_id:, query:) != :created
+
+        asked_at = Time.current
+        ask_log = AskAiLog.create!(user:, query:, asked_at:)
+        settings = result_settings
+        Jobs.enqueue(
+          :stream_discover_reply,
+          user_id: user.id,
+          query:,
+          request_id:,
+          ask_ai_log_id: ask_log.id,
+          queued_at: asked_at.to_f,
+          summary_detail: settings[:summary_detail].to_s,
+          related_count: settings[:related_count],
+        )
+      rescue StandardError
+        ask_log&.update!(ask_outcome: :failed)
+        raise
       end
 
       def bind_request(user_id:, request_id:, query:)
@@ -241,10 +259,6 @@ module DiscourseAi
 
       def work_token(user_id, request_id)
         "#{user_id}:#{request_id.downcase}"
-      end
-
-      def retrieval_configured?
-        SiteSetting.ai_embeddings_enabled && SiteSetting.ai_embeddings_semantic_search_enabled
       end
     end
   end

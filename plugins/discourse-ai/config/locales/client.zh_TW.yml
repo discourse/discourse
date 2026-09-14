@@ -19,6 +19,15 @@ zh_TW:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "詢問 AI"
+        ask_ai:
+          title: "詢問 AI"
+          seconds: "%{seconds} 秒"
+          date: "日期"
+          outcomes:
+            failed: "失敗"
         emotion:
           title: "情緒"
           description: "該表格列出了按特定情緒分類的貼文數量。根據所選情緒分類方法，貼文將使用配置的情緒分類模型（“SamLowe/roberta-base-go_emotions”）或配置的情緒分類智能體進行分類。"
@@ -268,7 +277,6 @@ zh_TW:
           runner_username: "運行身份："
           runner_username_tooltip: "其權限用于控制上傳內容可見性和 AI 智能體工具的使用者。使用 system 實現符合工作流的自動化操作。"
           upload_ids: "上傳 ID"
-          upload_ids_tooltip: "用于附加到提示中的可選上傳 ID。當智能體啟用視覺功能時，將包含圖片上傳；當所選 LLM 支持相應文件類型時，將包含文檔上傳。"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "選擇智能體…"
       bot_chats:

@@ -5,6 +5,15 @@
 # https://translate.discourse.org/
 
 ru:
+  mcp:
+    errors:
+      draft_too_long: "Черновик слишком длинный"
+      post_not_found: "Пост не найден"
+      topic_not_found: "Тема не найдена"
+      user_not_found: "Пользователь не найден"
+    oauth:
+      deny: "Отказать"
+      approve: "Разрешить"
   llms_txt:
     sections:
       optional: "Опционально"
@@ -1846,12 +1855,6 @@ ru:
       host_names: "Файл config/database.yml использует имя хоста localhost по умолчанию. Измените его на имя хоста сайта."
       queue_size: "Большое количество заданий в очереди: %{queue_size}. Это может привести к проблемам с процессами Sidekiq — придется добавить больше рабочих процессов Sidekiq."
       ram: "Сервер использует менее 1 ГБ памяти. Рекомендовано использовать минимум 1 ГБ."
-      google_oauth2_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Google OAuth2 (enable_google_oauth2_logins), но идентификатор клиента и значения секретного кода клиента не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">этом руководстве</a>.'
-      facebook_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Facebook (enable_facebook_logins), но идентификатор приложения и значения ключа приложения не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">этом руководстве</a>.'
-      twitter_config: 'Сервер настроен так, чтобы разрешать регистрацию и вход с помощью Twitter (enable_twitter_logins), но ключ и значения ключа не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">этом руководстве</a>.'
-      github_config: 'Сервер настроен, так, чтобы разрешать регистрацию и вход с помощью GitHub (enable_github_logins), но идентификатор клиента и значения ключа не заданы. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — в <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">этом руководстве</a>.'
-      s3_upload_config: 'Сервер настроен на загрузку файлов в S3, но как минимум один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_upload_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — на странице <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">«Как настроить загрузку изображений в S3»</a>.'
-      s3_backup_config: 'Сервер настроен на загрузку резервных копий в S3, но как минимум один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_backup_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и измените параметры. Подробнее — на странице <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">«Как настроить загрузку изображений в S3»</a>.'
       s3_cdn: 'Сервер настроен на загрузку файлов в S3, но CDN не настроена. Это может привести к увеличению затрат на хранение данных и снижению производительности сайта. Подробнее — на странице <a href="https://meta.discourse.org/t/-/148916" target="_blank">«Использование объектного хранилища для загрузок»</a>.'
       image_magick: 'Сервер настроен на создание миниатюр больших изображений, но ImageMagick не установлен. Установите ImageMagick с помощью менеджера пакетов или <a href="https://www.imagemagick.org/script/download.php" target="_blank">скачайте последнюю версию</a> с официального сайта.'
       failing_emails: 'Не удалось выполнить задания электронной почты в количестве %{num_failed_jobs}. Проверьте настройки почтового сервера в файле app.yml. <a href="%{base_path}/sidekiq/retries" target="_blank">Смотрите невыполненные задания в Sidekiq</a>.'
@@ -2731,7 +2734,6 @@ ru:
       markdown_linkify_tlds: "Нельзя использовать значение «*»."
       google_oauth2_hd_groups: "Перед включением этого параметра необходимо задать все настройки «google oauth2 hd»."
       discourse_id_registration: "Не удалось автоматически зарегистрироваться в Discourse ID. Это может быть связано с проблемами сетевого подключения, ограничениями брандмауэра или недоступностью службы Discourse ID. Для получения более подробной информации проверьте журналы сервера или обратитесь в службу поддержки."
-      linkedin_oidc_credentials: "Прежде чем включать этот параметр, необходимо настроить учетные данные LinkedIn OIDC ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret')."
       search_tokenize_chinese_enabled: "Перед включением этого параметра нужно отключить «search_tokenize_chinese»."
       search_tokenize_japanese_enabled: "Перед включением этого параметра нужно отключить «search_tokenize_japanese»."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Нельзя включить DiscourseConnect, если принудительно включена двухфакторная аутентификация."
@@ -5052,6 +5054,12 @@ ru:
   performance_report:
     initial_post_raw: Эта тема содержит ежедневные отчёты активности форума.
     initial_topic_title: Отчёты активности форума
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записью."
+      few: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
+      many: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
+      other: "Слишком много записей в CSV-файле. Загрузите файл с не более чем %{count} записями."
   tags:
     title: "Теги"
     groups:
@@ -5322,8 +5330,6 @@ ru:
         complete: "Публикация скрыта, пользователь уведомлен."
       agree_and_edit:
         title: "Редактировать пост"
-        description: "Согласиться с жалобой и открыть окно редактора, чтобы изменить публикацию."
-        complete: "Жалоба принята, теперь вы можете отредактировать публикацию."
       delete:
         title: "Удалить"
         complete: "Публикация удалена."
@@ -5417,30 +5423,6 @@ ru:
       approve_and_unhide:
         title: "Да"
         complete: "Публикация одобрена и показана"
-      post_actions:
-        bundle_title: "Что вы хотите сделать с этим постом?"
-      delete_post:
-        title: "Удалить публикацию"
-        description: "Удалить этот пост"
-        complete: "Публикация удалена"
-      hide_post:
-        title: "Скрыть сообщение"
-        description: "Скрыть этот пост от публичного просмотра"
-        complete: "Пост скрыт"
-      unhide_post:
-        title: "Показать пост"
-        description: "Сделать этот пост видимым для всех пользователей"
-        complete: "Пост не скрыт"
-      restore_post:
-        title: "Восстановить сообщение"
-        description: "Восстановить этот удаленный пост"
-        complete: "Публикация восстановлена"
-      edit_post:
-        title: "Редактировать сообщение"
-        description: "Отредактировать содержимое этой записи"
-        complete: "Сообщение отредактировано"
-      user_actions:
-        bundle_title: "Что вы хотите сделать с пользователем?"
       silence_user:
         title: "Заморозка пользователя"
         complete: "Пользователь заморожен"

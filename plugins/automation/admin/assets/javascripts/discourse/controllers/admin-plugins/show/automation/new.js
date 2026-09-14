@@ -8,16 +8,6 @@ export default class AutomationNew extends Controller {
 
   @tracked filterText = "";
 
-  @action
-  updateFilterText(event) {
-    this.filterText = event.target.value;
-  }
-
-  @action
-  resetFilterText() {
-    this.filterText = "";
-  }
-
   get scriptableContent() {
     let scripts = this.model.scriptables.content;
     let filter = this.filterText.toLowerCase();
@@ -33,6 +23,16 @@ export default class AutomationNew extends Controller {
         : "";
       return name.includes(filter) || description.includes(filter);
     });
+  }
+
+  @action
+  updateFilterText(event) {
+    this.filterText = event.target.value;
+  }
+
+  @action
+  resetFilterText() {
+    this.filterText = "";
   }
 
   @action

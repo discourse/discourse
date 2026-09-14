@@ -1,3 +1,4 @@
+import voiceLog from "discourse/plugins/voice/discourse/lib/voice/logger";
 // LiveKit room session.
 //
 // One instance per active room on the "livekit" transport, owned by the
@@ -6,7 +7,6 @@
 // UI component work unchanged on both transports. Callback-injected in the
 // same style as PeerManager; a fake SDK module can be injected via `loadSdk`
 // (or the module-level test override), which is what makes it unit-testable.
-
 import {
   cameraEncodingFor,
   screenEncodingFor,
@@ -134,13 +134,6 @@ export default class LivekitRoomSession {
     this.#onConnectionChange = onConnectionChange;
     this.#mintToken = mintToken;
     this.#getQualityTiers = getQualityTiers;
-  }
-
-  // Effective tiers already clamped by the service (user choice vs room and
-  // site caps). Read at publish time, so a changed preference applies on the
-  // next publish without renegotiating current ones.
-  #qualityTiers() {
-    return this.#getQualityTiers?.() ?? {};
   }
 
   async connect(wsUrl, token) {
@@ -400,8 +393,7 @@ export default class LivekitRoomSession {
           await this.connect(minted.url, minted.token);
           return this.#closed ? "aborted" : "reconnected";
         } catch (error) {
-          // eslint-disable-next-line no-console
-          console.warn(
+          voiceLog.warn(
             `[voice-livekit] reconnect attempt failed for room ${this.#roomId}`,
             error
           );
@@ -412,6 +404,13 @@ export default class LivekitRoomSession {
     } finally {
       this.#reconnecting = false;
     }
+  }
+
+  // Effective tiers already clamped by the service (user choice vs room and
+  // site caps). Read at publish time, so a changed preference applies on the
+  // next publish without renegotiating current ones.
+  #qualityTiers() {
+    return this.#getQualityTiers?.() ?? {};
   }
 
   async #syncVideoPublication(track, kind) {
@@ -466,8 +465,7 @@ export default class LivekitRoomSession {
       );
       this.#videoKind = kind;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(
+      voiceLog.warn(
         `[voice-livekit] failed to publish ${kind} video for room ${this.#roomId}`,
         error
       );
@@ -494,8 +492,7 @@ export default class LivekitRoomSession {
           audioBitrate: SCREEN_AUDIO_BITRATE,
         });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(
+      voiceLog.warn(
         `[voice-livekit] failed to publish screen audio for room ${this.#roomId}`,
         error
       );
@@ -515,8 +512,7 @@ export default class LivekitRoomSession {
         false
       );
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn(
+      voiceLog.warn(
         `[voice-livekit] failed to unpublish a track for room ${this.#roomId}`,
         error
       );
@@ -639,8 +635,7 @@ export default class LivekitRoomSession {
       // A server-side permission update (e.g. a promotion synced by the
       // backend) lets the mic publish without a reconnect.
       this.refreshPublications().catch((error) => {
-        // eslint-disable-next-line no-console
-        console.warn(
+        voiceLog.warn(
           `[voice-livekit] failed to refresh publications for room ${this.#roomId}`,
           error
         );
@@ -693,16 +688,14 @@ export default class LivekitRoomSession {
     });
 
     room.on(RoomEvent.Reconnecting, () => {
-      // eslint-disable-next-line no-console
-      console.log(
+      voiceLog.info(
         `[voice-livekit] connection interrupted for room ${this.#roomId}; SDK is resuming`
       );
       this.#onConnectionChange("reconnecting");
     });
 
     room.on(RoomEvent.Reconnected, () => {
-      // eslint-disable-next-line no-console
-      console.log(
+      voiceLog.info(
         `[voice-livekit] connection resumed for room ${this.#roomId}`
       );
       this.#onConnectionChange("connected");
@@ -735,8 +728,8 @@ export default class LivekitRoomSession {
     } catch (error) {
       // A rejected publish (e.g. a stale token after a role change) must
       // not fail the join — the user can still listen.
-      // eslint-disable-next-line no-console
-      console.warn(
+
+      voiceLog.warn(
         `[voice-livekit] failed to publish microphone for room ${this.#roomId}`,
         error
       );

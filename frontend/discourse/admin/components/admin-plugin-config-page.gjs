@@ -33,21 +33,21 @@ export default class AdminPluginConfigPage extends Component {
   <template>
     <div class="admin-plugin-config-page">
       <DPageHeader
-        @titleLabel={{@plugin.nameTitleized}}
         @descriptionLabel={{@plugin.about}}
-        @learnMoreUrl={{@plugin.linkUrl}}
         @headerActionComponent={{this.headerActionComponent}}
         @hideTabs={{this.hideTabs}}
+        @learnMoreUrl={{@plugin.linkUrl}}
+        @titleLabel={{@plugin.nameTitleized}}
       >
         <:breadcrumbs>
-          <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+          <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
           <DBreadcrumbsItem
-            @path="/admin/plugins"
             @label={{i18n "admin.plugins.title"}}
+            @path="/admin/plugins"
           />
           <DBreadcrumbsItem
-            @path="/admin/plugins/{{@plugin.name}}"
             @label={{@plugin.nameTitleized}}
+            @path="/admin/plugins/{{@plugin.name}}"
           />
         </:breadcrumbs>
         <:tabs>
@@ -56,11 +56,11 @@ export default class AdminPluginConfigPage extends Component {
             as |navLink|
           }}
             <DNavItem
-              @route={{navLink.route}}
+              class="admin-plugin-config-page__top-nav-item"
+              title={{this.linkText navLink}}
               @currentWhen={{navLink.currentWhen}}
               @i18nLabel={{this.linkText navLink}}
-              title={{this.linkText navLink}}
-              class="admin-plugin-config-page__top-nav-item"
+              @route={{navLink.route}}
             >
               {{this.linkText navLink}}
             </DNavItem>

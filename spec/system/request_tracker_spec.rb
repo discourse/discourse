@@ -965,6 +965,7 @@ describe "Request tracking" do
 
     context "when logged in" do
       before { sign_in(user) }
+
       let(:expected_username) { user.username }
 
       include_examples "logs piggyback and beacon entries on home and topic"

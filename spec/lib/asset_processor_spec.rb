@@ -478,8 +478,9 @@ RSpec.describe AssetProcessor do
 
     expect(entrypoint(result, "main")["code"]).to include("setComponentTemplate")
     expect(entrypoint(result, "main")["code"]).to include(
-      "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
+      "= setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
+    expect(entrypoint(result, "main")["code"]).to include('registerModuleForModifyClass("bar",')
   end
 
   it "handles colocation of connectors" do
@@ -649,7 +650,7 @@ RSpec.describe AssetProcessor do
     expect(AssetProcessor.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
 
-  it "errors on missing relative imports" do
+  it "errors on missing relative imports for a plugin without a hyphenated name" do
     mod_1 = <<~JS.chomp
       import SomeModule from "../some-module";
       console.log(SomeModule);

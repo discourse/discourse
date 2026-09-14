@@ -44,6 +44,16 @@ export default class UppyChunkedUpload {
     this._initChunks();
   }
 
+  start() {
+    this._createUpload();
+  }
+
+  abort(opts = undefined) {
+    if (opts?.really) {
+      this._abortUpload();
+    }
+  }
+
   _aborted() {
     return this.abortController.signal.aborted;
   }
@@ -321,15 +331,5 @@ export default class UppyChunkedUpload {
     }
 
     this.options.onError(err);
-  }
-
-  start() {
-    this._createUpload();
-  }
-
-  abort(opts = undefined) {
-    if (opts?.really) {
-      this._abortUpload();
-    }
   }
 }

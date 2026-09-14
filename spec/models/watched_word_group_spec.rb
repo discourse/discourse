@@ -3,6 +3,7 @@
 RSpec.describe WatchedWordGroup do
   fab!(:watched_word_group)
   let!(:watched_word_1) { watched_word_group.watched_words.first }
+
   fab!(:watched_word_2) { Fabricate(:watched_word, watched_word_group_id: watched_word_group.id) }
 
   describe "#create_or_update_members" do

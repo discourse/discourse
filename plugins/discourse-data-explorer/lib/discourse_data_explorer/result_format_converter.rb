@@ -25,7 +25,7 @@ module DiscourseDataExplorer
 
     def to_csv
       require "csv"
-      CSV.generate do |csv|
+      CSV.generate(+Encodings::BOM) do |csv|
         csv << cols
         pg_result.values.each { |row| csv << row }
       end
@@ -36,7 +36,7 @@ module DiscourseDataExplorer
         success: true,
         errors: [],
         duration: (result[:duration_secs].to_f * 1000).round(1),
-        result_count: pg_result.values.length || 0,
+        result_count: pg_result.ntuples,
         params: opts[:query_params],
         columns: cols,
         default_limit: SiteSetting.data_explorer_query_result_limit,
@@ -45,9 +45,10 @@ module DiscourseDataExplorer
 
       if !opts[:download]
         guardian = Guardian.new(opts[:current_user])
-        relations, colrender = DataExplorer.add_extra_data(pg_result, guardian:)
+        relations, colrender, hidden = DataExplorer.add_extra_data(pg_result, guardian:)
         json[:relations] = relations
         json[:colrender] = colrender
+        json[:hidden_relations] = hidden
       end
 
       json[:rows] = pg_result.values

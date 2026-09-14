@@ -82,17 +82,17 @@ export default class ProblemCheckItem extends Component {
         <div class="d-table__cell-actions">
           {{#if @tracker.ignored}}
             <DButton
-              @action={{fn this.watch @tracker}}
-              @label="admin.config.problem_checks.watch"
-              @icon="eye"
               class="btn-default btn-small"
+              @action={{fn this.watch @tracker}}
+              @icon="eye"
+              @label="admin.config.problem_checks.watch"
             />
           {{else}}
             <DButton
-              @action={{fn this.ignore @tracker}}
-              @label="admin.config.problem_checks.ignore"
-              @icon="eye-slash"
               class="btn-default btn-small"
+              @action={{fn this.ignore @tracker}}
+              @icon="eye-slash"
+              @label="admin.config.problem_checks.ignore"
             />
           {{/if}}
         </div>
