@@ -1,150 +1,55 @@
-# External agent participation
+# LiveKit agent participation
 
-## Problem and agreed scope
+## Product contract
 
-An external worker can join the media server without appearing or becoming audible
-in Voice. This is deliberate in the original design: Discourse owns the roster
-instead of importing the media server's participants. This change admits explicitly
-authorized external agents while preserving the existing human presence path.
+- `voice_livekit_agent_enabled` creates one negative-ID bot, `livekit_agent_bot`.
+  Disabling preserves the account; enabling again reuses it. An existing unrelated
+  account with that username is never adopted.
+- The invite modal accepts an agent dispatch name for each invitation. The feature
+  uses the existing LiveKit Cloud project credentials and dashboard deployment.
+- Admins explicitly invite the bot through a public Voice room's menu, including the widget menu. A human
+  must already be present, and the call must already use LiveKit.
+- The bot speaks and listens. Room managers can kick it without a timed exclusion;
+  admins can immediately invite it again. Private rooms and mesh calls are outside
+  this feature's scope.
+- Bots leave when the last human leaves and do not contribute to human capacity,
+  attendance, co-presence, badges, or statistics.
+- No integration records, custom worker credentials, room allowlists, role fields,
+  or exclusion management are needed. The single bot ID uses PluginStore.
 
-Agreed product decisions:
+## Authorization and lifecycle
 
-- Initially support agents in LiveKit rooms. Do not switch mesh calls automatically.
-- Administrators associate an integration with an existing bot account and allowed
-  rooms. Support valid negative user IDs; zero and arbitrary numeric identities
-  are not authorization. There is no dependency on the AI plugin.
-- A customer runs their worker. An integration credential is exchanged for a
-  short-lived, room-scoped media token. Alternatively, admins can explicitly
-  dispatch an existing LiveKit Agent Builder deployment into an ongoing call.
-  Worker creation and deployment remain outside this change.
-- Discourse authorizes the account, room, and listener/speaker role. Verified
-  provider events establish presence for an authorized agent session only.
-- Agents appear in the shared roster and use the existing media/role controls.
-- Room moderators can exclude an agent for a duration or indefinitely. Exclusion
-  survives reconnects; admins can restore access.
-- Agents do not consume human room capacity or contribute to human attendance,
-  badges, co-presence, or participation statistics. Provider resource usage remains.
-- Agents leave when the last human leaves. No agent admission into an empty room.
-  Integration authorization survives the call; exclusions remain effective.
-- Keep authorization and moderation independent of the media provider. Additional
-  providers require adapters and frontend transport support, not just endpoints.
+The invite endpoint uses normal session authentication, CSRF protection, and
+Guardian admin/public-room checks. The dispatcher independently requires the
+feature, a configured Cloud project and a valid invitation name, an active bot, human presence, and a
+LiveKit transport pin.
 
-## Authorization and lifecycle contract
+Every invitation writes a new opaque Redis admission proof. An authenticated
+provider snapshot must match the dispatch ID, room, agent name, and metadata and
+report exactly one running job identity. The participant must have the provider's
+agent kind. Neither a participant's claimed metadata nor its display name is
+sufficient. Clients receive the verified identity mapping in roster metadata.
 
-1. An admin creates a revocable integration credential scoped to a bot and rooms.
-   Store only a digest; reveal the secret once. Normal admin endpoints retain
-   session authentication and CSRF protection.
-2. A machine endpoint authenticates the integration credential, checks the room's
-   active transport, human presence, role, and exclusions, and records an authorized
-   session before returning connection credentials. Never accept a caller-selected
-   identity as proof of authorization. Do not expose the media server API secret.
-3. Verified provider connection events activate only that authorized session.
-   Unknown participants never create Discourse membership. Human webhook handling
-   remains reconciliation-only.
-4. Connection identity/session correlation must prevent stale joins/departures or
-   reused credentials from reviving superseded or excluded sessions.
-5. Periodic reconciliation maintains agent presence without browser heartbeats and
-   removes stale connections. Human departures and expiry end agent participation
-   when the room has no humans. External failures must not revive roster access.
-6. Exclusion revokes authorization before disconnecting media. Self-hosted LiveKit
-   does not revoke an already issued token when removing a participant: short token
-   lifetimes, roster gating, and re-eviction limit reuse but do not guarantee zero
-   transport access between reconnection and enforcement. Document this limitation
-   honestly; token expiry alone is not a strict immediate revocation mechanism.
+Provider permission updates precede roster admission. A Redis compare-and-set
+checks that the authorization proof remains current when committing presence;
+a concurrent kick or changed setting cannot restore a stale session. Signed
+webhooks trigger reconciliation rather than importing event payloads as members.
+The scheduled sweep reconciles missed events and expires absent agents.
 
-## Implementation plan
+Kicking revokes local authorization before cancelling the provider dispatch.
+Cleanup records remain separate from admission proofs, allowing deletion retries
+and recovery of dispatch creation whose response was lost. A new invitation
+supersedes earlier sessions. Disabling the feature revokes current sessions. Last-human cleanup also handles pending dispatches.
 
-- [x] Backend: durable integration/exclusion storage, admin API, credential exchange,
-  authorization, provider credentials and lifecycle reconciliation.
-- [x] Shared presence: authorized negative IDs, separate human capacity/accounting,
-  roster serialization and last-human cleanup across leave, kick, and expiry.
-- [x] Frontend: negative-ID media support, admin integration management, and agent
-  exclusion duration controls using existing UI primitives and FormKit.
-- [x] Automated tests: unauthorized identity/room/token rejection; credential revocation;
-  role grants; webhook replay/supersession; missed events; empty-room cleanup;
-  exclusion reconnects; human accounting/capacity; negative-ID audio and rendering;
-  unchanged mesh/human behavior.
-- [x] Review complete diff, run focused Ruby/JS tests and required lint, and record
-  actual validation results and remaining limitations below.
-- [x] Update operational documentation. Preserve this spec when preparing the PR.
+LiveKit supplies the initial permissions for managed agents. Discourse updates
+these before admitting playback, but this does not prevent provider access before
+reconciliation. Use trusted dashboard deployments. Audio conversation is supported;
+provider data publishing is disabled. Outages can delay remote disconnection.
 
-## Historical rationale for reviewers
+## Hosting and testing
 
-- Resenha c84cdca8f6a1 (#50): Discourse identity and Guardian token authorization.
-- Resenha 32516ef7738c (#58): numeric identities and roster-driven media eviction.
-- Resenha 8f7d11cbc207 (#56): webhooks cannot invent presence.
-- Resenha 0c5460e4f592 (#72): session-ID bookkeeping for delayed departures.
-- Discourse 89bcc0f498cf (#43044): bundled Resenha as Voice.
-
-The new exception is provider-maintained presence for explicitly authorized agents;
-it is not general provider authority over room membership. Existing AI bot accounts
-use negative IDs, whereas staged accounts are a separate account property.
-
-## Validation and implementation notes
-
-### Dashboard dispatch
-
-Admin invitations use the configured LiveKit project and an existing scoped bot
-integration. Each dispatch has a separate admission proof and cleanup record.
-Provider snapshots must match the requested dispatch ID, room, agent name and
-metadata, and report a running job and an agent participant. Clients receive the
-verified provider identity in roster metadata; numeric identities remain reserved
-for the existing human and custom-worker paths.
-
-Dispatch cleanup survives revocation and retries provider failures. A response
-lost during creation is recovered by matching its server-generated metadata.
-Permission updates must succeed before roster admission. LiveKit controls the
-initial connection grants for managed agents, so these do not provide the same
-pre-connect grant restrictions as Discourse-minted worker tokens. See the
-[dashboard operations guide](../livekit.md#livekit-agent-builder) for testing and
-the provider access limitation.
-
-Local validation: the non-system Voice suite passed with **844 examples**, and
-the focused browser suites passed with **21 media tests and 2 admin form tests**.
-Provider dispatch responses are stubbed in the backend tests. A real Agent Builder
-conversation still needs the manual check in the operations guide.
-
-### Custom workers
-
-The implementation adds durable integration, room scope and exclusion records;
-the migration and schema dump are included. Bot selection uses existing negative-ID
-accounts, excluding the system account. Bot creation and managed worker dispatch
-remain outside scope.
-
-Agent admission uses an opaque Redis session proof embedded in token metadata.
-Signed webhooks request a current provider snapshot rather than trusting the event
-to create or delete presence. Reconciliation rechecks room scope, revocation,
-exclusions and human presence. Listener/speaker permission is capped by the admin's
-integration role; room moderation may demote a speaker. Integration edits, rotation
-and revocation invalidate existing admission proofs.
-
-The SFU callback writes directly into the remote-stream registry, whereas mesh
-tracks use a separate media-policy helper. Agent role/admission checks therefore
-also run at the SFU callback. Tracks received before roster admission are restored
-after admission; demotion and exclusion remove them. Human SFU behavior is preserved.
-
-Validation completed so far:
-
-- Non-system Voice RSpec suite: **820 examples, 0 failures**.
-- After final fallback and orphan-session cleanup changes: focused controller,
-  agent-manager and orphan-session specs: **52 examples, 0 failures**.
-- Signed-webhook suite, including agent admission, stale departure, revocation and
-  exclusion replay: **28 examples, 0 failures**.
-- Focused browser suite (`voice-webrtc-livekit`, `VoiceAgentIntegrations`,
-  `VoiceKick`): **22 tests, 0 failures**. An initial browser launch stalled before
-  executing tests; a fresh run completed.
-- Test database migration, schema dump and model annotations completed.
-- Required `bin/lint --fix` passed for all changed Voice files; `git diff --check`
-  passed. Unrelated workspace edits were left untouched.
-
-The credential exchange and operations are documented in [LiveKit setup](../livekit.md#external-agents).
-The gated two-browser LiveKit system spec passed on 2026-09-14 against a disposable
-LiveKit 1.13.7 server: **1 example, 0 failures**. It verified the LiveKit transport
-pin, SFU WebSocket connection, and receipt of a live remote camera track. Run with
-`CI=1 LOAD_PLUGINS=1 VOICE_LIVEKIT_TEST_URL=ws://localhost:7880 bin/rspec plugins/voice/spec/system/voice_livekit_spec.rb`.
-
-Real-provider end-to-end agent audio and the remaining system tests have not been
-run for this change. Exercise those before deployment, including last-human leave,
-token reuse after exclusion, delayed webhooks and provider outages. The transport
-revocation limitation above remains; authorization and disconnect operations also
-span the database, Redis and the provider rather than forming one atomic operation.
+LiveKit's Agents framework supports Cloud and self-hosted servers, while Agent
+Builder and managed hosting belong to Cloud. This implementation targets Cloud
+only. The [operations guide](../livekit.md#livekit-agent-builder) documents setup,
+manual testing, and automated test commands. Backend tests stub provider responses;
+real agent audio, deployment readiness, and provider logs require manual validation.

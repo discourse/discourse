@@ -8,13 +8,19 @@ module Voice
     end
 
     TOKEN_TTL = 10.minutes
-    AGENT_TOKEN_TTL = 2.minutes
     LAST_WEBHOOK_KEY = "voice:livekit:last_webhook_at"
     LAST_WEBHOOK_TTL = 7.days
 
     def self.configured?
       SiteSetting.voice_livekit_url.present? && SiteSetting.voice_livekit_api_key.present? &&
         SiteSetting.voice_livekit_api_secret.present?
+    end
+
+    def self.cloud?
+      uri = URI.parse(SiteSetting.voice_livekit_url)
+      uri.scheme == "wss" && uri.host&.end_with?(".livekit.cloud")
+    rescue URI::InvalidURIError
+      false
     end
 
     def self.available_for?(room)
@@ -72,20 +78,17 @@ module Voice
       sources
     end
 
-    # Callers must authorize the human through Guardian or the bot through
-    # AgentManager before minting credentials.
-    def self.mint_token(user:, room:, guardian: nil, role: nil, metadata: nil)
+    def self.mint_token(user:, room:, guardian:)
       raise MintError, "LiveKit is not fully configured" unless configured?
 
-      can_publish = role ? role == "speaker" : guardian.can_speak_in_voice_room?(room)
+      can_publish = guardian.can_speak_in_voice_room?(room)
       sources = publish_sources(room, can_publish)
 
       payload = {
         iss: SiteSetting.voice_livekit_api_key,
         sub: user.id.to_s,
         name: user.username,
-        metadata: metadata,
-        exp: (user.bot? ? AGENT_TOKEN_TTL : TOKEN_TTL).from_now.to_i,
+        exp: TOKEN_TTL.from_now.to_i,
         video: {
           room: room_name(room),
           roomJoin: true,

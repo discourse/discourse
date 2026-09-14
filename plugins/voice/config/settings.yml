@@ -90,6 +90,10 @@ plugins:
     default: ""
   voice_livekit_mesh_fallback:
     default: false
+  voice_livekit_agent_enabled:
+    default: false
+    validator: "VoiceLivekitAgentValidator"
+    refresh: true
   voice_livekit_recording_enabled:
     default: false
     client: true

@@ -9,74 +9,34 @@ module Voice
     end
 
     class << self
-      def create_credential!(integration)
-        credential = SecureRandom.urlsafe_base64(32)
-        integration.update!(credential_digest: digest(credential))
-        credential
+      def authorize!(room:)
+        bot = AgentBot.user
+        unless Voice.enabled? && AgentBot.available? && room.public? &&
+                 ParticipantTracker.pinned_transport(room.id) == "livekit" &&
+                 ParticipantTracker.human_user_ids(room.id).any?
+          raise AuthorizationError
+        end
+        bot
       end
 
-      def authenticate(credential)
-        return if credential.blank?
-
-        AgentIntegration.find_by(credential_digest: digest(credential))
-      end
-
-      def authorize!(integration:, room:)
-        raise AuthorizationError unless integration&.active?
-        raise AuthorizationError unless Voice.enabled?
-        raise AuthorizationError unless eligible_bot?(integration.bot_user)
-        raise AuthorizationError unless integration.rooms.exists?(id: room.id)
-        raise AuthorizationError unless Livekit.configured?
-        raise AuthorizationError unless ParticipantTracker.pinned_transport(room.id) == "livekit"
-        raise AuthorizationError if ParticipantTracker.human_user_ids(room.id).none?
-        raise AuthorizationError if integration.excluded_from?(room)
-
-        integration
-      end
-
-      def authorize_session!(integration:, room:)
+      def authorize_session!(room:, agent_name:)
+        bot = authorize!(room:)
         Discourse.redis.sadd(PROVIDER_ROOMS_KEY, room.id)
         session_id = SecureRandom.hex(16)
-        payload = {
-          integration_id: integration.id,
-          session_id: session_id,
-          role: role_for(integration, room),
-        }
-        Discourse.redis.setex(
-          session_key(room.id, integration.bot_user_id),
-          SESSION_TTL.to_i,
-          payload.to_json,
-        )
+        payload = { bot_user_id: bot.id, session_id:, agent_name: }
+        Discourse.redis.setex(session_key(room.id, bot.id), SESSION_TTL.to_i, payload.to_json)
         session_id
       end
 
-      def role_for(integration, room)
-        membership = room.room_memberships.find_by(user_id: integration.bot_user_id)
-        return "participant" if membership&.participant?
-        return "speaker" if integration.role_name == "speaker"
-
-        "participant"
-      end
-
-      def authorized_session?(room:, user_id:, metadata:)
-        !!authorized_session(room:, user_id:, metadata:)
-      rescue JSON::ParserError, AuthorizationError
-        false
-      end
-
       def authorized_session(room:, user_id:, metadata:)
-        return unless user_id.to_s.match?(/\A-\d+\z/)
         raw = Discourse.redis.get(session_key(room.id, user_id))
         return if raw.blank?
-
         session = JSON.parse(raw, symbolize_names: true)
-        return unless metadata.to_s == session[:session_id]
+        return unless metadata == session[:session_id]
+        bot = authorize!(room:)
+        return unless bot.id == user_id && session[:bot_user_id] == bot.id
 
-        integration = AgentIntegration.find_by(id: session[:integration_id])
-        authorize!(integration:, room:)
-        return unless integration.bot_user_id == user_id.to_i
-
-        session.merge(integration: integration, proof: raw)
+        session.merge(bot:, proof: raw)
       rescue JSON::ParserError, AuthorizationError
         nil
       end
@@ -90,58 +50,35 @@ module Voice
         AgentDispatcher.cancel(room_id, user_id)
       end
 
-      def revoke_sessions!(integration)
-        Discourse
-          .redis
-          .scan_each(match: "voice:agent:session:*:#{integration.bot_user_id}") do |key|
-            revoke_session(key.split(":")[-2].to_i, integration.bot_user_id)
-          end
-      end
-
-      def exclude!(room:, user_id:, duration: nil)
-        valid_duration =
-          duration.nil? || (/\A\d+\z/.match?(duration.to_s) && duration.to_i <= 365.days.to_i)
-        raise Discourse::InvalidParameters.new(:duration) unless valid_duration
-        integration = AgentIntegration.find_by(bot_user_id: user_id)
-        return unless integration
-
-        expires_at = duration.to_i.positive? ? duration.to_i.seconds.from_now : nil
-        exclusion = integration.exclusions.find_or_initialize_by(room_id: room.id)
-        exclusion.expires_at = expires_at
-        exclusion.save!
-        revoke_session(room.id, user_id)
-        integration
-      end
-
       def evict!(room:, user_id:)
+        dispatched = AgentDispatcher.pending?(room.id)
+        identity = ParticipantTracker.get_metadata(room.id, user_id)[:livekit_identity]
         revoke_session(room.id, user_id)
         ParticipantTracker.mark_left(room.id, user_id)
         ParticipantTracker.remove(room.id, user_id)
-        Livekit::RoomServiceClient.remove_participant(room, user_id)
-      end
-
-      def evict_integration!(integration)
-        room_ids = ParticipantTracker.recently_active_room_ids | provider_room_ids
-        revoke_sessions!(integration)
-        room_ids.each do |room_id|
-          room = Room.find_by(id: room_id)
-          next unless room
-          if provider_room?(room.id) ||
-               ParticipantTracker.user_ids(room.id).include?(integration.bot_user_id)
-            evict!(room:, user_id: integration.bot_user_id)
-            RoomBroadcaster.publish_participants(room)
-          end
+        unless dispatched
+          Livekit::RoomServiceClient.remove_participant(
+            room,
+            user_id,
+            **(identity ? { identity: } : {}),
+          )
         end
       end
 
-      def evict_agents_in_room!(room, delete_room: true)
-        AgentDispatcher.cancel(room.id)
-        agent_user_ids = ParticipantTracker.agent_user_ids(room.id)
-        Discourse
-          .redis
-          .scan_each(match: "voice:agent:session:#{room.id}:*") do |key|
-            revoke_session(room.id, key.split(":").last.to_i)
+      def stop_all!
+        Room
+          .where(id: provider_room_ids)
+          .find_each do |room|
+            revoke_room_sessions(room)
+            AgentDispatcher.cancel(room.id)
+            RoomBroadcaster.publish_participants(room)
           end
+      end
+
+      def evict_agents_in_room!(room, delete_room: true)
+        agent_user_ids = ParticipantTracker.agent_user_ids(room.id)
+        revoke_room_sessions(room)
+        AgentDispatcher.cancel(room.id)
         agent_user_ids.each { |user_id| evict!(room:, user_id:) }
         AgentDispatcher.sessions(room) if AgentDispatcher.pending?(room.id)
         room_deleted = !delete_room || Livekit::RoomServiceClient.delete_room(room)
@@ -160,92 +97,63 @@ module Voice
       end
 
       def reconcile(room)
-        unless ParticipantTracker.pinned_transport(room.id) == "livekit" || provider_room?(room.id)
-          return
-        end
-        return unless AgentIntegration.exists? || ParticipantTracker.agent_user_ids(room.id).any?
+        return unless provider_room?(room.id) || ParticipantTracker.agent_user_ids(room.id).any?
         return evict_agents_in_room!(room) if ParticipantTracker.human_user_ids(room.id).empty?
 
+        sessions = AgentDispatcher.sessions(room)
         participants = Livekit::RoomServiceClient.list_participants(Livekit.room_name(room))
         return unless participants[:ok]
 
-        dispatched_sessions = AgentDispatcher.sessions(room)
         live_agents = Set.new
         Array(participants.dig(:data, "participants")).each do |participant|
           identity = participant["identity"].to_s
-          session = dispatched_sessions[identity]
-          if session
-            next if [4, "AGENT"].exclude?(participant["kind"])
-            user_id = session[:integration].bot_user_id
-          else
-            next unless /\A-[1-9]\d*\z/.match?(identity)
-            user_id = identity.to_i
-            session = authorized_session(room:, user_id:, metadata: participant["metadata"])
-          end
-          unless session
-            Livekit::RoomServiceClient.remove_participant(room, user_id)
-            next
-          end
+          session = sessions[identity]
+          next unless session
+          next if [4, "AGENT"].exclude?(participant["kind"])
 
-          metadata = ParticipantTracker.get_metadata(room.id, user_id)
-          metadata.merge!(
+          bot = session[:bot]
+          next unless Livekit::RoomServiceClient.update_participant(room, bot, identity:)
+          metadata = {
             external_agent: true,
             livekit_identity: identity,
-            agent_can_speak: session[:integration].role_name == "speaker",
-            role: role_for(session[:integration], room),
+            role: "speaker",
             last_heartbeat_at: Time.now.to_f,
-          )
-          if dispatched_sessions.key?(identity)
-            unless Livekit::RoomServiceClient.update_participant(
-                     room,
-                     session[:integration].bot_user,
-                     identity:,
-                   )
-              next
-            end
-          end
+          }
           unless ParticipantTracker.commit_agent(
                    room.id,
-                   user_id,
-                   session_key: session_key(room.id, user_id),
+                   bot.id,
+                   session_key: session_key(room.id, bot.id),
                    proof: session[:proof],
                    ttl: SESSION_TTL.to_i,
-                   metadata: metadata,
+                   metadata:,
                    sid: participant["sid"],
                  )
-            Livekit::RoomServiceClient.remove_participant(room, user_id, identity:)
+            Livekit::RoomServiceClient.remove_participant(room, bot.id, identity:)
             next
           end
-          live_agents << user_id
-          can_publish = role_for(session[:integration], room) == "speaker"
-          permission = participant["permission"] || {}
-          if !dispatched_sessions.key?(identity) &&
-               (permission["canPublish"] || permission["can_publish"] || false) != can_publish
-            Livekit::RoomServiceClient.update_participant(room, session[:integration].bot_user)
-          end
+          live_agents << bot.id
         end
 
         ParticipantTracker
           .agent_user_ids(room.id)
           .each do |user_id|
-            next if live_agents.include?(user_id)
-            ParticipantTracker.expire_presence(room.id, user_id)
+            ParticipantTracker.expire_presence(room.id, user_id) if live_agents.exclude?(user_id)
           end
         RoomBroadcaster.publish_participants_if_changed(room)
       end
 
       private
 
-      def digest(credential)
-        Digest::SHA256.hexdigest(credential.to_s)
+      def revoke_room_sessions(room)
+        Discourse
+          .redis
+          .scan_each(match: "voice:agent:session:#{room.id}:*") do |key|
+            revoke_session(room.id, key.split(":").last.to_i)
+          end
       end
 
       def session_key(room_id, user_id)
         "voice:agent:session:#{room_id}:#{user_id}"
-      end
-
-      def eligible_bot?(user)
-        user&.bot? && user.id.negative? && !user.is_system_user? && user.active? && !user.suspended?
       end
     end
   end

@@ -3,6 +3,7 @@
 Voice::Engine.routes.draw do
   resources :rooms do
     member do
+      post :invite_agent
       post :join
       post :heartbeat
       delete :leave
@@ -34,7 +35,6 @@ Voice::Engine.routes.draw do
   # LiveKit server webhooks — machine-to-machine, authenticated by the
   # signature on the request body, not by a user session.
   post "livekit/webhook" => "livekit_webhooks#create"
-  post "agent-token" => "agent_tokens#create"
 
   get "contacts" => "contacts#index"
   get "chat_threads/:id" => "chat_threads#show", :constraints => { id: /\d+/ }
@@ -50,7 +50,6 @@ Discourse::Application.routes.draw do
       get "/voice-rooms/:id" => "voice/admin#edit"
       get "/voice-dashboard" => "voice/admin#index"
       get "/voice-recordings" => "voice/admin#index"
-      get "/voice-agent-integrations" => "voice/admin#index"
     end
 
     scope format: :json do
@@ -69,16 +68,6 @@ Discourse::Application.routes.draw do
       post "/livekit/probe" => "voice/admin_livekit#probe"
 
       get "/recordings" => "voice/admin_recordings#index"
-
-      get "/agent-integrations" => "voice/admin_agent_integrations#index"
-      post "/agent-integrations" => "voice/admin_agent_integrations#create"
-      put "/agent-integrations/:id" => "voice/admin_agent_integrations#update"
-      delete "/agent-integrations/:id" => "voice/admin_agent_integrations#destroy"
-      post "/agent-integrations/:id/restore" => "voice/admin_agent_integrations#restore"
-      post "/agent-integrations/:id/rotate" => "voice/admin_agent_integrations#rotate"
-      post "/agent-integrations/:id/dispatch" => "voice/admin_agent_integrations#invite"
-      delete "/agent-integrations/:id/exclusions/:room_id" =>
-               "voice/admin_agent_integrations#restore_exclusion"
     end
   end
 end

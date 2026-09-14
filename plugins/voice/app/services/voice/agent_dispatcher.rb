@@ -5,17 +5,17 @@ module Voice
     class DispatchError < StandardError
     end
 
-    def self.dispatch!(integration:, room:, agent_name:)
-      unless agent_name.is_a?(String) && agent_name.present? && agent_name.length <= 256
+    def self.dispatch!(room:, agent_name:)
+      unless agent_name.is_a?(String) && agent_name.strip.present? && agent_name.length <= 256
         raise Discourse::InvalidParameters.new(:agent_name)
       end
-
-      DistributedMutex.synchronize("voice:dispatch:#{room.id}:#{integration.bot_user_id}") do
-        AgentManager.authorize!(integration:, room:)
-        AgentManager.revoke_session(room.id, integration.bot_user_id)
-        session_id = AgentManager.authorize_session!(integration:, room:)
+      agent_name = agent_name.strip
+      DistributedMutex.synchronize("voice:dispatch:#{room.id}") do
+        bot = AgentManager.authorize!(room:)
+        AgentManager.revoke_session(room.id, bot.id)
+        session_id = AgentManager.authorize_session!(room:, agent_name:)
         record = {
-          "bot_user_id" => integration.bot_user_id,
+          "bot_user_id" => bot.id,
           "session_id" => session_id,
           "agent_name" => agent_name,
           "metadata" => { voice_session_id: session_id }.to_json,
@@ -29,12 +29,12 @@ module Voice
           record["dispatch_id"] = result[:data]["id"]
           save(room.id, record)
         else
-          AgentManager.revoke_session(room.id, integration.bot_user_id)
+          AgentManager.revoke_session(room.id, bot.id)
           raise DispatchError
         end
 
         unless authorized_session(room, record)
-          cancel(room.id, integration.bot_user_id)
+          cancel(room.id, bot.id)
           raise AgentManager::AuthorizationError
         end
         record["dispatch_id"]

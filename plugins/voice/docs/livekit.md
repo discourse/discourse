@@ -162,7 +162,7 @@ never an outage.
 
 Authorized external agents have a separate lifecycle: provider connection events
 and reconciliation maintain their presence, while Discourse controls admission,
-roles, and exclusions. They do not create human session analytics. See
+invitations and removal. They do not create human session analytics. See
 [External agent participation](./roadmap/agent-participation.md) for the contract
 and its implementation checklist.
 
@@ -219,142 +219,81 @@ SDK never calls `getUserMedia`).
 The [local fake participants harness](./local-fake-participants.md) works
 against LiveKit-routed rooms unchanged, for the same reason.
 
-## External agents
+## LiveKit Agent Builder
 
-### LiveKit Agent Builder
+Voice supports manually inviting a chosen LiveKit Cloud agent into ongoing
+public Voice calls. Deploy the agent with Agent Builder in the same Cloud project
+configured for Voice. The agent does not need `VOICE_AGENT_CREDENTIAL` or a
+Discourse HTTP tool.
 
-Agents created in the LiveKit Cloud dashboard can be invited without exporting
-their code. Deploy the agent in the same LiveKit project configured for Voice,
-then:
+### Setup and testing
 
-1. Create a bot integration in **Admin → Plugins → Voice → External agents**.
-   Select an existing bot, allow the test room, and choose the speaker role to
-   test conversation.
-2. Join that room as a human and confirm it is using LiveKit.
-3. In **Invite dashboard agent**, select the integration and room, enter the
-   agent name shown in Agent Builder (not its `CA_` deployment ID), and click
-   **Invite agent**. The agent must be deployed and available under that name.
-4. Wait for the bot to appear in the roster, then speak. Webhooks can establish
-   presence promptly; without them, allow the next one-minute scheduled sweep.
-   The agent's initial greeting may occur before roster admission and be inaudible.
-5. Test demotion, exclusion, credential revocation, and last-human departure as
-   described below. Exclusion and revocation stop the provider dispatch as well
-   as removing Discourse presence. Restore access and invite again to start a
-   new session.
+1. In **Admin → Settings**, enable `voice_livekit_agent_enabled`. This creates the
+   `livekit_agent_bot` account automatically. Voice uses its existing LiveKit URL
+   and API credentials.
+2. Make a public Voice room use LiveKit through the existing room policy. Join it
+   as a human and confirm that the call uses LiveKit. Mesh calls cannot invite an
+   agent and do not switch transport automatically.
+3. As an admin, open the room's **…** menu (on its page or in the sidebar) and
+   select **Invite LiveKit agent**. The same action is available in the widget’s
+   **…** menu. Enter the deployed agent’s dispatch name in the modal and invite it.
+   Choose a name for each invitation; do not use its `CA_` deployment ID.
+4. Wait for `livekit_agent_bot` to appear, then speak. With webhooks configured,
+   presence can appear promptly; otherwise allow the next one-minute scheduled
+   sweep. The agent's initial greeting may occur before roster admission.
+5. Open the bot's participant menu and select **Kick**. Verify that its roster
+   entry and audio disappear. Invite it again immediately from the room menu.
+   Each invitation creates a fresh session; no expulsion duration is stored.
+6. Leave as the last human and verify the bot disconnects. Repeat after closing
+   the human browser abruptly, allowing presence expiry and reconciliation.
+7. Disable the feature while the bot is present and verify that it is removed.
+   Enabling again reuses the same bot account. Private rooms, empty calls, non-admins, and a missing
+   or inactive bot cannot initiate an invitation.
 
-The dashboard agent does not need `VOICE_AGENT_CREDENTIAL` or a Discourse HTTP
-tool. Discourse creates the dispatch using its existing LiveKit server credentials.
-The invitation endpoint is admin-only, uses normal session/CSRF authentication,
-and checks the integration's room scope, exclusions, active transport, and human
-presence. Agent names are entered per invitation; nothing is automatically
-dispatched when a human joins.
+Set the LiveKit webhook URL to the site's public HTTPS origin followed by
+`/voice/livekit/webhook`. Keep scheduled jobs running even
+when webhooks are configured so missed events and cleanup failures are retried.
 
-Discourse associates the bot with the running job's participant identity returned
-by LiveKit's authenticated dispatch API. Neither participant metadata nor a
-matching display name authorizes a bot. The roster carries the verified identity
-mapping so clients can apply the bot's media and moderation controls.
+Agents always join as speakers. They do not count toward human capacity,
+attendance, badges, or participation statistics. Room managers can kick them;
+only admins can invite them. Nothing automatically dispatches an agent when
+humans join a room.
 
-Unlike worker tokens issued by Discourse, dispatch does not accept participant
-permission grants. LiveKit initially connects the agent with its own permissions;
-Discourse applies the integration's permissions before admitting its media to the
-roster. This cannot guarantee listener-only or source-restricted access at the
-provider before reconciliation. Use trusted dashboard agents. Discourse clients
-withhold agent playback until admission, but this is not a transport-level access
-barrier. Provider permissions disable data publishing, so this flow supports audio
-participation rather than the Agent Console's transcription and data features.
+### Hosting and provider behavior
 
-Cleanup records survive admission revocation so failed dispatch deletion can be
-retried by scheduled jobs. A timed-out create is reconciled by its dispatch
-metadata; it is never admitted after revocation. Invitations reported as sent are
-accepted dispatch requests, not confirmation that an agent worker has connected.
-Use LiveKit's session logs to diagnose an unavailable agent name or failed job.
+The LiveKit Agents framework and dispatch mechanism support both Cloud and
+self-hosted servers. Agent Builder and managed agent hosting are Cloud services.
+This UI intentionally supports only a configured `wss://*.livekit.cloud` project.
+See [LiveKit Cloud](https://docs.livekit.io/intro/cloud/) and
+[Agent Builder](https://docs.livekit.io/agents/start/builder/).
 
-See [LiveKit's dispatch API](https://docs.livekit.io/reference/agents/agent-dispatch-service-api/)
-and [Agent Builder](https://docs.livekit.io/agents/start/builder/).
+An accepted invitation means LiveKit accepted the dispatch, not that a worker has
+connected. Check LiveKit's session logs if the bot does not appear, particularly
+the dispatch name and deployment status. Discourse associates the bot only with
+the running job's identity returned by LiveKit's authenticated dispatch API;
+participant metadata or matching display names cannot authorize roster access.
 
-### Custom RTC workers
+LiveKit controls a managed agent's initial connection permissions. Discourse
+updates them before roster admission, disabling data publishing and applying the
+room's permitted media sources. Use trusted agents: roster gating does not block
+provider access before reconciliation. This flow supports audio conversation;
+it does not enable Agent Console transcription or data features.
 
-In the Voice admin configuration, open **External agents**, select an existing
-bot account, choose allowed rooms and a listener or speaker role, and save. Copy
-the credential shown after creation; only its digest is stored. Rotation replaces
-the credential, and revocation prevents further admission. Bot accounts have
-negative user IDs; staged accounts with positive IDs are not eligible. Creating
-bot accounts is outside this interface.
+Cleanup records outlive revoked admission proofs, allowing failed deletion and
+ambiguous dispatch creation responses to be reconciled. Discourse clients stop
+agent playback on roster removal. Provider disconnection may lag during outages.
+See the [dispatch API](https://docs.livekit.io/reference/agents/agent-dispatch-service-api/)
+and [implementation contract](./roadmap/agent-participation.md).
 
-Once a human has joined an allowed room using the SFU transport, the customer's
-worker exchanges that credential for connection details:
-
-```bash
-curl --request POST "$DISCOURSE_URL/voice/agent-token" \
-  --header "Authorization: Bearer $VOICE_AGENT_CREDENTIAL" \
-  --header 'Content-Type: application/json' \
-  --data '{"room_id": 123}'
-```
-
-The JSON response contains `url`, `token`, `identity`, and
-`participant_session_id`. Connect the worker's RTC client to `url` with `token`;
-the token already contains the assigned identity and session metadata. Do not
-replace the metadata or mint a separate token. Keep the integration credential
-on the worker's server. Deployment, dispatch and the worker's own application
-endpoints remain the customer's responsibility.
-
-A listener can subscribe to media; a speaker can also publish the sources allowed
-by the room. These tokens do not grant data-message publishing or access to other
-Discourse APIs. Moderators may demote speakers or exclude an agent for a duration
-or indefinitely. Administrators can restore an exclusion. Agents do not count
-toward human capacity or participation statistics and are disconnected when the
-last human leaves.
-
-Each exchange supersedes the bot's previous authorized session in that room.
-Connect within the token's two-minute validity period. Signed webhooks trigger a
-current participant snapshot; the periodic one-minute reconciliation also handles
-missed events. Confirmed agent presence expires after three minutes without a
-successful refresh. Keep webhooks and scheduled jobs operational.
-
-Removal from a self-hosted media server does not invalidate an already issued JWT.
-An excluded agent may briefly reconnect with that token before reconciliation
-disconnects it again. Discourse removes roster/media access immediately on its
-side, but this is not a guarantee of immediate transport-level revocation.
-
-See the [implementation decisions](./roadmap/agent-participation.md) for scope,
-historical rationale, and the review checklist.
-
-### Testing external agents
-
-Use a development or staging site with LiveKit configured, scheduled jobs running,
-and an existing eligible bot account. Start with a human-only call and confirm
-the join response reports `transport: "livekit"` and audio works between browsers.
-
-1. Create an integration in **Admin → Plugins → Voice → External agents**, scoped
-   to your test room with the speaker role. Copy its credential.
-2. Join the room as a human, exchange the integration credential using the request
-   above, and connect an external RTC worker with the returned URL and token within
-   two minutes. The credential exchange alone does not connect an agent; the worker
-   must publish an audio track to test speaking. A repeating test tone is sufficient.
-3. Verify the bot appears in the roster and its audio is audible. Without webhooks,
-   allow the next one-minute reconciliation sweep to establish presence.
-4. Demote the agent and verify its audio stops; promote it and verify audio returns.
-   Exclude it and verify it disappears and loses audio. A fresh token exchange must
-   return 403 until the exclusion is restored or expires.
-5. Try an invalid credential, a room outside the integration's scope, an empty room,
-   and a mesh room. Each token request must return 403. Rotate or revoke the
-   credential and verify the old credential also returns 403.
-6. Have the last human leave normally, then repeat by abruptly closing the browser.
-   Verify both the Discourse roster and the provider connection are cleaned up
-   after presence expiry and reconciliation. Repeat with the provider temporarily
-   unavailable and confirm cleanup retries once it recovers.
-7. Submit an invalid integration edit together with a changed room selection.
-   Verify the rejected edit preserves the original room scope and admitted session.
-
-For automated coverage, run these sequentially from the repository root:
+Automated checks:
 
 ```bash
 LOAD_PLUGINS=1 bin/rspec plugins/voice/spec --exclude-pattern 'plugins/voice/spec/system/**/*_spec.rb'
-CI=true bin/qunit --standalone --target voice --filter 'voice-webrtc-livekit'
+CI=1 bin/qunit --standalone --target voice --filter '/VoiceInviteAgentButton|VoiceParticipantSidebarContextMenu|voice-webrtc-livekit/i'
 ```
 
-The gated LiveKit system spec above verifies human media through a real SFU; it
-does not replace the external-worker checks in this section.
+The real-SFU system spec above tests human media. A real dashboard-agent
+conversation still requires the manual checks in this section.
 
 ## Manual browser checklist
 

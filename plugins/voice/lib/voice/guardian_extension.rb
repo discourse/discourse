@@ -91,6 +91,10 @@ module Voice
       room.public? || can_manage_voice_room?(room)
     end
 
+    def can_invite_voice_agent?(room)
+      is_admin? && can_join_voice_room?(room) && room.public? && Voice::AgentBot.available?
+    end
+
     def ensure_can_invite_to_voice_room!(room)
       unless can_invite_to_voice_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("voice.errors.not_authorized"))

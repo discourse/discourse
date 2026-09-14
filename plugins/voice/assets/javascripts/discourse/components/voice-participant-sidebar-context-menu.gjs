@@ -12,7 +12,6 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 import { humanKeyName } from "../lib/voice/ptt-utils";
 import VoiceFlag from "../lib/voice-flag";
-import VoiceKickModal from "./modal/voice-kick";
 import VoiceVoiceSettingsModal from "./modal/voice-voice-settings";
 import VoicePttKeyCapture from "./voice-ptt-key-capture";
 
@@ -93,8 +92,8 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
   get canPromoteToSpeaker() {
     return (
       this.canManageRoom &&
-      (this.isStageRoom || this.participant.external_agent) &&
-      (!this.participant.external_agent || this.participant.agent_can_speak) &&
+      this.isStageRoom &&
+      !this.participant.external_agent &&
       !this.isCurrentUser &&
       !this.participantIsSpeakerOrMod
     );
@@ -103,7 +102,8 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
   get canDemoteToListener() {
     return (
       this.canManageRoom &&
-      (this.isStageRoom || this.participant.external_agent) &&
+      this.isStageRoom &&
+      !this.participant.external_agent &&
       !this.isCurrentUser &&
       this.participant.role === "speaker"
     );
@@ -214,16 +214,10 @@ export default class VoiceParticipantSidebarContextMenu extends Component {
 
   @action
   async kick() {
-    const result =
-      this.participant.id < 0 ? await this.modal.show(VoiceKickModal) : {};
-    if (!result || (this.participant.id < 0 && result.duration === undefined)) {
-      return;
-    }
-
     try {
       await ajax(`/voice/rooms/${this.room.id}/kick`, {
         type: "DELETE",
-        data: { user_id: this.participant.id, duration: result.duration },
+        data: { user_id: this.participant.id },
       });
       this.args.close();
     } catch (error) {

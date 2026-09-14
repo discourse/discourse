@@ -27,15 +27,8 @@ module Voice
         # grants — sending only `canPublish` would silently revoke
         # `canSubscribe` and deafen the participant.
         def update_participant(room, user, identity: nil)
-          integration = AgentIntegration.find_by(bot_user_id: user.id)
           can_publish =
-            (
-              if integration
-                AgentManager.role_for(integration, room) == "speaker"
-              else
-                user.guardian.can_speak_in_voice_room?(room)
-              end
-            )
+            user.bot? ? user.id == AgentBot.user&.id : user.guardian.can_speak_in_voice_room?(room)
           call(
             room,
             "UpdateParticipant",

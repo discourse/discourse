@@ -72,11 +72,11 @@ RSpec.describe Jobs::Voice::CloseOrphanedSessions do
   end
 
   it "ends agent participation when the final human session expires" do
-    integration = Fabricate(:voice_agent_integration, rooms: [room])
+    bot = Fabricate(:user, id: -1400)
     session =
       Fabricate(:voice_session, user: user1, room: room, joined_at: 50.minutes.ago, left_at: nil)
     set_stale_participant(room, user1, last_heartbeat: 2.minutes.ago)
-    Voice::ParticipantTracker.add(room.id, integration.bot_user_id)
+    Voice::ParticipantTracker.add(room.id, bot.id)
     Voice::ParticipantTracker.pin_transport!(room.id, "mesh")
 
     job.execute({})

@@ -5,7 +5,6 @@ export default {
 
   map() {
     this.route("voice-dashboard");
-    this.route("voice-agent-integrations");
     this.route("voice-recordings");
     this.route(
       "voice-rooms",

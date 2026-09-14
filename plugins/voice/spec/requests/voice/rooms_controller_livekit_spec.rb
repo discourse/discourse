@@ -159,8 +159,7 @@ RSpec.describe Voice::RoomsController do
     it "cleans up an agent-only call before falling back to mesh" do
       configure_livekit!
       SiteSetting.voice_livekit_mesh_fallback = true
-      integration = Fabricate(:voice_agent_integration, rooms: [room])
-      bot_id = integration.bot_user_id
+      bot_id = Fabricate(:user, id: -1400).id
       Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
       Voice::ParticipantTracker.add(room.id, bot_id)
       Voice::Livekit.stubs(:mint_token).raises(Voice::Livekit::MintError.new("boom"))

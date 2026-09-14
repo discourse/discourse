@@ -7,7 +7,6 @@ require_relative "../../../db/migrate/20260612135211_add_video_enabled_to_voice_
 require_relative "../../../db/migrate/20260630183841_add_chat_settings_to_voice_rooms"
 require_relative "../../../db/migrate/20260709165411_add_livekit_enabled_to_voice_rooms"
 require_relative "../../../db/migrate/20260717172530_create_voice_recordings"
-require_relative "../../../db/migrate/20260910085119_create_voice_agent_integrations"
 
 RSpec.describe Voice::LivekitWebhooksController do
   before do
@@ -27,9 +26,6 @@ RSpec.describe Voice::LivekitWebhooksController do
       end
       unless ActiveRecord::Base.connection.table_exists?(:voice_recordings)
         CreateVoiceRecordings.new.change
-      end
-      unless ActiveRecord::Base.connection.table_exists?(:voice_agent_integrations)
-        CreateVoiceAgentIntegrations.new.change
       end
     end
     Voice::Room.reset_column_information
@@ -100,6 +96,69 @@ RSpec.describe Voice::LivekitWebhooksController do
   end
 
   describe "#create" do
+    it "reconciles a dashboard agent without letting stale events restore a kicked bot" do
+      SiteSetting.voice_livekit_url = "wss://test.livekit.cloud"
+      SiteSetting.voice_livekit_agent_enabled = true
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, user.id)
+      dispatch = nil
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/CreateDispatch",
+      ).to_return do |request|
+        dispatch =
+          JSON.parse(request.body).merge(
+            "id" => "AD_test",
+            "state" => {
+              "jobs" => [
+                {
+                  "dispatchId" => "AD_test",
+                  "state" => {
+                    "status" => "JS_RUNNING",
+                    "participantIdentity" => "agent-test",
+                  },
+                },
+              ],
+            },
+          )
+        { status: 200, body: dispatch.to_json }
+      end
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/ListDispatch",
+      ).to_return { { status: 200, body: { agentDispatches: [dispatch] }.to_json } }
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.RoomService/ListParticipants",
+      ).to_return(
+        status: 200,
+        body: {
+          participants: [{ identity: "agent-test", kind: "AGENT", sid: "PA_current" }],
+        }.to_json,
+      )
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.RoomService/UpdateParticipant",
+      ).to_return(status: 200, body: "{}")
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/DeleteDispatch",
+      ).to_return(status: 200, body: "{}")
+      Voice::AgentDispatcher.dispatch!(room:, agent_name: "assistant")
+      bot = Voice::AgentBot.user
+
+      post_webhook(event_for(event: "participant_joined", identity: "agent-test"))
+      expect(response.status).to eq(200)
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to eq([bot.id])
+
+      post_webhook(event_for(identity: "agent-test", sid: "PA_old"))
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to eq([bot.id])
+
+      Voice::AgentManager.evict!(room:, user_id: bot.id)
+      post_webhook(event_for(event: "participant_joined", identity: "agent-test"))
+      expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
+    end
+
     context "with an invalid delivery" do
       it "rejects a request with no Authorization token and records no delivery" do
         body = event_for.to_json
@@ -300,73 +359,6 @@ RSpec.describe Voice::LivekitWebhooksController do
 
         expect(response.status).to eq(200)
         expect(Voice::ParticipantTracker.user_ids(room.id)).not_to include(user.id)
-      end
-    end
-
-    context "with an authorized external agent" do
-      it "keeps the current agent on a stale departure and never re-admits it after revocation or exclusion" do
-        integration = Fabricate(:voice_agent_integration, rooms: [room])
-        Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
-        Voice::ParticipantTracker.add(room.id, user.id)
-        session_id = Voice::AgentManager.authorize_session!(integration:, room:)
-
-        provider_participant = {
-          "identity" => integration.bot_user_id.to_s,
-          "metadata" => session_id,
-          "sid" => "PA_current",
-        }
-        stub_request(
-          :post,
-          "https://livekit.example.com/twirp/livekit.RoomService/ListParticipants",
-        ).to_return(status: 200, body: { participants: [provider_participant] }.to_json)
-        stub_request(
-          :post,
-          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
-        ).to_return(status: 200, body: "{}")
-
-        post_webhook(
-          event_for(
-            event: "participant_joined",
-            identity: integration.bot_user_id.to_s,
-            sid: "PA_current",
-            metadata: session_id,
-          ),
-        )
-        expect(response.status).to eq(200)
-        expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to eq([integration.bot_user_id])
-
-        post_webhook(
-          event_for(identity: integration.bot_user_id.to_s, sid: "PA_old", metadata: session_id),
-        )
-
-        expect(response.status).to eq(200)
-        expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to eq([integration.bot_user_id])
-
-        integration.revoke!
-        post_webhook(
-          event_for(
-            event: "participant_joined",
-            identity: integration.bot_user_id.to_s,
-            sid: "PA_current",
-            metadata: session_id,
-          ),
-        )
-        expect(response.status).to eq(200)
-        expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
-
-        integration.restore!
-        Voice::AgentManager.exclude!(room:, user_id: integration.bot_user_id, duration: 60)
-        post_webhook(
-          event_for(
-            event: "participant_joined",
-            identity: integration.bot_user_id.to_s,
-            sid: "PA_current",
-            metadata: session_id,
-          ),
-        )
-
-        expect(response.status).to eq(200)
-        expect(Voice::ParticipantTracker.agent_user_ids(room.id)).to be_empty
       end
     end
 

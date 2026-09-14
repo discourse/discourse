@@ -96,8 +96,7 @@ module Voice
           gone_at: event_created_at(event),
         )
       if expired
-        if ParticipantTracker.human_user_ids(room.id).empty? &&
-             AgentIntegrationRoom.exists?(room_id: room.id)
+        if ParticipantTracker.human_user_ids(room.id).empty? && AgentManager.provider_room?(room.id)
           AgentManager.evict_agents_in_room!(room)
         end
         RoomBroadcaster.publish_participants_if_changed(room)

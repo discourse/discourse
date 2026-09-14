@@ -20,6 +20,7 @@ import {
 } from "../../lib/voice/video-grid-layout";
 import VoiceInviteUsersModal from "../modal/voice-invite-users";
 import VoiceRoomInfoModal from "../modal/voice-room-info";
+import VoiceInviteAgentButton from "../voice-invite-agent-button";
 import VoiceCallControls from "./call-controls";
 import VoiceRecordingBadge from "./recording-badge";
 import VoiceRingingTile from "./ringing-tile";
@@ -786,6 +787,11 @@ export default class VoiceCallWidget extends Component {
             >
               <:content as |roomMenu|>
                 <DDropdownMenu as |dropdown|>
+                  <VoiceInviteAgentButton
+                    @room={{this.room}}
+                    @item={{dropdown.item}}
+                    @closeMenu={{roomMenu.close}}
+                  />
                   {{#if this.chatAvailable}}
                     <dropdown.item>
                       <DButton
