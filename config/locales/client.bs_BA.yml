@@ -2797,6 +2797,7 @@ bs_BA:
       with_topics: "%{filter} teme"
       with_category: "%{filter} %{category} teme"
       filter:
+        reset: "reset"
         button:
           label: "Filter"
       latest:

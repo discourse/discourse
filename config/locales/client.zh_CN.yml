@@ -355,6 +355,7 @@ zh_CN:
     notifications_tracking:
       tooltip: "通知级别：%{level}"
     back_button: "返回"
+    confirm_button: "确认"
     welcome_banner:
       header:
         new_members: "欢迎，%{preferred_display_name}！"
@@ -5231,6 +5232,7 @@ zh_CN:
       with_category: "%{filter}%{category}话题"
       filter:
         title: "%{filter} 的筛选结果"
+        reset: "重置"
         button:
           label: "筛选"
       latest:

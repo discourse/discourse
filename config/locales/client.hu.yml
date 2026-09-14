@@ -348,6 +348,7 @@ hu:
     notifications_tracking:
       tooltip: "Értesítési szint: %{level}"
     back_button: "Vissza"
+    confirm_button: "Megerősítés"
     welcome_banner:
       header:
         new_members: "Üdvözöljük, %{preferred_display_name}!"
@@ -4794,6 +4795,7 @@ hu:
       with_category: "%{filter} %{category} Témák"
       filter:
         title: "Szűrt eredmények: %{filter}"
+        reset: "alaphelyzet"
         button:
           label: "Szűrő"
       latest:

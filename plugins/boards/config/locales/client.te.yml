@@ -7,6 +7,8 @@
 te:
   js:
     boards:
+      status:
+        all: "అన్నీ"
       board:
         remove_card: "తొలగించు"
         title: "శీర్షిక"

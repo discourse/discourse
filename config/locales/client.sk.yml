@@ -278,6 +278,7 @@ sk:
       message: "Aktualizovali sme túto stránku, <span>prosím obnovte</span> , aby všetko fungovalo bez problémov."
       dismiss: "Zahodiť"
     back_button: "Späť"
+    confirm_button: "Potvrďte"
     welcome_banner:
       header:
         logged_in_members: "Vitaj späť, %{preferred_display_name}!"
@@ -4794,6 +4795,7 @@ sk:
       with_category: "%{filter} %{category} témy"
       filter:
         title: "Filtrované výsledky pre %{filter}"
+        reset: "zrušiť"
         button:
           label: "Filter"
       latest:

@@ -7,6 +7,9 @@
 lt:
   js:
     boards:
+      status:
+        all: "Visi"
+        open: "Atidaryti"
       board:
         remove_card: "Pašalinti"
         title: "Antraštė"

@@ -439,6 +439,7 @@ pl_PL:
     notifications_tracking:
       tooltip: "Poziom powiadomienia: %{level}"
     back_button: "Poprzednia"
+    confirm_button: "Potwierdź"
     welcome_banner:
       header:
         new_members: "Witaj, %{preferred_display_name}!"
@@ -6066,6 +6067,8 @@ pl_PL:
       with_category: "%{filter} tematy w %{category} "
       filter:
         title: "Filtrowane wyniki dla %{filter}"
+        results_for: "Wyniki dla: %{query}"
+        reset: "przywróć"
         button:
           label: "Filtr"
       latest:

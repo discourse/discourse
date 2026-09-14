@@ -7,6 +7,10 @@
 cs:
   js:
     boards:
+      status:
+        all: "Vše"
+        open: "Otevřeno"
+        archived: "Archivované"
       board:
         remove_card: "Smazat"
         new_topic: "Nové téma..."

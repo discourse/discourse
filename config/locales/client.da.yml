@@ -317,6 +317,7 @@ da:
       message: "Vi har opdateret dette websted. <span>Genopfrisk siden</span> for at undgå problemer."
       dismiss: "Afvis alle"
     back_button: "Tilbage"
+    confirm_button: "Bekræft"
     welcome_banner:
       header:
         logged_in_members: "Velkommen tilbage, %{preferred_display_name}!"
@@ -3809,6 +3810,7 @@ da:
       with_topics: "%{filter} emner"
       with_category: "%{filter} %{category} emner"
       filter:
+        reset: "nulstil"
         button:
           label: "Filter"
       latest:

@@ -300,7 +300,6 @@ zh_CN:
           runner_username: "运行身份："
           runner_username_tooltip: "其权限用于控制上传内容可见性和 AI 智能体工具的用户。使用 system 实现符合工作流的自动化操作。"
           upload_ids: "上传 ID"
-          upload_ids_tooltip: "用于附加到提示中的可选上传 ID。当智能体启用视觉功能时，将包含图片上传；当所选 LLM 支持相应文件类型时，将包含文档上传。"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "选择智能体…"
       bot_chats:

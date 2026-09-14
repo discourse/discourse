@@ -402,6 +402,25 @@ de:
       configuration_missing: "Die Konfiguration der KI-Spamerkennung fehlt. Füge die Konfiguration in „Administration > Plug-ins > Discourse KI > Spam“ hinzu, bevor du sie aktivierst."
       logging_subject: "Spam-Erkennung"
     ai_bot:
+      navigation:
+        settings:
+          title: "Website-Einstellungen"
+        users:
+          title: "Benutzer"
+        groups:
+          title: "Gruppen"
+        review:
+          title: "Warteschlange zur Überprüfung"
+        categories:
+          title: "Kategorien"
+        tags:
+          title: "Schlagwörter"
+        themes:
+          title: "Themes"
+        authentication:
+          title: "Anmeldung und Authentifizierung"
+        backups:
+          title: "Backups"
       reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"

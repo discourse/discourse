@@ -321,6 +321,7 @@ it:
       message: "Abbiamo aggiornato il sito. <span>Aggiorna la pagina</span> o potrebbe verificarsi un comportamento imprevisto."
       dismiss: "Ignora"
     back_button: "Indietro"
+    confirm_button: "Conferma"
     welcome_banner:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
@@ -4445,6 +4446,7 @@ it:
       with_category: "%{filter} %{category} argomenti"
       filter:
         title: "Risultati filtrati per %{filter}"
+        reset: "reimposta"
         button:
           label: "Filtro"
       latest:

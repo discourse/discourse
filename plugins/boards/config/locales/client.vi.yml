@@ -7,6 +7,10 @@
 vi:
   js:
     boards:
+      status:
+        all: "Tất cả"
+        open: "Mở"
+        archived: "Đã lưu trữ"
       board:
         remove_card: "Bỏ"
         new_topic: "Chủ đề mới..."

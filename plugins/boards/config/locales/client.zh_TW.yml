@@ -7,6 +7,10 @@
 zh_TW:
   js:
     boards:
+      status:
+        all: "所有"
+        open: "開放"
+        archived: "已歸檔"
       board:
         remove_card: "移除"
         new_topic: "新主題..."
