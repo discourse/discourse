@@ -282,6 +282,23 @@ module PageObjects
         has_css?(".embed-mode-composer .docked-composer")
       end
 
+      def embed_topic_actions
+        find(".embed-topic-actions")
+      end
+
+      def has_embed_topic_actions?
+        has_css?(".embed-topic-actions nav.post-controls")
+      end
+
+      def has_no_embed_topic_actions?
+        has_no_css?(".embed-topic-actions")
+      end
+
+      def click_embed_topic_like_button
+        embed_topic_actions.find(".post-action-menu__like").click
+        self
+      end
+
       def has_no_docked_composer?
         has_no_css?(".embed-mode-composer .docked-composer")
       end
