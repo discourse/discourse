@@ -160,6 +160,36 @@ module DiscourseEvents::Events
         expect(response.parsed_body["events"].pluck("id")).to contain_exactly(private_event.id)
       end
 
+      it "filters untagged events within the selected category" do
+        category = Fabricate(:category)
+        untagged =
+          Fabricate(:event, post: Fabricate(:post, topic: Fabricate(:topic, category: category)))
+        tagged =
+          Fabricate(
+            :event,
+            post:
+              Fabricate(
+                :post,
+                topic: Fabricate(:topic, category: category, tags: [Fabricate(:tag)]),
+              ),
+          )
+        Fabricate(:event)
+
+        get "/discourse-post-event/events.json", params: { category_id: category.id, no_tags: true }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(untagged.id)
+
+        get "/discourse-post-event/events.json",
+            params: {
+              category_id: category.id,
+              no_tags: false,
+            }
+        expect(response.parsed_body["events"].pluck("id")).to contain_exactly(
+          untagged.id,
+          tagged.id,
+        )
+      end
+
       it "returns events in ICS format" do
         event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
         event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
