@@ -1,21 +1,21 @@
 {
-  "source_head": "9154b8cb60f4ac08525c5313394fd6139ad2f1fa",
+  "source_head": "9e970d7a315f13fc72df7dd0e5ce6170da023a6e",
   "production_image": "discourse/base:2.0.20260812-0036@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
   "source_sha256": {
-    "lib/discourse_vips.rb": "22e033695503925e9bf4e4f6a96d210eaaac09dc6c082162bf20b99e0376bca0",
+    "lib/discourse_vips.rb": "30a350223b2f9bf8b5ea06f1ae14963bc8894acd71f25e2d67497575ad8dd33b",
     "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
     "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
     "lib/discourse_vips/jpeg_quality.rb": "bdd1cecad7b475586ad720203978071f15ad49bada98223b9a25805ea396f371",
     "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
     "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
     "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
-    "script/discourse_vips_worker": "2c23d1cb4436d69c7cd1d30ee1a28b136d45d1adb30e0a0c33e58d43a5cea6b8",
-    "app/models/upload.rb": "62800a9d6c1d9e6ffe9909a0775e95fd5ff5bc6b6f39b242ce6bb586c5bd5ac7",
-    "lib/upload_creator.rb": "dd481ee6f1258f920fa1ab8709bb9787de361fc1ca9842246a6238aa78b4fadb",
-    "app/models/optimized_image.rb": "e3b6036d31e58e5d5497fbb3d8b2c5a78fd3ce671e16ef9a064192a9ebf7454a"
+    "script/discourse_vips_worker": "7e1f4e796b3aee66ec3b08e1ff834fccdf81a3909b6d67aae2139eb867035e23",
+    "app/models/upload.rb": "c9c4878aedeb2fae992f3e356942625e3929fe1085dca5357f42215370d838b8",
+    "lib/upload_creator.rb": "db70f7a03ebf33a49f81c1496661759dd8efff0b44c3bcac5477b69b898f8a55",
+    "app/models/optimized_image.rb": "eae89817e832c584f50ae89e8703a33952d930a872ec08bdf5fa10d556f9fadd"
   },
   "gist_revision": "5191bbf2abec0bdce138896420a8e6b4272223cf",
-  "benchmark_sha256": "bf91dd9619471fc1117fdc3406de91507ddc3fe4f02eda4a999118d2e48de47b",
+  "benchmark_sha256": "d6d571ad174a8b01419f8910760dbce1f43630ba82bd66aff26a42c9dd0ad003",
   "input_sha256": {
     "standard-q80.jpg": "d686dc6599039a754e37b366e71211d326de5be1bb9d29c9042ab6bfd0a70755",
     "standard-q30.jpg": "7df52fe0f995dfd37cc54aa106ad9f56cf4c72e9ef77fa6f6f18a18a370afbf0",
@@ -35,7 +35,7 @@
   "policy": "Unknown quality skips quality-only recompression. Independently required conversion and previews retain configured quality.",
   "estimator_contract": "Role-aware full-table logarithmic argmin over IJG candidates1..100; no confidence cutoff. Unsupported, malformed or ambiguous input remains unknown. Encoder-requested quality is not ground truth for IJG-equivalent estimates.",
   "validation": {
-    "rspec_examples": 47,
+    "rspec_examples": 57,
     "failures": 0,
     "mutation_checks_detected": 3
   },
@@ -488,5 +488,10 @@
       }
     ],
     "unambiguous_violations": []
+  },
+  "api": {
+    "estimate": "DiscourseVips.estimated_jpeg_quality",
+    "output_policy": "Upload#target_jpeg_quality",
+    "scope": "Estimate only JPEG inputs; apply JPEG preview quality only to JPEG outputs. Required JPEG encodes use configured quality for unknown input or cap known JPEG input at its estimated quality."
   }
 }
