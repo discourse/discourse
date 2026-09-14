@@ -643,7 +643,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
 
         expect(
           BrowserPageviewEvent.where(normalized_url_version: nil).pluck(:id),
-        ).to contain_exactly(second.id)
+        ).to contain_exactly(first.id)
 
         job.execute({})
 
