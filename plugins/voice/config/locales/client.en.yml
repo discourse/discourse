@@ -1,6 +1,10 @@
 en:
   js:
     voice:
+      about:
+        participants:
+          one: "%{formatted_number} person joined voice chats"
+          other: "%{formatted_number} people joined voice chats"
       sidebar:
         title: "Voice rooms"
         create: "Create room"
