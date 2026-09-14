@@ -113,7 +113,12 @@ Validation completed so far:
   passed. Unrelated workspace edits were left untouched.
 
 The credential exchange and operations are documented in [LiveKit setup](../livekit.md#external-agents).
-Real-provider end-to-end agent audio and multi-browser/system tests have not been
+The gated two-browser LiveKit system spec passed on 2026-09-14 against a disposable
+LiveKit 1.13.7 server: **1 example, 0 failures**. It verified the LiveKit transport
+pin, SFU WebSocket connection, and receipt of a live remote camera track. Run with
+`CI=1 LOAD_PLUGINS=1 VOICE_LIVEKIT_TEST_URL=ws://localhost:7880 bin/rspec plugins/voice/spec/system/voice_livekit_spec.rb`.
+
+Real-provider end-to-end agent audio and the remaining system tests have not been
 run for this change. Exercise those before deployment, including last-human leave,
 token reuse after exclusion, delayed webhooks and provider outages. The transport
 revocation limitation above remains; authorization and disconnect operations also
