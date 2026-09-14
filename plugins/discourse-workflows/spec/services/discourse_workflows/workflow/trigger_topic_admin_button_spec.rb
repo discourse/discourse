@@ -60,6 +60,12 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerTopicAdminButton do
       it { is_expected.to fail_to_find_a_model(:topic) }
     end
 
+    context "when topic is deleted" do
+      before { topic.trash!(admin) }
+
+      it { is_expected.to run_successfully }
+    end
+
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 
