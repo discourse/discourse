@@ -20,6 +20,7 @@ module DiscourseRewind
     #   @return [Service::Base::Context]
 
     INITIAL_REPORT_COUNT = 3
+    TOPIC_REPORTS = [Action::BestTopics, Action::BestPosts]
 
     # The order here controls the order of reports in the UI,
     # so be careful when moving these around.

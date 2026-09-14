@@ -101,6 +101,46 @@ RSpec.describe DiscourseRewind::RewindsController do
     context "when in valid month" do
       before { freeze_time DateTime.parse("2022-12-24") }
 
+      it "does not return cached best post excerpts after their category becomes read-restricted" do
+        report_user = Fabricate(:user)
+        viewer = Fabricate(:user)
+        category = Fabricate(:category)
+        topic = Fabricate(:topic, category:, user: report_user)
+        post =
+          Fabricate(
+            :post,
+            topic:,
+            user: report_user,
+            post_number: 2,
+            created_at: Time.zone.parse("2022-06-01"),
+            raw: "classified rewind cache content",
+            like_count: 1,
+          )
+        report_user.user_option.update!(discourse_rewind_share_publicly: true)
+
+        sign_in(report_user)
+        get "/rewinds/#{DiscourseRewind::FetchReports::REPORTS.index(DiscourseRewind::Action::BestPosts)}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(post.raw)
+
+        category.update!(read_restricted: true)
+
+        sign_in(viewer)
+        get "/t/#{topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(post.raw)
+
+        get "/rewinds/#{DiscourseRewind::FetchReports::REPORTS.index(DiscourseRewind::Action::BestPosts)}.json",
+            params: {
+              for_user_username: report_user.username,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(post.raw)
+      end
+
       context "when reports are cached" do
         before { get "/rewinds.json" }
 
@@ -120,6 +160,164 @@ RSpec.describe DiscourseRewind::RewindsController do
           expect(response.parsed_body["errors"].first).to eq(
             I18n.t("discourse_rewind.report_not_found"),
           )
+        end
+      end
+
+      context "when cached topic-backed reports become ineligible" do
+        fab!(:rewind_owner, :user)
+        fab!(:viewer, :user)
+        fab!(:restricted_category) { Fabricate(:category, read_restricted: true) }
+        fab!(:unlisted_topic) do
+          Fabricate(
+            :topic,
+            user: rewind_owner,
+            created_at: DateTime.parse("2022-01-01"),
+            title: "Cached unlisted topic title",
+            excerpt: "Cached unlisted topic excerpt",
+          )
+        end
+        fab!(:restricted_topic) do
+          Fabricate(
+            :topic,
+            user: rewind_owner,
+            created_at: DateTime.parse("2022-01-02"),
+            title: "Cached restricted topic title",
+          )
+        end
+        fab!(:eligible_topic) do
+          Fabricate(
+            :topic,
+            user: rewind_owner,
+            created_at: DateTime.parse("2022-01-03"),
+            title: "Cached eligible topic title",
+          )
+        end
+        fab!(:hidden_reply) do
+          Fabricate(
+            :post,
+            topic: eligible_topic,
+            user: rewind_owner,
+            post_number: 2,
+            created_at: DateTime.parse("2022-01-04"),
+            raw: "Cached hidden post excerpt",
+            like_count: 100,
+          )
+        end
+        fab!(:deleted_reply) do
+          Fabricate(
+            :post,
+            topic: eligible_topic,
+            user: rewind_owner,
+            post_number: 3,
+            created_at: DateTime.parse("2022-01-05"),
+            raw: "Cached deleted post excerpt",
+            like_count: 99,
+          )
+        end
+        fab!(:eligible_reply) do
+          Fabricate(
+            :post,
+            topic: eligible_topic,
+            user: rewind_owner,
+            post_number: 4,
+            created_at: DateTime.parse("2022-01-06"),
+            raw: "Cached eligible post excerpt",
+            like_count: 98,
+          )
+        end
+
+        before do
+          rewind_owner.user_option.update!(discourse_rewind_share_publicly: true)
+          TopTopic.refresh!
+          TopTopic.find_by!(topic_id: unlisted_topic.id).update!(yearly_score: 100)
+          TopTopic.find_by!(topic_id: restricted_topic.id).update!(yearly_score: 99)
+          TopTopic.find_by!(topic_id: eligible_topic.id).update!(yearly_score: 98)
+          sign_in(rewind_owner)
+          get "/rewinds/7.json"
+          get "/rewinds/8.json"
+        end
+
+        it "omits an unlisted topic from a cached shared Best Topics report" do
+          cached_report =
+            DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
+              rewind_owner.id,
+              2022,
+              "BestTopics",
+            )
+          cached_topic = cached_report[:data].find { |topic| topic[:topic_id] == unlisted_topic.id }
+          expect(cached_topic).to be_present
+
+          unlisted_topic.update!(visible: false)
+          sign_in(viewer)
+
+          get "/rewinds/7.json", params: { for_user_username: rewind_owner.username }
+
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body.dig("report", "data").map { |topic| topic["topic_id"] },
+          ).to contain_exactly(restricted_topic.id, eligible_topic.id)
+          expect(response.body).not_to include(cached_topic[:title])
+          expect(response.body).not_to include(cached_topic[:excerpt])
+          expect(
+            DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
+              rewind_owner.id,
+              2022,
+              "BestTopics",
+            ),
+          ).to include(data: include(cached_topic))
+        end
+
+        it "omits a deleted topic while retaining eligible cached Best Topics entries" do
+          restricted_topic.trash!(Discourse.system_user)
+          sign_in(viewer)
+
+          get "/rewinds/7.json", params: { for_user_username: rewind_owner.username }
+
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body.dig("report", "data").map { |topic| topic["topic_id"] },
+          ).to contain_exactly(unlisted_topic.id, eligible_topic.id)
+        end
+
+        it "omits a topic after the viewer loses category access while retaining eligible cached Best Topics entries" do
+          restricted_topic.change_category_to_id(restricted_category.id)
+          expect(viewer.guardian.can_see?(restricted_topic)).to eq(false)
+          sign_in(viewer)
+
+          get "/rewinds/7.json", params: { for_user_username: rewind_owner.username }
+
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body.dig("report", "data").map { |topic| topic["topic_id"] },
+          ).to contain_exactly(unlisted_topic.id, eligible_topic.id)
+        end
+
+        it "omits hidden and deleted posts from a cached shared Best Posts report" do
+          cached_report =
+            DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
+              rewind_owner.id,
+              2022,
+              "BestPosts",
+            )
+          cached_hidden_post =
+            cached_report[:data].find { |post| post[:post_number] == hidden_reply.post_number }
+          cached_deleted_post =
+            cached_report[:data].find { |post| post[:post_number] == deleted_reply.post_number }
+          expect(cached_hidden_post).to be_present
+          expect(cached_deleted_post).to be_present
+
+          hidden_reply.update!(hidden: true)
+          deleted_reply.trash!(Discourse.system_user)
+          sign_in(viewer)
+
+          get "/rewinds/8.json", params: { for_user_username: rewind_owner.username }
+
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body.dig("report", "data").map { |post| post["post_number"] },
+          ).to contain_exactly(eligible_reply.post_number)
+          expect(response.body).not_to include(cached_hidden_post[:excerpt])
+          expect(response.body).not_to include(cached_deleted_post[:excerpt])
         end
       end
     end
