@@ -141,6 +141,14 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(described_class.estimate(input).status).to eq(:unknown)
     end
 
+    it "estimates quality when a short APP14 marker is not an Adobe header" do
+      original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
+      marker = [0xFF, 0xEE, 7].pack("CCn") + "Adobe"
+      input = StringIO.new(original.byteslice(0, 2) + marker + original.byteslice(2..))
+
+      expect(described_class.estimate(input).quality).to eq(95)
+    end
+
     it "rejects non-JPEG input" do
       expect { described_class.estimate(file_from_fixtures("logo.png").path) }.to raise_error(
         described_class::InvalidJPEG,

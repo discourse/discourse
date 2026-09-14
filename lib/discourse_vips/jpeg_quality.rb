@@ -96,8 +96,7 @@ module DiscourseVips
             parse_dqt(read_segment(marker))
           when APP14
             payload = read_segment(marker)
-            if payload.start_with?("Adobe")
-              raise InvalidJPEG, "truncated Adobe marker" if payload.bytesize < 12
+            if payload.bytesize >= 12 && payload.start_with?("Adobe")
               @adobe_transform = payload.getbyte(11)
             end
           when *SOF_MARKERS
