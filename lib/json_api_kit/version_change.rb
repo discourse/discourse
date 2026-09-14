@@ -2,8 +2,6 @@
 
 module JsonApiKit
   class VersionChange
-    PASS_THROUGH = ->(_index, name) { PassThrough.new(name) }
-
     class << self
       def version(raw = nil)
         @version = ApiVersion.parse(raw) if raw
@@ -33,16 +31,14 @@ module JsonApiKit
       def type_renames = @type_renames ||= []
     end
 
-    delegate :version, :description, :transformations, :type_renames, to: :class
+    delegate :version, :description, to: :class
 
     attr_reader :source
 
     def initialize(source)
       @source = source
-      @upward = index_by(transformations, &:previous_names)
-      @downward = index_by(transformations) { [it.current] }
-      @type_upward = index_by(type_renames, &:previous_names)
-      @type_downward = index_by(type_renames) { [it.current] }
+      @transformations = Transformations.new(self.class.transformations)
+      @type_renames = TypeRenames.new(self.class.type_renames)
     end
 
     def verify!
@@ -52,58 +48,34 @@ module JsonApiKit
         raise ArgumentError, "#{source} is dated on or before the first release."
       end
       raise ArgumentError, "#{source} has no description." if description.blank?
-      duplicate_name(&:previous_names).try { raise ArgumentError, "#{source} changes #{it} twice." }
-      duplicate_name { [it.current] }.try do
-        raise ArgumentError, "#{source} changes two names into #{it}."
-      end
+      transformations.verify!
+      type_renames.verify!
       return if File.basename(source).start_with?(version.to_s)
       raise ArgumentError, "The file name must start with the version #{version}: #{source}."
+    rescue NameChanges::Conflict => conflict
+      raise ArgumentError, "#{source} #{conflict.message}"
     end
 
-    def current(name) = upward[current_type(name)].current
+    def current_names(name) = transformations.current_names(current_type(name))
 
     def current_attributes(attributes)
-      current_values(attributes.transform_keys { current_type(it) })
+      transformations.current_values(attributes.transform_keys { current_type(it) })
     rescue Converter::Failure => failure
       raise failure.convert_names { previous_type(it) }
     end
 
-    def previous(name) = previous_names(name).first
-
-    def previous_names(name) = downward[name].previous_names.map { previous_type(it) }
+    def previous_names(name) = transformations.previous_names(name).map { previous_type(it) }
 
     def previous_attributes(attributes)
-      attributes
-        .flat_map { |name, value| downward[name].previous_pairs(value) }
-        .to_h
-        .transform_keys { previous_type(it) }
+      transformations.previous_values(attributes).transform_keys { previous_type(it) }
     end
 
     private
 
-    attr_reader :upward, :downward, :type_upward, :type_downward
+    attr_reader :transformations, :type_renames
 
-    def current_type(name)
-      name.convert_type { type_upward[Name::Type.new(value: it)].current.value }
-    end
+    def current_type(name) = name.convert_type { type_renames.current(it) }
 
-    def previous_type(name)
-      name.convert_type { type_downward[Name::Type.new(value: it)].previous_names.first.value }
-    end
-
-    def current_values(attributes)
-      attributes.keys.map { upward[it] }.uniq.flat_map { it.current_pairs(attributes) }.to_h
-    end
-
-    def index_by(transformations, &names)
-      transformations
-        .flat_map { |transformation| names.call(transformation).map { [it, transformation] } }
-        .to_h
-        .tap { it.default_proc = PASS_THROUGH }
-    end
-
-    def duplicate_name(&)
-      (transformations + type_renames).flat_map(&).tally.detect { |_name, count| count > 1 }&.first
-    end
+    def previous_type(name) = name.convert_type { type_renames.previous(it) }
   end
 end
