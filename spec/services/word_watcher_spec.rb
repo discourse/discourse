@@ -412,6 +412,22 @@ RSpec.describe WordWatcher do
     end
   end
 
+  describe "#word_matches_across_actions" do
+    it "only returns words for the specified actions" do
+      Fabricate(:watched_word, action: WatchedWord.actions[:block], word: "blocked")
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "replaced",
+        replacement: "replacement",
+      )
+
+      watcher = described_class.new("blocked and replaced")
+
+      expect(watcher.word_matches_across_actions(%i[block flag])).to contain_exactly("blocked")
+    end
+  end
+
   describe "word replacement" do
     fab!(:censored_word) do
       Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
