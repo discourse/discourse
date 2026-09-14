@@ -11,6 +11,12 @@ RSpec.describe FileHelper do
     stub_request(:get, url).to_return(body: png)
   end
 
+  describe ".is_supported_image?" do
+    it "does not support ICO files" do
+      expect(described_class.is_supported_image?("icon.ico")).to eq(false)
+    end
+  end
+
   describe "download" do
     it "correctly raises an OpenURI HTTP error if it gets a 404 even with redirect" do
       url = "http://fourohfour.com/404"
@@ -177,7 +183,6 @@ RSpec.describe FileHelper do
         expect(FileHelper.is_inline_safe?("image.gif")).to eq(true)
         expect(FileHelper.is_inline_safe?("picture.webp")).to eq(true)
         expect(FileHelper.is_inline_safe?("pic.avif")).to eq(true)
-        expect(FileHelper.is_inline_safe?("icon.ico")).to eq(true)
       end
 
       it "returns true for PDFs" do
@@ -202,6 +207,10 @@ RSpec.describe FileHelper do
       it "returns false for SVG" do
         expect(FileHelper.is_inline_safe?("image.svg")).to eq(false)
         expect(FileHelper.is_inline_safe?("IMAGE.SVG")).to eq(false)
+      end
+
+      it "returns false for ICO files" do
+        expect(FileHelper.is_inline_safe?("icon.ico")).to eq(false)
       end
 
       it "returns false for HTML files" do

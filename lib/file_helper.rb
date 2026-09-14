@@ -183,7 +183,7 @@ class FileHelper
   end
 
   def self.supported_images
-    @@supported_images ||= Set.new %w[jpg jpeg png gif svg ico webp avif heic heif jxl]
+    @@supported_images ||= Set.new %w[jpg jpeg png gif svg webp avif heic heif jxl]
   end
 
   def self.inline_images

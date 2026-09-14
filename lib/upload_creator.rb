@@ -106,8 +106,6 @@ class UploadCreator
 
         if @image_info.type == :svg
           clean_svg!
-        elsif @image_info.type == :ico
-          convert_favicon_to_png!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_heif! if %i[heic heif].include?(@image_info.type)
           convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
@@ -342,36 +340,6 @@ class UploadCreator
 
   MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
-
-  def convert_favicon_to_png!
-    png_tempfile = Tempfile.new(%w[image .png])
-
-    from = @file.path
-    to = png_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
-
-    opts = { flatten: false } # Preserve transparency
-
-    read = [@file.path]
-    write = [File.dirname(png_tempfile.path)]
-
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
-    end
-
-    @file.respond_to?(:close!) ? @file.close! : @file.close
-    @file = png_tempfile
-    extract_image_info!
-  end
 
   def convert_to_jpeg!
     return if @opts[:type] == "topic_og_image"
