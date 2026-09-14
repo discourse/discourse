@@ -7,6 +7,9 @@
 sl:
   js:
     boards:
+      status:
+        all: "Vsi"
+        open: "Odpri"
       board:
         remove_card: "Odstrani"
         title: "Naziv"

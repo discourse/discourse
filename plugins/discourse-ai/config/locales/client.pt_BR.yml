@@ -17,6 +17,14 @@ pt_BR:
         categories:
           discourse_ai: "Discourse IA"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Perguntar à IA"
+        ask_ai:
+          title: "Perguntar à IA"
+          date: "Data"
+          outcomes:
+            failed: "Falha"
         emotion:
           title: "Gesto"
         reports:

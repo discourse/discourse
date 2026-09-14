@@ -4330,7 +4330,11 @@ CREATE TABLE public.discourse_kanban_boards (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     category_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
-    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL
+    tag_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
+    archived boolean DEFAULT false NOT NULL,
+    archived_at timestamp(6) without time zone,
+    archived_by_id bigint,
+    original_slug character varying
 );
 
 
@@ -19007,17 +19011,10 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 
 
 --
--- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_referrer_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
-
-
---
--- Name: idx_bpe_normalized_url_version; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events USING btree (normalized_url_version);
+CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)));
 
 
 --
@@ -19025,6 +19022,13 @@ CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events US
 --
 
 CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
+
+
+--
+-- Name: idx_bpe_url_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_url_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
 
 
 --
@@ -25069,6 +25073,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260914172801'),
+('20260914172757'),
+('20260910033302'),
 ('20260909181443'),
 ('20260908160656'),
 ('20260908153158'),

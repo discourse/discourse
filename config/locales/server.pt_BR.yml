@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  mcp:
+    errors:
+      draft_too_long: "O rascunho é muito longo"
+      topic_not_found: "Tópico não encontrado"
+    oauth:
+      deny: "Negar"
+      approve: "Autorizar"
   llms_txt:
     sections:
       optional: "Opcional"
@@ -1667,12 +1674,6 @@ pt_BR:
       host_names: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."
       queue_size: "A quantidade de processos na fila é de %{queue_size}, o que é um número alto. Isso pode indicar um problema com os processos do Sidekiq, ou pode ser necessário adicionar mais trabalhadores do Sidekiq."
       ram: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada."
-      google_oauth2_config: 'O servidor está configurado para permitir o cadastro e entrada com conta do Google OAuth2 (enable_google_oauth2_logins), mas o ID de cliente e os valores de segredo de cliente não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia para saber mais</a>.'
-      facebook_config: 'O servidor está configurado para permitir o cadastro e entrada com a conta do Facebook (enable_facebook_logins), mas os valores de id do aplicativo e os valores de segredo dele não foram definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia para saber mais</a>.'
-      twitter_config: 'O servidor está configurado para permitir o cadastro e entrada com a conta do Twitter (enable_twitter_logins), mas a chave e os valores de segredo não foram definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia para saber mais</a>.'
-      github_config: 'O servidor está configurado para permitir o cadastro e entrada com conta do GitHub (enable_github_logins), mas a ID de cliente e os valores de segredo de cliente não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte este guia para saber mais</a>.'
-      s3_upload_config: 'O servidor está configurado para enviar arquivos para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Acesse <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "Como configurar envio de imagens para o S3?" para saber mais</a>.'
-      s3_backup_config: 'O servidor está configurado para enviar backup para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Acesse <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "Como configurar envio de imagens para o S3?" para saber mais</a>.'
       s3_cdn: 'O servidor está configurado para enviar arquivos para S3, mas não há nenhum S3 CDN configurado. Isso pode ocasionar custos S3 elevados e queda de desempenho no site. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Veja "Usando armazenamento de objeto para envios" para saber mais</a>.'
       image_magick: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes favorito ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixe a versão mais recente</a>.'
       failing_emails: 'Existem tarefas de e-mail %{num_failed_jobs} que falharam. Verifique seu app.yml e se as configurações do servidor de e-mail estão corretas. <a href="%{base_path}/sidekiq/retries" target="_blank">Veja os trabalhos com falha no Sidekiq</a>.'
@@ -2527,7 +2528,6 @@ pt_BR:
       markdown_linkify_tlds: "Você não pode incluir um valor de '*'."
       google_oauth2_hd_groups: "Você deve configurar \"google oauth2 hd\" antes de ativar esta configuração."
       discourse_id_registration: "Não foi possível registrar-se automaticamente com o ID do Discourse. Isso pode ser devido a problemas de conectividade de rede, restrições de firewall ou, porque o serviço de Discourse ID está inaccessível. Verifique os logs do servidor para mais informações ou entre em contato com o suporte."
-      linkedin_oidc_credentials: "Você deve configurar as credenciais do LinkedIn OIDC ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') antes de habilitar esta configuração."
       search_tokenize_chinese_enabled: "Você deve desativar o 'search_tokenize_chinese' antes de ativar esta configuração."
       search_tokenize_japanese_enabled: "Você deve desativar o 'search_tokenize_japanese' antes de ativar esta configuração."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Você não pode ativar o DiscourseConnect se o 2FA for aplicado."
@@ -4670,6 +4670,10 @@ pt_BR:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de desempenho diários do seu site.
     initial_topic_title: Relatórios de desempenho do site
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Muitas entradas para o arquivo CSV. Forneça um arquivo CSV com no máximo %{count} entrada."
+      other: "Muitas entradas para o arquivo CSV. Forneça um arquivo CSV com no máximo %{count} entradas."
   tags:
     title: "Etiquetas"
     restricted_tag_disallowed: 'Você não pode aplicar a etiqueta "%{tag}".'

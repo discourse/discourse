@@ -97,6 +97,8 @@ class InviteRedeemer
     email_token: nil,
     email_verified: false
   )
+    raise Discourse::SiteArchived if SiteSetting.site_archived
+
     if username && UsernameValidator.new(username).valid_format? &&
          User.username_available?(username, email)
       available_username = username

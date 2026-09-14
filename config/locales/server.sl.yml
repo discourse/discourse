@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sl:
+  mcp:
+    errors:
+      topic_not_found: "Ne najdemo temo."
+    oauth:
+      deny: "Zavrni"
   llms_txt:
     sections:
       optional: "Neobvezno"

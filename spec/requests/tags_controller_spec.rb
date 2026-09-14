@@ -1162,6 +1162,24 @@ RSpec.describe TagsController do
     context "when signed in as admin" do
       before { sign_in(admin) }
 
+      it "rejects a source locale exceeding the maximum length" do
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { locale: "a" * 21 } }
+
+        expect(response.status).to eq(422)
+        expect(tag.reload.locale).to be_nil
+      end
+
+      it "sets and clears the source locale" do
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { locale: "ja" } }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["tag_settings"]["locale"]).to eq("ja")
+        expect(tag.reload.locale).to eq("ja")
+
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { locale: "" } }
+        expect(response.status).to eq(200)
+        expect(tag.reload.locale).to be_nil
+      end
+
       it "updates the tag name" do
         put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "updated-name" } }
         expect(response.status).to eq(200)

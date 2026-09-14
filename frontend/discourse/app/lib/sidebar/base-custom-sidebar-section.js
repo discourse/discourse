@@ -27,6 +27,15 @@ export default class BaseCustomSidebarSection {
   get actionsIcon() {}
 
   /**
+   * Render actions as separate buttons instead of a menu. Each action may
+   * specify an icon (falling back to actionsIcon), id, and disabled state.
+   * @returns {boolean}
+   */
+  get actionsInline() {
+    return false;
+  }
+
+  /**
    * @returns {BaseCustomSidebarSectionLink[]} Links for section
    */
   get links() {}

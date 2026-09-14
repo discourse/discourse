@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import ChatChannelListFilterToggle from "../../chat-channel-list-filter-toggle";
 import ChatChannelListOptionsButton from "../../chat-channel-list-options-button";
 
 /**
@@ -17,6 +18,7 @@ export default class ChatNavbarChannelListOptionsButton extends Component {
 
   <template>
     {{#if this.showButton}}
+      <ChatChannelListFilterToggle @section={{@section}} />
       <ChatChannelListOptionsButton @section={{@section}} />
     {{/if}}
   </template>

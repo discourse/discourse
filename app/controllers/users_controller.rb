@@ -117,6 +117,13 @@ class UsersController < ApplicationController
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
 
+  allow_when_archived :email_login,
+                      :password_reset_update,
+                      :admin_login,
+                      :confirm_email_token,
+                      :perform_account_activation,
+                      :send_activation_email
+
   MAX_RECENT_SEARCHES = 5
 
   def index
@@ -658,7 +665,16 @@ class UsersController < ApplicationController
       )
     end
 
-    render json: { username: }
+    # Keep a chosen avatar intact. Otherwise return the avatar derived from the
+    # suggestion so account-setup screens can update their preview immediately.
+    avatar_template =
+      if current_user&.uploaded_avatar_id
+        current_user.avatar_template
+      else
+        User.default_template(username)
+      end
+
+    render json: { username:, avatar_template: }
   end
 
   def check_email

@@ -7,6 +7,11 @@ RSpec.describe InvitesController do
   describe "#show" do
     fab!(:invite)
 
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     it "shows the accept invite page" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
@@ -70,7 +75,7 @@ RSpec.describe InvitesController do
       it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
         SiteSetting.enable_local_logins_via_code = true
         SiteSetting.public_send("#{setting}=", false)
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
 
         get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
@@ -1351,6 +1356,11 @@ RSpec.describe InvitesController do
   end
 
   describe "#perform_accept_invitation" do
+    # These cover the legacy invite flow, which the email code flow replaces
+    # when enable_local_logins_via_code is on. Examples that exercise the code
+    # flow enable it for themselves.
+    before { SiteSetting.enable_local_logins_via_code = false }
+
     context "when anonymous invite acceptance uses email codes" do
       fab!(:invite)
 
@@ -1533,7 +1543,7 @@ RSpec.describe InvitesController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
 
           get "/auth/google_oauth2/callback.json"
           expect(response.status).to eq(302)

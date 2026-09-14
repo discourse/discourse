@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import {
   click,
   find,
+  focus,
   render,
   settled,
   triggerEvent,
@@ -52,6 +53,84 @@ function belowAllLinks() {
 
 module("Integration | Component | Sidebar | Section", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("inline header actions retain individual icons and callbacks", async function (assert) {
+    this.headerActions = [
+      {
+        id: "show",
+        icon: "eye",
+        title: "Show all",
+        action: () => assert.step("show"),
+      },
+      { id: "options", title: "Options", action: () => assert.step("options") },
+    ];
+    await render(
+      <template>
+        <Section
+          @headerActions={{this.headerActions}}
+          @headerActionsIcon="ellipsis-vertical"
+          @headerActionsInline={{true}}
+          @sectionName="test"
+        />
+      </template>
+    );
+    assert
+      .dom(".sidebar-section-header-button")
+      .exists({ count: 2 }, "both actions are separate buttons");
+    assert
+      .dom('[data-sidebar-action-id="show"] .d-icon-eye')
+      .exists("the action has its own icon");
+    assert
+      .dom('[data-sidebar-action-id="options"] .d-icon-ellipsis-vertical')
+      .exists("the shared icon remains a fallback");
+    await click('[data-sidebar-action-id="show"]');
+    await click('[data-sidebar-action-id="options"]');
+    assert.verifySteps(
+      ["show", "options"],
+      "each action runs its own callback"
+    );
+  });
+
+  test("inline actions retain focus when their state changes", async function (assert) {
+    this.headerActions = [
+      { id: "toggle", icon: "eye", title: "Show all", action() {} },
+    ];
+    await render(
+      <template>
+        <Section
+          @headerActions={{this.headerActions}}
+          @headerActionsInline={{true}}
+          @sectionName="test"
+        />
+      </template>
+    );
+    await focus('[data-sidebar-action-id="toggle"]');
+    this.set("headerActions", [
+      { id: "toggle", icon: "eye-slash", title: "Apply filters", action() {} },
+    ]);
+    await settled();
+    assert
+      .dom('[data-sidebar-action-id="toggle"]')
+      .isFocused("the updated action retains keyboard focus");
+    assert
+      .dom('[data-sidebar-action-id="toggle"] .d-icon-eye-slash')
+      .exists("the icon reflects the new state");
+  });
+
+  test("multiple header actions default to a dropdown", async function (assert) {
+    this.headerActions = [{ title: "First" }, { title: "Second" }];
+    await render(
+      <template>
+        <Section @headerActions={{this.headerActions}} @sectionName="test" />
+      </template>
+    );
+    assert
+      .dom(".sidebar-section-header-dropdown")
+      .exists("existing callers retain the dropdown");
+    assert
+      .dom(".sidebar-section-header-button")
+      .doesNotExist("inline buttons are opt-in");
+  });
 
   test("default displaySection value for section", async function (assert) {
     const template = <template>

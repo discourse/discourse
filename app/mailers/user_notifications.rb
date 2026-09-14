@@ -789,6 +789,7 @@ class UserNotifications < ActionMailer::Base
       add_re_to_subject: add_re_to_subject,
       show_category_in_subject: show_category_in_subject,
       show_tags_in_subject: show_tags_in_subject,
+      tag_names: tags,
       private_reply: post.topic.private_message?,
       subject_pm: subject_pm,
       participants: participants,

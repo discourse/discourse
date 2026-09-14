@@ -410,6 +410,7 @@ en:
       tooltip: "Notification level: %{level}"
 
     back_button: "Back"
+    confirm_button: "Confirm"
 
     welcome_banner:
       header:
@@ -2944,6 +2945,10 @@ en:
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
       signup_disabled: "Signing up is disabled while the site is in read only mode."
+    site_archived:
+      enabled: "This site is archived. Please continue to browse, but replying, likes, and other actions are disabled."
+      enabled_anonymous: "This site is archived. Please continue to browse or log in, but replying, likes, and other actions are disabled."
+      signup_disabled: "Signing up is disabled on an archived site."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
       enabled_anonymous: "This site is in staff only mode. Please continue to browse, but signing up is unavailable and only staff members can log in."
@@ -3851,6 +3856,59 @@ en:
       preview_node:
         show_source: "Show source"
         show_preview: "Show preview"
+
+      table:
+        add_row: "Add row"
+        add_column: "Add column"
+        insert_row_above: "Insert above"
+        insert_header_above: "Insert header above"
+        insert_row_below: "Insert below"
+        insert_column_left: "Insert left"
+        insert_column_right: "Insert right"
+        duplicate_row: "Duplicate row"
+        duplicate_column: "Duplicate column"
+        move_row_up: "Move row up"
+        move_row_down: "Move row down"
+        move_column_left: "Move column left"
+        move_column_right: "Move column right"
+        clear_contents: "Clear contents"
+        delete_row: "Delete row"
+        delete_column: "Delete column"
+        delete_table: "Delete table"
+        align_left: "Align left"
+        align_center: "Align center"
+        align_right: "Align right"
+        row_actions: "Row %{number} actions"
+        column_actions: "Column %{number} actions"
+        row_inserted: "Row inserted"
+        header_inserted: "Header row inserted"
+        column_inserted: "Column inserted"
+        row_duplicated: "Row duplicated"
+        column_duplicated: "Column duplicated"
+        row_moved_up: "Row moved up"
+        row_moved_down: "Row moved down"
+        column_moved_left: "Column moved left"
+        column_moved_right: "Column moved right"
+        contents_cleared: "Cell contents cleared"
+        row_deleted: "Row deleted"
+        column_deleted: "Column deleted"
+        table_deleted: "Table deleted"
+        alignment_left: "left"
+        alignment_center: "center"
+        alignment_right: "right"
+        alignment_changed: "Column alignment changed to %{alignment}"
+        rows_added:
+          one: "%{count} row added"
+          other: "%{count} rows added"
+        columns_added:
+          one: "%{count} column added"
+          other: "%{count} columns added"
+        rows_removed:
+          one: "%{count} row removed"
+          other: "%{count} rows removed"
+        columns_removed:
+          one: "%{count} column removed"
+          other: "%{count} columns removed"
 
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
@@ -5819,6 +5877,8 @@ en:
       with_category: "%{filter} %{category} topics"
       filter:
         title: "Filtered results for %{filter}"
+        results_for: "Results for: %{query}"
+        reset: "reset"
         button:
           label: "Filter"
       latest:
@@ -6187,6 +6247,8 @@ en:
         synonyms_hint: "When the above tags are used, they will be replaced with %{baseTagName}."
         add_synonyms_confirm: "Any place that currently uses %{synonymNames} will be changed to use %{tagName} instead. Are you sure you want to make this change?"
       localization:
+        language: "Tag language"
+        language_description: "The primary language of this tag’s name and description."
         hint: "Add localizations to show different tag names for users in different languages."
         locale: "Locale"
         name: "Name"
@@ -8884,6 +8946,14 @@ en:
           disable:
             title: "Disable read-only mode"
             label: "Disable read-only"
+        site_archived:
+          enable:
+            title: "Archive site"
+            label: "Archive site"
+            confirm: "Are you sure you want to archive this site? Users will still be able to log in and browse, but all write actions will be disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
+          disable:
+            title: "Unarchive site"
+            label: "Unarchive site"
         logs:
           none: "No logs yet…"
         columns:

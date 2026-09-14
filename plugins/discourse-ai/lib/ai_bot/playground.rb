@@ -491,6 +491,7 @@ module DiscourseAi
       def reply_to(
         post,
         custom_instructions: nil,
+        additional_messages: [],
         whisper: nil,
         context_style: nil,
         add_user_to_pm: true,
@@ -540,6 +541,7 @@ module DiscourseAi
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
+                guardian: (attributed_user || post.user).guardian,
                 style: context_style,
                 max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
                 context_token_budget: context_token_budget(context_llm),
@@ -550,6 +552,8 @@ module DiscourseAi
                 bot_usernames: available_bot_usernames,
               ),
           )
+
+        context.messages.concat(additional_messages)
 
         reply_user = bot.bot_user
         if bot.agent.class.respond_to?(:user_id)

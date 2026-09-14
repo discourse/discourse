@@ -9,6 +9,10 @@ zh_CN:
     boards:
       filter_boards: "过滤看板"
       filter_boards_no_results: "没有符合您搜索条件的看板"
+      status:
+        all: "所有"
+        open: "已打开"
+        archived: "已归档"
       topic_footer:
         add_to_board: "添加到看板"
         already_added: "已添加"

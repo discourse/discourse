@@ -7,6 +7,10 @@
 ja:
   js:
     boards:
+      status:
+        all: "すべて"
+        open: "オープン"
+        archived: "アーカイブ済み"
       board:
         remove_card: "削除"
         new_topic: "新規トピック..."

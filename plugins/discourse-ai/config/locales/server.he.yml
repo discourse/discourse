@@ -270,6 +270,25 @@ he:
       configuration_missing: "הגדרות זיהוי ספאם עם בינה מלאכותית חסרות. יש להוסיף הגדרות דרך ‚ניהול > תוספים > בינה מלאכותית ב־Dicsourse > ספאם’ לפני הפעלת האפשרות הזאת."
       logging_subject: "זיהוי זבל"
     ai_bot:
+      navigation:
+        settings:
+          title: "הגדרות האתר"
+        users:
+          title: "משתמשים"
+        groups:
+          title: "קבוצות"
+        review:
+          title: "תור סקירה"
+        categories:
+          title: "קטגוריות"
+        tags:
+          title: "תגיות"
+        themes:
+          title: "תמות"
+        authentication:
+          title: "כניסה ואימות"
+        backups:
+          title: "גיבויים"
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
       read_post:

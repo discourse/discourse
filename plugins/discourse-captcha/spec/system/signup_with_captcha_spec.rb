@@ -7,6 +7,10 @@ RSpec.describe "Signup with captcha" do
   before do
     SiteSetting.enable_local_logins = true
     SiteSetting.discourse_captcha_enabled = true
+
+    # The captcha outlet only exists on the password signup form, which the
+    # code-based form replaces when enable_local_logins_via_code is on.
+    SiteSetting.enable_local_logins_via_code = false
   end
 
   context "with hCaptcha", allow_network: %w[hcaptcha.com *.hcaptcha.com] do

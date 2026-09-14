@@ -463,6 +463,7 @@ export default class CodeLoginForm extends Component {
       }
 
       this.username = result.username;
+      this.avatarTemplate = result.avatar_template;
       this.usernameError = null;
       this.usernameAvailable = false;
       await this.checkUsernameAvailability();

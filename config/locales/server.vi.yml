@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 vi:
+  mcp:
+    errors:
+      topic_not_found: "Không tìm thấy chủ đề"
+    oauth:
+      deny: "Từ chối"
   llms_txt:
     sections:
       optional: "Không bắt buộc"
@@ -1105,9 +1110,6 @@ vi:
       host_names: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
       queue_size: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
       ram: "Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB ."
-      google_oauth2_config: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Google OAuth2 (enable_google_oauth2_logins), nhưng id máy khách và giá trị bí mật của máy khách không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
-      facebook_config: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Facebook (enable_facebook_logins), nhưng giá trị id ứng dụng và bí mật ứng dụng không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang web</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
-      s3_backup_config: 'Máy chủ được định cấu hình để tải các bản sao lưu lên S3, nhưng ít nhất một cài đặt sau chưa được đặt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile hoặc s3_backup_bucket. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem "Cách thiết lập tải hình ảnh lên S3?" để tìm hiểu thêm</a>.'
       s3_cdn: 'Máy chủ được cấu hình để tải lên các tập tin lên S3, nhưng không có S3 CDN cấu hình. Điều này có thể dẫn đến chi phí S3 đắt tiền và hiệu suất trang web chậm hơn. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Xem “Sử dụng lưu trữ đối tượng để tải lên” để tìm hiểu thêm</a>.'
       subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
       email_polling_errored_recently:
@@ -1213,7 +1215,6 @@ vi:
     discourse_connect_overrides_website: "Ghi đè trang web của người dùng bằng giá trị tải từ DiscourseConnect và ngăn các thay đổi cục bộ."
     discourse_connect_overrides_profile_background: "Ghi đè nền hồ sơ người dùng bằng giá trị tải từ DiscourseConnect."
     discourse_connect_overrides_card_background: "Ghi đè nền thẻ người dùng bằng giá trị tải từ DiscourseConnect."
-    enable_local_logins_via_code: "Cho phép thành viên đăng ký và đăng nhập nhanh hơn bằng mã xác thực một lần (OTP) gửi qua thư điện tử (Email)."
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
     enable_google_oauth2_logins: "Bật xác thực Google Oauth2. Đây là phương thức xác thực mà Google hiện đang hỗ trợ. Yêu cầu khóa và bí mật. Xem <a href='https://meta.discourse.org/t/15858' target='_blank'>Định cấu hình đăng nhập Google cho Discourse</a>."

@@ -7,6 +7,9 @@
 hr:
   js:
     boards:
+      status:
+        all: "Sve"
+        open: "Otvori"
       board:
         remove_card: "Ukloni"
         new_topic: "Nova tema..."

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sk:
+  mcp:
+    errors:
+      draft_too_long: "Koncept je príliš dlhý"
+      topic_not_found: "Téma sa nenašla"
+    oauth:
+      deny: "Odmietnuť"
+      approve: "Autorizovať"
   llms_txt:
     sections:
       optional: "Voliteľné"
@@ -1787,12 +1794,6 @@ sk:
       host_names: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
       queue_size: "Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov."
       ram: "Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. "
-      google_oauth2_config: 'Server je nakonfigurovaný tak, aby umožňoval registráciu a prihlásenie pomocou Google OAuth2 (enable_google_oauth2_logins), ale hodnoty client id a client secret nie sú nastavené. Prejdite do <a href="%{base_path}/admin/site_settings">Nastavení stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
-      facebook_config: 'Server je nakonfigurovaný tak, aby umožňoval registráciu a prihlásenie pomocou Facebooku (enable_facebook_logins), ale hodnoty id aplikácie a app secret nie sú nastavené. Prejdite do <a href="%{base_path}/admin/site_settings">Nastavení stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
-      twitter_config: 'Server je nakonfigurovaný tak, aby umožňoval registráciu a prihlásenie pomocou služby Twitter (enable_twitter_logins), ale hodnoty kľúčov a tajných údajov nie sú nastavené. Prejdite do <a href="%{base_path}/admin/site_settings">Nastavení stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
-      github_config: 'Server je nakonfigurovaný tak, aby umožňoval registráciu a prihlásenie do služby GitHub (enable_github_logins), ale hodnoty id klienta a secret nie sú nastavené. Prejdite do <a href="%{base_path}/admin/site_settings">Nastavení stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
-      s3_upload_config: 'Server je nakonfigurovaný na odosielanie súborov na S3, ale nie je nastavené aspoň jedno z nasledujúcich nastavení: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile alebo s3_upload_bucket. Prejdite do <a href="%{base_path}/admin/site_settings">Nastavení stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Viac informácií nájdete v časti "Ako nastaviť odosielanie obrázkov do služby S3?"</a>.'
-      s3_backup_config: 'Server je nakonfigurovaný na odosielanie záloh na S3, ale nie je nastavené aspoň jedno z nasledujúcich nastavení: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile alebo s3_backup_bucket. Prejdite do <a href="%{base_path}/admin/site_settings">Nastavení stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Viac informácií nájdete v časti "Ako nastaviť nahrávanie obrázkov do služby S3?"</a>.'
       s3_cdn: 'Server je nakonfigurovaný na odosielanie súborov do služby S3, ale nie je nakonfigurovaná CDN S3. To môže viesť k drahým nákladom na S3 a pomalšiemu výkonu webu. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Viac informácií nájdete v časti "Používanie objektového úložiska na nahrávanie"</a>.'
       image_magick: 'Server je nakonfigurovaný na vytváranie miniatúr veľkých obrázkov, ale ImageMagick nie je nainštalovaný. Nainštalujte ImageMagick pomocou obľúbeného správcu balíkov alebo <a href="https://www.imagemagick.org/script/download.php" target="_blank">si stiahnite najnovšiu verziu</a>.'
       failing_emails: 'Existuje %{num_failed_jobs} e-mailových úloh, ktoré zlyhali. Skontrolujte súbor app.yml a uistite sa, že nastavenia poštového servera sú správne. <a href="%{base_path}/sidekiq/retries" target="_blank">Pozrite si neúspešné úlohy v Sidekiq</a>.'
@@ -2598,7 +2599,6 @@ sk:
         other: "Zoznam musí obsahovať presne %{count} hodnoty."
       markdown_linkify_tlds: "Nemôžete uviesť hodnotu \"*\"."
       google_oauth2_hd_groups: "Pred povolením tohto nastavenia musíte nakonfigurovať všetky nastavenia \"google oauth2 hd\"."
-      linkedin_oidc_credentials: "Pred povolením tohto nastavenia musíte nakonfigurovať poverenia LinkedIn OIDC (\"linkedin_oidc_client_id\" a \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "Pred povolením tohto nastavenia musíte vypnúť „search_tokenize_chinese“."
       search_tokenize_japanese_enabled: "Pred povolením tohto nastavenia musíte vypnúť „search_tokenize_japanese“."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Ak je vynútená funkcia 2FA, nie je možné povoliť DiscourseConnect."
@@ -4715,6 +4715,12 @@ sk:
   performance_report:
     initial_post_raw: Táto téma obsahuje denné reporty rýchlosti Vašich stránok.
     initial_topic_title: Reporty rýchlosti stránok
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamom."
+      few: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamami."
+      many: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamami."
+      other: "Príliš veľa záznamov v súbore CSV. Poskytnite súbor CSV s maximálne %{count} záznamami."
   tags:
     title: "Štítky"
     restricted_tag_disallowed: 'Nemôžete použiť značku "%{tag}".'

@@ -16,6 +16,14 @@ sk:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Spýtajte sa AI"
+        ask_ai:
+          title: "Spýtajte sa AI"
+          date: "Dátum"
+          outcomes:
+            failed: "Nepodarilo sa"
         emotion:
           title: "Emócia"
         reports:

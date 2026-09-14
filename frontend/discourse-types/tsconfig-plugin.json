@@ -16,7 +16,6 @@
     "typeRoots": ["./external-types"],
     "types": [
       "discourse-i18n",
-      "ember-compat__tracked-built-ins",
       "ember-modifier",
       "ember-qunit",
       "ember-source",

@@ -1335,6 +1335,10 @@ RSpec.describe UpcomingChanges do
     end
 
     describe ".should_display_enable_local_logins_via_code?" do
+      # Pin the promotion threshold above the change's status so these specs
+      # exercise the prerequisite branch rather than the auto-promoted one.
+      before { SiteSetting.promote_upcoming_changes_on_status = :never }
+
       it "returns true when local logins via email are possible" do
         expect(
           UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),

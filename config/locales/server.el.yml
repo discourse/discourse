@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 el:
+  mcp:
+    errors:
+      draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο"
+      topic_not_found: "Το θέμα δε βρέθηκε"
+    oauth:
+      deny: "Άρνηση"
+      approve: "Εξουσιοδότηση"
   llms_txt:
     sections:
       optional: "Προαιρετικό"

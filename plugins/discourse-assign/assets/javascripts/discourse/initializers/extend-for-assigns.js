@@ -4,7 +4,6 @@ import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
@@ -415,27 +414,7 @@ function initialize(api) {
       )}">${escapeExpression(name)}</span></${tagName}>`;
     };
 
-    // is there's one assignment just return the tag
-    if (assignedTo.length === 1) {
-      return createTagHtml(assignedTo[0]);
-    }
-
-    // join multiple assignments with a separator
-    let result = "";
-    assignedTo.forEach((assignment, index) => {
-      result += createTagHtml(assignment);
-
-      // add separator if not the last tag
-      if (index < assignedTo.length - 1) {
-        const separator = applyValueTransformer("tag-separator", ",", {
-          topic,
-          index,
-        });
-        result += `<span class="discourse-tags__tag-separator">${separator}</span>`;
-      }
-    });
-
-    return result;
+    return assignedTo.map((assignment) => createTagHtml(assignment));
   });
 
   api.addModelSaveProperty("group", "assignable_level");

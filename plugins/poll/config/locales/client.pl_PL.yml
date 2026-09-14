@@ -151,6 +151,7 @@ pl_PL:
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
       error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
       ui_builder:
+        edit: Edytuj ankietę
         title: Skonstruuj ankietę
         insert: Wstaw ankietę
         help:
@@ -188,6 +189,7 @@ pl_PL:
           label: Zezwól na dodawanie lub usuwanie opcji po opublikowaniu
         poll_title:
           label: Tytuł (opcjonalnie)
+          placeholder: Tytuł ankiety
         poll_options:
           label: Opcje (jedna na wiersz)
           add: Dodaj opcję

@@ -511,6 +511,49 @@ module("Unit | Service | chat-channels-manager", function (hooks) {
       };
     });
 
+    test("temporarily bypasses filters in sidebar and drawer while retaining sorting", function (assert) {
+      this.preferences.channelsFilter = "unread";
+      this.preferences.channelsSort = "recent_activity";
+      const older = this.buildChannel({
+        id: 1,
+        slug: "alpha",
+        createdAt: "2026-09-01",
+        unreadCount: 1,
+      });
+      const newer = this.buildChannel({
+        id: 2,
+        slug: "zulu",
+        createdAt: "2026-09-03",
+      });
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels,
+        [older],
+        "the preferred filter applies"
+      );
+      this.preferences.showAllChannels("channels");
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels,
+        [newer, older],
+        "the sidebar retains recency sorting"
+      );
+      assert.deepEqual(
+        this.subject.publicMessageChannelsByPreference,
+        [newer, older],
+        "the drawer shares the override"
+      );
+      this.preferences.applyFilter("channels");
+      assert.deepEqual(
+        this.subject.sidebarPublicMessageChannels,
+        [older],
+        "the sidebar reapplies the filter"
+      );
+      assert.deepEqual(
+        this.subject.publicMessageChannelsByPreference,
+        [older],
+        "the drawer reapplies the filter"
+      );
+    });
+
     test("sorts channels alphabetically by default", function (assert) {
       this.buildChannel({ id: 1, slug: "zulu", createdAt: "2026-09-03" });
       this.buildChannel({ id: 2, slug: "alpha", createdAt: "2026-09-01" });

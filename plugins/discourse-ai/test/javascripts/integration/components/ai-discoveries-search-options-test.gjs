@@ -81,6 +81,31 @@ module(
       );
     });
 
+    test("topic scope remains selected when the query changes", async function (assert) {
+      const searchService = this.owner.lookup("service:search");
+      searchService.searchContext = { type: "topic", id: 280 };
+      searchService.inTopicContext = true;
+
+      await render(<template><AiDiscoveriesSearchOptions /></template>);
+
+      searchService.activeGlobalSearchTerm = "miyazaki 猫";
+      await settled();
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--topic")
+        .hasClass("is-active", "the topic option stays selected after editing");
+
+      searchService.inTopicContext = false;
+      await settled();
+
+      assert
+        .dom(".ai-discoveries-search-options__option.--topic")
+        .doesNotHaveClass(
+          "is-active",
+          "clearing the scope deselects the option"
+        );
+    });
+
     test("the preferred option leads and owns Enter", async function (assert) {
       this.currentUser.user_option.ai_ask_ai_default = true;
 
@@ -863,14 +888,22 @@ module(
         );
     });
 
-    test("stays out of the menu with an empty box", async function (assert) {
-      this.owner.lookup("service:search").activeGlobalSearchTerm = "";
+    test("offers the search options before typing", async function (assert) {
+      const search = this.owner.lookup("service:search");
+      search.activeGlobalSearchTerm = "";
+      search.searchContext = { type: "topic", id: 280 };
 
       await render(<template><AiDiscoveriesSearchOptions /></template>);
 
       assert
-        .dom(".ai-discoveries-search-options")
-        .doesNotExist("there is no term to resolve");
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .exists("AI is visible before typing");
+      assert
+        .dom(".ai-discoveries-search-options__option.--topic")
+        .exists("the current topic is offered before typing");
+      assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .exists("all topics is offered before typing");
     });
   }
 );

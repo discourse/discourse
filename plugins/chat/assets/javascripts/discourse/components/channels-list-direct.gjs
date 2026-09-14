@@ -11,6 +11,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle";
 import ChatChannelListOptionsButton from "./chat-channel-list-options-button";
 import ChatChannelRow from "./chat-channel-row";
 import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state";
@@ -89,6 +90,7 @@ export default class ChannelsListDirect extends Component {
 
         {{#if this.site.desktopView}}
           <div class="chat-channel-divider__actions">
+            <ChatChannelListFilterToggle @section="dms" />
             <ChatChannelListOptionsButton @section="dms" />
           </div>
         {{/if}}
@@ -123,10 +125,7 @@ export default class ChannelsListDirect extends Component {
           />
         {{else}}
           {{#unless this.inSidebar}}
-            <ChatSidebarChannelListFilterEmptyState
-              @layout="empty-state"
-              @section="dms"
-            />
+            <ChatSidebarChannelListFilterEmptyState @section="dms" />
           {{/unless}}
         {{/each}}
       {{/if}}

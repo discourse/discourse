@@ -22,6 +22,7 @@ import type MenuService from "discourse/float-kit/services/menu";
 import type ToastsService from "discourse/float-kit/services/toasts";
 import type Session from "discourse/models/session";
 import type Site from "discourse/models/site";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
@@ -60,6 +61,8 @@ export interface PluginContext {
   siteSettings: Record<string, unknown>;
   /** Application event bus. */
   appEvents: AppEventsService;
+  /** Service used to announce editor changes to assistive technology. */
+  a11y: A11yService;
   /** Service used to show confirmation and alert dialogs. */
   dialog: DialogService;
   /** Replaces or restores the toolbar displayed by the editor container. */

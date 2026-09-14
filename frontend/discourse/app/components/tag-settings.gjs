@@ -43,6 +43,7 @@ export default class TagSettings extends Component {
   get formData() {
     return {
       name: this.args.tag.name,
+      locale: this.args.tag.locale,
       slug: this.args.tag.slug,
       description: this.args.tag.description || "",
       synonyms: this.args.tag.synonyms || [],
@@ -386,6 +387,7 @@ export default class TagSettings extends Component {
         {{else if (eq @selectedTab "localizations")}}
           <TagSettingsLocalizations
             @form={{form}}
+            @locale={{transientData.locale}}
             @localizations={{transientData.localizations}}
             @tagId={{@tag.id}}
           />

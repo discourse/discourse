@@ -8,6 +8,9 @@ sr:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          outcomes:
+            failed: "Neuspešno"
         reports:
           filters:
             sort_by:

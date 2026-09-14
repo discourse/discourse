@@ -44,7 +44,7 @@ module PageObjects
         find(selector).hover
         menu =
           PageObjects::Components::DMenu.new(
-            "#{selector} .sidebar-section-header-button",
+            "#{selector} [data-sidebar-action-id='channelListOptions']",
             "chat-channel-list-options-menu",
           )
         menu.expand
@@ -80,8 +80,8 @@ module PageObjects
         submenu.option(%([data-menu-option-id="#{sort}"])).click
       end
 
-      def show_all_channels
-        find(".chat-sidebar-channels-filter-empty-state__reset").click
+      def toggle_channel_filter
+        find("[data-sidebar-action-id='toggleChannelFilter']").click
       end
 
       def open_channel(channel)

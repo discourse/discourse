@@ -7,6 +7,9 @@
 fa_IR:
   js:
     boards:
+      status:
+        all: "همه"
+        open: "باز"
       board:
         remove_card: "پاک کردن"
         title: "عنوان"

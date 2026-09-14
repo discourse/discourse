@@ -6,7 +6,6 @@ import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/ember-template-compiler/index.js";
-import EmberThisFallback from "ember-this-fallback";
 import StripTestSelectorsPlugin from "strip-test-selectors/src/strip-test-selectors";
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
@@ -26,6 +25,7 @@ import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import { labelFor, routeNamesFor } from "./rollup-virtual-imports";
 import { urlTableFor } from "./route-map-parser";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
+import buildThisFallbackPlugin from "./this-fallback";
 import transformActionSyntax from "./transform-action-syntax";
 import createVirtualFs from "./virtual-fs";
 
@@ -110,10 +110,7 @@ async function performRollup(modules, opts) {
                 "htmlbars-inline-precompile",
               ],
               transforms: [
-                EmberThisFallback._buildPlugin({
-                  enableLogging: false,
-                  isTheme: true,
-                }).plugin,
+                buildThisFallbackPlugin(),
                 buildEmberTemplateManipulatorPlugin(opts.themeId),
                 transformActionSyntax,
                 ...(opts.minify ? [StripTestSelectorsPlugin] : []),

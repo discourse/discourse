@@ -73,11 +73,13 @@ describe "Category Localizations" do
         expect(category_page).to have_setting_tab("localizations")
       end
 
-      it "defaults to site locale when category has no locale" do
+      it "shows no language when category has no locale" do
         category_without_locale = Fabricate(:category, locale: nil)
         category_page.visit_edit_localizations(category_without_locale)
 
-        expect(form.field("locale")).to have_value(SiteSetting.default_locale)
+        expect(form.field("locale")).to have_value(
+          PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+        )
       end
 
       it "loads the saved locale correctly" do
@@ -93,7 +95,15 @@ describe "Category Localizations" do
         form.field("locale").select("ja")
         category_page.save_settings
 
-        expect(category_without_locale.reload.locale).to eq("ja")
+        page.refresh
+        expect(form.field("locale")).to have_value("ja")
+
+        form.field("locale").select_none
+        category_page.save_settings
+        page.refresh
+        expect(form.field("locale")).to have_value(
+          PageObjects::Components::DNativeSelect::NO_VALUE_OPTION,
+        )
       end
 
       describe "when editing a category with no category localizations" do

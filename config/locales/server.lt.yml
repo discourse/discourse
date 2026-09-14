@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 lt:
+  mcp:
+    errors:
+      topic_not_found: "Tema nerasta"
+    oauth:
+      deny: "Atsisakyti"
+      approve: "Leisti"
   llms_txt:
     sections:
       optional: "Pasirinktinai"

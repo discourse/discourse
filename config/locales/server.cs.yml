@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 cs:
+  mcp:
+    errors:
+      draft_too_long: "Koncept je příliš dlouhý"
+      topic_not_found: "Téma nenalezeno"
+    oauth:
+      deny: "Odmítnout"
+      approve: "Autorizovat"
   llms_txt:
     sections:
       optional: "Volitelné"
@@ -1807,12 +1814,6 @@ cs:
       host_names: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
       queue_size: "Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů."
       ram: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
-      google_oauth2_config: 'Server je nakonfigurován tak, aby umožňoval registraci a přihlášení pomocí Google OAuth2 (enable_google_oauth2_logins), ale hodnoty client id a client secret nejsou nastaveny. Přejděte do <a href="%{base_path}/admin/site_settings">nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Více informací naleznete v této příručce</a>.'
-      facebook_config: 'Server je nakonfigurován tak, aby umožňoval registraci a přihlášení pomocí Facebooku (enable_facebook_logins), ale hodnoty app id a app secret nejsou nastaveny. Přejděte na <a href="%{base_path}/admin/site_settings">Nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Více informací naleznete v této příručce</a>.'
-      twitter_config: 'Server je nakonfigurován tak, aby umožňoval přihlášení a přihlášení pomocí Twitteru (enable_twitter_logins), ale hodnoty key a secret nejsou nastaveny. Přejděte na <a href="%{base_path}/admin/site_settings">Nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Více informací naleznete v této příručce</a>.'
-      github_config: 'Server je nakonfigurován tak, aby umožňoval přihlášení a přihlášení pomocí GitHubu (enable_github_logins), ale hodnoty client id a secret nejsou nastaveny. Přejděte na <a href="%{base_path}/admin/site_settings">Nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Více informací naleznete v této příručce</a>.'
-      s3_upload_config: 'Server je nakonfigurován k odesílání souborů do S3, ale alespoň jedno z následujících nastavení není nastaveno: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile nebo s3_upload_bucket. Přejděte na <a href="%{base_path}/admin/site_settings">Nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Viz "Jak nastavit odesílání obrázků do S3?"</a>.'
-      s3_backup_config: 'Server je nakonfigurován pro nahrávání záloh do S3, ale není nastaveno alespoň jedno z následujících nastavení: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile nebo s3_backup_bucket. Přejděte na <a href="%{base_path}/admin/site_settings">Nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Viz "Jak nastavit odesílání obrázků do S3?"</a>.'
       s3_cdn: 'Server je nakonfigurován pro odesílání souborů do S3, ale není nakonfigurováno žádné S3 CDN. To může vést k vysokým nákladům na S3 a pomalejšímu výkonu webu. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Další informace naleznete v části „Použití úložiště objektů pro nahrávání“</a>.'
       image_magick: 'Server je nakonfigurován pro vytváření miniatur velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí svého oblíbeného správce balíčků nebo <a href="https://www.imagemagick.org/script/download.php" target="_blank">si stáhněte nejnovější verzi</a>.'
       failing_emails: 'Existuje %{num_failed_jobs} e-mailových úloh, které se nezdařily. Zkontrolujte svůj app.yml a ujistěte se, že nastavení poštovního serveru je správné. <a href="%{base_path}/sidekiq/retries" target="_blank">Podívejte se na neúspěšné úlohy v Sidekiq</a>.'
@@ -4239,6 +4240,12 @@ cs:
   performance_report:
     initial_post_raw: Toto téma zahrnuje denní přehledy výkonu vašeho webu.
     initial_topic_title: Zprávy o výkonu webových stránek
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamem."
+      few: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
+      many: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
+      other: "Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy."
   tags:
     title: "Štítky"
     restricted_tag_disallowed: 'Nelze použít štítek "%{tag}".'

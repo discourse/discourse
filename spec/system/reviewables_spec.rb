@@ -164,7 +164,7 @@ describe "Reviewables" do
 
       expect(suspend_user_modal).to be_closed
       expect(review_page).to have_reviewable_with_rejected_status(suspect_reviewable)
-      expect(review_page).to have_no_scrub_button(suspect_reviewable)
+      expect(review_page).to have_no_reviewable_actions(suspect_reviewable)
       expect(suspect_user.reload).to be_suspended
       expect(
         UserHistory.find_by(

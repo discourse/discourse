@@ -16,6 +16,7 @@ import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import ChatChannelListFilterMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-filter-menu";
+import ChatChannelListFilterToggle from "discourse/plugins/chat/discourse/components/chat-channel-list-filter-toggle";
 import ChatChannelListOptionsButton from "discourse/plugins/chat/discourse/components/chat-channel-list-options-button";
 import ChatChannelListSidebarMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sidebar-menu";
 import ChatChannelListSortMenu from "discourse/plugins/chat/discourse/components/chat-channel-list-sort-menu";
@@ -158,7 +159,8 @@ module(
         .exists("the sort option is shown behind a fly-out submenu");
     });
 
-    test("shows the new message, filter, and sort options for the direct messages header", async function (assert) {
+    test("shows the new message, group chat, filter, and sort options for the direct messages header", async function (assert) {
+      this.siteSettings.chat_max_direct_message_users = 20;
       sinon
         .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
         .value(true);
@@ -179,6 +181,12 @@ module(
         .hasText(
           i18n("chat.direct_messages.new"),
           "the new message action is shown"
+        );
+      assert
+        .dom('[data-menu-option-id="startGroupChat"]')
+        .hasText(
+          i18n("chat.direct_messages.new_group"),
+          "the new group chat action is shown"
         );
       assert
         .dom('[data-menu-option-id="browseChannels"]')
@@ -204,35 +212,51 @@ module(
         .exists({ count: 1 }, "exactly one sort choice is checked");
     });
 
-    test("starts a personal chat from the direct messages header menu", async function (assert) {
-      sinon
-        .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
-        .value(true);
+    for (const [option, mode] of [
+      ["startDm", "search"],
+      ["startGroupChat", "new-group"],
+    ]) {
+      test(`opens ${mode} from the direct messages header menu`, async function (assert) {
+        this.siteSettings.chat_max_direct_message_users = 20;
+        sinon
+          .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
+          .value(true);
 
-      await render(
-        <template>
-          <button class="menu-trigger" type="button">Open</button>
-          <DMenus />
-          <ModalContainer />
-        </template>
-      );
-      const menu = getOwner(this).lookup("service:menu");
-      await menu.show(find(".menu-trigger"), {
-        component: ChatChannelListSidebarMenu,
-        contentRole: "menu",
-        identifier: "chat-channel-list-options-menu",
-        data: DMS_DATA,
+        await render(
+          <template>
+            <button class="menu-trigger" type="button">Open</button>
+            <DMenus />
+            <ModalContainer />
+          </template>
+        );
+        const menu = getOwner(this).lookup("service:menu");
+        await menu.show(find(".menu-trigger"), {
+          component: ChatChannelListSidebarMenu,
+          contentRole: "menu",
+          identifier: "chat-channel-list-options-menu",
+          data: DMS_DATA,
+        });
+
+        await click(`[data-menu-option-id="${option}"]`);
+
+        assert
+          .dom(".chat-modal-new-message")
+          .exists("the new message modal opens");
+        assert
+          .dom(`.chat-message-creator__${mode}`)
+          .exists("the requested mode is shown immediately");
+        assert
+          .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
+          .doesNotExist("the menu closes");
+        if (mode === "new-group") {
+          await click(".chat-message-creator__add-members__close-btn");
+
+          assert
+            .dom(".chat-message-creator__search")
+            .exists("canceling group creation returns to search");
+        }
       });
-
-      await click('[data-menu-option-id="startDm"]');
-
-      assert
-        .dom(".chat-modal-new-message")
-        .exists("the new message modal opens");
-      assert
-        .dom('.fk-d-menu[data-identifier="chat-channel-list-options-menu"]')
-        .doesNotExist("the menu closes");
-    });
+    }
 
     test("hides the new message option when the user cannot send direct messages", async function (assert) {
       await render(
@@ -246,6 +270,9 @@ module(
         .dom('[data-menu-option-id="startDm"]')
         .doesNotExist("the new message action is hidden without permission");
       assert
+        .dom('[data-menu-option-id="startGroupChat"]')
+        .doesNotExist("the group chat action is hidden without permission");
+      assert
         .dom(".dropdown-menu__divider")
         .doesNotExist(
           "the top-level divider is dropped with no actions above it"
@@ -253,6 +280,24 @@ module(
       assert
         .dom('[data-menu-option-id="filterChannels"]')
         .exists("the filter option is still shown");
+    });
+
+    test("hides group chat when only one recipient is allowed", async function (assert) {
+      this.siteSettings.chat_max_direct_message_users = 1;
+      sinon
+        .stub(getOwner(this).lookup("service:chat"), "userCanDirectMessage")
+        .value(true);
+
+      await render(
+        <template><ChatChannelListSidebarMenu @data={{DMS_DATA}} /></template>
+      );
+
+      assert
+        .dom('[data-menu-option-id="startDm"]')
+        .exists("direct messages are available");
+      assert
+        .dom('[data-menu-option-id="startGroupChat"]')
+        .doesNotExist("group chat is unavailable");
     });
 
     test("hides the create channel option for non-staff", async function (assert) {
@@ -642,113 +687,74 @@ module(
       sidebarState.filter = "missing";
 
       await render(
-        <template>
-          <ul>
-            <ChatSidebarChannelListFilterEmptyState />
-          </ul>
-        </template>
+        <template><ChatSidebarChannelListFilterEmptyState /></template>
       );
 
       assert
-        .dom(".chat-sidebar-channels-filter-empty-state")
+        .dom(".empty-state")
         .doesNotExist("the channel-filter reset is hidden during text search");
     });
 
-    test("resets the channels filter by default", async function (assert) {
-      const preferences = getOwner(this).lookup(
-        "service:chat-channel-list-preferences"
-      );
-      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
-
-      await render(
-        <template>
-          <ul>
-            <ChatSidebarChannelListFilterEmptyState />
-          </ul>
-        </template>
-      );
-
-      assert
-        .dom(".chat-sidebar-channels-filter-empty-state")
-        .hasTagName("li", "the state is valid section-list content")
-        .includesText(
-          i18n("chat.channel_list.empty.filtered"),
-          "the empty state explains the filter"
+    for (const section of ["channels", "dms", "starred"]) {
+      test(`temporarily shows all ${section} and updates the header toggle`, async function (assert) {
+        const preferences = this.owner.lookup(
+          "service:chat-channel-list-preferences"
         );
-
-      await click(".chat-sidebar-channels-filter-empty-state__reset");
-
-      assert.true(
-        setFilter.calledWith("channels", "all"),
-        "the channels filter is reset"
-      );
-    });
-
-    test("resets the filter of the section it is rendered for", async function (assert) {
-      const preferences = getOwner(this).lookup(
-        "service:chat-channel-list-preferences"
-      );
-      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
-
-      await render(
-        <template>
-          <ul>
-            <ChatSidebarChannelListFilterEmptyState @section="starred" />
-            <ChatSidebarChannelListFilterEmptyState @section="dms" />
-          </ul>
-        </template>
-      );
-
-      await click(".chat-sidebar-channels-filter-empty-state__reset");
-
-      assert.true(
-        setFilter.calledWith("starred", "all"),
-        "the starred filter is reset"
-      );
-
-      const resets = document.querySelectorAll(
-        ".chat-sidebar-channels-filter-empty-state__reset"
-      );
-      await click(resets[1]);
-
-      assert.true(
-        setFilter.calledWith("dms", "all"),
-        "the dms filter is reset"
-      );
-    });
-
-    test("renders an illustrated state matching the no-channels layout", async function (assert) {
-      const preferences = getOwner(this).lookup(
-        "service:chat-channel-list-preferences"
-      );
-      const setFilter = sinon.stub(preferences, "setFilter").resolves(true);
-
-      await render(
-        <template>
-          <ChatSidebarChannelListFilterEmptyState
-            @layout="empty-state"
-            @section="dms"
-          />
-        </template>
-      );
-
-      assert
-        .dom(".empty-state__image")
-        .exists("the same illustration as the no-channels state is shown");
-      assert
-        .dom(".empty-state__title")
-        .hasText(
-          i18n("chat.channel_list.empty.filtered"),
-          "the title explains the filter"
+        preferences[`${section}Filter`] = "unread";
+        this.section = section;
+        await render(
+          <template>
+            <ChatChannelListFilterToggle @section={{this.section}} />
+            <ChatSidebarChannelListFilterEmptyState @section={{this.section}} />
+          </template>
         );
-
-      await click(".empty-state__cta .btn");
-
-      assert.true(
-        setFilter.calledWith("dms", "all"),
-        "the show all action resets the dms filter"
-      );
-    });
+        assert
+          .dom(".empty-state__image")
+          .exists("the illustrated state is retained");
+        assert
+          .dom(".empty-state__title")
+          .hasText(
+            i18n("chat.channel_list.empty.filtered"),
+            "the filter explanation is retained"
+          );
+        assert
+          .dom(".chat-channel-list-filter-toggle .d-icon-filter-circle-xmark")
+          .exists("the header offers to show all");
+        await click(".empty-state__cta .btn");
+        assert.strictEqual(
+          preferences.filterFor(section),
+          "unread",
+          "the preference is retained"
+        );
+        assert.strictEqual(
+          preferences.effectiveFilterFor(section),
+          "all",
+          "the empty state bypasses the filter"
+        );
+        assert
+          .dom(".chat-channel-list-filter-toggle")
+          .hasAttribute(
+            "title",
+            i18n("chat.channel_list.apply_filters"),
+            "the header offers to reapply filters"
+          );
+        assert
+          .dom(".chat-channel-list-filter-toggle .d-icon-filter")
+          .exists("the icon changes");
+        await click(".chat-channel-list-filter-toggle");
+        assert.strictEqual(
+          preferences.effectiveFilterFor(section),
+          "unread",
+          "the header reapplies the filter"
+        );
+        await click(".chat-channel-list-filter-toggle");
+        assert.strictEqual(
+          preferences.effectiveFilterFor(section),
+          "all",
+          "the header can also bypass the filter"
+        );
+      });
+    }
   }
 );
 

@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ro:
+  mcp:
+    errors:
+      topic_not_found: "Subiectul nu a fost găsit"
+    oauth:
+      deny: "Respinge"
+      approve: "Autorizează"
   llms_txt:
     sections:
       optional: "Opțional"

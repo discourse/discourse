@@ -1834,7 +1834,50 @@ RSpec.describe GroupsController do
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
 
     fab!(:bot)
-    let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
+    let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
+
+    it "lists bot members of automatic groups not created by core" do
+      group.update_columns(automatic: true)
+      group.add(bot)
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["members"].map { |m| m["id"] }).to contain_exactly(
+        user1.id,
+        user2.id,
+        user3.id,
+        bot.id,
+      )
+      expect(response.parsed_body["meta"]["total"]).to eq(4)
+    end
+
+    it "does not list bot members of hand-managed groups" do
+      group.add(bot)
+
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["members"].map { |m| m["id"] }).to contain_exactly(
+        user1.id,
+        user2.id,
+        user3.id,
+      )
+      expect(response.parsed_body["meta"]["total"]).to eq(3)
+    end
+
+    it "does not list bot members of core automatic groups" do
+      sign_in(admin)
+      Group[:admins].add(bot)
+
+      get "/groups/admins/members.json"
+
+      expect(response.status).to eq(200)
+      member_ids = response.parsed_body["members"].map { |m| m["id"] }
+      expect(member_ids).to include(admin.id)
+      expect(member_ids).not_to include(bot.id)
+      expect(response.parsed_body["meta"]["total"]).to eq(Group[:admins].human_users.count)
+    end
 
     it "allows members to be sorted by supported columns" do
       get "/groups/#{group.name}/members.json", params: { order: "last_seen_at" }

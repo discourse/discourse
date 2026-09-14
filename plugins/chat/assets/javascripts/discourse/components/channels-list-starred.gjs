@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle";
 import ChatChannelListOptionsButton from "./chat-channel-list-options-button";
 import ChatChannelRow from "./chat-channel-row";
 import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state";
@@ -31,6 +32,7 @@ export default class ChannelsListStarred extends Component {
         <span class="channel-title">{{i18n "chat.starred_channels"}}</span>
 
         <div class="chat-channel-divider__actions">
+          <ChatChannelListFilterToggle @section="starred" />
           <ChatChannelListOptionsButton @section="starred" />
         </div>
       </div>
@@ -45,10 +47,7 @@ export default class ChannelsListStarred extends Component {
       {{else}}
         {{#if this.chatChannelsManager.starredChannels.length}}
           {{#unless this.inSidebar}}
-            <ChatSidebarChannelListFilterEmptyState
-              @layout="empty-state"
-              @section="starred"
-            />
+            <ChatSidebarChannelListFilterEmptyState @section="starred" />
           {{/unless}}
         {{else}}
           <div class="chat-channel-list__empty">

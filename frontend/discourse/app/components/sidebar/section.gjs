@@ -20,6 +20,7 @@ import {
   WEB_LINK_KINDS,
   webLinkPayload,
 } from "discourse/lib/sidebar/link-drop";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -116,12 +117,16 @@ export default class SidebarSection extends Component {
     return this.displaySectionContent ? "angle-down" : "angle-right";
   }
 
-  get isSingleHeaderAction() {
-    return this.args.headerActions?.length === 1;
+  get showInlineHeaderActions() {
+    return (
+      this.args.headerActionsInline || this.args.headerActions?.length === 1
+    );
   }
 
   get isMultipleHeaderActions() {
-    return this.args.headerActions?.length > 1;
+    return (
+      !this.args.headerActionsInline && this.args.headerActions?.length > 1
+    );
   }
 
   get displaySection() {
@@ -410,16 +415,18 @@ export default class SidebarSection extends Component {
               {{/if}}
             </SectionHeader>
 
-            {{#if this.isSingleHeaderAction}}
-              {{#each @headerActions as |headerAction|}}
+            {{#if this.showInlineHeaderActions}}
+              {{#each @headerActions key="@index" as |headerAction|}}
                 <button
                   aria-label={{headerAction.title}}
                   class="sidebar-section-header-button btn-icon btn-flat"
+                  data-sidebar-action-id={{headerAction.id}}
+                  disabled={{headerAction.disabled}}
                   title={{headerAction.title}}
                   type="button"
                   {{on "click" headerAction.action}}
                 >
-                  {{dIcon @headerActionsIcon}}
+                  {{dIcon (or headerAction.icon @headerActionsIcon)}}
                 </button>
               {{/each}}
             {{/if}}

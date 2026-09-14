@@ -11,6 +11,7 @@ import DEmptyState from "discourse/ui-kit/d-empty-state";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import ChatChannelListFilterToggle from "./chat-channel-list-filter-toggle";
 import ChatChannelListOptionsButton from "./chat-channel-list-options-button";
 import ChatChannelRow from "./chat-channel-row";
 import ChatSidebarChannelListFilterEmptyState from "./chat-sidebar-channel-list-filter-empty-state";
@@ -93,6 +94,7 @@ export default class ChannelsListPublic extends Component {
 
         {{#if this.canBrowseChannels}}
           <div class="chat-channel-divider__actions">
+            <ChatChannelListFilterToggle @section="channels" />
             <ChatChannelListOptionsButton @section="channels" />
           </div>
         {{/if}}
@@ -129,10 +131,7 @@ export default class ChannelsListPublic extends Component {
           />
         {{else}}
           {{#unless this.inSidebar}}
-            <ChatSidebarChannelListFilterEmptyState
-              @layout="empty-state"
-              @section="channels"
-            />
+            <ChatSidebarChannelListFilterEmptyState @section="channels" />
           {{/unless}}
         {{/each}}
       {{/if}}

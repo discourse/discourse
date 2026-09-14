@@ -238,6 +238,7 @@ class TagsController < ::ApplicationController
     updater_params =
       params.require(:tag_settings).permit(
         :name,
+        :locale,
         :slug,
         :description,
         removed_synonym_ids: [],

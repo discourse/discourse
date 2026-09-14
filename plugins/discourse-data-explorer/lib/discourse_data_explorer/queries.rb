@@ -266,6 +266,18 @@ module DiscourseDataExplorer
           description:
             "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. WARNING: requires browser pageview event collection to be enabled (hidden site setting persist_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
         },
+        "ask-ai-asks-over-time": {
+          id: -45,
+          name: "Ask AI - Asks over time",
+          description:
+            "Daily Ask AI counts between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
+        },
+        "ask-ai-ask-outcomes": {
+          id: -46,
+          name: "Ask AI - Ask outcomes",
+          description:
+            "Ask AI outcome counts and percentages between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
+        },
       }.with_indifferent_access
 
       queries["most-common-likers"]["sql"] = <<~SQL
@@ -1605,6 +1617,46 @@ module DiscourseDataExplorer
       GROUP BY ip_address, asn, country_code
       ORDER BY asn_total_pageviews DESC, pageviews DESC
       LIMIT 100
+      SQL
+
+      queries["ask-ai-asks-over-time"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      WITH daily_asks AS (
+        SELECT asked_at::date AS date, COUNT(*) AS asks
+        FROM ask_ai_logs
+        WHERE asked_at >= :start_date::date
+          AND asked_at < :end_date::date + INTERVAL '1 day'
+        GROUP BY asked_at::date
+      )
+      SELECT days.date::date AS date, COALESCE(daily_asks.asks, 0) AS asks
+      FROM generate_series(:start_date::date, :end_date::date, INTERVAL '1 day') AS days(date)
+      LEFT JOIN daily_asks ON daily_asks.date = days.date::date
+      ORDER BY days.date
+      SQL
+
+      queries["ask-ai-ask-outcomes"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        CASE ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome,
+        COUNT(*) AS asks,
+        ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1) AS percentage
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
+      GROUP BY ask_outcome
+      ORDER BY ask_outcome NULLS LAST
       SQL
 
       # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.

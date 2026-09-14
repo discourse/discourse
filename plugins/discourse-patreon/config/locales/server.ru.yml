@@ -22,8 +22,6 @@ ru:
     patreon_donation_prompt_show_after_topics: "Показывать приглашение к пожертвованию после указанного здесь количества тем"
     patreon_api_version: "Версия API Patreon. Версия 1 устарела — создайте новый OAuth-клиент на Patreon и переключитесь на версию 2."
     patreon_donation_prompt_campaign_url: "URL рекламной кампании для пожертвований"
-    errors:
-      patreon_creator_username_not_set: "Перед включением входа через Patreon необходимо установить настройку имени пользователя в Patreon Creator Discourse."
   dashboard:
     problem:
       access_token_invalid: "Значения токенов доступа и обновления Patreon Creator некорректны. Скопируйте новые токены с <a href='https://www.patreon.com/platform/documentation/clients'>сайта Patreon</a> и вставьте их в <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>настройки сайта</a>."

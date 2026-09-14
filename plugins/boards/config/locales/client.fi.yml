@@ -7,6 +7,10 @@
 fi:
   js:
     boards:
+      status:
+        all: "Kaikki"
+        open: "Avoinna"
+        archived: "Arkistoitu"
       board:
         remove_card: "Poista"
         new_topic: "Uusi ketju..."

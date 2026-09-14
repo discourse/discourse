@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 hu:
+  mcp:
+    errors:
+      draft_too_long: "A vázlat túl hosszú"
+      topic_not_found: "A téma nem található"
+    oauth:
+      deny: "Tiltás"
+      approve: "Engedélyezés"
   llms_txt:
     sections:
       optional: "Nem kötelező"
@@ -1667,12 +1674,6 @@ hu:
       host_names: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
       queue_size: "A sorba állított feladatok száma %{queue_size}, ami magas. Ez a Sidekiq-folyamat(ok) problémáját jelezheti, vagy több Sidekiq-kezelőt kell hozzáadni."
       ram: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
-      google_oauth2_config: 'A szerver úgy van beállítva, hogy engedélyezze a regisztrációt és a bejelentkezést a Google OAuth2 használatával (enable_google_oauth2_logins), de az ügyfélazonosító és az ügyfél titkossága nincs beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      facebook_config: 'A szerver úgy van konfigurálva, hogy engedélyezze a regisztrációt és a bejelentkezést a Facebookon (enable_facebook_logins), de az alkalmazásazonosító és az alkalmazás titkos értékei nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      twitter_config: 'A szerver úgy van konfigurálva, hogy engedélyezze az X-en keresztüli regisztrációt és bejelentkezést (enable_twitter_logins), de a kulcs és a titkos értékek nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      github_config: 'A szerver úgy van konfigurálva, hogy engedélyezze a regisztrációt és a bejelentkezést a Facebookon (enable_facebook_logins), de az alkalmazásazonosító és az alkalmazás titkos értékei nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      s3_upload_config: 'A kiszolgáló úgy van beállítva, hogy fájlokat töltsön fel az S3-ba, de a következő beállítások közül legalább egy nincs beállítva: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile vagy s3_upload_bucket. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lásd "Hogyan állíthatom be a képfeltöltést az S3-ba?" a részletekért</a>.'
-      s3_backup_config: 'A kiszolgáló úgy van beállítva, hogy biztonsági másolatokat töltsön fel az S3-ba, de a következő beállítások közül legalább egy nincs beállítva: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile vagy s3_backup_bucket. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lásd: "Hogyan állíthatom be a képfeltöltést az S3-ba?" a részletekért</a>.'
       s3_cdn: 'A szerver úgy van beállítva, hogy fájlokat töltsön fel az S3-ba, de nincs konfigurálva S3 CDN. Ez drága S3-költségekhez és lassabb webhelyteljesítményhez vezethet. <a href="https://meta.discourse.org/t/-/148916" target="_blank">További információért olvassa el az "Object Storage használata feltöltéshez" részt</a>.'
       image_magick: 'A szerver úgy van beállítva, hogy nagyméretű képek miniatűrjeit hozza létre, de az ImageMagick nincs telepítve. Telepítse az ImageMagick-et kedvenc csomagkezelőjével, vagy <a href="https://www.imagemagick.org/script/download.php" target="_blank">töltse le a legújabb kiadást</a>.'
       failing_emails: 'Van %{num_failed_jobs} e-mail feladat, amelyek meghiúsultak. Ellenőrizze az app.yml fájlt, és győződjön meg arról, hogy a levelezőszerver beállításai helyesek. <a href="%{base_path}/sidekiq/retries" target="_blank">Tekintse meg a sikertelen feladatokat a Sidekiq</a>-ban.'
@@ -2527,7 +2528,6 @@ hu:
       markdown_linkify_tlds: "Nem adhat meg „*” értéket."
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt konfigurálnia kell a „google oauth2 hd” összes beállítását."
       discourse_id_registration: "Nem sikerült az automatikus regisztráció a Discourse ID-vel. Ezt hálózati kapcsolódási problémák, tűzfalkorlátozások vagy a Discourse ID szolgáltatás elérhetetlensége okozhatja. További részletekért ellenőrizze a szervernaplókat, vagy lépjen kapcsolatba az ügyfélszolgálattal."
-      linkedin_oidc_credentials: "A beállítás engedélyezése előtt konfigurálnia kell a LinkedIn OIDC hitelesítő adatait (\"linkedin_oidc_client_id\" és \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "A DiscourseConnect nem engedélyezhető, ha a 2FA kényszerítve van."
@@ -4603,6 +4603,10 @@ hu:
   performance_report:
     initial_post_raw: Ez a téma a webhely napi teljesítményjelentéseit tartalmazza.
     initial_topic_title: Weboldal teljesítményjelentések
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Túl sok bejegyzés a CSV-fájlban. Kérjük, adjon meg egy CSV-fájlt, amely legfeljebb %{count} bejegyzést tartalmaz."
+      other: "Túl sok bejegyzés a CSV-fájlban. Kérjük, adjon meg egy CSV-fájlt, amely legfeljebb %{count} bejegyzést tartalmaz."
   tags:
     title: "Címkék"
     restricted_tag_disallowed: 'Nem alkalmazhatja a "%{tag}" címkét.'

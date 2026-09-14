@@ -31,7 +31,7 @@ RSpec.describe JsonApiKit::Query::Collection do
   describe ".new" do
     let(:params) { { sort: { secrets: :asc } } }
 
-    it "reads nothing before a caller asks for records" do
+    it "queries nothing before a caller asks for records" do
       expect { query }.not_to raise_error
     end
   end
@@ -86,11 +86,11 @@ RSpec.describe JsonApiKit::Query::Collection do
       expect(previous_cursor).to be_nil
     end
 
-    context "when a caller reads from further into the listing" do
+    context "when a caller starts further into the listing" do
       let(:first_cursor) { described_class.new(resource, request_for({})).rows.first.cursor.to_s }
       let(:params) { { page: { size: 2, after: first_cursor } } }
 
-      it "returns the cursor that reads the page before it" do
+      it "returns the cursor of the page before it" do
         expect(previous_cursor).to be_present
       end
     end
@@ -109,9 +109,10 @@ RSpec.describe JsonApiKit::Query::Collection do
         attribute :closed
       end
     end
+    let(:title) { JsonApiKit::Name::Field.new(value: "title", type: "topics") }
 
-    it "renders every row in the order the listing reads them" do
-      expect(fields.map { it["title"] }).to eq(
+    it "renders every row in the order of the listing" do
+      expect(fields.map { it[title] }).to eq(
         [first_topic.title, second_topic.title, third_topic.title],
       )
     end
@@ -120,10 +121,10 @@ RSpec.describe JsonApiKit::Query::Collection do
       let(:params) { { fields: { topics: %w[title] } } }
 
       it "renders only those fields" do
-        expect(fields.first.keys).to contain_exactly("title")
+        expect(fields.first.keys).to contain_exactly(title)
       end
 
-      it "reads only the columns those fields and the order need" do
+      it "selects only the columns those fields and the order need" do
         expect(query.records.first.record.attributes.keys).to contain_exactly(
           "id",
           "title",
@@ -145,7 +146,7 @@ RSpec.describe JsonApiKit::Query::Collection do
       end
       let(:params) { { fields: { topics: %w[title slug] } } }
 
-      it "reads the whole row" do
+      it "selects every column" do
         expect(query.records.first.record.attributes.keys).to include("closed", "views")
       end
     end
@@ -154,22 +155,22 @@ RSpec.describe JsonApiKit::Query::Collection do
   describe "#records" do
     subject(:records) { query.records.map(&:record) }
 
-    it "reads the rows the resource exposes in the order it declares" do
+    it "returns the rows the resource exposes in the order it declares" do
       expect(records).to eq([first_topic, second_topic, third_topic])
     end
 
     context "when the sort holds a key" do
       let(:params) { { sort: { created_at: :desc } } }
 
-      it "reads the rows that way" do
+      it "returns the rows in that order" do
         expect(records).to eq([third_topic, second_topic, first_topic])
       end
     end
 
-    context "when the resource is read as part of another listing" do
+    context "when another listing scopes the resource" do
       let(:scoped_to) { Topic.where(id: [first_topic.id, third_topic.id]) }
 
-      it "reads only the rows both allow" do
+      it "returns only the rows both allow" do
         expect(records).to eq([first_topic, third_topic])
       end
     end
@@ -177,7 +178,7 @@ RSpec.describe JsonApiKit::Query::Collection do
     context "when the page holds a size" do
       let(:params) { { page: { size: 2 } } }
 
-      it "reads only that many rows" do
+      it "returns only that many rows" do
         expect(records).to eq([first_topic, second_topic])
       end
     end
@@ -186,7 +187,7 @@ RSpec.describe JsonApiKit::Query::Collection do
       let(:resource) { Class.new(super()) { filter :title } }
       let(:params) { { filter: { title: second_topic.title } } }
 
-      it "reads only the rows that filter keeps" do
+      it "returns only the rows that filter keeps" do
         expect(records).to eq([second_topic])
       end
     end
@@ -197,7 +198,7 @@ RSpec.describe JsonApiKit::Query::Collection do
       end
       let(:guardian) { Guardian.new(second_topic.user) }
 
-      it "reads only the rows that scope exposes" do
+      it "returns only the rows that scope exposes" do
         expect(records).to eq([second_topic])
       end
     end

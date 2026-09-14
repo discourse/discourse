@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
+    oauth:
+      deny: "odbiti"
   llms_txt:
     sections:
       optional: "Opcionalno"
