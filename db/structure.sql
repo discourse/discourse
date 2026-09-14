@@ -5650,7 +5650,8 @@ CREATE TABLE public.email_login_codes (
     expires_at timestamp(6) without time zone NOT NULL,
     consumed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    purpose integer DEFAULT 0 NOT NULL
 );
 
 
@@ -25075,6 +25076,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914172801'),
 ('20260914172757'),
 ('20260910033302'),
+('20260909181443'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
