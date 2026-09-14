@@ -37,17 +37,21 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
             AND #{source_condition}
         ),
         session_pageviews AS (
-          SELECT
-            bpe.session_id,
-            MIN(bpe.created_at)::date AS date,
-            COUNT(*) AS pageview_count,
-            bool_or(bpe.user_id IS NOT NULL) AS logged_in,
-            bool_or(#{CrawlerScorer.likely_crawler_condition(table: "bpe")}) AS likely_crawler
-          FROM browser_pageview_events bpe
-          JOIN active_sessions ON active_sessions.session_id = bpe.session_id
-          WHERE #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
-          GROUP BY bpe.session_id
-          HAVING MIN(bpe.created_at) >= :start_date
+          SELECT sp.*
+          FROM active_sessions
+          CROSS JOIN LATERAL (
+            SELECT
+              bpe.session_id,
+              MIN(bpe.created_at)::date AS date,
+              COUNT(*) AS pageview_count,
+              bool_or(bpe.user_id IS NOT NULL) AS logged_in,
+              bool_or(#{CrawlerScorer.likely_crawler_condition(table: "bpe")}) AS likely_crawler
+            FROM browser_pageview_events bpe
+            WHERE bpe.session_id = active_sessions.session_id
+              AND #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
+            GROUP BY bpe.session_id
+            HAVING MIN(bpe.created_at) >= :start_date
+          ) sp
         )
         INSERT INTO browser_pageview_session_engagement_daily_rollups
           (
