@@ -451,7 +451,10 @@ RSpec.describe UploadCreator do
         end
 
         it "alters the image quality" do
-          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+          upload =
+            UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(
+              user.id,
+            )
 
           expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
 
@@ -461,6 +464,15 @@ RSpec.describe UploadCreator do
           expect(image_quality(upload.optimized_images.first.url)).to eq(
             SiteSetting.image_preview_jpg_quality,
           )
+        end
+
+        it "preserves PNG format when conversion is not independently requested" do
+          global_setting :enable_vips_image_processing, true
+
+          upload = described_class.new(file, filename, force_optimize: true).create_for(user.id)
+
+          expect(upload).to be_persisted
+          expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
         end
 
         it "does not convert animated images" do

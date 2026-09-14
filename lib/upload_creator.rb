@@ -472,16 +472,10 @@ class UploadCreator
   end
 
   def should_alter_quality?
+    return false if @image_info.type != :jpeg
     return false if animated?
 
-    desired_quality =
-      (
-        if @image_info.type == :png
-          SiteSetting.ImageQuality.png_to_jpg_quality
-        else
-          SiteSetting.ImageQuality.recompress_original_jpg_quality
-        end
-      )
+    desired_quality = SiteSetting.ImageQuality.recompress_original_jpg_quality
 
     @upload.target_image_quality(@file.path, desired_quality).present?
   end

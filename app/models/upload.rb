@@ -451,15 +451,21 @@ class Upload < ActiveRecord::Base
   def target_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
-        ImageMagick.identify(
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          operation: :upload_quality_probe,
-          read: [local_path],
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
+        return test_quality if File.open(local_path, "rb") { |file| FastImage.type(file) } != :jpeg
+
+        if GlobalSetting.enable_vips_image_processing
+          DiscourseVips.jpeg_quality(input_path: local_path, timeout: MAX_IDENTIFY_SECONDS).to_i
+        else
+          ImageMagick.identify(
+            "-ping",
+            "-format",
+            "%Q",
+            local_path,
+            operation: :upload_quality_probe,
+            read: [local_path],
+            timeout: MAX_IDENTIFY_SECONDS,
+          ).to_i
+        end
       rescue StandardError
         0
       end

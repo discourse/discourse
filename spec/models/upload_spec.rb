@@ -1175,6 +1175,36 @@ RSpec.describe Upload do
   describe "#target_image_quality" do
     let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
 
+    context "when libvips image processing is enabled" do
+      let(:local_path) { file_from_fixtures("exif_orientation.jpg").path }
+
+      before { global_setting :enable_vips_image_processing, true }
+
+      it "preserves a JPEG already below the requested quality" do
+        expect(upload.target_image_quality(local_path, 100)).to eq(nil)
+      end
+
+      it "reduces a JPEG above the requested quality" do
+        expect(upload.target_image_quality(local_path, 90)).to eq(90)
+      end
+
+      it "uses the configured PNG conversion quality without estimating the source" do
+        path = file_from_fixtures("logo.png").path
+
+        expect(upload.target_image_quality(path, 100)).to eq(100)
+      end
+
+      it "uses the configured GIF preview quality" do
+        path = file_from_fixtures("tiny_animated.gif").path
+
+        expect(upload.target_image_quality(path, 95)).to eq(95)
+      end
+
+      it "uses the requested quality when a JPEG cannot be read" do
+        expect(upload.target_image_quality("/missing-quality-input.jpg", 90)).to eq(90)
+      end
+    end
+
     it "returns nil when the target quality is higher than the source quality" do
       target_quality = upload.target_image_quality(local_path, 100)
 
