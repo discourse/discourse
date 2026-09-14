@@ -448,7 +448,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, requested_quality, operation: :recompression)
+  def target_jpeg_quality(local_path, requested_quality, operation: :recompression)
     if %i[recompression encoding].exclude?(operation)
       raise ArgumentError, "Unknown image quality operation: #{operation}"
     end
@@ -458,7 +458,10 @@ class Upload < ActiveRecord::Base
         return if File.open(local_path, "rb") { |file| FastImage.type(file) } != :jpeg
 
         if GlobalSetting.enable_vips_image_processing
-          DiscourseVips.jpeg_quality(input_path: local_path, timeout: MAX_IDENTIFY_SECONDS).to_i
+          DiscourseVips.estimated_jpeg_quality(
+            input_path: local_path,
+            timeout: MAX_IDENTIFY_SECONDS,
+          ).to_i
         else
           ImageMagick.identify(
             "-ping",

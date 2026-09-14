@@ -397,7 +397,7 @@ class UploadCreator
 
     target_quality =
       if @image_info.type == :jpeg
-        @upload.target_image_quality(@file.path, desired_quality, operation: :encoding)
+        @upload.target_jpeg_quality(@file.path, desired_quality, operation: :encoding)
       else
         desired_quality
       end
@@ -481,7 +481,7 @@ class UploadCreator
 
     desired_quality = SiteSetting.ImageQuality.recompress_original_jpg_quality
 
-    @upload.target_image_quality(@file.path, desired_quality).present?
+    @upload.target_jpeg_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?

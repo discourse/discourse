@@ -6,8 +6,8 @@ module DiscourseVips
   SVG_DIMENSIONS_TIMEOUT_SECONDS = 3
   private_constant :SVG_DIMENSIONS_TIMEOUT_SECONDS
 
-  def self.jpeg_quality(input_path:, timeout:)
-    Client.call(["jpeg-quality", input_path], operation: :upload_quality_probe, timeout:)
+  def self.estimated_jpeg_quality(input_path:, timeout:)
+    Client.call(["estimated-jpeg-quality", input_path], operation: :upload_quality_probe, timeout:)
   end
 
   def self.version

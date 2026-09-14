@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseVips do
-  describe ".jpeg_quality" do
+  describe ".estimated_jpeg_quality" do
     it "returns the estimated JPEG quality" do
       result =
-        described_class.jpeg_quality(
+        described_class.estimated_jpeg_quality(
           input_path: file_from_fixtures("exif_orientation.jpg").path,
           timeout: 5,
         )
@@ -14,7 +14,10 @@ RSpec.describe DiscourseVips do
 
     it "rejects a non-JPEG image and keeps the worker available" do
       expect do
-        described_class.jpeg_quality(input_path: file_from_fixtures("logo.png").path, timeout: 5)
+        described_class.estimated_jpeg_quality(
+          input_path: file_from_fixtures("logo.png").path,
+          timeout: 5,
+        )
       end.to raise_error(DiscourseVips::InvalidImage)
 
       expect(described_class.version).to be_present

@@ -47,8 +47,8 @@ class DiscourseVipsWorker
       case operation
       when "version"
         version
-      when "jpeg-quality"
-        jpeg_quality(input_path: arguments[0])
+      when "estimated-jpeg-quality"
+        estimated_jpeg_quality(input_path: arguments[0])
       when "letter-avatar"
         letter_avatar(*arguments)
       when "dominant-color"
@@ -91,14 +91,14 @@ class DiscourseVipsWorker
     end
     private_class_method :version
 
-    def self.jpeg_quality(input_path:)
+    def self.estimated_jpeg_quality(input_path:)
       new(read_paths: [input_path]) do
         DiscourseVips::JpegQuality.estimate(input_path).quality
       rescue DiscourseVips::JpegQuality::Error => error
         raise InvalidImage, error.message
       end
     end
-    private_class_method :jpeg_quality
+    private_class_method :estimated_jpeg_quality
 
     def self.letter_avatar(letter, output_path, background_color, font, font_path)
       new(

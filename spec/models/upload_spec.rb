@@ -1172,7 +1172,7 @@ RSpec.describe Upload do
     end
   end
 
-  describe "#target_image_quality" do
+  describe "#target_jpeg_quality" do
     let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
 
     context "when libvips image processing is enabled" do
@@ -1181,67 +1181,67 @@ RSpec.describe Upload do
       before { global_setting :enable_vips_image_processing, true }
 
       it "returns nil when the JPEG quality is below the requested quality" do
-        expect(upload.target_image_quality(local_path, 100)).to eq(nil)
+        expect(upload.target_jpeg_quality(local_path, 100)).to eq(nil)
       end
 
       it "returns the requested quality when the JPEG quality is higher" do
-        expect(upload.target_image_quality(local_path, 90)).to eq(90)
+        expect(upload.target_jpeg_quality(local_path, 90)).to eq(90)
       end
 
       it "returns nil for a PNG" do
         path = file_from_fixtures("logo.png").path
 
-        expect(upload.target_image_quality(path, 100)).to eq(nil)
+        expect(upload.target_jpeg_quality(path, 100)).to eq(nil)
       end
 
       it "returns nil for an animated GIF" do
         path = file_from_fixtures("tiny_animated.gif").path
 
-        expect(upload.target_image_quality(path, 95)).to eq(nil)
+        expect(upload.target_jpeg_quality(path, 95)).to eq(nil)
       end
 
       it "returns nil for a static GIF" do
         path = file_from_fixtures("static.gif").path
 
-        expect(upload.target_image_quality(path, 90)).to eq(nil)
+        expect(upload.target_jpeg_quality(path, 90)).to eq(nil)
       end
 
       it "returns nil for a static WebP" do
         path = file_from_fixtures("static.webp").path
 
-        expect(upload.target_image_quality(path, 90)).to eq(nil)
+        expect(upload.target_jpeg_quality(path, 90)).to eq(nil)
       end
 
       it "returns nil when the JPEG quality cannot be read" do
-        expect(upload.target_image_quality("/missing-quality-input.jpg", 90)).to eq(nil)
+        expect(upload.target_jpeg_quality("/missing-quality-input.jpg", 90)).to eq(nil)
       end
 
       it "returns nil when a custom-table JPEG is below the requested quality" do
-        expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 100)).to eq(nil)
+        expect(upload.target_jpeg_quality(file_from_fixtures("logo.jpg").path, 100)).to eq(nil)
       end
 
       it "returns the requested quality when a custom-table JPEG is above it" do
-        expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(90)
+        expect(upload.target_jpeg_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(90)
       end
 
       it "returns the requested encoding quality when JPEG quality cannot be read" do
         expect(
-          upload.target_image_quality("/missing-quality-input.jpg", 90, operation: :encoding),
+          upload.target_jpeg_quality("/missing-quality-input.jpg", 90, operation: :encoding),
         ).to eq(90)
       end
 
       it "limits the encoding quality to the known source quality" do
-        expect(upload.target_image_quality(local_path, 100, operation: :encoding)).to eq(95)
+        expect(upload.target_jpeg_quality(local_path, 100, operation: :encoding)).to eq(95)
       end
 
       it "uses the lower requested encoding quality" do
-        expect(upload.target_image_quality(local_path, 90, operation: :encoding)).to eq(90)
+        expect(upload.target_jpeg_quality(local_path, 90, operation: :encoding)).to eq(90)
       end
 
       it "returns nil for a non-JPEG source even when encoding is required" do
         path = file_from_fixtures("logo.png").path
 
-        expect(upload.target_image_quality(path, 90, operation: :encoding)).to eq(nil)
+        expect(upload.target_jpeg_quality(path, 90, operation: :encoding)).to eq(nil)
       end
 
       it "returns nil for optional recompression when JPEG component roles are ambiguous" do
@@ -1251,7 +1251,7 @@ RSpec.describe Upload do
         marker = [0xFF, 0xEE, adobe.bytesize + 2].pack("CCn") + adobe
         File.binwrite(jpeg.path, original.byteslice(0, 2) + marker + original.byteslice(2..))
 
-        expect(upload.target_image_quality(jpeg.path, 90)).to eq(nil)
+        expect(upload.target_jpeg_quality(jpeg.path, 90)).to eq(nil)
       end
 
       it "returns the requested encoding quality when JPEG component roles are ambiguous" do
@@ -1261,18 +1261,18 @@ RSpec.describe Upload do
         marker = [0xFF, 0xEE, adobe.bytesize + 2].pack("CCn") + adobe
         File.binwrite(jpeg.path, original.byteslice(0, 2) + marker + original.byteslice(2..))
 
-        expect(upload.target_image_quality(jpeg.path, 90, operation: :encoding)).to eq(90)
+        expect(upload.target_jpeg_quality(jpeg.path, 90, operation: :encoding)).to eq(90)
       end
     end
 
     it "returns nil when the target quality is higher than the source quality" do
-      target_quality = upload.target_image_quality(local_path, 100)
+      target_quality = upload.target_jpeg_quality(local_path, 100)
 
       expect(target_quality).to eq(nil)
     end
 
     it "returns the target quality when it is lower than the source quality" do
-      target_quality = upload.target_image_quality(local_path, 10)
+      target_quality = upload.target_jpeg_quality(local_path, 10)
 
       expect(target_quality).to eq(10)
     end

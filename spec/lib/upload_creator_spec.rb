@@ -502,7 +502,10 @@ RSpec.describe UploadCreator do
           preview = upload.optimized_images.first
           expect(preview).to be_persisted
           expect(
-            DiscourseVips.jpeg_quality(input_path: Discourse.store.path_for(preview), timeout: 5),
+            DiscourseVips.estimated_jpeg_quality(
+              input_path: Discourse.store.path_for(preview),
+              timeout: 5,
+            ),
           ).to eq(10)
         end
 
@@ -521,7 +524,10 @@ RSpec.describe UploadCreator do
           expect(upload).to be_persisted
           expect(upload.filesize).to be < original.bytesize * 0.70
           expect(
-            DiscourseVips.jpeg_quality(input_path: Discourse.store.path_for(upload), timeout: 5),
+            DiscourseVips.estimated_jpeg_quality(
+              input_path: Discourse.store.path_for(upload),
+              timeout: 5,
+            ),
           ).to eq(90)
         end
 
