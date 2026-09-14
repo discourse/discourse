@@ -788,9 +788,9 @@ export default class VoiceCallWidget extends Component {
               <:content as |roomMenu|>
                 <DDropdownMenu as |dropdown|>
                   <VoiceInviteAgentButton
-                    @room={{this.room}}
-                    @item={{dropdown.item}}
                     @closeMenu={{roomMenu.close}}
+                    @item={{dropdown.item}}
+                    @room={{this.room}}
                   />
                   {{#if this.chatAvailable}}
                     <dropdown.item>

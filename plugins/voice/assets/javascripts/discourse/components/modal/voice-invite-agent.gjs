@@ -27,17 +27,17 @@ export default class VoiceInviteAgentModal extends Component {
 
   <template>
     <DModal
+      @closeModal={{@closeModal}}
       @inline={{@inline}}
       @title={{i18n "voice.agent.invite"}}
-      @closeModal={{@closeModal}}
     >
       <:body>
         <Form @data={{hash agent_name=""}} @onSubmit={{this.invite}} as |form|>
           <form.Field
-            @name="agent_name"
-            @type="input"
-            @title={{i18n "voice.agent.name"}}
             @description={{i18n "voice.agent.name_help"}}
+            @name="agent_name"
+            @title={{i18n "voice.agent.name"}}
+            @type="input"
             @validation="required"
             as |field|
           >

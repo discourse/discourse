@@ -75,9 +75,9 @@ export default class VoiceRoomSidebarContextMenu extends Component {
   <template>
     <DDropdownMenu class="voice-room-sidebar-context-menu" as |dropdown|>
       <VoiceInviteAgentButton
-        @room={{this.room}}
-        @item={{dropdown.item}}
         @closeMenu={{@close}}
+        @item={{dropdown.item}}
+        @room={{this.room}}
       />
       <dropdown.item>
         <DButton

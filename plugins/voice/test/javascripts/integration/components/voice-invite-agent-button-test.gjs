@@ -36,7 +36,7 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     await render(
       <template>
         <DDropdownMenu as |dropdown|>
-          <VoiceInviteAgentButton @room={{this.room}} @item={{dropdown.item}} />
+          <VoiceInviteAgentButton @item={{dropdown.item}} @room={{this.room}} />
         </DDropdownMenu>
       </template>
     );
@@ -60,9 +60,9 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     await render(
       <template>
         <VoiceInviteAgentModal
+          @closeModal={{this.closeModal}}
           @inline={{true}}
           @model={{this.model}}
-          @closeModal={{this.closeModal}}
         />
       </template>
     );
@@ -84,8 +84,8 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
         <template>
           <DDropdownMenu as |dropdown|>
             <VoiceInviteAgentButton
-              @room={{this.testRoom}}
               @item={{dropdown.item}}
+              @room={{this.testRoom}}
             />
           </DDropdownMenu>
         </template>
@@ -99,7 +99,7 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     await render(
       <template>
         <DDropdownMenu as |dropdown|>
-          <VoiceInviteAgentButton @room={{this.room}} @item={{dropdown.item}} />
+          <VoiceInviteAgentButton @item={{dropdown.item}} @room={{this.room}} />
         </DDropdownMenu>
       </template>
     );
@@ -110,7 +110,7 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     await render(
       <template>
         <DDropdownMenu as |dropdown|>
-          <VoiceInviteAgentButton @room={{this.room}} @item={{dropdown.item}} />
+          <VoiceInviteAgentButton @item={{dropdown.item}} @room={{this.room}} />
         </DDropdownMenu>
       </template>
     );

@@ -61,8 +61,8 @@ module(
       await render(
         <template>
           <VoiceParticipantSidebarContextMenu
-            @data={{this.menuData}}
             @close={{this.closeMenu}}
+            @data={{this.menuData}}
           />
         </template>
       );
