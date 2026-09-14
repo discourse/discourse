@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module DiscourseVips
-  # Estimates the closest IJG-equivalent quality from JPEG quantization tables for optional recompression.
-  # This does not measure perceptual quality or recover the encoder's original quality setting.
+  # Compares stored JPEG tables with libjpeg tables from the Independent JPEG Group (IJG).
+  # The closest quality setting guides optional recompression; it is a comparison scale,
+  # not perceptual quality or necessarily the encoder's original setting.
   module JpegQuality
     class Error < StandardError
     end
