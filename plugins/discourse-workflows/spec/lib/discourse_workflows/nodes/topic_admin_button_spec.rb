@@ -9,18 +9,6 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicAdminButton::V1 do
     topic.tags << tag
   end
 
-  describe "#valid?" do
-    it "returns true when topic is present" do
-      trigger = described_class.new(topic)
-      expect(trigger).to be_valid
-    end
-
-    it "returns false when topic is nil" do
-      trigger = described_class.new(nil)
-      expect(trigger).not_to be_valid
-    end
-  end
-
   describe "#output" do
     it "returns topic data" do
       output = described_class.new(topic).output

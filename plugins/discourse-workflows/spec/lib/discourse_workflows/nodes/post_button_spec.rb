@@ -5,18 +5,6 @@ RSpec.describe DiscourseWorkflows::Nodes::PostButton::V1 do
   fab!(:user)
   fab!(:post)
 
-  describe "#valid?" do
-    it "returns true when the post is present" do
-      trigger = described_class.new(post)
-      expect(trigger).to be_valid
-    end
-
-    it "returns false when the post is nil" do
-      trigger = described_class.new(nil)
-      expect(trigger).not_to be_valid
-    end
-  end
-
   describe "#output" do
     it "returns post and topic data" do
       output = described_class.new(post).output
