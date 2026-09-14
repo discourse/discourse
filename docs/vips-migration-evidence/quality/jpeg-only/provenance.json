@@ -1,17 +1,17 @@
 {
-  "source_head": "d656d482cef213de1d2fce9fe556da3bad23fdd0",
+  "source_head": "5b461339427e38ad4eeb3c0d574a59bfcdcd5bec",
   "production_image": "discourse/base:2.0.20260812-0036@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
   "source_sha256": {
-    "lib/discourse_vips.rb": "30a350223b2f9bf8b5ea06f1ae14963bc8894acd71f25e2d67497575ad8dd33b",
+    "lib/discourse_vips.rb": "b456937d58932af1254bc47084e53c6a143a21dbcb3c3c7b4311529acdc534c9",
     "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
     "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
-    "lib/discourse_vips/jpeg_quality.rb": "bdd1cecad7b475586ad720203978071f15ad49bada98223b9a25805ea396f371",
+    "lib/discourse_vips/jpeg_quality.rb": "9b143515c378cccbd3931c3636745764d95275ea76e63ca1daaf4467d54c33e3",
     "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
     "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
     "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
-    "script/discourse_vips_worker": "7e1f4e796b3aee66ec3b08e1ff834fccdf81a3909b6d67aae2139eb867035e23",
-    "app/models/upload.rb": "0c211ec938f2da39984a7c6e1cd8ad331df6126c3c7bd3850db948ec7cef19d2",
-    "lib/upload_creator.rb": "f2316f8b504a35dc8da88b65b4e9223d95c1f6e69e8ecc1c2adeb2a8e066303f",
+    "script/discourse_vips_worker": "7f4bf04400cf9ee3eee23101c84d9d273cc53c20e6d90590b4559d45e4a2ab61",
+    "app/models/upload.rb": "0985c22a5561923f5566282146a4bada99ee04f6401938a44f3e91f73585b7aa",
+    "lib/upload_creator.rb": "18d65cb889b08cdc73efe05b384fd5d63385e977650a81a585e4a5d700c47807",
     "app/models/optimized_image.rb": "b5ceadcd2820a16942ca9b60288228037e6c6185126e0d8d711b2934a6ef913e"
   },
   "gist_revision": "5191bbf2abec0bdce138896420a8e6b4272223cf",
@@ -494,6 +494,6 @@
     "output_policy": "Upload#target_jpeg_quality",
     "scope": "Source estimation only decides optional existing-JPEG recompression. JPEG destinations receive configured output quality directly; other destinations receive no JPEG preview quality setting."
   },
-  "measurement_source_head": "9e970d7a315f13fc72df7dd0e5ce6170da023a6e",
-  "measurement_compatibility": "Facade, estimator, worker and executed benchmark script are byte-identical to measurement_source_head; subsequent changes simplify Rails caller policy and are covered by 56 focused tests."
+  "measurement_source_head": "5b461339427e38ad4eeb3c0d574a59bfcdcd5bec",
+  "source_base": "f15bf9887c71fc906e512cf4ca47cd87f70764ee"
 }
