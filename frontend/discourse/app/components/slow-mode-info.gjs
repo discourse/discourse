@@ -1,7 +1,5 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { action, get, set } from "@ember/object";
 import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Topic from "discourse/models/topic";
@@ -9,23 +7,31 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class SlowModeInfo extends Component {
-  @computed("topic.slow_mode_seconds")
+  // `slow_mode_seconds` and `closed` are plain fields on the topic model, so they are
+  // only tracked when read through `get`.
   get durationText() {
-    return durationTextFromSeconds(this.topic?.slow_mode_seconds);
+    return durationTextFromSeconds(
+      this.args.topic && get(this.args.topic, "slow_mode_seconds")
+    );
   }
 
-  @computed("topic.slow_mode_seconds", "topic.closed")
   get showSlowModeNotice() {
-    return this.topic?.slow_mode_seconds > 0 && !this.topic?.closed;
+    if (!this.args.topic) {
+      return false;
+    }
+
+    return (
+      get(this.args.topic, "slow_mode_seconds") > 0 &&
+      !get(this.args.topic, "closed")
+    );
   }
 
   @action
   disableSlowMode() {
-    Topic.setSlowMode(this.topic.id, 0)
+    Topic.setSlowMode(this.args.topic.id, 0)
       .catch(popupAjaxError)
-      .then(() => this.set("topic.slow_mode_seconds", 0));
+      .then(() => set(this.args.topic, "slow_mode_seconds", 0));
   }
 
   <template>
@@ -40,7 +46,7 @@ export default class SlowModeInfo extends Component {
             }}
           </span>
 
-          {{#if this.user.canManageTopic}}
+          {{#if @user.canManageTopic}}
             <DButton
               class="slow-mode-remove"
               @action={{this.disableSlowMode}}
