@@ -6,6 +6,11 @@
 
 de:
   mcp:
+    errors:
+      draft_too_long: "Der Entwurf ist zu lang"
+      post_not_found: "Beitrag nicht gefunden"
+      topic_not_found: "Thema nicht gefunden"
+      user_not_found: "Benutzer nicht gefunden"
     oauth:
       resource: "MCP-Server"
       deny: "ablehnen"

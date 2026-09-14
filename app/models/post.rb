@@ -323,11 +323,7 @@ class Post < ActiveRecord::Base
     !add_nofollow?
   end
 
-  def cook(raw, opts = {})
-    # For some posts, for example those imported via RSS, we support raw HTML. In that
-    # case we can skip the rendering pipeline.
-    return raw if cook_method == Post.cook_methods[:raw_html]
-
+  def markdown_options(opts = {})
     options = opts.dup
     options[:cook_method] = cook_method
 
@@ -340,6 +336,15 @@ class Post < ActiveRecord::Base
     options[:user_id] = last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
+    options
+  end
+
+  def cook(raw, opts = {})
+    # For some posts, for example those imported via RSS, we support raw HTML. In that
+    # case we can skip the rendering pipeline.
+    return raw if cook_method == Post.cook_methods[:raw_html]
+
+    options = markdown_options(opts)
 
     if should_secure_uploads?
       each_upload_url do |url|

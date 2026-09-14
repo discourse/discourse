@@ -14,6 +14,10 @@ module Chat
       "channel"
     end
 
+    def self.ref_for(channel_id)
+      Chat::Channel.where(id: channel_id, deleted_at: nil).pick(:slug)
+    end
+
     def self.channel_to_hashtag_item(guardian, channel)
       HashtagAutocompleteService::HashtagItem.new.tap do |item|
         item.text = channel.title

@@ -6,6 +6,11 @@
 
 es:
   mcp:
+    errors:
+      draft_too_long: "El borrador es demasiado largo"
+      post_not_found: "Publicación no encontrada"
+      topic_not_found: "Tema no encontrado"
+      user_not_found: "Usuario no encontrado"
     oauth:
       resource: "Servidor MCP"
       deny: "Denegar"

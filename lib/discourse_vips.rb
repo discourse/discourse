@@ -23,6 +23,20 @@ module DiscourseVips
     )
   end
 
+  # Uses GIF/WebP frame counts and HEIF/AVIF image collections.
+  # APNG and timed HEIF/AVIF sequences are unsupported.
+  def self.animated?(input_path:, timeout:)
+    Client.call(["animated", input_path], operation: :upload_animation_probe, timeout:)
+  end
+
+  def self.heif_to_jpeg(input_path:, output_path:, timeout:)
+    Client.call(
+      ["heif-to-jpeg", input_path, output_path],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
   def self.before_fork
     Client.before_fork
   end

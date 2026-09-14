@@ -6,6 +6,11 @@
 
 ar:
   mcp:
+    errors:
+      draft_too_long: "المسودة طويلة للغاية"
+      post_not_found: "المنشور غير موجود"
+      topic_not_found: "الموضوع غير موجود"
+      user_not_found: "المستخدم غير موجود"
     oauth:
       resource: "خادم MCP"
       deny: "الرفض"

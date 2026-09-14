@@ -6,6 +6,9 @@
 
 fi:
   mcp:
+    errors:
+      draft_too_long: "Luonnos on liian pitkä"
+      topic_not_found: "Ketjua ei löytynyt"
     oauth:
       deny: "Hylkää"
       approve: "Anna käyttöoikeus"

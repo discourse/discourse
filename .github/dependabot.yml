@@ -81,6 +81,10 @@ updates:
     versioning-strategy: increase
     ignore:
       - dependency-name: "webpack" # Recent versions have bugs with `/static` loading. We're working to move away from webpack anyway.
+      # Pinned as exact peers by @discourse/lint-configs; bump them there, and the lint-configs update carries them here.
+      - dependency-name: "eslint"
+      - dependency-name: "prettier"
+      - dependency-name: "stylelint"
     groups:
       babel:
         patterns:
@@ -115,9 +119,3 @@ updates:
       fullcalendar:
         patterns:
           - "@fullcalendar/*"
-      lint:
-        patterns:
-          - "@discourse/lint-configs"
-          - "eslint"
-          - "prettier"
-          - "stylelint"

@@ -6,6 +6,9 @@
 
 fa_IR:
   mcp:
+    errors:
+      draft_too_long: "پیش‌نویس خیلی طولانی است"
+      topic_not_found: "موضوع پیدا نشد"
     oauth:
       deny: "رد کردن"
       approve: "اجازه دادن"

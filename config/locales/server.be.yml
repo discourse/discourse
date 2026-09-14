@@ -6,6 +6,8 @@
 
 be:
   mcp:
+    errors:
+      topic_not_found: "Тэма не знойдзена"
     oauth:
       approve: "Аўтарызаваць"
   llms_txt:

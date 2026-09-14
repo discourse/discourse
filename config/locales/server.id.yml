@@ -6,6 +6,9 @@
 
 id:
   mcp:
+    errors:
+      draft_too_long: "Draf terlalu panjang"
+      topic_not_found: "Tidak ada topik"
     oauth:
       deny: "Menolak"
       approve: "Izinkan"

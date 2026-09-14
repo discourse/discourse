@@ -6465,6 +6465,8 @@ pl_PL:
         synonyms_hint: "W przypadku użycia powyższych tagów zostaną one zastąpione przez %{baseTagName}."
         add_synonyms_confirm: "Każde miejsce, w którym obecnie używany jest kod %{synonymNames} , zostanie zmienione na kod %{tagName} . Czy na pewno chcesz wprowadzić tę zmianę?"
       localization:
+        language: "Język tagów"
+        language_description: "Podstawowy język nazwy i opisu tego tagu."
         hint: "Dodaj lokalizacje, aby wyświetlać różne nazwy tagów użytkownikom w różnych językach."
         locale: "Ustawienia regionalne"
         name: "Nazwa"

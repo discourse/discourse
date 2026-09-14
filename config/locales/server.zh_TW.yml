@@ -6,6 +6,8 @@
 
 zh_TW:
   mcp:
+    errors:
+      topic_not_found: "未找到話題"
     oauth:
       resource: "MCP 服務器"
       deny: "拒絕"

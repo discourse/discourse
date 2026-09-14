@@ -254,7 +254,8 @@ module OmniAuth
         return super if options.use_userinfo
         response =
           client.request(:post, options[:client_options][:token_url], body: get_token_options)
-        ::OAuth2::AccessToken.from_hash(client, response.parsed)
+        parsed = response.parsed
+        ::OAuth2::AccessToken.new(client, parsed["id_token"].to_s, parsed)
       end
     end
   end

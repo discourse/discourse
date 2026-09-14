@@ -3,18 +3,18 @@
 require "discourse_diff"
 
 RSpec.describe DiscourseDiff do
+  it "does not lead to XSS" do
+    a = "<test>start</test>"
+    b = "<test>end</test>"
+    prev = "<div>#{CGI.escapeHTML(a)}</div>"
+    cur = "<div>#{CGI.escapeHTML(b)}</div>"
+
+    diff = DiscourseDiff.new(prev, cur)
+    expect(diff.inline_html).not_to match(%r{</?test>})
+    expect(diff.side_by_side_html).not_to match(%r{</?test>})
+  end
+
   describe "inline_html" do
-    it "does not lead to XSS" do
-      a = "<test>start</test>"
-      b = "<test>end</test>"
-      prev = "<div>#{CGI.escapeHTML(a)}</div>"
-      cur = "<div>#{CGI.escapeHTML(b)}</div>"
-
-      diff = DiscourseDiff.new(prev, cur)
-      expect(diff.inline_html).not_to match(%r{</?test>})
-      expect(diff.side_by_side_html).not_to match(%r{</?test>})
-    end
-
     it "returns an empty div when no content is diffed" do
       expect(DiscourseDiff.new("", "").inline_html).to eq("<div class=\"inline-diff\"></div>")
     end
@@ -92,8 +92,7 @@ RSpec.describe DiscourseDiff do
     it "adds <ins> and <del> tags on consecutive paragraphs" do
       before = "<p>this is one paragraph</p><p>here is yet another</p>"
       after = "<p>this is one great paragraph</p><p>here is another</p>"
-      got = DiscourseDiff.new(before, after).side_by_side_html
-      expect(got).to eq(
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
         "<div class=\"revision-content --previous\"><p>this is one paragraph</p><p>here is <del>yet </del>another</p></div><div class=\"revision-content --current\"><p>this is one <ins>great </ins>paragraph</p><p>here is another</p></div>",
       )
     end
@@ -130,11 +129,43 @@ RSpec.describe DiscourseDiff do
       )
     end
 
-    it "escapes attribute values" do
-      before = "<p data-attr='Some \"quoted\" string'></p>"
-      after = "<p data-attr='Some \"quoted\" string'></p>"
+    it "leaves formatting whitespace and closing tags undecorated" do
+      before = "<p>a paragraph</p>"
+      after = "<div class=\"grid\">\n  <span>a paragraph</span>\n</div>"
       expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
-        "<div class=\"revision-content --previous\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div><div class=\"revision-content --current\"><p data-attr=\"Some &quot;quoted&quot; string\"></p></div>",
+        "<div class=\"revision-content --previous\"><p class=\"diff-del\">a paragraph</p></div><div class=\"revision-content --current\"><div class=\"diff-ins grid\">\n  <span class=\"diff-ins\">a paragraph</span>\n</div></div>",
+      )
+    end
+
+    it "still decorates whitespace inside text" do
+      before = "<pre><code>foo\nbar</code></pre>"
+      after = "<pre><code>foo\n  bar</code></pre>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><pre><code>foo\nbar</code></pre></div><div class=\"revision-content --current\"><pre><code>foo\n<ins> </ins><ins> </ins>bar</code></pre></div>",
+      )
+    end
+
+    it "ignores a class= inside an attribute value" do
+      before = "<p>x</p>"
+      after = "<p><a title=\"class=foo\">bar</a></p>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><p><del>x</del></p></div><div class=\"revision-content --current\"><p><a title=\"class=foo\" class=\"diff-ins\"><ins>bar</ins></a></p></div>",
+      )
+    end
+
+    it "adds the class to the outer tag of an added block" do
+      before = "<p>keep</p>"
+      after = "<p>keep</p><div><span class=\"foo\">new</span></div>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><p>keep</p></div><div class=\"revision-content --current\"><p>keep</p><div class=\"diff-ins\"><span class=\"foo\">new</span></div></div>",
+      )
+    end
+
+    it "escapes attribute values" do
+      before = "<p data-attr='Some \"quoted\" string'>x</p>"
+      after = "<p data-attr='Some \"quoted\" string'>y</p>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><p data-attr=\"Some &quot;quoted&quot; string\"><del>x</del></p></div><div class=\"revision-content --current\"><p data-attr=\"Some &quot;quoted&quot; string\"><ins>y</ins></p></div>",
       )
     end
   end
@@ -165,7 +196,7 @@ RSpec.describe DiscourseDiff do
       before = "this is a paragraph"
       after = "this is a great paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is a paragraph</td><td class=\"--current diff-ins\">this is a <ins>great </ins>paragraph</td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous\">this is a paragraph</td><td class=\"--current\">this is a <ins>great </ins>paragraph</td></tr></table>",
       )
     end
 
@@ -173,15 +204,15 @@ RSpec.describe DiscourseDiff do
       before = "this is a great paragraph"
       after = "this is a paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is a <del>great </del>paragraph</td><td class=\"--current diff-ins\">this is a paragraph</td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous\">this is a <del>great </del>paragraph</td><td class=\"--current\">this is a paragraph</td></tr></table>",
       )
     end
 
-    it "adds .diff-ins class when a paragraph is added" do
+    it "marks only the changed words when a line is edited" do
       before = "this is the first paragraph"
       after = "this is the first paragraph\nthis is the second paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
-        "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is the first paragraph</td><td class=\"--current diff-ins\">this is the first paragraph<ins>\nthis is the second paragraph</ins></td></tr></table>",
+        "<table class=\"markdown\"><tr><td class=\"--previous\">this is the first paragraph</td><td class=\"--current\">this is the first paragraph<ins>\nthis is the second paragraph</ins></td></tr></table>",
       )
     end
 

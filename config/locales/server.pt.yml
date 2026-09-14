@@ -6,6 +6,8 @@
 
 pt:
   mcp:
+    errors:
+      topic_not_found: "Tópico não encontrado"
     oauth:
       deny: "Rejeitar"
       approve: "Autorizar"

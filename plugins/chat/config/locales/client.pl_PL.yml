@@ -669,7 +669,8 @@ pl_PL:
       direct_messages:
         title: "PW"
         aria_label: "Przełącz na wiadomości bezpośrednie"
-        new: "Nowa wiadomość bezpośrednia lub czat grupowy..."
+        new: "Nowa wiadomość bezpośrednia"
+        new_group: "Nowy czat grupowy"
         create: "Utwórz"
         leave: "Opuść kanał"
         close: "Zamknij kanał"

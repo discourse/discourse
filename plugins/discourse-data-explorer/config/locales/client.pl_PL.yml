@@ -39,6 +39,7 @@ pl_PL:
         ai: "Generuj za pomocą AI"
       or: "lub"
       admins_only: "Eksplorator danych jest dostępny wyłącznie dla administratorów."
+      hidden_relation: "Nie masz dostępu do tej treści."
       allow_groups: "Zezwól grupom na dostęp do tego zapytania"
       title: "Eksplorator danych"
       create: "Utwórz"

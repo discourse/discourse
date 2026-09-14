@@ -9,10 +9,18 @@ class PostMover
 
   # options:
   # freeze_original: :boolean  - if true, the original topic will be frozen but not deleted and posts will be "copied" to topic
-  def initialize(original_topic, user, post_ids, move_to_pm: false, options: {})
+  def initialize(
+    original_topic,
+    user,
+    post_ids,
+    guardian: user.guardian,
+    move_to_pm: false,
+    options: {}
+  )
     @original_topic = original_topic
     @original_topic_title = original_topic.title
     @user = user
+    @guardian = guardian
     @post_ids = post_ids
     # For now we store a copy of post_ids. If `freeze_original` is present, we will have new post_ids.
     # When we create the new posts, we will pluck out post_ids out of this and replace with updated ids.
@@ -22,11 +30,14 @@ class PostMover
   end
 
   def to_topic(id, participants: nil, chronological_order: false)
+    @guardian.ensure_can_move_posts!(original_topic)
+    topic = Topic.find_by_id(id)
+    @guardian.ensure_can_create_post_on_topic!(topic)
+
     @move_type = PostMover.move_types[:existing_topic]
     @creating_new_topic = false
     @chronological_order = chronological_order
 
-    topic = Topic.find_by_id(id)
     if topic.archetype != @original_topic.archetype &&
          [@original_topic.archetype, topic.archetype].include?(Archetype.private_message)
       raise Discourse::InvalidParameters
@@ -39,6 +50,9 @@ class PostMover
   end
 
   def to_new_topic(title, category_id = nil, tag_ids: nil, tags: nil)
+    @guardian.ensure_can_move_posts!(original_topic)
+    @guardian.ensure_can_create_topic_on_category!(category_id) if category_id.present?
+
     @move_type = PostMover.move_types[:new_topic]
     @creating_new_topic = true
 

@@ -6,6 +6,8 @@
 
 gl:
   mcp:
+    errors:
+      topic_not_found: "Non foi posíbel atopar o tema"
     oauth:
       deny: "Rexeitar"
       approve: "Autorizar"

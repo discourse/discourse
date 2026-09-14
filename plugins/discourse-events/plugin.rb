@@ -1094,6 +1094,7 @@ after_initialize do
       },
       additionalProperties: false,
     },
+    output_schema: DiscourseEvents::McpTools::ListEvents::OUTPUT_SCHEMA,
     required_scopes: %w[discourse-calendar:read],
     annotations: {
       readOnlyHint: true,

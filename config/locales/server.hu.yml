@@ -6,6 +6,9 @@
 
 hu:
   mcp:
+    errors:
+      draft_too_long: "A vázlat túl hosszú"
+      topic_not_found: "A téma nem található"
     oauth:
       deny: "Tiltás"
       approve: "Engedélyezés"

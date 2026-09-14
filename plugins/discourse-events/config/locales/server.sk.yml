@@ -94,10 +94,8 @@ sk:
           raw_invitees_length: "Udalosť je obmedzená na %{count} používateľov/skupín."
           raw_invitees:
             only_group: "Udalosť akceptuje iba názvy skupín."
-          ends_at_before_starts_at: "Udalosť nemôže skončiť skôr, ako sa začne."
           start_must_be_present_and_a_valid_date: "Udalosť vyžaduje platný dátum začiatku."
           end_must_be_a_valid_date: "Dátum ukončenia musí byť platný dátum."
-          invalid_recurrence: "Opakovanie musí byť jedno z nasledujúcich: každý_mesiac, každý_týždeň, každé_dva_týždne, každé_štyri_týždne, každý_deň, každý_pracovný_deň."
           invalid_timezone: "Časové pásmo nebolo rozpoznané."
           acting_user_not_allowed_to_create_event: "Aktuálny používateľ nemá povolenie vytvárať udalosti."
           acting_user_not_allowed_to_act_on_this_event: "Aktuálny používateľ nemá povolené konať v súvislosti s touto udalosťou."

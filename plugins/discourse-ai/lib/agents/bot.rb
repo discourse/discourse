@@ -77,6 +77,25 @@ module DiscourseAi
         new(bot_user, agent, model)
       end
 
+      def self.json_schema_properties(response_format)
+        response_format
+          .to_a
+          .reduce({}) do |memo, format|
+            next memo if !format.is_a?(Hash) || format["key"].blank?
+
+            type_desc = { type: format["type"] }
+
+            if format["type"] == "array"
+              type_desc[:items] = { type: format["array_type"] || "string" }
+              max_items = format["max_items"]
+              type_desc[:maxItems] = max_items if max_items.is_a?(Integer) && max_items >= 0
+            end
+
+            memo[format["key"].to_sym] = type_desc
+            memo
+          end
+      end
+
       def initialize(bot_user, agent, model = nil)
         @bot_user = bot_user
         @agent = agent
@@ -946,21 +965,7 @@ module DiscourseAi
       end
 
       def build_json_schema(response_format)
-        properties =
-          response_format
-            .to_a
-            .reduce({}) do |memo, format|
-              type_desc = { type: format["type"] }
-
-              if format["type"] == "array"
-                type_desc[:items] = { type: format["array_type"] || "string" }
-                max_items = format["max_items"]
-                type_desc[:maxItems] = max_items if max_items.is_a?(Integer) && max_items >= 0
-              end
-
-              memo[format["key"].to_sym] = type_desc
-              memo
-            end
+        properties = self.class.json_schema_properties(response_format)
 
         {
           type: "json_schema",
