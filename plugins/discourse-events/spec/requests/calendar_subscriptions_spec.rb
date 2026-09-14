@@ -43,4 +43,19 @@ describe "Calendar subscription feeds" do
 
     expect(response.parsed_body["feeds"]).to contain_exactly("bookmarks", "all_events", "my_events")
   end
+
+  it "distinguishes generated events URLs from a bookmarks-only key and revocation" do
+    sign_in(user)
+    get "/calendar-subscriptions.json"
+    expect(response.parsed_body["subscribed_feeds"]).to eq([])
+    post "/calendar-subscriptions.json"
+    get "/calendar-subscriptions.json"
+    expect(response.parsed_body["subscribed_feeds"]).to contain_exactly("all_events", "my_events")
+    user.user_api_keys.last.scopes.where(name: "discourse-calendar:events_calendar").destroy_all
+    get "/calendar-subscriptions.json"
+    expect(response.parsed_body["subscribed_feeds"]).to eq([])
+    delete "/calendar-subscriptions.json"
+    get "/calendar-subscriptions.json"
+    expect(response.parsed_body["has_subscription"]).to eq(false)
+  end
 end

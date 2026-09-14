@@ -5,15 +5,28 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      raise Discourse::InvalidParameters.new(:event_id) if args[:event_id].blank?
-      raise Discourse::InvalidParameters.new(:reminder) if args[:reminder].blank?
+      return unless SiteSetting.discourse_post_event_enabled
+
+      return if args[:event_id].blank? || args[:reminder].blank?
 
       event =
         DiscourseEvents::Events::Event.includes(post: [:topic], invitees: [:user]).find(
           args[:event_id],
         )
 
-      return unless event.post
+      return if event.post.blank?
+      return if event.closed || event.deleted_at
+
+      event_date =
+        (
+          if args[:event_date_id]
+            event.event_dates.find_by(id: args[:event_date_id])
+          else
+            event.current_event_date
+          end
+        )
+
+      return if args[:event_date_id] && (!event_date || event_date.starts_at != event.starts_at)
 
       invitees =
         event.invitees.where(
@@ -22,6 +35,25 @@ module Jobs
             DiscourseEvents::Events::Invitee.statuses[:interested],
           ],
         )
+
+      invitees
+        .includes(user: :user_option)
+        .find_each do |invitee|
+          # Don't email the user for the reminder if they have turned off reminders or have notification only reminders
+          next if %w[email both].exclude?(invitee.user.user_option.event_reminder_preference)
+          next if event_date.blank?
+
+          Jobs.enqueue(
+            :user_email,
+            type: "event_reminder",
+            user_id: invitee.user_id,
+            force_respect_seen_recently: true,
+            notification_type: "event_reminder",
+            notification_data_hash: {
+              event_date_id: event_date.id,
+            },
+          )
+        end
 
       already_notified_users =
         Notification.where(
@@ -81,33 +113,38 @@ module Jobs
         prefix = "ongoing"
       end
 
-      invitees.find_each do |invitee|
-        attrs = {
-          notification_type: Notification.types[:event_reminder] || Notification.types[:custom],
-          topic_id: event.post.topic_id,
-          post_number: event.post.post_number,
-          data: {
-            topic_title: event.name || event.post.topic.title,
-            display_username: invitee.user.username,
-            message: "discourse_post_event.notifications.#{prefix}_event_reminder",
-          }.to_json,
-        }
+      invitees
+        .includes(user: :user_option)
+        .find_each do |invitee|
+          next if %w[notification both].exclude?(invitee.user.user_option.event_reminder_preference)
+          next unless invitee.user.guardian.can_see?(event.post)
 
-        invitee.user.notifications.consolidate_or_create!(attrs)
+          attrs = {
+            notification_type: Notification.types[:event_reminder] || Notification.types[:custom],
+            topic_id: event.post.topic_id,
+            post_number: event.post.post_number,
+            data: {
+              topic_title: event.name || event.post.topic.title,
+              display_username: invitee.user.username,
+              message: "discourse_post_event.notifications.#{prefix}_event_reminder",
+            }.to_json,
+          }
 
-        PostAlerter.new(event.post).create_notification_alert(
-          user: invitee.user,
-          post: event.post,
-          username: invitee.user.username,
-          notification_type: Notification.types[:event_reminder] || Notification.types[:custom],
-          excerpt:
-            I18n.t(
-              "discourse_post_event.notifications.#{prefix}_event_reminder",
-              title: event.name || event.post.topic.title,
-              locale: invitee.user.effective_locale,
-            ),
-        )
-      end
+          invitee.user.notifications.consolidate_or_create!(attrs)
+
+          PostAlerter.new(event.post).create_notification_alert(
+            user: invitee.user,
+            post: event.post,
+            username: invitee.user.username,
+            notification_type: Notification.types[:event_reminder] || Notification.types[:custom],
+            excerpt:
+              I18n.t(
+                "discourse_post_event.notifications.#{prefix}_event_reminder",
+                title: event.name || event.post.topic.title,
+                locale: invitee.user.effective_locale,
+              ),
+          )
+        end
     end
   end
 end

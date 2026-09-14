@@ -82,6 +82,20 @@ en:
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 
   discourse_events:
+    reminder_mailer:
+      title: "Event reminder"
+      subject_template: "[%{email_prefix}] %{event_title}"
+      text_body_template: |
+        %{reminder}
+
+        Starts: %{starts_at}
+        Ends: %{ends_at}
+        Timezone: %{timezone}
+        Location: %{location}
+
+        [View event](%{event_url})
+
+        [Change event reminder preferences](%{preferences_url})
     category_type:
       default_calendar_view:
         label: "Default calendar view"
