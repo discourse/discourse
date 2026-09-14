@@ -29,7 +29,7 @@ module DiscourseWorkflows
     end
 
     def fetch_topic(params:)
-      Topic.find_by(id: params.topic_id)
+      Topic.with_deleted.find_by(id: params.topic_id)
     end
 
     def enqueue_workflow(published_trigger:, topic:, guardian:)
