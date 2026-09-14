@@ -309,9 +309,9 @@ end
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
-#  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
-#  idx_bpe_normalized_url_version               (normalized_url_version)
+#  idx_bpe_referrer_backfill                    (created_at,id) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)))
 #  idx_bpe_session_created_at                   (session_id,created_at)
+#  idx_bpe_url_backfill                         (created_at,id) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1))
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)
 #  index_browser_pageview_events_on_user_id     (user_id)
