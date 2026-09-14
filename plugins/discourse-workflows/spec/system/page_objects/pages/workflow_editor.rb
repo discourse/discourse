@@ -189,6 +189,24 @@ module PageObjects
             page.has_css?(".workflow-rete-node__port-pill", text: "false", wait: 10)
         end
 
+        def has_publish_banner?
+          page.has_css?(".workflows-publish-banner")
+        end
+
+        def has_no_publish_banner?
+          page.has_no_css?(".workflows-publish-banner")
+        end
+
+        def click_publish
+          find(".workflows-publish-banner__btn.btn-primary").click
+          self
+        end
+
+        def click_discard
+          find(".workflows-publish-banner__btn.btn-default").click
+          self
+        end
+
         private
 
         def workflow_path(workflow)

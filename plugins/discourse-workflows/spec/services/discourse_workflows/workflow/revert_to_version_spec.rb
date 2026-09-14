@@ -86,6 +86,30 @@ RSpec.describe DiscourseWorkflows::Workflow::RevertToVersion do
         expect { result }.not_to change { workflow.workflow_versions.count }
       end
 
+      it "restores a variable's value along with the chosen version" do
+        variable =
+          workflow.variables.create!(
+            key: "priority",
+            variable_type: "string",
+            value: "urgent",
+            created_by: user,
+          )
+        target_version = workflow.snapshot!(user: user)
+
+        variable.update!(value: "changed")
+        workflow.snapshot!(user: user)
+
+        described_class.call(
+          params: {
+            workflow_id: workflow.id,
+            version_id: target_version.version_id,
+          },
+          guardian: user.guardian,
+        )
+
+        expect(workflow.variables.find_by(key: "priority").value).to eq("urgent")
+      end
+
       it_behaves_like "expires workflow caches"
     end
   end

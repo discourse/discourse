@@ -943,5 +943,121 @@ RSpec.describe DiscourseWorkflows::Executor do
         end
       end
     end
+
+    context "with $workflow_vars" do
+      def build_workflow_vars_workflow
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "code-1",
+                   "action:code",
+                   configuration: {
+                     "code" =>
+                       "return { json: { priority: $workflow_vars.priority, region: $vars.region } };",
+                   }
+            g.chain "trigger-1", "code-1"
+          end
+        Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+      end
+
+      def resolved_priority(execution)
+        execution.execution_data.find_step(node_id: "code-1")["output"].first.dig(
+          "json",
+          "priority",
+        )
+      end
+
+      def resolved_region(execution)
+        execution.execution_data.find_step(node_id: "code-1")["output"].first.dig("json", "region")
+      end
+
+      it "resolves $workflow_vars.<key> to the variable's live value" do
+        workflow = build_workflow_vars_workflow
+        Fabricate(
+          :discourse_workflows_workflow_variable,
+          workflow: workflow,
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+        )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+      end
+
+      it "resolves $workflow_vars.<key> to the published version's embedded value even after the live variable is deleted" do
+        workflow = build_workflow_vars_workflow
+        variable =
+          Fabricate(
+            :discourse_workflows_workflow_variable,
+            workflow: workflow,
+            key: "priority",
+            variable_type: "string",
+            value: "urgent",
+          )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+        variable.destroy!
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+      end
+
+      it "resolves $workflow_vars.<key> and $vars.<key> independently in the same expression" do
+        workflow = build_workflow_vars_workflow
+        Fabricate(
+          :discourse_workflows_workflow_variable,
+          workflow: workflow,
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+        )
+        Fabricate(:discourse_workflows_variable, key: "region", value: "emea")
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+
+        expect(resolved_priority(execution)).to eq("urgent")
+        expect(resolved_region(execution)).to eq("emea")
+      end
+
+      it "resolves $workflow_vars.<key> after a wait/resume cycle" do
+        graph =
+          build_workflow_graph do |g|
+            g.node "trigger-1", "trigger:topic_closed"
+            g.node "wait-1", "flow:wait", configuration: { "resume" => "webhook" }
+            g.node "code-1",
+                   "action:code",
+                   configuration: {
+                     "code" => "return { json: { priority: $workflow_vars.priority } };",
+                   }
+            g.chain "trigger-1", "wait-1", "code-1"
+          end
+        workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
+        Fabricate(
+          :discourse_workflows_workflow_variable,
+          workflow: workflow,
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+        )
+        workflow.snapshot!(user: user)
+        workflow.publish!(user: user)
+
+        execution = described_class.new(workflow, "trigger-1", { topic_id: topic.id }).run
+        expect(execution.status).to eq("waiting")
+
+        claimed = DiscourseWorkflows::Execution.claim_for_resume(execution.reload)
+        resumed = DiscourseWorkflows::Executor.resume(claimed, [{ "json" => {} }])
+
+        expect(resolved_priority(resumed)).to eq("urgent")
+      end
+    end
   end
 end

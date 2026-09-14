@@ -9,6 +9,7 @@ const EXPRESSION_CONTEXT = {
   environment: {
     $site_settings: { type: "object" },
     $vars: { type: "object" },
+    $workflow_vars: { type: "object" },
     $current_user: {
       type: "object",
       fields: { id: { type: "integer" }, username: { type: "string" } },
@@ -234,6 +235,72 @@ module(
       ].map((el) => el.textContent.trim());
 
       assert.true(allKeys.includes("resumeFormUrl"));
+    });
+
+    test("workflow_vars expands to show the workflow's declared variables", async function (assert) {
+      const node = {
+        clientId: "n1",
+        type: "action:http_request",
+        name: "HTTP",
+      };
+      const nodes = makeNodes(node);
+      this.session = new WorkflowEditorSession({
+        lastExecutionRunData: {},
+        variables: [
+          { key: "notify_categories", variable_type: "category_list" },
+          { key: "priority", variable_type: "enum" },
+        ],
+      });
+
+      await render(
+        <template>
+          <InputContext
+            @connections={{(Array)}}
+            @node={{node}}
+            @nodes={{nodes}}
+            @nodeTypes={{(Array)}}
+            @session={{this.session}}
+          />
+        </template>
+      );
+
+      const schemaFields = [
+        ...this.element.querySelectorAll(".workflows-schema-field"),
+      ];
+      const workflowVarsField = schemaFields.find(
+        (el) =>
+          el
+            .querySelector(".workflows-schema-field__key")
+            ?.textContent.trim() === "workflow_vars"
+      );
+
+      await click(
+        workflowVarsField.querySelector(".workflows-schema-field__row")
+      );
+
+      const allKeys = [
+        ...this.element.querySelectorAll(".workflows-schema-field__key"),
+      ].map((el) => el.textContent.trim());
+
+      assert.true(allKeys.includes("notify_categories"));
+      assert.true(allKeys.includes("priority"));
+
+      const notifyField = [
+        ...this.element.querySelectorAll(".workflows-schema-field__key"),
+      ].find((el) => el.textContent.trim() === "notify_categories");
+      const dragged = {};
+      await triggerEvent(notifyField, "dragstart", {
+        dataTransfer: {
+          setData(type, value) {
+            dragged[type] = value;
+          },
+        },
+      });
+
+      assert.strictEqual(
+        JSON.parse(dragged[WORKFLOW_VARIABLE_MIME]).id,
+        "$workflow_vars.notify_categories"
+      );
     });
 
     test("uses previous node name as the input heading", async function (assert) {

@@ -566,6 +566,7 @@ module DiscourseWorkflows
         user: @options.user,
         resolver: resolver,
         vars: preloaded_vars,
+        workflow_vars: preloaded_workflow_vars,
         workflow: @workflow,
         workflow_version: @options.workflow_version,
         execution_id: @store.execution&.id,
@@ -1094,12 +1095,35 @@ module DiscourseWorkflows
           @context.resolver_context,
           user: @options.user,
           vars: preloaded_vars,
+          workflow_vars: preloaded_workflow_vars,
           budget_tracker: sandbox_budget_tracker,
         )
     end
 
     def preloaded_vars
-      @preloaded_vars ||= DiscourseWorkflows::Variable.pluck(:key, :value).to_h
+      @preloaded_vars ||=
+        DiscourseWorkflows::Variable.where(workflow_id: nil).pluck(:key, :value).to_h
+    end
+
+    # Mirrors the same nodes/connections source-selection above: whatever
+    # variables schema a workflow_snapshot was built with (a resume, a node
+    # preview, a step execution, a form test session) travels with it, the
+    # same way its nodes/connections do.
+    def preloaded_workflow_vars
+      @preloaded_workflow_vars ||=
+        DiscourseWorkflows::WorkflowVariableValueResolver.new(variables_schema).resolve
+    end
+
+    def variables_schema
+      if @options.workflow_snapshot
+        @options.workflow_snapshot.variables_schema
+      elsif @options.workflow_version
+        @options.workflow_version.variables_schema
+      elsif @options.draft_execution
+        @workflow.variables_schema
+      else
+        @workflow.active_version&.variables_schema || []
+      end
     end
 
     def preloaded_workflow_dependencies

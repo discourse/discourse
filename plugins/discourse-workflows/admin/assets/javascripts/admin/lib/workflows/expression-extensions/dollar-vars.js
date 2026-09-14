@@ -27,6 +27,10 @@ const DOLLAR_VAR_DOCS = {
   },
   $vars: {
     detail: "object",
+    infoKey: "discourse_workflows.expression_docs.vars.global_vars",
+  },
+  $workflow_vars: {
+    detail: "object",
     infoKey: "discourse_workflows.expression_docs.vars.workflow_vars",
   },
   $execution: {
@@ -59,6 +63,7 @@ export function buildDollarVars(scope, sections) {
         "$site_settings",
         "$current_user",
         "$vars",
+        "$workflow_vars",
         "$execution",
         "$helpers",
       ],

@@ -103,5 +103,27 @@ RSpec.describe DiscourseWorkflows::Expression::Evaluate do
         expect(result[:segments].first[:state]).to eq("valid")
       end
     end
+
+    context "with a workflow local variable" do
+      fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
+      fab!(:variable) do
+        Fabricate(
+          :discourse_workflows_workflow_variable,
+          workflow:,
+          key: "notify_categories",
+          variable_type: "category_list",
+          value: "4|9",
+        )
+      end
+
+      let(:params) do
+        { template: "{{ $workflow_vars.notify_categories }}", workflow_id: workflow.id }
+      end
+
+      it "resolves the variable's current value" do
+        expect(result).to run_successfully
+        expect(result[:segments].first).to include(state: "valid", text: "4, 9")
+      end
+    end
   end
 end

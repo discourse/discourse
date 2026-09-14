@@ -47,6 +47,27 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidateScript do
     )
   end
 
+  it "accepts code referencing $workflow_vars without a ReferenceError" do
+    result =
+      invoke_tool(
+        {
+          mode: "runOnceForAllItems",
+          code: "return { json: { priority: $workflow_vars.priority } };",
+        },
+      )
+
+    expect(result).to include(status: "success", valid: true, errors: [])
+  end
+
+  it "accepts code referencing $vars without a ReferenceError" do
+    result =
+      invoke_tool(
+        { mode: "runOnceForAllItems", code: "return { json: { region: $vars.region } };" },
+      )
+
+    expect(result).to include(status: "success", valid: true, errors: [])
+  end
+
   it "rejects output that mixes reserved item keys with plain fields" do
     result =
       invoke_tool(

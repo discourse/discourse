@@ -48,6 +48,16 @@ RSpec.describe DiscourseWorkflows::Variable::List do
       end
     end
 
+    context "when there are workflow-scoped local variables alongside global ones" do
+      fab!(:global_variable) { Fabricate(:discourse_workflows_variable, key: "GLOBAL") }
+      fab!(:local_variable) { Fabricate(:discourse_workflows_workflow_variable, key: "local") }
+
+      it "returns only global variables" do
+        expect(result[:variables]).to contain_exactly(global_variable)
+        expect(result[:total_rows]).to eq(1)
+      end
+    end
+
     context "with pagination" do
       let(:params) { { limit: 2 } }
 

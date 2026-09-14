@@ -34,15 +34,18 @@ export default class WorkflowEditorSession {
   @tracked lastExecutionRunData = null;
   @tracked pinData = {};
   @tracked webhookTestListeners = {};
+  @tracked variables = [];
 
   constructor({
     workflowId = null,
     lastExecutionRunData = null,
     pinData = {},
+    variables = [],
   } = {}) {
     this.workflowId = workflowId;
     this.lastExecutionRunData = lastExecutionRunData;
     this.pinData = pinData || {};
+    this.variables = variables || [];
   }
 
   setEditingContext(node, nodes, connections) {

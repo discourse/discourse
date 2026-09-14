@@ -32,6 +32,17 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
       id: 42,
       name: "Imported workflow",
       settings: { executionOrder: "v1" },
+      variables: [
+        {
+          id: 7,
+          key: "notify_categories",
+          label: "Notify categories",
+          description: "Categories to notify",
+          variable_type: "category_list",
+          type_options: {},
+          value: "2|24",
+        },
+      ],
       staticData: { "node:Send request": { count: 1 } },
       pinData: { "node-1": [{ json: { ok: true } }] },
       versionId: "version-1",
@@ -57,6 +68,22 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
     assert.true(payload.nodes[0].alwaysOutputData);
     assert.false("settings" in payload.nodes[0]);
     assert.false("credentials" in payload.nodes[0].parameters);
+    assert.deepEqual(payload.variables, [
+      {
+        key: "notify_categories",
+        description: "Categories to notify",
+        variable_type: "category_list",
+        type_options: {},
+      },
+    ]);
+    assert.false(
+      "id" in payload.variables[0],
+      "export never includes a variable's database id"
+    );
+    assert.false(
+      "value" in payload.variables[0],
+      "export never includes a variable's site-specific value"
+    );
   });
 
   test("buildWorkflowExportPayload serializes multi-output connections without null holes", function (assert) {
@@ -311,6 +338,84 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
         { error: "invalid" }
       );
     }
+  });
+
+  test("parseWorkflowImport preserves imported variables", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        variables: [
+          {
+            key: "notify_categories",
+            description: "Categories to notify",
+            variable_type: "category_list",
+            type_options: {},
+          },
+        ],
+      })
+    );
+
+    assert.deepEqual(result.variables, [
+      {
+        key: "notify_categories",
+        description: "Categories to notify",
+        variable_type: "category_list",
+        type_options: {},
+      },
+    ]);
+  });
+
+  test("parseWorkflowImport fills in defaults for a malformed variable", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        variables: [{ key: "priority" }, { description: "No key, dropped" }],
+      })
+    );
+
+    assert.deepEqual(result.variables, [
+      {
+        key: "priority",
+        description: null,
+        variable_type: "string",
+        type_options: {},
+      },
+    ]);
+  });
+
+  test("parseWorkflowImport rejects a non-array variables", function (assert) {
+    const result = parseWorkflowImport(
+      JSON.stringify({
+        nodes: [
+          {
+            type: "action:log",
+            typeVersion: "1.0",
+            name: "Log",
+            parameters: {},
+          },
+        ],
+        connections: {},
+        variables: "not-an-array",
+      })
+    );
+
+    assert.deepEqual(result, { error: "invalid" });
   });
 
   test("parseWorkflowImport rejects non-object workflow JSON", function (assert) {
