@@ -33,7 +33,7 @@ describe ChatSDK::Thread do
         UserSilencer.new(current_user).silence
       end
 
-      it "fails" do
+      it "raises a silenced guardian error" do
         expect { described_class.update_title(**params) }.to raise_error("Guardian is silenced")
       end
     end
