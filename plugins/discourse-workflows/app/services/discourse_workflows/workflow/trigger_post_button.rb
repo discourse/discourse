@@ -16,6 +16,7 @@ module DiscourseWorkflows
     model :published_trigger
     policy :can_use_post_button
     model :post
+    model :topic
     policy :can_see_post
     policy :can_trigger_for_post
     step :enqueue_workflow
@@ -48,7 +49,11 @@ module DiscourseWorkflows
     end
 
     def fetch_post(params:)
-      Post.find_by(id: params.post_id)
+      Post.with_deleted.find_by(id: params.post_id)
+    end
+
+    def fetch_topic(post:)
+      post.topic = Topic.with_deleted.find_by(id: post.topic_id)
     end
 
     def can_see_post(post:, guardian:)

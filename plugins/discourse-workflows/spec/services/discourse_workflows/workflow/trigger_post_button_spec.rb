@@ -139,6 +139,22 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
       it { is_expected.to fail_a_policy(:can_see_post) }
     end
 
+    context "when a moderator triggers the first post of a deleted topic" do
+      fab!(:member) { Fabricate(:moderator).tap { |user| group.add(user) } }
+
+      before { PostDestroyer.new(admin, post_record).destroy }
+
+      it { is_expected.to run_successfully }
+    end
+
+    context "when a group member triggers a deleted reply" do
+      fab!(:post_record) { Fabricate(:post, topic: Fabricate(:topic_with_op)) }
+
+      before { post_record.trash!(admin) }
+
+      it { is_expected.to fail_a_policy(:can_see_post) }
+    end
+
     context "when the configured post number does not match" do
       before do
         update_workflow_node(workflow, "trigger-1") do |node|
