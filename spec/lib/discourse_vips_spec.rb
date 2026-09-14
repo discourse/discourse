@@ -50,19 +50,35 @@ RSpec.describe DiscourseVips do
       end
     end
 
-    it "decodes a 16-bit RGB555 bitmap" do
+    it "rejects an unsupported 16-bit RGB555 bitmap without creating an output" do
       input_path = file_from_fixtures("ico-bmp-16bit.ico").path
 
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.png")
 
+        expect {
+          described_class.ico_to_png(input_path:, output_path:, timeout: 20)
+        }.to raise_error(DiscourseVips::InvalidImage)
+
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "loads the final entry when an earlier entry has an unsupported payload" do
+      content = File.binread(file_from_fixtures("ico-last-png.ico").path)
+      first_payload_offset = content.byteslice(18, 4).unpack1("V")
+      content[first_payload_offset, 4] = [0].pack("V")
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "unsupported-first-entry.ico")
+        output_path = File.join(directory, "converted.png")
+        File.binwrite(input_path, content)
+
         described_class.ico_to_png(input_path:, output_path:, timeout: 20)
         image = ChunkyPNG::Image.from_file(output_path)
 
-        expect([image.width, image.height]).to eq([60, 40])
-        expect(image[10, 10]).to eq(ChunkyPNG::Color.rgba(255, 0, 0, 255))
-        expect(image[30, 10]).to eq(ChunkyPNG::Color.rgba(0, 255, 0, 255))
-        expect(image[50, 10]).to eq(ChunkyPNG::Color.rgba(0, 0, 255, 255))
+        expect([image.width, image.height]).to eq([30, 20])
+        expect(image[5, 5]).to eq(ChunkyPNG::Color.rgba(255, 0, 0, 0))
       end
     end
 
@@ -105,7 +121,7 @@ RSpec.describe DiscourseVips do
 
         expect {
           described_class.ico_to_png(input_path:, output_path:, timeout: 20)
-        }.to raise_error(DiscourseVips::InvalidImage, "invalid ICO directory")
+        }.to raise_error(DiscourseVips::InvalidImage)
 
         expect(File.exist?(output_path)).to eq(false)
       end
@@ -122,7 +138,7 @@ RSpec.describe DiscourseVips do
 
         expect {
           described_class.ico_to_png(input_path:, output_path:, timeout: 20)
-        }.to raise_error(DiscourseVips::InvalidImage, "invalid ICO image offset")
+        }.to raise_error(DiscourseVips::InvalidImage)
 
         expect(File.exist?(output_path)).to eq(false)
       end

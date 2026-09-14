@@ -24,7 +24,7 @@ class DiscourseVipsWorker
     DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
     private_constant :DYNAMIC_LINKER_CACHE_PATH
 
-    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
+    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail icoload].freeze
     private_constant :WARM_OPERATIONS
 
     def self.warm
@@ -137,17 +137,17 @@ class DiscourseVipsWorker
     private_class_method :dominant_color
 
     def self.ico_to_png(input_path:, output_path:)
-      require "discourse_vips/ico_image"
-
       new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
         if File.identical?(input_path, output_path)
           raise ArgumentError, "input and output must be different files"
         end
 
-        block_loaders(allowed: %w[VipsForeignLoadPng])
+        block_loaders(allowed: %w[VipsForeignLoadIco VipsForeignLoadPng])
         begin
-          DiscourseVips::IcoImage.load(input_path:).autorot.pngsave(output_path)
-        rescue Vips::Error, ArgumentError => error
+          metadata = Vips::Image.icoload(input_path)
+          page = metadata.get("n-pages") - 1
+          Vips::Image.icoload(input_path, page:).pngsave(output_path)
+        rescue Vips::Error => error
           raise InvalidImage, error.message
         end
 
