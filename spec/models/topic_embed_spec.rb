@@ -580,6 +580,23 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.topic_id_for_embed("http://example.com/post")).to eq(nil)
     end
 
+    it "finds the topic id when the stored embed_url has mixed case" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "https://Example.com/Post/248")
+
+      expect(TopicEmbed.topic_id_for_embed("http://example.com/post/248")).to eq(
+        topic_embed.topic_id,
+      )
+    end
+
+    it "returns the oldest topic id when both http and https embeds exist" do
+      http_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248")
+      Fabricate(:topic_embed, embed_url: "https://example.com/post/248")
+
+      expect(TopicEmbed.topic_id_for_embed("https://example.com/post/248")).to eq(
+        http_embed.topic_id,
+      )
+    end
+
     it "finds the topic id when the embed_url contains a query string" do
       topic_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248?key=foo")
       expect(TopicEmbed.topic_id_for_embed("http://example.com/post/248?key=foo")).to eq(
