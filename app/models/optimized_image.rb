@@ -96,7 +96,7 @@ class OptimizedImage < ActiveRecord::Base
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
-        if extension.match?(/\A\.jpe?g\z/i)
+        if %w[.jpg .jpeg].include?(extension.downcase)
           opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
         end
         opts = opts.merge(upload_id: upload.id)

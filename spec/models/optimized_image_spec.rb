@@ -291,23 +291,49 @@ RSpec.describe OptimizedImage do
       include_examples "a preview independent of JPEG quality"
     end
 
-    it "uses the configured JPEG output quality when converting a PNG preview" do
-      global_setting :enable_vips_image_processing, true
-      SiteSetting.image_preview_jpg_quality = 35
-      source =
-        UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(
-          Discourse.system_user.id,
-        )
+    shared_examples "a JPEG preview with configured quality" do
+      it "uses the configured JPEG output quality when converting a PNG preview" do
+        global_setting :enable_vips_image_processing, true
+        SiteSetting.image_preview_jpg_quality = 35
+        source =
+          UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(
+            Discourse.system_user.id,
+          )
 
-      preview = described_class.create_for(source, 50, 50, format: "jpg")
+        preview = described_class.create_for(source, 50, 50, format: output_format)
 
-      expect(FastImage.type(Discourse.store.path_for(preview))).to eq(:jpeg)
-      expect(
-        DiscourseVips.estimated_jpeg_quality(
-          input_path: Discourse.store.path_for(preview),
-          timeout: 5,
-        ),
-      ).to eq(35)
+        expect(FastImage.type(Discourse.store.path_for(preview))).to eq(:jpeg)
+        expect(
+          DiscourseVips.estimated_jpeg_quality(
+            input_path: Discourse.store.path_for(preview),
+            timeout: 5,
+          ),
+        ).to eq(35)
+      end
+    end
+
+    context "when the output format is jpg" do
+      let(:output_format) { "jpg" }
+
+      include_examples "a JPEG preview with configured quality"
+    end
+
+    context "when the output format is jpeg" do
+      let(:output_format) { "jpeg" }
+
+      include_examples "a JPEG preview with configured quality"
+    end
+
+    context "when the output format is JPG" do
+      let(:output_format) { "JPG" }
+
+      include_examples "a JPEG preview with configured quality"
+    end
+
+    context "when the output format is JPEG" do
+      let(:output_format) { "JPEG" }
+
+      include_examples "a JPEG preview with configured quality"
     end
 
     it "uses the configured JPEG preview quality even when the source estimate is lower" do
