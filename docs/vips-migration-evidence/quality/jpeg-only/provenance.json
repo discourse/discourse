@@ -1,5 +1,5 @@
 {
-  "source_head": "9a6573d921c96b6b15b3f5a617556ebdcb19ffb3",
+  "source_head": "d656d482cef213de1d2fce9fe556da3bad23fdd0",
   "production_image": "discourse/base:2.0.20260812-0036@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
   "source_sha256": {
     "lib/discourse_vips.rb": "30a350223b2f9bf8b5ea06f1ae14963bc8894acd71f25e2d67497575ad8dd33b",
@@ -12,7 +12,7 @@
     "script/discourse_vips_worker": "7e1f4e796b3aee66ec3b08e1ff834fccdf81a3909b6d67aae2139eb867035e23",
     "app/models/upload.rb": "0c211ec938f2da39984a7c6e1cd8ad331df6126c3c7bd3850db948ec7cef19d2",
     "lib/upload_creator.rb": "f2316f8b504a35dc8da88b65b4e9223d95c1f6e69e8ecc1c2adeb2a8e066303f",
-    "app/models/optimized_image.rb": "2c5442a06e5ebdecdd9d78871102d41a7548cdc34f66de31767a09b01a1f7686"
+    "app/models/optimized_image.rb": "b5ceadcd2820a16942ca9b60288228037e6c6185126e0d8d711b2934a6ef913e"
   },
   "gist_revision": "5191bbf2abec0bdce138896420a8e6b4272223cf",
   "benchmark_sha256": "d6d571ad174a8b01419f8910760dbce1f43630ba82bd66aff26a42c9dd0ad003",
@@ -35,7 +35,7 @@
   "policy": "Unknown quality skips quality-only recompression. Independently required conversion and previews retain configured quality.",
   "estimator_contract": "Role-aware full-table logarithmic argmin over IJG candidates1..100; no confidence cutoff. Unsupported, malformed or ambiguous input remains unknown. Encoder-requested quality is not ground truth for IJG-equivalent estimates.",
   "validation": {
-    "rspec_examples": 53,
+    "rspec_examples": 56,
     "failures": 0,
     "mutation_checks_detected": 3
   },
@@ -495,5 +495,5 @@
     "scope": "Source estimation only decides optional existing-JPEG recompression. JPEG destinations receive configured output quality directly; other destinations receive no JPEG preview quality setting."
   },
   "measurement_source_head": "9e970d7a315f13fc72df7dd0e5ce6170da023a6e",
-  "measurement_compatibility": "Facade, estimator, worker and executed benchmark script are byte-identical to measurement_source_head; subsequent changes simplify Rails caller policy and are covered by53 focused tests."
+  "measurement_compatibility": "Facade, estimator, worker and executed benchmark script are byte-identical to measurement_source_head; subsequent changes simplify Rails caller policy and are covered by 56 focused tests."
 }
