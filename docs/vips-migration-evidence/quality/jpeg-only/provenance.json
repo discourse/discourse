@@ -1,11 +1,11 @@
 {
-  "source_head": "504768ac14888850f4e4b10150be2d29a69eb643",
+  "source_head": "c0bc3f41e83f58fa2b27729eea58da2224c5797d",
   "production_image": "discourse/base:2.0.20260812-0036@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
   "source_sha256": {
     "lib/discourse_vips.rb": "22e033695503925e9bf4e4f6a96d210eaaac09dc6c082162bf20b99e0376bca0",
     "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
     "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
-    "lib/discourse_vips/jpeg_quality.rb": "28cff10805b47b68c1b49be72a4d4f9861bae994579156a68dfdef7476ac1175",
+    "lib/discourse_vips/jpeg_quality.rb": "7f1c7da3180e403c490a5b9f9a51a9be1a26b102baab27cefc3a74b9ff417e2b",
     "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
     "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
     "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
@@ -15,10 +15,6 @@
     "app/models/optimized_image.rb": "e3b6036d31e58e5d5497fbb3d8b2c5a78fd3ce671e16ef9a064192a9ebf7454a"
   },
   "gist_revision": "5191bbf2abec0bdce138896420a8e6b4272223cf",
-  "optimization_comparison": {
-    "jpeg_count": 510,
-    "different_estimates": 0
-  },
   "benchmark_sha256": "7672181b661783bb99515ba307de3e07ccf51397d90f7d8dc8c5878f1b3c7c6e",
   "input_sha256": {
     "standard-q80.jpg": "d686dc6599039a754e37b366e71211d326de5be1bb9d29c9042ab6bfd0a70755",
@@ -36,7 +32,13 @@
     "memory_plus_swap_gib": 3
   },
   "corpus": "Photo re-encoded with ImageMagick at Q30/Q80/Q95. Large metadata adds eight 60,000-byte APP15 payloads to Q95. Custom logo is the existing Discourse logo.jpg fixture. The large custom input adds two 60,000-byte APP15 payloads to the custom logo.",
-  "measured_source_head": "c434de50bd4c16f843c4d123eb37df989dbbc57a",
-  "head_difference": "The final source head adds caller tests only; benchmark-relevant files are byte-identical.",
-  "policy": "Unknown quality skips quality-only recompression. Independently required conversion and previews retain configured quality."
+  "policy": "Unknown quality skips quality-only recompression. Independently required conversion and previews retain configured quality.",
+  "corpus_status_summary": {
+    "jpeg_count": 510,
+    "exact": 407,
+    "unknown": 103,
+    "approximate": 0,
+    "scope": "Constructed comparison corpus, not a representative sample of user uploads."
+  },
+  "estimator_confidence": "Match component roles; ambiguous layouts return unknown. Approximation requires every coefficient ratio in [1/1.20, 1.20] and aggregate log-RMSE <= log(1.20)."
 }
