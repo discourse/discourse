@@ -475,6 +475,36 @@ RSpec.describe UploadCreator do
           expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
         end
 
+        it "preserves a large custom-table JPEG when its quality is unknown" do
+          global_setting :enable_vips_image_processing, true
+          FileHelper.stubs(:optimize_image!)
+          jpeg = file_from_fixtures("logo.jpg")
+          original = File.binread(jpeg.path)
+          metadata = [0xFF, 0xEF, 60_002].pack("CCn") + "x" * 60_000
+          original = original.byteslice(0, 2) + metadata * 2 + original.byteslice(2..)
+          File.binwrite(jpeg.path, original)
+
+          upload = described_class.new(jpeg, "custom.jpg", force_optimize: true).create_for(user.id)
+
+          expect(upload).to be_persisted
+          expect(upload.filesize).to be > 75_000
+          expect(File.binread(Discourse.store.path_for(upload))).to eq(original)
+        end
+
+        it "uses the configured preview quality for a custom-table JPEG" do
+          global_setting :enable_vips_image_processing, true
+          jpeg = file_from_fixtures("logo.jpg")
+          upload = described_class.new(jpeg, "custom.jpg").create_for(user.id)
+
+          upload.create_thumbnail!(100, 100)
+
+          preview = upload.optimized_images.first
+          expect(preview).to be_persisted
+          expect(
+            DiscourseVips.jpeg_quality(input_path: Discourse.store.path_for(preview), timeout: 5),
+          ).to eq(10)
+        end
+
         it "does not convert animated images" do
           expect do
             UploadCreator.new(animated_file, animated_filename, force_optimize: true).create_for(
