@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicListItemSerializer do
-  subject(:serializer) { described_class.new(topic, scope: Guardian.new, root: false) }
+  subject(:serializer) do
+    Topic.preload_custom_fields([topic], TopicList.preloaded_custom_fields)
+    described_class.new(topic, scope: Guardian.new, root: false)
+  end
 
   let(:topic) { Fabricate(:topic) }
   let(:first_post) { Fabricate(:post, topic:) }
@@ -17,6 +20,12 @@ RSpec.describe TopicListItemSerializer do
       original_starts_at: 1.hour.from_now,
       original_ends_at: 2.hours.from_now,
     )
+  end
+
+  it "omits event fields when the topic's custom fields were not preloaded" do
+    json = JSON.parse(described_class.new(topic, scope: Guardian.new, root: false).to_json)
+
+    expect(json.keys).not_to include("event_starts_at", "event_ends_at")
   end
 
   describe "#event_starts_at" do
@@ -60,6 +69,7 @@ RSpec.describe TopicListItemSerializer do
         all_day: true,
       )
 
+      Topic.preload_custom_fields([all_day_topic], TopicList.preloaded_custom_fields)
       all_day_serializer = described_class.new(all_day_topic, scope: Guardian.new, root: false)
       all_day_json = JSON.parse(all_day_serializer.to_json)
 
