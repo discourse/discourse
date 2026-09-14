@@ -395,6 +395,22 @@ RSpec.describe TopicEmbed do
         imported_page = TopicEmbed.import(user, url, title, contents, tags: [])
         expect(imported_page.topic.tags).to match_array([])
       end
+
+      it "does not revise the post when the tags cannot all be saved" do
+        SiteSetting.max_tags_per_topic = 1
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+
+        Post.any_instance.expects(:revise).never
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+      end
+
+      it "does not revise the post when the existing tags match the incoming tags" do
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+        SiteSetting.max_tags_per_topic = 1
+
+        Post.any_instance.expects(:revise).never
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+      end
     end
 
     context "with specified user and tags" do
