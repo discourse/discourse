@@ -1,48 +1,50 @@
 {
-  "contract": "Nearest role-aware IJG table quality; not recovery of jpegli encoder setting or universal perceptual quality.",
-  "corpus_files": 1029,
+  "contract": "ImageMagick 7.1.2-27 JPEGSetImageQuality and %Q compatibility for supported JPEG headers. No ImageMagick runtime dependency in the estimator.",
   "comparison": {
-    "imagemagick": {
-      "count": 521,
-      "numeric_disagreements": 0,
-      "absolute_difference_median_p95_max": [
-        0,
-        0,
-        0
-      ],
-      "threshold90_disagreements": 0,
-      "threshold100_disagreements": 0
-    },
-    "libvips": {
-      "count": 508,
-      "numeric_disagreements": 488,
-      "absolute_difference_median_p95_max": [
-        10,
-        69,
-        78
-      ],
-      "threshold90_disagreements": 257,
-      "threshold100_disagreements": 0
+    "count": 1029,
+    "errors": 0,
+    "estimate_disagreements": 0,
+    "decision_disagreements": {
+      "90": 0,
+      "100": 0
     }
   },
-  "order": {
-    "imagemagick": {
-      "coarser": 424,
-      "equal": 21,
-      "finer": 76,
-      "mixed": 0
-    },
-    "libvips": {
-      "coarser": 269,
-      "equal": 0,
-      "finer": 28,
-      "mixed": 211
-    }
+  "encoder_counts": {
+    "imagemagick": 521,
+    "libvips": 508
   },
+  "custom": [
+    {
+      "filename": "custom-logo.jpg",
+      "estimate": {
+        "status": "approximate",
+        "quality": 94,
+        "table_count": 2,
+        "precisions": [
+          8
+        ],
+        "reason": null
+      },
+      "imagemagick": 94
+    },
+    {
+      "filename": "custom-large-metadata.jpg",
+      "estimate": {
+        "status": "approximate",
+        "quality": 94,
+        "table_count": 2,
+        "precisions": [
+          8
+        ],
+        "reason": null
+      },
+      "imagemagick": 94
+    }
+  ],
   "policy_outcomes": {
     "count": 72,
     "legacy_attempts": 14,
-    "new_attempts": 24,
+    "new_attempts": 14,
     "legacy_retained": 0,
     "new_retained": 0
   },
@@ -65,386 +67,5 @@
       "kept": true,
       "metadata_bytes": 480032
     }
-  ],
-  "jpegli_photo_444_mapping": [
-    {
-      "requested_quality": 80,
-      "legacy_quality": 61,
-      "estimate": {
-        "status": "approximate",
-        "quality": 89,
-        "deviation": 0.9323602497918804,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "e886a7cf2a54a4b2f8e10d4258ea607dda086667cddc588959e76f61fa25b646",
-      "equivalent_qualities": [
-        80
-      ]
-    },
-    {
-      "requested_quality": 81,
-      "legacy_quality": 63,
-      "estimate": {
-        "status": "approximate",
-        "quality": 89,
-        "deviation": 0.9590981313772773,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "6e0736a11a67e3211208d4a97d6014c81aa7e82d07cf807bba15bb3d99d198de",
-      "equivalent_qualities": [
-        81
-      ]
-    },
-    {
-      "requested_quality": 82,
-      "legacy_quality": 65,
-      "estimate": {
-        "status": "approximate",
-        "quality": 90,
-        "deviation": 0.9545569704425394,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "acd5b394bc9bdac9c26034b9f66999b6ad17567366e5a11590491fc287328cf0",
-      "equivalent_qualities": [
-        82
-      ]
-    },
-    {
-      "requested_quality": 83,
-      "legacy_quality": 67,
-      "estimate": {
-        "status": "approximate",
-        "quality": 91,
-        "deviation": 0.9720500092769075,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "b5306cef7bc91e7c83ad6aa32b5690b5e6583791139a305177758a99c2207730",
-      "equivalent_qualities": [
-        83
-      ]
-    },
-    {
-      "requested_quality": 84,
-      "legacy_quality": 69,
-      "estimate": {
-        "status": "approximate",
-        "quality": 92,
-        "deviation": 0.956411631459051,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "03948e2bb8e58914d6cacc166c089b5b9538c407991aeb9c2d2c200b724ad21a",
-      "equivalent_qualities": [
-        84
-      ]
-    },
-    {
-      "requested_quality": 85,
-      "legacy_quality": 70,
-      "estimate": {
-        "status": "approximate",
-        "quality": 92,
-        "deviation": 0.9413643553723652,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "d0e4a40242bc3ea2c4e638dcd5ae392107cf10600ffad3079a7e9ddb728bda10",
-      "equivalent_qualities": [
-        85
-      ]
-    },
-    {
-      "requested_quality": 86,
-      "legacy_quality": 73,
-      "estimate": {
-        "status": "approximate",
-        "quality": 92,
-        "deviation": 0.9496529443112283,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "9cc3cb7d0b4d68b36cb3dbf2d38552036ff0a506dcb03e116e4c04f862465d13",
-      "equivalent_qualities": [
-        86
-      ]
-    },
-    {
-      "requested_quality": 87,
-      "legacy_quality": 74,
-      "estimate": {
-        "status": "approximate",
-        "quality": 92,
-        "deviation": 0.96767158703071,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "ac05bddfde40362b4100b27c9d67f889b9533992f6cdb313f12bc3201d535c7c",
-      "equivalent_qualities": [
-        87
-      ]
-    },
-    {
-      "requested_quality": 88,
-      "legacy_quality": 76,
-      "estimate": {
-        "status": "approximate",
-        "quality": 93,
-        "deviation": 0.9688303379952456,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "463cd77667d71ed6a616d13b168e87980d7f97b08767d62fd880193c9f363a77",
-      "equivalent_qualities": [
-        88
-      ]
-    },
-    {
-      "requested_quality": 89,
-      "legacy_quality": 78,
-      "estimate": {
-        "status": "approximate",
-        "quality": 94,
-        "deviation": 0.998893114728266,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "49bb3afefe0935ca60b014b940ff89b1b0a95d0f78b9ed848b13f847dd2875a8",
-      "equivalent_qualities": [
-        89
-      ]
-    },
-    {
-      "requested_quality": 90,
-      "legacy_quality": 80,
-      "estimate": {
-        "status": "approximate",
-        "quality": 94,
-        "deviation": 0.9805615483945578,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "e4a4dd00e95800b54e79533ed7767c350f57ab5d2b6406e046352b6ad93f92a2",
-      "equivalent_qualities": [
-        90
-      ]
-    },
-    {
-      "requested_quality": 91,
-      "legacy_quality": 82,
-      "estimate": {
-        "status": "approximate",
-        "quality": 94,
-        "deviation": 1.0035317655535274,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "11d19ce4e1779ea9cca3a0942ca83e19ab45ccd3554e453b04314b5803f9fe80",
-      "equivalent_qualities": [
-        91
-      ]
-    },
-    {
-      "requested_quality": 92,
-      "legacy_quality": 84,
-      "estimate": {
-        "status": "approximate",
-        "quality": 95,
-        "deviation": 1.024909967567349,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "98226bd49e948c699e07d1f8d10f78b67bdb444705c665ce5f060e72729c28ad",
-      "equivalent_qualities": [
-        92
-      ]
-    },
-    {
-      "requested_quality": 93,
-      "legacy_quality": 85,
-      "estimate": {
-        "status": "approximate",
-        "quality": 96,
-        "deviation": 1.0157723470441526,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "bf710b2f741c829130942eca560c056108c6f96ee08fcf15f514c28781311861",
-      "equivalent_qualities": [
-        93
-      ]
-    },
-    {
-      "requested_quality": 94,
-      "legacy_quality": 87,
-      "estimate": {
-        "status": "approximate",
-        "quality": 96,
-        "deviation": 1.0407145022185076,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "80f07b7d773cde3af271709d8a49da3df7be29b34b3223a3d163ebb05b414cca",
-      "equivalent_qualities": [
-        94
-      ]
-    },
-    {
-      "requested_quality": 95,
-      "legacy_quality": 89,
-      "estimate": {
-        "status": "approximate",
-        "quality": 97,
-        "deviation": 0.962395338012789,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "66593daea4b1f5d058c27334581e0065646849361b46e2c0c431ea0da2c134fc",
-      "equivalent_qualities": [
-        95
-      ]
-    },
-    {
-      "requested_quality": 96,
-      "legacy_quality": 91,
-      "estimate": {
-        "status": "approximate",
-        "quality": 98,
-        "deviation": 0.8819895074164805,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "f48e1f96ae3a8e2e32e09ae2a94aa39fd8c769c75d084309a9c4a409f9dd24c8",
-      "equivalent_qualities": [
-        96
-      ]
-    },
-    {
-      "requested_quality": 97,
-      "legacy_quality": 93,
-      "estimate": {
-        "status": "approximate",
-        "quality": 98,
-        "deviation": 0.8270717261333607,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "45f9c18e98b17a0046f777e1c4e6ab24732fab521468be954c465d04a78a9899",
-      "equivalent_qualities": [
-        97
-      ]
-    },
-    {
-      "requested_quality": 98,
-      "legacy_quality": 95,
-      "estimate": {
-        "status": "approximate",
-        "quality": 99,
-        "deviation": 0.7435398313852899,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "a42b9a1a8ff40f388268a11ffe25036f44784710d4db97be93c50234db3ddd2d",
-      "equivalent_qualities": [
-        98
-      ]
-    },
-    {
-      "requested_quality": 99,
-      "legacy_quality": 96,
-      "estimate": {
-        "status": "approximate",
-        "quality": 100,
-        "deviation": 0.6009450392421651,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "9fa3e9d1bae71cdb126f7c19332ea6aaabffc2a22e201ff70b1416f7b9f631d8",
-      "equivalent_qualities": [
-        99
-      ]
-    },
-    {
-      "requested_quality": 100,
-      "legacy_quality": 100,
-      "estimate": {
-        "status": "exact",
-        "quality": 100,
-        "deviation": 0.0,
-        "table_count": 2,
-        "precisions": [
-          8
-        ],
-        "reason": null
-      },
-      "signature": "2c2cc9d7c43700488cd4e1d8044c37958f32932382e28b3d4bc8d8c99e162ee3",
-      "equivalent_qualities": [
-        100
-      ]
-    }
-  ],
-  "unambiguous_violations": []
+  ]
 }
