@@ -692,6 +692,39 @@ RSpec.describe Group do
     expect(g.human_users).to contain_exactly(admin, other_admin, other_user)
   end
 
+  describe ".reset_user_count" do
+    fab!(:bot)
+    fab!(:group)
+
+    it "counts bots in automatic groups not created by core" do
+      group.update_columns(automatic: true)
+      group.add(bot)
+      group.update_columns(user_count: 0)
+
+      Group.reset_user_count(group)
+
+      expect(group.reload.user_count).to eq(1)
+    end
+
+    it "does not count bots in hand-managed groups" do
+      group.add(bot)
+      group.add(Fabricate(:user))
+      group.update_columns(user_count: 0)
+
+      Group.reset_user_count(group)
+
+      expect(group.reload.user_count).to eq(1)
+    end
+
+    it "resets groups without any counted members to zero" do
+      group.update_columns(user_count: 4)
+
+      Group.ensure_consistency!
+
+      expect(group.reload.user_count).to eq(0)
+    end
+  end
+
   it "can set members via usernames helper" do
     g = Fabricate(:group)
     u1 = Fabricate(:user)

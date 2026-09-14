@@ -3,6 +3,12 @@
 module DiscourseSolved
   module McpTools
     class SetSolution
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          post_id: DiscourseMcp::OutputSchema::INTEGER,
+          accepted: DiscourseMcp::OutputSchema::BOOLEAN,
+        )
+
       def self.call(arguments:, request_context:)
         service =
           (

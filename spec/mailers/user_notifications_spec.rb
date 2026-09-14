@@ -705,7 +705,29 @@ RSpec.describe UserNotifications do
     end
 
     describe "optional placeholders in email body" do
-      it "renders optional_tags, optional_cat, optional_pm, and optional_re in body templates" do
+      it "renders no body hashtags when the email tag limit is zero" do
+        SiteSetting.enable_max_tags_per_email_subject = true
+        SiteSetting.max_tags_per_email_subject = 0
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.text_body_template",
+          "Tags: %{optional_tags}\n\n",
+        )
+
+        mail =
+          UserNotifications.user_replied(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        expect(Email::Renderer.new(mail).text.lines.first.strip).to eq("Tags:")
+      end
+
+      it "renders optional placeholders with tag links in the body and plain tags in the subject" do
+        Fabricate(:category, name: tag2.name, slug: tag2.name.downcase)
+        SiteSetting.email_subject = "%{optional_tags}%{topic_title}"
         custom_body = <<~BODY
           You got a reply!
 
@@ -731,17 +753,19 @@ RSpec.describe UserNotifications do
             notification_data_hash: notification.data_hash,
           )
 
-        body = mail.body.to_s
+        renderer = Email::Renderer.new(mail)
+        links = Nokogiri::HTML5.parse(renderer.html).css("a.hashtag-cooked")
 
-        expect(body).to include(tag2.name)
-        expect(body).to include(tag3.name)
-        expect(body).to include(category.name)
-
-        expect(body).not_to include("translation missing")
-        expect(body).not_to include("%{optional_tags}")
-        expect(body).not_to include("%{optional_cat}")
-        expect(body).not_to include("%{optional_pm}")
-        expect(body).not_to include("%{optional_re}")
+        expect(renderer.text).to include(
+          "Category: [#{category.name}]",
+          "Tags: ##{tag2.name}::tag ##{tag3.name} ##{tag1.name}",
+          "PM marker: \nRe marker: \n",
+        )
+        expect(renderer.text).not_to include(hidden_tag.name)
+        expect(links.map(&:text)).to eq([tag2, tag3, tag1].map { |tag| "##{tag.name}" })
+        expect(links.map { |link| link["href"] }).to eq([tag2, tag3, tag1].map(&:full_url))
+        expect(mail.subject).to eq("#{tag2.name} #{tag3.name} #{tag1.name} #{topic.title}")
+        expect(mail["X-Discourse-Tags"].value).to eq("#{tag2.name} #{tag3.name} #{tag1.name}")
       end
     end
 

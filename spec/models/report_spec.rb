@@ -1810,6 +1810,32 @@ RSpec.describe Report do
         CachedCounting.disable
       end
 
+      it "clamps daily other traffic to zero while preserving browser counts" do
+        freeze_time Time.utc(2024, 1, 3)
+        dates = [2.days.ago.to_date, 1.day.ago.to_date, Time.zone.today]
+
+        dates
+          .zip([6, 4, 3])
+          .each do |date, logged_in_count|
+            ApplicationRequest.write_cache!(:page_view_anon, 2, date)
+            ApplicationRequest.write_cache!(:page_view_logged_in, logged_in_count, date)
+            ApplicationRequest.write_cache!(:page_view_anon_browser, 5, date)
+            ApplicationRequest.write_cache!(:page_view_logged_in_browser, 1, date)
+          end
+
+        series = reports.data.index_by { |report| report[:req] }
+
+        expect(series["page_view_other"][:data]).to eq(
+          dates.zip([2, 0, 0]).map { |date, count| { x: date, y: count } },
+        )
+        expect(series["page_view_anon_browser"][:data]).to eq(
+          dates.map { |date| { x: date, y: 5 } },
+        )
+        expect(series["page_view_logged_in_browser"][:data]).to eq(
+          dates.map { |date| { x: date, y: 1 } },
+        )
+      end
+
       it "exposes embedded pageviews as their own series without polluting other series" do
         Fabricate(:embeddable_host)
 

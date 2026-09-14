@@ -3,6 +3,12 @@
 module DiscourseTopicVoting
   module McpTools
     class SetVote
+      OUTPUT_SCHEMA =
+        DiscourseMcp::OutputSchema.object(
+          topic_id: DiscourseMcp::OutputSchema::INTEGER,
+          voted: DiscourseMcp::OutputSchema::BOOLEAN,
+        )
+
       def self.call(arguments:, request_context:)
         service =
           (

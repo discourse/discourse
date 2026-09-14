@@ -275,6 +275,7 @@ after_initialize do
       required: %w[topic_id voted],
       additionalProperties: false,
     },
+    output_schema: DiscourseTopicVoting::McpTools::SetVote::OUTPUT_SCHEMA,
     required_scopes: %w[discourse-topic-voting:write],
     annotations: {
       readOnlyHint: false,

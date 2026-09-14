@@ -75,7 +75,7 @@ RSpec.describe InvitesController do
       it "verifies legacy email tokens when #{setting} is disabled after enabling codes" do
         SiteSetting.enable_local_logins_via_code = true
         SiteSetting.public_send("#{setting}=", false)
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
 
         get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
@@ -1543,7 +1543,7 @@ RSpec.describe InvitesController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
 
           get "/auth/google_oauth2/callback.json"
           expect(response.status).to eq(302)

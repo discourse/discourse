@@ -6,6 +6,11 @@
 
 ru:
   mcp:
+    errors:
+      draft_too_long: "Черновик слишком длинный"
+      post_not_found: "Пост не найден"
+      topic_not_found: "Тема не найдена"
+      user_not_found: "Пользователь не найден"
     oauth:
       deny: "Отказать"
       approve: "Разрешить"

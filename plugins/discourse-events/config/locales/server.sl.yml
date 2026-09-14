@@ -67,7 +67,6 @@ sl:
           raw_invitees_length: "Dogodek je omejen na %{count} uporabnikov/skupin."
           raw_invitees:
             only_group: "Dogodek sprejema samo grupe."
-          ends_at_before_starts_at: "Dogodek se ne more končati preden se začne."
           start_must_be_present_and_a_valid_date: "Dogodek zahteva začetni datum veljavne oblike."
           end_must_be_a_valid_date: "Končni datum mora biti veljavne oblike."
           acting_user_not_allowed_to_create_event: "Trenutni uporabnik nima pravic za ustvarjanje dogodkov."

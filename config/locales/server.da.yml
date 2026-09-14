@@ -6,6 +6,8 @@
 
 da:
   mcp:
+    errors:
+      topic_not_found: "Emne ikke fundet"
     oauth:
       deny: "Nægt"
       approve: "Autoriser"

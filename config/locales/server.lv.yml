@@ -6,6 +6,8 @@
 
 lv:
   mcp:
+    errors:
+      topic_not_found: "Tēma nav atrasta "
     oauth:
       deny: "Atteikt"
   llms_txt:

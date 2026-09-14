@@ -6,6 +6,8 @@
 
 ur:
   mcp:
+    errors:
+      topic_not_found: "موضوع نہیں ملا"
     oauth:
       deny: "انکار"
       approve: "مجاز بنائیں"

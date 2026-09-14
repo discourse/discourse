@@ -65,19 +65,19 @@ RSpec.describe TopicsFilter do
 
     it "applies the topics_filter_options modifier for authenticated users" do
       plugin_instance = Plugin::Instance.new
-      DiscoursePluginRegistry.register_modifier(
-        plugin_instance,
-        :topics_filter_options,
-      ) do |results, guardian|
-        if guardian.authenticated?
-          results << {
-            name: "custom-filter:",
-            description: "A custom filter option from modifier",
-            type: "text",
-          }
+      modifier =
+        lambda do |results, guardian|
+          if guardian.authenticated?
+            results << {
+              name: "custom-filter:",
+              description: "A custom filter option from modifier",
+              type: "text",
+            }
+          end
+          results
         end
-        results
-      end
+
+      DiscoursePluginRegistry.register_modifier(plugin_instance, :topics_filter_options, &modifier)
 
       anon_options = TopicsFilter.option_info(Guardian.new)
       logged_in_options = TopicsFilter.option_info(Guardian.new(user))
@@ -95,7 +95,11 @@ RSpec.describe TopicsFilter do
         type: "text",
       )
     ensure
-      DiscoursePluginRegistry.reset_register!(:modifiers)
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :topics_filter_options,
+        &modifier
+      )
     end
   end
 
@@ -719,6 +723,13 @@ RSpec.describe TopicsFilter do
       let(:id_block) { Proc.new { |scope, value| scope.where(id: value) } }
       let(:plugin) { Plugin::Instance.new }
 
+      around do |example|
+        registered = DiscoursePluginRegistry._raw_custom_filter_mappings.dup
+        example.run
+      ensure
+        DiscoursePluginRegistry._raw_custom_filter_mappings.replace(registered)
+      end
+
       it "supports a custom filter" do
         plugin.add_filter_custom_filter("word_count", &word_count_block)
 
@@ -728,8 +739,6 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("word_count:42")
             .pluck(:id),
         ).to contain_exactly(word_count_topic.id, word_count_topic_2.id)
-      ensure
-        DiscoursePluginRegistry.reset_register!(:custom_filter_mappings)
       end
 
       it "supports multiple custom filters" do
@@ -742,8 +751,6 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("word_count:42 id:#{word_count_topic.id}")
             .pluck(:id),
         ).to contain_exactly(word_count_topic.id)
-      ensure
-        DiscoursePluginRegistry.reset_register!(:custom_filter_mappings)
       end
     end
 
@@ -1154,7 +1161,12 @@ RSpec.describe TopicsFilter do
       fab!(:deleted_topic_id) { Fabricate(:topic, deleted_at: Time.zone.now).id }
       fab!(:foobar_topic) { Fabricate(:topic, closed: true, word_count: 42) }
 
-      after { TopicsFilter.custom_status_filters.clear }
+      around do |example|
+        registered = TopicsFilter.custom_status_filters.dup
+        example.run
+      ensure
+        TopicsFilter.custom_status_filters.replace(registered)
+      end
 
       context "with custom status filters" do
         let(:enabled?) { true }
@@ -2910,25 +2922,17 @@ RSpec.describe TopicsFilter do
     fab!(:solved_topic) { Fabricate(:topic, closed: true) }
 
     describe "custom in: filter" do
-      before do
-        plugin_instance = Plugin::Instance.new
-        DiscoursePluginRegistry.register_modifier(
-          plugin_instance,
-          :topics_filter_options,
-        ) do |results, guardian|
-          results << { name: "in:solved", description: "Topics that are solved", type: "text" }
-          results
-        end
+      around do |example|
+        registered = DiscoursePluginRegistry._raw_custom_filter_mappings.dup
 
         Plugin::Instance.new.add_filter_custom_filter(
           "in:solved",
           &->(scope, value, guardian) { scope.where(closed: true) }
         )
-      end
 
-      after do
-        DiscoursePluginRegistry.reset_register!(:custom_filter_mappings)
-        DiscoursePluginRegistry.reset_register!(:modifiers)
+        example.run
+      ensure
+        DiscoursePluginRegistry._raw_custom_filter_mappings.replace(registered)
       end
 
       it "applies custom in: filter" do

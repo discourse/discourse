@@ -342,6 +342,34 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "does not allow posts to be moved to a private category when a destination topic is supplied" do
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               title: "Logan is a good movie",
+               post_ids: [p2.id],
+               category_id: staff_category.id,
+               destination_topic_id: dest_topic.id,
+             }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
+      end
+
+      it "does not allow posts to be moved to a private category when an archetype is supplied" do
+        post "/t/#{topic.id}/move-posts.json",
+             params: {
+               title: "Logan is a good movie",
+               post_ids: [p2.id],
+               category_id: staff_category.id,
+               archetype: Archetype.default,
+             }
+
+        expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
+      end
+
       it "ignores unrelated post IDs without exposing their reviewables" do
         restricted_category = Fabricate(:private_category, group: Fabricate(:group))
         restricted_topic = Fabricate(:topic, category: restricted_category)
@@ -614,9 +642,8 @@ RSpec.describe TopicsController do
              }
 
         expect(response.status).to eq(200)
-        result = response.parsed_body
-        expect(result["success"]).to eq(true)
-        expect(result["url"]).to be_present
+        expect(response.parsed_body).to eq("success" => true, "url" => dest_topic.relative_url)
+        expect(p2.reload.topic_id).to eq(dest_topic.id)
       end
 
       it "does not allow posts to be moved to a private category" do
@@ -629,6 +656,9 @@ RSpec.describe TopicsController do
              }
 
         expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
+        expect(topic.reload.deleted_at).to be_nil
       end
 
       it "does not allow posts outside of the category to be moved" do
@@ -934,9 +964,8 @@ RSpec.describe TopicsController do
         post "/t/#{topic.id}/merge-topic.json", params: { destination_topic_id: dest_topic.id }
 
         expect(response.status).to eq(200)
-        result = response.parsed_body
-        expect(result["success"]).to eq(true)
-        expect(result["url"]).to be_present
+        expect(response.parsed_body).to eq("success" => true, "url" => dest_topic.relative_url)
+        expect(p2.reload.topic_id).to eq(dest_topic.id)
       end
 
       it "does not allow posts to be moved to a private category" do
@@ -945,6 +974,9 @@ RSpec.describe TopicsController do
         post "/t/#{topic.id}/merge-topic.json", params: { destination_topic_id: dest_topic.id }
 
         expect(response).to be_forbidden
+        expect(response.parsed_body["errors"]).to be_present
+        expect(p2.reload.topic_id).to eq(topic.id)
+        expect(topic.reload.deleted_at).to be_nil
       end
 
       it "does not allow posts outside of the category to be moved" do
@@ -2939,6 +2971,18 @@ RSpec.describe TopicsController do
 
             expect(response.status).to eq(200)
             expect(topic.reload.tags).to include(tag1)
+          end
+
+          it "does not reveal a hidden current tag when a category change is rejected" do
+            hidden_tag = Fabricate(:tag)
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+            topic.update!(tags: [hidden_tag])
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: restricted_category.id }
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"].first).not_to include(hidden_tag.name)
           end
 
           it "allows category change when topic has a read-only tag" do

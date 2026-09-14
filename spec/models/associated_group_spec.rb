@@ -11,7 +11,7 @@ RSpec.describe AssociatedGroup do
   end
 
   it "detects whether any auth providers provide associated groups" do
-    SiteSetting.enable_google_oauth2_logins = true
+    enable_auth_provider(:google_oauth2)
     SiteSetting.google_oauth2_hd = "domain.com"
     SiteSetting.google_oauth2_hd_groups = false
     SiteSetting.google_oauth2_hd_groups_service_account_admin_email = "test@example.com"

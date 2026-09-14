@@ -424,16 +424,26 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
 
-    begin
-      execute_convert(from, to, {}, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, { debug: true }, read:, write:)
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.heif_to_jpeg(
+        input_path: from,
+        output_path: to,
+        timeout: MAX_CONVERT_FORMAT_SECONDS,
+      )
+    else
+      begin
+        execute_convert(from, to, {}, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, to, { debug: true }, read:, write:)
+      end
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = jpeg_tempfile
     extract_image_info!
+  ensure
+    jpeg_tempfile&.close! if jpeg_tempfile != @file
   end
 
   MAX_CONVERT_FORMAT_SECONDS = 20
@@ -696,8 +706,10 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          frames =
-            begin
+          begin
+            if GlobalSetting.enable_vips_image_processing
+              DiscourseVips.animated?(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+            else
               ImageMagick.identify(
                 "-ping",
                 "-format",
@@ -706,12 +718,11 @@ class UploadCreator
                 operation: :upload_animation_probe,
                 read: [@file.path],
                 timeout: Upload::MAX_IDENTIFY_SECONDS,
-              ).to_i
-            rescue StandardError
-              1
+              ).to_i > 1
             end
-
-          frames > 1
+          rescue StandardError
+            false
+          end
         else
           false
         end

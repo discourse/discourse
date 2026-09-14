@@ -6,6 +6,9 @@
 
 cs:
   mcp:
+    errors:
+      draft_too_long: "Koncept je příliš dlouhý"
+      topic_not_found: "Téma nenalezeno"
     oauth:
       deny: "Odmítnout"
       approve: "Autorizovat"

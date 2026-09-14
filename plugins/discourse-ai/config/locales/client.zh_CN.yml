@@ -24,10 +24,27 @@ zh_CN:
             title: "询问 AI"
         ask_ai:
           title: "询问 AI"
+          questions: "问的问题"
+          askers: "用户提问"
+          latency: "应答延迟"
+          latency_tooltip: "服务器接受查询到发送第一个响应更新的平均时间，包括队列等待时间。此时间不包括网络传输到用户所需的时间。"
           seconds: "%{seconds} s"
+          not_available: "—"
+          activity: "随着时间的推移而提出问题"
           date: "日期"
+          percentage: "%{value}%"
+          outcomes_title: "询问结果"
           outcomes:
+            answered: "已提供答案"
+            no_answer: "未提供答案"
             failed: "失败"
+            cancelled: "已取消"
+            pending: "未完成"
+          outcome_note: "提供的答案并不能告诉我们它是否有效。用户成功与否尚未得到衡量。"
+          summary:
+            other: "%{count} 此期间提出的问题"
+          empty: "此期间未收到任何请求。"
+          fetch_error: "询问 AI 指标无法加载。"
         emotion:
           title: "情绪"
           description: "该表格列出了按特定情绪分类的帖子数量。根据所选情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"

@@ -82,6 +82,7 @@ class AiAgent < ActiveRecord::Base
   before_validation :normalize_subagent_ids
 
   before_update :regenerate_rag_fragments
+  after_update :sync_spam_detection_model, if: :saved_change_to_default_llm_id?
   before_destroy :ensure_not_system
   after_destroy :remove_destroyed_agent_from_subagents
 
@@ -92,13 +93,30 @@ class AiAgent < ActiveRecord::Base
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }
   scope :with_user, -> { where.not(user_id: nil) }
 
+  def allowed_group_ids
+    ids = super
+    return ids unless SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+
+    # Preserve stored permissions so opting out restores the original group selection.
+    ids
+      .map { |id| id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id }
+      .uniq
+  end
+
   def self.all_agents(enabled_only: true)
-    agent_cache[:value] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
+    key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        :value_everyone_disallowed
+      else
+        :value_everyone_allowed
+      end
+    agents =
+      agent_cache[key] ||= AiAgent.ordered.all.limit(MAX_AGENTS_PER_SITE).map(&:class_instance)
 
     if enabled_only
-      agent_cache[:value].select { |p| p.enabled }
+      agents.select(&:enabled)
     else
-      agent_cache[:value]
+      agents
     end
   end
 
@@ -147,8 +165,14 @@ class AiAgent < ActiveRecord::Base
   end
 
   def self.agent_users(user: nil)
+    key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        :agent_users_everyone_disallowed
+      else
+        :agent_users_everyone_allowed
+      end
     agent_users =
-      agent_cache[:agent_users] ||= AiAgent
+      agent_cache[key] ||= AiAgent
         .where(enabled: true)
         .joins(:user)
         .map do |agent|
@@ -180,8 +204,14 @@ class AiAgent < ActiveRecord::Base
     allow_topic_mentions: false,
     allow_personal_messages: false
   )
+    permission_key =
+      if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+        "everyone_disallowed"
+      else
+        "everyone_allowed"
+      end
     index =
-      "modality-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
+      "modality-#{permission_key}-#{allow_chat_channel_mentions}-#{allow_chat_direct_messages}-#{allow_topic_mentions}-#{allow_personal_messages}"
 
     agents =
       agent_cache[index.to_sym] ||= agent_users.select do |agent|
@@ -305,7 +335,7 @@ class AiAgent < ActiveRecord::Base
 
     instance_attributes = {}
     attributes.each do |attr|
-      value = self[attr]
+      value = attr == :allowed_group_ids ? allowed_group_ids : self[attr]
       instance_attributes[attr] = value
     end
 
@@ -484,6 +514,15 @@ class AiAgent < ActiveRecord::Base
   end
 
   private
+
+  # Spam scans use an explicit model setting, so agent edits must update it too.
+  # Clearing the agent default preserves the model selected for spam detection.
+  def sync_spam_detection_model
+    return if default_llm_id.blank?
+
+    settings = AiModerationSetting.spam
+    settings.update!(llm_model_id: default_llm_id) if settings&.ai_agent_id == id
+  end
 
   def normalize_subagent_ids
     self[:subagent_ids] = Array(self[:subagent_ids])

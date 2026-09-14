@@ -6,6 +6,8 @@
 
 ko:
   mcp:
+    errors:
+      topic_not_found: "글을 찾을 수 없음"
     oauth:
       deny: "거부"
       approve: "인증하기"

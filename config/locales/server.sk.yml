@@ -6,6 +6,9 @@
 
 sk:
   mcp:
+    errors:
+      draft_too_long: "Koncept je príliš dlhý"
+      topic_not_found: "Téma sa nenašla"
     oauth:
       deny: "Odmietnuť"
       approve: "Autorizovať"

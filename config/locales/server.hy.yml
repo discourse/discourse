@@ -6,6 +6,8 @@
 
 hy:
   mcp:
+    errors:
+      topic_not_found: "Թեման չի գտնվել"
     oauth:
       deny: "Մերժել"
       approve: "Նույնականացնել"

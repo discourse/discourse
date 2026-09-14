@@ -443,7 +443,7 @@ describe DiscourseMcp::OAuth do
     access_token = McpOauthAccessToken.issue!(authorization: authorization)
     McpPrimitive.create!(
       kind: "tool",
-      identifier: "discourse_post_get",
+      identifier: "discourse_read_post",
       enabled: true,
       consent_required_at: 1.second.from_now,
     )

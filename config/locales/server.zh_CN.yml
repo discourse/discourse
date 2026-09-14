@@ -6,10 +6,56 @@
 
 zh_CN:
   mcp:
+    errors:
+      draft_sequence_conflict: "草稿序号冲突"
+      draft_too_long: "草稿太长了"
+      group_not_found: "未找到群组"
+      invalid_date: "无效日期"
+      invalid_directory_period: "无效的目录时间范围"
+      invalid_reply_mode: "无效回复模式"
+      post_not_found: "帖子未找到"
+      user_directory_disabled: "用户目录已禁用"
+      filter_only_for_filtered_view: "筛选功能仅在已筛选视图中受支持。"
+      filter_required: "筛选视图需要一个非空白的筛选器。"
+      invalid_post_selection: "帖子选择选项无效"
+      invalid_search_query: "搜索查询无效"
+      group_mailbox_sent: "群组私信邮箱不支持已发送消息"
+      invalid_upload_data: "上传的数据不是有效的 base64 编码。"
+      invalid_upload_source: "请提供带有文件名的 base64 编码数据或一个远程 URL。"
+      invalid_upload_type: "不支持此上传类型。"
+      invalid_upload_url: "上传 URL 必须使用 HTTP 或 HTTPS。"
+      private_message_email_message: "自定义消息仅对电子邮件收件人有效"
+      private_message_group_notification: "群组通知仅对群组收件人有效"
+      private_message_invite_failed: "无法将该参与者添加到私人消息中"
+      private_message_not_found: "未找到私人消息"
+      private_message_recipient_required: "至少需要一位私信接收者"
+      private_message_single_recipient: "请提供一个用户、群组或电子邮件收件人"
+      topic_not_found: "找不到话题"
+      topic_update_required: "至少提供一个要更新的主题字段"
+      top_period_only_for_top_view: "热门时间范围仅支持热门视图"
+      upload_not_found: "未找到上传文件"
+      upload_too_large: "上传文件过大"
+      user_update_required: "至少提供一个个人资料字段以供更新"
+      user_not_found: "用户未找到"
     oauth:
+      authorize_title: "授权 MCP 客户端"
+      client_request: "%{client_name} 请求访问 %{site_name}。"
+      client_id: "客户端 ID"
+      redirect_uri: "重定向 URI"
       resource: "MCP 服务器"
+      requested_permission_count:
+        other: "%{client_name} 请求 %{count} 权限。"
+      eligible_permission_count:
+        other: "您的账户符合 %{count}的条件。"
+      granted_permissions:
+        other: "将授予以下权限"
+      guardian_notice: "客户端充当您的帐户，并受您正常的 Discourse 权限约束。"
       deny: "拒绝"
       approve: "授权"
+    admin:
+      site_enabled: "启用 MCP 服务器站点设置"
+      primitives_enabled: "在 “能力” 中启用至少一个原语"
+      client_registered: "注册或批准 OAuth 客户端"
   llms_txt:
     human_community_policy: "这是一个供人类讨论交流的社区。请勿冒充他人或擅自创建账号。只有当人类明确要求您执行特定操作时，才能发布内容、编辑文章或进行其他任何形式的写作操作。"
     crawler_policy: "仅抓取用户特定请求所需的页面。请勿系统性地抓取或批量下载此社区。请遵守 `robots.txt` 文件、网站条款及其爬虫控制设置。如果服务器返回 HTTP 429 错误，请停止并等待 `Retry-After` 间隔后再重试。"
@@ -2058,6 +2104,7 @@ zh_CN:
     discourse_connect_allowed_redirect_domains: "对于 DiscourseConnect 提供的返回路径，限制为这些网域（返回路径默认必须在当前网站）。使用 * 可以允许任何域作为返回路径。不允许使用子域通配符 (`*.foobar.com`)。"
     enable_local_logins: "启用基于本地用户名和密码登录的帐户。警告：如果禁用，并且您之前没有配置至少一种备用登录方法，您可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
+    enable_local_logins_via_code: "允许会员使用一次性电子邮件代码 (OTP) 注册、接受邀请和登录，而无需密码。"
     enable_random_usernames: '使用一次性电子邮件验证码创建的帐户会生成随机用户名，格式为“形容词+名词+两个随机数字”（例如：QuietFalcon34）。新会员可以在注册过程中更改用户名。'
     random_username_adjectives: '用作随机生成用户名前半部分的单词。单词组合时，首字母大写。'
     random_username_nouns: '用作随机生成用户名后半部分的单词。单词组合时，首字母大写。'
@@ -2568,6 +2615,18 @@ zh_CN:
     default_sidebar_link_to_filtered_list: "默认情况下，将导航菜单链接设为链接到筛选后的列表。"
     default_sidebar_show_count_of_new_items: "默认情况下，将导航菜单链接设为显示新条目的数量而非徽章的数量。"
     default_sidebar_switch_panel_position: "边栏上用于切换到聊天的按钮的位置"
+    mcp_server_enabled: "启用网站的模型上下文协议 (MCP) 服务器。MCP 客户端将作为授权的 Discourse 用户运行，并保持正常的权限设置。"
+    mcp_server_instructions: "向 MCP 客户端发送的可选说明，用于解释如何使用此服务器。"
+    mcp_cache_ttl_ms: "MCP 客户端将可缓存响应视为新鲜的最短时间（以毫秒为单位）。设置为 0 可使响应立即失效。"
+    mcp_oauth_client_id_metadata_policy: "选择是否允许 OAuth 客户端使用客户端 ID 元数据文档 (CIMD) 进行注册。管理员注册的客户端始终允许访问。用户仍需批准请求的访问权限。"
+    mcp_oauth_client_id_metadata_domains: "当 {{setting:mcp_oauth_client_id_metadata_policy}} 设置为已批准的域名时，允许提供客户端 ID 元数据文档的主机。子域名除非单独列出，否则不包含在内。"
+    mcp_access_token_lifetime_minutes: "MCP 访问令牌的有效期（以分钟为单位）。"
+    mcp_refresh_token_lifetime_days: "MCP刷新令牌系列的有效期为多少天？"
+    mcp_authorization_code_lifetime_seconds: "一次性 MCP OAuth 授权码的有效时长（以秒为单位）。"
+    mcp_global_rate_limit_per_minute: "每分钟每个用户、客户端和 IP 地址可接受的最大 MCP 请求数。一些功能强大的工具可以设置更严格的限制。"
+    mcp_audit_log_retention_days: "保留有界 MCP 安全审计记录的天数。"
+    mcp_max_request_bytes: "MCP 请求体最大可接受大小（以字节为单位）。"
+    mcp_max_response_bytes: "MCP 响应的最大大小（以字节为单位）。"
     retain_web_hook_events_period_days: "保留网络钩子事件记录的天数。"
     retain_web_hook_events_aggregate_days: "保留网络钩子事件聚合记录的天数。"
     retry_web_hook_events: "自动重试失败的网络钩子事件 4 次。重试之间的时间间隔为 1、5、25 和 125 分钟。"
@@ -5142,6 +5201,8 @@ zh_CN:
     too_many_tags_for_topic:
       other: "您最多可以向一个话题应用 %{count} 个标签。"
     upload_row_too_long: "CSV 文件的每行应该有一个标签。或者，标签后面可以跟一个逗号，然后是标签组名称。"
+    upload_too_many_rows:
+      other: "CSV 文件中的行数过多。请一次上传不超过 %{count} 行。"
     bulk_create:
       invalid_params: "参数无效。请提供标签名称数组。"
       invalid_name: "标签名称无效。"

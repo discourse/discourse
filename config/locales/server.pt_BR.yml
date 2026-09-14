@@ -6,6 +6,9 @@
 
 pt_BR:
   mcp:
+    errors:
+      draft_too_long: "O rascunho é muito longo"
+      topic_not_found: "Tópico não encontrado"
     oauth:
       deny: "Negar"
       approve: "Autorizar"
