@@ -73,6 +73,9 @@ export function renderAvatar(user, options) {
       extraClasses: get(user, "extras") || options.extraClasses,
       loading: options.loading,
       title: options.hideTitle ? null : title || displayName,
+      // `alt: true` names the person rather than making the caller repeat the
+      // display-name logic above; a string sets it verbatim.
+      alt: options.alt === true ? displayName : options.alt,
       avatarTemplate,
     });
   } else {
