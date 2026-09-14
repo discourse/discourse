@@ -2,10 +2,12 @@
 
 module DiscourseVips
   # Estimates JPEG quality for optional recompression using ImageMagick's table heuristic.
-  # Adapted from ImageMagick 7.1.2-27 JPEGSetImageQuality (coders/jpeg.c) and %Q (MagickCore/property.c).
-  # Modified for Discourse: translated to Ruby with bounded JPEG header parsing.
+  # Copyright 1999 ImageMagick Studio LLC. Based in part on the Independent JPEG Group's work.
+  # Translated and modified for Discourse with bounded JPEG header parsing from ImageMagick 7.1.2-27:
+  # https://github.com/ImageMagick/ImageMagick/blob/b661ac969aa3a0d326690f95830aab246569f090/coders/jpeg.c#L1197-L1325
+  # https://github.com/ImageMagick/ImageMagick/blob/b661ac969aa3a0d326690f95830aab246569f090/MagickCore/property.c#L2742-L2747
+  # License: https://github.com/ImageMagick/ImageMagick/blob/b661ac969aa3a0d326690f95830aab246569f090/LICENSE
   # Lossless input stays unknown because the production decoder rejects it before the helper's 100 branch.
-  # Copyright 1999 ImageMagick Studio LLC. See jpeg_quality.LICENSE and jpeg_quality.NOTICE.
   module JpegQuality
     class Error < StandardError
     end
