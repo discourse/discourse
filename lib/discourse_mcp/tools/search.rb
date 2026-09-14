@@ -9,7 +9,12 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         query = arguments.fetch("query").to_s
         limit = arguments.fetch("max_results", 10)
-        results = ::Search.execute(query, guardian: request_context.guardian)
+        results =
+          ::Search.execute(
+            query,
+            guardian: request_context.guardian,
+            exclude_private_messages: !request_context.has_scopes?("mcp:private-messages:read"),
+          )
         topics = results.posts.filter_map(&:topic).uniq(&:id).first(limit + 1)
         has_more = topics.length > limit
         topics = topics.first(limit)
@@ -115,6 +120,7 @@ module DiscourseMcp
             search_type: :full_page,
             page:,
             blurb_length: 300,
+            exclude_private_messages: !request_context.has_scopes?("mcp:private-messages:read"),
           )
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.invalid_search_query") if results.blank?
 
