@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  mcp:
+    errors:
+      draft_too_long: "Taslak fazla uzun"
+      post_not_found: "Gönderi bulunamadı"
+      topic_not_found: "Konu bulunamadı."
+      user_not_found: "Kullanıcı bulunamadı"
+    oauth:
+      resource: "MCP sunucusu"
+      deny: "Reddet"
+      approve: "Yetkilendir"
   llms_txt:
     sections:
       optional: "İsteğe bağlı"
@@ -1004,6 +1014,7 @@ tr_TR:
       windows: "Microsoft Windows"
       unknown: "bilinmeyen işletim sistemi"
   admin_site_traffic_explorer:
+    unknown: "Bilinmeyen"
     traffic_types:
       anonymous: "Anonim"
   change_email:
@@ -1684,12 +1695,6 @@ tr_TR:
       host_names: "config/database.yml dosyanız varsayılan localhost sunucu adını kullanıyor. Sitenizin sunucu adını kullanmak için bunu güncelleyin."
       queue_size: "Sıraya alınan işlerin sayısı %{queue_size} ve bu, yüksek bir değer. Bu, Sidekiq işlem(ler)inde bir sorun olduğunu gösterebilir veya daha fazla Sidekiq çalışanı eklemeniz gerekebilir."
       ram: "Sunucunuz 1 GB'den az toplam bellekle çalışıyor. En az 1 GB bellek önerilir."
-      google_oauth2_config: 'Sunucu, Google OAuth2 (enable_google_oauth2_logins) ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış ancak istemci kimliği ve istemci gizli değerleri ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      facebook_config: 'Sunucu, Facebook ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_facebook_logins) ancak uygulama kimliği ve uygulama gizli değerleri ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      twitter_config: 'Sunucu, Twitter ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_twitter_logins) ancak anahtar ve gizli değerler ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      github_config: 'Sunucu, GitHub ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_github_logins) ancak istemci kimliği ve gizli değerler ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      s3_upload_config: 'Sunucu, S3''e dosya yüklemek üzere yapılandırılmış ancak aşağıdaki ayarlardan en az biri yapılmamış: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile veya s3_upload_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi edinmek için "S3''e görüntü yüklemeleri nasıl ayarlanır?" bölümüne bakın</a>.'
-      s3_backup_config: 'Sunucu, yedekleri S3''e yüklemek üzere yapılandırılmış ancak aşağıdaki ayarlardan en az biri yapılmamış: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile veya s3_backup_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi edinmek için "S3''e görüntü yüklemeleri nasıl ayarlanır?" bölümüne bakın</a>.'
       s3_cdn: 'Sunucu, dosyaları S3''e yükleyecek şekilde yapılandırılmış ancak yapılandırılmış bir S3 İTA''sı yok. Bu, yüksek S3 maliyetlerine ve site performansının daha yavaş olmasına yol açabilir. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Daha fazla bilgi edinmek için "Yüklemeler için Nesne Depolamayı Kullanma" bölümüne bakın</a>.'
       image_magick: 'Sunucu büyük resimlerin küçük resimlerini oluşturacak şekilde yapılandırılmış ancak ImageMagick yüklü değil. ImageMagick''i favori paket yöneticinizi kullanarak yükleyin veya <a href="https://www.imagemagick.org/script/download.php" target="_blank">en son sürümü indirin</a>.'
       failing_emails: 'Başarısız olan %{num_failed_jobs} e-posta işi var. App.yml dosyanızı kontrol edin ve posta sunucusu ayarlarının doğru olduğundan emin olun. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq''teki başarısız işlere bakın</a>.'
@@ -1880,7 +1885,7 @@ tr_TR:
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."
     allow_username_in_share_links: "Kullanıcı adlarının paylaşım bağlantılarına dahil edilmesine izin verin. Bu, benzersiz ziyaretçilere dayalı rozetleri ödüllendirmek için kullanışlıdır."
     site_contact_username: "Tüm otomatik mesajların gönderileceği geçerli bir personel kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılır."
-    site_contact_group_name: "Otomatik olarak gönderilen tüm kişisel mesajlara davet edilen bir grubun geçerli adı."
+    site_contact_group_name: "Otomatik olarak gönderilen tüm kişisel mesajlara davet edilen grup."
     send_welcome_message: "Tüm yeni kullanıcılara hızlı başlangıç kılavuzu içeren bir karşılama mesajı gönderin."
     send_tl1_welcome_message: "Yeni güven seviyesi 1 kullanıcılarına bir karşılama mesajı gönderin."
     send_tl2_promotion_message: "Yeni güven seviyesi 2 kullanıcılarına yükselme hakkında bir mesaj gönderin."
@@ -2502,7 +2507,6 @@ tr_TR:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adına sahip bir kullanıcı yok."
       valid_username: "Bu kullanıcı adına sahip bir kullanıcı var."
-      invalid_group: "Bu ada sahip bir grup yok."
       invalid_svg: "SVG görüntüsü geçersiz. SVG öğesi içermeli ve komut dosyası veya olay işleyicisi içermemelidir."
       invalid_upload: "Yükleme geçersiz veya mevcut değil."
       invalid_topic: "Bu kimlik numarasıyla ilgili konu yok."
@@ -2563,7 +2567,6 @@ tr_TR:
       markdown_linkify_tlds: "\"*\" değerini dahil edemezsiniz."
       google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce tüm \"google oauth2 hd\" ayarlarını yapılandırmanız gerekiyor."
       discourse_id_registration: "Discourse ID ile otomatik olarak kayıt yapılamadı. Bunun nedeni ağ bağlantısı sorunları, güvenlik duvarı kısıtlamaları veya Discourse ID hizmetine erişilememesi olabilir. Daha fazla bilgi için lütfen sunucu günlüklerini kontrol edin veya destek ekibiyle iletişime geçin."
-      linkedin_oidc_credentials: "Bu ayarı etkinleştirmeden önce LinkedIn OIDC giriş bilgilerini ('linkedin_oidc_client_id' ve 'linkedin_oidc_client_secret') yapılandırmanız gerekiyor."
       search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_chinese\" özelliğini devre dışı bırakmalısınız."
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_japanese\" özelliğini devre dışı bırakmalısınız."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2 adımlı kimlik doğrulama zorunlu ise DiscourseConnect'i etkinleştiremezsiniz."
@@ -4809,6 +4812,10 @@ tr_TR:
   performance_report:
     initial_post_raw: Bu konu, siteniz için günlük performans raporlarını içerir.
     initial_topic_title: Web sitesi performans raporları
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "CSV dosyasında çok fazla girdi var. Lütfen en fazla %{count} girdi içeren bir CSV dosyası sağlayın."
+      other: "CSV dosyasında çok fazla girdi var. Lütfen en fazla %{count} girdi içeren bir CSV dosyası sağlayın."
   tags:
     title: "Etiketler"
     restricted_tag_disallowed: '"%{tag}" etiketini uygulayamazsınız.'
@@ -5076,8 +5083,6 @@ tr_TR:
         complete: "Gönderi gizlendi, kullanıcı bilgilendirildi."
       agree_and_edit:
         title: "Yazıyı düzenle"
-        description: "Bayrağı kabul edin ve gönderiyi düzenlemek için bir besteci penceresi açın."
-        complete: "Bayrak onaylandı, artık gönderiyi düzenleyebilirsiniz."
       delete:
         title: "Sil"
         complete: "Gönderi silindi."
@@ -5181,30 +5186,6 @@ tr_TR:
       approve_and_unhide:
         title: "Evet"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
-      post_actions:
-        bundle_title: "Bu gönderiyle ne yapmak istiyorsunuz?"
-      delete_post:
-        title: "Gönderiyi sil"
-        description: "Bu gönderiyi sil"
-        complete: "Gönderi silindi"
-      hide_post:
-        title: "Gönderiyi gizle"
-        description: "Bu gönderiyi herkesten gizle"
-        complete: "Gizli gönderi"
-      unhide_post:
-        title: "Gönderiyi göster"
-        description: "Bu gönderiyi tüm kullanıcılar için görünür hale getir"
-        complete: "Gönderi gizlilikten çıkarıldı"
-      restore_post:
-        title: "Gönderiyi geri yükle"
-        description: "Silinen bu gönderiyi geri yükle"
-        complete: "Gönderi geri yüklendi"
-      edit_post:
-        title: "Yazıyı düzenle"
-        description: "Bu gönderinin içeriğini düzenle"
-        complete: "Gönderi düzenlendi"
-      user_actions:
-        bundle_title: "Kullanıcıyla ne yapmak istiyorsunuz?"
       silence_user:
         title: "Kullanıcıyı sustur"
         complete: "Kullanıcı susturuldu"

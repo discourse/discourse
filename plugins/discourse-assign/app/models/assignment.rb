@@ -128,7 +128,7 @@ class Assignment < ActiveRecord::Base
   end
 
   def validate_status
-    if SiteSetting.enable_assign_status && !Assignment.statuses.include?(self.status)
+    if SiteSetting.enable_assign_status && !Assignment.statuses.include?(status)
       errors.add(:status, :invalid)
     end
   end

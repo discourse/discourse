@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 be:
+  mcp:
+    errors:
+      topic_not_found: "Тэма не знойдзена"
+    oauth:
+      approve: "Аўтарызаваць"
   llms_txt:
     links:
       search:
@@ -463,6 +468,7 @@ be:
       windows: "Microsoft Windows,"
       unknown: "невядомая аперацыйная сістэма"
   admin_site_traffic_explorer:
+    unknown: "Невядома"
     traffic_types:
       anonymous: "ананімны"
   change_email:

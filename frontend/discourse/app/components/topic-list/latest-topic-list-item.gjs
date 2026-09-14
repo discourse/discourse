@@ -32,7 +32,6 @@ export default class LatestTopicListItem extends Component {
 
   <template>
     <div
-      data-topic-id={{@topic.id}}
       class={{dConcatClass
         "latest-topic-list-item"
         this.tagClassNames
@@ -45,10 +44,11 @@ export default class LatestTopicListItem extends Component {
         (if @topic.visited "visited")
         this.additionalClasses
       }}
+      data-topic-id={{@topic.id}}
     >
       <PluginOutlet
-        @name="above-latest-topic-list-item"
         @connectorTagName="div"
+        @name="above-latest-topic-list-item"
         @outletArgs={{lazyHash topic=@topic}}
       />
 
@@ -70,7 +70,7 @@ export default class LatestTopicListItem extends Component {
             @name="latest-topic-list-item-main-link-top-row"
             @outletArgs={{lazyHash topic=@topic}}
           >
-            <TopicStatus @topic={{@topic}} @context="topic-list" />
+            <TopicStatus @context="topic-list" @topic={{@topic}} />
 
             {{dTopicLink @topic}}
             {{~#if @topic.featured_link}}
@@ -86,7 +86,6 @@ export default class LatestTopicListItem extends Component {
 
         <div class="bottom-row">
           <PluginOutlet
-            @name="latest-topic-list-item-main-link-bottom-row"
             @aliases={{array
               (hash
                 name="below-latest-topic-list-item-bottom-row"
@@ -96,6 +95,7 @@ export default class LatestTopicListItem extends Component {
                 since="2026.3.0"
               )
             }}
+            @name="latest-topic-list-item-main-link-bottom-row"
             @outletArgs={{lazyHash topic=@topic}}
           >
             {{dCategoryLink @topic.category~}}
@@ -106,7 +106,6 @@ export default class LatestTopicListItem extends Component {
 
       <div class="topic-stats">
         <PluginOutlet
-          @name="latest-topic-list-item-topic-stats"
           @aliases={{array
             (hash
               name="above-latest-topic-list-item-post-count"
@@ -116,9 +115,10 @@ export default class LatestTopicListItem extends Component {
               since="2026.3.0"
             )
           }}
+          @name="latest-topic-list-item-topic-stats"
           @outletArgs={{lazyHash topic=@topic}}
         >
-          <ItemRepliesCell @topic={{@topic}} @tagName="div" />
+          <ItemRepliesCell @tagName="div" @topic={{@topic}} />
           <div class="topic-last-activity">
             <a
               href={{@topic.lastPostUrl}}

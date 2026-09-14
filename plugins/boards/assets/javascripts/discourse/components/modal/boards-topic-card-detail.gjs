@@ -122,9 +122,9 @@ export default class BoardsTopicCardDetail extends Component {
 
   <template>
     <DModal
-      @title={{this.topicTitle}}
-      @closeModal={{@closeModal}}
       class="discourse-boards-topic-card-detail-modal"
+      @closeModal={{@closeModal}}
+      @title={{this.topicTitle}}
       {{didInsert this.viewCard}}
     >
       <:body>
@@ -151,8 +151,8 @@ export default class BoardsTopicCardDetail extends Component {
                 {{dIcon "user-plus"}}
                 {{#each this.allAssignedUsers as |user|}}
                   <a
-                    href="/u/{{user.username}}/activity/assigned"
                     class="discourse-boards-topic-card-detail__username"
+                    href="/u/{{user.username}}/activity/assigned"
                   >{{user.username}}</a>
                 {{/each}}
               </span>
@@ -186,8 +186,8 @@ export default class BoardsTopicCardDetail extends Component {
           {{else}}
             <div class="discourse-boards-topic-card-detail__cooked">
               <DDecoratedHtml
-                @html={{trustHTML this.cooked}}
                 @className="cooked"
+                @html={{trustHTML this.cooked}}
               />
             </div>
           {{/if}}
@@ -212,9 +212,9 @@ export default class BoardsTopicCardDetail extends Component {
       </:body>
       <:footer>
         <DButton
-          @href={{this.topicUrl}}
           class="btn-primary"
           @action={{this.viewTopic}}
+          @href={{this.topicUrl}}
           @icon="up-right-from-square"
           @label="boards.board.view_topic"
         />

@@ -119,6 +119,7 @@ module DiscourseAi
 
       def self.messages_from_post(
         post,
+        guardian: post.user.guardian,
         style: nil,
         max_posts:,
         context_token_budget: nil,
@@ -167,7 +168,6 @@ module DiscourseAi
 
         builder = new
         builder.topic = post.topic
-        guardian = Guardian.new(post.user)
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
           filtered_upload_ids =

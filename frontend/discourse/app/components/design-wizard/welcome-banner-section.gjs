@@ -15,22 +15,22 @@ const DesignWizardWelcomeBannerSection = <template>
   <div class="design-wizard__switch-row">
     <div>
       <span
-        id="design-wizard-welcome-banner-title"
         class="design-wizard__switch-row-title"
+        id="design-wizard-welcome-banner-title"
       >
         {{i18n "design_wizard.welcome_banner.enable"}}
       </span>
       <span
-        id="design-wizard-welcome-banner-description"
         class="design-wizard__switch-row-description"
+        id="design-wizard-welcome-banner-description"
       >
         {{i18n "design_wizard.welcome_banner.enable_description"}}
       </span>
     </div>
     <DToggleSwitch
-      @state={{@enabled}}
-      aria-labelledby="design-wizard-welcome-banner-title"
       aria-describedby="design-wizard-welcome-banner-description"
+      aria-labelledby="design-wizard-welcome-banner-title"
+      @state={{@enabled}}
       {{on "click" @onToggle}}
     />
   </div>
@@ -43,10 +43,10 @@ const DesignWizardWelcomeBannerSection = <template>
       <div class="design-wizard__option-rows">
         {{#each LOCATIONS as |location|}}
           <OptionRow
-            @label={{locationLabel location}}
-            @selected={{eq location @location}}
-            @onSelect={{fn @onSelectLocation location}}
             data-welcome-banner-location={{location}}
+            @label={{locationLabel location}}
+            @onSelect={{fn @onSelectLocation location}}
+            @selected={{eq location @location}}
           />
         {{/each}}
       </div>

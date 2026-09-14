@@ -69,8 +69,8 @@ module(
       await render(
         <template>
           <DashboardDateRangePicker
-            @presets={{presets}}
             @activePreset="last_30_days"
+            @presets={{presets}}
           />
         </template>
       );
@@ -89,7 +89,7 @@ module(
 
       await render(
         <template>
-          <DashboardDateRangePicker @presets={{presets}} @onApply={{onApply}} />
+          <DashboardDateRangePicker @onApply={{onApply}} @presets={{presets}} />
         </template>
       );
 
@@ -112,8 +112,8 @@ module(
         <template>
           <DashboardDateRangePicker
             @from={{from}}
-            @to={{to}}
             @onApply={{onApply}}
+            @to={{to}}
           />
         </template>
       );
@@ -182,8 +182,8 @@ module(
         <template>
           <DashboardDateRangePicker
             @from={{from}}
-            @to={{to}}
             @onApply={{onApply}}
+            @to={{to}}
           />
         </template>
       );
@@ -324,9 +324,9 @@ module(
         <template>
           <DashboardDateRangePicker
             @from={{from}}
-            @to={{to}}
             @onApply={{onApply}}
             @onCancel={{onCancel}}
+            @to={{to}}
           />
         </template>
       );

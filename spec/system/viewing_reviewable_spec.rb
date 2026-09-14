@@ -383,6 +383,8 @@ describe "Viewing reviewable item" do
 
       review_page.click_scrub_user_button
 
+      expect(scrub_user_modal.scrub_button).to be_disabled
+
       scrubbing_reason = "a spammer who knows how to make GDPR requests"
       scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
       expect(scrub_user_modal.scrub_button).not_to be_disabled

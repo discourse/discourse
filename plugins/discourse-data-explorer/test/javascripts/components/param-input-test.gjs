@@ -195,8 +195,8 @@ module("Component | ParamInput", function (hooks) {
             <ParamInputForm
               @hasParams="true"
               @initialValues={{this.initialValues}}
-              @paramInfo={{this.param_info}}
               @onRegisterApi={{this.onRegisterApi}}
+              @paramInfo={{this.param_info}}
             />
           </template>
         );
@@ -269,8 +269,8 @@ module("Component | ParamInput", function (hooks) {
       <template>
         <ParamInputForm
           @initialValues={{this.initialValues}}
-          @paramInfo={{this.param_info}}
           @onRegisterApi={{this.onRegisterApi}}
+          @paramInfo={{this.param_info}}
         />
       </template>
     );
@@ -304,8 +304,8 @@ module("Component | ParamInput", function (hooks) {
       <template>
         <ParamInputForm
           @initialValues={{this.initialValues}}
-          @paramInfo={{this.param_info}}
           @onRegisterApi={{this.onRegisterApi}}
+          @paramInfo={{this.param_info}}
         />
       </template>
     );
@@ -335,8 +335,8 @@ module("Component | ParamInput", function (hooks) {
       <template>
         <ParamInputForm
           @initialValues={{this.initialValues}}
-          @paramInfo={{this.param_info}}
           @onRegisterApi={{this.onRegisterApi}}
+          @paramInfo={{this.param_info}}
         />
       </template>
     );
@@ -369,8 +369,8 @@ module("Component | ParamInput", function (hooks) {
       <template>
         <ParamInputForm
           @initialValues={{this.initialValues}}
-          @paramInfo={{this.param_info}}
           @onRegisterApi={{this.onRegisterApi}}
+          @paramInfo={{this.param_info}}
         />
       </template>
     );
@@ -415,8 +415,8 @@ module("Component | ParamInput", function (hooks) {
       <template>
         <ParamInputForm
           @initialValues={{this.initialValues}}
-          @paramInfo={{this.param_info}}
           @onRegisterApi={{this.onRegisterApi}}
+          @paramInfo={{this.param_info}}
         />
       </template>
     );

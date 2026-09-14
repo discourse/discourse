@@ -23,10 +23,10 @@ export default class ChatNavbarFullPageButton extends Component {
   <template>
     {{#if this.chatStateManager.isDrawerExpanded}}
       <DButton
-        @icon="discourse-expand"
         class="btn-transparent no-text c-navbar__full-page-button"
-        @title="chat.open_full_page"
         @action={{this.openInFullPage}}
+        @icon="discourse-expand"
+        @title="chat.open_full_page"
       />
     {{/if}}
   </template>

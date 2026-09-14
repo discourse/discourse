@@ -199,3 +199,49 @@ span.onebox-ai-llm-title {
   padding: 0;
   border-bottom: none;
 }
+
+.ai-details {
+  background-color: var(--primary-very-low);
+  padding: 0.25rem 0.75rem;
+  margin-bottom: 0.5rem;
+
+  &:not([open]):is(:hover, :focus-within) {
+    background-color: var(--d-hover);
+  }
+
+  > .ai-details__summary {
+    display: block;
+    cursor: pointer;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &::before {
+      content: none;
+    }
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  &__caret {
+    font-size: var(--font-down-1);
+    margin-inline-end: 0.25em;
+
+    &.--expanded {
+      display: none;
+    }
+  }
+
+  &[open] > .ai-details__summary {
+    .ai-details__caret.--collapsed {
+      display: none;
+    }
+
+    .ai-details__caret.--expanded {
+      display: inline-block;
+    }
+  }
+}

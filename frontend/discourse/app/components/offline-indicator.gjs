@@ -21,9 +21,9 @@ export default class OfflineIndicator extends Component {
       <div class="offline-indicator">
         <span>{{i18n "offline_indicator.no_internet"}}</span>
         <DButton
-          @label="offline_indicator.refresh_page"
-          @display="link"
           @action={{this.refresh}}
+          @display="link"
+          @label="offline_indicator.refresh_page"
         />
       </div>
     {{/if}}

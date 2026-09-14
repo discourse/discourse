@@ -4,6 +4,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ListReviewables do
   fab!(:llm_model)
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+
   fab!(:admin)
 
   before do

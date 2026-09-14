@@ -4,22 +4,22 @@ import DButton from "discourse/ui-kit/d-button";
 
 export default <template>
   <PluginOutlet
-    @name="admin-customize-email-style-edit"
     @connectorTagName="div"
+    @name="admin-customize-email-style-edit"
   >
     <EmailStylesEditor
-      @styles={{@controller.model}}
       @fieldName={{@controller.fieldName}}
       @save={{@controller.save}}
+      @styles={{@controller.model}}
     />
 
     <div class="admin-footer">
       <div class="buttons">
         <DButton
+          class="btn-primary"
           @action={{@controller.save}}
           @disabled={{@controller.saveDisabled}}
           @translatedLabel={{@controller.saveButtonText}}
-          class="btn-primary"
         />
       </div>
     </div>

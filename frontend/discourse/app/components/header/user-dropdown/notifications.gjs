@@ -58,21 +58,21 @@ export default class Notifications extends Component {
 
     {{#if this._shouldHighlightAvatar}}
       <UserTip
-        @id="first_notification"
-        @triggerSelector=".header-dropdown-toggle.current-user"
-        @placement="bottom-end"
-        @titleText={{i18n "user_tips.first_notification.title"}}
         @contentText={{i18n "user_tips.first_notification.content"}}
+        @id="first_notification"
+        @placement="bottom-end"
         @portalOutletSelector=".d-header-wrap"
-        @showSkipButton={{true}}
         @priority={{1000}}
+        @showSkipButton={{true}}
+        @titleText={{i18n "user_tips.first_notification.title"}}
+        @triggerSelector=".header-dropdown-toggle.current-user"
       />
     {{/if}}
 
     {{#if this.currentUser.status}}
       <UserStatusBubble
-        @timezone={{this.currentUser.user_option.timezone}}
         @status={{this.currentUser.status}}
+        @timezone={{this.currentUser.user_option.timezone}}
       />
     {{/if}}
 
@@ -84,15 +84,15 @@ export default class Notifications extends Component {
     {{else}}
       {{#if this.currentUser.new_personal_messages_notifications_count}}
         <a
-          href="#"
-          class="badge-notification with-icon new-pms"
-          title={{i18n
+          aria-label={{i18n
             "notifications.tooltip.new_message_notification"
             (hash
               count=this.currentUser.new_personal_messages_notifications_count
             )
           }}
-          aria-label={{i18n
+          class="badge-notification with-icon new-pms"
+          href="#"
+          title={{i18n
             "notifications.tooltip.new_message_notification"
             (hash
               count=this.currentUser.new_personal_messages_notifications_count
@@ -103,13 +103,13 @@ export default class Notifications extends Component {
         </a>
       {{else if this.currentUser.unseen_reviewable_count}}
         <a
-          href="#"
-          class="badge-notification with-icon new-reviewables"
-          title={{i18n
+          aria-label={{i18n
             "notifications.tooltip.new_reviewable"
             (hash count=this.currentUser.unseen_reviewable_count)
           }}
-          aria-label={{i18n
+          class="badge-notification with-icon new-reviewables"
+          href="#"
+          title={{i18n
             "notifications.tooltip.new_reviewable"
             (hash count=this.currentUser.unseen_reviewable_count)
           }}
@@ -118,14 +118,14 @@ export default class Notifications extends Component {
         </a>
       {{else if this.currentUser.all_unread_notifications_count}}
         <a
-          href="#"
-          class="badge-notification unread-notifications"
-          title={{i18n
-            "notifications.tooltip.regular"
-            (hash count=this.currentUser.all_unread_notifications_count)
-          }}
           aria-label={{i18n
             "user.notifications"
+            (hash count=this.currentUser.all_unread_notifications_count)
+          }}
+          class="badge-notification unread-notifications"
+          href="#"
+          title={{i18n
+            "notifications.tooltip.regular"
             (hash count=this.currentUser.all_unread_notifications_count)
           }}
         >

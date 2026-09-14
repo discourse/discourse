@@ -2,14 +2,14 @@ import DButton from "discourse/ui-kit/d-button";
 
 export default <template>
   <DButton
+    class="btn-primary btn-large"
     @icon="plus"
     @translatedLabel="large"
-    class="btn-primary btn-large"
   />
-  <DButton @icon="plus" @translatedLabel="default" class="btn-primary" />
+  <DButton class="btn-primary" @icon="plus" @translatedLabel="default" />
   <DButton
+    class="btn-primary btn-small"
     @icon="plus"
     @translatedLabel="small"
-    class="btn-primary btn-small"
   />
 </template>

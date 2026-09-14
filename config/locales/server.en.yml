@@ -1,4 +1,59 @@
 en:
+  mcp:
+    errors:
+      draft_sequence_conflict: "Draft sequence conflict"
+      draft_too_long: "Draft is too long"
+      group_not_found: "Group not found"
+      invalid_date: "Invalid date"
+      invalid_directory_period: "Invalid directory period"
+      invalid_reply_mode: "Invalid reply mode"
+      post_not_found: "Post not found"
+      user_directory_disabled: "The user directory is disabled"
+      filter_only_for_filtered_view: "Filter is only supported by the filtered view"
+      filter_required: "A nonblank filter is required for the filtered view"
+      invalid_post_selection: "The post selection options are invalid"
+      invalid_search_query: "The search query is invalid"
+      group_mailbox_sent: "Group private-message mailboxes do not support sent messages"
+      invalid_upload_data: "The upload data is not valid base64"
+      invalid_upload_source: "Provide either base64 data with a filename or one remote URL"
+      invalid_upload_type: "The upload type is not supported"
+      invalid_upload_url: "The upload URL must use HTTP or HTTPS"
+      private_message_email_message: "A custom message is only valid with an email recipient"
+      private_message_group_notification: "Group notifications are only valid with a group recipient"
+      private_message_invite_failed: "The participant could not be added to the personal message"
+      private_message_not_found: "Personal message not found"
+      private_message_recipient_required: "At least one private-message recipient is required"
+      private_message_single_recipient: "Provide exactly one user, group, or email recipient"
+      topic_not_found: "Topic not found"
+      topic_update_required: "Provide at least one topic field to update"
+      top_period_only_for_top_view: "Top period is only supported by the top view"
+      upload_not_found: "Upload not found"
+      upload_too_large: "The upload is too large"
+      user_update_required: "Provide at least one profile field to update"
+      user_not_found: "User not found"
+    oauth:
+      authorize_title: "Authorize MCP client"
+      client_request: "%{client_name} is requesting access to %{site_name}."
+      client_id: "Client ID"
+      redirect_uri: "Redirect URI"
+      resource: "MCP server"
+      requested_permission_count:
+        one: "%{client_name} requested %{count} permission."
+        other: "%{client_name} requested %{count} permissions."
+      eligible_permission_count:
+        one: "Your account is eligible for %{count}."
+        other: "Your account is eligible for %{count}."
+      granted_permissions:
+        one: "The following permission will be granted"
+        other: "The following permissions will be granted"
+      guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
+      deny: "Deny"
+      approve: "Authorize"
+    admin:
+      site_enabled: "Enable the MCP server site setting"
+      primitives_enabled: "Enable at least one primitive in Capabilities"
+      client_registered: "Register or approve an OAuth client"
+
   llms_txt:
     human_community_policy: "This is a community for human discussion. Do not impersonate people or create accounts autonomously. Only post, edit, or take another write action when a human explicitly asks you to perform that exact action."
     crawler_policy: "Fetch only the pages needed for the user's specific request. Do not systematically crawl or bulk-download this community. Respect `robots.txt`, the site's terms, and its crawler controls. If the server responds with HTTP 429, stop and wait for the `Retry-After` interval before retrying."
@@ -536,6 +591,7 @@ en:
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  site_archived_error: "This site is archived. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
@@ -1179,6 +1235,7 @@ en:
 
   admin_site_traffic_explorer:
     direct_or_unknown: "Direct / unknown"
+    unknown: "Unknown"
     traffic_types:
       logged_in: "Logged in"
       anonymous: "Anonymous"
@@ -1346,7 +1403,8 @@ en:
     marked_insecure_from_theme_component_reason: "upload used in theme component"
 
   unsubscribe:
-    title: "Unsubscribe"
+    title: "Unsubscribe %{email}"
+    unsubscribe: "Unsubscribe"
     stop_watching_topic: "Stop watching this topic, %{link}"
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
@@ -1924,13 +1982,13 @@ en:
       sidekiq_check: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
       queue_size: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
       ram: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
-      google_oauth2_config: 'The server is configured to allow signup and login with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
-      facebook_config: 'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
-      twitter_config: 'The server is configured to allow signup and login with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
-      github_config: 'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
+      google_oauth2_config: '{{setting:enable_google_oauth2_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
+      facebook_config: '{{setting:enable_facebook_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
+      twitter_config: '{{setting:enable_twitter_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
+      github_config: '{{setting:enable_github_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
       github_onebox_backoff: "GitHub is rate-limiting the server, so GitHub links may not preview until the limit resets. Configuring {{setting:github_onebox_access_tokens}} raises the limit significantly."
-      s3_upload_config: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-      s3_backup_config: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+      s3_upload_config: '{{setting:enable_s3_uploads}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+      s3_backup_config: '{{setting:backup_location}} is set to S3, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
       s3_cdn: 'The server is configured to upload files to S3, but there is no S3 CDN configured. This can lead to expensive S3 costs and slower site performance. <a href="https://meta.discourse.org/t/-/148916" target="_blank">See "Using Object Storage for Uploads" to learn more</a>.'
       image_magick: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
@@ -1987,6 +2045,7 @@ en:
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     max_emojis_in_title: "Maximum allowed emojis in topic title.  If the set value is zero, it prevents the use of any emojis in topic titles."
     min_search_term_length: "Minimum valid search term length in characters"
+    allow_anonymous_search: "Allow anonymous visitors to use /search. When disabled, anonymous visitors cannot access /search and interface controls that use /search are hidden."
     search_tokenize_chinese: "Force search to tokenize Chinese even on non Chinese sites"
     search_tokenize_japanese: "Force search to tokenize Japanese even on non Japanese sites"
     search_prefer_recent_posts: "If searching your large forum is slow, this option tries an index of more recent posts first"
@@ -2180,7 +2239,7 @@ en:
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
-    site_contact_group_name: "A valid name of a group that gets invited to all automatically sent personal messages."
+    site_contact_group_name: "The group that gets invited to all automatically sent personal messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
@@ -2265,7 +2324,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
-    enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs)."
+    enable_local_logins_via_code: "Allow members to sign up, accept invitations, and log in with one-time email codes (OTPs), without requiring a password."
     enable_random_usernames: 'Generates random usernames for accounts created with a one-time email code using the format "adjective + noun + two random numbers" (example: QuietFalcon34). New members can change their username during the signup process.'
     random_username_adjectives: 'Words used as the first half of a randomly generated username. The leading letter is capitalized when the words are combined.'
     random_username_nouns: 'Words used as the second half of a randomly generated username. The leading letter is capitalized when the words are combined.'
@@ -2305,6 +2364,7 @@ en:
     linkedin_oidc_client_id: "Client ID for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     linkedin_oidc_client_secret: "Client secret for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
 
+    site_archived: "Permanently freeze the site as an archive. Reads and login remain available; new content, likes, and other write actions are disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
@@ -2908,6 +2968,19 @@ en:
     default_sidebar_show_count_of_new_items: "Make navigation menu links show count of new items instead of badges by default."
     default_sidebar_switch_panel_position: "Position of button on sidebar to switch to chat"
 
+    mcp_server_enabled: "Enable the site's Model Context Protocol server. MCP clients act as an authorized Discourse user and remain subject to normal permissions."
+    mcp_server_instructions: "Optional instructions sent to MCP clients to explain how to use this server."
+    mcp_cache_ttl_ms: "How long MCP clients may consider a cacheable response fresh, in milliseconds. Set to 0 to make responses immediately stale."
+    mcp_oauth_client_id_metadata_policy: "Choose whether OAuth clients can register using Client ID Metadata Documents (CIMD). Admin-registered clients are always allowed. Users must still approve requested access."
+    mcp_oauth_client_id_metadata_domains: "Hosts allowed to provide Client ID Metadata Documents when {{setting:mcp_oauth_client_id_metadata_policy}} is set to approved domains. Subdomains are not included unless listed separately."
+    mcp_access_token_lifetime_minutes: "How long an MCP access token remains valid, in minutes."
+    mcp_refresh_token_lifetime_days: "How long an MCP refresh token family remains valid, in days."
+    mcp_authorization_code_lifetime_seconds: "How long a single-use MCP OAuth authorization code remains valid, in seconds."
+    mcp_global_rate_limit_per_minute: "Maximum MCP requests accepted per user, client, and IP address each minute. Expensive tools can apply stricter limits."
+    mcp_audit_log_retention_days: "Number of days to retain bounded MCP security audit records."
+    mcp_max_request_bytes: "Maximum accepted MCP request body size in bytes."
+    mcp_max_response_bytes: "Maximum MCP response size in bytes."
+
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retain_web_hook_events_aggregate_days: "Number of days to retain web hook event aggregate records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
@@ -3077,7 +3150,7 @@ en:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
-      invalid_group: "There's no group with that name."
+      invalid_group: "There's no such group."
       invalid_svg: "The SVG image is invalid. It must contain an SVG element and no scripts or event handlers."
       invalid_upload: "The upload is invalid or does not exist."
       invalid_topic: "There's no topic with that ID."
@@ -3147,7 +3220,7 @@ en:
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
       discourse_id_registration: "Failed to automatically register with Discourse ID. This could be due to network connectivity issues, firewall restrictions, or the Discourse ID service being unreachable. Please check server logs for more details or contact support."
-      linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
+      auth_provider_credentials_missing: "You must set %{settings} before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
@@ -3247,8 +3320,6 @@ en:
       tags_any: "Show topics with any of the specified tags (comma-separated)"
       tags_all: "Show topics with all of the specified tags (plus-separated)"
       exclude_tag: "Exclude topics with a specific tag"
-      exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
-      exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
@@ -3258,7 +3329,6 @@ en:
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
-      created_by_user: "Show topics created by username or group (without @)"
       created_by_multiple: "Show topics created by any of the specified users or groups (comma-separated)"
       latest_post_before: "Show topics with last post before a date (YYYY-MM-DD or days ago)"
       latest_post_after: "Show topics with last post after a date (YYYY-MM-DD or days ago)"
@@ -3281,6 +3351,7 @@ en:
       status_public: "Show topics in public categories"
       status_noreplies: "Show topics with no replies"
       status_single_user: "Show topics with a single participant"
+      status_scheduled: "Show topics scheduled to publish to a category"
       in_pinned: "Show pinned topics"
       in_bookmarked: "Show topics you've bookmarked"
       in_watching: "Show topics you're watching"
@@ -3292,6 +3363,7 @@ en:
       in_new_replies: "Show topics with new replies"
       in_new_topics: "Show new topics"
       in_unseen: "Show topics you haven't seen"
+      in_untagged: "Show topics without any tags"
       order_activity: "Sort by last activity (newest first)"
       order_activity_asc: "Sort by last activity (oldest first)"
       order_category: "Sort by category name (Z-A)"
@@ -3306,6 +3378,8 @@ en:
       order_likes_op_asc: "Sort by likes on first post (least first)"
       order_posters: "Sort by number of participants (most first)"
       order_posters_asc: "Sort by number of participants (least first)"
+      order_posts: "Sort by number of replies (most first)"
+      order_posts_asc: "Sort by number of replies (least first)"
       order_title: "Sort by title (Z-A)"
       order_title_asc: "Sort by title (A-Z)"
       order_views: "Sort by view count (most first)"
@@ -5981,6 +6055,11 @@ en:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
 
+  watched_words:
+    upload_too_many_csv_entries:
+      one: "Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entry."
+      other: "Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries."
+
   tags:
     title: "Tags"
     groups:
@@ -5995,6 +6074,9 @@ en:
       one: "You can apply up to %{count} tag to a topic."
       other: "You can apply up to %{count} tags to a topic."
     upload_row_too_long: "The CSV file should have one tag per line. Optionally the tag can be followed by a comma, then the tag group name."
+    upload_too_many_rows:
+      one: "Too many rows in the CSV file. Please upload no more than %{count} row at a time."
+      other: "Too many rows in the CSV file. Please upload no more than %{count} rows at a time."
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
       invalid_name: "Invalid tag name."
@@ -6290,8 +6372,8 @@ en:
         complete: "Post hidden, user has been notified."
       agree_and_edit:
         title: "Edit post"
-        description: "Agree with flag and open a composer window to edit the post."
-        complete: "Flag acknowledged, you can now edit the post."
+        description: "Agree with flag once you save the edit."
+        complete: "Post edited and flag acknowledged."
       delete:
         title: "Delete"
         complete: "Post deleted."
@@ -6341,6 +6423,10 @@ en:
         title: "Unsilence user and ignore"
         description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
         complete: "User unsilenced and flag ignored."
+      unsilence_user:
+        title: "Unsilence author"
+        description: "Lift the silence on the author. This flag stays in the queue."
+        complete: "Author unsilenced."
       approve:
         title: "Yes"
         complete: "Post approved."
@@ -6409,31 +6495,6 @@ en:
       approve_and_unhide:
         title: "Yes"
         complete: "Post approved and unhidden"
-      # New separated post actions
-      post_actions:
-        bundle_title: "What do you want to do with the post?"
-      delete_post:
-        title: "Delete post"
-        description: "Delete this post"
-        complete: "Post deleted"
-      hide_post:
-        title: "Hide post"
-        description: "Hide this post from public view"
-        complete: "Post hidden"
-      unhide_post:
-        title: "Unhide post"
-        description: "Make this post visible to all users"
-        complete: "Post unhidden"
-      restore_post:
-        title: "Restore post"
-        description: "Restore this deleted post"
-        complete: "Post restored"
-      edit_post:
-        title: "Edit post"
-        description: "Edit this post content"
-        complete: "Post edited"
-      user_actions:
-        bundle_title: "What do you want to do with the user?"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting or sending messages"

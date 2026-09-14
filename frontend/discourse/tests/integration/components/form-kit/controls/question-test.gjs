@@ -15,8 +15,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="question" @name="foo" @title="Foo" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" @type="question" as |field|>
               <field.Control />
             </form.Field>
           </Form>
@@ -39,7 +39,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="question" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="question" as |field|>
               <field.Control @yesLabel="Correct" />
             </form.Field>
           </Form>
@@ -53,7 +53,7 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="question" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="question" as |field|>
               <field.Control @noLabel="Wrong" />
             </form.Field>
           </Form>

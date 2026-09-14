@@ -25,20 +25,6 @@ export default class ColorSchemeColor extends EmberObject {
     return !deepEqual(this.hex, this.default_hex);
   }
 
-  discardColorChange() {
-    this.hex = this.originalHex;
-  }
-
-  @on("init")
-  startTrackingChanges() {
-    this.set("originals", {
-      hex: this.hex || "FFFFFF",
-    });
-
-    // force changed property to be recalculated
-    this.notifyPropertyChange("hex");
-  }
-
   // Whether value has changed since it was last saved.
   @computed("hex")
   get changed() {
@@ -58,16 +44,6 @@ export default class ColorSchemeColor extends EmberObject {
       return false;
     }
     return this.originals.hex !== this.default_hex;
-  }
-
-  revert() {
-    this.set("hex", this.default_hex);
-  }
-
-  undo() {
-    if (this.originals) {
-      this.set("hex", this.originals.hex);
-    }
   }
 
   @computed("name")
@@ -104,15 +80,39 @@ export default class ColorSchemeColor extends EmberObject {
     }
   }
 
+  @computed("hex")
+  get valid() {
+    return isValidHex(this.hex);
+  }
+
+  discardColorChange() {
+    this.hex = this.originalHex;
+  }
+
+  @on("init")
+  startTrackingChanges() {
+    this.set("originals", {
+      hex: this.hex || "FFFFFF",
+    });
+
+    // force changed property to be recalculated
+    this.notifyPropertyChange("hex");
+  }
+
+  revert() {
+    this.set("hex", this.default_hex);
+  }
+
+  undo() {
+    if (this.originals) {
+      this.set("hex", this.originals.hex);
+    }
+  }
+
   @observes("hex")
   hexValueChanged() {
     if (this.hex) {
       this.set("hex", this.hex.toString().replace(/[^0-9a-fA-F]/g, ""));
     }
-  }
-
-  @computed("hex")
-  get valid() {
-    return isValidHex(this.hex);
   }
 }

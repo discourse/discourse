@@ -16,6 +16,7 @@ RSpec.describe JsonApiKit::Query::Individual do
   let(:request) { JsonApiKit::Request::Individual.new(params, guardian:) }
   let(:params) { { id: topic.id } }
   let(:guardian) { Guardian.new }
+  let(:title) { JsonApiKit::Name::Field.new(value: "title", type: "topics") }
 
   describe "#record" do
     it "returns the record with that id" do
@@ -23,13 +24,13 @@ RSpec.describe JsonApiKit::Query::Individual do
     end
 
     it "renders it with the fields the resource declares" do
-      expect(reading.record.attributes).to eq("title" => topic.title)
+      expect(reading.record.attributes).to eq(title => topic.title)
     end
 
     context "when nothing is there under that id" do
       let(:params) { { id: -1 } }
 
-      it "refuses the request instead of answering with nothing" do
+      it "raises not found instead of answering with nothing" do
         expect { reading.record }.to raise_error(JsonApiKit::NotFound)
       end
     end
@@ -37,7 +38,7 @@ RSpec.describe JsonApiKit::Query::Individual do
     context "when the scope withholds the row" do
       let(:resource) { Class.new(super()) { scope { Topic.where(closed: true) } } }
 
-      it "refuses the request instead of answering with nothing" do
+      it "raises not found instead of answering with nothing" do
         expect { reading.record }.to raise_error(JsonApiKit::NotFound)
       end
     end

@@ -16,39 +16,39 @@ const REMOVE_MENU_IDENTIFIER = "composer-image-grid-remove";
 const GridModeButtons = <template>
   <div
     class="composer-image-gallery__mode-buttons"
-    role="group"
     contenteditable="false"
+    role="group"
   >
     <button
-      type="button"
+      aria-label={{i18n "composer.grid_mode_grid"}}
+      aria-pressed={{if (eq @data.currentMode "grid") "true" "false"}}
       class={{dConcatClass
         "composer-image-gallery__mode-btn"
         (if (eq @data.currentMode "grid") "is-active")
       }}
       data-mode="grid"
-      aria-label={{i18n "composer.grid_mode_grid"}}
       title={{i18n
         "composer.grid_mode_title"
         mode=(i18n "composer.grid_mode_grid")
       }}
-      aria-pressed={{if (eq @data.currentMode "grid") "true" "false"}}
+      type="button"
       {{on "click" (fn @data.setMode "grid")}}
     >{{dIcon "table-cells"}}<span>{{i18n
           "composer.grid_mode_grid"
         }}</span></button>
     <button
-      type="button"
+      aria-label={{i18n "composer.grid_mode_carousel"}}
+      aria-pressed={{if (eq @data.currentMode "carousel") "true" "false"}}
       class={{dConcatClass
         "composer-image-gallery__mode-btn"
         (if (eq @data.currentMode "carousel") "is-active")
       }}
       data-mode="carousel"
-      aria-label={{i18n "composer.grid_mode_carousel"}}
       title={{i18n
         "composer.grid_mode_title"
         mode=(i18n "composer.grid_mode_carousel")
       }}
-      aria-pressed={{if (eq @data.currentMode "carousel") "true" "false"}}
+      type="button"
       {{on "click" (fn @data.setMode "carousel")}}
     >{{dIcon "image"}}<span>{{i18n
           "composer.grid_mode_carousel"
@@ -58,10 +58,10 @@ const GridModeButtons = <template>
 
 const RemoveGridButton = <template>
   <button
-    type="button"
     class="composer-image-grid__remove-btn"
-    title={{i18n "composer.remove_grid"}}
     contenteditable="false"
+    title={{i18n "composer.remove_grid"}}
+    type="button"
     {{on "click" @data.removeGrid}}
   ><span>{{i18n "composer.remove_grid"}}</span></button>
 </template>;

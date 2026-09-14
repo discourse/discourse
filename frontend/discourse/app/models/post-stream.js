@@ -288,6 +288,10 @@ export default class PostStream extends RestModel {
     );
   }
 
+  get loadedPosts() {
+    return Object.values(this._identityMap).filter(Boolean);
+  }
+
   cancelFilter() {
     this.streamFilters.mixedHiddenPosts = false;
 
@@ -700,10 +704,6 @@ export default class PostStream extends RestModel {
     return this._identityMap[id];
   }
 
-  get loadedPosts() {
-    return Object.values(this._identityMap).filter(Boolean);
-  }
-
   loadPostByPostNumber(postNumber) {
     const url = `/posts/by_number/${this.topic.id}/${postNumber}`;
 
@@ -924,43 +924,6 @@ export default class PostStream extends RestModel {
     );
 
     return refreshState.reconciled;
-  }
-
-  _reconcilePostRefresh(postId, refreshState) {
-    if (this._pendingPostRefreshes.get(postId) !== refreshState) {
-      return;
-    }
-
-    for (
-      let requestIndex = refreshState.requests.length - 1;
-      requestIndex >= 0;
-      requestIndex--
-    ) {
-      const refresh = refreshState.requests[requestIndex];
-      if (refresh.status === "pending") {
-        return;
-      }
-
-      if (refresh.status === "succeeded") {
-        const latest = this._identityMap[postId];
-        if (
-          latest &&
-          comparePostTimestamps(refresh.data.updated_at, latest.updated_at) >= 0
-        ) {
-          if (refreshState.preserveCooked) {
-            refresh.data.cooked = latest.cooked;
-          }
-          this.storePost(this.store.createRecord("post", refresh.data));
-        }
-
-        this._pendingPostRefreshes.delete(postId);
-        refreshState.resolve();
-        return;
-      }
-    }
-
-    this._pendingPostRefreshes.delete(postId);
-    refreshState.reject(refreshState.requests.at(-1).error);
   }
 
   /**
@@ -1403,6 +1366,43 @@ export default class PostStream extends RestModel {
         error,
       }
     );
+  }
+
+  _reconcilePostRefresh(postId, refreshState) {
+    if (this._pendingPostRefreshes.get(postId) !== refreshState) {
+      return;
+    }
+
+    for (
+      let requestIndex = refreshState.requests.length - 1;
+      requestIndex >= 0;
+      requestIndex--
+    ) {
+      const refresh = refreshState.requests[requestIndex];
+      if (refresh.status === "pending") {
+        return;
+      }
+
+      if (refresh.status === "succeeded") {
+        const latest = this._identityMap[postId];
+        if (
+          latest &&
+          comparePostTimestamps(refresh.data.updated_at, latest.updated_at) >= 0
+        ) {
+          if (refreshState.preserveCooked) {
+            refresh.data.cooked = latest.cooked;
+          }
+          this.storePost(this.store.createRecord("post", refresh.data));
+        }
+
+        this._pendingPostRefreshes.delete(postId);
+        refreshState.resolve();
+        return;
+      }
+    }
+
+    this._pendingPostRefreshes.delete(postId);
+    refreshState.reject(refreshState.requests.at(-1).error);
   }
 
   _initUserModels(post) {

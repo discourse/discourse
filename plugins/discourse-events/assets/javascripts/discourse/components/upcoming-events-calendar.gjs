@@ -29,19 +29,6 @@ export default class UpcomingEventsCalendar extends Component {
     );
   }
 
-  @action
-  async onDateClick(info) {
-    await openEventComposer({
-      composer: this.composer,
-      currentUser: this.currentUser,
-      siteSettings: this.siteSettings,
-      info,
-      category: this.args.categoryId
-        ? (Category.findById(this.args.categoryId) ?? null)
-        : null,
-    });
-  }
-
   get customButtons() {
     return {
       mineEvents: {
@@ -71,36 +58,6 @@ export default class UpcomingEventsCalendar extends Component {
         },
       },
     };
-  }
-
-  @action
-  async loadEvents(info) {
-    const params = {
-      after: info.startStr,
-      before: info.endStr,
-      include_ongoing: true,
-      attending_user: this.args.mine ? this.currentUser?.username : null,
-    };
-
-    if (this.args.categoryId) {
-      params.category_id = this.args.categoryId;
-    }
-
-    if (this.args.includeSubcategories !== undefined) {
-      params.include_subcategories = this.args.includeSubcategories;
-    }
-
-    const events = await this.discoursePostEventService.fetchEvents(params);
-
-    const timezone = this.currentUser?.user_option?.timezone;
-
-    return events.map((event) =>
-      formatEventForCalendar(
-        event,
-        this.siteSettings.map_events_to_color,
-        timezone
-      )
-    );
   }
 
   get refreshKey() {
@@ -141,6 +98,49 @@ export default class UpcomingEventsCalendar extends Component {
     } else {
       return "title";
     }
+  }
+
+  @action
+  async onDateClick(info) {
+    await openEventComposer({
+      composer: this.composer,
+      currentUser: this.currentUser,
+      siteSettings: this.siteSettings,
+      info,
+      category: this.args.categoryId
+        ? (Category.findById(this.args.categoryId) ?? null)
+        : null,
+    });
+  }
+
+  @action
+  async loadEvents(info) {
+    const params = {
+      after: info.startStr,
+      before: info.endStr,
+      include_ongoing: true,
+      attending_user: this.args.mine ? this.currentUser?.username : null,
+    };
+
+    if (this.args.categoryId) {
+      params.category_id = this.args.categoryId;
+    }
+
+    if (this.args.includeSubcategories !== undefined) {
+      params.include_subcategories = this.args.includeSubcategories;
+    }
+
+    const events = await this.discoursePostEventService.fetchEvents(params);
+
+    const timezone = this.currentUser?.user_option?.timezone;
+
+    return events.map((event) =>
+      formatEventForCalendar(
+        event,
+        this.siteSettings.map_events_to_color,
+        timezone
+      )
+    );
   }
 
   @action
@@ -188,16 +188,16 @@ export default class UpcomingEventsCalendar extends Component {
   <template>
     <div id="upcoming-events-calendar">
       <FullCalendar
-        @initialDate={{@initialDate}}
-        @onDatesChange={{this.onDatesChange}}
-        @onDateClick={{if this.canCreateEvent this.onDateClick}}
-        @onLoadEvents={{this.loadEvents}}
-        @initialView={{@initialView}}
-        @customButtons={{this.customButtons}}
-        @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
-        @rightHeaderToolbar={{this.rightHeaderToolbar}}
+        @customButtons={{this.customButtons}}
+        @initialDate={{@initialDate}}
+        @initialView={{@initialView}}
+        @leftHeaderToolbar={{this.leftHeaderToolbar}}
+        @onDateClick={{if this.canCreateEvent this.onDateClick}}
+        @onDatesChange={{this.onDatesChange}}
+        @onLoadEvents={{this.loadEvents}}
         @refreshKey={{this.refreshKey}}
+        @rightHeaderToolbar={{this.rightHeaderToolbar}}
       />
     </div>
   </template>

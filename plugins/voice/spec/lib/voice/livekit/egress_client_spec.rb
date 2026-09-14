@@ -32,7 +32,112 @@ RSpec.describe Voice::Livekit::EgressClient do
     stub_request(:post, "https://livekit.example.com/twirp/livekit.Egress/#{method}")
   end
 
+  def configure_recording_s3
+    SiteSetting.voice_livekit_recording_s3_access_key_id = "recording-access-key"
+    SiteSetting.voice_livekit_recording_s3_secret_access_key = "recording-secret-key"
+    SiteSetting.voice_livekit_recording_s3_region = "eu-west-1"
+    SiteSetting.voice_livekit_recording_s3_bucket = "voice-recordings"
+  end
+
   describe ".start_room_composite" do
+    it "sends dedicated S3 storage credentials without using the upload settings" do
+      configure_recording_s3
+      SiteSetting.s3_access_key_id = "upload-access-key"
+      SiteSetting.s3_secret_access_key = "upload-secret-key"
+      SiteSetting.s3_upload_bucket = "uploads"
+      stub =
+        twirp_stub("StartRoomCompositeEgress")
+          .with do |request|
+            JSON.parse(request.body)["fileOutputs"] ==
+              [
+                {
+                  "filepath" => "voice/test-abc123",
+                  "s3" => {
+                    "bucket" => "voice-recordings",
+                    "region" => "eu-west-1",
+                    "accessKey" => "recording-access-key",
+                    "secret" => "recording-secret-key",
+                  },
+                },
+              ]
+          end
+          .to_return(body: { egressId: "EG_1" }.to_json)
+
+      result = described_class.start_room_composite(room, filepath: "voice/test-abc123")
+
+      expect(result).to eq(ok: true, data: { "egressId" => "EG_1" })
+      expect(stub).to have_been_requested.once
+    end
+
+    it "uses path-style addressing for a custom S3 endpoint" do
+      configure_recording_s3
+      SiteSetting.voice_livekit_recording_s3_endpoint = "https://storage.example.com"
+      stub =
+        twirp_stub("StartRoomCompositeEgress")
+          .with do |request|
+            storage = JSON.parse(request.body)["fileOutputs"].first["s3"]
+            storage["endpoint"] == "https://storage.example.com" &&
+              storage["forcePathStyle"] == true
+          end
+          .to_return(body: "{}")
+
+      result = described_class.start_room_composite(room, filepath: "voice/test")
+
+      expect(result[:ok]).to eq(true)
+      expect(stub).to have_been_requested.once
+    end
+
+    it "refuses to start if recording credentials were cleared after configuring the bucket" do
+      configure_recording_s3
+      SiteSetting.voice_livekit_recording_s3_secret_access_key = ""
+      stub = twirp_stub("StartRoomCompositeEgress")
+
+      result = described_class.start_room_composite(room, filepath: "voice/test")
+
+      expect(result).to eq(
+        ok: false,
+        error: I18n.t("site_settings.errors.voice_livekit_recording_s3_requires_credentials"),
+      )
+      expect(stub).not_to have_been_requested
+    end
+
+    it "refuses to send recording credentials over HTTP after a URL change" do
+      configure_recording_s3
+      SiteSetting.voice_livekit_url = "ws://livekit.example.com"
+      stub =
+        stub_request(
+          :post,
+          "http://livekit.example.com/twirp/livekit.Egress/StartRoomCompositeEgress",
+        )
+
+      result = described_class.start_room_composite(room, filepath: "voice/test")
+
+      expect(result).to eq(
+        ok: false,
+        error: I18n.t("site_settings.errors.voice_livekit_recording_s3_requires_wss"),
+      )
+      expect(stub).not_to have_been_requested
+    end
+
+    it "omits response bodies containing recording credentials from verbose logs" do
+      SiteSetting.voice_verbose_logging = true
+      configure_recording_s3
+      credentials = [
+        SiteSetting.voice_livekit_recording_s3_access_key_id,
+        SiteSetting.voice_livekit_recording_s3_secret_access_key,
+      ]
+      twirp_stub("StartRoomCompositeEgress").to_return(status: 400, body: credentials.join(" "))
+
+      logs =
+        track_log_messages do
+          result = described_class.start_room_composite(room, filepath: "voice/test")
+          expect(result).to eq(ok: false, error: "HTTP 400")
+        end
+
+      expect(logs.warnings).to eq(["[voice-livekit] StartRoomCompositeEgress failed: HTTP 400"])
+      credentials.each { |credential| expect(logs.warnings.join).not_to include(credential) }
+    end
+
     it "POSTs the room name and file output with a roomRecord-granted token" do
       SiteSetting.voice_video_enabled = false
       stub = twirp_stub("StartRoomCompositeEgress").to_return(body: { egressId: "EG_1" }.to_json)

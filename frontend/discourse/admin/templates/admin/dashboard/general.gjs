@@ -13,7 +13,7 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DConditionalLoadingSpinner @condition={{@controller.isLoading}}>
-    <PluginOutlet @name="admin-dashboard-general-top" @connectorTagName="div" />
+    <PluginOutlet @connectorTagName="div" @name="admin-dashboard-general-top" />
 
     {{#if @controller.isCommunityHealthVisible}}
       <div class="community-health section">
@@ -26,11 +26,11 @@ export default <template>
             </h2>
 
             <DashboardPeriodSelector
+              @endDate={{@controller.endDate}}
               @period={{@controller.period}}
+              @setCustomDateRange={{@controller.setCustomDateRange}}
               @setPeriod={{@controller.setPeriod}}
               @startDate={{@controller.startDate}}
-              @endDate={{@controller.endDate}}
-              @setCustomDateRange={{@controller.setCustomDateRange}}
             />
           </div>
 
@@ -39,58 +39,58 @@ export default <template>
               {{#if @controller.siteSettings.use_legacy_pageviews}}
                 <AdminReport
                   @dataSourceName="consolidated_page_views"
-                  @forcedModes={{@controller.reportModes.stacked_chart}}
                   @filters={{@controller.filters}}
+                  @forcedModes={{@controller.reportModes.stacked_chart}}
                 />
               {{else}}
                 <AdminReport
                   @dataSourceName="site_traffic"
+                  @filters={{@controller.filters}}
                   @forcedModes={{@controller.reportModes.stacked_chart}}
                   @reportOptions={{@controller.siteTrafficOptions}}
-                  @filters={{@controller.filters}}
                 />
               {{/if}}
 
               <AdminReport
                 @dataSourceName="signups"
-                @showTrend={{true}}
-                @forcedModes={{@controller.reportModes.chart}}
                 @filters={{@controller.filters}}
+                @forcedModes={{@controller.reportModes.chart}}
+                @showTrend={{true}}
               />
 
               <AdminReport
                 @dataSourceName="topics"
-                @showTrend={{true}}
-                @forcedModes={{@controller.reportModes.chart}}
                 @filters={{@controller.filters}}
+                @forcedModes={{@controller.reportModes.chart}}
+                @showTrend={{true}}
               />
 
               <AdminReport
                 @dataSourceName="posts"
-                @showTrend={{true}}
-                @forcedModes={{@controller.reportModes.chart}}
                 @filters={{@controller.filters}}
+                @forcedModes={{@controller.reportModes.chart}}
+                @showTrend={{true}}
               />
 
               <AdminReport
                 @dataSourceName="dau_by_mau"
-                @showTrend={{true}}
-                @forcedModes={{@controller.reportModes.chart}}
                 @filters={{@controller.filters}}
+                @forcedModes={{@controller.reportModes.chart}}
+                @showTrend={{true}}
               />
 
               <AdminReport
                 @dataSourceName="daily_engaged_users"
-                @showTrend={{true}}
-                @forcedModes={{@controller.reportModes.chart}}
                 @filters={{@controller.filters}}
+                @forcedModes={{@controller.reportModes.chart}}
+                @showTrend={{true}}
               />
 
               <AdminReport
                 @dataSourceName="new_contributors"
-                @showTrend={{true}}
-                @forcedModes={{@controller.reportModes.chart}}
                 @filters={{@controller.filters}}
+                @forcedModes={{@controller.reportModes.chart}}
+                @showTrend={{true}}
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ export default <template>
               <div class="header">
                 <ul class="breadcrumb">
                   <li class="item report">
-                    <LinkTo @route="adminReports" class="report-url">
+                    <LinkTo class="report-url" @route="adminReports">
                       {{i18n "admin.dashboard.activity_metrics"}}
                     </LinkTo>
                   </li>
@@ -132,10 +132,10 @@ export default <template>
 
                   {{#each @controller.activityMetrics as |metric|}}
                     <AdminReport
-                      @showHeader={{false}}
+                      @dataSourceName={{metric}}
                       @filters={{@controller.activityMetricsFilters}}
                       @forcedModes={{@controller.reportModes.counters}}
-                      @dataSourceName={{metric}}
+                      @showHeader={{false}}
                     />
                   {{/each}}
                 </div>
@@ -147,21 +147,21 @@ export default <template>
         <div class="user-metrics">
           <DConditionalLoadingSection @isLoading={{@controller.isLoading}}>
             <AdminReport
-              @forcedModes={{@controller.reportModes.inline_table}}
               @dataSourceName="users_by_type"
+              @forcedModes={{@controller.reportModes.inline_table}}
             />
 
             <AdminReport
-              @forcedModes={{@controller.reportModes.inline_table}}
               @dataSourceName="users_by_trust_level"
+              @forcedModes={{@controller.reportModes.inline_table}}
             />
           </DConditionalLoadingSection>
         </div>
 
         <div class="misc">
           <AdminReport
-            @forcedModes={{@controller.reportModes.storage_stats}}
             @dataSourceName="storage_stats"
+            @forcedModes={{@controller.reportModes.storage_stats}}
             @showHeader={{false}}
           />
 
@@ -180,7 +180,7 @@ export default <template>
                     @controller.model.attributes.discourse_updated_at
                     leaveAgo="true"
                   }}</p>
-                <LinkTo @route="admin.whatsNew" class="btn btn-default">
+                <LinkTo class="btn btn-default" @route="admin.whatsNew">
                   {{i18n "admin.dashboard.whats_new_in_discourse"}}
                 </LinkTo>
               </div>
@@ -192,17 +192,17 @@ export default <template>
       {{#if @controller.isSearchReportsVisible}}
         <div class="section-column">
           <AdminReport
-            @filters={{@controller.topReferredTopicsFilters}}
             @dataSourceName="top_referred_topics"
+            @filters={{@controller.topReferredTopicsFilters}}
             @reportOptions={{@controller.topReferredTopicsOptions}}
           />
 
           <AdminReport
             @dataSourceName="trending_search"
-            @reportOptions={{@controller.trendingSearchOptions}}
+            @disabledLabel={{@controller.trendingSearchDisabledLabel}}
             @filters={{@controller.trendingSearchFilters}}
             @isEnabled={{@controller.logSearchQueriesEnabled}}
-            @disabledLabel={{@controller.trendingSearchDisabledLabel}}
+            @reportOptions={{@controller.trendingSearchOptions}}
           />
           {{trustHTML
             (i18n
@@ -215,8 +215,8 @@ export default <template>
     </div>
 
     <PluginOutlet
-      @name="admin-dashboard-general-bottom"
       @connectorTagName="div"
+      @name="admin-dashboard-general-bottom"
       @outletArgs={{lazyHash filters=@controller.filters}}
     />
   </DConditionalLoadingSpinner>

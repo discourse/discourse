@@ -70,10 +70,10 @@ export default class PwaInstallBanner extends Component {
           />
         </span>
         <DButton
-          @icon="xmark"
-          @action={{this.dismiss}}
-          @title="banner.close"
           class="btn-transparent close"
+          @action={{this.dismiss}}
+          @icon="xmark"
+          @title="banner.close"
         />
       </div>
     {{/if}}

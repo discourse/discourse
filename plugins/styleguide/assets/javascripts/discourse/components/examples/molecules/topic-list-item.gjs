@@ -66,5 +66,5 @@ export default class TopicListItemExample extends Component {
     ).resolve();
   }
 
-  <template><Item @topic={{@topic}} @columns={{this.columns}} /></template>
+  <template><Item @columns={{this.columns}} @topic={{@topic}} /></template>
 }

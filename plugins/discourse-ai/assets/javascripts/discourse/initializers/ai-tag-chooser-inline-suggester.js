@@ -55,7 +55,7 @@ async function loadSuggestions(component, selectKit, context) {
       data,
     });
 
-    if (component.isDestroying || component.isDestroyed) {
+    if (component.isDestroying) {
       return;
     }
 
@@ -69,7 +69,7 @@ async function loadSuggestions(component, selectKit, context) {
     state.mode = "idle";
     popupAjaxError(error);
   } finally {
-    if (!component.isDestroying && !component.isDestroyed) {
+    if (!component.isDestroying) {
       selectKit.triggerSearch();
     }
   }

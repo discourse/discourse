@@ -75,9 +75,9 @@ module("Integration | Component | EmailLogsList", function (hooks) {
     await render(
       <template>
         <EmailLogsList
-          @status="sent"
-          @headers={{mockHeaders}}
           @filters={{mockFilters}}
+          @headers={{mockHeaders}}
+          @status="sent"
         >
           <:default as |emailLog|>
             <tr>
@@ -102,9 +102,9 @@ module("Integration | Component | EmailLogsList", function (hooks) {
     await render(
       <template>
         <EmailLogsList
-          @status="sent"
-          @headers={{mockHeaders}}
           @filters={{mockFilters}}
+          @headers={{mockHeaders}}
+          @status="sent"
         >
           <:default as |emailLog|>
             <tr class="test-row">
@@ -129,9 +129,9 @@ module("Integration | Component | EmailLogsList", function (hooks) {
     await render(
       <template>
         <EmailLogsList
-          @status="sent"
-          @headers={{mockHeaders}}
           @filters={{mockFilters}}
+          @headers={{mockHeaders}}
+          @status="sent"
         >
           <:default>
             <tr><td>test</td></tr>
@@ -168,9 +168,9 @@ module("Integration | Component | EmailLogsList", function (hooks) {
     await render(
       <template>
         <EmailLogsList
-          @status="sent"
-          @headers={{mockHeaders}}
           @filters={{mockFilters}}
+          @headers={{mockHeaders}}
+          @status="sent"
         >
           <:default as |emailLog|>
             <tr class="email-row" data-id={{emailLog.id}}>
@@ -226,9 +226,9 @@ module("Integration | Component | EmailLogsList", function (hooks) {
     await render(
       <template>
         <EmailLogsList
-          @status="sent"
-          @headers={{mockHeaders}}
           @filters={{mockFilters}}
+          @headers={{mockHeaders}}
+          @status="sent"
         >
           <:default as |emailLog|>
             <tr class="email-row"><td>{{emailLog.to_address}}</td></tr>

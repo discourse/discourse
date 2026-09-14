@@ -61,6 +61,61 @@ export default class CardContentsBase extends Component {
     return /^topic\./.test(this.router?.currentRouteName);
   }
 
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+
+    document.addEventListener("pointerdown", this._clickOutsideHandler);
+    document.addEventListener("keyup", this._escListener);
+
+    _cardClickListenerSelectors.forEach((selector) => {
+      document
+        .querySelector(selector)
+        ?.addEventListener("click", this._cardClickHandler);
+    });
+
+    this.appEvents.on(
+      `d-editor:preview-click-${this.elementId}`,
+      this,
+      "_previewClick"
+    );
+
+    this.appEvents.on(
+      `topic-header:trigger-${this.elementId}`,
+      this,
+      "_topicHeaderTrigger"
+    );
+
+    this.appEvents.on("card:close", this, "_close");
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    document.removeEventListener("pointerdown", this._clickOutsideHandler);
+    document.removeEventListener("keyup", this._escListener);
+
+    _cardClickListenerSelectors.forEach((selector) => {
+      document
+        .querySelector(selector)
+        ?.removeEventListener("click", this._cardClickHandler);
+    });
+
+    this.appEvents.off(
+      `d-editor:preview-click-${this.elementId}`,
+      this,
+      "_previewClick"
+    );
+
+    this.appEvents.off(
+      `topic-header:trigger-${this.elementId}`,
+      this,
+      "_topicHeaderTrigger"
+    );
+
+    this.appEvents.off("card:close", this, "_close");
+    this._hide();
+  }
+
   _show(username, target, event) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
@@ -116,33 +171,6 @@ export default class CardContentsBase extends Component {
     }
 
     return false;
-  }
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    document.addEventListener("pointerdown", this._clickOutsideHandler);
-    document.addEventListener("keyup", this._escListener);
-
-    _cardClickListenerSelectors.forEach((selector) => {
-      document
-        .querySelector(selector)
-        ?.addEventListener("click", this._cardClickHandler);
-    });
-
-    this.appEvents.on(
-      `d-editor:preview-click-${this.elementId}`,
-      this,
-      "_previewClick"
-    );
-
-    this.appEvents.on(
-      `topic-header:trigger-${this.elementId}`,
-      this,
-      "_topicHeaderTrigger"
-    );
-
-    this.appEvents.on("card:close", this, "_close");
   }
 
   @bind
@@ -286,34 +314,6 @@ export default class CardContentsBase extends Component {
 
     this._hide();
     this.appEvents.trigger("card:hide");
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    document.removeEventListener("pointerdown", this._clickOutsideHandler);
-    document.removeEventListener("keyup", this._escListener);
-
-    _cardClickListenerSelectors.forEach((selector) => {
-      document
-        .querySelector(selector)
-        ?.removeEventListener("click", this._cardClickHandler);
-    });
-
-    this.appEvents.off(
-      `d-editor:preview-click-${this.elementId}`,
-      this,
-      "_previewClick"
-    );
-
-    this.appEvents.off(
-      `topic-header:trigger-${this.elementId}`,
-      this,
-      "_topicHeaderTrigger"
-    );
-
-    this.appEvents.off("card:close", this, "_close");
-    this._hide();
   }
 
   @bind

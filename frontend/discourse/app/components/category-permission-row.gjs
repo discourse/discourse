@@ -144,9 +144,10 @@ export default class CategoryPermissionRow extends Component {
         {{/if}}
       </span>
       <span class="options actionable">
-        <DButton @icon="square-check" @disabled={{true}} class="btn-flat see" />
+        <DButton class="btn-flat see" @disabled={{true}} @icon="square-check" />
 
         <PluginOutlet
+          @defaultGlimmer={{true}}
           @name="category-security-permissions-row-actions"
           @outletArgs={{lazyHash
             groupName=@groupName
@@ -164,28 +165,27 @@ export default class CategoryPermissionRow extends Component {
             setPermissionFull=this.setPermissionFull
             removeRow=this.removeRow
           }}
-          @defaultGlimmer={{true}}
         >
           <DButton
-            @icon={{this.canReplyIcon}}
-            @action={{this.setPermissionReply}}
-            @translatedTitle={{this.replyTooltip}}
-            @disabled={{this.replyDisabled}}
             class={{dConcatClass
               "btn btn-flat reply-toggle"
               this.replyGrantedClass
             }}
+            @action={{this.setPermissionReply}}
+            @disabled={{this.replyDisabled}}
+            @icon={{this.canReplyIcon}}
+            @translatedTitle={{this.replyTooltip}}
           />
 
           <DButton
-            @icon={{this.canCreateIcon}}
-            @action={{this.setPermissionFull}}
-            @translatedTitle={{this.createTooltip}}
-            @disabled={{this.createDisabled}}
             class={{dConcatClass
               "btn-flat create-toggle"
               this.createGrantedClass
             }}
+            @action={{this.setPermissionFull}}
+            @disabled={{this.createDisabled}}
+            @icon={{this.canCreateIcon}}
+            @translatedTitle={{this.createTooltip}}
           />
 
           <DButton

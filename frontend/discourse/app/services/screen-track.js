@@ -190,7 +190,7 @@ export default class ScreenTrack extends Service {
         },
       });
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying) {
         return;
       }
 

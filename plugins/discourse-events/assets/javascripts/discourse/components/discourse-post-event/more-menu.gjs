@@ -292,24 +292,24 @@ export default class DiscoursePostEventMoreMenu extends Component {
 
   <template>
     <DMenu
+      @icon="ellipsis"
       @identifier="discourse-post-event-more-menu"
+      @onRegisterApi={{this.registerMenuApi}}
       @triggerClass={{dConcatClass
         "more-dropdown"
         "btn-small"
         "btn-default"
         (if this.isSavingEvent "--saving")
       }}
-      @icon="ellipsis"
-      @onRegisterApi={{this.registerMenuApi}}
     >
       <:content>
         <DDropdownMenu as |dropdown|>
           {{#unless this.expiredOrClosed}}
             <dropdown.item class="add-to-calendar">
               <DButton
+                @action={{this.addToCalendar}}
                 @icon="file"
                 @label="discourse_post_event.add_to_calendar"
-                @action={{this.addToCalendar}}
               />
             </dropdown.item>
           {{/unless}}
@@ -317,13 +317,13 @@ export default class DiscoursePostEventMoreMenu extends Component {
           {{#if this.canSendPmToCreator}}
             <dropdown.item class="send-pm-to-creator">
               <DButton
-                @icon="envelope"
                 class="btn-transparent"
+                @action={{this.sendPMToCreator}}
+                @icon="envelope"
                 @translatedLabel={{i18n
                   "discourse_post_event.send_pm_to_creator"
                   (hash username=@event.creator.username)
                 }}
-                @action={{this.sendPMToCreator}}
               />
             </dropdown.item>
           {{/if}}
@@ -331,10 +331,10 @@ export default class DiscoursePostEventMoreMenu extends Component {
           {{#if this.canInvite}}
             <dropdown.item class="invite-user-or-group">
               <DButton
-                @icon="user-plus"
                 class="btn-transparent"
-                @translatedLabel={{i18n "discourse_post_event.invite"}}
                 @action={{this.inviteUserOrGroup}}
+                @icon="user-plus"
+                @translatedLabel={{i18n "discourse_post_event.invite"}}
               />
             </dropdown.item>
           {{/if}}
@@ -342,12 +342,12 @@ export default class DiscoursePostEventMoreMenu extends Component {
           {{#if this.canSeeUpcomingEvents}}
             <dropdown.item class="upcoming-events">
               <DButton
-                @icon="far-calendar-plus"
                 class="btn-transparent"
+                @action={{this.upcomingEvents}}
+                @icon="far-calendar-plus"
                 @translatedLabel={{i18n
                   "discourse_post_event.upcoming_events.title"
                 }}
-                @action={{this.upcomingEvents}}
               />
             </dropdown.item>
           {{/if}}
@@ -355,10 +355,10 @@ export default class DiscoursePostEventMoreMenu extends Component {
           {{#if this.shouldShowParticipants}}
             <dropdown.item class="show-all-participants">
               <DButton
-                @icon="user-group"
                 class="btn-transparent"
-                @label="discourse_post_event.show_participants"
                 @action={{this.showParticipants}}
+                @icon="user-group"
+                @label="discourse_post_event.show_participants"
               />
             </dropdown.item>
 
@@ -367,20 +367,20 @@ export default class DiscoursePostEventMoreMenu extends Component {
           {{#if this.canActOnEvent}}
             <dropdown.item class="export-event">
               <DButton
-                @icon="file-csv"
                 class="btn-transparent"
-                @label="discourse_post_event.export_event"
                 @action={{this.exportPostEvent}}
+                @icon="file-csv"
+                @label="discourse_post_event.export_event"
               />
             </dropdown.item>
 
             {{#if this.canBulkInvite}}
               <dropdown.item class="bulk-invite">
                 <DButton
-                  @icon="file-arrow-up"
                   class="btn-transparent"
-                  @label="discourse_post_event.bulk_invite"
                   @action={{this.bulkInvite}}
+                  @icon="file-arrow-up"
+                  @label="discourse_post_event.bulk_invite"
                 />
               </dropdown.item>
             {{/if}}
@@ -388,31 +388,31 @@ export default class DiscoursePostEventMoreMenu extends Component {
             {{#if @event.isClosed}}
               <dropdown.item class="open-event">
                 <DButton
-                  @icon="unlock"
                   class="btn-transparent"
-                  @label="discourse_post_event.open_event"
                   @action={{this.openEvent}}
                   @disabled={{this.isSavingEvent}}
+                  @icon="unlock"
+                  @label="discourse_post_event.open_event"
                 />
               </dropdown.item>
             {{else}}
               <dropdown.item class="edit-event">
                 <DButton
-                  @icon="pencil"
                   class="btn-transparent"
-                  @label="discourse_post_event.edit_event"
                   @action={{this.editPostEvent}}
+                  @icon="pencil"
+                  @label="discourse_post_event.edit_event"
                 />
               </dropdown.item>
 
               {{#unless @event.isExpired}}
                 <dropdown.item class="close-event">
                   <DButton
-                    @icon="xmark"
-                    @label="discourse_post_event.close_event"
+                    class="btn-transparent --danger"
                     @action={{this.closeEvent}}
                     @disabled={{this.isSavingEvent}}
-                    class="btn-transparent --danger"
+                    @icon="xmark"
+                    @label="discourse_post_event.close_event"
                   />
                 </dropdown.item>
               {{/unless}}

@@ -26,6 +26,9 @@ sw:
         year: "Mwaka"
     group_timezones:
       search: "Tafuta"
+    discourse_workflows:
+      post_event:
+        topic_id: "Utambulisho wa Mada"
     discourse_post_event:
       created_by: "Imetengenezwa na"
       bulk_invite_modal:

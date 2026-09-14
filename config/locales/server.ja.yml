@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ja:
+  mcp:
+    errors:
+      topic_not_found: "トピックが見つかりませんでした"
+    oauth:
+      deny: "拒否"
+      approve: "承認"
   llms_txt:
     sections:
       optional: "オプション"
@@ -910,6 +916,7 @@ ja:
       windows: "Microsoft Windows"
       unknown: "不明なオペレーティングシステム"
   admin_site_traffic_explorer:
+    unknown: "不明"
     traffic_types:
       anonymous: "匿名ユーザー"
   change_email:
@@ -1581,12 +1588,6 @@ ja:
       host_names: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
       queue_size: "キューに入れられたジョブの数は %{queue_size} で、これは高い数字です。Sidekiq プロセスに問題があるか、Sidekiq ワーカーを増やす必要があります。"
       ram: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
-      google_oauth2_config: 'サーバーは Google OAuth2 を使った登録とログインを許可 (enable_google_oauth2_logins) するように構成されていますが、クライアント ID とクライアントシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-      facebook_config: 'サーバーは Facebook を使った登録とログインを許可 (enable_facebook_logins) するように構成されていますが、アプリ ID とアプリシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-      twitter_config: 'サーバーは X を使った登録とログインを許可 (enable_twitter_logins) するように構成されていますが、キーとシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-      github_config: 'サーバーは GitHub を使った登録とログインを許可 (enable_github_logins) するように構成されていますが、クライアント ID とシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-      s3_upload_config: 'サーバーはファイルを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 つが設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_upload_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
-      s3_backup_config: 'サーバーはバックアップを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 つが設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_backup_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
       s3_cdn: 'サーバーはファイルを S3 にアップロードするように構成されていますが、S3 CDN が構成されていません。これにより、S3 のコストが高くなり、サイトパフォーマンスが低下する可能性があります。<a href="https://meta.discourse.org/t/-/148916" target="_blank">詳しくは、「アップロードにオブジェクトストレージを使用する」をご覧ください</a>。'
       image_magick: 'サーバーは大きな画像のサムネイルを作成するように構成されていますが、ImageMagick がインストールされていません。パッケージマネージャーを使用して ImageMagick をインストールするか、<a href="https://www.imagemagick.org/script/download.php" target="_blank">最新リリースをダウンロード</a>してください。'
       failing_emails: '失敗したメールジョブが %{num_failed_jobs} 件あります。app.yml を確認し、メールサーバーの設定が正しいことを確認してください。<a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを参照</a>してください。'
@@ -1772,7 +1773,7 @@ ja:
     share_links: "共有ダイアログに表示する項目、表示順を指定。"
     allow_username_in_share_links: "ユーザー名を共有リンクに含めることを許可します。これは、ユニークビジター数に応じてバッジを与えるのに役立ちます。"
     site_contact_username: "自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合デフォルトのシステムアカウントが使用されます。"
-    site_contact_group_name: "自動的に送信されるすべての個人メッセージに招待される有効なグループ名。"
+    site_contact_group_name: "自動的に送信されるすべての個人メッセージに招待されるグループ。"
     send_welcome_message: "すべての新規ユーザーにクイックスタートガイド付きのようこそメッセージを送信する。"
     send_tl1_welcome_message: "新しい信頼レベル 1 のユーザーにようこそメッセージを送信します。"
     send_tl2_promotion_message: "新しい信頼レベル 2 ユーザーに昇格に関するメッセージを送信します。"
@@ -2366,7 +2367,6 @@ ja:
       invalid_email: "無効なメールアドレスです。"
       invalid_username: "そのユーザー名のユーザは存在しません。"
       valid_username: "そのユーザー名のユーザーが存在します。"
-      invalid_group: "その名前のグループは存在しません。"
       invalid_topic: "その ID のトピックは存在しません。"
       invalid_integer_min_max: "値は %{min} から %{max} の間である必要があります。"
       invalid_integer_min: "値は %{min} 以上である必要があります。"
@@ -2416,7 +2416,6 @@ ja:
       markdown_linkify_tlds: "値 '*' を含めることはできません。"
       google_oauth2_hd_groups: "この設定を有効にする前に、すべての 'google oauth2 hd' 設定を構成する必要があります。"
       discourse_id_registration: "Discourse ID での自動登録に失敗しました。これは、ネットワーク接続の問題、ファイアウォールの制限、または Discourse ID サービスにアクセスできないことが原因である可能性があります。詳細については、サーバーログを確認するか、サポートにお問い合わせください。"
-      linkedin_oidc_credentials: "この設定を有効にする前に、LinkedIn OIDC 資格情報 ('linkedin_oidc_client_id' および 'linkedin_oidc_client_secret') を構成する必要があります。"
       search_tokenize_chinese_enabled: "この設定を有効にする前に 'search_tokenize_chinese' を無効にする必要があります。"
       search_tokenize_japanese_enabled: "この設定を有効にする前に 'search_tokenize_japanese' を無効にする必要があります。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2FA が適用されている場合、DiscourseConnect を有効にできません。"
@@ -4504,6 +4503,9 @@ ja:
   performance_report:
     initial_post_raw: このトピックには、サイトの毎日のパフォーマンスレポートが含まれています。
     initial_topic_title: ウェブサイトパフォーマンスレポート
+  watched_words:
+    upload_too_many_csv_entries:
+      other: "CSV ファイルのエントリが多すぎます。%{count} エントリ以下の CSV ファイルを提供してください。"
   tags:
     title: "タグ"
     restricted_tag_disallowed: 'タグ "%{tag}" を適用できません。'
@@ -4759,8 +4761,6 @@ ja:
         complete: "投稿は非表示になり、ユーザーに通知されました。"
       agree_and_edit:
         title: "投稿を編集する"
-        description: "通報に同意し、コンポーザーウィンドウを開いて投稿を編集します。"
-        complete: "通報が承認され、投稿を編集できるようになりました。"
       delete:
         title: "削除"
         complete: "投稿は削除されました。"
@@ -4864,30 +4864,6 @@ ja:
       approve_and_unhide:
         title: "はい"
         complete: "投稿を承認して非表示状態を解除しました"
-      post_actions:
-        bundle_title: "投稿をどうしますか？"
-      delete_post:
-        title: "投稿を削除"
-        description: "この投稿を削除します"
-        complete: "削除された投稿"
-      hide_post:
-        title: "投稿を非表示にする"
-        description: "この投稿を非公開にします"
-        complete: "投稿は非表示になりました"
-      unhide_post:
-        title: "投稿を表示する"
-        description: "この投稿をすべてのユーザーに公開します"
-        complete: "投稿を公開しました"
-      restore_post:
-        title: "投稿を復元する"
-        description: "削除されたこの投稿を復元します"
-        complete: "投稿を復元しました"
-      edit_post:
-        title: "投稿を編集する"
-        description: "この投稿のコンテンツを編集します"
-        complete: "投稿を編集しました"
-      user_actions:
-        bundle_title: "ユーザーをどうしますか？"
       silence_user:
         title: "ユーザーを投稿禁止にする"
         complete: "ユーザーを投稿禁止にしました"

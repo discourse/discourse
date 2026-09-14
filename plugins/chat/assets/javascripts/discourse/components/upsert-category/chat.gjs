@@ -132,9 +132,9 @@ export default class EditCategoryChat extends Component {
                     class="d-table__cell edit-category-chat__channel-actions d-table__cell-actions"
                   >
                     <LinkTo
-                      @route="chat.channel.info.settings"
-                      @models={{array (or channel.slug "-") channel.id}}
                       class="btn btn-default btn-small"
+                      @models={{array (or channel.slug "-") channel.id}}
+                      @route="chat.channel.info.settings"
                     >
                       {{i18n "chat.edit_category.settings"}}
                     </LinkTo>
@@ -145,13 +145,13 @@ export default class EditCategoryChat extends Component {
           </table>
         {{else}}
           <DEmptyState
-            @title={{i18n "chat.edit_category.no_channels"}}
             @body={{trustHTML
               (i18n
                 "chat.edit_category.no_channels_body"
                 chatBrowseUrl=(getURL "/chat/browse/open")
               )
             }}
+            @title={{i18n "chat.edit_category.no_channels"}}
           />
         {{/if}}
       </DConditionalLoadingSpinner>

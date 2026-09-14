@@ -14,20 +14,20 @@ export default class ReviewableTopicLink extends Component {
   <template>
     {{#if this.reviewable.topic}}
       <TopicStatus
-        @topic={{this.reviewable.topic}}
         @showPrivateMessageIcon={{true}}
+        @topic={{this.reviewable.topic}}
       />
       <a
-        href={{this.reviewable.target_url}}
         class="title-text"
+        href={{this.reviewable.target_url}}
       >{{highlightWatchedWords
           this.reviewable.topic.fancyTitle
           this.reviewable
         }}</a>
       {{dCategoryBadge this.reviewable.category}}
       <ReviewableTags
-        @topic={{this.reviewable.topic}}
         @tags={{this.reviewable.topic_tags}}
+        @topic={{this.reviewable.topic}}
       />
     {{else if (has-block)}}
       {{yield}}
@@ -35,8 +35,8 @@ export default class ReviewableTopicLink extends Component {
       <span class="title-text">
         {{i18n "review.topics.deleted"}}
         <LinkTo
-          @route="topic"
           @models={{array "-" this.reviewable.removed_topic_id}}
+          @route="topic"
         >{{i18n "review.topics.original"}}</LinkTo>
       </span>
     {{/if}}

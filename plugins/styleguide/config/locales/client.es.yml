@@ -32,6 +32,10 @@ es:
           title: "Campos de entrada de fecha/hora"
         menus:
           title: "Menús"
+        context_menu:
+          actions:
+            duplicate: "Duplicar"
+            delete: "Eliminar"
         multi_select:
           title: "Selección múltiple"
         toasts:

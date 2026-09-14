@@ -107,6 +107,9 @@ export default class PollResultsPieComponent extends Component {
     this.canvasElement = element;
   });
 
+  /** @type {import("chart.js").Chart | null} */
+  _chart = null;
+
   get canvasId() {
     return trustHTML(`poll-results-chart-${this.args.id}`);
   }
@@ -137,15 +140,15 @@ export default class PollResultsPieComponent extends Component {
   <template>
     <div class="poll-results-chart">
       <canvas
+        class="poll-results-canvas"
+        id={{this.canvasId}}
         {{didInsert this.drawPie}}
         {{didInsert this.registerCanvasElement}}
-        id={{this.canvasId}}
-        class="poll-results-canvas"
       ></canvas>
       <ul
-        {{didInsert this.registerLegendElement}}
-        id={{this.legendId}}
         class="pie-chart-legends"
+        id={{this.legendId}}
+        {{didInsert this.registerLegendElement}}
       >
       </ul>
     </div>

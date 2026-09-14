@@ -20,11 +20,11 @@ import { normalizeViewForCalendar } from "../lib/calendar-view-helper";
 
 const PostEventMenu = <template>
   <DiscoursePostEvent
-    @linkToPost={{true}}
+    @clampDescription={{true}}
     @event={{@data.event}}
+    @linkToPost={{true}}
     @onClose={{@data.onClose}}
     @withDescription={{true}}
-    @clampDescription={{true}}
   />
 </template>;
 
@@ -70,6 +70,29 @@ export default class FullCalendar extends Component {
       default:
         return 1;
     }
+  }
+
+  get defaultLeftHeaderToolbar() {
+    return !this.capabilities.viewport.md ? "prev,next" : "prev,next today";
+  }
+
+  get headerToolbar() {
+    return {
+      left: this.args.leftHeaderToolbar ?? this.defaultLeftHeaderToolbar,
+      center: this.args.centerHeaderToolbar ?? "title",
+      right:
+        this.args.rightHeaderToolbar ??
+        "timeGridDay,timeGridWeek,dayGridMonth,listYear",
+    };
+  }
+
+  get initialView() {
+    const normalizedView = normalizeViewForCalendar(this.args.initialView);
+
+    return (
+      normalizedView ||
+      (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
+    );
   }
 
   @action
@@ -193,31 +216,9 @@ export default class FullCalendar extends Component {
     }
   }
 
-  get defaultLeftHeaderToolbar() {
-    return !this.capabilities.viewport.md ? "prev,next" : "prev,next today";
-  }
-
-  get headerToolbar() {
-    return {
-      left: this.args.leftHeaderToolbar ?? this.defaultLeftHeaderToolbar,
-      center: this.args.centerHeaderToolbar ?? "title",
-      right:
-        this.args.rightHeaderToolbar ??
-        "timeGridDay,timeGridWeek,dayGridMonth,listYear",
-    };
-  }
-
-  get initialView() {
-    const normalizedView = normalizeViewForCalendar(this.args.initialView);
-
-    return (
-      normalizedView ||
-      (this.capabilities.viewport.sm ? "dayGridMonth" : "timeGridWeek")
-    );
-  }
-
   <template>
     <div
+      ...attributes
       {{didInsert this.setupCalendar}}
       {{didUpdate
         this.updateCalendar
@@ -226,7 +227,6 @@ export default class FullCalendar extends Component {
         this.capabilities.viewport.md
       }}
       {{this.forceUpdateSize}}
-      ...attributes
     >
       {{! The calendar will be rendered inside this div by the library }}
     </div>

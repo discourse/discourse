@@ -5,12 +5,15 @@ RSpec.describe DiscourseWorkflows::DataTableColumn::Rename do
     it { is_expected.to validate_presence_of(:data_table_id) }
     it { is_expected.to validate_presence_of(:column_name) }
     it { is_expected.to validate_presence_of(:name) }
+
     it do
       is_expected.to validate_length_of(:name).is_at_most(
         DiscourseWorkflows::DataTable::MAX_COLUMN_NAME_LENGTH,
       )
     end
+
     it { is_expected.to allow_values("valid_col", "column_1", "_col").for(:name) }
+
     it do
       is_expected.not_to allow_values("123col", "col space", "col!@#", "id", "created_at").for(
         :name,

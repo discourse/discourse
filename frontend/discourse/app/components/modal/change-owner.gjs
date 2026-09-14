@@ -65,12 +65,12 @@ export default class ChangeOwnerModal extends Component {
 
   <template>
     <DModal
+      class="change-ownership-modal"
       @bodyClass="change-ownership"
       @closeModal={{@closeModal}}
-      @title={{i18n "topic.change_owner.title"}}
       @flash={{this.flash}}
       @flashType="error"
-      class="change-ownership-modal"
+      @title={{i18n "topic.change_owner.title"}}
     >
       <:body>
         <span>
@@ -88,7 +88,6 @@ export default class ChangeOwnerModal extends Component {
         </span>
 
         <EmailGroupUserChooser
-          @value={{this.newOwner}}
           @autofocus={{true}}
           @onChange={{this.updateNewOwner}}
           @options={{hash
@@ -97,14 +96,15 @@ export default class ChangeOwnerModal extends Component {
             filterIcon="magnifying-glass"
             useHeaderFilter=true
           }}
+          @value={{this.newOwner}}
         />
       </:body>
       <:footer>
         <DButton
-          {{on "click" this.changeOwnershipOfPosts}}
+          class="btn-primary"
           @disabled={{this.buttonDisabled}}
           @label={{if this.saving "saving" "topic.change_owner.action"}}
-          class="btn-primary"
+          {{on "click" this.changeOwnershipOfPosts}}
         />
       </:footer>
     </DModal>

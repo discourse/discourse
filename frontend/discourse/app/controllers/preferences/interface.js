@@ -121,19 +121,6 @@ export default class InterfaceController extends Controller {
     }));
   }
 
-  @action
-  setInterfaceLanguage(locale) {
-    this.model.set("locale", locale);
-  }
-
-  @action
-  setUnderstoodLanguages(locales) {
-    this.model.set(
-      "user_option.understood_languages",
-      normalizeUnderstoodLanguages(locales)
-    );
-  }
-
   @computed("currentThemeId")
   get defaultDarkSchemeId() {
     const theme = this.userSelectableThemes?.find(
@@ -282,48 +269,6 @@ export default class InterfaceController extends Controller {
     );
   }
 
-  #shouldEnablePreview(isDarkMode) {
-    return (
-      this.isViewingOwnProfile &&
-      (isDarkMode ? this.isInDarkMode : this.isInLightMode)
-    );
-  }
-
-  #resolveThemeDefaultColorScheme(colorSchemeId, isDark) {
-    // non-default color schemes
-    if (!isDark && colorSchemeId >= 0) {
-      return colorSchemeId;
-    }
-    // -1 is the default color scheme
-    if (isDark && colorSchemeId !== -1) {
-      return colorSchemeId;
-    }
-
-    const defaultTheme = this.userSelectableThemes.find(
-      (theme) => theme.id === this.themeId
-    );
-    if (!defaultTheme) {
-      return colorSchemeId;
-    }
-
-    if (isDark) {
-      return defaultTheme.dark_color_scheme_id || this.selectedColorSchemeId;
-    }
-    return defaultTheme.color_scheme_id || colorSchemeId;
-  }
-
-  homeChanged() {
-    const siteHome = siteDefaultHomepage(this.siteSettings);
-
-    if (this.model.canPickThemeWithCustomHomepage) {
-      USER_HOMES[-1] = "custom";
-    }
-
-    const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
-
-    setDefaultHomepage(userHome || siteHome);
-  }
-
   @computed()
   get userSelectableHome() {
     let homeValues = {};
@@ -445,6 +390,31 @@ export default class InterfaceController extends Controller {
       }
     }
     return this.model.user_option.interface_color_mode;
+  }
+
+  @action
+  setInterfaceLanguage(locale) {
+    this.model.set("locale", locale);
+  }
+
+  @action
+  setUnderstoodLanguages(locales) {
+    this.model.set(
+      "user_option.understood_languages",
+      normalizeUnderstoodLanguages(locales)
+    );
+  }
+
+  homeChanged() {
+    const siteHome = siteDefaultHomepage(this.siteSettings);
+
+    if (this.model.canPickThemeWithCustomHomepage) {
+      USER_HOMES[-1] = "custom";
+    }
+
+    const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
+
+    setDefaultHomepage(userHome || siteHome);
   }
 
   getSelectedColorSchemeId() {
@@ -634,6 +604,74 @@ export default class InterfaceController extends Controller {
     this.#previewColorSchemeForMode(modeId);
   }
 
+  @action
+  undoColorSchemePreview() {
+    this.setProperties({
+      selectedColorSchemeId: this.session.userColorSchemeId,
+      selectedDarkColorSchemeId: this.session.userDarkSchemeId,
+      selectedInterfaceColorModeId: null,
+      previewingColorScheme: false,
+    });
+
+    if (this.isViewingOwnProfile) {
+      const originalMode = this.model.user_option.interface_color_mode;
+      if (originalMode === INTERFACE_COLOR_MODES.AUTO) {
+        this.interfaceColor.useAutoMode();
+      } else if (originalMode === INTERFACE_COLOR_MODES.LIGHT) {
+        this.interfaceColor.forceLightMode();
+      } else if (originalMode === INTERFACE_COLOR_MODES.DARK) {
+        this.interfaceColor.forceDarkMode();
+      }
+    }
+
+    const darkStylesheet = document.querySelector("link#cs-preview-dark"),
+      lightStylesheet = document.querySelector("link#cs-preview-light");
+    if (darkStylesheet) {
+      darkStylesheet.remove();
+    }
+
+    if (lightStylesheet) {
+      lightStylesheet.remove();
+    }
+  }
+
+  @action
+  resetSeenUserTips() {
+    this.model.set("user_option.skip_new_user_tips", false);
+    this.model.set("user_option.seen_popups", null);
+    return this.model.save(["skip_new_user_tips", "seen_popups"]);
+  }
+
+  #shouldEnablePreview(isDarkMode) {
+    return (
+      this.isViewingOwnProfile &&
+      (isDarkMode ? this.isInDarkMode : this.isInLightMode)
+    );
+  }
+
+  #resolveThemeDefaultColorScheme(colorSchemeId, isDark) {
+    // non-default color schemes
+    if (!isDark && colorSchemeId >= 0) {
+      return colorSchemeId;
+    }
+    // -1 is the default color scheme
+    if (isDark && colorSchemeId !== -1) {
+      return colorSchemeId;
+    }
+
+    const defaultTheme = this.userSelectableThemes.find(
+      (theme) => theme.id === this.themeId
+    );
+    if (!defaultTheme) {
+      return colorSchemeId;
+    }
+
+    if (isDark) {
+      return defaultTheme.dark_color_scheme_id || this.selectedColorSchemeId;
+    }
+    return defaultTheme.color_scheme_id || colorSchemeId;
+  }
+
   #applyInterfaceModePreview(modeId) {
     if (modeId === INTERFACE_COLOR_MODES.AUTO) {
       this.interfaceColor.useAutoMode();
@@ -692,43 +730,5 @@ export default class InterfaceController extends Controller {
       loadColorSchemeStylesheet(colorSchemeId, this.themeId, false);
       loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
     }
-  }
-
-  @action
-  undoColorSchemePreview() {
-    this.setProperties({
-      selectedColorSchemeId: this.session.userColorSchemeId,
-      selectedDarkColorSchemeId: this.session.userDarkSchemeId,
-      selectedInterfaceColorModeId: null,
-      previewingColorScheme: false,
-    });
-
-    if (this.isViewingOwnProfile) {
-      const originalMode = this.model.user_option.interface_color_mode;
-      if (originalMode === INTERFACE_COLOR_MODES.AUTO) {
-        this.interfaceColor.useAutoMode();
-      } else if (originalMode === INTERFACE_COLOR_MODES.LIGHT) {
-        this.interfaceColor.forceLightMode();
-      } else if (originalMode === INTERFACE_COLOR_MODES.DARK) {
-        this.interfaceColor.forceDarkMode();
-      }
-    }
-
-    const darkStylesheet = document.querySelector("link#cs-preview-dark"),
-      lightStylesheet = document.querySelector("link#cs-preview-light");
-    if (darkStylesheet) {
-      darkStylesheet.remove();
-    }
-
-    if (lightStylesheet) {
-      lightStylesheet.remove();
-    }
-  }
-
-  @action
-  resetSeenUserTips() {
-    this.model.set("user_option.skip_new_user_tips", false);
-    this.model.set("user_option.seen_popups", null);
-    return this.model.save(["skip_new_user_tips", "seen_popups"]);
   }
 }

@@ -7,6 +7,10 @@
 ru:
   js:
     boards:
+      status:
+        all: "Все"
+        open: "Открытые"
+        archived: "Архивные"
       board:
         remove_card: "Отозвать"
         new_topic: "Новая тема..."

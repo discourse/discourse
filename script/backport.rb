@@ -160,8 +160,23 @@ backport_versions.each do |version|
     next
   end
 
-  # Push the backport branch
-  run("git", "push", "-f", "origin", backport_branch)
+  push = run("git", "push", "-f", "origin", backport_branch, allow_failure: true)
+
+  unless push.success
+    puts "Failed to push #{backport_branch}:\n#{push.stderr}"
+    results << {
+      version: version,
+      success: false,
+      error: push.stderr,
+      release_branch: release_branch,
+      backport_branch: backport_branch,
+      cherry_pick_range: cherry_pick_range,
+      backport_title: backport_title,
+      backport_body: backport_body,
+    }
+    run("git", "checkout", "main", allow_failure: true)
+    next
+  end
 
   # Create or update PR
   # Try to create the PR
@@ -230,7 +245,7 @@ if failed.any?
         git checkout -B #{r[:backport_branch]} FETCH_HEAD
         git cherry-pick #{r[:cherry_pick_range]}
 
-        # Resolve the conflicts, then push the branch and open the PR:
+        # Resolve any conflicts, then push the branch and open the PR:
         git push -f #{repo_url} #{r[:backport_branch]}:#{r[:backport_branch]}
         #{gh_create}
         ```

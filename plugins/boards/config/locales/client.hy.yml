@@ -7,6 +7,9 @@
 hy:
   js:
     boards:
+      status:
+        all: "Բոլոր"
+        open: "Բացել"
       board:
         remove_card: "Հեռացնել"
         title: "Վերնագիր"

@@ -34,18 +34,18 @@ export default class CardContainer extends Component {
 
     <PluginOutlet @name="user-card-content-container">
       <UserCardContents
-        @topic={{this.topic.model}}
-        @showUser={{this.showUser}}
-        @filterPosts={{this.filterPosts}}
-        @composePrivateMessage={{routeAction "composePrivateMessage"}}
         role="dialog"
+        @composePrivateMessage={{routeAction "composePrivateMessage"}}
+        @filterPosts={{this.filterPosts}}
+        @showUser={{this.showUser}}
+        @topic={{this.topic.model}}
       />
     </PluginOutlet>
 
     <GroupCardContents
-      @topic={{this.topic.model}}
-      @showUser={{this.showUser}}
       @showGroup={{this.showGroup}}
+      @showUser={{this.showUser}}
+      @topic={{this.topic.model}}
     />
   </template>
 }

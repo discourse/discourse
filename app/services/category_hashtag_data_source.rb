@@ -16,6 +16,10 @@ class CategoryHashtagDataSource
     "category"
   end
 
+  def self.ref_for(category_id)
+    Category.find_by(id: category_id)&.slug_ref
+  end
+
   def self.category_to_hashtag_item(category)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text =

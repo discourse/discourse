@@ -18,9 +18,9 @@ export default class FutureDateInputSelectorHeader extends ComboBoxHeaderCompone
         as |SelectedNameComponent|
       }}
         <SelectedNameComponent
-          @tabindex={{this.tabindex}}
           @item={{this.selectedContent}}
           @selectKit={{this.selectKit}}
+          @tabindex={{this.tabindex}}
         />
       {{/let}}
 

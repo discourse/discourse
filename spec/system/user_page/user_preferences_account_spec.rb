@@ -97,10 +97,10 @@ describe "User preferences | Account" do
 
   describe "external login provider URLs" do
     it "shows provider URLs as links when available" do
-      SiteSetting.enable_discord_logins = true
-      SiteSetting.enable_facebook_logins = true
-      SiteSetting.enable_github_logins = true
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:discord)
+      enable_auth_provider(:facebook)
+      enable_auth_provider(:github)
+      enable_auth_provider(:google_oauth2)
 
       # Let's connect at least 1 external account
       UserAssociatedAccount.create!(

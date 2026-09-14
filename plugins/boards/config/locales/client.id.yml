@@ -7,6 +7,10 @@
 id:
   js:
     boards:
+      status:
+        all: "Semua"
+        open: "Buka"
+        archived: "Diarsipkan"
       board:
         remove_card: "Hapus"
         title: "Judul"

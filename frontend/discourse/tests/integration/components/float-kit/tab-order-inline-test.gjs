@@ -66,15 +66,15 @@ module(
               @portalOutletElement={{this.outlet}}
             >
               <:content>
-                <button type="button" id="in-panel" class="in-panel">panel
+                <button class="in-panel" id="in-panel" type="button">panel
                   action</button>
               </:content>
             </DMenu>
           {{/if}}
           <button
-            type="button"
-            id="after-trigger"
             class="after-trigger"
+            id="after-trigger"
+            type="button"
           >after</button>
           <div id="outlet" {{didInsert this.setOutlet}}></div>
         </template>
@@ -117,11 +117,11 @@ module(
               @portalOutletElement={{this.outlet}}
             >
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
+          <button id="after-trigger" type="button">after</button>
           <div id="outlet" {{didInsert this.setOutlet}}></div>
         </template>
       );
@@ -154,12 +154,12 @@ module(
               @portalOutletElement={{this.outlet}}
             >
               <:content>
-                <input id="panel-filter" aria-label="filter" />
-                <button type="button" id="panel-action">panel action</button>
+                <input aria-label="filter" id="panel-filter" />
+                <button id="panel-action" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
+          <button id="after-trigger" type="button">after</button>
           <div id="outlet" {{didInsert this.setOutlet}}></div>
         </template>
       );
@@ -204,7 +204,7 @@ module(
               @portalOutletElement={{this.outlet}}
             >
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
@@ -213,7 +213,7 @@ module(
               has to exclude the panel, or the forward exit lands back inside the float it is
               dismissing. }}
           <div id="outlet" {{didInsert this.setOutlet}}></div>
-          <button type="button" id="after-trigger">after</button>
+          <button id="after-trigger" type="button">after</button>
         </template>
       );
 
@@ -239,18 +239,18 @@ module(
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
-              @triggerComponent={{dElement "div"}}
               @portalOutletElement={{this.outlet}}
+              @triggerComponent={{dElement "div"}}
             >
               <:trigger>
-                <input id="trigger-input" aria-label="trigger" />
+                <input aria-label="trigger" id="trigger-input" />
               </:trigger>
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
+          <button id="after-trigger" type="button">after</button>
           <div id="outlet" {{didInsert this.setOutlet}}></div>
         </template>
       );
@@ -270,24 +270,24 @@ module(
     test("a compound trigger finishes its own tab sequence before entering the panel", async function (assert) {
       await render(
         <template>
-          <button type="button" id="before-trigger">before</button>
+          <button id="before-trigger" type="button">before</button>
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
               @inlineTabOrder={{true}}
-              @triggerComponent={{dElement "div"}}
               @portalOutletElement={{this.outlet}}
+              @triggerComponent={{dElement "div"}}
             >
               <:trigger>
-                <input id="trigger-first" aria-label="first trigger control" />
-                <button type="button" id="trigger-last">last trigger control</button>
+                <input aria-label="first trigger control" id="trigger-first" />
+                <button id="trigger-last" type="button">last trigger control</button>
               </:trigger>
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
-          <button type="button" id="after-trigger">after</button>
+          <button id="after-trigger" type="button">after</button>
           <div id="outlet" {{didInsert this.setOutlet}}></div>
         </template>
       );
@@ -330,7 +330,7 @@ module(
               @portalOutletElement={{this.outlet}}
             >
               <:content>
-                <button type="button" id="in-panel" class="in-panel">panel
+                <button class="in-panel" id="in-panel" type="button">panel
                   action</button>
               </:content>
             </DMenu>
@@ -367,9 +367,9 @@ module(
             </DMenu>
           {{/if}}
           <button
-            type="button"
-            id="after-trigger"
             class="after-trigger"
+            id="after-trigger"
+            type="button"
           >after</button>
           <div id="outlet" {{didInsert this.setOutlet}}></div>
         </template>
@@ -401,13 +401,13 @@ module(
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
-              @trapTab={{true}}
               @inlineTabOrder={{true}}
               @label="trigger"
               @portalOutletElement={{this.outlet}}
+              @trapTab={{true}}
             >
               <:content>
-                <button type="button" id="in-panel">panel action</button>
+                <button id="in-panel" type="button">panel action</button>
               </:content>
             </DMenu>
           {{/if}}
@@ -428,20 +428,20 @@ module(
           {{#if this.outlet}}
             <DMenu
               @inline={{false}}
-              @trapTab={{false}}
               @label="trigger"
               @portalOutletElement={{this.outlet}}
+              @trapTab={{false}}
             >
               <:content>
-                <button type="button" id="in-panel" class="in-panel">panel
+                <button class="in-panel" id="in-panel" type="button">panel
                   action</button>
               </:content>
             </DMenu>
           {{/if}}
           <button
-            type="button"
-            id="after-trigger"
             class="after-trigger"
+            id="after-trigger"
+            type="button"
           >after</button>
           <div id="outlet" {{didInsert this.setOutlet}}></div>
         </template>
@@ -491,19 +491,19 @@ module(
       await render(
         <template>
           <input
-            id="checked-outside"
-            type="radio"
-            name="outside-group"
             checked
+            id="checked-outside"
+            name="outside-group"
+            type="radio"
           />
           <div id="root">
-            <input id="unchecked" type="radio" name="group" />
-            <input id="checked" type="radio" name="group" checked />
-            <input id="unchecked-after" type="radio" name="group" />
+            <input id="unchecked" name="group" type="radio" />
+            <input checked id="checked" name="group" type="radio" />
+            <input id="unchecked-after" name="group" type="radio" />
             <input
               id="suppressed-by-outside"
-              type="radio"
               name="outside-group"
+              type="radio"
             />
           </div>
         </template>
@@ -521,14 +521,14 @@ module(
         <template>
           <div id="root">
             <button id="before-radios">before</button>
-            <input id="first-radio" type="radio" name="group" />
-            <input id="focused-radio" type="radio" name="group" />
+            <input id="first-radio" name="group" type="radio" />
+            <input id="focused-radio" name="group" type="radio" />
             <button id="after-radios">after</button>
             <form id="form-a">
-              <input id="form-a-radio" type="radio" name="shared" />
+              <input id="form-a-radio" name="shared" type="radio" />
             </form>
             <form id="form-b">
-              <input id="form-b-radio" type="radio" name="shared" />
+              <input id="form-b-radio" name="shared" type="radio" />
             </form>
           </div>
         </template>
@@ -592,7 +592,7 @@ module(
           <div id="root">
             <button id="before-panel">before</button>
             <div id="panel">
-              <input id="panel-filter" aria-label="filter" />
+              <input aria-label="filter" id="panel-filter" />
               <button id="panel-action">panel action</button>
             </div>
             <button id="after-panel">after</button>
@@ -627,13 +627,13 @@ module(
               teardown order. }}
           <div id="root">
             <button id="rescan-control">control</button>
-            <input id="rescan-first-radio" type="radio" name="rescan-group" />
+            <input id="rescan-first-radio" name="rescan-group" type="radio" />
             {{#if this.showLateRadio}}
               <input
-                id="rescan-late-radio"
-                type="radio"
-                name="rescan-group"
                 checked
+                id="rescan-late-radio"
+                name="rescan-group"
+                type="radio"
               />
             {{/if}}
           </div>
@@ -666,7 +666,7 @@ module(
       await render(
         <template>
           <div id="root">
-            <button id="aria-hidden" aria-hidden="true">aria hidden</button>
+            <button aria-hidden="true" id="aria-hidden">aria hidden</button>
             <button id="transparent" style="opacity: 0">transparent</button>
             <button id="visibility-hidden" style="visibility: hidden">visibility
               hidden</button>

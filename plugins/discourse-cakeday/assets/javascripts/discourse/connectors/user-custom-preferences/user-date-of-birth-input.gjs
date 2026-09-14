@@ -57,22 +57,22 @@ export default class UserDateOfBirthInput extends Component {
           <div class="controls">
             <ComboBox
               @content={{this.months}}
+              @none="cakeday.none"
+              @onChange={{fn (mut this.month)}}
+              @options={{hash clearable=true autoInsertNoneItem=false}}
               @value={{this.month}}
               @valueAttribute="value"
               @valueProperty="value"
-              @none="cakeday.none"
-              @options={{hash clearable=true autoInsertNoneItem=false}}
-              @onChange={{fn (mut this.month)}}
             />
 
             <ComboBox
               @content={{this.days}}
-              @value={{this.day}}
-              @valueProperty={{null}}
               @nameProperty={{null}}
               @none="cakeday.none"
-              @options={{hash clearable=true autoInsertNoneItem=false}}
               @onChange={{fn (mut this.day)}}
+              @options={{hash clearable=true autoInsertNoneItem=false}}
+              @value={{this.day}}
+              @valueProperty={{null}}
             />
           </div>
         </div>

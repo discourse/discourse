@@ -1,9 +1,28 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
-import { chartability, looksLikeDate } from "../lib/chart-helpers";
+import { chartability, chartDatasets, hasDates } from "../lib/chart-helpers";
+import {
+  buildColumnComponents,
+  buildRelationTables,
+  displayColumnNames,
+  relationLabel,
+  VIEW_COMPONENTS,
+} from "../lib/result-columns";
 import DataExplorerChart from "./data-explorer-chart";
+import QueryRowContent from "./query-row-content";
+
+const CARD_VIEW_COMPONENTS = Object.fromEntries(
+  ["badge", "category", "group", "text", "topic", "user"].map((type) => [
+    type,
+    VIEW_COMPONENTS[type],
+  ])
+);
 
 export default class DataExplorerAdminDashboardCard extends Component {
+  @service site;
+
   get rows() {
     return this.args.payload?.rows ?? [];
   }
@@ -13,9 +32,26 @@ export default class DataExplorerAdminDashboardCard extends Component {
   }
 
   get columnLabels() {
-    return this.columns.map((col) => col.replaceAll("_", " "));
+    return displayColumnNames(this.columns).map((name) =>
+      name.replaceAll("_", " ")
+    );
   }
 
+  @cached
+  get relationTables() {
+    return buildRelationTables(this.args.payload?.relations, this.site);
+  }
+
+  @cached
+  get columnComponents() {
+    return buildColumnComponents(
+      this.args.payload,
+      this.relationTables,
+      CARD_VIEW_COMPONENTS
+    );
+  }
+
+  @cached
   get chartability() {
     return chartability(this.args.payload);
   }
@@ -24,8 +60,9 @@ export default class DataExplorerAdminDashboardCard extends Component {
     return this.columns.length === 2 && this.chartability.chartable;
   }
 
+  @cached
   get hasDates() {
-    return this.rows.length > 0 && looksLikeDate(String(this.rows[0][0]));
+    return hasDates(this.rows);
   }
 
   get chartType() {
@@ -40,14 +77,17 @@ export default class DataExplorerAdminDashboardCard extends Component {
   }
 
   get chartLabels() {
-    return this.rows.map((row) => row[0]);
+    const table = this.columnComponents[0]?.table;
+
+    return this.rows.map((row) => relationLabel(table?.[row[0]]) ?? row[0]);
   }
 
   get chartDatasets() {
-    return this.chartability.numericIndices.map((colIdx) => ({
-      label: this.columnLabels[colIdx],
-      values: this.rows.map((row) => Number(row[colIdx])),
-    }));
+    return chartDatasets(
+      this.rows,
+      this.chartability.numericIndices,
+      this.columnLabels
+    );
   }
 
   <template>
@@ -55,9 +95,9 @@ export default class DataExplorerAdminDashboardCard extends Component {
       {{#if this.rows.length}}
         {{#if this.isChartable}}
           <DataExplorerChart
-            @labels={{this.chartLabels}}
-            @datasets={{this.chartDatasets}}
             @chartType={{this.chartType}}
+            @datasets={{this.chartDatasets}}
+            @labels={{this.chartLabels}}
             @stacked={{this.isStacked}}
           />
         {{else}}
@@ -71,11 +111,10 @@ export default class DataExplorerAdminDashboardCard extends Component {
             </thead>
             <tbody>
               {{#each this.rows as |row|}}
-                <tr>
-                  {{#each row as |cell|}}
-                    <td>{{cell}}</td>
-                  {{/each}}
-                </tr>
+                <QueryRowContent
+                  @columnComponents={{this.columnComponents}}
+                  @row={{row}}
+                />
               {{/each}}
             </tbody>
           </table>

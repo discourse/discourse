@@ -11,6 +11,19 @@ sq:
         image_generation_custom:
           name: "Grupet e krijuara"
     ai_bot:
+      navigation:
+        users:
+          title: "Users"
+        groups:
+          title: "Grupet"
+        review:
+          title: "Radha e rishikimit"
+        categories:
+          title: "Categories"
+        tags:
+          title: "Etiketat"
+        backups:
+          title: "Rezervat"
       read_post:
         unknown_post: "postim"
       tool_summary:

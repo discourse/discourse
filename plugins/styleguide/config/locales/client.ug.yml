@@ -32,6 +32,10 @@ ug:
           title: "Datum / tyd insette"
         menus:
           title: "تىزىملىك"
+        context_menu:
+          actions:
+            duplicate: "كۆپەيت"
+            delete: "ئۆچۈر"
         multi_select:
           title: "كۆپ تاللاش"
         toasts:

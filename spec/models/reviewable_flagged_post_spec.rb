@@ -125,7 +125,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(reviewable.actions_for(guardian).has?(:disagree_and_restore)).to eq(true)
       end
 
-      it "won't return the penalty options if the user is not regular" do
+      it "omits penalty options for a non-regular user" do
         post.user.update(moderator: true)
         expect(reviewable.actions_for(guardian).has?(:agree_and_silence)).to eq(false)
         expect(reviewable.actions_for(guardian).has?(:agree_and_suspend)).to eq(false)
@@ -446,7 +446,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(pending_count).to eq(1)
     end
 
-    it "should reset counts when a topic is deleted" do
+    it "resets counts when a topic is deleted" do
       PostActionCreator.off_topic(user, post)
       expect(pending_count).to eq(1)
 
@@ -454,14 +454,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(pending_count).to eq(0)
     end
 
-    it "should not review non-human users" do
+    it "does not review non-human users" do
       post = create_post(user: Discourse.system_user)
       reviewable = PostActionCreator.off_topic(user, post).reviewable
       expect(reviewable).to be_blank
       expect(pending_count).to eq(0)
     end
 
-    it "should ignore handled flags" do
+    it "ignores handled flags" do
       post = create_post
       reviewable = PostActionCreator.off_topic(user, post).reviewable
       expect(post.hidden).to eq(false)
@@ -545,6 +545,186 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_unsilence_user" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagged_post) { Fabricate(:post, user: author) }
+
+    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+    let(:guardian) { Guardian.new(moderator) }
+
+    it "is offered whenever the author is currently silenced" do
+      expect(reviewable.actions_for(guardian).has?(:unsilence_user)).to eq(false)
+
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      expect(reviewable.reload.actions_for(guardian).has?(:unsilence_user)).to eq(true)
+    end
+
+    it "is set apart from the actions that resolve the reviewable" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      secondary_bundles = reviewable.reload.actions_for(guardian).bundles.select(&:secondary)
+
+      expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["unsilence_user"])
+    end
+
+    it "is offered even when the silence is not linked to this post" do
+      other_post = Fabricate(:post, user: author)
+      UserSilencer.silence(author, moderator, post_id: other_post.id)
+
+      expect(UserSilencer.was_silenced_for?(flagged_post)).to eq(false)
+      expect(reviewable.actions_for(guardian).has?(:unsilence_user)).to eq(true)
+    end
+
+    it "lifts the silence without resolving the reviewable" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      result = reviewable.perform(moderator, :unsilence_user)
+
+      expect(author.reload.silenced?).to eq(false)
+      expect(reviewable.reload).to be_pending
+      expect(result.remove_reviewable_ids).to eq([])
+    end
+
+    it "attributes the unsilence to the moderator and the reviewable" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      reviewable.perform(moderator, :unsilence_user)
+
+      history =
+        UserHistory.find_by(action: UserHistory.actions[:unsilence_user], target_user_id: author.id)
+
+      expect(history.acting_user_id).to eq(moderator.id)
+      expect(history.reviewable_id).to eq(reviewable.id)
+    end
+
+    it "is not offered to a moderator who cannot unsilence the author" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      expect(reviewable.actions_for(Guardian.new(user)).has?(:unsilence_user)).to eq(false)
+    end
+  end
+
+  describe "penalty_effect" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagged_post) { Fabricate(:post, user: author) }
+
+    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+    let(:guardian) { Guardian.new(moderator) }
+
+    def effect_for(action_id)
+      action = reviewable.actions_for(guardian).to_a.find { |a| a.server_action == action_id.to_s }
+
+      raise "no #{action_id} action was built" if action.nil?
+
+      action.penalty_effect
+    end
+
+    it "is absent when the author has no penalty" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+
+      expect(effect_for(:delete_and_agree)).to eq(nil)
+      expect(effect_for(:disagree_and_restore)).to eq(nil)
+    end
+
+    it "marks actions that keep a silence that was applied for this post" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+
+      expect(effect_for(:delete_and_agree)).to eq(:retains_penalty)
+      expect(effect_for(:agree_and_keep_hidden)).to eq(:retains_penalty)
+      expect(effect_for(:delete_and_ignore)).to eq(:retains_penalty)
+      expect(effect_for(:disagree_and_restore)).to eq(:lifts_penalty)
+      expect(effect_for(:unsilence_user)).to eq(:lifts_penalty)
+    end
+
+    it "does not promise a lift when the silence is not linked to this post" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+      other_post = Fabricate(:post, user: author)
+      UserSilencer.silence(author, moderator, post_id: other_post.id)
+
+      expect(effect_for(:disagree_and_restore)).to eq(:retains_penalty)
+      expect(effect_for(:unsilence_user)).to eq(:lifts_penalty)
+    end
+
+    it "still promises to unsilence when the author is also suspended" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+      UserSuspender.new(
+        author,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+      ).suspend
+
+      expect(effect_for(:unsilence_user)).to eq(:lifts_penalty)
+      expect(effect_for(:disagree_and_restore)).to eq(:lifts_penalty)
+      expect(effect_for(:delete_and_agree)).to eq(:retains_penalty)
+    end
+
+    it "does not promise a lift for a suspension" do
+      flagged_post.update!(hidden: true, hidden_at: Time.zone.now)
+      UserSuspender.new(
+        author,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+        post_id: flagged_post.id,
+      ).suspend
+
+      expect(effect_for(:disagree_and_restore)).to eq(:retains_penalty)
+    end
+  end
+
+  describe "#author_penalties" do
+    fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagged_post) { Fabricate(:post, user: author) }
+
+    let!(:reviewable) { PostActionCreator.spam(user, flagged_post).reviewable }
+
+    it "is empty when the author has no penalty" do
+      expect(reviewable.author_penalties).to eq([])
+    end
+
+    it "describes a silence applied for this post" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id, reason: "spammy")
+
+      penalty = reviewable.author_penalties.sole
+
+      expect(penalty.kind).to eq(:silence)
+      expect(penalty.from_this_target).to eq(true)
+      expect(penalty.applied_by).to eq(moderator)
+      expect(penalty.automatic).to eq(false)
+      expect(penalty.reason).to include("spammy")
+      expect(penalty.applied_at).to be_present
+    end
+
+    it "marks a penalty applied by a bot as automatic" do
+      UserSilencer.silence(author, Discourse.system_user, post_id: flagged_post.id)
+
+      expect(reviewable.author_penalties.sole.automatic).to eq(true)
+    end
+
+    it "reports a silence that was not applied for this post" do
+      other_post = Fabricate(:post, user: author)
+      UserSilencer.silence(author, moderator, post_id: other_post.id)
+
+      expect(reviewable.author_penalties.sole.from_this_target).to eq(false)
+    end
+
+    it "reports both a silence and a suspension" do
+      UserSilencer.silence(author, moderator, post_id: flagged_post.id)
+      UserSuspender.new(
+        author,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+      ).suspend
+
+      expect(reviewable.author_penalties.map(&:kind)).to contain_exactly(:silence, :suspension)
+    end
+  end
+
   describe "#perform_unsilence_user_and_ignore" do
     it "unsilences the user and resolves the reviewable without restoring the deleted post" do
       reviewable = Fabricate(:reviewable_flagged_post)
@@ -611,6 +791,28 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       reviewable.perform(moderator, :disagree_and_restore)
 
       expect(target_user.reload.silenced?).to eq(false)
+    end
+
+    it "attributes the unsilence to the moderator and the reviewable" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      target_user = reviewable.post.user
+      reviewable.post.update(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: PostActionType.types[:spam],
+      )
+      UserSilencer.silence(target_user, moderator, post_id: reviewable.post.id)
+
+      reviewable.perform(moderator, :disagree_and_restore)
+
+      history =
+        UserHistory.find_by(
+          action: UserHistory.actions[:unsilence_user],
+          target_user_id: target_user.id,
+        )
+
+      expect(history.acting_user_id).to eq(moderator.id)
+      expect(history.reviewable_id).to eq(reviewable.id)
     end
 
     context "with category group moderator" do

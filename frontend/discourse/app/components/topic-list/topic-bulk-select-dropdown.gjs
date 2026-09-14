@@ -4,10 +4,10 @@ import { i18n } from "discourse-i18n";
 const TopicBulkSelectDropdown = <template>
   <div class="bulk-select-topics-dropdown">
     <BulkSelectTopicsDropdown
-      @bulkSelectHelper={{@bulkSelectHelper}}
       @afterBulkActionComplete={{@afterBulkActionComplete}}
-      @extraButtons={{@extraButtons}}
+      @bulkSelectHelper={{@bulkSelectHelper}}
       @excludedButtonIds={{@excludedButtonIds}}
+      @extraButtons={{@extraButtons}}
       @onAction={{@onAction}}
     />
     <span class="bulk-select-topic-dropdown__count">

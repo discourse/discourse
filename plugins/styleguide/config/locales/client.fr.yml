@@ -33,6 +33,10 @@ fr:
           title: "Date/heure"
         menus:
           title: "Menus"
+        context_menu:
+          actions:
+            duplicate: "Dupliquer"
+            delete: "Supprimer"
         multi_select:
           title: "Sélection multiple"
         toasts:

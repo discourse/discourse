@@ -144,19 +144,19 @@ export default class SecretValueList extends Component {
           {{#each this.collection as |value index|}}
             <div class="value" data-index={{index}}>
               <DButton
+                class="btn-default remove-value-btn btn-small"
                 @action={{fn this.removeValue value}}
                 @icon="xmark"
-                class="btn-default remove-value-btn btn-small"
               />
               <Input
-                @value={{value.key}}
                 class="value-input"
+                @value={{value.key}}
                 {{on "focusout" (fn this.changeKey index)}}
               />
               <Input
-                @value={{value.secret}}
                 class="value-input"
                 @type={{if @isSecret "password" "text"}}
+                @value={{value.secret}}
                 {{on "focusout" (fn this.changeSecret index)}}
               />
             </div>
@@ -166,20 +166,20 @@ export default class SecretValueList extends Component {
 
       <div class="value">
         <DTextField
-          @value={{this.newKey}}
-          @placeholder={{this.setting.placeholder.key}}
           class="new-value-input key"
+          @placeholder={{this.setting.placeholder.key}}
+          @value={{this.newKey}}
         />
         <Input
-          @type={{if @isSecret "password" "text"}}
-          @value={{this.newSecret}}
           class="new-value-input secret"
           placeholder={{this.setting.placeholder.value}}
+          @type={{if @isSecret "password" "text"}}
+          @value={{this.newSecret}}
         />
         <DButton
+          class="add-value-btn btn-small"
           @action={{this.addValue}}
           @icon="plus"
-          class="add-value-btn btn-small"
         />
       </div>
     </div>

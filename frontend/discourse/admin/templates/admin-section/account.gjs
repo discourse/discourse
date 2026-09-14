@@ -6,29 +6,29 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
-    @titleLabel={{i18n "admin.config_sections.account.title"}}
     @hideTabs={{true}}
+    @titleLabel={{i18n "admin.config_sections.account.title"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/section/account"
         @label={{i18n "admin.config_sections.account.title"}}
+        @path="/admin/section/account"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <AdminSectionLandingWrapper>
     <AdminSectionLandingItem
+      @descriptionLabel="admin.config.backups.header_description"
       @icon="box-archive"
       @titleLabel="admin.config.backups.title"
-      @descriptionLabel="admin.config.backups.header_description"
       @titleRoute="admin.backups"
     />
     <AdminSectionLandingItem
+      @descriptionLabel="admin.config.whats_new.header_description"
       @icon="gift"
       @titleLabel="admin.config.whats_new.title"
-      @descriptionLabel="admin.config.whats_new.header_description"
       @titleRoute="admin.whatsNew"
     />
   </AdminSectionLandingWrapper>

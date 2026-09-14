@@ -8,6 +8,10 @@ import ReviewableNoteForm from "discourse/components/reviewable/note-form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
+import {
+  penaltyIcon,
+  penaltyPastTense,
+} from "discourse/lib/reviewable-penalty";
 import { sanitize } from "discourse/lib/text";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import { and, eq } from "discourse/truth-helpers";
@@ -142,6 +146,25 @@ export default class ReviewableTimeline extends Component {
       });
     }
 
+    this.args.reviewable.author_penalties?.forEach((penalty) => {
+      if (!penalty.from_this_target || !penalty.applied_at) {
+        return;
+      }
+
+      events.push({
+        type: `author_${penaltyPastTense(penalty.kind)}`,
+        date: penalty.applied_at,
+        user: penalty.applied_by,
+        icon: penaltyIcon(penalty.kind),
+        titleKey: penalty.automatic
+          ? `review.timeline.author_${penaltyPastTense(penalty.kind)}_automatically`
+          : `review.timeline.author_${penaltyPastTense(penalty.kind)}_by`,
+        description: penalty.reason
+          ? trustHTML(sanitize(penalty.reason))
+          : null,
+      });
+    });
+
     // Add notes events
     this.args.reviewable.reviewable_notes?.forEach((note) => {
       const date = note.created_at;
@@ -265,10 +288,10 @@ export default class ReviewableTimeline extends Component {
                   {{#if (and (eq event.type "note") event.canDelete)}}
                     <div class="timeline-event__actions">
                       <DButton
+                        class="btn-transparent --danger timeline-event__delete-note btn-transparent"
+                        @action={{fn this.deleteNote event.noteId}}
                         @icon="trash-can"
                         @title="review.notes.delete_note"
-                        @action={{fn this.deleteNote event.noteId}}
-                        class="btn-transparent --danger timeline-event__delete-note btn-transparent"
                       />
                     </div>
                   {{/if}}
@@ -289,8 +312,8 @@ export default class ReviewableTimeline extends Component {
         </div>
       {{/if}}
       <ReviewableNoteForm
-        @reviewable={{@reviewable}}
         @onNoteCreated={{this.onNoteCreated}}
+        @reviewable={{@reviewable}}
       />
     </div>
   </template>

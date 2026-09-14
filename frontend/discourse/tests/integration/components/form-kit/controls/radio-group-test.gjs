@@ -15,8 +15,8 @@ module(
 
       await render(
         <template>
-          <Form @onSubmit={{mutateData}} @data={{data}} as |form|>
-            <form.Field @type="radio-group" @name="foo" @title="Foo" as |field|>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" @type="radio-group" as |field|>
               <field.Control as |RadioGroup|>
                 <RadioGroup.Radio @value="one">One</RadioGroup.Radio>
                 <RadioGroup.Radio @value="two">Two</RadioGroup.Radio>
@@ -42,10 +42,10 @@ module(
       await render(
         <template>
           <Form as |form|>
-            <form.Field @type="radio-group" @name="foo" @title="Foo" as |field|>
+            <form.Field @name="foo" @title="Foo" @type="radio-group" as |field|>
               <field.Control
-                @title="Pick one"
                 @description="Choose carefully"
+                @title="Pick one"
                 as |RadioGroup|
               >
                 <RadioGroup.Radio @value="one">One</RadioGroup.Radio>

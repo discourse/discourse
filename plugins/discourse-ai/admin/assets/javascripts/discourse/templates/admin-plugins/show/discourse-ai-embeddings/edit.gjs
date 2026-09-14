@@ -2,7 +2,7 @@ import AiEmbeddingsListEditor from "../../../../components/ai-embeddings-list-ed
 
 export default <template>
   <AiEmbeddingsListEditor
-    @embeddings={{@controller.allEmbeddings}}
     @currentEmbedding={{@controller.model}}
+    @embeddings={{@controller.allEmbeddings}}
   />
 </template>

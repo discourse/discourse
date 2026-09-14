@@ -94,11 +94,11 @@ export default class ForgotPassword extends Component {
 
   <template>
     <DModal
-      @title={{i18n "forgot_password.title"}}
+      class="forgot-password-modal"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
       @flashType="error"
-      class="forgot-password-modal"
+      @title={{i18n "forgot_password.title"}}
     >
       <:body>
         {{#if this.offerHelp}}
@@ -108,13 +108,13 @@ export default class ForgotPassword extends Component {
             {{i18n "forgot_password.invite_no_username"}}
           </label>
           <input
-            {{on "input" this.updateEmailOrUsername}}
-            value={{this.emailOrUsername}}
+            autocapitalize="off"
+            autocorrect="off"
+            id="username-or-email"
             placeholder={{i18n "email"}}
             type="text"
-            id="username-or-email"
-            autocorrect="off"
-            autocapitalize="off"
+            value={{this.emailOrUsername}}
+            {{on "input" this.updateEmailOrUsername}}
           />
         {{else}}
           <p>{{i18n "forgot_password.invite"}}</p>
@@ -122,13 +122,13 @@ export default class ForgotPassword extends Component {
             {{i18n "forgot_password.email-username"}}
           </label>
           <input
-            {{on "input" this.updateEmailOrUsername}}
-            value={{this.emailOrUsername}}
+            autocapitalize="off"
+            autocorrect="off"
+            id="username-or-email"
             placeholder={{i18n "login.email_placeholder"}}
             type="text"
-            id="username-or-email"
-            autocorrect="off"
-            autocapitalize="off"
+            value={{this.emailOrUsername}}
+            {{on "input" this.updateEmailOrUsername}}
           />
         {{/if}}
       </:body>
@@ -136,26 +136,26 @@ export default class ForgotPassword extends Component {
       <:footer>
         {{#if this.offerHelp}}
           <DButton
+            class="btn-large btn-primary"
+            type="submit"
             @action={{@closeModal}}
             @label="forgot_password.button_ok"
-            type="submit"
-            class="btn-large btn-primary"
           />
           {{#unless this.helpSeen}}
             <DButton
-              @action={{this.help}}
-              @label="forgot_password.button_help"
-              @icon="circle-question"
               class="btn-large"
+              @action={{this.help}}
+              @icon="circle-question"
+              @label="forgot_password.button_help"
             />
           {{/unless}}
         {{else}}
           <DButton
+            class="btn-primary forgot-password-reset"
+            type="submit"
             @action={{this.resetPassword}}
             @disabled={{this.submitDisabled}}
             @label="forgot_password.reset"
-            type="submit"
-            class="btn-primary forgot-password-reset"
           />
         {{/if}}
       </:footer>

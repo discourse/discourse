@@ -11,7 +11,10 @@ import {
   arraySortedByProperties,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
-import { grantableBadges } from "discourse/lib/grant-badge-utils";
+import {
+  grantableBadgeOptions,
+  grantableBadges,
+} from "discourse/lib/grant-badge-utils";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
@@ -59,6 +62,11 @@ export default class AdminUserBadgesController extends Controller {
   @dependentKeyCompat
   get availableBadges() {
     return grantableBadges(this.allBadges, this.userBadges);
+  }
+
+  @dependentKeyCompat
+  get badgeOptions() {
+    return grantableBadgeOptions(this.availableBadges);
   }
 
   get groupedBadges() {
@@ -128,7 +136,7 @@ export default class AdminUserBadgesController extends Controller {
         // Update the selected badge ID after the combobox has re-rendered.
         const newSelectedBadge = this.availableBadges[0];
         if (newSelectedBadge) {
-          this.set("selectedBadgeId", newSelectedBadge.get("id"));
+          this.set("selectedBadgeId", newSelectedBadge.id);
         }
       });
     } catch (error) {

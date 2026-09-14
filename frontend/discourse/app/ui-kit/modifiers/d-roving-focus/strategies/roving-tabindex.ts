@@ -1,5 +1,6 @@
 import type { DRovingFocusConfig } from "../config";
 import {
+  anchorsToSelection,
   fallsBackToFirst,
   findMarked,
   isMarked,
@@ -11,18 +12,21 @@ import ItemScope from "../item-scope";
 export default class RovingTabindexStrategy {
   #scope: ItemScope;
   #config: DRovingFocusConfig;
+
   /**
    * Items already demoted to `tabindex="-1"`. Identity tracking prevents an incoming authored
    * `tabindex="0"` from creating a second tab stop; weak references do not retain removed items.
    */
   #stamped = new WeakSet<HTMLElement>();
   #tabStopHolder: HTMLElement | null = null;
+
   /**
    * The last focused item and its raw-item index, retained to distinguish removal from focus
    * moving away and to address its positional replacement.
    */
   #lastFocusedItem: HTMLElement | null = null;
   #lastFocusedIndex = -1;
+
   /**
    * The previous render's items, used only to distinguish one removal from whole-list replacement.
    */
@@ -50,16 +54,24 @@ export default class RovingTabindexStrategy {
     return items.find((item) => item.getAttribute("tabindex") === "0") ?? null;
   }
 
-  /** Records focus that entered an item and promotes it as the tab stop. */
+  /**
+   * Records focus that entered an item and promotes it as the tab stop. Anchored to selection the
+   * promotion is skipped, but the item is still remembered, because restoration answers "where was
+   * the reader" rather than "where does Tab return".
+   */
   recordFocus(target: HTMLElement): void {
-    this.#promote(target);
+    if (!anchorsToSelection(this.#config)) {
+      this.#promote(target);
+    }
     this.#lastFocusedItem = target;
     this.#lastFocusedIndex = this.#scope.all().indexOf(target);
   }
 
-  /** Promotes an item and moves DOM focus to it. */
+  /** Promotes an item and moves DOM focus to it, or moves focus alone when anchored to selection. */
   activate(target: HTMLElement): void {
-    this.#promote(target);
+    if (!anchorsToSelection(this.#config)) {
+      this.#promote(target);
+    }
     target.focus();
   }
 
@@ -74,10 +86,13 @@ export default class RovingTabindexStrategy {
     let preferred: HTMLElement | undefined;
     if (this.#config.tabStop) {
       const navigable = (item: HTMLElement) => this.#scope.isNavigable(item);
-      const current = reseed ? null : this.current(all);
+      // Anchoring to selection is a standing reseed: honouring a surviving cursor is exactly what
+      // it exists to prevent, so the entry policy alone decides where the stop sits.
+      const fresh = reseed || anchorsToSelection(this.#config);
+      const current = fresh ? null : this.current(all);
       preferred =
         (current && navigable(current) ? current : undefined) ??
-        (reseed
+        (fresh
           ? undefined
           : all.find(
               (item) => item.getAttribute("tabindex") === "0" && navigable(item)

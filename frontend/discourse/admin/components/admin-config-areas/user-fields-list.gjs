@@ -90,20 +90,20 @@ export default class AdminConfigAreasUserFieldsList extends Component {
           <tbody class="d-table__body">
             {{#each this.sortedFields as |field|}}
               <AdminUserFieldItem
-                @userField={{field}}
-                @fieldTypes={{this.fieldTypes}}
                 @destroyAction={{this.destroyField}}
-                @moveUpAction={{this.moveUp}}
+                @fieldTypes={{this.fieldTypes}}
                 @moveDownAction={{this.moveDown}}
+                @moveUpAction={{this.moveUp}}
+                @userField={{field}}
               />
             {{/each}}
           </tbody>
         </table>
       {{else}}
         <AdminConfigAreaEmptyList
+          @ctaClass="admin-user_fields__add-emoji"
           @ctaLabel="admin.user_fields.add"
           @ctaRoute="adminUserFields.new"
-          @ctaClass="admin-user_fields__add-emoji"
           @emptyLabel="admin.user_fields.no_user_fields"
         />
       {{/if}}

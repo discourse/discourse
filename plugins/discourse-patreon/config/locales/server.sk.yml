@@ -21,8 +21,6 @@ sk:
     patreon_donation_prompt_enabled: "Povoliť výzvu na darovanie?"
     patreon_donation_prompt_show_after_topics: "Zobraziť výzvu na darovanie po n témach"
     patreon_donation_prompt_campaign_url: "URL adresa kampane s výzvou na darovanie"
-    errors:
-      patreon_creator_username_not_set: "Pred povolením prihlásenia do Patreonu je potrebné nastaviť používateľské meno pre tvorcov Patreonu v Discourse."
   dashboard:
     problem:
       access_token_invalid: "Hodnoty prístupového a obnovovacieho tokenu Patreon Creator sú nesprávne. Musíte skopírovať a vložiť nové tokeny z <a href='https://www.patreon.com/platform/documentation/clients'>webovej stránky Patreon</a> do <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>nastavení stránky</a>."

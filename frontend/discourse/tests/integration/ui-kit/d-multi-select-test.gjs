@@ -32,11 +32,11 @@ class TestComponent extends Component {
 
   <template>
     <DMultiSelect
-      @loadFn={{if @loadFn @loadFn this.loadFn}}
       @compareFn={{@compareFn}}
+      @label={{@label}}
+      @loadFn={{if @loadFn @loadFn this.loadFn}}
       @onChange={{this.onChange}}
       @selection={{this.selection}}
-      @label={{@label}}
     >
       <:selection as |result|>{{result.name}}</:selection>
       <:result as |result|>{{result.name}}</:result>

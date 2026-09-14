@@ -55,20 +55,20 @@ export default class RovingFocus extends Component {
     </p>
 
     <StyleguideGroups
-      @groups={{this.groups}}
-      @section={{@section}}
       @active={{@group}}
       @ariaLabel={{i18n "styleguide.sections.roving_focus.groups.aria_label"}}
+      @groups={{this.groups}}
+      @section={{@section}}
       as |Group|
     >
       <Group @id="toolbar">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.toolbar.example"}}
+          @code={{rovingFocusToolbarSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.toolbar.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.toolbar.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.toolbar.try_this"}}
-          @code={{rovingFocusToolbarSource}}
         >
           <RovingFocusToolbarExample />
         </StyleguideExample>
@@ -76,22 +76,22 @@ export default class RovingFocus extends Component {
 
       <Group @id="listbox">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.multi.example"}}
+          @code={{rovingFocusMultiSelectSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.multi.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.multi.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.multi.try_this"}}
-          @code={{rovingFocusMultiSelectSource}}
         >
           <RovingFocusMultiSelectExample />
         </StyleguideExample>
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.listbox.example"}}
+          @code={{rovingFocusListboxSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.listbox.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.listbox.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.listbox.try_this"}}
-          @code={{rovingFocusListboxSource}}
         >
           <RovingFocusListboxExample />
         </StyleguideExample>
@@ -99,12 +99,12 @@ export default class RovingFocus extends Component {
 
       <Group @id="combobox">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.combobox.example"}}
+          @code={{rovingFocusComboboxSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.combobox.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.combobox.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.combobox.try_this"}}
-          @code={{rovingFocusComboboxSource}}
         >
           <RovingFocusComboboxExample />
         </StyleguideExample>
@@ -112,12 +112,12 @@ export default class RovingFocus extends Component {
 
       <Group @id="radio">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.radio.example"}}
+          @code={{rovingFocusRadioGroupSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.radio.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.radio.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.radio.try_this"}}
-          @code={{rovingFocusRadioGroupSource}}
         >
           <RovingFocusRadioGroupExample />
         </StyleguideExample>
@@ -125,21 +125,21 @@ export default class RovingFocus extends Component {
 
       <Group @id="tree">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.tree.example"}}
+          @code={{rovingFocusTreeSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.tree.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.tree.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.tree.try_this"}}
-          @code={{rovingFocusTreeSource}}
         >
           <RovingFocusTreeExample @dir="ltr" />
         </StyleguideExample>
 
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.tree.rtl_example"}}
           @description={{i18n
             "styleguide.sections.roving_focus.tree.rtl_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.tree.rtl_example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.tree.rtl_try_this"}}
         >
           <RovingFocusTreeExample @dir="rtl" />
@@ -148,12 +148,12 @@ export default class RovingFocus extends Component {
 
       <Group @id="adjacent">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.adjacent.example"}}
+          @code={{rovingFocusAdjacentGroupsSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.adjacent.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.adjacent.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.adjacent.try_this"}}
-          @code={{rovingFocusAdjacentGroupsSource}}
         >
           <RovingFocusAdjacentGroupsExample />
         </StyleguideExample>
@@ -161,12 +161,12 @@ export default class RovingFocus extends Component {
 
       <Group @id="components">
         <StyleguideExample
-          @title={{i18n "styleguide.sections.roving_focus.tags.example"}}
+          @code={{rovingFocusRemovableTagsSource}}
           @description={{i18n
             "styleguide.sections.roving_focus.tags.example_description"
           }}
+          @title={{i18n "styleguide.sections.roving_focus.tags.example"}}
           @tryThis={{i18n "styleguide.sections.roving_focus.tags.try_this"}}
-          @code={{rovingFocusRemovableTagsSource}}
         >
           <RovingFocusRemovableTagsExample />
         </StyleguideExample>

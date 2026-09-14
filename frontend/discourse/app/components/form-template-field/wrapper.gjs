@@ -17,13 +17,13 @@ import UploadField from "./upload";
 
 const FormTemplateField = <template>
   <@component
-    @id={{@content.id}}
     @attributes={{@content.attributes}}
     @choices={{@content.choices}}
-    @validations={{@content.validations}}
-    @value={{@initialValue}}
+    @id={{@content.id}}
     @onChange={{@onChange}}
     @uppyComposerUpload={{@uppyComposerUpload}}
+    @validations={{@content.validations}}
+    @value={{@initialValue}}
   />
 </template>;
 
@@ -66,16 +66,9 @@ export default class FormTemplateFieldWrapper extends Component {
     });
   }
 
-  async _loadTemplate(templateContent) {
-    try {
-      const promise = import("js-yaml");
-      waitForPromise(promise);
-      const Yaml = (await promise).default;
-      this.parsedTemplate = Yaml.load(templateContent);
-      this.args.onSelectFormTemplate?.(this.parsedTemplate);
-    } catch (e) {
-      this.error = e;
-    }
+  // child components expect an onChange function
+  get onChange() {
+    return this.args.onChange || (() => {});
   }
 
   @action
@@ -87,15 +80,22 @@ export default class FormTemplateFieldWrapper extends Component {
     return this._fetchTemplate(this.args.id);
   }
 
+  async _loadTemplate(templateContent) {
+    try {
+      const promise = import("js-yaml");
+      waitForPromise(promise);
+      const { load } = await promise;
+      this.parsedTemplate = load(templateContent);
+      this.args.onSelectFormTemplate?.(this.parsedTemplate);
+    } catch (e) {
+      this.error = e;
+    }
+  }
+
   async _fetchTemplate(id) {
     const response = await FormTemplate.findById(id);
     const templateContent = await response.form_template.template;
     return this._loadTemplate(templateContent);
-  }
-
-  // child components expect an onChange function
-  get onChange() {
-    return this.args.onChange || (() => {});
   }
 
   <template>

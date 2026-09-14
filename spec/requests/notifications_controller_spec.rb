@@ -38,12 +38,12 @@ RSpec.describe NotificationsController do
       end
 
       describe "#index" do
-        it "should succeed for recent" do
+        it "returns recent notifications" do
           get "/notifications", params: { recent: true }
           expect(response.status).to eq(200)
         end
 
-        it "should succeed for history" do
+        it "returns notification history" do
           get "/notifications.json"
 
           expect(response.status).to eq(200)
@@ -54,7 +54,7 @@ RSpec.describe NotificationsController do
           expect(notifications.first["id"]).to eq(notification.id)
         end
 
-        it "should mark notifications as viewed" do
+        it "marks notifications as viewed" do
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
 
@@ -65,7 +65,7 @@ RSpec.describe NotificationsController do
           expect(user.reload.total_unread_notifications).to eq(1)
         end
 
-        it "should not mark notifications as viewed if silent param is present" do
+        it "does not mark notifications viewed with the silent parameter" do
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
 
@@ -76,7 +76,7 @@ RSpec.describe NotificationsController do
           expect(user.reload.total_unread_notifications).to eq(1)
         end
 
-        it "should not mark notifications as viewed in readonly mode" do
+        it "does not mark notifications viewed in read-only mode" do
           Discourse.received_redis_readonly!
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
@@ -206,7 +206,7 @@ RSpec.describe NotificationsController do
             )
           end
 
-          it "should not bump last seen reviewable in readonly mode" do
+          it "does not update the last-seen reviewable in read-only mode" do
             user.update!(admin: true)
 
             Discourse.received_redis_readonly!
@@ -219,14 +219,14 @@ RSpec.describe NotificationsController do
             Discourse.clear_redis_readonly!
           end
 
-          it "should not bump last seen reviewable if the user can't see reviewables" do
+          it "does not update the last-seen reviewable without review access" do
             expect {
               get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
               expect(response.status).to eq(200)
             }.not_to change { user.reload.last_seen_reviewable_id }
           end
 
-          it "should not bump last seen reviewable if the silent param is present" do
+          it "does not update the last-seen reviewable with the silent parameter" do
             user.update!(admin: true)
 
             expect {
@@ -240,7 +240,7 @@ RSpec.describe NotificationsController do
             }.not_to change { user.reload.last_seen_reviewable_id }
           end
 
-          it "should not bump last seen reviewable if the bump_last_seen_reviewable param is not present" do
+          it "does not update the last-seen reviewable without the bump parameter" do
             user.update!(admin: true)
 
             expect {
@@ -373,7 +373,7 @@ RSpec.describe NotificationsController do
         end
 
         context "when username params is not valid" do
-          it "should raise the right error" do
+          it "returns the permission error" do
             get "/notifications.json", params: { username: "somedude" }
             expect(response.status).to eq(404)
           end
@@ -586,7 +586,7 @@ RSpec.describe NotificationsController do
         end
       end
 
-      it "should succeed" do
+      it "marks every notification as read" do
         put "/notifications/mark-read.json"
         expect(response.status).to eq(200)
       end
@@ -737,7 +737,7 @@ RSpec.describe NotificationsController do
 
   context "when not logged in" do
     describe "#index" do
-      it "should raise an error" do
+      it "requires authentication" do
         get "/notifications.json", params: { recent: true }
         expect(response.status).to eq(403)
       end

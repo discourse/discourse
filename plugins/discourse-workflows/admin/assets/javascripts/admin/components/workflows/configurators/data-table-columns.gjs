@@ -63,11 +63,11 @@ export default class DataTableColumns extends Component {
         <@form.Object @name={{@fieldName}} as |object|>
           {{#each this.columns key="name" as |column|}}
             <Field
+              @configuration={{this.columnsConfiguration}}
+              @fieldName={{column.name}}
               @form={{object}}
               @formApi={{@formApi}}
-              @fieldName={{column.name}}
               @formApiPath={{concat @fieldName "." column.name}}
-              @configuration={{this.columnsConfiguration}}
               @label={{column.name}}
               @schema={{schemaForColumn column}}
               @session={{@session}}

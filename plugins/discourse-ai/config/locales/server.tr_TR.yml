@@ -93,7 +93,6 @@ tr_TR:
     ai_helper_post_illustrator_agent: "AI yardımcısının \"gönderiyi görselleştir\" özelliği için kullanılacak araç. Not: Bu özelliğin çalışması için ayrıca bir görsel oluşturma aracı oluşturmanız gerekir (Yönetici > Eklentiler > Discourse AI > Araçlar)."
     ai_helper_chat_thread_title_agent: "Sohbet başlıklarını oluşturmak için kullanılacak işleyici."
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
-    ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
     ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Aramayı kullanın."
     ai_embeddings_semantic_related_topics: "İlgili konu bölümünde gösterilecek maksimum konu sayısı."
     ai_embeddings_backfill_batch_size: "Her 15 dakikada bir geri doldurulacak gömme sayısı."
@@ -350,6 +349,25 @@ tr_TR:
       configuration_missing: "YZ spam algılama yapılandırması eksik. Etkinleştirmeden önce \"Yönetici > Eklentiler > Discourse YZ > Spam\" bölümüne yapılandırmayı ekleyin."
       logging_subject: "Spam tespiti"
     ai_bot:
+      navigation:
+        settings:
+          title: "Site ayarları"
+        users:
+          title: "Kullanıcılar"
+        groups:
+          title: "Gruplar"
+        review:
+          title: "Değerlendirme kuyruğu"
+        categories:
+          title: "Kategoriler"
+        tags:
+          title: "Etiketler"
+        themes:
+          title: "Temalar"
+        authentication:
+          title: "Giriş ve kimlik doğrulama"
+        backups:
+          title: "Yedeklemeler"
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"

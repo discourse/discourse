@@ -210,6 +210,27 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("post-edited-trigger")
   end
 
+  it "enqueues post destroyed workflows only when the deletion does not skip them" do
+    post = create_post(category: category)
+    skipped = create_post(category: category)
+    create_published_workflow("post-destroyed-trigger", "trigger:post_destroyed")
+
+    PostDestroyer.new(admin, skipped, skip_workflows: true).destroy
+    PostDestroyer.new(admin, post).destroy
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("post-destroyed-trigger")
+  end
+
+  it "enqueues post recovered workflows from the post recovered event" do
+    post = create_post(category: category)
+    PostDestroyer.new(admin, post).destroy
+    create_published_workflow("post-recovered-trigger", "trigger:post_recovered")
+
+    PostDestroyer.new(admin, post.reload).recover
+
+    expect(enqueued_trigger_node_ids).to include("post-recovered-trigger")
+  end
+
   it "only enqueues reviewable approved workflows matching the reviewable type" do
     create_published_workflow(
       "matching-trigger",

@@ -190,10 +190,10 @@ export default class EditSlowMode extends Component {
 
   <template>
     <DModal
-      @title={{i18n "topic.slow_mode_update.title"}}
       class="edit-slow-mode-modal"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @title={{i18n "topic.slow_mode_update.title"}}
     >
       <:body>
         <div class="control-group">
@@ -208,8 +208,8 @@ export default class EditSlowMode extends Component {
           <ComboBox
             class="slow-mode-type"
             @content={{this.slowModes}}
-            @value={{this.selectedSlowMode}}
             @onChange={{this.setSlowModeDuration}}
+            @value={{this.selectedSlowMode}}
           />
         </div>
         {{#if this.showCustomSelect}}
@@ -217,26 +217,26 @@ export default class EditSlowMode extends Component {
             <label class="slow-mode-label">
               {{i18n "topic.slow_mode_update.hours"}}
             </label>
-            <Input @value={{this.hours}} @type="number" class="input-small" />
+            <Input class="input-small" @type="number" @value={{this.hours}} />
             <label class="slow-mode-label">
               {{i18n "topic.slow_mode_update.minutes"}}
             </label>
-            <Input @value={{this.minutes}} @type="number" class="input-small" />
+            <Input class="input-small" @type="number" @value={{this.minutes}} />
             <label class="slow-mode-label">
               {{i18n "topic.slow_mode_update.seconds"}}
             </label>
-            <Input @value={{this.seconds}} @type="number" class="input-small" />
+            <Input class="input-small" @type="number" @value={{this.seconds}} />
           </div>
         {{/if}}
 
         <div class="control-group">
           <DFutureDateInput
             class="enabled-until"
+            @clearable={{true}}
+            @customShortcuts={{this.timeShortcuts}}
+            @input={{@model.topic.slow_mode_enabled_until}}
             @label="topic.slow_mode_update.enabled_until"
             @labelClasses="slow-mode-label"
-            @customShortcuts={{this.timeShortcuts}}
-            @clearable={{true}}
-            @input={{@model.topic.slow_mode_enabled_until}}
             @onChangeInput={{fn (mut @model.topic.slow_mode_enabled_until)}}
           />
         </div>
@@ -244,10 +244,10 @@ export default class EditSlowMode extends Component {
       <:footer>
         <DButton
           class="btn-primary"
+          @action={{this.enableSlowMode}}
           @disabled={{this.submitDisabled}}
           @icon="hourglass-start"
           @label={{this.saveButtonLabel}}
-          @action={{this.enableSlowMode}}
         />
         {{#if @model.topic.slow_mode_seconds}}
           <DButton

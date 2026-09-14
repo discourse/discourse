@@ -16,6 +16,10 @@ el:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          date: "Ημερομηνία"
+          outcomes:
+            failed: "Απέτυχε"
         reports:
           filters:
             group_by:

@@ -21,8 +21,8 @@ export default class ComboBoxExample extends Component {
   <template>
     <ComboBox
       @content={{OPTIONS}}
-      @value={{this.value}}
       @onChange={{this.onChange}}
+      @value={{this.value}}
     />
   </template>
 }

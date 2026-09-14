@@ -32,10 +32,10 @@ export default class Participant extends Component {
     <span class={{concat "trigger-" @type "-card"}}>
       <a
         class="icon"
-        {{on "click" this.click}}
-        href={{this.url}}
         data-auto-route="true"
+        href={{this.url}}
         title={{@username}}
+        {{on "click" this.click}}
       >
         {{#if (eq @type "user")}}
           {{dBoundAvatarTemplate

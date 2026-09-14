@@ -86,8 +86,8 @@ export default class ShareModal extends Component {
   <template>
     <DModal
       class="ai-share-modal"
-      @title={{i18n "discourse_ai.ai_bot.share_modal.title"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "discourse_ai.ai_bot.share_modal.title"}}
     >
       <:body>
         <div class="ai-share-modal__preview">
@@ -98,9 +98,9 @@ export default class ShareModal extends Component {
       <:footer>
         <div class="ai-share-modal__slider">
           <Input
-            @type="range"
-            min="1"
             max={{this.maxContext}}
+            min="1"
+            @type="range"
             @value={{this.contextValue}}
             {{on "change" this.updateHtmlContext}}
           />
@@ -111,8 +111,8 @@ export default class ShareModal extends Component {
         </div>
         <DButton
           class="btn-primary confirm"
-          @icon="copy"
           @action={{this.copyContext}}
+          @icon="copy"
           @label="discourse_ai.ai_bot.share_modal.copy"
         />
         <span class="ai-share-modal__just-copied">{{this.justCopiedText}}</span>

@@ -98,8 +98,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -152,8 +152,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -200,9 +200,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
           @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -298,9 +298,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
       await render(
         <template>
           <DAccessControl
-            @groups={{GROUPS}}
             @acl={{state.acl}}
             @aclTarget={{aclTarget}}
+            @groups={{GROUPS}}
             @onChange={{state.onChange}}
           />
         </template>
@@ -362,8 +362,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
           @transformPermissionOptions={{transformPermissionOptions}}
         />
@@ -406,8 +406,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -459,8 +459,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -491,8 +491,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -525,8 +525,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -580,9 +580,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
           @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
           @transformPermissionOptions={{transformPermissionOptions}}
         />
@@ -625,8 +625,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -678,8 +678,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -708,9 +708,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
           @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -757,9 +757,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await render(
       <template>
         <DAccessControl
-          @groups={{GROUPS}}
           @acl={{state.acl}}
           @aclTarget={{aclTarget}}
+          @groups={{GROUPS}}
           @onChange={{state.onChange}}
         />
       </template>
@@ -804,11 +804,11 @@ module("Integration | Component | DAccessControlField", function (hooks) {
       <template>
         <Form @data={{this.data}} @onSubmit={{this.onSubmit}} as |form|>
           <DAccessControlField
-            @form={{form}}
-            @title="Access"
             @aclTarget={{aclTarget}}
-            @onChange={{this.onChange}}
+            @form={{form}}
             @onAccessLossConfirmed={{this.onAccessLossConfirmed}}
+            @onChange={{this.onChange}}
+            @title="Access"
           />
           <form.Submit />
         </Form>

@@ -18,13 +18,13 @@ export default class UserFieldMultiselect extends UserFieldBase {
 
     <div class="controls">
       <MultiSelect
-        @id={{concat "user-" this.elementId}}
         @content={{this.field.options}}
-        @valueProperty={{null}}
+        @id={{concat "user-" this.elementId}}
         @nameProperty={{null}}
-        @value={{this.value}}
         @onChange={{fn (mut this.value)}}
         @options={{hash none=this.noneLabel}}
+        @value={{this.value}}
+        @valueProperty={{null}}
       />
       {{#if this.validation.failed}}
         <DInputTip @validation={{this.validation}} />

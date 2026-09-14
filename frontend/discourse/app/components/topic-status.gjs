@@ -33,84 +33,84 @@ export default class TopicStatus extends Component {
       {{~#if @topic.bookmarked~}}
         {{~#if this.canAct~}}
           <a
+            class="topic-status --bookmarked"
             href={{@topic.url}}
             title={{i18n "topic_statuses.bookmarked.help"}}
-            class="topic-status --bookmarked"
           >{{dIcon "bookmark"}}</a>
         {{~else~}}
           <span
-            title={{i18n "topic_statuses.bookmarked.help"}}
             class="topic-status --bookmarked"
+            title={{i18n "topic_statuses.bookmarked.help"}}
           >{{dIcon "bookmark"}}</span>
         {{~/if~}}
       {{~/if~}}
 
       {{~#if (and @topic.closed @topic.archived)~}}
         <span
-          title={{i18n "topic_statuses.locked_and_archived.help"}}
           class="topic-status --closed --archived"
+          title={{i18n "topic_statuses.locked_and_archived.help"}}
         >{{dIcon "topic.closed"}}</span>
       {{~else if @topic.closed~}}
         <span
-          title={{i18n "topic_statuses.locked.help"}}
           class="topic-status --closed"
+          title={{i18n "topic_statuses.locked.help"}}
         >{{dIcon "topic.closed"}}</span>
       {{~else if @topic.archived~}}
         <span
-          title={{i18n "topic_statuses.archived.help"}}
           class="topic-status --archived"
+          title={{i18n "topic_statuses.archived.help"}}
         >{{dIcon "topic.closed"}}</span>
       {{~/if~}}
 
       {{~#if @topic.is_warning~}}
         <span
-          title={{i18n "topic_statuses.warning.help"}}
           class="topic-status --warning topic-status-warning"
+          title={{i18n "topic_statuses.warning.help"}}
         >{{dIcon "envelope"}}</span>
       {{~else if (and @showPrivateMessageIcon @topic.isPrivateMessage)~}}
         <span
-          title={{i18n "topic_statuses.personal_message.help"}}
           class="topic-status --personal-message"
+          title={{i18n "topic_statuses.personal_message.help"}}
         >{{dIcon "envelope"}}</span>
       {{~/if~}}
 
       {{~#if @topic.pinned~}}
         {{~#if this.canAct~}}
           <a
-            {{on "click" this.togglePinned}}
+            class="topic-status --pinned pin-toggle-button"
             href
             title={{i18n "topic_statuses.pinned.help"}}
-            class="topic-status --pinned pin-toggle-button"
+            {{on "click" this.togglePinned}}
           >{{dIcon "thumbtack"}}</a>
         {{~else~}}
           <span
-            title={{i18n "topic_statuses.pinned.help"}}
             class="topic-status --pinned"
+            title={{i18n "topic_statuses.pinned.help"}}
           >{{dIcon "thumbtack"}}</span>
         {{~/if~}}
       {{~else if @topic.unpinned~}}
         {{~#if this.canAct~}}
           <a
-            {{on "click" this.togglePinned}}
+            class="topic-status --unpinned pin-toggle-button"
             href
             title={{i18n "topic_statuses.unpinned.help"}}
-            class="topic-status --unpinned pin-toggle-button"
+            {{on "click" this.togglePinned}}
           >{{dIcon "thumbtack" class="unpinned"}}</a>
         {{~else~}}
           <span
-            title={{i18n "topic_statuses.unpinned.help"}}
             class="topic-status --unpinned"
+            title={{i18n "topic_statuses.unpinned.help"}}
           >{{dIcon "thumbtack" class="unpinned"}}</span>
         {{~/if~}}
       {{~/if~}}
 
       {{~#if @topic.invisible~}}
         <span
+          class="topic-status --invisible"
           title={{i18n
             "topic_statuses.unlisted.help"
             unlistedReason=@topic.visibilityReasonTranslated
           }}
-          class="topic-status --invisible"
         >{{dIcon "far-eye-slash"}}</span>
       {{~/if~}}
       <PluginOutlet

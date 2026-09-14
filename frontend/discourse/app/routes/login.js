@@ -20,6 +20,22 @@ export default class extends DiscourseRoute {
   beforeModel(transition) {
     const { from, wantsTo } = transition;
     const { currentUser, dialog, router } = this;
+
+    if (currentUser) {
+      const { redirect } = transition.to.queryParams;
+      if (redirect) {
+        transition.abort();
+        // Keep redirect validation on the server.
+        DiscourseURL.redirectTo(
+          getURL(`/login?redirect=${encodeURIComponent(redirect)}`)
+        );
+        return;
+      }
+
+      router.replaceWith("/").followRedirects();
+      return;
+    }
+
     const { isReadOnly, isStaffWritesOnly } = this.site;
     const { isAppWebview } = this.capabilities;
     const { auth_immediately, enable_discourse_connect, login_required } =
@@ -56,12 +72,10 @@ export default class extends DiscourseRoute {
     }
 
     // Automatically store the current URL (aka. the one **before** the transition)
-    if (!currentUser) {
-      if (isValidDestinationUrl(url)) {
-        cookie("destination_url", url + query);
-      } else if (DiscourseURL.isInternalTopic(referrer)) {
-        cookie("destination_url", referrer);
-      }
+    if (isValidDestinationUrl(url)) {
+      cookie("destination_url", url + query);
+    } else if (DiscourseURL.isInternalTopic(referrer)) {
+      cookie("destination_url", referrer);
     }
 
     // Automatically kick off the external login if it's the only one available

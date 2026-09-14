@@ -64,8 +64,8 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       </div>
       {{#if (and this.item.showUserStatus this.item.status)}}
         <DUserStatusMessage
-          @status={{this.item.status}}
           @showDescription={{true}}
+          @status={{this.item.status}}
         />
       {{/if}}
       {{decorateUsernameSelector this.item.id}}

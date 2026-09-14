@@ -28,9 +28,9 @@ export default class DCustomHtml extends Component {
 
   <template>
     <div
+      ...attributes
       {{didInsert this.didInsertElement}}
       {{willDestroy this.willDestroyElement}}
-      ...attributes
     >
       {{this.html}}
     </div>

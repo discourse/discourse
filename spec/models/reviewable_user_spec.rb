@@ -7,6 +7,7 @@ RSpec.describe ReviewableUser, type: :model do
     user.activate
     user
   end
+
   fab!(:admin)
 
   describe "#actions_for" do
@@ -110,12 +111,16 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:delete_user_block)).to eq(false)
     end
 
-    it "still allows approving in the rejected state" do
+    it "doesn't return anything in the rejected state while the user is still unapproved" do
       reviewable.status = Reviewable.statuses[:rejected]
       actions = reviewable.actions_for(Guardian.new(moderator))
-      expect(actions.has?(:approve_user)).to eq(true)
-      expect(actions.has?(:delete_user)).to eq(false)
-      expect(actions.has?(:delete_user_block)).to eq(false)
+      expect(actions.bundles).to be_empty
+    end
+
+    it "returns only the approve action in the rejected state when reviewed items are allowed" do
+      reviewable.status = Reviewable.statuses[:rejected]
+      actions = reviewable.actions_for(Guardian.new(moderator), allow_reviewed: true)
+      expect(actions.bundles.flat_map(&:actions).map(&:server_action)).to eq(["approve_user"])
     end
 
     it "doesn't ask for a rejection reason when deleting a user who was flagged as a possible spammer" do
@@ -229,7 +234,7 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   context "when a user is deleted" do
-    it "should reject the reviewable" do
+    it "rejects the reviewable" do
       SiteSetting.must_approve_users = true
       Jobs::CreateUserReviewable.new.execute(user_id: user.id)
       reviewable = Reviewable.find_by(target: user)
@@ -285,6 +290,12 @@ RSpec.describe ReviewableUser, type: :model do
 
         expect(reviewable.actions_for(Guardian.new(moderator)).has?(:remove_avatar)).to eq(false)
       end
+
+      it "is set apart from the approve and reject answers" do
+        secondary_bundles = reviewable.actions_for(moderator.guardian).bundles.select(&:secondary)
+
+        expect(secondary_bundles.flat_map(&:actions).map(&:server_action)).to eq(["remove_avatar"])
+      end
     end
 
     context "when approving" do
@@ -318,7 +329,7 @@ RSpec.describe ReviewableUser, type: :model do
           )
         reviewable.update!(status: Reviewable.statuses[:rejected])
 
-        reviewable.perform(moderator, :approve_user)
+        reviewable.perform(moderator, :approve_user, allow_reviewed: true)
 
         expect(reviewable.reload).to be_approved
         expect(score.reload.status).to eq("agreed")
@@ -458,7 +469,7 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   describe "changing must_approve_users" do
-    it "will approve any existing users" do
+    it "approves existing users" do
       user = Fabricate(:user)
       expect(user).not_to be_approved
       SiteSetting.must_approve_users = true

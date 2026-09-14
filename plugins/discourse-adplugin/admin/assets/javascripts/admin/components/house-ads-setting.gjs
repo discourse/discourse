@@ -78,7 +78,7 @@ export default class HouseAdsSetting extends Component {
   <template>
     <div class="house-ads-setting" ...attributes>
       <label for={{this.name}}>{{this.title}}</label>
-      <DTextField @value={{this.adValue}} @classNames="house-ads-text-input" />
+      <DTextField @classNames="house-ads-text-input" @value={{this.adValue}} />
       <div class="setting-controls">
         {{#if this.changed}}
           <DButton class="ok" @action={{this.save}} @icon="check" />

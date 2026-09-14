@@ -26,6 +26,9 @@ lv:
         year: "Gada"
     group_timezones:
       search: "Meklēt..."
+    discourse_workflows:
+      post_event:
+        topic_id: "Tēmas ID"
     discourse_post_event:
       bulk_invite_modal:
         success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."

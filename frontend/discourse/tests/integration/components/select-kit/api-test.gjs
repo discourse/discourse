@@ -40,14 +40,14 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
         <SingleSelect
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -80,14 +80,14 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
         <SingleSelect
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -117,9 +117,9 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
       <template>
         <div id="test"></div>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -148,9 +148,9 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );
@@ -181,14 +181,14 @@ module("Integration | Component | SelectKit | Api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
         <SingleSelect
-          @value={{this.value}}
           @content={{this.content}}
           @onChange={{this.onChange}}
+          @value={{this.value}}
         />
       </template>
     );

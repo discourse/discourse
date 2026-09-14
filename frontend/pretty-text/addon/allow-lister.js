@@ -36,6 +36,24 @@ export default class AllowLister {
     this._cache = null;
   }
 
+  getAllowList() {
+    this._ensureCache();
+    return this._cache.allowList;
+  }
+
+  getCustom() {
+    this._ensureCache();
+    return this._cache.custom;
+  }
+
+  getAllowedHrefSchemes() {
+    return this._allowedHrefSchemes;
+  }
+
+  getAllowedIframes() {
+    return this._allowedIframes;
+  }
+
   _buildCache() {
     const tagList = {};
     const attrList = {};
@@ -89,24 +107,6 @@ export default class AllowLister {
     if (!this._cache) {
       this._buildCache();
     }
-  }
-
-  getAllowList() {
-    this._ensureCache();
-    return this._cache.allowList;
-  }
-
-  getCustom() {
-    this._ensureCache();
-    return this._cache.custom;
-  }
-
-  getAllowedHrefSchemes() {
-    return this._allowedHrefSchemes;
-  }
-
-  getAllowedIframes() {
-    return this._allowedIframes;
   }
 }
 

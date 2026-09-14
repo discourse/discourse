@@ -15,24 +15,43 @@ if ENV["COVERAGE"]
 end
 
 require "rubygems"
-require "rbtrace" if RUBY_ENGINE == "ruby"
-require "pry"
-require "pry-rails"
+require "rbtrace" if RUBY_ENGINE == "ruby" && ENV["RBTRACE"] == "1"
 require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
+require "rspec-html-matchers"
+require "rspec-multi-mock"
 
 require_relative "support/server_error_tracking"
 
 ENV["RAILS_ENV"] ||= "test"
+ENV["RACK_ENV"] ||= "test"
 ENV["ENABLE_LOGSTASH_LOGGER"] ||= "1"
 require File.expand_path("../../config/environment", __FILE__)
 Discourse.singleton_class.prepend(RspecWarnExceptionCapture)
-require "rspec/rails"
+
+spec_files = RSpec.configuration.files_to_run
+system_specs_requested = spec_files.any? { |file| file.match?(%r{(^|/)spec/system/}) }
+request_specs_requested = spec_files.any? { |file| file.match?(%r{(^|/)spec/requests/}) }
+
+if system_specs_requested || request_specs_requested
+  require "rspec/rails"
+else
+  capybara_path = Gem::Specification.find_by_name("capybara").full_gem_path
+  skipped_capybara_features =
+    %w[capybara/rspec.rb capybara/rails.rb].map { |file| File.join(capybara_path, "lib", file) }
+  skipped_capybara_features.reject! { |feature| $LOADED_FEATURES.include?(feature) }
+  $LOADED_FEATURES.concat(skipped_capybara_features)
+  begin
+    require "rspec/rails"
+  ensure
+    skipped_capybara_features.each { |feature| $LOADED_FEATURES.delete(feature) }
+  end
+end
+
 require "shoulda-matchers"
 require "sidekiq/testing"
-require "capybara/rails"
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
@@ -46,26 +65,48 @@ end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+system_support_files = [
+  Rails.root.join("spec/support/system_helpers.rb").to_s,
+  Rails.root.join("spec/support/theme_screenshot_marker.rb").to_s,
+  *Dir[Rails.root.join("spec/support/system/**/*.rb")],
+]
+
+lazy_support_files = {
+  DiscourseConnectHelpers:
+    Rails.root.join("spec/support/discourse_connect_support_helpers.rb").to_s,
+  FakeS3: Rails.root.join("spec/support/fake_s3.rb").to_s,
+  ImageOrientationHelpers: Rails.root.join("spec/support/image_orientation_helpers.rb").to_s,
+}
+lazy_support_files.each { |constant, file| Object.autoload(constant, file) }
+
+(
+  Dir[Rails.root.join("spec/support/**/*.rb")] - system_support_files - lazy_support_files.values
+).each { |f| require f }
 Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
-Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
+if system_specs_requested
+  require "capybara-playwright-driver"
+  system_support_files.each { |f| require f }
+  Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
+  Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
+  Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require f }
+  Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
+end
 
-Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
 require_relative "helpers/redis_snapshot_helper"
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV["LOAD_PLUGINS"] == "1"
+  Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
   Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each { |f| require f }
 
   Dir[Rails.root.join("plugins/*/spec/support/**/*.rb")].sort.each { |f| require f }
 
   Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each { |f| require f }
 
-  Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
+  if system_specs_requested
+    Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
+  end
 end
 
 RSpec.configure do |config|
@@ -83,8 +124,10 @@ RSpec.configure do |config|
   config.include MessageBus
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
-  config.include SystemHelpers, type: :system
-  config.include ThemeScreenshotMarker, type: :system
+  if system_specs_requested
+    config.include SystemHelpers, type: :system
+    config.include ThemeScreenshotMarker, type: :system
+  end
   config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
@@ -148,13 +191,17 @@ RSpec.configure do |config|
     # Rebase the seeded DB settings as defaults, then swap in the in-memory provider.
     TestLocalProcessProvider.install!
 
+    s3_system_test_urls = []
+    if ENV["S3_SYSTEM_TEST_ENDPOINT"].present?
+      s3_endpoint = URI(ENV.fetch("S3_SYSTEM_TEST_ENDPOINT"))
+      s3_bucket_endpoint = s3_endpoint.dup
+      s3_bucket_endpoint.host = "#{ENV.fetch("S3_SYSTEM_TEST_BUCKET")}.#{s3_endpoint.host}"
+      s3_system_test_urls = [s3_endpoint.to_s, s3_bucket_endpoint.to_s]
+    end
+
     WebMock.disable_net_connect!(
       allow_localhost: true,
-      allow: [
-        *MinioRunner.config.minio_urls,
-        URI(MinioRunner::MinioBinary.platform_binary_url).host,
-        ENV["CAPYBARA_REMOTE_DRIVER_URL"],
-      ].compact,
+      allow: [*s3_system_test_urls, ENV["CAPYBARA_REMOTE_DRIVER_URL"]].compact,
     )
 
     # Registering this from inside before(:suite) makes it run at the end of the
@@ -171,7 +218,7 @@ RSpec.configure do |config|
     SiteIconManager.clear_cache!
   end
 
-  config.after(:suite) { Downloads.clear }
+  config.after(:suite) { Downloads.clear } if system_specs_requested
 
   config.before(:each) { TestSetup.test_setup }
 

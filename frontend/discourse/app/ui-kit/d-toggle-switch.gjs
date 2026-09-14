@@ -14,10 +14,10 @@ export default class DToggleSwitch extends Component {
     <div class="d-toggle-switch">
       <label class="d-toggle-switch__label">
         <button
-          class="d-toggle-switch__checkbox"
-          type="button"
-          role="switch"
           aria-checked={{if @state "true" "false"}}
+          class="d-toggle-switch__checkbox"
+          role="switch"
+          type="button"
           ...attributes
         ></button>
 

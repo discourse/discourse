@@ -27,6 +27,18 @@ export const CHAT_ATTRS = [
   "chat_quick_reactions_custom",
 ];
 
+export const CHAT_CHANNEL_LIST_FILTERS = Object.freeze({
+  ALL: "all",
+  ACTIVE: "active",
+  UNREAD: "unread",
+  MENTIONS: "mentions",
+});
+export const CHAT_CHANNEL_LIST_SORTS = Object.freeze({
+  ALPHABETICAL: "alphabetical",
+  RECENT_ACTIVITY: "recent_activity",
+  PRIORITY: "priority",
+});
+export const CHAT_CHANNEL_LIST_ACTIVE_DAYS = 30;
 export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";

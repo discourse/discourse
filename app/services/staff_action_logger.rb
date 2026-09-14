@@ -1169,6 +1169,18 @@ class StaffActionLogger
     )
   end
 
+  def log_group_creation(group)
+    raise Discourse::InvalidParameters.new(:group) if group.nil?
+
+    details = ["name: #{group.name}", "full_name: #{group.full_name}", "id: #{group.id}"]
+
+    UserHistory.create!(
+      acting_user_id: @admin.id,
+      action: UserHistory.actions[:create_group],
+      details: details.join(", "),
+    )
+  end
+
   def log_permanently_delete_post_revisions(post)
     raise Discourse::InvalidParameters.new(:post) if post.nil?
 

@@ -7,6 +7,10 @@
 ug:
   js:
     boards:
+      status:
+        all: "ھەممىسى"
+        open: "ئاچ"
+        archived: "ئارخىپلاشتۇرۇلغان"
       board:
         remove_card: "چىقىرىۋەت"
         new_topic: "يېڭى تېما..."

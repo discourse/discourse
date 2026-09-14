@@ -21,15 +21,15 @@ export default class Button extends Component {
 
   <template>
     <DButton
-      @isLoading={{this.interacting}}
-      @icon={{@definition.icon}}
-      @translatedLabel={{dReplaceEmoji @definition.text.text}}
-      @action={{this.createInteraction}}
-      id={{@definition.action_id}}
       class={{dConcatClass
         "block__button"
         (if @definition.style (concat "btn-" @definition.style))
       }}
+      id={{@definition.action_id}}
+      @action={{this.createInteraction}}
+      @icon={{@definition.icon}}
+      @isLoading={{this.interacting}}
+      @translatedLabel={{dReplaceEmoji @definition.text.text}}
     />
   </template>
 }

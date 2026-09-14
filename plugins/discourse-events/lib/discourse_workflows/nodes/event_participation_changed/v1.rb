@@ -19,10 +19,7 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.discourse_post_event_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_post_event",
             output_contracts: [
-              {
-                schema:
-                  DiscourseEvents::Events::Workflows::Schema::EVENT_PARTICIPATION_CHANGED_OUTPUT_SCHEMA,
-              },
+              { schema: PostEventSchema::EVENT_PARTICIPATION_CHANGED_OUTPUT_SCHEMA },
             ],
             properties: PostEventScoping::SCOPE_PROPERTIES,
             i18n_scope: PostEventScoping::I18N_SCOPE,

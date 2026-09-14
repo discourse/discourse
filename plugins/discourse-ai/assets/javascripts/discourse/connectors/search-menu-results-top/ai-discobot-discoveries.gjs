@@ -36,14 +36,14 @@ export default class AiDiscobotDiscoveries extends Component {
     {{! rendered from here rather than its own connector so the options always
         lead the answer, whatever order connectors resolve in }}
     <AiDiscoveriesSearchOptions
+      @clearPMInboxContext={{@outletArgs.clearPMInboxContext}}
+      @clearTopicContext={{@outletArgs.clearTopicContext}}
+      @inPMInboxContext={{@outletArgs.inPMInboxContext}}
+      @openAdvancedSearch={{@outletArgs.openAdvancedSearch}}
+      @searchTermChanged={{@outletArgs.searchTermChanged}}
+      @searchTopics={{@outletArgs.searchTopics}}
       @triggerSearch={{@outletArgs.triggerSearch}}
       @updateTypeFilter={{@outletArgs.updateTypeFilter}}
-      @searchTermChanged={{@outletArgs.searchTermChanged}}
-      @clearTopicContext={{@outletArgs.clearTopicContext}}
-      @searchTopics={{@outletArgs.searchTopics}}
-      @openAdvancedSearch={{@outletArgs.openAdvancedSearch}}
-      @inPMInboxContext={{@outletArgs.inPMInboxContext}}
-      @clearPMInboxContext={{@outletArgs.clearPMInboxContext}}
     />
 
     {{#if this.shouldShow}}
@@ -56,8 +56,8 @@ export default class AiDiscobotDiscoveries extends Component {
         }}
       >
         <AiSearchDiscoveries
-          @searchTerm={{@outletArgs.searchTerm}}
           @closeSearchMenu={{@outletArgs.closeSearchMenu}}
+          @searchTerm={{@outletArgs.searchTerm}}
           @showHeading={{true}}
           @showSources={{true}}
           @triggerOnInsert={{false}}

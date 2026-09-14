@@ -23,7 +23,7 @@ export default class HelpResources extends Component {
             <span class="review-resources__icon">
               {{dIcon "book"}}
             </span>
-            <a href={{this.moderatorGuideUrl}} class="review-resources__link">
+            <a class="review-resources__link" href={{this.moderatorGuideUrl}}>
               {{i18n "review.help.community_moderation_guide"}}
             </a>
           </li>
@@ -33,8 +33,8 @@ export default class HelpResources extends Component {
             {{dIcon "book"}}
           </span>
           <a
-            href="https://meta.discourse.org/t/-/63116"
             class="review-resources__link"
+            href="https://meta.discourse.org/t/-/63116"
           >
             {{i18n "review.help.moderation_guide"}}
           </a>
@@ -44,8 +44,8 @@ export default class HelpResources extends Component {
             {{dIcon "book"}}
           </span>
           <a
-            href="https://meta.discourse.org/t/-/123464"
             class="review-resources__link"
+            href="https://meta.discourse.org/t/-/123464"
           >
             {{i18n "review.help.flag_priorities"}}
           </a>
@@ -55,8 +55,8 @@ export default class HelpResources extends Component {
             {{dIcon "book"}}
           </span>
           <a
-            href="https://meta.discourse.org/t/-/343541"
             class="review-resources__link"
+            href="https://meta.discourse.org/t/-/343541"
           >
             {{i18n "review.help.spam_detection"}}
           </a>

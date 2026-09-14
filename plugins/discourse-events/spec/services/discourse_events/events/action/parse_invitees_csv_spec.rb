@@ -40,6 +40,16 @@ RSpec.describe(DiscourseEvents::Events::Action::ParseInviteesCsv) do
       end
     end
 
+    context "when the file has more rows than the maximum number of bulk invitees" do
+      let(:file) { csv_file("a,going\nb,going\nc,going\n") }
+
+      before { SiteSetting.discourse_post_event_max_bulk_invitees = 2 }
+
+      it "stops parsing at the maximum" do
+        expect(result.size).to eq(2)
+      end
+    end
+
     context "when the file is malformed" do
       let(:file) { csv_file("alice,\"unterminated") }
 

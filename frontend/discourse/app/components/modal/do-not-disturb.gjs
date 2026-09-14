@@ -33,42 +33,42 @@ export default class DoNotDisturb extends Component {
 
   <template>
     <DModal
-      @title={{i18n "pause_notifications.title"}}
+      class="do-not-disturb-modal"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
-      class="do-not-disturb-modal"
+      @title={{i18n "pause_notifications.title"}}
     >
       <:body>
         <DTapTileGrid as |grid|>
           <DTapTile
-            @tileId="30"
+            class="do-not-disturb-tile"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
-            class="do-not-disturb-tile"
+            @tileId="30"
           >
             {{i18n "pause_notifications.options.half_hour"}}
           </DTapTile>
           <DTapTile
-            @tileId="60"
+            class="do-not-disturb-tile"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
-            class="do-not-disturb-tile"
+            @tileId="60"
           >
             {{i18n "pause_notifications.options.one_hour"}}
           </DTapTile>
           <DTapTile
-            @tileId="120"
+            class="do-not-disturb-tile"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
-            class="do-not-disturb-tile"
+            @tileId="120"
           >
             {{i18n "pause_notifications.options.two_hours"}}
           </DTapTile>
           <DTapTile
-            @tileId="tomorrow"
+            class="do-not-disturb-tile"
             @activeTile={{grid.activeTile}}
             @onChange={{this.saveDuration}}
-            class="do-not-disturb-tile"
+            @tileId="tomorrow"
           >
             {{i18n "pause_notifications.options.tomorrow"}}
           </DTapTile>

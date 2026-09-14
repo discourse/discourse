@@ -11,6 +11,27 @@ RSpec.describe UserSerializer do
     end
   end
 
+  describe "#chat_channel_list_preferences" do
+    it "includes default values" do
+      expect(serializer.as_json[:user_option]).to include(
+        chat_channel_list_filter: "all",
+        chat_channel_list_sort: "alphabetical",
+      )
+    end
+
+    it "includes changed values" do
+      user.user_option.update!(
+        chat_channel_list_filter: "mentions",
+        chat_channel_list_sort: "priority",
+      )
+
+      expect(serializer.as_json[:user_option]).to include(
+        chat_channel_list_filter: "mentions",
+        chat_channel_list_sort: "priority",
+      )
+    end
+  end
+
   describe "#chat_quick_reaction_type" do
     it "is present with default enum string" do
       expect(serializer.as_json[:user_option][:chat_quick_reaction_type]).to eq("frequent")

@@ -37,6 +37,7 @@ module Migrations
             def self.current_db_override=(value)
               @current_db_override = value
             end
+
             def self.current_db
               @current_db_override
             end

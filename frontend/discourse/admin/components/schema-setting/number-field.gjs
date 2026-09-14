@@ -15,28 +15,6 @@ export default class SchemaSettingNumberField extends Component {
   max = this.args.spec.validations?.max;
   required = this.args.spec.required;
 
-  @action
-  onInput(event) {
-    this.touched = true;
-    let inputValue = event.currentTarget.value;
-
-    if (isNaN(inputValue)) {
-      this.value = null;
-    } else {
-      this.value = this.parseValue(inputValue);
-    }
-
-    this.args.onChange(this.value);
-  }
-
-  /**
-   * @param {string} value - The value of the input field to parse into a number
-   * @returns {number}
-   */
-  parseFunc() {
-    throw "Not implemented";
-  }
-
   get validationErrorMessage() {
     if (!this.touched) {
       return;
@@ -63,17 +41,39 @@ export default class SchemaSettingNumberField extends Component {
     }
   }
 
+  @action
+  onInput(event) {
+    this.touched = true;
+    let inputValue = event.currentTarget.value;
+
+    if (isNaN(inputValue)) {
+      this.value = null;
+    } else {
+      this.value = this.parseValue(inputValue);
+    }
+
+    this.args.onChange(this.value);
+  }
+
+  /**
+   * @param {string} value - The value of the input field to parse into a number
+   * @returns {number}
+   */
+  parseFunc() {
+    throw "Not implemented";
+  }
+
   <template>
     <Input
-      @value={{this.value}}
-      {{on "input" this.onInput}}
-      @type="number"
       inputmode={{this.inputmode}}
-      pattern={{this.pattern}}
-      step={{this.step}}
       max={{this.max}}
       min={{this.min}}
+      pattern={{this.pattern}}
       required={{this.required}}
+      step={{this.step}}
+      @type="number"
+      @value={{this.value}}
+      {{on "input" this.onInput}}
     />
 
     <div class="schema-field__input-supporting-text">

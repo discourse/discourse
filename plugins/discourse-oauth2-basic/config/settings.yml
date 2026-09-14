@@ -2,6 +2,7 @@ login:
   oauth2_enabled:
     default: false
     client: true
+    validator: "AuthProviderCredentialsValidator"
     area: "oauth2"
   oauth2_client_id:
     default: ""

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  before_action :ensure_can_search, only: %i[show query]
   before_action :block_crawler, only: :show
   before_action :cancel_overloaded_search, only: [:query]
   skip_before_action :check_xhr, only: :show
@@ -165,6 +166,16 @@ class SearchController < ApplicationController
   end
 
   protected
+
+  def ensure_can_search
+    return if guardian.can_search?
+
+    if request.format.html?
+      redirect_to_login
+    else
+      ensure_logged_in
+    end
+  end
 
   def pageview_session_id
     request.headers["HTTP_DISCOURSE_PAGEVIEW_SESSION_ID"]

@@ -88,7 +88,7 @@
 #                                 are allowed based on authorized_extensions setting.
 #                               - max_file_size_kb: maximum file size in KB. If not specified,
 #                                 uses max_image_size_kb or max_attachment_size_kb.
-# type: group                 - A single group ID.
+# type: group                 - A single group ID. A name is converted to its ID on write.
 # type: group_list            - A list of group IDs.
 # type: tag_list              - A list of tag names.
 # type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
@@ -694,7 +694,7 @@ login:
       - enable_local_logins
       - enable_local_logins_via_email
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
       permanent_warning: false
@@ -757,6 +757,7 @@ login:
     hidden: true
   enable_google_oauth2_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   google_oauth2_client_id:
     default: ""
@@ -794,6 +795,7 @@ login:
     area: "authenticators"
   enable_twitter_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   twitter_consumer_key:
     default: ""
@@ -806,6 +808,7 @@ login:
     area: "authenticators"
   enable_facebook_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   facebook_app_id:
     client: true
@@ -819,6 +822,7 @@ login:
     area: "authenticators"
   enable_github_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   github_client_id:
     default: ""
@@ -831,6 +835,7 @@ login:
     area: "authenticators"
   enable_discord_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   discord_client_id:
     default: ""
@@ -846,7 +851,7 @@ login:
     area: "authenticators"
   enable_linkedin_oidc_logins:
     default: false
-    validator: "LinkedinOidcCredentialsValidator"
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   linkedin_oidc_client_id:
     default: ""
@@ -3729,6 +3734,9 @@ legal:
     area: "legal"
 
 backups:
+  site_archived:
+    default: false
+    client: true
   enable_backups:
     default: true
     client: true
@@ -3806,6 +3814,9 @@ search:
       zh_TW: 1
       ko: 1
       ja: 1
+  allow_anonymous_search:
+    default: true
+    refresh: true
   search_tokenize_chinese:
     default: false
     validator: "SearchTokenizeChineseValidator"
@@ -4475,6 +4486,73 @@ user_preferences:
     default: false
     area: "categories_and_tags|user_defaults"
 
+mcp:
+  mcp_server_enabled:
+    default: false
+    client: true
+    area: "mcp"
+    requires_confirmation: simple_on_enable
+  mcp_server_instructions:
+    default: ""
+    textarea: true
+    area: "mcp"
+  mcp_cache_ttl_ms:
+    default: 300000
+    min: 0
+    max: 86400000
+    area: "mcp"
+  mcp_oauth_client_id_metadata_policy:
+    type: enum
+    default: "any_domain"
+    enum: "McpOauthClientIdMetadataPolicy"
+    area: "mcp"
+  mcp_oauth_client_id_metadata_domains:
+    type: host_list
+    default: ""
+    area: "mcp"
+    depends_on:
+      - mcp_oauth_client_id_metadata_policy
+    depends_on_values:
+      mcp_oauth_client_id_metadata_policy:
+        - approved_domains
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
+  mcp_access_token_lifetime_minutes:
+    default: 60
+    min: 5
+    max: 1440
+    area: "mcp"
+  mcp_refresh_token_lifetime_days:
+    default: 30
+    min: 1
+    max: 365
+    area: "mcp"
+  mcp_authorization_code_lifetime_seconds:
+    default: 300
+    min: 60
+    max: 600
+    area: "mcp"
+  mcp_global_rate_limit_per_minute:
+    default: 120
+    min: 10
+    max: 10000
+    area: "mcp"
+  mcp_audit_log_retention_days:
+    default: 90
+    min: 1
+    max: 3650
+    area: "mcp"
+  mcp_max_request_bytes:
+    default: 1048576
+    min: 16384
+    max: 5242880
+    hidden: true
+  mcp_max_response_bytes:
+    default: 5242880
+    min: 16384
+    max: 10485760
+    hidden: true
+
 api:
   retain_web_hook_events_period_days:
     default: 30
@@ -4898,7 +4976,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/407727"
   update_pending_users_reminder_default:

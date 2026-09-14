@@ -8,9 +8,9 @@ import { i18n } from "discourse-i18n";
 const CreateInviteBulk = <template>
   <CreateInviteUploader @autoFindInput={{false}} as |uploader setElement|>
     <DModal
-      @title={{i18n "user.invited.bulk_invite.text"}}
       class="create-invite-bulk-modal --large"
       @closeModal={{@closeModal}}
+      @title={{i18n "user.invited.bulk_invite.text"}}
     >
       <:body>
         {{#if uploader.uploaded}}
@@ -18,10 +18,10 @@ const CreateInviteBulk = <template>
         {{else}}
           {{trustHTML (i18n "user.invited.bulk_invite.instructions")}}
           <input
-            id="csv-file"
-            disabled={{uploader.uploading}}
-            type="file"
             accept=".csv"
+            disabled={{uploader.uploading}}
+            id="csv-file"
+            type="file"
             {{didInsert setElement}}
           />
         {{/if}}
@@ -29,6 +29,9 @@ const CreateInviteBulk = <template>
       <:footer>
         {{#unless uploader.uploaded}}
           <DButton
+            class="btn-primary"
+            @action={{uploader.startUpload}}
+            @disabled={{uploader.submitDisabled}}
             @icon="link"
             @translatedLabel={{if
               uploader.uploading
@@ -38,12 +41,9 @@ const CreateInviteBulk = <template>
               )
               (i18n "user.invited.bulk_invite.text")
             }}
-            class="btn-primary"
-            @action={{uploader.startUpload}}
-            @disabled={{uploader.submitDisabled}}
           />
         {{/unless}}
-        <DButton @label="close" class="btn-primary" @action={{@closeModal}} />
+        <DButton class="btn-primary" @action={{@closeModal}} @label="close" />
       </:footer>
     </DModal>
   </CreateInviteUploader>

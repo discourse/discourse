@@ -153,13 +153,13 @@ export default class IpLookup extends Component {
 
   <template>
     <DMenu
-      @identifier="ip-lookup"
-      @label={{i18n "admin.user.ip_lookup"}}
       @icon="globe"
-      @onShow={{this.lookup}}
+      @identifier="ip-lookup"
+      @isLoading={{this.loading}}
+      @label={{i18n "admin.user.ip_lookup"}}
       @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
-      @isLoading={{this.loading}}
+      @onShow={{this.lookup}}
       @triggerClass="btn-default"
     >
       <:content>
@@ -169,15 +169,15 @@ export default class IpLookup extends Component {
               {{i18n "ip_lookup.title"}}
               <div class="location-box__controls">
                 <DButton
+                  class="btn-transparent"
                   @action={{this.copy}}
                   @icon="copy"
-                  class="btn-transparent"
                 />
                 {{#if this.site.mobileView}}
                   <DButton
+                    class="btn-transparent"
                     @action={{this.close}}
                     @icon="xmark"
-                    class="btn-transparent"
                   />
                 {{/if}}
 
@@ -223,20 +223,20 @@ export default class IpLookup extends Component {
                 </span>
                 {{#if this.otherAccounts}}
                   <DButton
+                    class="btn-danger pull-right"
                     @action={{this.deleteOtherAccounts}}
                     @icon="triangle-exclamation"
                     @translatedLabel={{i18n
                       "ip_lookup.delete_other_accounts"
                       count=this.otherAccountsToDelete
                     }}
-                    class="btn-danger pull-right"
                   />
                 {{/if}}
               </dt>
 
               <DConditionalLoadingSpinner
-                @size="small"
                 @condition={{this.otherAccountsLoading}}
+                @size="small"
               >
                 {{#if this.otherAccounts}}
                   <dd class="other-accounts">

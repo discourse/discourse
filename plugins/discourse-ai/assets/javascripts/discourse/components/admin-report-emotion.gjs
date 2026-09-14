@@ -41,8 +41,8 @@ export default class AdminReportEmotion extends Component {
 
   <template>
     <div
-      title={{this.model.description}}
       class="admin-report-counters"
+      title={{this.model.description}}
       ...attributes
     >
       <div class="cell title">

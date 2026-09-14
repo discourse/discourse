@@ -6,7 +6,9 @@ module SvgSprite
         a
         address-book
         address-card
+        align-center
         align-left
+        align-right
         anchor
         angle-down
         angle-left
@@ -418,6 +420,7 @@ module SvgSprite
         .new()
         .merge(settings_icons)
         .merge(plugin_icons)
+        .merge(plugin_icon_sources)
         .merge(badge_icons)
         .merge(group_icons)
         .merge(theme_icons(theme_id))
@@ -556,6 +559,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 
   def self.plugin_icons
     DiscoursePluginRegistry.svg_icons
+  end
+
+  def self.plugin_icon_sources
+    DiscoursePluginRegistry.svg_icon_sources.flat_map { |source| Array(source.call) }
   end
 
   def self.badge_icons

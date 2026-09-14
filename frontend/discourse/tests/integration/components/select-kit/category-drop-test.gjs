@@ -44,7 +44,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
   test("caretUpIcon", async function (assert) {
     await render(
       <template>
-        <CategoryDrop @category={{this.value}} @categories={{this.content}} />
+        <CategoryDrop @categories={{this.content}} @category={{this.value}} />
       </template>
     );
 
@@ -56,7 +56,7 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
   test("none", async function (assert) {
     await render(
       <template>
-        <CategoryDrop @category={{this.value}} @categories={{this.content}} />
+        <CategoryDrop @categories={{this.content}} @category={{this.value}} />
       </template>
     );
 
@@ -77,8 +77,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -101,8 +101,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -125,8 +125,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -146,8 +146,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -166,10 +166,10 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash hideParentCategory=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -194,8 +194,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -215,8 +215,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -235,8 +235,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -258,10 +258,10 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash countSubcategories=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -283,8 +283,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -305,8 +305,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>
@@ -323,10 +323,10 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash subCategory=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -343,10 +343,10 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
-          @parentCategory={{this.parentCategory}}
+          @category={{this.category}}
           @options={{hash subCategory=true}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -364,8 +364,8 @@ module("Integration | Component | SelectKit | CategoryDrop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{this.category}}
           @categories={{this.categories}}
+          @category={{this.category}}
           @parentCategory={{this.parentCategory}}
         />
       </template>

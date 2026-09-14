@@ -27,29 +27,29 @@ export default class AdminFontChooser extends Component {
   <template>
     {{#each MAIN_FONTS as |font|}}
       <DButton
-        @action={{fn this.setButtonValue @field.set font.key}}
         class={{dConcatClass
           "admin-fonts-form__button-option font btn-flat"
           (concat "body-font-" (dasherize font.key))
           (if (eq @selectedFont font.key) "active")
         }}
+        @action={{fn this.setButtonValue @field.set font.key}}
       >{{font.name}}</DButton>
     {{/each}}
     {{#if this.showMoreFonts}}
       {{#each MORE_FONTS as |font|}}
         <DButton
-          @action={{fn this.setButtonValue @field.set font.key}}
           class={{dConcatClass
             "admin-fonts-form__button-option font btn-flat"
             (concat "body-font-" (dasherize font.key))
             (if (eq @selectedFont font.key) "active")
           }}
+          @action={{fn this.setButtonValue @field.set font.key}}
         >{{font.name}}</DButton>
       {{/each}}
     {{/if}}
     <DButton
-      @action={{this.toggleMoreFonts}}
       class="btn-default admin-fonts-form__more"
+      @action={{this.toggleMoreFonts}}
     >
       {{#if this.showMoreFonts}}
         {{i18n "admin.config.fonts.form.fewer_fonts"}}

@@ -88,17 +88,6 @@ export default class RssPollingFeedForm extends Component {
     return previewSummary(this.testResults);
   }
 
-  @action
-  dismissTest() {
-    this.testResults = null;
-    this.testError = null;
-  }
-
-  @action
-  markDirty() {
-    this.dirty = true;
-  }
-
   get pollNowTitle() {
     if (this.dirty) {
       return "admin.rss_polling.history.poll_now_dirty";
@@ -109,6 +98,17 @@ export default class RssPollingFeedForm extends Component {
     }
 
     return null;
+  }
+
+  @action
+  dismissTest() {
+    this.testResults = null;
+    this.testError = null;
+  }
+
+  @action
+  markDirty() {
+    this.dirty = true;
   }
 
   @action
@@ -246,18 +246,18 @@ export default class RssPollingFeedForm extends Component {
   }
 
   <template>
-    <AdminConfigAreaCard @heading={{this.header}} class="rss-polling-feed-form">
+    <AdminConfigAreaCard class="rss-polling-feed-form" @heading={{this.header}}>
       <:headerAction>
         {{#if this.isEditing}}
           <div class="rss-polling-feed-form__enabled-control">
             <DToggleSwitch
-              @state={{this.feedToggle.enabled}}
               aria-label={{if
                 this.feedToggle.enabled
                 (i18n "admin.rss_polling.feeds.disable")
                 (i18n "admin.rss_polling.feeds.enable")
               }}
               class="rss-polling-feed-form__toggle"
+              @state={{this.feedToggle.enabled}}
               {{on "click" this.feedToggle.toggle}}
             />
             <span
@@ -278,31 +278,31 @@ export default class RssPollingFeedForm extends Component {
       </:headerAction>
       <:content>
         <Form
+          @data={{this.formData}}
+          @onSet={{this.markDirty}}
           @onSubmit={{this.save}}
           @validate={{this.validateForm}}
-          @onSet={{this.markDirty}}
-          @data={{this.formData}}
           as |form transientData|
         >
           <form.Fieldset @title={{i18n "admin.rss_polling.feed_settings"}}>
             <form.Field
+              @format="full"
               @name="feed_url"
               @title={{i18n "admin.rss_polling.feed_url"}}
-              @validation="required"
-              @format="full"
               @type="input-url"
+              @validation="required"
               as |field|
             >
               <field.Control placeholder="https://blog.example.com/feed" />
             </form.Field>
 
             <form.Field
-              @name="feed_category_filter"
-              @title={{i18n "admin.rss_polling.feed_category_filter"}}
               @description={{i18n
                 "admin.rss_polling.feed_category_filter_description"
               }}
               @format="full"
+              @name="feed_category_filter"
+              @title={{i18n "admin.rss_polling.feed_category_filter"}}
               @type="input"
               as |field|
             >
@@ -313,54 +313,54 @@ export default class RssPollingFeedForm extends Component {
           <form.Fieldset @title={{i18n "admin.rss_polling.discourse_settings"}}>
             <div class="rss-polling-feed-form__discourse-fields">
               <form.Field
+                @format="full"
                 @name="author_username"
                 @title={{i18n "admin.rss_polling.author"}}
-                @validation="required"
-                @format="full"
                 @type="custom"
+                @validation="required"
                 as |field|
               >
                 <field.Control>
                   <UserChooser
-                    @value={{field.value}}
+                    class="rss-polling-feed-form__author"
                     @onChange={{field.set}}
                     @options={{hash maximum=1 excludeCurrentUser=false}}
-                    class="rss-polling-feed-form__author"
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>
 
               <form.Field
+                @format="full"
                 @name="discourse_category_id"
                 @title={{i18n "admin.rss_polling.discourse_category"}}
-                @format="full"
                 @type="custom"
                 as |field|
               >
                 <field.Control>
                   <CategoryChooser
-                    @value={{field.value}}
-                    @onChange={{fn this.categoryChanged field}}
                     class="rss-polling-feed-form__category"
+                    @onChange={{fn this.categoryChanged field}}
+                    @value={{field.value}}
                   />
                 </field.Control>
               </form.Field>
 
               <form.Field
+                @format="full"
                 @name="discourse_tags"
                 @title={{i18n "admin.rss_polling.discourse_tags"}}
-                @format="full"
                 @type="custom"
                 as |field|
               >
                 <field.Control>
                   <TagChooser
-                    @tags={{field.value}}
+                    class="rss-polling-feed-form__tags"
                     @allowCreate={{false}}
                     @everyTag={{true}}
-                    @unlimitedTagCount={{true}}
                     @onChange={{field.set}}
-                    class="rss-polling-feed-form__tags"
+                    @tags={{field.value}}
+                    @unlimitedTagCount={{true}}
                   />
                 </field.Control>
                 {{#if this.requiredTagNames.length}}
@@ -377,41 +377,41 @@ export default class RssPollingFeedForm extends Component {
 
           <div class="rss-polling-feed-form__buttons">
             <DButton
-              @icon="check"
-              @label="admin.rss_polling.feeds.save"
-              @isLoading={{this.submitting}}
-              type="submit"
               class="btn-primary form-kit__button rss-polling-feed-form__save"
+              type="submit"
+              @icon="check"
+              @isLoading={{this.submitting}}
+              @label="admin.rss_polling.feeds.save"
             />
             <DButton
+              class="btn-default rss-polling-feed-form__test"
               @action={{fn this.testFeed transientData}}
               @icon="paper-plane"
-              @label="admin.rss_polling.test.button"
               @isLoading={{this.testing}}
-              class="btn-default rss-polling-feed-form__test"
+              @label="admin.rss_polling.test.button"
             />
 
             {{#if this.isEditing}}
               <DButtonTooltip>
                 <:button>
                   <DButton
+                    class="btn-default rss-polling-feed-form__poll"
                     @action={{this.pollNow}}
-                    @icon="arrows-rotate"
-                    @label="admin.rss_polling.history.poll_now"
-                    @isLoading={{this.polling}}
                     @disabled={{or
                       this.dirty
                       this.testing
                       (not this.feedToggle.enabled)
                     }}
-                    class="btn-default rss-polling-feed-form__poll"
+                    @icon="arrows-rotate"
+                    @isLoading={{this.polling}}
+                    @label="admin.rss_polling.history.poll_now"
                   />
                 </:button>
                 <:tooltip>
                   {{#if this.pollNowTitle}}
                     <DTooltip
-                      @icon="circle-info"
                       @content={{i18n this.pollNowTitle}}
+                      @icon="circle-info"
                     />
                   {{/if}}
                 </:tooltip>
@@ -424,10 +424,10 @@ export default class RssPollingFeedForm extends Component {
           <div class="alert alert-error rss-polling-feed-test__error">
             <span>{{this.testErrorMessage}}</span>
             <DButton
+              class="btn-flat btn-small rss-polling-feed-test__dismiss"
               @action={{this.dismissTest}}
               @icon="xmark"
               @title="admin.rss_polling.test.dismiss"
-              class="btn-flat btn-small rss-polling-feed-test__dismiss"
             />
           </div>
         {{else if this.testResults}}
@@ -442,10 +442,10 @@ export default class RssPollingFeedForm extends Component {
                 </span>
               {{/if}}
               <DButton
+                class="btn-flat btn-small rss-polling-feed-test__dismiss"
                 @action={{this.dismissTest}}
                 @icon="xmark"
                 @label="admin.rss_polling.test.dismiss"
-                class="btn-flat btn-small rss-polling-feed-test__dismiss"
               />
             </div>
 

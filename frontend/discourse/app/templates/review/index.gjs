@@ -9,14 +9,14 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <DHorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
-    <DNavItem @route="review.index" @label="review.view_all" />
-    <DNavItem @route="review.topics" @label="review.grouped_by_topic" />
+  <DHorizontalOverflowNav class="reviewable-title" @ariaLabel="Review">
+    <DNavItem @label="review.view_all" @route="review.index" />
+    <DNavItem @label="review.grouped_by_topic" @route="review.topics" />
     {{#if @controller.currentUser.admin}}
       <DNavItem
-        @route="review.settings"
-        @label="review.settings.title"
         @icon="wrench"
+        @label="review.settings.title"
+        @route="review.settings"
       />
     {{/if}}
   </DHorizontalOverflowNav>
@@ -50,15 +50,15 @@ export default <template>
           )
         }}</span>
       <div class="unknown-reviewables__options">
-        <LinkTo @route="adminPlugins.index" class="btn">
+        <LinkTo class="btn" @route="adminPlugins.index">
           {{dIcon "puzzle-piece"}}
           <span>{{i18n "review.unknown.enable_plugins"}}</span>
         </LinkTo>
         <DButton
-          @label="review.unknown.ignore_all"
-          @icon="trash-can"
-          @action={{@controller.ignoreAllUnknownTypes}}
           class="btn-default"
+          @action={{@controller.ignoreAllUnknownTypes}}
+          @icon="trash-can"
+          @label="review.unknown.ignore_all"
         />
       </div>
     </div>

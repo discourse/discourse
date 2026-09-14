@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  mcp:
+    errors:
+      topic_not_found: "Fant ikke emnet"
+    oauth:
+      deny: "Avslå"
+      approve: "Autoriser"
   llms_txt:
     sections:
       optional: "Valgfritt"
@@ -521,6 +527,7 @@ nb_NO:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Ukjent"
     traffic_types:
       anonymous: "Anonym"
   change_email:
@@ -1454,8 +1461,6 @@ nb_NO:
         title: "Ja"
       approve_and_unhide:
         title: "Ja"
-      delete_post:
-        complete: "Post slettet"
       delete_user:
         complete: "Bruker slettet"
   fallback_username: "bruker"

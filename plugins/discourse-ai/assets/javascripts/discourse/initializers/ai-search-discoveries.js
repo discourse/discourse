@@ -216,9 +216,6 @@ export default apiInitializer((api) => {
     return false;
   });
 
-  // Enter always runs the indexed search, so nothing has to be remembered
-  // between submissions. Shift+Enter is the one that asks: Ctrl/Cmd+Enter is
-  // already advanced search, and a second Enter already means the same.
   api.addSearchMenuOnKeyDownCallback((searchTerm, event) => {
     if (!offersDiscoveries(searchTerm?.args?.location)) {
       return true;
@@ -227,9 +224,8 @@ export default apiInitializer((api) => {
     if (event.key === "Enter") {
       const query = search.activeGlobalSearchTerm?.trim();
 
-      // The preference decides which key asks; the other one does the opposite,
-      // so both remain reachable whichever way round it is.
-      if (event.shiftKey !== asksByDefault() && query) {
+      const enterAsks = !search.inTopicContext && asksByDefault();
+      if (event.shiftKey !== enterAsks && query) {
         // asking honours no scope, so picking it leaves any behind
         searchTerm.args.clearTopicContext();
         searchTerm.args.clearPMInboxContext();
@@ -239,13 +235,6 @@ export default apiInitializer((api) => {
 
       discobotDiscoveries.dismissDiscovery();
       return true;
-    }
-
-    // A different term has to be resubmitted anyway, so the option that answered
-    // the last one stops applying: the scope is released and the row goes back
-    // to offering all three.
-    if (search.inTopicContext) {
-      searchTerm.args.clearTopicContext();
     }
 
     // An answer belongs to the submission that asked for it, not to the text.
@@ -268,17 +257,9 @@ export default apiInitializer((api) => {
       offersDiscoveries(context?.location) ? [...value, "--with-ask-ai"] : value
   );
 
-  // scope is one of the options in the menu, and that row stays put while
-  // scoped, so the input never carries a chip for it
   // advanced search is offered in the options row instead
   api.registerValueTransformer(
     "search-menu-advanced-button-enabled",
-    ({ value, context }) =>
-      offersDiscoveries(context?.location) ? false : value
-  );
-
-  api.registerValueTransformer(
-    "search-menu-search-context-enabled",
     ({ value, context }) =>
       offersDiscoveries(context?.location) ? false : value
   );

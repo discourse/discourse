@@ -344,7 +344,7 @@ class GroupsController < ApplicationController
         "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = #{ActiveRecord::Base.connection.quote(params[:order_field])}) #{dir} NULLS LAST"
     end
 
-    users = group.users.human_users
+    users = group.listed_users
     total = users.count
 
     if (filter = params[:filter]).present?

@@ -64,10 +64,11 @@ module Voice
       object.room_memberships.size
     end
 
-    # Read before active_participants (attributes serialize in declaration
-    # order) so clients subscribing from this position replay, at worst,
-    # broadcasts already reflected in the snapshot — never a gap.
+    # The directory captures every room position before its live state. Other
+    # callers rely on attribute order so concurrent broadcasts replay instead of being missed.
     def message_bus_last_id
+      return directory_entry.message_bus_last_id if directory_entry
+
       MessageBus.last_id(Voice.room_channel(object.id))
     end
 
@@ -115,7 +116,13 @@ module Voice
 
     def chat_available
       return @chat_available if defined?(@chat_available)
-      @chat_available = Voice::ChatSession.available_for?(object, scope)
+
+      @chat_available =
+        if @options[:chat_availability]&.key?(object.id)
+          @options[:chat_availability][object.id]
+        else
+          Voice::ChatSession.available_for?(object, scope)
+        end
     end
 
     # The room's chat wiring isn't for general consumption: whether chat is
@@ -148,15 +155,27 @@ module Voice
     # warn about mesh's IP exposure before joining, and a race that flips
     # mesh → livekit only makes the warning over-cautious.
     def expected_transport
-      Voice::ParticipantTracker.pinned_transport(object.id) ||
-        (Voice::Livekit.available_for?(object) ? "livekit" : "mesh")
+      pinned_transport =
+        if directory_entry
+          directory_entry.pinned_transport
+        else
+          Voice::ParticipantTracker.pinned_transport(object.id)
+        end
+
+      pinned_transport || (Voice::Livekit.available_for?(object) ? "livekit" : "mesh")
     end
 
     # Not gated per user: an active recording is something everyone who can
     # see the room is entitled to know about.
     def recording
       return @recording if defined?(@recording)
-      @recording = Voice::RecordingManager.status(object.id)
+
+      @recording =
+        if directory_entry
+          directory_entry.recording
+        else
+          Voice::RecordingManager.status(object.id)
+        end
     end
 
     def include_recording?
@@ -165,12 +184,32 @@ module Voice
 
     private
 
+    def directory_entry
+      return @directory_entry if defined?(@directory_entry)
+
+      @directory_entry = @options[:directory_entries]&.[](object.id)
+    end
+
     def tracked_participants
-      @tracked_participants ||= Voice::ParticipantTracker.list(object.id)
+      return @tracked_participants if defined?(@tracked_participants)
+
+      @tracked_participants =
+        if directory_entry
+          directory_entry.participant_users
+        else
+          Voice::ParticipantTracker.list(object.id)
+        end
     end
 
     def participant_metadata
-      @participant_metadata ||= Voice::ParticipantTracker.get_all_metadata(object.id)
+      return @participant_metadata if defined?(@participant_metadata)
+
+      @participant_metadata =
+        if directory_entry
+          directory_entry.participant_metadata
+        else
+          Voice::ParticipantTracker.get_all_metadata(object.id)
+        end
     end
 
     def participating?

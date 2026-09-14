@@ -20,8 +20,8 @@ import CollapsedInfo from "./user/collapsed-info";
 
 export default <template>
   <PluginOutlet
-    @name="above-user-profile"
     @connectorTagName="div"
+    @name="above-user-profile"
     @outletArgs={{lazyHash model=@controller.model}}
   />
   <div
@@ -32,9 +32,9 @@ export default <template>
   >
     <section class="user-main">
       <a
+        class="skip-link__user-nav"
         href="#user-content"
         id="user-nav-skip-link"
-        class="skip-link__user-nav"
       >
         {{i18n "skip_user_nav"}}
       </a>
@@ -53,11 +53,11 @@ export default <template>
               {{#if @controller.model.number_of_flags_given}}
                 <div>
                   <LinkTo
-                    @route="review"
                     @query={{hash
                       flagged_by=@controller.model.username
                       status="approved"
                     }}
+                    @route="review"
                   >
                     {{trustHTML
                       (i18n
@@ -72,11 +72,11 @@ export default <template>
               {{#if @controller.model.number_of_flags}}
                 <div>
                   <LinkTo
-                    @route="review"
                     @query={{hash
                       username=@controller.model.username
                       status="all"
                     }}
+                    @route="review"
                   >
                     {{trustHTML
                       (i18n
@@ -91,12 +91,12 @@ export default <template>
               {{#if @controller.model.number_of_rejected_posts}}
                 <div>
                   <LinkTo
-                    @route="review"
                     @query={{hash
                       username=@controller.model.username
                       status="rejected"
                       type="ReviewableQueuedPost"
                     }}
+                    @route="review"
                   >
                     {{trustHTML
                       (i18n
@@ -112,8 +112,8 @@ export default <template>
               {{#if @controller.model.number_of_deleted_posts}}
                 <div>
                   <LinkTo
-                    @route="user.deletedPosts"
                     @model={{@controller.model}}
+                    @route="user.deletedPosts"
                   >
                     {{trustHTML
                       (i18n
@@ -128,8 +128,8 @@ export default <template>
               {{#if @controller.model.number_of_silencings}}
                 <div>
                   <LinkTo
-                    @route="adminLogs.staffActionLogs"
                     @query={{@controller.silencingsRouteQuery}}
+                    @route="adminLogs.staffActionLogs"
                   >
                     {{trustHTML
                       (i18n
@@ -144,8 +144,8 @@ export default <template>
               {{#if @controller.model.number_of_suspensions}}
                 <div>
                   <LinkTo
-                    @route="adminLogs.staffActionLogs"
                     @query={{@controller.suspensionsRouteQuery}}
+                    @route="adminLogs.staffActionLogs"
                   >
                     {{trustHTML
                       (i18n
@@ -160,8 +160,8 @@ export default <template>
               {{#if @controller.model.warnings_received_count}}
                 <div>
                   <LinkTo
-                    @route="userPrivateMessages.user.warnings"
                     @model={{@controller.model}}
+                    @route="userPrivateMessages.user.warnings"
                   >
                     {{trustHTML
                       (i18n
@@ -224,8 +224,8 @@ export default <template>
                 {{/if}}
                 <span>
                   <PluginOutlet
-                    @name="user-post-names"
                     @connectorTagName="div"
+                    @name="user-post-names"
                     @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </span>
@@ -236,11 +236,11 @@ export default <template>
                   <span title={{i18n "user.featured_topic"}}>
                     {{dIcon "book"~}}
                   </span><LinkTo
-                    @route="topic"
                     @models={{array
                       @controller.model.featured_topic.slug
                       @controller.model.featured_topic.id
                     }}
+                    @route="topic"
                   >{{dReplaceEmoji
                       (trustHTML @controller.model.featured_topic.fancy_title)
                     }}</LinkTo>
@@ -277,16 +277,16 @@ export default <template>
                 {{/if}}
                 <span>
                   <PluginOutlet
-                    @name="user-location-and-website"
                     @connectorTagName="div"
+                    @name="user-location-and-website"
                     @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </span>
               </div>
 
               <PluginOutlet
-                @name="before-user-profile-bio"
                 @connectorTagName="div"
+                @name="before-user-profile-bio"
                 @outletArgs={{lazyHash
                   model=@controller.model
                   publicUserFields=@controller.publicUserFields
@@ -367,8 +367,8 @@ export default <template>
                             <span class="user-field-value-list-item">
                               {{#if uf.field.searchable}}
                                 <LinkTo
-                                  @route="users"
                                   @query={{hash name=v}}
+                                  @route="users"
                                 >{{v}}</LinkTo>
                               {{else}}
                                 {{v}}
@@ -384,8 +384,8 @@ export default <template>
 
                   <span>
                     <PluginOutlet
-                      @name="user-profile-public-fields"
                       @connectorTagName="div"
+                      @name="user-profile-public-fields"
                       @outletArgs={{lazyHash
                         publicUserFields=@controller.publicUserFields
                         model=@controller.model
@@ -397,8 +397,8 @@ export default <template>
 
               <span>
                 <PluginOutlet
-                  @name="user-profile-primary"
                   @connectorTagName="div"
+                  @name="user-profile-primary"
                   @outletArgs={{lazyHash model=@controller.model}}
                 />
               </span>
@@ -414,13 +414,13 @@ export default <template>
                 }}
                   <li>
                     <DButton
+                      class="btn-primary compose-pm"
                       @action={{fn
                         (routeAction "composePrivateMessage")
                         @controller.model
                       }}
                       @icon="envelope"
                       @label="user.private_message"
-                      class="btn-primary compose-pm"
                     />
                   </li>
                 {{/if}}
@@ -428,38 +428,31 @@ export default <template>
                 {{#if @controller.canMuteOrIgnoreUser}}
                   <li>
                     <UserNotificationsDropdown
+                      @updateNotificationLevel={{@controller.updateNotificationLevel}}
                       @user={{@controller.model}}
                       @value={{@controller.userNotificationLevel}}
-                      @updateNotificationLevel={{@controller.updateNotificationLevel}}
                     />
                   </li>
                 {{/if}}
 
                 {{#if @controller.displayTopLevelAdminButton}}
                   <li><a
-                      href={{@controller.model.adminPath}}
                       class="btn btn-default user-admin"
+                      href={{@controller.model.adminPath}}
                     >{{dIcon "wrench"}}<span class="d-button-label">{{i18n
                           "admin.user.show_admin_profile"
                         }}</span></a></li>
                 {{/if}}
 
                 <PluginOutlet
-                  @name="user-profile-controls"
                   @connectorTagName="li"
+                  @name="user-profile-controls"
                   @outletArgs={{lazyHash model=@controller.model}}
                 />
 
                 {{#if @controller.canExpandProfile}}
                   <li>
                     <DButton
-                      @ariaLabel={{@controller.collapsedInfoState.ariaLabel}}
-                      @label={{concat
-                        "user."
-                        @controller.collapsedInfoState.label
-                      }}
-                      @icon={{@controller.collapsedInfoState.icon}}
-                      @action={{@controller.collapsedInfoState.action}}
                       aria-controls="collapsed-info-panel"
                       aria-expanded={{if
                         @controller.collapsedInfoState.isExpanded
@@ -467,6 +460,13 @@ export default <template>
                         "false"
                       }}
                       class="btn-default user-profile-toggle-btn"
+                      @action={{@controller.collapsedInfoState.action}}
+                      @ariaLabel={{@controller.collapsedInfoState.ariaLabel}}
+                      @icon={{@controller.collapsedInfoState.icon}}
+                      @label={{concat
+                        "user."
+                        @controller.collapsedInfoState.label
+                      }}
                     />
                   </li>
                 {{/if}}
@@ -474,31 +474,31 @@ export default <template>
             </section>
           </div>
           <CollapsedInfo
-            @model={{@controller.model}}
-            @collapsedInfo={{@controller.collapsedInfo}}
-            @hasTrustLevel={{@controller.hasTrustLevel}}
-            @canCheckEmails={{@controller.canCheckEmails}}
-            @canDeleteUser={{@controller.canDeleteUser}}
             @adminDelete={{@controller.adminDelete}}
             @adminDeleteOptions={{@controller.adminDeleteOptions}}
+            @canCheckEmails={{@controller.canCheckEmails}}
+            @canDeleteUser={{@controller.canDeleteUser}}
+            @collapsedInfo={{@controller.collapsedInfo}}
+            @hasTrustLevel={{@controller.hasTrustLevel}}
+            @model={{@controller.model}}
           />
         </div>
       </section>
 
       <div class="new-user-wrapper">
         <UserNav
-          @user={{@controller.model}}
-          @isStaff={{@controller.currentUser.staff}}
+          @canInviteToForum={{@controller.canInviteToForum}}
+          @currentParentRoute={{@controller.currentParentRoute}}
           @isMobileView={{@controller.site.mobileView}}
+          @isStaff={{@controller.currentUser.staff}}
           @showActivityTab={{@controller.showActivityTab}}
+          @showBadges={{@controller.showBadges}}
+          @showBookmarks={{@controller.showBookmarks}}
+          @showDrafts={{@controller.showDrafts}}
           @showNotificationsTab={{@controller.showNotificationsTab}}
           @showPrivateMessages={{@controller.showPrivateMessages}}
-          @canInviteToForum={{@controller.canInviteToForum}}
-          @showBadges={{@controller.showBadges}}
-          @currentParentRoute={{@controller.currentParentRoute}}
           @showRead={{@controller.showRead}}
-          @showDrafts={{@controller.showDrafts}}
-          @showBookmarks={{@controller.showBookmarks}}
+          @user={{@controller.model}}
         />
 
         <div class="new-user-content-wrapper">

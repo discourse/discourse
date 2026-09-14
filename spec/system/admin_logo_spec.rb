@@ -12,6 +12,7 @@ describe "Admin Logo Page" do
 
   describe "primary section" do
     let(:primary_section_logos) { %i[logo logo_dark large_icon favicon logo_small logo_small_dark] }
+
     it "can upload images and dark versions" do
       logo_page.visit
 
@@ -64,6 +65,7 @@ describe "Admin Logo Page" do
 
   describe "mobile section" do
     let(:mobile_section_logos) { %i[mobile_logo mobile_logo_dark manifest_icon apple_touch_icon] }
+
     it "can upload images and dark versions" do
       logo_page.visit
       logo_page.form.expand_mobile_section
@@ -113,6 +115,7 @@ describe "Admin Logo Page" do
 
   describe "email section" do
     let(:email_section_logos) { %i[digest_logo] }
+
     it "can upload images" do
       logo_page.visit
       logo_page.form.expand_email_section
@@ -156,6 +159,7 @@ describe "Admin Logo Page" do
 
   describe "social media section" do
     let(:social_media_section_logos) { %i[opengraph_image] }
+
     it "can upload images" do
       logo_page.visit
       logo_page.form.expand_social_media_section

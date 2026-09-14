@@ -84,12 +84,12 @@ export default class RandomQuickTip extends Component {
   <template>
     <li class="search-random-quick-tip">
       <button
+        aria-describedby="tip-description"
         class={{dConcatClass
           "tip-label"
           (if this.randomTip.clickable "tip-clickable")
         }}
         {{on "click" this.tipSelected}}
-        aria-describedby="tip-description"
       >
         {{#if this.randomTip.shortcut}}
           <DShortcut @keys={{this.randomTip.shortcut}} />

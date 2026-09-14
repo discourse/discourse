@@ -21,6 +21,27 @@ RSpec.describe Boards::Column do
     expect(column).to be_recency
   end
 
+  describe "icons" do
+    after { SvgSprite.expire_cache }
+
+    it "adds icons in use to the SVG sprite" do
+      board.columns.create!(title: "Backlog", position: 0, icon: "blender")
+
+      expect(SvgSprite.all_icons).to include("blender")
+    end
+
+    it "expires the sprite cache when an icon changes" do
+      column = board.columns.create!(title: "Backlog", position: 0, icon: "blender")
+
+      expect(SvgSprite.all_icons).to include("blender")
+
+      column.update!(icon: "guitar")
+
+      expect(SvgSprite.all_icons).to include("guitar")
+      expect(SvgSprite.all_icons).not_to include("blender")
+    end
+  end
+
   it "accepts a bare hex or no color, but rejects malformed values" do
     expect(board.columns.build(title: "A", position: 0, color: "1A2B3C")).to be_valid
     expect(board.columns.build(title: "B", position: 1, color: "f0a")).to be_valid

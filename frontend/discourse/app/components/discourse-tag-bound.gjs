@@ -24,8 +24,8 @@ export default class DiscourseTagBound extends Component {
 
   <template>
     <a
-      href={{this.href}}
       class={{dConcatClass "discourse-tag" this.style this.tagClass}}
+      href={{this.href}}
       ...attributes
     >{{this.tagRecord.name}}</a>
   </template>

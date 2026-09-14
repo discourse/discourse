@@ -70,6 +70,69 @@ RSpec.describe Voice::RoomsController do
       expect(response.parsed_body["rooms"].first["message_bus_last_id"]).to be_a(Integer)
     end
 
+    it "returns preloaded participant and recording state" do
+      sign_in(user)
+      Voice::ParticipantTracker.add(room.id, other_participant.id)
+      Voice::ParticipantTracker.update_metadata(room.id, other_participant.id, muted: true)
+      Voice::ParticipantTracker.set_recording(
+        room.id,
+        egress_id: "EG_1",
+        user_id: staff.id,
+        username: staff.username,
+        started_at: 123.0,
+      )
+
+      get "/voice/rooms.json"
+
+      listed_room = response.parsed_body["rooms"].find { |candidate| candidate["id"] == room.id }
+      expect(listed_room["active_participants"]).to contain_exactly(
+        include("id" => other_participant.id, "muted" => true),
+      )
+      expect(listed_room["recording"]).to eq(
+        "started_at" => 123.0,
+        "started_by" => {
+          "id" => staff.id,
+          "username" => staff.username,
+        },
+      )
+    ensure
+      Voice::ParticipantTracker.clear(room.id)
+    end
+
+    it "does not add membership queries as the directory grows" do
+      sign_in(user)
+      get "/voice/rooms.json"
+
+      initial_queries =
+        track_sql_queries { get "/voice/rooms.json" }.grep(/voice_room_memberships/).size
+
+      4.times { Fabricate(:voice_room, creator: Fabricate(:user), public: true) }
+      expanded_queries =
+        track_sql_queries { get "/voice/rooms.json" }.grep(/voice_room_memberships/).size
+
+      expect(expanded_queries).to eq(initial_queries)
+    end
+
+    it "does not add chat channel queries as the directory grows" do
+      SiteSetting.voice_chat_enabled = true
+      SiteSetting.chat_enabled = true
+      room.update!(chat_channel_id: Fabricate(:chat_channel, threading_enabled: true).id)
+      sign_in(staff)
+
+      initial_queries =
+        track_sql_queries { get "/voice/rooms.json" }.grep(/FROM "chat_channels"/).size
+
+      4.times do
+        channel = Fabricate(:chat_channel, threading_enabled: true)
+        Fabricate(:voice_room, creator: Fabricate(:user), public: true, chat_channel_id: channel.id)
+      end
+      expanded_queries =
+        track_sql_queries { get "/voice/rooms.json" }.grep(/FROM "chat_channels"/).size
+
+      expect(initial_queries).to eq(1)
+      expect(expanded_queries).to eq(initial_queries)
+    end
+
     it "hides non-public rooms from non-members who can create rooms" do
       sign_in(user)
 

@@ -90,9 +90,9 @@ export default class BaseCaptcha extends Component {
       </:loading>
       <:content as |captchaApi|>
         <div
-          id={{this.containerId}}
           class="captcha-container"
           data-sitekey={{@siteKey}}
+          id={{this.containerId}}
           {{this.renderCaptcha captchaApi=captchaApi}}
         ></div>
       </:content>

@@ -31,8 +31,8 @@ export default class BoardsMenu extends Component {
       {{#each this.memberships as |membership|}}
         <dropdown.item>
           <DButton
-            @action={{fn this.goToBoard membership}}
             class="btn-transparent discourse-boards-boards-menu__item --with-description"
+            @action={{fn this.goToBoard membership}}
           >
             <div class="discourse-boards-boards-menu__item-texts">
               <span

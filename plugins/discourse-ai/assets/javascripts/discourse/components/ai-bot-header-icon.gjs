@@ -69,11 +69,11 @@ export default class AiBotHeaderIcon extends Component {
           @outletArgs={{lazyHash onClick=this.onClick icon=this.icon}}
         >
           <DButton
-            @href={{this.href}}
-            @action={{unless this.href this.onClick}}
-            @icon={{this.icon}}
-            title={{this.title}}
             class="ai-bot-button icon btn-flat"
+            title={{this.title}}
+            @action={{unless this.href this.onClick}}
+            @href={{this.href}}
+            @icon={{this.icon}}
           />
         </PluginOutlet>
       </li>

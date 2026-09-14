@@ -38,6 +38,7 @@ describe Jobs::DiscoursePostEventBumpTopic do
           Jobs::DiscoursePostEventBumpTopic.new.execute(date: "2019-12-10 5:00")
         }.not_to raise_error
       end
+
       it "does not throw an error if the date param is missing" do
         expect { Jobs::DiscoursePostEventBumpTopic.new.execute({}) }.not_to raise_error
       end

@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 id:
+  mcp:
+    errors:
+      draft_too_long: "Draf terlalu panjang"
+      topic_not_found: "Tidak ada topik"
+    oauth:
+      deny: "Menolak"
+      approve: "Izinkan"
   llms_txt:
     sections:
       optional: "Opsional"
@@ -712,6 +719,7 @@ id:
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
   admin_site_traffic_explorer:
+    unknown: "Tidak diketahui"
     traffic_types:
       anonymous: "Anonim"
   change_email:
@@ -1238,12 +1246,6 @@ id:
       host_names: "Berkas config/database.yml Anda menggunakan nama host localhost default. Perbarui untuk menggunakan nama host situs Anda."
       queue_size: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
       ram: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
-      google_oauth2_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan masuk dengan Google OAuth2 (enable_google_oauth2_logins), namun id klien dan nilai rahasia klien tidak ditetapkan. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
-      facebook_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan masuk dengan Facebook (enable_facebook_logins), tetapi nilai id aplikasi dan rahasia aplikasi tidak ditetapkan. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
-      twitter_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan login dengan Twitter (enable_twitter_logins), tetapi nilai kunci dan rahasia tidak disetel. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
-      github_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan login dengan GitHub (enable_github_logins), tetapi id klien dan nilai rahasia tidak disetel. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
-      s3_upload_config: 'Server dikonfigurasi untuk mengunggah file ke S3, namun setidaknya satu pengaturan berikut tidak disetel: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, atau s3_upload_bucket. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lihat "Bagaimana cara mengatur unggahan gambar ke S3?" untuk mempelajari lebih lanjut</a>.'
-      s3_backup_config: 'Server dikonfigurasi untuk mengunggah cadangan ke S3, namun setidaknya satu pengaturan berikut tidak disetel: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, atau s3_backup_bucket. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lihat "Bagaimana cara mengatur unggahan gambar ke S3?" untuk mempelajari lebih lanjut</a>.'
       s3_cdn: 'Server dikonfigurasi untuk mengunggah file ke S3, tetapi tidak ada CDN S3 yang dikonfigurasi. Hal ini dapat menyebabkan biaya S3 yang mahal dan kinerja situs yang lebih lambat. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Lihat "Menggunakan Penyimpanan Objek untuk Unggahan" untuk mempelajari lebih lanjut</a>.'
       image_magick: 'Server dikonfigurasi untuk membuat thumbnail gambar besar, tetapi ImageMagick tidak diinstal. Instal ImageMagick menggunakan manajer paket favorit Anda atau <a href="https://www.imagemagick.org/script/download.php" target="_blank">unduh rilis terbaru</a>.'
       failing_emails: 'Ada %{num_failed_jobs} pekerjaan email yang gagal. Periksa app.yml Anda dan pastikan pengaturan server email sudah benar. <a href="%{base_path}/sidekiq/retries" target="_blank">Lihat pekerjaan yang gagal di Sidekiq</a>.'
@@ -1590,8 +1592,6 @@ id:
       agree_and_hide:
         title: "Sembunyikan pos"
         description: "Setuju dengan penanda dan sembunyikan kiriman ini + secara otomatis mengirimkan pesan kepada pengguna yang mendesak mereka untuk mengeditnya."
-      agree_and_edit:
-        description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
       delete:
         title: "Hapus"
         complete: "Pos dihapus."
@@ -1651,13 +1651,6 @@ id:
         title: "Ya"
       approve_and_unhide:
         title: "Ya"
-      delete_post:
-        title: "Hapus postingan"
-        complete: "Pos dihapus"
-      hide_post:
-        title: "Sembunyikan pos"
-      restore_post:
-        title: "Pulihkan post"
       silence_user:
         title: "Senyapkan pengguna"
       suspend_user:

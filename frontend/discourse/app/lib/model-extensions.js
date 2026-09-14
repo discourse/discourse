@@ -46,7 +46,9 @@ export function stampModelClass(klass, modelName) {
 }
 
 export function modelNameFor(instance) {
-  return instance?.constructor?.[MODEL_NAME];
+  // WarpDrive models carry their resolver name as `static type`; fall back to
+  // it so they resolve without depending on `stampModelClass` having run.
+  return instance?.constructor?.[MODEL_NAME] ?? instance?.constructor?.type;
 }
 
 // --- Fields (tracked data properties) ---
@@ -100,31 +102,42 @@ function defineTrackedArrayField(instance, name, value) {
   );
 }
 
-// Defines each registered field as a tracked property on the instance. Runs in
-// `RestModel`'s constructor, before the server payload, so a server value wins.
-export function applyRegisteredFields(instance) {
+function seedField(instance, name, value, type) {
+  if (type === "array") {
+    defineTrackedArrayField(instance, name, value);
+  } else if (type === "object") {
+    defineTrackedField(instance, name, trackedObject(value));
+  } else if (type === "set") {
+    defineTrackedField(instance, name, trackedSet(value));
+  } else {
+    defineTrackedField(instance, name, value);
+  }
+}
+
+// Defines each registered field as a tracked property on the instance.
+//
+// `RestModel` calls this in its constructor, before the server payload is
+// assigned, so a server value wins by overwriting the seeded default later.
+// WarpDrive models have their attributes in place at construction, so they pass
+// `resolveInitial(name) -> { value }` to make a caller/server value win up front
+// (returning a falsy result falls back to the registered default).
+export function applyRegisteredFields(instance, resolveInitial) {
   const modelFields = fields.get(modelNameFor(instance));
   if (!modelFields) {
     return;
   }
 
   for (const [name, { defaultValue, type }] of modelFields) {
+    const provided = resolveInitial?.(name);
     // Function defaults run per instance; a plain value is shared across
     // instances, so mutable defaults should use a function or a `type`.
-    const value =
-      typeof defaultValue === "function"
+    const value = provided
+      ? provided.value
+      : typeof defaultValue === "function"
         ? defaultValue.call(instance)
         : defaultValue;
 
-    if (type === "array") {
-      defineTrackedArrayField(instance, name, value);
-    } else if (type === "object") {
-      defineTrackedField(instance, name, trackedObject(value));
-    } else if (type === "set") {
-      defineTrackedField(instance, name, trackedSet(value));
-    } else {
-      defineTrackedField(instance, name, value);
-    }
+    seedField(instance, name, value, type);
   }
 }
 

@@ -17,7 +17,7 @@ const DEmptyState = <template>
       {{/if}}
 
       {{#if @title}}
-        <div data-test-title class="empty-state__title">{{@title}}</div>
+        <div class="empty-state__title" data-test-title>{{@title}}</div>
       {{/if}}
 
       {{#if @body}}
@@ -29,12 +29,12 @@ const DEmptyState = <template>
       {{#if @ctaLabel}}
         <div class="empty-state__cta">
           <DButton
+            class="btn-primary"
             @action={{@ctaAction}}
             @href={{@ctaHref}}
+            @icon={{@ctaIcon}}
             @route={{@ctaRoute}}
             @translatedLabel={{@ctaLabel}}
-            @icon={{@ctaIcon}}
-            class="btn-primary"
           />
         </div>
       {{/if}}

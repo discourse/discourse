@@ -1,0 +1,48 @@
+.ask-ai-dashboard {
+  &__metrics {
+    margin: 0;
+  }
+
+  &__metric {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+
+    dd {
+      margin: 0;
+    }
+  }
+
+  &__chart {
+    .chart-canvas-container {
+      height: 15em;
+    }
+  }
+
+  &__list {
+    margin: 0;
+    font-size: var(--font-down-1);
+
+    > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-3);
+      padding-block: var(--space-3);
+      border-block-end: 1px solid var(--primary-low);
+    }
+
+    dd {
+      display: flex;
+      gap: var(--space-3);
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  &__percentage {
+    min-inline-size: 5ch;
+    color: var(--primary-high);
+    text-align: end;
+  }
+}

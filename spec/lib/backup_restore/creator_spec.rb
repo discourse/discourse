@@ -248,6 +248,7 @@ describe BackupRestore::Creator do
 
     context "when the result is successful" do
       let(:success) { true }
+
       it "refreshes disk stats" do
         store.expects(:reset_cache).at_least_once
         run

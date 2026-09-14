@@ -86,8 +86,8 @@ export default class SecondFactorForm extends Component {
       {{#if this.showToggleMethodLink}}
         <p>
           <a
-            href
             class="toggle-second-factor-method"
+            href
             {{on "click" this.toggleSecondFactorMethod}}
           >{{i18n this.linkText}}</a>
         </p>

@@ -9,6 +9,7 @@ RSpec.describe DiscourseRssPolling::FeedItem do
     it { expect(feed_item.content).to eq(expected[:content]) }
     it { expect(feed_item.url).to eq(expected[:url]) }
     it { expect(feed_item.title).to eq(expected[:title]) }
+
     if expected.key?(:cook_method)
       it { expect(feed_item.cook_method).to eq(expected[:cook_method]) }
     end
@@ -17,6 +18,7 @@ RSpec.describe DiscourseRssPolling::FeedItem do
 
   context "with empty item" do
     let(:raw_feed_item) { {} }
+
     include_examples("correctly parses the feed", content: nil, url: nil, title: nil)
   end
 

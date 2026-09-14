@@ -3,16 +3,16 @@ import { i18n } from "discourse-i18n";
 
 const ParticipantGroups = <template>
   <div
-    role="list"
     aria-label={{i18n "topic.participant_groups"}}
     class="participant-group-wrapper"
+    role="list"
   >
     {{#each @groups as |group|}}
       <div class="participant-group">
         <a
-          href={{group.url}}
-          data-group-card={{group.name}}
           class="user-group trigger-group-card"
+          data-group-card={{group.name}}
+          href={{group.url}}
         >
           {{dIcon "users"}}
           {{group.name}}

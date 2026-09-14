@@ -19,16 +19,6 @@ export default class GroupList extends Component {
   @service currentUser;
   @service router;
 
-  @action
-  new() {
-    this.router.transitionTo("groups.new");
-  }
-
-  @action
-  loadMore() {
-    this.args.groups?.loadMore();
-  }
-
   get types() {
     const types = [];
     const typeFilters = this.args.groups.extras.type_filters;
@@ -42,6 +32,16 @@ export default class GroupList extends Component {
     return types;
   }
 
+  @action
+  new() {
+    this.router.transitionTo("groups.new");
+  }
+
+  @action
+  loadMore() {
+    this.args.groups?.loadMore();
+  }
+
   <template>
     {{#if (or @groups.loadingMore @groups.canLoadMore)}}
       {{hideApplicationFooter}}
@@ -50,37 +50,37 @@ export default class GroupList extends Component {
     {{bodyClass "groups-page"}}
 
     <PluginOutlet
-      @name="before-groups-index-container"
       @connectorTagName="div"
+      @name="before-groups-index-container"
     />
 
     <section class="container groups-index">
       <div class="groups-header">
         {{#if this.currentUser.can_create_group}}
           <DButton
+            class="btn-default groups-header-new pull-right"
             @action={{this.new}}
             @icon="plus"
             @label="admin.groups.new.title"
-            class="btn-default groups-header-new pull-right"
           />
         {{/if}}
 
         <div class="groups-header-filters">
           <input
-            value={{@filter}}
-            placeholder={{i18n "groups.index.all"}}
-            class="groups-header-filters-name no-blur"
-            {{on "input" (withEventValue @onFilterChanged)}}
-            type="search"
             aria-label={{i18n "groups.index.search_results"}}
+            class="groups-header-filters-name no-blur"
+            placeholder={{i18n "groups.index.all"}}
+            type="search"
+            value={{@filter}}
+            {{on "input" (withEventValue @onFilterChanged)}}
           />
 
           <ComboBox
-            @value={{@type}}
+            class="groups-header-filters-type"
             @content={{this.types}}
             @onChange={{@onTypeChanged}}
             @options={{hash clearable=true none="groups.index.filter"}}
-            class="groups-header-filters-type"
+            @value={{@type}}
           />
         </div>
       </div>
@@ -93,8 +93,8 @@ export default class GroupList extends Component {
                 <GroupCard @group={{group}} />
               {{/each}}
               <PluginOutlet
-                @name="groups-boxes-additional-cards"
                 @connectorTagName="div"
+                @name="groups-boxes-additional-cards"
               />
             </div>
           </div>

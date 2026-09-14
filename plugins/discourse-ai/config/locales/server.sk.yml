@@ -61,7 +61,6 @@ sk:
     ai_helper_automatic_chat_thread_title: "Automatické nastavenie názvov chatových vlákien na základe obsahu vlákna."
     post_ai_helper_allowed_groups: "Skupiny používateľov majú povolený prístup k funkciám AI Helper v príspevkoch"
     ai_embeddings_selected_model: "Použitie vybraného modelu na generovanie vložených súborov."
-    ai_embeddings_generate_for_pms: "Generovanie vložených osobných správ."
     ai_embeddings_semantic_related_topics_enabled: "Použite sémantické vyhľadávanie pre súvisiace témy."
     ai_embeddings_semantic_related_topics: "Maximálny počet tém, ktoré sa majú zobraziť v sekcii súvisiacich tém."
     ai_embeddings_backfill_batch_size: "Počet vnorení na zasypanie každých 15 minút."
@@ -242,6 +241,25 @@ sk:
       configuration_missing: "Chýba konfigurácia detekcie nevyžiadanej pošty AI. Pred povolením pridajte konfiguráciu do \"Admin > Plugins > Discourse AI > Spam\"."
       logging_subject: "Detekcia spamu"
     ai_bot:
+      navigation:
+        settings:
+          title: "Nastavenia stránky"
+        users:
+          title: "Používatelia"
+        groups:
+          title: "Skupiny"
+        review:
+          title: "Fronta na posúdenie"
+        categories:
+          title: "Kategórie"
+        tags:
+          title: "Značky"
+        themes:
+          title: "Témy"
+        authentication:
+          title: "Prihlásenie a overenie"
+        backups:
+          title: "Zálohy"
       reply_error: "Ospravedlňujeme sa, ale zdá sa, že náš systém narazil na neočakávaný problém pri pokuse o odpoveď.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Bez názvu AI bot PM]"
       read_post:

@@ -42,7 +42,7 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
 
   test("@icon", async function (assert) {
     await render(
-      <template><DTooltip @inline={{true}} @icon="check" /></template>
+      <template><DTooltip @icon="check" @inline={{true}} /></template>
     );
 
     assert.dom(".fk-d-tooltip__icon .d-icon-check").exists();
@@ -51,7 +51,7 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   test("@content", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @content="content" />
+        <DTooltip @content="content" @inline={{true}} @label="label" />
       </template>
     );
     await hover();
@@ -131,7 +131,7 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   test("@identifier", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @identifier="tip" />
+        <DTooltip @identifier="tip" @inline={{true}} @label="label" />
       </template>
     );
 
@@ -219,10 +219,10 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
-          @inline={{true}}
-          @label="test"
           @component={{this.component}}
           @data={{hash message="content"}}
+          @inline={{true}}
+          @label="test"
         />
       </template>
     );
@@ -254,7 +254,7 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   test("@closeOnEscape", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @closeOnEscape={{true}} />
+        <DTooltip @closeOnEscape={{true}} @inline={{true}} @label="label" />
       </template>
     );
     await hover();
@@ -264,7 +264,7 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
 
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @closeOnEscape={{false}} />
+        <DTooltip @closeOnEscape={{false}} @inline={{true}} @label="label" />
       </template>
     );
     await hover();
@@ -277,9 +277,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <span class="test">test</span><DTooltip
+          @closeOnClickOutside={{true}}
           @inline={{true}}
           @label="label"
-          @closeOnClickOutside={{true}}
         />
       </template>
     );
@@ -291,9 +291,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <span class="test">test</span><DTooltip
+          @closeOnClickOutside={{false}}
           @inline={{true}}
           @label="label"
-          @closeOnClickOutside={{false}}
         />
       </template>
     );
@@ -399,9 +399,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
+          @identifier="test"
           @inline={{true}}
           @label="label"
-          @identifier="test"
         >test</DTooltip>
       </template>
     );
@@ -471,8 +471,8 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
           <DTooltip @inline={{true}} @label="trigger">
             <:content>
               <button
-                type="button"
                 class="inner-link"
+                type="button"
                 {{on "click" handleInnerClick}}
               >link</button>
             </:content>
@@ -515,9 +515,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
+          @hoverGracePeriod={{150}}
           @inline={{true}}
           @label="label"
-          @hoverGracePeriod={{150}}
         ><:content>content</:content></DTooltip>
       </template>
     );
@@ -540,7 +540,7 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   test("@hoverGracePeriod closes after the grace period when the pointer leaves entirely", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @hoverGracePeriod={{150}} />
+        <DTooltip @hoverGracePeriod={{150}} @inline={{true}} @label="label" />
       </template>
     );
 
@@ -554,9 +554,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
+          @hoverGracePeriod={{150}}
           @inline={{true}}
           @label="label"
-          @hoverGracePeriod={{150}}
         ><:content>content</:content></DTooltip>
       </template>
     );
@@ -575,9 +575,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
+          @hoverGracePeriod={{150}}
           @inline={{true}}
           @label="label"
-          @hoverGracePeriod={{150}}
         ><:content>content</:content></DTooltip>
       </template>
     );
@@ -591,9 +591,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   test("@hoverGracePeriod keeps the tooltip open while focus is inside the content", async function (assert) {
     await render(
       <template>
-        <DTooltip @inline={{true}} @label="label" @hoverGracePeriod={{150}}>
+        <DTooltip @hoverGracePeriod={{150}} @inline={{true}} @label="label">
           <:content>
-            <button type="button" class="focusable">click</button>
+            <button class="focusable" type="button">click</button>
           </:content>
         </DTooltip>
       </template>
@@ -621,13 +621,13 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
     await render(
       <template>
         <DTooltip
+          @hoverGracePeriod={{10}}
           @inline={{true}}
           @label="label"
-          @hoverGracePeriod={{10}}
           @onRegisterApi={{this.onRegisterApi}}
         >
           <:content>
-            <button type="button" class="focusable">click</button>
+            <button class="focusable" type="button">click</button>
           </:content>
         </DTooltip>
       </template>
@@ -669,9 +669,9 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
         ></div>
         {{#if this.portalOutletElement}}
           <DTooltip
+            @content="content"
             @inline={{false}}
             @label="label"
-            @content="content"
             @portalOutletElement={{this.portalOutletElement}}
           />
         {{/if}}

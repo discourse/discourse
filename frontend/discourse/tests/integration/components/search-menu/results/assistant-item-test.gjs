@@ -20,9 +20,9 @@ module(
         <template>
           <ul>
             <AssistantItem
+              @closeSearchMenu={{noop}}
               @extraHint={{true}}
               @label="test search"
-              @closeSearchMenu={{noop}}
               @searchTermChanged={{noop}}
             />
           </ul>
@@ -40,9 +40,9 @@ module(
         <template>
           <ul>
             <AssistantItem
+              @closeSearchMenu={{noop}}
               @extraHint={{true}}
               @label="test search"
-              @closeSearchMenu={{noop}}
               @searchTermChanged={{noop}}
             />
           </ul>

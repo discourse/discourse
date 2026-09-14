@@ -7,6 +7,9 @@
 th:
   js:
     boards:
+      status:
+        all: "ทั้งหมด"
+        open: "เปิด"
       board:
         remove_card: "ลบ"
         title: "ชื่อเรื่อง"

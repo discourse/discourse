@@ -78,6 +78,14 @@ export default class BoardsColumnSettings extends Component {
     return this.args.model.board?.category_ids?.[0] || null;
   }
 
+  get showMoveToCategoryField() {
+    const boardCategoryCount = this.args.model.board?.category_ids?.length ?? 0;
+    if (boardCategoryCount === 1) {
+      return !!this.args.model.column?.move_to_category_id;
+    }
+    return true;
+  }
+
   @action
   onDefaultSortChange(field, value) {
     field.set(value || "priority");
@@ -107,14 +115,6 @@ export default class BoardsColumnSettings extends Component {
   @action
   onStatusChange(field, value) {
     field.set(value);
-  }
-
-  get showMoveToCategoryField() {
-    const boardCategoryCount = this.args.model.board?.category_ids?.length ?? 0;
-    if (boardCategoryCount === 1) {
-      return !!this.args.model.column?.move_to_category_id;
-    }
-    return true;
   }
 
   @action
@@ -154,28 +154,28 @@ export default class BoardsColumnSettings extends Component {
 
   <template>
     <DModal
+      class="discourse-boards-column-settings-modal"
       @closeModal={{@closeModal}}
       @hideHeader={{true}}
-      class="discourse-boards-column-settings-modal"
     >
       <:body>
         <Form @data={{this.formData}} @onSubmit={{this.save}} as |form data|>
           <BoardsEditableTitle
             @form={{form}}
             @name="title"
-            @title={{i18n "boards.manage.columns.column_title"}}
+            @onClose={{@closeModal}}
             @placeholder={{i18n
               "boards.manage.columns.column_title_placeholder"
             }}
+            @title={{i18n "boards.manage.columns.column_title"}}
             @validate={{this.validateTitle}}
-            @onClose={{@closeModal}}
           />
           <div class="discourse-boards-column-settings-modal__wrapper">
             <form.Section>
               <form.Field
+                @format="max"
                 @name="icon"
                 @title={{i18n "boards.manage.columns.icon"}}
-                @format="max"
                 @type="icon"
                 as |field|
               >
@@ -183,9 +183,9 @@ export default class BoardsColumnSettings extends Component {
               </form.Field>
 
               <form.Field
+                @format="max"
                 @name="color"
                 @title={{i18n "boards.manage.columns.color"}}
-                @format="max"
                 @type="color"
                 as |field|
               >
@@ -193,37 +193,37 @@ export default class BoardsColumnSettings extends Component {
               </form.Field>
 
               <form.Field
+                @format="max"
                 @name="default_sort"
                 @title={{i18n "boards.manage.columns.default_sort"}}
-                @format="max"
                 @type="custom"
                 as |field|
               >
                 <field.Control>
                   <ComboBox
-                    @value={{data.default_sort}}
                     @content={{this.sortOptions}}
                     @onChange={{fn this.onDefaultSortChange field}}
+                    @value={{data.default_sort}}
                   />
                 </field.Control>
               </form.Field>
 
               <form.Field
+                @format="max"
                 @name="tag_name"
                 @title={{i18n "boards.manage.columns.tag"}}
-                @format="max"
                 @type="custom"
                 as |field|
               >
                 <field.Control>
                   <MiniTagChooser
-                    @value={{tagToArray data.tag_name}}
                     @onChange={{fn this.onTagChange field}}
                     @options={{hash
                       maximum=1
                       allowCreate=true
                       categoryId=this.tagChooserCategoryId
                     }}
+                    @value={{tagToArray data.tag_name}}
                   />
                   <p class="discourse-boards-column-settings__help">
                     {{i18n "boards.manage.columns.tag_help"}}
@@ -232,21 +232,21 @@ export default class BoardsColumnSettings extends Component {
               </form.Field>
 
               <form.Field
+                @format="max"
                 @name="move_to_status"
                 @title={{i18n "boards.manage.columns.move_to_status"}}
-                @format="max"
                 @type="custom"
                 as |field|
               >
                 <field.Control>
                   <ComboBox
-                    @value={{data.move_to_status}}
                     @content={{this.statusOptions}}
                     @onChange={{fn this.onStatusChange field}}
                     @options={{hash
                       clearable=true
                       none="boards.manage.columns.move_to_status_none"
                     }}
+                    @value={{data.move_to_status}}
                   />
                 </field.Control>
               </form.Field>
@@ -254,44 +254,44 @@ export default class BoardsColumnSettings extends Component {
               {{#if this.showAdvanced}}
                 {{#if this.showMoveToCategoryField}}
                   <form.Field
+                    @format="max"
                     @name="move_to_category_id"
                     @title={{i18n "boards.manage.columns.move_to_category"}}
-                    @format="max"
                     @type="custom"
                     as |field|
                   >
                     <field.Control>
                       <CategoryChooser
-                        @value={{data.move_to_category_id}}
                         @onChange={{fn this.onCategoryChange field}}
                         @options={{hash clearable=true}}
+                        @value={{data.move_to_category_id}}
                       />
                     </field.Control>
                   </form.Field>
                 {{/if}}
 
                 <form.Field
+                  @format="max"
                   @name="move_to_assigned"
                   @title={{i18n "boards.manage.columns.move_to_assigned"}}
-                  @format="max"
                   @type="custom"
                   as |field|
                 >
                   <field.Control>
                     <ComboBox
-                      @value={{assignedMode data.move_to_assigned}}
                       @content={{this.assignedOptions}}
                       @onChange={{fn this.onAssignedModeChange field}}
                       @options={{hash
                         clearable=true
                         none="boards.manage.columns.move_to_assigned_none"
                       }}
+                      @value={{assignedMode data.move_to_assigned}}
                     />
                     {{#if (eq (assignedMode data.move_to_assigned) "_user")}}
                       <EmailGroupUserChooser
-                        @value={{assignedUserValue data.move_to_assigned}}
                         @onChange={{fn this.onAssignedUserChange field}}
                         @options={{hash maximum=1}}
+                        @value={{assignedUserValue data.move_to_assigned}}
                       />
                     {{/if}}
                   </field.Control>
@@ -308,6 +308,7 @@ export default class BoardsColumnSettings extends Component {
               @label="cancel"
             />
             <DButton
+              class="btn-default show-advanced"
               @action={{this.toggleAdvanced}}
               @icon="gear"
               @title={{if
@@ -315,7 +316,6 @@ export default class BoardsColumnSettings extends Component {
                 "boards.manage.columns.hide_advanced"
                 "boards.manage.columns.show_advanced"
               }}
-              class="btn-default show-advanced"
             />
           </form.Actions>
         </Form>

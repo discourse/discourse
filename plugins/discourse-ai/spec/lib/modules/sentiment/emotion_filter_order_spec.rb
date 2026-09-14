@@ -216,6 +216,7 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
       TopicsFilter.new(guardian:).filter_from_query_string("order:emotion_love-asc").pluck(:id),
     ).to contain_exactly(post_2.topic.id, post_1.topic.id)
   end
+
   it "sorts emotion in default descending order" do
     expect(
       TopicsFilter.new(guardian:).filter_from_query_string("order:emotion_love").pluck(:id),

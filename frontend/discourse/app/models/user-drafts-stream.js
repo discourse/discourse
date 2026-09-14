@@ -22,17 +22,17 @@ export default class UserDraftsStream extends RestModel {
     this.reset();
   }
 
+  @computed("content.length", "loading")
+  get noContent() {
+    return this.content?.length === 0 && !this.loading;
+  }
+
   reset() {
     this.setProperties({
       loading: false,
       hasMore: true,
       content: [],
     });
-  }
-
-  @computed("content.length", "loading")
-  get noContent() {
-    return this.content?.length === 0 && !this.loading;
   }
 
   remove(draft) {

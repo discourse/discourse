@@ -14,6 +14,24 @@ import {
 } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
 
+function stubPluginDetails(server, helper) {
+  server.get("/admin/plugins/discourse-data-explorer.json", () =>
+    helper.response({
+      id: "discourse-data-explorer",
+      name: "discourse-data-explorer",
+      enabled: true,
+      has_settings: true,
+      humanized_name: "Data Explorer",
+      is_discourse_owned: true,
+      admin_route: {
+        label: "explorer.title",
+        location: "discourse-data-explorer",
+        use_new_show_route: true,
+      },
+    })
+  );
+}
+
 acceptance("Run Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
@@ -27,21 +45,7 @@ acceptance("Run Query", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/discourse-data-explorer.json", () => {
-      return helper.response({
-        id: "discourse-data-explorer",
-        name: "discourse-data-explorer",
-        enabled: true,
-        has_settings: true,
-        humanized_name: "Data Explorer",
-        is_discourse_owned: true,
-        admin_route: {
-          label: "explorer.title",
-          location: "discourse-data-explorer",
-          use_new_show_route: true,
-        },
-      });
-    });
+    stubPluginDetails(server, helper);
 
     server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([
@@ -582,5 +586,26 @@ acceptance("Run Query", function (needs) {
       heightWhenTornDown,
       "the detached panes keep the size they had when the separator went"
     );
+  });
+});
+
+acceptance("Run Query | non-admin", function (needs) {
+  needs.user({ admin: false });
+  needs.settings({ data_explorer_enabled: true });
+
+  needs.pretender((server, helper) => {
+    stubPluginDetails(server, helper);
+  });
+
+  test("shows the admins only error page", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/62");
+
+    assert.dom(".error-page .desc").hasText(i18n("explorer.admins_only"));
+  });
+
+  test("shows the admins only error page for a new query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert.dom(".error-page .desc").hasText(i18n("explorer.admins_only"));
   });
 });

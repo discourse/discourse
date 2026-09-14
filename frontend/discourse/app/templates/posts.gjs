@@ -17,8 +17,8 @@ export default class extends Component {
     <section class="posts-page">
       <h2 class="posts-page__title">{{i18n "post_list.title"}}</h2>
       <PostList
-        @posts={{@model}}
         @fetchMorePosts={{this.loadMorePosts}}
+        @posts={{@model}}
         @titlePath="topic_html_title"
       />
     </section>

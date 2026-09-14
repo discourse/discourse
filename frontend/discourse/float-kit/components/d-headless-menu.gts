@@ -21,13 +21,13 @@ interface DHeadlessMenuSignature {
  */
 const DHeadlessMenu: TemplateOnlyComponent<DHeadlessMenuSignature> = <template>
   <DInlineFloat
-    @instance={{@menu}}
-    @trapTab={{@menu.options.trapTab}}
-    @inlineTabOrder={{@menu.options.inlineTabOrder}}
-    @mainClass="fk-d-menu"
-    @innerClass="fk-d-menu__inner-content"
-    @role={{@menu.options.contentRole}}
     @inline={{@inline}}
+    @inlineTabOrder={{@menu.options.inlineTabOrder}}
+    @innerClass="fk-d-menu__inner-content"
+    @instance={{@menu}}
+    @mainClass="fk-d-menu"
+    @role={{@menu.options.contentRole}}
+    @trapTab={{@menu.options.trapTab}}
   />
 </template>;
 

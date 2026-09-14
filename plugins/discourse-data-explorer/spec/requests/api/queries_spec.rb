@@ -43,11 +43,12 @@ RSpec.describe "JSON:API queries", type: :request do
   let(:query_parameters) { {} }
   let(:user) { admin }
   let(:parsed_body) { JSON.parse(response.body) }
+  let(:headers) { { "HTTP_API_VERSION" => JsonApiKit::Timeline.current.to_s } }
 
   before do
     SiteSetting.data_explorer_enabled = true
     sign_in(user)
-    get path, params: query_parameters
+    get path, headers:, params: query_parameters
   end
 
   shared_examples "a request only for admins" do
@@ -79,10 +80,10 @@ RSpec.describe "JSON:API queries", type: :request do
             "name" => query.name,
             "description" => query.description,
             "sql" => query.sql,
-            "param_info" => [],
-            "is_default" => false,
-            "created_at" => query.created_at.as_json,
-            "last_run_at" => query.last_run_at.as_json,
+            "paramInfo" => [],
+            "isDefault" => false,
+            "createdAt" => query.created_at.as_json,
+            "lastRunAt" => query.last_run_at.as_json,
           },
           "links" => {
             "self" => "#{base}/queries/#{query.id}",
@@ -135,6 +136,7 @@ RSpec.describe "JSON:API queries", type: :request do
 
     context "when the request includes the author and the groups" do
       let(:query_parameters) { { include: "user,groups" } }
+
       it "sends every related record under its own namespace" do
         expect(parsed_body["included"]).to contain_exactly(
           {
@@ -176,10 +178,10 @@ RSpec.describe "JSON:API queries", type: :request do
             "name" => middle.name,
             "description" => middle.description,
             "sql" => middle.sql,
-            "param_info" => [],
-            "is_default" => false,
-            "created_at" => middle.created_at.as_json,
-            "last_run_at" => middle.last_run_at.as_json,
+            "paramInfo" => [],
+            "isDefault" => false,
+            "createdAt" => middle.created_at.as_json,
+            "lastRunAt" => middle.last_run_at.as_json,
           },
           "links" => {
             "self" => "#{base}/queries/#{middle.id}",

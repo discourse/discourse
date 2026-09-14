@@ -24,13 +24,60 @@ module("Integration | ui-kit | DModal", function (hooks) {
       <template>
         <DModal
           @inline={{true}}
-          @title="Modal Title"
           @subtitle="Modal Subtitle"
+          @title="Modal Title"
         />
       </template>
     );
     assert.dom(".d-modal .d-modal__title-text").hasText("Modal Title");
     assert.dom(".d-modal .d-modal__subtitle-text").hasText("Modal Subtitle");
+  });
+
+  test("modal-name-oracle: title references respect header visibility", async function (assert) {
+    await render(
+      <template>
+        <DModal
+          @hideHeader={{true}}
+          @inline={{true}}
+          @title="admin.search.modal_title"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-modal[role='dialog']")
+      .exists("the hidden-header dialog renders");
+    assert.dom(".d-modal__header").doesNotExist("the header is not rendered");
+    assert
+      .dom(".d-modal[role='dialog']")
+      .doesNotHaveAttribute(
+        "aria-labelledby",
+        "a hidden-header dialog does not reference an unrendered title"
+      );
+
+    await render(
+      <template>
+        <DModal @hideHeader={{false}} @inline={{true}} @title="Modal Title" />
+      </template>
+    );
+
+    assert
+      .dom(".d-modal[role='dialog']")
+      .hasAttribute(
+        "aria-labelledby",
+        "discourse-modal-title",
+        "a visible-header dialog retains its title reference"
+      );
+    assert
+      .dom(".d-modal__header .d-modal__title-text")
+      .hasText("Modal Title", "the visible header renders the title");
+    assert.strictEqual(
+      document.getElementById(
+        find(".d-modal[role='dialog']").getAttribute("aria-labelledby")
+      ),
+      find(".d-modal__header .d-modal__title-text"),
+      "the visible-header dialog's label reference resolves to its rendered title"
+    );
   });
 
   test("named blocks", async function (assert) {
@@ -71,7 +118,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
 
     await render(
       <template>
-        <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+        <DModal @closeModal={{noop}} @inline={{true}} @title="test">
           <:headerPrimaryAction
           >headerPrimaryActionContent</:headerPrimaryAction>
         </DModal>
@@ -84,7 +131,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
 
     await render(
       <template>
-        <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+        <DModal @closeModal={{noop}} @inline={{true}} @title="test">
           <:headerPrimaryAction
           >headerPrimaryActionContent</:headerPrimaryAction>
         </DModal>
@@ -108,7 +155,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
 
   test("flash", async function (assert) {
     await render(
-      <template><DModal @inline={{true}} @flash="Some message" /></template>
+      <template><DModal @flash="Some message" @inline={{true}} /></template>
     );
     assert.dom(".d-modal .alert").hasText("Some message");
   });
@@ -116,7 +163,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
   test("flash type", async function (assert) {
     await render(
       <template>
-        <DModal @inline={{true}} @flash="Some message" @flashType="success" />
+        <DModal @flash="Some message" @flashType="success" @inline={{true}} />
       </template>
     );
     assert.dom(".d-modal .alert").hasClass("alert-success");
@@ -137,9 +184,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
     await render(
       <template>
         <DModal
-          @inline={{true}}
           @closeModal={{testState.closeModal}}
           @dismissable={{testState.dismissable}}
+          @inline={{true}}
         />
       </template>
     );
@@ -173,9 +220,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
     await render(
       <template>
         <DModal
-          @inline={{true}}
-          @closeModal={{closeModal}}
           @beforeClose={{beforeClose}}
+          @closeModal={{closeModal}}
+          @inline={{true}}
         />
       </template>
     );
@@ -198,9 +245,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
     await render(
       <template>
         <DModal
-          @inline={{true}}
           @bodyClass="my-body-class"
           @headerClass="my-header-class"
+          @inline={{true}}
           @title="Hello world"
         />
       </template>
@@ -221,7 +268,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
       <template>
         <DModal @inline={{true}} @tagName="form" {{on "submit" handleSubmit}}>
           <:body>
-            <input type="text" name="name" value="John Doe" />
+            <input name="name" type="text" value="John Doe" />
           </:body>
           <:footer>
             <button type="submit">Submit</button>
@@ -249,9 +296,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
+              class="btn-primary"
               @action={{someAction}}
               @translatedLabel="Perform action"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -281,9 +328,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
+              class="btn-primary"
               @action={{someAction}}
               @translatedLabel="Perform action"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -336,16 +383,16 @@ module("Integration | ui-kit | DModal", function (hooks) {
         <DModal @inline={{true}}>
           <:body>
             <DButton
+              class="body-button"
               @action={{onBody}}
               @translatedLabel="Body action"
-              class="body-button"
             />
           </:body>
           <:footer>
             <DButton
+              class="btn-primary"
               @action={{onFooter}}
               @translatedLabel="Perform action"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -380,9 +427,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
+              class="btn-primary"
               @action={{someAction}}
               @translatedLabel="Perform action"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -406,7 +453,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
             <input class="body-input" type="text" />
           </:body>
           <:footer>
-            <DButton @translatedLabel="Not primary" class="btn-danger" />
+            <DButton class="btn-danger" @translatedLabel="Not primary" />
           </:footer>
         </DModal>
       </template>
@@ -444,15 +491,15 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
-              @action={{onUpload}}
-              @translatedLabel="Upload"
-              @disabled={{true}}
               class="btn-primary"
+              @action={{onUpload}}
+              @disabled={{true}}
+              @translatedLabel="Upload"
             />
             <DButton
+              class="btn-primary"
               @action={{onClose}}
               @translatedLabel="Close"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -481,7 +528,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <fieldset disabled>
-              <DButton @translatedLabel="Perform action" class="btn-primary" />
+              <DButton class="btn-primary" @translatedLabel="Perform action" />
             </fieldset>
           </:footer>
         </DModal>
@@ -525,11 +572,11 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
-              @action={{someAction}}
-              @translatedLabel="Perform action"
-              @href="/somewhere"
-              @disabled={{true}}
               class="btn-primary"
+              @action={{someAction}}
+              @disabled={{true}}
+              @href="/somewhere"
+              @translatedLabel="Perform action"
             />
           </:footer>
         </DModal>
@@ -564,9 +611,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
+              class="btn-primary"
               @action={{someAction}}
               @translatedLabel="Perform action"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -598,9 +645,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
+              class="btn-primary"
               @action={{someAction}}
               @translatedLabel="Upload"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -627,9 +674,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
-              @translatedLabel="Upload"
-              @disabled={{true}}
               class="btn-primary"
+              @disabled={{true}}
+              @translatedLabel="Upload"
             />
           </:footer>
         </DModal>
@@ -673,9 +720,9 @@ module("Integration | ui-kit | DModal", function (hooks) {
           </:body>
           <:footer>
             <DButton
+              class="btn-primary"
               @action={{someAction}}
               @translatedLabel="Perform action"
-              class="btn-primary"
             />
           </:footer>
         </DModal>
@@ -696,7 +743,7 @@ module("Integration | ui-kit | DModal", function (hooks) {
         <DModal @inline={{true}} @title="Underlying modal" />
         <DModal @inline={{true}} @title="Stacked modal">
           <:body>
-            <input type="text" class="stacked-modal-input" />
+            <input class="stacked-modal-input" type="text" />
           </:body>
         </DModal>
       </template>

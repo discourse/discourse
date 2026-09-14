@@ -10,22 +10,22 @@ export default class DateTimeField extends BaseField {
   <template>
     <section class="field date-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <div class="controls-row">
             <Input
+              disabled={{@field.isDisabled}}
               @type="datetime-local"
               @value={{readonly this.localTime}}
-              disabled={{@field.isDisabled}}
               {{on "input" this.convertToUniversalTime}}
             />
 
             {{#if @field.metadata.value}}
               <DButton
-                @icon="trash-can"
                 @action={{this.reset}}
                 @disabled={{@field.isDisabled}}
+                @icon="trash-can"
               />
             {{/if}}
           </div>
@@ -35,6 +35,15 @@ export default class DateTimeField extends BaseField {
       </div>
     </section>
   </template>
+
+  get localTime() {
+    return (
+      this.args.field.metadata.value &&
+      moment(this.args.field.metadata.value)
+        .local()
+        .format(moment.HTML5_FMT.DATETIME_LOCAL)
+    );
+  }
 
   @action
   convertToUniversalTime(event) {
@@ -49,14 +58,5 @@ export default class DateTimeField extends BaseField {
   @action
   reset() {
     this.mutValue(null);
-  }
-
-  get localTime() {
-    return (
-      this.args.field.metadata.value &&
-      moment(this.args.field.metadata.value)
-        .local()
-        .format(moment.HTML5_FMT.DATETIME_LOCAL)
-    );
   }
 }

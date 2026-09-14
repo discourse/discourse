@@ -44,10 +44,10 @@ export default class RovingFocusMultiSelectExample extends Component {
 
   <template>
     <ul
+      aria-label={{i18n "styleguide.sections.roving_focus.multi.label"}}
+      aria-multiselectable="true"
       class="roving-demo__listbox"
       role="listbox"
-      aria-multiselectable="true"
-      aria-label={{i18n "styleguide.sections.roving_focus.multi.label"}}
       {{dRovingFocus
         orientation="vertical"
         itemSelector=".roving-demo__option"
@@ -58,10 +58,10 @@ export default class RovingFocusMultiSelectExample extends Component {
     >
       {{#each this.rows key="id" as |row|}}
         <li
-          class="roving-demo__option"
-          role="option"
-          data-option-id={{row.id}}
           aria-selected={{row.selected}}
+          class="roving-demo__option"
+          data-option-id={{row.id}}
+          role="option"
         >
           {{row.label}}
         </li>

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sw:
+  mcp:
+    errors:
+      topic_not_found: "Mada haijapatikana"
+    oauth:
+      approve: "Idhini"
   llms_txt:
     sections:
       optional: "Sio Muhimu"
@@ -414,6 +419,7 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   admin_site_traffic_explorer:
+    unknown: "Haijulikani"
     traffic_types:
       anonymous: "Asiyejulikana"
   change_email:

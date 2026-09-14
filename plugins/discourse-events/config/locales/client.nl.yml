@@ -331,6 +331,9 @@ nl:
     group_timezones:
       search: "Zoeken..."
       group_availability: "Beschikbaarheid %{group}"
+    discourse_workflows:
+      post_event:
+        topic_id: "Topic-ID"
     discourse_post_event:
       notifications:
         before_event_reminder: "Een evenement gaat beginnen"
@@ -361,6 +364,9 @@ nl:
       edit_event: "Evenement bewerken"
       export_event: "Evenement exporteren"
       created_by: "Gemaakt door"
+      other_hosts:
+        one: "en %{count} ander"
+        other: "en %{count} anderen"
       bulk_invite: "Bulkuitnodiging"
       close_event: "Evenement sluiten"
       open_event: "Evenement openen"
@@ -528,6 +534,8 @@ nl:
           placeholder: "Optioneel, standaard ingesteld op topictitel"
         invitees:
           label: "Uitgenodigde groepen"
+        hosts:
+          label: "Hosts"
         event_type:
           public:
             title: "Openbaar"

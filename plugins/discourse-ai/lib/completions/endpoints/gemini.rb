@@ -20,6 +20,15 @@ module DiscourseAi
           THINKING_LEVEL_BY_EFFORT.merge("minimal" => "low").freeze
         LOW_HIGH_THINKING_LEVEL_BY_EFFORT =
           THINKING_LEVEL_WITHOUT_MINIMAL_BY_EFFORT.merge("medium" => "high").freeze
+        GEMINI_3_8_UNSUPPORTED_MODEL_PARAMS = %i[
+          temperature
+          top_p
+          topP
+          top_k
+          topK
+          thinking_budget
+          thinkingBudget
+        ].freeze
 
         def self.can_contact?(llm_model)
           llm_model.provider == "google"
@@ -62,6 +71,7 @@ module DiscourseAi
           end
 
           model_params.delete(:topP) if llm_model.lookup_custom_param("disable_top_p")
+          strip_unsupported_gemini_3_8_params!(model_params)
 
           model_params
         end
@@ -83,6 +93,17 @@ module DiscourseAi
           end
 
           if effort == "none"
+            if gemini_3_8_flash?
+              return(
+                DiscourseAi::Completions::ThinkingConfig.new(
+                  canonical_effort: effort,
+                  provider_effort: "low",
+                  enabled: true,
+                  strip_temperature: true,
+                )
+              )
+            end
+
             # some Gemini 3 Pro-tier models can't run with thinking disabled at
             # all and reject a forced thinkingBudget: 0 outright — omit the
             # override entirely and let the model use its own default instead.
@@ -214,6 +235,32 @@ module DiscourseAi
           @gemini_model_id ||= [llm_model.name, llm_model.url].compact.join(" ")
         end
 
+        def gemini_3_8_flash?
+          gemini_model_id.include?("gemini-3.8-flash")
+        end
+
+        def strip_unsupported_gemini_3_8_params!(model_params)
+          return if !gemini_3_8_flash?
+
+          model_params.except!(*GEMINI_3_8_UNSUPPORTED_MODEL_PARAMS)
+
+          thinking_config = model_params[:thinkingConfig]
+          return if !thinking_config.is_a?(Hash)
+
+          thinking_config =
+            thinking_config.except(
+              :thinkingBudget,
+              :thinking_budget,
+              "thinkingBudget",
+              "thinking_budget",
+            )
+          if thinking_config.empty?
+            model_params.delete(:thinkingConfig)
+          else
+            model_params[:thinkingConfig] = thinking_config
+          end
+        end
+
         def legacy_thinking_config
           thinking_level = llm_model.lookup_custom_param("thinking_level")
           provider_effort = thinking_level_for_effort(thinking_level)
@@ -229,6 +276,8 @@ module DiscourseAi
           end
 
           if llm_model.lookup_custom_param("enable_thinking")
+            return DiscourseAi::Completions::ThinkingConfig.disabled if gemini_3_8_flash?
+
             thinking_tokens = llm_model.lookup_custom_param("thinking_tokens").to_i.clamp(0, 24_576)
             return DiscourseAi::Completions::ThinkingConfig.explicit_none if thinking_tokens.zero?
 

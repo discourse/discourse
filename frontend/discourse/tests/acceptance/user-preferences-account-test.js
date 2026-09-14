@@ -80,8 +80,17 @@ acceptance("User Preferences - Account", function (needs) {
     assert.dom(".username-preference__input").hasValue("eviltrout");
     assert.dom(".username-preference__submit").isDisabled();
 
+    await fillIn(".username-preference__input", "taken");
+    assert.dom(".username-preference__submit").isDisabled();
+    assert
+      .dom(".pref-username .instructions")
+      .includesText(i18n("user.change_username.taken"));
+
     await fillIn(".username-preference__input", "good_trout");
     assert.dom(".username-preference__submit").isEnabled();
+    assert
+      .dom(".pref-username .instructions")
+      .doesNotIncludeText(i18n("user.change_username.taken"));
 
     await click(".username-preference__submit");
     await click(".dialog-container .btn-primary");

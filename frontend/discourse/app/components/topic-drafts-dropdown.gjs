@@ -105,30 +105,30 @@ export default class TopicDraftsDropdown extends Component {
 
   <template>
     <DComboButton
-      @hasMenu={{@showDrafts}}
-      @btnTypeClass={{@btnTypeClass}}
-      class="topic-create-button__combo"
       aria-label={{i18n "topic.create_group"}}
+      class="topic-create-button__combo"
       ...attributes
+      @btnTypeClass={{@btnTypeClass}}
+      @hasMenu={{@showDrafts}}
       as |combo|
     >
       <combo.Button
+        class={{@btnClasses}}
+        id={{@btnId}}
         @action={{@action}}
-        @label={{@label}}
         @ariaLabel={{@label}}
         @icon={{or @icon "far-pen-to-square"}}
-        id={{@btnId}}
-        class={{@btnClasses}}
+        @label={{@label}}
       />
 
       <combo.Menu
-        @identifier="topic-drafts-menu"
-        @title={{i18n "drafts.dropdown.title"}}
-        @onShow={{this.onShowMenu}}
-        @onRegisterApi={{this.onRegisterApi}}
-        @modalForMobile={{true}}
         aria-label={{i18n "drafts.dropdown.title"}}
         class={{@draftMenuClasses}}
+        @identifier="topic-drafts-menu"
+        @modalForMobile={{true}}
+        @onRegisterApi={{this.onRegisterApi}}
+        @onShow={{this.onShowMenu}}
+        @title={{i18n "drafts.dropdown.title"}}
       >
         <DDropdownMenu as |dropdown|>
           {{#each this.drafts as |draft|}}
@@ -149,9 +149,9 @@ export default class TopicDraftsDropdown extends Component {
 
             <dropdown.item>
               <DButton
+                class="btn-link view-all-drafts"
                 @href={{getURL "/my/activity/drafts"}}
                 @model={{this.currentUser}}
-                class="btn-link view-all-drafts"
               >
                 <span
                   data-other-drafts={{this.otherDraftsCount}}

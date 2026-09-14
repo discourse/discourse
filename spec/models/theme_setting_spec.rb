@@ -82,7 +82,7 @@ RSpec.describe ThemeSetting do
   end
 
   context "for validations" do
-    it "should be invalid when json_value size is greater than the maximum allowed size" do
+    it "rejects json_value exceeding the maximum size" do
       json_value = { "key" => "value" }
       bytesize = json_value.to_json.bytesize
 

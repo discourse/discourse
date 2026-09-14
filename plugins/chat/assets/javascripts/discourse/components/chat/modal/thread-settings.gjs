@@ -49,24 +49,24 @@ export default class ChatModalThreadSettings extends Component {
 
   <template>
     <DModal
-      @closeModal={{@closeModal}}
       class="chat-modal-thread-settings"
+      @closeModal={{@closeModal}}
       @inline={{@inline}}
       @title={{i18n "chat.thread_title_modal.title"}}
     >
       <:headerPrimaryAction>
         <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.saveThread}}
-          @label="chat.save"
           class="btn-transparent --primary"
+          @action={{this.saveThread}}
+          @disabled={{this.buttonDisabled}}
+          @label="chat.save"
         />
       </:headerPrimaryAction>
       <:body>
         <Input
-          name="thread-title"
           class="chat-modal-thread-settings__title-input"
           maxlength="100"
+          name="thread-title"
           placeholder={{i18n "chat.thread_title_modal.input_placeholder"}}
           @type="text"
           @value={{this.editedTitle}}
@@ -91,10 +91,10 @@ export default class ChatModalThreadSettings extends Component {
       </:body>
       <:footer>
         <DButton
-          @disabled={{this.buttonDisabled}}
-          @action={{this.saveThread}}
-          @label="save"
           class="btn-primary"
+          @action={{this.saveThread}}
+          @disabled={{this.buttonDisabled}}
+          @label="save"
         />
       </:footer>
     </DModal>

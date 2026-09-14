@@ -26,23 +26,23 @@ export default class CustomDateRange extends Component {
   <template>
     <DModal
       class="custom-date-range-modal"
-      @title={{i18n "admin.dashboard.reports.dates"}}
       @closeModal={{@closeModal}}
+      @title={{i18n "admin.dashboard.reports.dates"}}
     >
       <:body>
         <DDateTimeInputRange
           @from={{this.startDate}}
-          @to={{this.endDate}}
           @onChange={{this.onChangeDateRange}}
           @showFromTime={{false}}
           @showToTime={{false}}
+          @to={{this.endDate}}
         />
       </:body>
       <:footer>
         <DButton
           @action={{this.updateDateRange}}
-          @label="admin.dashboard.reports.refresh_report"
           @icon="arrows-rotate"
+          @label="admin.dashboard.reports.refresh_report"
         />
       </:footer>
     </DModal>

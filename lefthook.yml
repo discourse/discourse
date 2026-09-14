@@ -17,7 +17,9 @@ pre-commit:
   commands:
     rubocop:
       exclude: &ruby_exclude
+        - "bin/dev"
         - "bin/notify_file_change"
+        - "bin/system_rspec"
         - "bin/docker/**/*"
       glob: &ruby_glob
         - "**/*.{rb,rake,thor}"

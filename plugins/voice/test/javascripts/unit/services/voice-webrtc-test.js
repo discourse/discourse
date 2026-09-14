@@ -99,7 +99,12 @@ class VoiceRoomsStub extends Service {
 }
 
 class ToastsStub extends Service {
-  error() {}
+  errors = [];
+
+  error(options) {
+    this.errors.push(options);
+  }
+
   success() {}
   default() {}
 }
@@ -462,6 +467,9 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
   hooks.beforeEach(function () {
     setPeerTimingForTesting(SAFE_PEER_TIMING);
     this.currentUser = logIn(this.owner);
+    this.keyValueStore = this.owner.lookup("service:key-value-store");
+    this.cameraPreferenceKey = `voice-camera-enabled-${this.currentUser.id}`;
+    this.keyValueStore.remove(this.cameraPreferenceKey);
     this.siteSettings = this.owner.lookup("service:site-settings");
     this.siteSettings.voice_auto_status_enabled = true;
     localStorage.removeItem("voice:noise-suppression");
@@ -547,6 +555,7 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
 
   hooks.afterEach(function () {
     this.subject?.leave({ id: 1 }, { keepLocalStream: true });
+    this.keyValueStore.remove(this.cameraPreferenceKey);
 
     setPeerTimingForTesting(null);
     globalThis.RTCPeerConnection = this.originalRTCPeerConnection;
@@ -2184,6 +2193,18 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
     };
   }
 
+  function createEndableCameraTrack(id) {
+    const track = createFakeCameraTrack(id);
+    let ended;
+    track.addEventListener = (event, callback) => {
+      if (event === "ended") {
+        ended = callback;
+      }
+    };
+    track.end = () => ended?.();
+    return track;
+  }
+
   function createFakeCameraStream(id, track) {
     return {
       id,
@@ -2205,6 +2226,686 @@ module("Voice | Unit | Service | voice-webrtc", function (hooks) {
 
     pretender.post("/voice/rooms/1/state", () => response({}));
   }
+
+  test("explicit camera toggles update the remembered preference", async function (assert) {
+    setupCameraRoom(this);
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    const cameraTrack = createFakeCameraTrack("camera-track");
+    const cameraStream = createFakeCameraStream("camera-stream", cameraTrack);
+    navigator.mediaDevices.getUserMedia = async (constraints) =>
+      constraints?.video ? cameraStream : rawStream;
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+
+      await this.subject.toggleCamera();
+
+      assert.strictEqual(
+        this.keyValueStore.get(this.cameraPreferenceKey),
+        "true",
+        "remembers a successfully started camera"
+      );
+
+      await this.subject.toggleCamera();
+
+      assert.strictEqual(
+        this.keyValueStore.get(this.cameraPreferenceKey),
+        undefined,
+        "clears the preference when the user turns the camera off"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a remembered camera restarts after leaving and joining another watched room", async function (assert) {
+    setupCameraRoom(this);
+
+    const secondRoom = {
+      ...this.room,
+      id: 2,
+      name: "Second room",
+      active_participants: [{ id: this.currentUser.id, role: "participant" }],
+    };
+    this.rooms.seedRoom(secondRoom);
+    pretender.post("/voice/rooms/2/join", () =>
+      response({
+        participant_session_id: "session-def",
+        room: JSON.parse(JSON.stringify(secondRoom)),
+      })
+    );
+    pretender.post("/voice/rooms/2/state", () => response({}));
+    pretender.delete("/voice/rooms/2/leave", () => response({}));
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    const cameraTracks = [];
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (!constraints?.video) {
+        return rawStream;
+      }
+
+      const track = createFakeCameraTrack(
+        `camera-track-${cameraTracks.length}`
+      );
+      cameraTracks.push(track);
+      return createFakeCameraStream(
+        `camera-stream-${cameraTracks.length}`,
+        track
+      );
+    };
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await this.subject.toggleCamera();
+
+      this.subject.leave(this.room, { keepLocalStream: true });
+
+      assert.true(
+        cameraTracks[0].stopped,
+        "releases the first room's camera track while preserving intent"
+      );
+
+      await this.subject.join(secondRoom);
+      this.subject.setWatching(2, true);
+      await waitUntil(() => this.subject.localVideoKind === "camera");
+
+      assert.strictEqual(
+        cameraTracks.length,
+        2,
+        "acquires a fresh camera stream without another camera-button click"
+      );
+      assert.strictEqual(
+        this.keyValueStore.get(this.cameraPreferenceKey),
+        "true",
+        "keeps the remembered camera preference"
+      );
+    } finally {
+      this.subject.leave(secondRoom, { keepLocalStream: true });
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a remembered camera waits for a visible call surface", async function (assert) {
+    setupCameraRoom(this);
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    let cameraCaptures = 0;
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (!constraints?.video) {
+        return rawStream;
+      }
+
+      cameraCaptures++;
+      const track = createFakeCameraTrack("camera-track");
+      return createFakeCameraStream("camera-stream", track);
+    };
+
+    try {
+      await this.subject.join(this.room);
+      await wait(20);
+
+      assert.strictEqual(
+        cameraCaptures,
+        0,
+        "does not capture while the room has no visible controls"
+      );
+
+      this.subject.setWatching(1, true);
+      await waitUntil(() => this.subject.localVideoKind === "camera");
+
+      assert.strictEqual(
+        cameraCaptures,
+        1,
+        "captures after the room page or call widget becomes visible"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a pending camera restore is deduplicated and canceled when its controls disappear", async function (assert) {
+    setupCameraRoom(this);
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    const cameraGranted = deferred();
+    const cameraTrack = createFakeCameraTrack("camera-track");
+    const cameraStream = createFakeCameraStream("camera-stream", cameraTrack);
+    let cameraCaptures = 0;
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (!constraints?.video) {
+        return rawStream;
+      }
+
+      cameraCaptures++;
+      return cameraGranted.promise;
+    };
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      this.subject.setWatching(1, true);
+      await waitUntil(() => cameraCaptures === 1);
+
+      this.subject.setWatching(1, false);
+      cameraGranted.resolve(cameraStream);
+      await waitUntil(() => cameraTrack.stopped);
+
+      assert.strictEqual(
+        cameraCaptures,
+        1,
+        "uses one capture request for repeated watching updates"
+      );
+      assert.strictEqual(
+        this.subject.localVideoKind,
+        null,
+        "does not publish after the visible controls disappear"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  test("an in-flight camera restore does not replace an explicit screen share", async function (assert) {
+    setupCameraRoom(this);
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    const cameraGranted = deferred();
+    const cameraTrack = createFakeCameraTrack("camera-track");
+    const cameraStream = createFakeCameraStream("camera-stream", cameraTrack);
+    const screenTrack = createFakeCameraTrack("screen-track");
+    const screenStream = {
+      ...createFakeCameraStream("screen-stream", screenTrack),
+      getAudioTracks: () => [],
+    };
+    const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
+    navigator.mediaDevices.getUserMedia = async (constraints) =>
+      constraints?.video ? cameraGranted.promise : rawStream;
+    navigator.mediaDevices.getDisplayMedia = async () => screenStream;
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await this.subject.toggleScreenShare();
+
+      cameraGranted.resolve(cameraStream);
+      await waitUntil(() => cameraTrack.stopped);
+
+      assert.strictEqual(
+        this.subject.localVideoKind,
+        "screen",
+        "keeps the explicitly selected screen share active"
+      );
+      assert.false(
+        screenTrack.stopped,
+        "does not stop the screen track when camera capture resolves"
+      );
+    } finally {
+      if (originalGetDisplayMedia) {
+        navigator.mediaDevices.getDisplayMedia = originalGetDisplayMedia;
+      } else {
+        delete navigator.mediaDevices.getDisplayMedia;
+      }
+      audioEnvironment.restore();
+    }
+  });
+
+  test("stopping a screen share restores the previously enabled camera", async function (assert) {
+    setupCameraRoom(this);
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    const cameraTracks = [];
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (!constraints?.video) {
+        return rawStream;
+      }
+
+      const track = createFakeCameraTrack(
+        `camera-track-${cameraTracks.length}`
+      );
+      cameraTracks.push(track);
+      return createFakeCameraStream(
+        `camera-stream-${cameraTracks.length}`,
+        track
+      );
+    };
+    const screenTrack = createFakeCameraTrack("screen-track");
+    const screenStream = {
+      ...createFakeCameraStream("screen-stream", screenTrack),
+      getAudioTracks: () => [],
+    };
+    const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
+    navigator.mediaDevices.getDisplayMedia = async () => screenStream;
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await this.subject.toggleCamera();
+      await this.subject.toggleScreenShare();
+
+      assert.strictEqual(
+        this.subject.localVideoKind,
+        "screen",
+        "replaces the camera with the screen share"
+      );
+
+      await this.subject.toggleScreenShare();
+      await waitUntil(() => this.subject.localVideoKind === "camera");
+
+      assert.strictEqual(
+        cameraTracks.length,
+        2,
+        "reacquires the camera after screen sharing stops"
+      );
+    } finally {
+      if (originalGetDisplayMedia) {
+        navigator.mediaDevices.getDisplayMedia = originalGetDisplayMedia;
+      } else {
+        delete navigator.mediaDevices.getDisplayMedia;
+      }
+      audioEnvironment.restore();
+    }
+  });
+
+  test("stopping a screen share keeps a previously disabled camera off", async function (assert) {
+    setupCameraRoom(this);
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    let cameraCaptures = 0;
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (constraints?.video) {
+        cameraCaptures++;
+      }
+      return rawStream;
+    };
+    const screenTrack = createFakeCameraTrack("screen-track");
+    const screenStream = {
+      ...createFakeCameraStream("screen-stream", screenTrack),
+      getAudioTracks: () => [],
+    };
+    const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
+    navigator.mediaDevices.getDisplayMedia = async () => screenStream;
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await this.subject.toggleScreenShare();
+      await this.subject.toggleScreenShare();
+      await wait(20);
+
+      assert.strictEqual(
+        cameraCaptures,
+        0,
+        "does not acquire a camera without a remembered camera-on choice"
+      );
+      assert.strictEqual(this.subject.localVideoKind, null, "leaves video off");
+    } finally {
+      if (originalGetDisplayMedia) {
+        navigator.mediaDevices.getDisplayMedia = originalGetDisplayMedia;
+      } else {
+        delete navigator.mediaDevices.getDisplayMedia;
+      }
+      audioEnvironment.restore();
+    }
+  });
+
+  test("the browser's stop-sharing action restores the previously enabled camera", async function (assert) {
+    setupCameraRoom(this);
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    let cameraCaptures = 0;
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (!constraints?.video) {
+        return rawStream;
+      }
+
+      cameraCaptures++;
+      const track = createFakeCameraTrack(`camera-track-${cameraCaptures}`);
+      return createFakeCameraStream(`camera-stream-${cameraCaptures}`, track);
+    };
+    const screenTrack = createEndableCameraTrack("screen-track");
+    const screenStream = {
+      ...createFakeCameraStream("screen-stream", screenTrack),
+      getAudioTracks: () => [],
+    };
+    const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
+    navigator.mediaDevices.getDisplayMedia = async () => screenStream;
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await this.subject.toggleCamera();
+      await this.subject.toggleScreenShare();
+
+      screenTrack.end();
+      await waitUntil(
+        () => this.subject.localVideoKind === "camera" && cameraCaptures === 2
+      );
+
+      assert.strictEqual(
+        this.subject.localVideoKind,
+        "camera",
+        "restores the camera after the browser ends screen capture"
+      );
+    } finally {
+      if (originalGetDisplayMedia) {
+        navigator.mediaDevices.getDisplayMedia = originalGetDisplayMedia;
+      } else {
+        delete navigator.mediaDevices.getDisplayMedia;
+      }
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a delayed ended event cannot stop a replacement screen share", async function (assert) {
+    setupCameraRoom(this);
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    const cameraTrack = createEndableCameraTrack("camera-track");
+    const cameraStream = createFakeCameraStream("camera-stream", cameraTrack);
+    navigator.mediaDevices.getUserMedia = async (constraints) =>
+      constraints?.video ? cameraStream : rawStream;
+    const screenTrack = createFakeCameraTrack("screen-track");
+    const screenStream = {
+      ...createFakeCameraStream("screen-stream", screenTrack),
+      getAudioTracks: () => [],
+    };
+    const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
+    navigator.mediaDevices.getDisplayMedia = async () => screenStream;
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await this.subject.toggleCamera();
+      await this.subject.toggleScreenShare();
+
+      cameraTrack.end();
+      await wait(20);
+
+      assert.strictEqual(
+        this.subject.localVideoKind,
+        "screen",
+        "ignores an ended event from the replaced camera pipeline"
+      );
+      assert.false(
+        screenTrack.stopped,
+        "keeps the replacement screen track active"
+      );
+    } finally {
+      if (originalGetDisplayMedia) {
+        navigator.mediaDevices.getDisplayMedia = originalGetDisplayMedia;
+      } else {
+        delete navigator.mediaDevices.getDisplayMedia;
+      }
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a failed explicit camera start does not create a preference", async function (assert) {
+    setupCameraRoom(this);
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (constraints?.video) {
+        throw new DOMException("Permission denied", "NotAllowedError");
+      }
+      return rawStream;
+    };
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await this.subject.toggleCamera();
+
+      assert.strictEqual(
+        this.keyValueStore.get(this.cameraPreferenceKey),
+        undefined,
+        "keeps future calls camera-off after capture is denied"
+      );
+      assert.strictEqual(
+        this.subject.connectionStateFor(1),
+        "connected",
+        "keeps the audio call connected"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a failed automatic camera restore stays silent", async function (assert) {
+    setupCameraRoom(this);
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (constraints?.video) {
+        throw new DOMException("Camera unavailable", "NotFoundError");
+      }
+      return rawStream;
+    };
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await wait(20);
+
+      const toasts = this.owner.lookup("service:toasts");
+      assert.deepEqual(
+        toasts.errors,
+        [],
+        "does not report a background capture failure as a user action"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a watched room restores the camera when its join finishes", async function (assert) {
+    setupCameraRoom(this);
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    let cameraCaptures = 0;
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (!constraints?.video) {
+        return rawStream;
+      }
+
+      cameraCaptures++;
+      const track = createFakeCameraTrack("camera-track");
+      return createFakeCameraStream("camera-stream", track);
+    };
+
+    try {
+      this.subject.setWatching(1, true);
+      await this.subject.join(this.room);
+      await waitUntil(() => this.subject.localVideoKind === "camera");
+
+      assert.strictEqual(
+        cameraCaptures,
+        1,
+        "restores after joining a room whose page was already visible"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a camera click cancels an in-flight automatic restore", async function (assert) {
+    setupCameraRoom(this);
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    const cameraGranted = deferred();
+    const cameraTrack = createFakeCameraTrack("camera-track");
+    const cameraStream = createFakeCameraStream("camera-stream", cameraTrack);
+    let cameraCaptures = 0;
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (!constraints?.video) {
+        return rawStream;
+      }
+
+      cameraCaptures++;
+      return cameraGranted.promise;
+    };
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await waitUntil(() => cameraCaptures === 1);
+
+      const toggle = this.subject.toggleCamera();
+      cameraGranted.resolve(cameraStream);
+      await toggle;
+
+      assert.strictEqual(
+        this.subject.localVideoKind,
+        null,
+        "keeps the camera off after the explicit click"
+      );
+      assert.true(
+        cameraTrack.stopped,
+        "releases the capture granted after cancellation"
+      );
+      assert.strictEqual(
+        this.keyValueStore.get(this.cameraPreferenceKey),
+        undefined,
+        "remembers the explicit camera-off choice"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
+
+  test("a remembered camera does not bypass room video permissions", async function (assert) {
+    setupCameraRoom(this);
+    this.room.video_enabled = false;
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    const rawTrack = createFakeTrack("raw-track");
+    const rawStream = createFakeStream("raw-stream", rawTrack);
+    const audioEnvironment = installFakeAudioEnvironment({
+      rawStream,
+      processedStream: rawStream,
+    });
+    let cameraCaptures = 0;
+    navigator.mediaDevices.getUserMedia = async (constraints) => {
+      if (constraints?.video) {
+        cameraCaptures++;
+      }
+      return rawStream;
+    };
+
+    try {
+      await this.subject.join(this.room);
+      this.subject.setWatching(1, true);
+      await wait(20);
+
+      assert.strictEqual(
+        cameraCaptures,
+        0,
+        "does not acquire video in a room where publishing is forbidden"
+      );
+      assert.strictEqual(
+        this.keyValueStore.get(this.cameraPreferenceKey),
+        "true",
+        "preserves the preference for a later eligible room"
+      );
+    } finally {
+      audioEnvironment.restore();
+    }
+  });
 
   test("setVideoInputDevice releases the live camera and retries when the hardware is busy", async function (assert) {
     setupCameraRoom(this);

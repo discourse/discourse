@@ -83,10 +83,10 @@ export default class RagDocumentSources extends Component {
 
       {{#unless @disabled}}
         <DButton
+          class="btn-default rag-document-sources__edit"
           @action={{this.openEditor}}
           @icon={{if this.sources.length "pencil" "plus"}}
           @label={{this.buttonLabel}}
-          class="btn-default rag-document-sources__edit"
         />
       {{/unless}}
     </div>

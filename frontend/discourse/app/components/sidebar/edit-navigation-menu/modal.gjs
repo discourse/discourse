@@ -49,18 +49,18 @@ export default class SidebarEditNavigationMenuModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n @title}}
-      @closeModal={{@closeModal}}
       class="sidebar__edit-navigation-menu__modal --large"
       ...attributes
+      @closeModal={{@closeModal}}
+      @title={{i18n @title}}
     >
       <:belowModalTitle>
         <p class="sidebar__edit-navigation-menu__deselect-wrapper">
           <DButton
-            @label="sidebar.edit_navigation_modal_form.deselect_button_text"
-            @ariaLabel="sidebar.edit_navigation_modal_form.deselect_button_text"
-            @action={{@deselectAll}}
             class="btn-flat sidebar__edit-navigation-menu__deselect-button"
+            @action={{@deselectAll}}
+            @ariaLabel="sidebar.edit_navigation_modal_form.deselect_button_text"
+            @label="sidebar.edit_navigation_modal_form.deselect_button_text"
           />
 
           {{@deselectAllText}}
@@ -76,23 +76,23 @@ export default class SidebarEditNavigationMenuModal extends Component {
             }}
 
             <input
-              {{on "input" (withEventValue (fn (mut this.filter)))}}
-              {{on "input" (withEventValue @onFilterInput)}}
-              type="text"
-              value={{this.filter}}
-              placeholder={{@inputFilterPlaceholder}}
               autofocus="true"
               class="sidebar__edit-navigation-menu__filter-input-field"
+              placeholder={{@inputFilterPlaceholder}}
+              type="text"
+              value={{this.filter}}
+              {{on "input" (withEventValue (fn (mut this.filter)))}}
+              {{on "input" (withEventValue @onFilterInput)}}
             />
           </div>
 
           <div class="sidebar__edit-navigation-menu__filter-dropdown-wrapper">
             <DropdownSelectBox
-              @value={{this.filterDropdownValue}}
+              class="sidebar__edit-navigation-menu__filter-dropdown"
               @content={{this.filterDropdownContent}}
               @onChange={{this.onFilterDropdownChange}}
               @options={{hash showCaret=true disabled=@loading}}
-              class="sidebar__edit-navigation-menu__filter-dropdown"
+              @value={{this.filterDropdownValue}}
             />
           </div>
         </div>
@@ -105,19 +105,19 @@ export default class SidebarEditNavigationMenuModal extends Component {
       <:footer>
         <div class="sidebar__edit-navigation-menu__footer">
           <DButton
-            @action={{@save}}
-            @label="save"
-            @disabled={{@saving}}
             class="btn-primary sidebar__edit-navigation-menu__save-button"
+            @action={{@save}}
+            @disabled={{@saving}}
+            @label="save"
           />
 
           {{#if @showResetDefaultsButton}}
             <DButton
-              @action={{@resetToDefaults}}
-              @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
-              @icon="arrow-rotate-left"
-              @disabled={{@saving}}
               class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
+              @action={{@resetToDefaults}}
+              @disabled={{@saving}}
+              @icon="arrow-rotate-left"
+              @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
             />
           {{/if}}
         </div>

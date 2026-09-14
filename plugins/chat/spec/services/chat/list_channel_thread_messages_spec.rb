@@ -10,6 +10,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
     it { is_expected.to validate_presence_of(:channel_id) }
     it { is_expected.to allow_values(1, options.max_page_size, nil).for(:page_size) }
     it { is_expected.not_to allow_values(0).for(:page_size) }
+
     it do
       is_expected.to validate_inclusion_of(:direction).in_array(
         Chat::MessagesQuery::VALID_DIRECTIONS,

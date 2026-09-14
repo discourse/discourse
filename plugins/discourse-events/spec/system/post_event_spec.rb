@@ -36,6 +36,29 @@ describe "Post event" do
     end
   end
 
+  it "shows the event hosts" do
+    first_host = Fabricate(:user, username: "event_host_maya")
+    second_host = Fabricate(:user, username: "event_host_noah")
+    raw = <<~EVENT
+      [event start='2222-02-22 14:22' hosts='#{admin.username},#{first_host.username},#{second_host.username}']
+      [/event]
+    EVENT
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_hosts([first_host, second_host], cohosted: true)
+  end
+
+  it "joins the creator and host roles for the same user" do
+    raw = "[event start='2222-02-22 14:22' hosts='#{admin.username}']\n[/event]"
+    post = PostCreator.create!(admin, title: "Community meetup", raw:)
+
+    visit(post.topic.url)
+
+    expect(post_event_page).to have_creator_host(admin)
+  end
+
   context "with description" do
     it "can save a description" do
       title = "My descriptive meetup event"
@@ -478,7 +501,7 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     form.field("eventType").select("private")
-    find(".group-selector").click
+    form.field("rawInvitees").component.find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
     form.field("customFields.custom").fill_in("custom value")
@@ -494,7 +517,12 @@ describe "Post event" do
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
-    expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
+    expect(
+      form
+        .field("rawInvitees")
+        .component
+        .find(".group-selector .d-multi-select-trigger__selection"),
+    ).to have_text(group.name)
     expect(form.field("customFields.custom")).to have_value("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"

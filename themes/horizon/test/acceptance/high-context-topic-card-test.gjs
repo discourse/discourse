@@ -45,7 +45,7 @@ module(
 
       await render(
         <template>
-          <HighContextTopicCard @topic={{topic}} @hideCategory={{true}} />
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -64,7 +64,7 @@ module(
 
       await render(
         <template>
-          <HighContextTopicCard @topic={{topic}} @hideCategory={{true}} />
+          <HighContextTopicCard @hideCategory={{true}} @topic={{topic}} />
         </template>
       );
 

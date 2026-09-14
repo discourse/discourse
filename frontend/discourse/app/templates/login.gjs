@@ -27,8 +27,8 @@ export default <template>
 
     <div class={{dConcatClass "login-body" @controller.bodyClasses}}>
       <PluginOutlet
-        @name="login-before-modal-body"
         @connectorTagName="div"
+        @name="login-before-modal-body"
         @outletArgs={{lazyHash
           flashChanged=this.flashChanged
           flashTypeChanged=this.flashTypeChanged
@@ -54,9 +54,9 @@ export default <template>
           }}
 
             <LoginButtons
+              @context="login"
               @externalLogin={{@controller.externalLogin}}
               @passkeyLogin={{@controller.passkeyLogin}}
-              @context="login"
             />
 
           {{/if}}
@@ -86,32 +86,32 @@ export default <template>
                 />
               {{else}}
                 <LocalLoginForm
+                  @backupEnabled={{@controller.backupEnabled}}
+                  @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
+                  @canUsePasskeys={{@controller.canUsePasskeys}}
+                  @flashChanged={{@controller.flashChanged}}
+                  @flashTypeChanged={{@controller.flashTypeChanged}}
+                  @handleForgotPassword={{@controller.handleForgotPassword}}
+                  @login={{@controller.localLogin}}
+                  @loginName={{@controller.loginName}}
+                  @loginNameChanged={{@controller.loginNameChanged}}
+                  @loginPassword={{@controller.loginPassword}}
+                  @loginPasswordChanged={{@controller.loginPasswordChanged}}
                   @onShowCodeLogin={{if
                     @controller.canUseCodeLogin
                     @controller.showCodeLogin
                   }}
-                  @loginName={{@controller.loginName}}
-                  @loginNameChanged={{@controller.loginNameChanged}}
-                  @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
-                  @canUsePasskeys={{@controller.canUsePasskeys}}
+                  @otherMethodAllowed={{@controller.otherMethodAllowed}}
                   @passkeyLogin={{@controller.passkeyLogin}}
-                  @loginPassword={{@controller.loginPassword}}
-                  @loginPasswordChanged={{@controller.loginPasswordChanged}}
                   @secondFactorMethod={{@controller.secondFactorMethod}}
                   @secondFactorToken={{@controller.secondFactorToken}}
                   @secondFactorTokenChanged={{@controller.secondFactorTokenChanged}}
-                  @backupEnabled={{@controller.backupEnabled}}
-                  @totpEnabled={{@controller.totpEnabled}}
                   @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
                   @securityKeyChallenge={{@controller.securityKeyChallenge}}
-                  @showSecurityKey={{@controller.showSecurityKey}}
-                  @otherMethodAllowed={{@controller.otherMethodAllowed}}
-                  @showSecondFactor={{@controller.showSecondFactor}}
-                  @handleForgotPassword={{@controller.handleForgotPassword}}
-                  @login={{@controller.localLogin}}
-                  @flashChanged={{@controller.flashChanged}}
-                  @flashTypeChanged={{@controller.flashTypeChanged}}
                   @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
+                  @showSecondFactor={{@controller.showSecondFactor}}
+                  @showSecurityKey={{@controller.showSecurityKey}}
+                  @totpEnabled={{@controller.totpEnabled}}
                 />
               {{/if}}
             </PluginOutlet>
@@ -123,14 +123,14 @@ export default <template>
             }}
               <LoginPageCta
                 @canLoginLocal={{@controller.canLoginLocal}}
-                @showSecurityKey={{@controller.showSecurityKey}}
+                @createAccount={{@controller.createAccount}}
+                @loggingIn={{@controller.loggingIn}}
                 @login={{@controller.localLogin}}
                 @loginButtonLabel={{@controller.loginButtonLabel}}
                 @loginDisabled={{@controller.loginDisabled}}
-                @showSignupLink={{@controller.showSignupLink}}
-                @createAccount={{@controller.createAccount}}
-                @loggingIn={{@controller.loggingIn}}
                 @showSecondFactor={{@controller.showSecondFactor}}
+                @showSecurityKey={{@controller.showSecurityKey}}
+                @showSignupLink={{@controller.showSignupLink}}
               />
             {{/if}}
           </div>
@@ -152,9 +152,9 @@ export default <template>
           {{#if @controller.hasAtLeastOneLoginButton}}
             <div class="login-right-side">
               <LoginButtons
+                @context="login"
                 @externalLogin={{@controller.externalLogin}}
                 @passkeyLogin={{@controller.passkeyLogin}}
-                @context="login"
               />
             </div>
           {{/if}}
@@ -168,14 +168,14 @@ export default <template>
         {{#unless @controller.hasNoLoginOptions}}
           <LoginPageCta
             @canLoginLocal={{@controller.canLoginLocal}}
-            @showSecurityKey={{@controller.showSecurityKey}}
+            @createAccount={{@controller.createAccount}}
+            @loggingIn={{@controller.loggingIn}}
             @login={{@controller.localLogin}}
             @loginButtonLabel={{@controller.loginButtonLabel}}
             @loginDisabled={{@controller.loginDisabled}}
-            @showSignupLink={{@controller.showSignupLink}}
-            @createAccount={{@controller.createAccount}}
-            @loggingIn={{@controller.loggingIn}}
             @showSecondFactor={{@controller.showSecondFactor}}
+            @showSecurityKey={{@controller.showSecurityKey}}
+            @showSignupLink={{@controller.showSignupLink}}
           />
         {{/unless}}
       {{/if}}

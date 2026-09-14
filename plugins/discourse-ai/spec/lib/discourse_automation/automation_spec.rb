@@ -32,6 +32,7 @@ RSpec.describe DiscourseAi::Automation do
 
   describe "manually configured model" do
     let!(:llm_model) { Fabricate(:llm_model) }
+
     it "returns a list of available models for automation" do
       models = DiscourseAi::Automation.available_models
       expect(models).to be_an(Array)

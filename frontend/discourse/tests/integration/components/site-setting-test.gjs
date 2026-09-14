@@ -526,8 +526,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await render(
       <template>
         <ThemeSiteSettingEditor
-          @setting={{this.themeSetting}}
           @model={{this.theme}}
+          @setting={{this.themeSetting}}
         />
       </template>
     );
@@ -560,8 +560,8 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await render(
       <template>
         <ThemeTranslation
-          @translation={{this.translation}}
           @model={{this.theme}}
+          @translation={{this.translation}}
         />
       </template>
     );

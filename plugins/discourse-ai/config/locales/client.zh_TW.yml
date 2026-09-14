@@ -19,6 +19,15 @@ zh_TW:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "詢問 AI"
+        ask_ai:
+          title: "詢問 AI"
+          seconds: "%{seconds} 秒"
+          date: "日期"
+          outcomes:
+            failed: "失敗"
         emotion:
           title: "情緒"
           description: "該表格列出了按特定情緒分類的貼文數量。根據所選情緒分類方法，貼文將使用配置的情緒分類模型（“SamLowe/roberta-base-go_emotions”）或配置的情緒分類智能體進行分類。"
@@ -268,7 +277,6 @@ zh_TW:
           runner_username: "運行身份："
           runner_username_tooltip: "其權限用于控制上傳內容可見性和 AI 智能體工具的使用者。使用 system 實現符合工作流的自動化操作。"
           upload_ids: "上傳 ID"
-          upload_ids_tooltip: "用于附加到提示中的可選上傳 ID。當智能體啟用視覺功能時，將包含圖片上傳；當所選 LLM 支持相應文件類型時，將包含文檔上傳。"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "選擇智能體…"
       bot_chats:
@@ -1159,20 +1167,6 @@ zh_TW:
           other: "此模型目前由以下項目使用：%{settings}。若設定不正確，相關功能將無法如預期運作。"
         model_description:
           none: "適用于大多數語言模型的常規設置"
-          anthropic-claude-opus-4-7: "Anthropic 最智能的模型"
-          anthropic-claude-sonnet-4-6: "速度與成本的最佳平衡"
-          anthropic-claude-haiku-4-5: "快速、經濟高效"
-          google-gemini-3-1-pro-preview: "Google 最智能的模型"
-          google-gemini-3-6-flash: "面向智能體，快速、前沿模型"
-          open_ai-gpt-5-6-sol: "OpenAI 用于處理復雜專業工作的前沿模型"
-          open_ai-gpt-5-6-terra: "在滿足高需求場景的同時，兼顧智能性和成本。"
-          open_ai-gpt-5-6-luna: "為注重成本、工作負載量大的場景而優化"
-          open_router-moonshotai-kimi-k2-6: "Moonshot 具有視覺能力的多模態模型"
-          open_router-deepseek-deepseek-v4-flash: "DeepSeek 的最新高性能模型，具備 100 萬上下文資訊"
-          open_router-minimax-minimax-m2-7: "MiniMax 的大上下文模型"
-          open_router-x-ai-grok-4-1-fast: "xAI 的快速多模態模型，具有非常大的上下文資訊"
-          open_router-z-ai-glm-5-1: "Z-AI 側重于推理的模型"
-          open_router-qwen-qwen3-6-plus: "Qwen 的多模態模型，具備 100 萬上下文資訊"
         preseeded_model_description: "利用 %{model} 的預配置開源模型"
         configured:
           title: "配置的 LLM"

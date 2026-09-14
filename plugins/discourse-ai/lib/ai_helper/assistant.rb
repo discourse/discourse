@@ -33,7 +33,12 @@ module DiscourseAi
       end
 
       def available_prompts(user)
-        key = "prompt_cache_#{I18n.locale}"
+        key =
+          if SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+            "prompt_cache_#{I18n.locale}_everyone_disallowed"
+          else
+            "prompt_cache_#{I18n.locale}_everyone_allowed"
+          end
         prompts = self.class.prompt_cache.fetch(key) { all_prompts }
 
         prompts

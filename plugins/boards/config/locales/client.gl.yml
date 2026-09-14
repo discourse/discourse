@@ -7,6 +7,9 @@
 gl:
   js:
     boards:
+      status:
+        all: "Todas"
+        open: "Abrir"
       board:
         remove_card: "Retirar"
         title: "Título"

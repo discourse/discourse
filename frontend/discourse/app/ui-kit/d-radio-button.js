@@ -14,6 +14,11 @@ import { attributeBindings, tagName } from "@ember-decorators/component";
 export default class DRadioButton extends Component {
   type = "radio";
 
+  @computed("value", "selection")
+  get checked() {
+    return this.value === this.selection;
+  }
+
   click() {
     const value = this.element.value;
 
@@ -25,10 +30,5 @@ export default class DRadioButton extends Component {
       }
       this.set("selection", value);
     }
-  }
-
-  @computed("value", "selection")
-  get checked() {
-    return this.value === this.selection;
   }
 }

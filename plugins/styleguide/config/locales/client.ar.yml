@@ -33,6 +33,10 @@ ar:
           title: "حقول إدخال التاريخ/الوقت"
         menus:
           title: "القوائم"
+        context_menu:
+          actions:
+            duplicate: "تكرار"
+            delete: "حذف"
         multi_select:
           title: "اختيار متعدد"
         toasts:

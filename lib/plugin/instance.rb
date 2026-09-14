@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../navigation_destination"
+
 require "digest/sha1"
 require "fileutils"
 require "plugin/metadata"
@@ -429,6 +431,21 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
+  # Title and description are server translation keys. Paths omit the installation
+  # base path; availability is evaluated for the requesting Guardian on each lookup.
+  def register_navigation_destination(id, path:, title:, description:, keywords: [], &available)
+    destination =
+      NavigationDestination.new(
+        id: "#{name}:#{id}",
+        path: path,
+        title: title,
+        description: description,
+        keywords: keywords,
+        &available
+      )
+    DiscoursePluginRegistry.register_navigation_destination(destination, self)
+  end
+
   def register_upcoming_change_conditional_display(setting_name, &block)
     raise ArgumentError, "block is required" if block.blank?
 
@@ -764,6 +781,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_svg_icon(icon)
   end
 
+  # Registers a block returning icon names to include in the SVG sprite. Use this
+  # instead of `register_svg_icon` when the names are only known at runtime, such
+  # as when they are chosen by admins and stored in the database. The block is
+  # called while the sprite is built, so it must not run at boot, and its result
+  # is scoped to the current site.
+  #
+  # Call `SvgSprite.expire_cache` when the underlying data changes.
+  def register_svg_icon_source(&block)
+    DiscoursePluginRegistry.register_svg_icon_source(block, self)
+  end
+
   def extend_content_security_policy(extension)
     csp_extensions << extension
   end
@@ -1070,6 +1098,29 @@ class Plugin::Instance
       { prefixed_scope_name => matcher_parameters&.map { |m| RouteMatcher.new(**m) } },
       self,
     )
+  end
+
+  # Register a primitive exposed through Discourse's MCP server. Registered
+  # primitives remain disabled until an admin enables them.
+  def register_mcp_tool(identifier, **attributes)
+    register_mcp_primitive(:tool, identifier, **attributes)
+  end
+
+  def register_mcp_resource_template(identifier, **attributes)
+    register_mcp_primitive(:resource_template, identifier, **attributes)
+  end
+
+  def register_mcp_prompt(identifier, **attributes)
+    register_mcp_primitive(:prompt, identifier, **attributes)
+  end
+
+  def register_mcp_primitive(kind, identifier, **attributes)
+    configured_availability = attributes.delete(:availability)
+    attributes[:provider] ||= name || directory_name
+    attributes[:availability] = -> do
+      enabled? && (configured_availability.nil? || configured_availability.call)
+    end
+    DiscourseMcp.registry.public_send("register_#{kind}", identifier, **attributes)
   end
 
   # Register a route which can be authenticated using an api key or user api key
@@ -1412,6 +1463,14 @@ class Plugin::Instance
   #   end
   def register_hashtag_data_source(klass)
     DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(klass, self)
+  end
+
+  def register_hashtag_content_store(klass)
+    if !(klass < HashtagRemapper::Store)
+      raise ArgumentError.new("Hashtag content stores must inherit from HashtagRemapper::Store")
+    end
+
+    DiscoursePluginRegistry.register_hashtag_content_store(klass, self)
   end
 
   ##

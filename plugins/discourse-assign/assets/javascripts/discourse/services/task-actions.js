@@ -3,6 +3,7 @@ import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { manuallyTrack } from "discourse/lib/tracked-tools";
 import AssignUser from "../components/modal/assign-user";
 import assignmentPayload from "../lib/assignment-payload";
 
@@ -28,7 +29,7 @@ export default class TaskActions extends Service {
   }
 
   suggestionsFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
+    manuallyTrack(this.suggestionsRevision);
     this.#ensureSuggestions(targetId, targetType);
 
     return (
@@ -39,7 +40,7 @@ export default class TaskActions extends Service {
   }
 
   allowedGroupsFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
+    manuallyTrack(this.suggestionsRevision);
     this.#ensureSuggestions(targetId, targetType);
 
     return (
@@ -50,7 +51,7 @@ export default class TaskActions extends Service {
   }
 
   allowedGroupsForAssignmentFor(targetId, targetType = "Topic") {
-    this.suggestionsRevision;
+    manuallyTrack(this.suggestionsRevision);
     this.#ensureSuggestions(targetId, targetType);
 
     return (
@@ -58,50 +59,6 @@ export default class TaskActions extends Service {
         this.#suggestionsKey(targetId, targetType)
       ) || []
     );
-  }
-
-  #ensureSuggestions(targetId, targetType) {
-    const key = this.#suggestionsKey(targetId, targetType);
-
-    if (
-      this.#suggestionsByTarget.has(key) ||
-      this.#suggestionsPromisesByTarget.has(key)
-    ) {
-      return;
-    }
-
-    this.#suggestionsPromisesByTarget.set(
-      key,
-      this.#fetchSuggestions(key, targetId, targetType)
-    );
-  }
-
-  async #fetchSuggestions(key, targetId, targetType) {
-    const data = {};
-
-    if (targetId) {
-      data.target_id = targetId;
-      data.target_type = targetType;
-    }
-
-    const response = await ajax("/assign/suggestions", { data });
-
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    this.#suggestionsByTarget.set(key, response.suggestions);
-    this.#allowedGroupsByTarget.set(key, response.assign_allowed_on_groups);
-    this.#allowedGroupsForAssignmentByTarget.set(
-      key,
-      response.assign_allowed_for_groups
-    );
-    this.#suggestionsPromisesByTarget.delete(key);
-    this.suggestionsRevision++;
-  }
-
-  #suggestionsKey(targetId, targetType) {
-    return targetId ? `${targetType}:${targetId}` : "default";
   }
 
   unassign(targetId, targetType = "Topic") {
@@ -195,5 +152,49 @@ export default class TaskActions extends Service {
         target_type: assignment.targetType,
       },
     });
+  }
+
+  #ensureSuggestions(targetId, targetType) {
+    const key = this.#suggestionsKey(targetId, targetType);
+
+    if (
+      this.#suggestionsByTarget.has(key) ||
+      this.#suggestionsPromisesByTarget.has(key)
+    ) {
+      return;
+    }
+
+    this.#suggestionsPromisesByTarget.set(
+      key,
+      this.#fetchSuggestions(key, targetId, targetType)
+    );
+  }
+
+  async #fetchSuggestions(key, targetId, targetType) {
+    const data = {};
+
+    if (targetId) {
+      data.target_id = targetId;
+      data.target_type = targetType;
+    }
+
+    const response = await ajax("/assign/suggestions", { data });
+
+    if (this.isDestroying) {
+      return;
+    }
+
+    this.#suggestionsByTarget.set(key, response.suggestions);
+    this.#allowedGroupsByTarget.set(key, response.assign_allowed_on_groups);
+    this.#allowedGroupsForAssignmentByTarget.set(
+      key,
+      response.assign_allowed_for_groups
+    );
+    this.#suggestionsPromisesByTarget.delete(key);
+    this.suggestionsRevision++;
+  }
+
+  #suggestionsKey(targetId, targetType) {
+    return targetId ? `${targetType}:${targetId}` : "default";
   }
 }

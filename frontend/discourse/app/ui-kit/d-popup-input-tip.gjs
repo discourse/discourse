@@ -22,11 +22,6 @@ export default class DPopupInputTip extends Component {
 
   @tracked _badOverride;
 
-  @computed("shownAt", "validation.lastShownAt")
-  get lastShownAt() {
-    return this.shownAt || this.validation?.lastShownAt;
-  }
-
   @computed("validation.failed")
   get bad() {
     if (this._badOverride !== undefined) {
@@ -37,6 +32,11 @@ export default class DPopupInputTip extends Component {
 
   set bad(value) {
     this._badOverride = value;
+  }
+
+  @computed("shownAt", "validation.lastShownAt")
+  get lastShownAt() {
+    return this.shownAt || this.validation?.lastShownAt;
   }
 
   @computed("bad")

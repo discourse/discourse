@@ -16,11 +16,6 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
   }
 
   async model() {
-    if (!this.currentUser.admin) {
-      // display "Only available to admins" message
-      return { model: null, schema: null, disallow: true, groups: null };
-    }
-
     const [groups, model] = await Promise.all([
       ajax("/admin/plugins/discourse-data-explorer/groups.json"),
       this.store.findAll("query"),

@@ -90,6 +90,13 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  register_admin_dashboard_section(
+    id: "ask_ai",
+    enabled: -> { SiteSetting.ai_ask_ai_enabled },
+  ) do |start_date:, end_date:, current_user:|
+    DiscourseAi::AdminDashboard::AskAi.build(start_date:, end_date:, current_user:)
+  end
+
   register_modifier(:site_setting_result) do |setting_result|
     if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
       setting_result[:disabled] = true
@@ -116,10 +123,7 @@ after_initialize do
   require_relative "discourse_automation/llm_tagger"
 
   if respond_to?(:register_discourse_workflows_node)
-    register_discourse_workflows_node do
-      require_relative "discourse_workflows/nodes/ai_agent/v1"
-      DiscourseWorkflows::Nodes::AiAgent::V1
-    end
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
   end
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
@@ -254,11 +258,24 @@ after_initialize do
     face-meh
     face-angry
     circle-info
+    discourse-ai
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
+  end
+
+  add_model_callback(AiAgent, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
+  end
+
+  add_model_callback(LlmModel, :after_commit, on: %i[create update]) do
+    if saved_change_to_user_id?
+      DiscourseAi::AiBot::UserFlair.sync_user_ids!(saved_change_to_user_id)
+    end
   end
 
   add_custom_reviewable_filter(

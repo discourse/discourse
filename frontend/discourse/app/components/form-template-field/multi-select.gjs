@@ -12,8 +12,8 @@ export default class FormTemplateFieldMultiSelect extends Component {
 
   <template>
     <div
-      data-field-type="multi-select"
       class="control-group form-template-field"
+      data-field-type="multi-select"
     >
       {{#if @attributes.label}}
         <label class="form-template-field__label">
@@ -31,24 +31,24 @@ export default class FormTemplateFieldMultiSelect extends Component {
       {{/if}}
 
       <select
+        class="form-template-field__multi-select"
+        multiple="multiple"
         name={{@id}}
         required={{if @validations.required "required" ""}}
-        multiple="multiple"
-        class="form-template-field__multi-select"
         {{on "input" @onChange}}
       >
         {{#if @attributes.none_label}}
           <option
             class="form-template-field__multi-select-placeholder"
-            value=""
             disabled
             hidden
+            value=""
           >{{@attributes.none_label}}</option>
         {{/if}}
         {{#each @choices as |choice|}}
           <option
-            value={{choice}}
             selected={{this.isSelected choice}}
+            value={{choice}}
           >{{choice}}</option>
         {{/each}}
       </select>

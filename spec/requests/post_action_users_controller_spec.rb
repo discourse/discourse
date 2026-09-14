@@ -116,7 +116,7 @@ RSpec.describe PostActionUsersController do
     expect(response).to be_forbidden
   end
 
-  it "succeeds" do
+  it "returns 200 when listing users who liked the post" do
     get "/post_action_users.json",
         params: {
           id: post.id,
@@ -126,7 +126,7 @@ RSpec.describe PostActionUsersController do
     expect(response.status).to eq(200)
   end
 
-  it "will return an unknown attribute for muted users" do
+  it "returns an unknown attribute for muted users" do
     muted_user = Fabricate(:user)
     PostActionCreator.like(muted_user, post)
     regular_user = Fabricate(:user)

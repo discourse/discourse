@@ -119,6 +119,7 @@ class DiscoursePluginRegistry
   define_filtered_register :user_destroyer_on_content_deletion_callbacks
 
   define_filtered_register :hashtag_autocomplete_data_sources
+  define_filtered_register :hashtag_content_stores
   define_filtered_register :hashtag_autocomplete_contextual_type_priorities
 
   define_filtered_register :search_groups_set_query_callbacks
@@ -146,9 +147,13 @@ class DiscoursePluginRegistry
 
   define_filtered_register :homepage_options
 
+  define_filtered_register :navigation_destinations
+
   define_filtered_register :custom_filter_mappings
 
   define_filtered_register :acl_target_classes
+
+  define_filtered_register :svg_icon_sources
 
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do

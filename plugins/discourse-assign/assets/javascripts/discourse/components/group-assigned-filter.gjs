@@ -9,12 +9,12 @@ const GroupAssignedFilter = <template>
   <li>
     {{#if @showAvatar}}
       <LinkTo
-        @route="group.assigned.show"
         @model={{@filter.username_lower}}
         @query={{hash order=@order ascending=@ascending search=@search}}
+        @route="group.assigned.show"
       >
         <div class="assign-image">
-          <a href={{@filter.userPath}} data-user-card={{@filter.username}}>
+          <a data-user-card={{@filter.username}} href={{@filter.userPath}}>
             {{dAvatar @filter imageSize="small"}}
           </a>
         </div>
@@ -30,9 +30,9 @@ const GroupAssignedFilter = <template>
       </LinkTo>
     {{else if @groupName}}
       <LinkTo
-        @route="group.assigned.show"
         @model={{@filter}}
         @query={{hash order=@order ascending=@ascending search=@search}}
+        @route="group.assigned.show"
       >
         <div class="assign-image">
           {{dIcon "group-plus"}}
@@ -47,9 +47,9 @@ const GroupAssignedFilter = <template>
       </LinkTo>
     {{else}}
       <LinkTo
-        @route="group.assigned.show"
         @model={{@filter}}
         @query={{hash order=@order ascending=@ascending search=@search}}
+        @route="group.assigned.show"
       >
         <div class="assign-everyone">
           {{i18n "discourse_assign.group_everyone"}}

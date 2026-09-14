@@ -514,7 +514,63 @@ RSpec.describe Boards::Api::BoardsController do
     end
   end
 
-  describe "POST /boards/api/boards" do
+  describe "#create" do
+    it "accepts all supported ACL permissions and retains mandatory admin access" do
+      sign_in(manager)
+
+      post "/boards/api/boards.json",
+           params: {
+             board: {
+               name: "Permission board",
+               slug: "permission-board",
+               acl: [
+                 { type: "group", id: read_group.id, permission: "view" },
+                 { type: "group", id: write_group.id, permission: "edit" },
+                 { type: "group", id: manage_group.id, permission: "manage" },
+               ],
+             },
+           }
+
+      expect(response.status).to eq(201)
+      board = Boards::Board.find(response.parsed_body["board"]["id"])
+      expect(
+        AccessControlList.where(target: board).pluck(:permission, :allowed_group_ids),
+      ).to contain_exactly(
+        ["view", [read_group.id]],
+        ["edit", [write_group.id]],
+        ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+      )
+    end
+
+    it "rejects an invalid permission name without creating a board, columns, or ACLs" do
+      sign_in(manager)
+
+      expect do
+        post "/boards/api/boards.json",
+             params: {
+               board: {
+                 name: "Invalid permissions",
+                 slug: "invalid-permissions",
+                 columns: [{ title: "Backlog" }],
+                 acl: [
+                   { type: "group", id: read_group.id, permission: "view" },
+                   { type: "group", id: manage_group.id, permission: "bogus" },
+                 ],
+               },
+             }
+      end.not_to change {
+        [
+          Boards::Board.count,
+          Boards::Column.count,
+          AccessControlList.count,
+          Boards::BoardHistory.count,
+        ]
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
     it "creates a board for users in the manage group" do
       sign_in(manager)
 
@@ -557,7 +613,61 @@ RSpec.describe Boards::Api::BoardsController do
     end
   end
 
-  describe "PUT /boards/api/boards/:id" do
+  describe "#update" do
+    fab!(:acl_board) do
+      Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+    end
+
+    it "accepts all supported ACL permissions and retains mandatory admin access" do
+      sign_in(manager)
+
+      put "/boards/api/boards/#{acl_board.id}.json",
+          params: {
+            board: {
+              acl: [
+                { type: "group", id: read_group.id, permission: "view" },
+                { type: "group", id: write_group.id, permission: "edit" },
+                { type: "group", id: manage_group.id, permission: "manage" },
+              ],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(
+        AccessControlList.where(target: acl_board).pluck(:permission, :allowed_group_ids),
+      ).to contain_exactly(
+        ["view", [read_group.id]],
+        ["edit", [write_group.id]],
+        ["manage", [manage_group.id, Group::AUTO_GROUPS[:admins]]],
+      )
+    end
+
+    it "rejects an invalid permission name and preserves the board and its existing ACLs" do
+      sign_in(manager)
+      previous_attributes = acl_board.attributes
+      previous_acls = AccessControlList.where(target: acl_board).order(:id).map(&:attributes)
+
+      expect do
+        put "/boards/api/boards/#{acl_board.id}.json",
+            params: {
+              board: {
+                name: "Invalid update",
+                acl: [
+                  { type: "group", id: read_group.id, permission: "view" },
+                  { type: "group", id: manage_group.id, permission: "bogus" },
+                ],
+              },
+            }
+      end.not_to change { Boards::BoardHistory.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["failed"]).to eq("FAILED")
+      expect(acl_board.reload.attributes).to eq(previous_attributes)
+      expect(AccessControlList.where(target: acl_board).order(:id).map(&:attributes)).to eq(
+        previous_acls,
+      )
+    end
+
     it "updates board attributes for users in the manage group" do
       board =
         Fabricate(
@@ -759,6 +869,154 @@ RSpec.describe Boards::Api::BoardsController do
       delete "/boards/api/boards/#{board.id}.json"
 
       expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#archive" do
+    fab!(:board) { Fabricate(:boards_board, additional_manage_groups: [manage_group]) }
+
+    it "returns archived state for a manager outside the global management group" do
+      SiteSetting.boards_manage_board_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      sign_in(manager)
+
+      post "/boards/api/boards/#{board.id}/archive.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["board"]).to include(
+        "archived" => true,
+        "can_unarchive" => true,
+        "can_manage" => false,
+      )
+    end
+
+    it "rejects an authenticated user without Manage permission" do
+      sign_in(outsider)
+
+      post "/boards/api/boards/#{board.id}/archive.json"
+
+      expect(response.status).to eq(403)
+      expect(board.reload).not_to be_archived
+    end
+
+    it "returns not found for an absent board" do
+      sign_in(manager)
+
+      post "/boards/api/boards/0/archive.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "#unarchive" do
+    fab!(:board) do
+      Fabricate(
+        :boards_board,
+        slug: "archived-board",
+        archived: true,
+        original_slug: "roadmap",
+        additional_manage_groups: [manage_group],
+      )
+    end
+
+    it "returns restored state after accepting a replacement slug" do
+      Fabricate(:boards_board, slug: "roadmap")
+      sign_in(manager)
+
+      post "/boards/api/boards/#{board.id}/unarchive.json", params: { slug: "restored-roadmap" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["board"]).to include(
+        "archived" => false,
+        "slug" => "restored-roadmap",
+      )
+    end
+
+    it "returns validation errors when the old slug has been claimed" do
+      Fabricate(:boards_board, slug: "roadmap")
+      sign_in(manager)
+
+      post "/boards/api/boards/#{board.id}/unarchive.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to be_present
+      expect(board.reload).to be_archived
+    end
+
+    it "rejects unarchiving without Manage permission" do
+      sign_in(outsider)
+
+      post "/boards/api/boards/#{board.id}/unarchive.json"
+
+      expect(response.status).to eq(403)
+      expect(board.reload).to be_archived
+    end
+  end
+
+  describe "archive visibility across board listings" do
+    fab!(:open_board, :boards_board)
+    fab!(:archived_board) { Fabricate(:boards_board, slug: "archived-board", archived: true) }
+
+    it "includes archived boards in the index but excludes them from available boards" do
+      sign_in(admin)
+
+      get "/boards/api/boards.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["boards"].map { |board| board["id"] }).to contain_exactly(
+        open_board.id,
+        archived_board.id,
+      )
+
+      get "/boards/api/boards/available.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["boards"].map { |board| board["id"] }).to eq([open_board.id])
+    end
+  end
+
+  describe "archived board mutation protection" do
+    fab!(:board) { Fabricate(:boards_board, slug: "archived-board", archived: true) }
+    fab!(:column) { Fabricate(:boards_column, board:) }
+    fab!(:card) { Fabricate(:boards_card, board:, column:) }
+
+    it "rejects board edits, deletion, and column reordering even for an administrator" do
+      sign_in(admin)
+
+      put "/boards/api/boards/#{board.id}.json", params: { board: { name: "Changed" } }
+      expect(response.status).to eq(403)
+
+      post "/boards/api/boards/#{board.id}/move-column.json",
+           params: {
+             column_id: column.id,
+             direction: 1,
+           }
+      expect(response.status).to eq(403)
+
+      delete "/boards/api/boards/#{board.id}.json"
+      expect(response.status).to eq(403)
+      expect(board.reload).to be_archived
+    end
+  end
+
+  describe "repeated archival" do
+    it "restores the current slug across multiple archive cycles" do
+      board = Fabricate(:boards_board, slug: "roadmap")
+      sign_in(admin)
+
+      post "/boards/api/boards/#{board.id}/archive.json"
+      expect(response.status).to eq(200)
+      Fabricate(:boards_board, slug: "roadmap")
+      post "/boards/api/boards/#{board.id}/unarchive.json", params: { slug: "new-roadmap" }
+      expect(response.status).to eq(200)
+      post "/boards/api/boards/#{board.id}/archive.json"
+      expect(response.status).to eq(200)
+      post "/boards/api/boards/#{board.id}/unarchive.json"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["board"]).to include("slug" => "new-roadmap", "archived" => false)
+      expect(board.history.order(:id).pluck(:action)).to eq(
+        %w[board_archived board_unarchived board_archived board_unarchived],
+      )
     end
   end
 end

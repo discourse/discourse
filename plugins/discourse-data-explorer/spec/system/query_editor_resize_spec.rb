@@ -23,7 +23,7 @@ RSpec.describe "Data explorer query editor resizing" do
     try_until_success { expect(query_runner.pane_overflow).to eq(0) }
   end
 
-  it "will not shrink the panes past the content they clip" do
+  it "does not shrink the panes past the content they clip" do
     in_the_stacked_layout do
       query_runner.visit_admin_query(query.id)
       expect(page).to have_css(".query-editor .panels-flex")
@@ -32,7 +32,7 @@ RSpec.describe "Data explorer query editor resizing" do
     end
   end
 
-  it "will not shrink past the shorter content left when the schema is hidden" do
+  it "does not shrink past the shorter content left when the schema is hidden" do
     in_the_stacked_layout do
       query_runner.visit_admin_query(query.id)
       expect(page).to have_css(".query-editor .panels-flex")

@@ -32,6 +32,10 @@ it:
           title: "Inserimenti Data/Ora"
         menus:
           title: "Menù"
+        context_menu:
+          actions:
+            duplicate: "Duplica"
+            delete: "Elimina"
         multi_select:
           title: "Selezione multipla"
         toasts:

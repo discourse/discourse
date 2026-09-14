@@ -11,8 +11,8 @@ export default class StringFormExample extends Component {
 
   <template>
     <DButton
-      class="btn-primary"
       aria-keyshortcuts={{this.shortcut.aria}}
+      class="btn-primary"
       @icon="check"
       @translatedLabel="Save"
       @translatedTitle={{this.title}}

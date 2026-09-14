@@ -93,57 +93,6 @@ export default class VoiceChatPanel extends Component {
     }
   }
 
-  async #applyState(data) {
-    if (!data?.channel_id || !data?.thread_id) {
-      return;
-    }
-    if (this.thread?.id === data.thread_id && this.channel) {
-      return;
-    }
-
-    const channel = await this.chatChannelsManager.find(data.channel_id);
-    if (!channel.isFollowing) {
-      // The server already followed us when the session was ensured; this only
-      // refreshes a channel that was cached client-side before that happened.
-      await this.chatChannelsManager.follow(channel);
-    }
-    const thread = await channel.threadsManager.find(
-      channel.id,
-      data.thread_id
-    );
-
-    this.channel = channel;
-    this.thread = thread;
-
-    // ChatThreadPane and the composer resolve "the current thread" from this
-    // global active state, exactly like the chat drawer's router sets it —
-    // without it, sending and message actions break outside chat's own routes.
-    this.chat.activeChannel = channel;
-    channel.activeThread = thread;
-  }
-
-  #deactivate() {
-    if (this.channel && this.chat.activeChannel === this.channel) {
-      // Also clears the channel's activeThread (the setter handles it).
-      this.chat.activeChannel = null;
-    }
-  }
-
-  #subscribeSession() {
-    if (this.#sessionPath) {
-      return;
-    }
-    this.#sessionPath = `/voice/rooms/${this.room.id}/chat`;
-    this.messageBus.subscribe(this.#sessionPath, this.onSessionMessage);
-  }
-
-  #unsubscribeSession() {
-    if (this.#sessionPath) {
-      this.messageBus.unsubscribe(this.#sessionPath, this.onSessionMessage);
-      this.#sessionPath = null;
-    }
-  }
-
   @action
   interceptEscape(event) {
     if (event.key !== "Escape") {
@@ -244,6 +193,57 @@ export default class VoiceChatPanel extends Component {
     }
   }
 
+  async #applyState(data) {
+    if (!data?.channel_id || !data?.thread_id) {
+      return;
+    }
+    if (this.thread?.id === data.thread_id && this.channel) {
+      return;
+    }
+
+    const channel = await this.chatChannelsManager.find(data.channel_id);
+    if (!channel.isFollowing) {
+      // The server already followed us when the session was ensured; this only
+      // refreshes a channel that was cached client-side before that happened.
+      await this.chatChannelsManager.follow(channel);
+    }
+    const thread = await channel.threadsManager.find(
+      channel.id,
+      data.thread_id
+    );
+
+    this.channel = channel;
+    this.thread = thread;
+
+    // ChatThreadPane and the composer resolve "the current thread" from this
+    // global active state, exactly like the chat drawer's router sets it —
+    // without it, sending and message actions break outside chat's own routes.
+    this.chat.activeChannel = channel;
+    channel.activeThread = thread;
+  }
+
+  #deactivate() {
+    if (this.channel && this.chat.activeChannel === this.channel) {
+      // Also clears the channel's activeThread (the setter handles it).
+      this.chat.activeChannel = null;
+    }
+  }
+
+  #subscribeSession() {
+    if (this.#sessionPath) {
+      return;
+    }
+    this.#sessionPath = `/voice/rooms/${this.room.id}/chat`;
+    this.messageBus.subscribe(this.#sessionPath, this.onSessionMessage);
+  }
+
+  #unsubscribeSession() {
+    if (this.#sessionPath) {
+      this.messageBus.unsubscribe(this.#sessionPath, this.onSessionMessage);
+      this.#sessionPath = null;
+    }
+  }
+
   #autogrow() {
     const element = this.textareaElement;
     if (!element) {
@@ -255,8 +255,8 @@ export default class VoiceChatPanel extends Component {
 
   <template>
     <section
-      class="voice-chat"
       aria-label={{i18n "voice.chat.title"}}
+      class="voice-chat"
       {{didInsert this.loadSession}}
     >
       <header class="voice-chat__header">
@@ -265,10 +265,10 @@ export default class VoiceChatPanel extends Component {
         </h2>
         {{#if this.canOpenInChat}}
           <button
-            type="button"
+            aria-label={{i18n "voice.chat.open_in_chat"}}
             class="btn btn-transparent btn-icon no-text voice-chat__open-in-chat"
             title={{i18n "voice.chat.open_in_chat"}}
-            aria-label={{i18n "voice.chat.open_in_chat"}}
+            type="button"
             {{on "click" this.openInChat}}
           >
             {{dIcon "up-right-from-square"}}
@@ -276,10 +276,10 @@ export default class VoiceChatPanel extends Component {
         {{/if}}
         {{#if @onClose}}
           <button
-            type="button"
+            aria-label={{i18n "voice.chat.close"}}
             class="btn btn-icon no-text voice-chat__close"
             title={{i18n "voice.chat.close"}}
-            aria-label={{i18n "voice.chat.close"}}
+            type="button"
             {{on "click" @onClose}}
           >
             {{dIcon "xmark"}}
@@ -322,25 +322,25 @@ export default class VoiceChatPanel extends Component {
           <footer class="voice-chat__composer">
             <div class="voice-chat__composer-inner">
               <EmojiPicker
+                @btnClass="btn-transparent voice-chat__emoji"
                 @context="voice-chat"
                 @didSelectEmoji={{this.insertEmoji}}
-                @btnClass="btn-transparent voice-chat__emoji"
               />
               <textarea
-                class="voice-chat__input"
-                rows="1"
-                placeholder={{i18n "voice.chat.composer_placeholder"}}
                 aria-label={{i18n "voice.chat.composer_placeholder"}}
+                class="voice-chat__input"
+                placeholder={{i18n "voice.chat.composer_placeholder"}}
+                rows="1"
                 {{didInsert this.registerTextarea}}
                 {{on "input" this.updateDraft}}
                 {{on "keydown" this.onKeydown}}
               ></textarea>
               <button
-                type="button"
-                class="btn btn-transparent btn-icon no-text voice-chat__send"
-                title={{i18n "voice.chat.send"}}
                 aria-label={{i18n "voice.chat.send"}}
+                class="btn btn-transparent btn-icon no-text voice-chat__send"
                 disabled={{this.sendDisabled}}
+                title={{i18n "voice.chat.send"}}
+                type="button"
                 {{on "click" this.sendFirstMessage}}
               >
                 {{dIcon "paper-plane"}}

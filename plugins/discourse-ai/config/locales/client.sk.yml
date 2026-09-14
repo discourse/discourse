@@ -16,6 +16,14 @@ sk:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Spýtajte sa AI"
+        ask_ai:
+          title: "Spýtajte sa AI"
+          date: "Dátum"
+          outcomes:
+            failed: "Nepodarilo sa"
         emotion:
           title: "Emócia"
         reports:
@@ -636,9 +644,6 @@ sk:
           other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
         model_description:
           none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
-          anthropic-claude-opus-4-7: "Najinteligentnejší model spoločnosti Anthropic"
-          anthropic-claude-sonnet-4-6: "Optimálna rovnováha medzi rýchlosťou a cenou"
-          anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
         preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
         configured:
           title: "Nakonfigurované LLM"

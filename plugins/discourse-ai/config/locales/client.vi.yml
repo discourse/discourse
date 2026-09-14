@@ -19,6 +19,14 @@ vi:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        sections:
+          ask_ai:
+            title: "Hỏi AI"
+        ask_ai:
+          title: "Hỏi AI"
+          date: "Ngày"
+          outcomes:
+            failed: "Thất bại"
         emotion:
           title: "Cảm xúc (Emotion)"
           description: "Bảng liệt kê số lượng bình luận được phân loại theo cảm xúc. Tùy thuộc vào phương pháp phân loại cảm xúc được chọn, các bình luận sẽ được phân loại bằng mô hình phân loại cảm xúc đã cấu hình ('SamLowe/roberta-base-go_emotions') hoặc đại lý (Agent) phân loại cảm xúc đã cấu hình.\n"
@@ -366,10 +374,6 @@ vi:
           ai_image_caption: "Chú thích hình ảnh"
           ai_summarization: "Tóm tắt"
           ai_spam: "Rác"
-        model_description:
-          open_ai-gpt-5-6-sol: "Mô hình tiên tiến nhất của OpenAI dành cho các tác vụ chuyên môn phức tạp"
-          open_ai-gpt-5-6-terra: "Cân bằng giữa trí thông minh và chi phí cho các tác vụ yêu cầu cao"
-          open_ai-gpt-5-6-luna: "Tối ưu hóa chi phí cho các tác vụ khối lượng lớn"
         next:
           title: "Kế tiếp"
         tests:

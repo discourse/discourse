@@ -17,6 +17,7 @@ register_asset "stylesheets/boards-topic-pill.scss"
 register_asset "stylesheets/boards-add-from-topic-menu.scss"
 register_svg_icon "table-columns"
 register_svg_icon "boards"
+register_svg_icon "box-archive"
 
 module ::Boards
   PLUGIN_NAME = "boards"
@@ -41,33 +42,18 @@ after_initialize do
 
   reloadable_patch { |plugin| Guardian.prepend Boards::GuardianExtensions }
 
-  # Register any column icons already in the DB so they appear in the SVG sprite
-  begin
-    if ActiveRecord::Base.connection.data_source_exists?(:discourse_kanban_columns) &&
-         ActiveRecord::Base.connection.column_exists?(:discourse_kanban_columns, :default_sort)
-      Boards::Column
-        .where.not(icon: [nil, ""])
-        .distinct
-        .pluck(:icon)
-        .each { |icon| DiscoursePluginRegistry.register_svg_icon(icon) }
-    end
-  rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
-    # Database may be unreachable (asset precompile) or may have pending migrations
-    # during db:create / db:migrate bootstrap.
-  end
+  # Column icons are picked by admins, so the sprite has to be told about whichever
+  # ones are in use.
+  register_svg_icon_source { Boards::Column.where.not(icon: [nil, ""]).distinct.pluck(:icon) }
 
-  # When a column's icon changes, register it and expire the sprite cache
   add_model_callback(Boards::Column, :after_commit) do
-    if saved_change_to_icon? && icon.present?
-      DiscoursePluginRegistry.register_svg_icon(icon)
-      SvgSprite.expire_cache
-    end
+    SvgSprite.expire_cache if saved_change_to_icon?
   end
 
   add_to_serializer(:current_user, :can_manage_boards) { scope.can_manage_boards? }
 
   add_to_serializer(:current_user, :can_edit_any_boards) do
-    scope.target_ids_with_any_acl_permissions(Boards::Board, %w[edit manage]).any?
+    Boards::Board.open.with_any_acl_permissions(scope, %w[edit manage]).exists?
   end
 
   add_to_class(:topic, :board_cards_map) { @board_cards_map }
