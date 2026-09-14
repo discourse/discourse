@@ -184,10 +184,6 @@ module DiscourseWorkflows
           @post = post
         end
 
-        def valid?
-          @post.present? && @post.topic.present?
-        end
-
         def output
           { post: post_data(@post), topic: topic_data(@post.topic) }
         end
