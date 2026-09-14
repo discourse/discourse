@@ -11,6 +11,9 @@ RSpec.describe "Publish and discard a workflow" do
 
   context "when acting from the Variables page" do
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin, published: true) }
+    fab!(:variable) do
+      Fabricate(:discourse_workflows_workflow_variable, workflow:, key: "priority")
+    end
 
     before { workflow.snapshot!(user: admin) }
 
