@@ -148,23 +148,17 @@ module DiscourseWorkflows
           group_ids.present? && user.in_any_groups?(group_ids)
         end
 
-        def self.normalized_post_number(parameters)
-          value = parameters["post_number"].to_s
-          value.to_i if value.match?(/\A[1-9]\d*\z/)
-        end
-
         def self.resolved_post_number(parameters)
-          value = parameters["post_number"]
-          return if value.to_s.strip.empty?
+          return unless value = parameters["post_number"].to_s.strip.presence
 
-          normalized_post_number(parameters) || INVALID_POST_NUMBER
+          value.match?(/\A[1-9]\d*\z/) ? value.to_i : INVALID_POST_NUMBER
         end
 
         def self.matches_post_number?(post, parameters)
           post_number = resolved_post_number(parameters)
           return true if post_number.nil?
 
-          post.present? && post.post_number == post_number
+          post.post_number == post_number
         end
 
         def self.resolved_position(parameters)

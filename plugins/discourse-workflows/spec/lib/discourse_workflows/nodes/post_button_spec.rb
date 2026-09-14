@@ -54,44 +54,17 @@ RSpec.describe DiscourseWorkflows::Nodes::PostButton::V1 do
     end
   end
 
-  describe ".normalized_post_number" do
-    it "normalizes positive integer values" do
-      expect(described_class.normalized_post_number("post_number" => post.post_number)).to eq(
-        post.post_number,
-      )
-      expect(described_class.normalized_post_number("post_number" => post.post_number.to_s)).to eq(
-        post.post_number,
-      )
-    end
-
-    it "returns nil for missing, blank, malformed, and nonpositive values" do
-      [
-        {},
-        { "post_number" => "" },
-        { "post_number" => "invalid" },
-        { "post_number" => 0 },
-        { "post_number" => -1 },
-      ].each { |parameters| expect(described_class.normalized_post_number(parameters)).to be_nil }
-    end
-  end
-
   describe ".resolved_post_number" do
-    it "returns nil when the parameter is missing or blank" do
-      [
-        {},
-        { "post_number" => nil },
-        { "post_number" => "" },
-        { "post_number" => " " },
-      ].each { |parameters| expect(described_class.resolved_post_number(parameters)).to be_nil }
+    it "returns nil when the post number is missing or blank" do
+      [nil, "", " "].each do |post_number|
+        expect(described_class.resolved_post_number("post_number" => post_number)).to be_nil
+      end
     end
 
-    it "returns an integer for numeric values" do
-      expect(described_class.resolved_post_number("post_number" => post.post_number)).to eq(
-        post.post_number,
-      )
-      expect(described_class.resolved_post_number("post_number" => post.post_number.to_s)).to eq(
-        post.post_number,
-      )
+    it "returns an integer for positive numeric values" do
+      [5, "5", " 5 "].each do |post_number|
+        expect(described_class.resolved_post_number("post_number" => post_number)).to eq(5)
+      end
     end
 
     it "returns the invalid sentinel for malformed and nonpositive values" do
