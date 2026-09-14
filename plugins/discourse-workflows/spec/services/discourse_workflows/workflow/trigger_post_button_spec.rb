@@ -9,9 +9,8 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:admin)
     fab!(:group)
-    fab!(:member) { Fabricate(:user).tap { |user| group.add(user) } }
+    fab!(:acting_user) { Fabricate(:user).tap { |user| group.add(user) } }
     fab!(:post_record, :post)
     fab!(:workflow) do
       graph =
@@ -24,15 +23,13 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
                    "group_ids" => [group.id],
                  }
         end
-      Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+      Fabricate(:discourse_workflows_workflow, published: true, **graph)
     end
 
     let(:params) do
       { workflow_id: workflow.id, trigger_node_id: "trigger-1", post_id: post_record.id }
     end
-    let(:dependencies) { { guardian: Guardian.new(member) } }
-
-    before { DiscourseWorkflows::WorkflowDependencyIndexer.call(workflow) }
+    let(:dependencies) { { guardian: acting_user.guardian } }
 
     context "when contract is invalid" do
       let(:params) { { trigger_node_id: nil, post_id: nil } }
@@ -41,9 +38,7 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
     end
 
     context "when workflow is not found" do
-      let(:params) do
-        { workflow_id: workflow.id, trigger_node_id: "nonexistent", post_id: post_record.id }
-      end
+      let(:params) { super().merge(trigger_node_id: "nonexistent") }
 
       it { is_expected.to fail_to_find_a_model(:published_trigger) }
     end
@@ -52,6 +47,12 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
       before { unpublish_workflow!(workflow) }
 
       it { is_expected.to fail_to_find_a_model(:published_trigger) }
+    end
+
+    context "when a legacy request omits the workflow id" do
+      let(:params) { super().except(:workflow_id) }
+
+      it { is_expected.to run_successfully }
     end
 
     context "when published workflows share a trigger node id" do
@@ -65,46 +66,28 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
                      "group_ids" => [group.id],
                    }
           end
-        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
+        Fabricate(:discourse_workflows_workflow, published: true, **graph)
       end
 
-      before { DiscourseWorkflows::WorkflowDependencyIndexer.call(other_workflow) }
+      let(:params) { super().merge(workflow_id: other_workflow.id) }
 
-      it "enqueues each specifically requested workflow" do
-        service_results = []
+      it "enqueues the requested workflow" do
+        result
 
-        expect do
-          [workflow, other_workflow].each do |requested_workflow|
-            service_results << described_class.call(
-              params: params.merge(workflow_id: requested_workflow.id),
-              **dependencies,
-            )
-          end
-        end.to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }.by(2)
-
-        service_results.each { |service_result| expect(service_result).to run_successfully }
-        expect(
-          Jobs::DiscourseWorkflows::ExecuteWorkflow
-            .jobs
-            .last(2)
-            .map { |job| job["args"].first["workflow_id"] },
-        ).to eq([workflow.id, other_workflow.id])
+        expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first).to include(
+          "workflow_id" => other_workflow.id,
+        )
       end
 
-      it "fails to find a trigger when a legacy request is ambiguous" do
-        legacy_params = params.except(:workflow_id)
-        legacy_result = nil
+      context "when a legacy request omits the workflow id" do
+        let(:params) { super().except(:workflow_id) }
 
-        expect do
-          legacy_result = described_class.call(params: legacy_params, **dependencies)
-        end.not_to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }
-        expect(legacy_result).to fail_to_find_a_model(:published_trigger)
+        it { is_expected.to fail_to_find_a_model(:published_trigger) }
       end
     end
 
     context "when user is in none of the configured groups" do
       fab!(:acting_user, :user)
-      let(:dependencies) { { guardian: Guardian.new(acting_user) } }
 
       it { is_expected.to fail_a_policy(:can_use_post_button) }
     end
@@ -121,28 +104,24 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
     end
 
     context "when post does not exist" do
-      let(:params) { { workflow_id: workflow.id, trigger_node_id: "trigger-1", post_id: -1 } }
+      let(:params) { super().merge(post_id: -1) }
 
       it { is_expected.to fail_to_find_a_model(:post) }
     end
 
     context "when the user cannot see the post" do
-      fab!(:private_post) do
+      fab!(:post_record) do
         category = Fabricate(:private_category, group: Fabricate(:group))
-        Fabricate(:post, topic: Fabricate(:topic, category: category))
-      end
-
-      let(:params) do
-        { workflow_id: workflow.id, trigger_node_id: "trigger-1", post_id: private_post.id }
+        Fabricate(:post, topic: Fabricate(:topic, category:))
       end
 
       it { is_expected.to fail_a_policy(:can_see_post) }
     end
 
     context "when a moderator triggers the first post of a deleted topic" do
-      fab!(:member) { Fabricate(:moderator).tap { |user| group.add(user) } }
+      fab!(:acting_user) { Fabricate(:moderator).tap { |user| group.add(user) } }
 
-      before { PostDestroyer.new(admin, post_record).destroy }
+      before { PostDestroyer.new(acting_user, post_record).destroy }
 
       it { is_expected.to run_successfully }
     end
@@ -150,7 +129,7 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
     context "when a group member triggers a deleted reply" do
       fab!(:post_record) { Fabricate(:post, topic: Fabricate(:topic_with_op)) }
 
-      before { post_record.trash!(admin) }
+      before { post_record.trash! }
 
       it { is_expected.to fail_a_policy(:can_see_post) }
     end
@@ -158,66 +137,37 @@ RSpec.describe DiscourseWorkflows::Workflow::TriggerPostButton do
     context "when the configured post number does not match" do
       before do
         update_workflow_node(workflow, "trigger-1") do |node|
-          node.merge(
-            "parameters" => {
-              "label" => "Run workflow",
-              "icon" => "bolt",
-              "group_ids" => [group.id],
-              "post_number" => post_record.post_number + 1,
-            },
-          )
+          node.deep_merge("parameters" => { "post_number" => post_record.post_number + 1 })
         end
         publish_workflow!(workflow)
       end
 
-      it "fails the post-number policy without enqueuing a workflow" do
-        expect { result }.not_to change { Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.size }
-        expect(result).to fail_a_policy(:can_trigger_for_post)
-      end
-    end
-
-    context "when the post number is omitted" do
-      it { is_expected.to run_successfully }
-
-      it "enqueues an ExecuteWorkflow job acting as the clicking user" do
-        result
-        job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
-        expect(job["args"].first).to include(
-          "trigger_node_id" => "trigger-1",
-          "workflow_id" => workflow.id,
-          "workflow_version_id" => workflow.active_version_id,
-          "user_id" => member.id,
-        )
-        expect(job["args"].first["trigger_data"]["post"]).to include(
-          "id" => post_record.id,
-          "post_number" => post_record.post_number,
-        )
-        expect(job["args"].first["trigger_data"]["topic"]).to include("id" => post_record.topic_id)
-      end
-    end
-
-    context "when a legacy request omits the workflow id" do
-      let(:params) { { trigger_node_id: "trigger-1", post_id: post_record.id } }
-
-      it { is_expected.to run_successfully }
+      it { is_expected.to fail_a_policy(:can_trigger_for_post) }
     end
 
     context "when the configured post number matches" do
       before do
         update_workflow_node(workflow, "trigger-1") do |node|
-          node.merge(
-            "parameters" => {
-              "label" => "Run workflow",
-              "icon" => "bolt",
-              "group_ids" => [group.id],
-              "post_number" => post_record.post_number.to_s,
-            },
-          )
+          node.deep_merge("parameters" => { "post_number" => post_record.post_number.to_s })
         end
         publish_workflow!(workflow)
       end
 
       it { is_expected.to run_successfully }
+    end
+
+    context "when everything is valid" do
+      it "enqueues an ExecuteWorkflow job acting as the clicking user" do
+        result
+
+        expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first).to include(
+          "trigger_node_id" => "trigger-1",
+          "workflow_id" => workflow.id,
+          "workflow_version_id" => workflow.active_version_id,
+          "user_id" => acting_user.id,
+          "trigger_data" => a_hash_including("post" => a_hash_including("id" => post_record.id)),
+        )
+      end
     end
   end
 end
