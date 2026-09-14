@@ -24,6 +24,20 @@ describe ChatSDK::Thread do
       end
     end
 
+    context "when guardian is silenced" do
+      fab!(:current_user, :user)
+      fab!(:thread_1) { Fabricate(:chat_thread, original_message_user: current_user) }
+
+      before do
+        params[:guardian] = current_user.guardian
+        UserSilencer.new(current_user).silence
+      end
+
+      it "fails" do
+        expect { described_class.update_title(**params) }.to raise_error("Guardian is silenced")
+      end
+    end
+
     context "when guardian can't see the channel" do
       fab!(:thread_1) { Fabricate(:chat_thread, channel: Fabricate(:private_category_channel)) }
 
