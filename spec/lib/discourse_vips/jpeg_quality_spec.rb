@@ -41,16 +41,48 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(result.table_count).to eq(2)
     end
 
-    it "reports unknown when a referenced quantization table is missing" do
+    it "estimates from defined tables when another referenced table is missing" do
       input = jpeg_header(tables: "\x00".b + Array.new(64, 1).pack("C*"), table_ids: [0, 1, 1])
 
-      expect(described_class.estimate(StringIO.new(input)).status).to eq(:unknown)
+      expect(described_class.estimate(StringIO.new(input)).quality).to eq(100)
     end
 
-    it "reports unknown for lossless JPEG frames" do
+    it "reports unknown for unsupported lossless JPEG frames" do
       input = jpeg_header(tables: "\x00".b + Array.new(64, 1).pack("C*"), frame_marker: 0xC3)
 
-      expect(described_class.estimate(StringIO.new(input)).status).to eq(:unknown)
+      expect(described_class.estimate(StringIO.new(input)).quality).to eq(nil)
+    end
+
+    it "includes unused quantization tables in the estimate" do
+      tables =
+        "\x00".b + Array.new(64, 1).pack("C*") + "\x01".b + Array.new(64, 1).pack("C*") + "\x02".b +
+          Array.new(64, 255).pack("C*")
+      input = jpeg_header(tables: tables, table_ids: [0, 1, 1])
+
+      result = described_class.estimate(StringIO.new(input))
+
+      expect(result.quality).to eq(92)
+      expect(result.table_count).to eq(3)
+    end
+
+    it "uses the default quality when table zero is absent" do
+      input = jpeg_header(tables: "\x01".b + Array.new(64, 1).pack("C*"), table_ids: [1])
+
+      expect(described_class.estimate(StringIO.new(input)).quality).to eq(92)
+    end
+
+    it "uses the default quality when 16-bit coefficients exceed the thresholds" do
+      input = jpeg_header(tables: "\x10".b + Array.new(64, 300).pack("n*"))
+
+      expect(described_class.estimate(StringIO.new(input)).quality).to eq(92)
+    end
+
+    it "uses the selected coefficient in natural table order" do
+      values = Array.new(64, 5)
+      values[5] = 100
+      input = jpeg_header(tables: "\x00".b + values.pack("C*"))
+
+      expect(described_class.estimate(StringIO.new(input)).quality).to eq(60)
     end
 
     it "rejects a repeated frame header before the first scan" do
@@ -87,11 +119,16 @@ RSpec.describe DiscourseVips::JpegQuality do
       expect(result.quality).to eq(95)
     end
 
-    it "returns the closest standard quality for custom quantization tables" do
+    it "estimates quality from custom quantization tables" do
       result = described_class.estimate(file_from_fixtures("logo.jpg").path)
 
-      expect(result.status).to eq(:approximate)
-      expect(result.quality).to eq(93)
+      expect(result.quality).to eq(94)
+    end
+
+    it "estimates quality from jpegli quantization tables" do
+      result = described_class.estimate(file_from_fixtures("jpegli_quality_90.jpg").path)
+
+      expect(result.quality).to eq(80)
     end
 
     it "approximates a table close to standard JPEG quantization" do
@@ -101,11 +138,10 @@ RSpec.describe DiscourseVips::JpegQuality do
 
       result = described_class.estimate(StringIO.new(original))
 
-      expect(result.status).to eq(:approximate)
       expect(result.quality).to eq(95)
     end
 
-    it "accounts for chroma when a luminance table is shared by all components" do
+    it "uses defined tables even when components share a single table" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
       frame_offset = original.index("\xFF\xC0".b)
       original.setbyte(frame_offset + 15, 0)
@@ -113,38 +149,36 @@ RSpec.describe DiscourseVips::JpegQuality do
 
       result = described_class.estimate(StringIO.new(original))
 
-      expect(result.status).to eq(:approximate)
-      expect(result.quality).not_to eq(95)
+      expect(result.quality).to eq(95)
     end
 
-    it "returns the closest quality when one coefficient is far from standard quantization" do
+    it "estimates quality when one coefficient differs from standard quantization" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
       coefficient_offset = original.index("\xFF\xDB".b) + 5
       original.setbyte(coefficient_offset, original.getbyte(coefficient_offset) * 4)
 
       result = described_class.estimate(StringIO.new(original))
 
-      expect(result.status).to eq(:approximate)
       expect(result.quality).to eq(95)
     end
 
-    it "reports unknown when component identifiers do not establish luminance and chroma roles" do
+    it "estimates quality independently of component names" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
       frame_offset = original.index("\xFF\xC0".b)
       original.setbyte(frame_offset + 10, 82)
       original.setbyte(frame_offset + 13, 71)
       original.setbyte(frame_offset + 16, 66)
 
-      expect(described_class.estimate(StringIO.new(original)).status).to eq(:unknown)
+      expect(described_class.estimate(StringIO.new(original)).quality).to eq(95)
     end
 
-    it "reports unknown when the Adobe marker identifies RGB components" do
+    it "estimates quality independently of the Adobe color transform" do
       original = File.binread(file_from_fixtures("exif_orientation.jpg").path)
       adobe = "Adobe" + [100, 0, 0, 0].pack("nnnC")
       marker = [0xFF, 0xEE, adobe.bytesize + 2].pack("CCn") + adobe
       input = StringIO.new(original.byteslice(0, 2) + marker + original.byteslice(2..))
 
-      expect(described_class.estimate(input).status).to eq(:unknown)
+      expect(described_class.estimate(input).quality).to eq(95)
     end
 
     it "estimates quality when a short APP14 marker is not an Adobe header" do

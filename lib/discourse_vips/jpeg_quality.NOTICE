@@ -1,0 +1,240 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+1. ImageMagick copyright:
+
+Copyright @ 1999 ImageMagick Studio LLC, a non-profit organization dedicated
+to making software imaging solutions freely available.
+
+You may not use this file except in compliance with the License. You may obtain
+a copy of the License at
+
+  https://imagemagick.org/license/
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations under the License.
+
+The full text of this license is available in the LICENSE file.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+2. E. I. du Pont de Nemours and Company copyright (ImageMagick was originally
+   developed and distributed by E. I. du Pont de Nemours and Company):
+
+Copyright 1999 E. I. du Pont de Nemours and Company
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files ("ImageMagick"), to deal in
+ImageMagick without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of ImageMagick, and to permit persons to whom the ImageMagick is furnished to
+do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of ImageMagick.
+
+The software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and noninfringement.  In no event shall E. I.
+du Pont de Nemours and Company be liable for any claim, damages or other
+liability, whether in an action of contract, tort or otherwise, arising from,
+out of or in connection with ImageMagick or the use or other dealings in
+ImageMagick.
+
+Except as contained in this notice, the name of the E. I. du Pont de Nemours
+and Company shall not be used in advertising or otherwise to promote the sale,
+use or other dealings in ImageMagick without prior written authorization from
+the E. I. du Pont de Nemours and Company.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+3. OpenSSH copyright (this copyright is limited to magick/utility.c/
+   Base64Decode() and Base64Encode(),incorporated from the OpenSSH package):
+
+Copyright (c) 2000 Markus Friedl.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR \`\`AS IS\'\' AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+4. Xfig copyright (this copyright is limited to the image patterns in
+   magick/nt-base.c, incorporated from the XFig package):
+
+| FIG : Facility for Interactive Generation of figures
+| Copyright (c) 1985-1988 by Supoj Sutanthavibul
+| Parts Copyright (c) 1989-2000 by Brian V. Smith
+| Parts Copyright (c) 1991 by Paul King
+
+Any party obtaining a copy of these files is granted, free of charge, a full
+and unrestricted irrevocable, world-wide, paid up, royalty-free, nonexclusive
+right and license to deal in this software and documentation files (the
+"Software"), including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the Software, and
+to permit persons who receive copies from any such party to do so, with the
+only requirement being that this copyright notice remains intact.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+5. ezXML copyright (This copyright is limited to code for reading XML files in
+   magick/xml-tree.c, incorporated from the ezxml package):
+
+Copyright 2004-2006 Aaron Voisine <aaron@voisine.org>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+6. GraphicsMagick copyright (this copyright is limited to the Windows installer
+   and enhancements to the automake and autoconf configure scripts,
+   incorporated from the GraphicsMagick package):
+
+Copyright (C) 2002 - 2009 GraphicsMagick Group
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+7. Magick++ copyright (this copyright is limited to the Magick++ API in the
+   Magick++ folder):
+
+Copyright 1999 - 2002 Bob Friesenhahn <bfriesen@simple.dallas.tx.us>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+the source files and associated documentation files ("Magick++"), to deal in
+Magick++ without restriction, including without limitation of the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of Magick++, and to permit persons to whom the Magick++ is furnished to do so,
+subject to the following conditions:
+
+This copyright notice shall be included in all copies or substantial portions
+of Magick++. The copyright to Magick++ is retained by its author and shall not
+be subsumed or replaced by any other copyright.
+
+The software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,fitness
+for a particular purpose and noninfringement. In no event shall Bob Friesenhahn
+be liable for any claim, damages or other liability, whether in an action of
+contract, tort or otherwise, arising from, out of or in connection with
+Magick++ or the use or other dealings in Magick++.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+8. Thatcher Ulrich copyright (ImageMagick includes two fonts,
+   PerlMagick/t/ttf/input.ttf and PerlMagick/demo/Generic.ttf under this
+   copyright):
+
+  Copyright: 2004-2007, Thatcher Ulrich <tu@tulrich.com>
+
+  I have placed these fonts in the Public Domain. This is all 100% my own work.
+  Usage is totally unrestricted. If you want to make derivative works for any
+  purpose, please go ahead.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+9. Gsview copyright (ImageMagick incorporated a small portion of code from the
+   gsview package to locate Ghostscript under Windows. This source code is
+   distributed under the following license):
+
+Copyright (C) 2000-2002, Ghostgum Software Pty Ltd. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this file ("Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of this Software, and to permit persons to whom
+this file is furnished to do so, subject to the following conditions:
+
+This Software is distributed with NO WARRANTY OF ANY KIND.  No author or
+distributor accepts any responsibility for the consequences of using it, or
+for whether it serves any particular purpose or works at all, unless he or she
+says so in writing.
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+10. Libsquish copyright (this copyright is limited to the compression used in
+    coder/dds.c, incorporated from the libsquish library):
+
+Copyright (c) 2006 Simon Brown                          si@sjbrown.co.uk
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to  permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+11. Bootstrap copyright (ImageMagick utilizes CSS for its web pages under this
+    copyright):
+
+Bootstrap v3.3.5 (http://getbootstrap.com)
+Copyright 2011-2015 Twitter, Inc.
+Licensed under the MIT license
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

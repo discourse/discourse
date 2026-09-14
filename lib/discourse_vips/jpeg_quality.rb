@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module DiscourseVips
-  # Compares stored JPEG tables with libjpeg tables from the Independent JPEG Group (IJG).
-  # The closest quality setting guides optional recompression; it is a comparison scale,
-  # not perceptual quality or necessarily the encoder's original setting.
+  # Estimates JPEG quality for optional recompression using ImageMagick's table heuristic.
+  # Adapted from ImageMagick 7.1.2-27 JPEGSetImageQuality (coders/jpeg.c) and %Q (MagickCore/property.c).
+  # Modified for Discourse: translated to Ruby with bounded JPEG header parsing.
+  # Lossless input stays unknown because the production decoder rejects it before the helper's 100 branch.
+  # Copyright 1999 ImageMagick Studio LLC. See jpeg_quality.LICENSE and jpeg_quality.NOTICE.
   module JpegQuality
     class Error < StandardError
     end
@@ -12,15 +14,7 @@ module DiscourseVips
     end
 
     Estimate =
-      Struct.new(
-        :status,
-        :quality,
-        :deviation,
-        :table_count,
-        :precisions,
-        :reason,
-        keyword_init: true,
-      ) do
+      Struct.new(:status, :quality, :table_count, :precisions, :reason, keyword_init: true) do
         def exact?
           status == :exact
         end
@@ -35,22 +29,13 @@ module DiscourseVips
       end
 
     QuantizationTable = Struct.new(:id, :precision, :values, keyword_init: true)
-    ParsedJPEG =
-      Struct.new(
-        :tables,
-        :used_table_ids,
-        :components,
-        :adobe_transform,
-        :lossless,
-        keyword_init: true,
-      )
+    ParsedJPEG = Struct.new(:tables, :used_table_ids, :components, :lossless, keyword_init: true)
 
     class Parser
       TEM = 0x01
       DQT = 0xDB
       EOI = 0xD9
       SOS = 0xDA
-      APP14 = 0xEE
 
       SOF_MARKERS = [
         0xC0,
@@ -72,6 +57,74 @@ module DiscourseVips
       DISCARD_CHUNK_SIZE = 16 * 1024
       MAX_HEADER_BYTES = 16 * 1024 * 1024
 
+      ZIGZAG = [
+        0,
+        1,
+        8,
+        16,
+        9,
+        2,
+        3,
+        10,
+        17,
+        24,
+        32,
+        25,
+        18,
+        11,
+        4,
+        5,
+        12,
+        19,
+        26,
+        33,
+        40,
+        48,
+        41,
+        34,
+        27,
+        20,
+        13,
+        6,
+        7,
+        14,
+        21,
+        28,
+        35,
+        42,
+        49,
+        56,
+        57,
+        50,
+        43,
+        36,
+        29,
+        22,
+        15,
+        23,
+        30,
+        37,
+        44,
+        51,
+        58,
+        59,
+        52,
+        45,
+        38,
+        31,
+        39,
+        46,
+        53,
+        60,
+        61,
+        54,
+        47,
+        55,
+        62,
+        63,
+      ].freeze
+      private_constant :ZIGZAG
+
       def initialize(io)
         @io = io
         @tables = {}
@@ -80,7 +133,6 @@ module DiscourseVips
         @header_bytes = 0
         @frame_seen = false
         @components = []
-        @adobe_transform = nil
       end
 
       def parse
@@ -97,11 +149,6 @@ module DiscourseVips
             next
           when DQT
             parse_dqt(read_segment(marker))
-          when APP14
-            payload = read_segment(marker)
-            if payload.bytesize >= 12 && payload.start_with?("Adobe")
-              @adobe_transform = payload.getbyte(11)
-            end
           when *SOF_MARKERS
             parse_sof(marker, read_segment(marker))
           when SOS
@@ -124,7 +171,6 @@ module DiscourseVips
           tables: @tables,
           used_table_ids: @used_table_ids,
           components: @components,
-          adobe_transform: @adobe_transform,
           lossless: @lossless,
         )
       end
@@ -183,7 +229,13 @@ module DiscourseVips
           @tables[table_id] = QuantizationTable.new(
             id: table_id,
             precision: precision,
-            values: values.freeze,
+            values:
+              values
+                .each_with_index
+                .with_object(Array.new(64)) do |(value, index), natural|
+                  natural[ZIGZAG[index]] = value
+                end
+                .freeze,
           )
           offset += table_size
         end
@@ -265,329 +317,466 @@ module DiscourseVips
     end
 
     class Estimator
-      LUMINANCE_BASE = [
-        16,
-        11,
-        10,
-        16,
-        24,
-        40,
-        51,
-        61,
-        12,
-        12,
-        14,
-        19,
-        26,
-        58,
-        60,
-        55,
-        14,
-        13,
-        16,
-        24,
-        40,
-        57,
-        69,
-        56,
-        14,
-        17,
-        22,
-        29,
-        51,
-        87,
-        80,
-        62,
-        18,
-        22,
-        37,
-        56,
-        68,
-        109,
-        103,
-        77,
-        24,
-        35,
-        55,
-        64,
-        81,
+      COLOR_COEFFICIENT_SUMS = [
+        1020,
+        1015,
+        932,
+        848,
+        780,
+        735,
+        702,
+        679,
+        660,
+        645,
+        632,
+        623,
+        613,
+        607,
+        600,
+        594,
+        589,
+        585,
+        581,
+        571,
+        555,
+        542,
+        529,
+        514,
+        494,
+        474,
+        457,
+        439,
+        424,
+        410,
+        397,
+        386,
+        373,
+        364,
+        351,
+        341,
+        334,
+        324,
+        317,
+        309,
+        299,
+        294,
+        287,
+        279,
+        274,
+        267,
+        262,
+        257,
+        251,
+        247,
+        243,
+        237,
+        232,
+        227,
+        222,
+        217,
+        213,
+        207,
+        202,
+        198,
+        192,
+        188,
+        183,
+        177,
+        173,
+        168,
+        163,
+        157,
+        153,
+        148,
+        143,
+        139,
+        132,
+        128,
+        125,
+        119,
+        115,
+        108,
         104,
-        113,
-        92,
-        49,
+        99,
+        94,
+        90,
+        84,
+        79,
+        74,
+        70,
         64,
-        78,
-        87,
-        103,
-        121,
-        120,
-        101,
-        72,
-        92,
-        95,
-        98,
-        112,
-        100,
-        103,
-        99,
-      ].freeze
-
-      CHROMINANCE_BASE = [
-        17,
-        18,
-        24,
-        47,
-        99,
-        99,
-        99,
-        99,
-        18,
-        21,
-        26,
-        66,
-        99,
-        99,
-        99,
-        99,
-        24,
-        26,
-        56,
-        99,
-        99,
-        99,
-        99,
-        99,
-        47,
-        66,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-        99,
-      ].freeze
-
-      ZIGZAG_ORDER = [
-        0,
-        1,
-        8,
-        16,
-        9,
-        2,
-        3,
-        10,
-        17,
-        24,
-        32,
-        25,
-        18,
-        11,
-        4,
-        5,
-        12,
-        19,
-        26,
-        33,
-        40,
-        48,
-        41,
-        34,
-        27,
-        20,
-        13,
-        6,
-        7,
-        14,
-        21,
-        28,
-        35,
-        42,
-        49,
-        56,
-        57,
-        50,
-        43,
-        36,
-        29,
-        22,
-        15,
-        23,
-        30,
-        37,
-        44,
-        51,
-        58,
         59,
-        52,
-        45,
-        38,
-        31,
-        39,
-        46,
-        53,
-        60,
-        61,
-        54,
-        47,
         55,
-        62,
-        63,
+        49,
+        45,
+        40,
+        34,
+        30,
+        25,
+        20,
+        15,
+        11,
+        6,
+        4,
+        0,
       ].freeze
+      private_constant :COLOR_COEFFICIENT_SUMS
 
-      BASE_TABLES = [LUMINANCE_BASE, CHROMINANCE_BASE].freeze
+      COLOR_TABLE_SUMS = [
+        32_640,
+        32_635,
+        32_266,
+        31_495,
+        30_665,
+        29_804,
+        29_146,
+        28_599,
+        28_104,
+        27_670,
+        27_225,
+        26_725,
+        26_210,
+        25_716,
+        25_240,
+        24_789,
+        24_373,
+        23_946,
+        23_572,
+        22_846,
+        21_801,
+        20_842,
+        19_949,
+        19_121,
+        18_386,
+        17_651,
+        16_998,
+        16_349,
+        15_800,
+        15_247,
+        14_783,
+        14_321,
+        13_859,
+        13_535,
+        13_081,
+        12_702,
+        12_423,
+        12_056,
+        11_779,
+        11_513,
+        11_135,
+        10_955,
+        10_676,
+        10_392,
+        10_208,
+        9928,
+        9747,
+        9564,
+        9369,
+        9193,
+        9017,
+        8822,
+        8639,
+        8458,
+        8270,
+        8084,
+        7896,
+        7710,
+        7527,
+        7347,
+        7156,
+        6977,
+        6788,
+        6607,
+        6422,
+        6236,
+        6054,
+        5867,
+        5684,
+        5495,
+        5305,
+        5128,
+        4945,
+        4751,
+        4638,
+        4442,
+        4248,
+        4065,
+        3888,
+        3698,
+        3509,
+        3326,
+        3139,
+        2957,
+        2775,
+        2586,
+        2405,
+        2216,
+        2037,
+        1846,
+        1666,
+        1483,
+        1297,
+        1109,
+        927,
+        735,
+        554,
+        375,
+        201,
+        128,
+        0,
+      ].freeze
+      private_constant :COLOR_TABLE_SUMS
 
-      CANDIDATE_TABLES =
-        (1..100)
-          .to_h do |quality|
-            scale = quality < 50 ? 5000 / quality : 200 - quality * 2
-            candidates =
-              BASE_TABLES.map do |base|
-                [255, 32_767].map do |maximum|
-                    natural =
-                      base.map do |coefficient|
-                        ((coefficient * scale + 50) / 100).clamp(1, maximum)
-                      end
-                    ZIGZAG_ORDER.map { |index| natural[index] }.freeze
-                  end
-                  .uniq
-                  .freeze
-              end
-            [quality, candidates.freeze]
-          end
-          .freeze
-      private_constant :CANDIDATE_TABLES
+      GRAYSCALE_COEFFICIENT_SUMS = [
+        510,
+        505,
+        422,
+        380,
+        355,
+        338,
+        326,
+        318,
+        311,
+        305,
+        300,
+        297,
+        293,
+        291,
+        288,
+        286,
+        284,
+        283,
+        281,
+        280,
+        279,
+        278,
+        277,
+        273,
+        262,
+        251,
+        243,
+        233,
+        225,
+        218,
+        211,
+        205,
+        198,
+        193,
+        186,
+        181,
+        177,
+        172,
+        168,
+        164,
+        158,
+        156,
+        152,
+        148,
+        145,
+        142,
+        139,
+        136,
+        133,
+        131,
+        129,
+        126,
+        123,
+        120,
+        118,
+        115,
+        113,
+        110,
+        107,
+        105,
+        102,
+        100,
+        97,
+        94,
+        92,
+        89,
+        87,
+        83,
+        81,
+        79,
+        76,
+        74,
+        70,
+        68,
+        66,
+        63,
+        61,
+        57,
+        55,
+        52,
+        50,
+        48,
+        44,
+        42,
+        39,
+        37,
+        34,
+        31,
+        29,
+        26,
+        24,
+        21,
+        18,
+        16,
+        13,
+        11,
+        8,
+        6,
+        3,
+        2,
+        0,
+      ].freeze
+      private_constant :GRAYSCALE_COEFFICIENT_SUMS
 
-      EXACT_QUALITIES =
-        [0, 1].map do |role|
-            CANDIDATE_TABLES
-              .each_with_object({}) do |(quality, candidates), index|
-                candidates[role].each { |candidate| (index[candidate] ||= []) << quality }
-              end
-              .transform_values(&:freeze)
-              .freeze
-          end
-          .freeze
-      private_constant :EXACT_QUALITIES
+      GRAYSCALE_TABLE_SUMS = [
+        16_320,
+        16_315,
+        15_946,
+        15_277,
+        14_655,
+        14_073,
+        13_623,
+        13_230,
+        12_859,
+        12_560,
+        12_240,
+        11_861,
+        11_456,
+        11_081,
+        10_714,
+        10_360,
+        10_027,
+        9679,
+        9368,
+        9056,
+        8680,
+        8331,
+        7995,
+        7668,
+        7376,
+        7084,
+        6823,
+        6562,
+        6345,
+        6125,
+        5939,
+        5756,
+        5571,
+        5421,
+        5240,
+        5086,
+        4976,
+        4829,
+        4719,
+        4616,
+        4463,
+        4393,
+        4280,
+        4166,
+        4092,
+        3980,
+        3909,
+        3835,
+        3755,
+        3688,
+        3621,
+        3541,
+        3467,
+        3396,
+        3323,
+        3247,
+        3170,
+        3096,
+        3021,
+        2952,
+        2874,
+        2804,
+        2727,
+        2657,
+        2583,
+        2509,
+        2437,
+        2362,
+        2290,
+        2211,
+        2136,
+        2068,
+        1996,
+        1915,
+        1858,
+        1773,
+        1692,
+        1620,
+        1552,
+        1477,
+        1398,
+        1326,
+        1251,
+        1179,
+        1109,
+        1031,
+        961,
+        884,
+        814,
+        736,
+        667,
+        592,
+        518,
+        441,
+        369,
+        292,
+        221,
+        151,
+        86,
+        64,
+        0,
+      ].freeze
+      private_constant :GRAYSCALE_TABLE_SUMS
 
       def initialize(parsed_jpeg)
         @parsed_jpeg = parsed_jpeg
       end
 
       def estimate
-        return unknown("lossless JPEG processes do not use DQT quality") if @parsed_jpeg.lossless
+        tables = @parsed_jpeg.tables
+        return result(:unknown, nil) if @parsed_jpeg.lossless
+        return result(:undefined, 92) unless tables[0]
 
-        tables = active_tables
-        return unknown("no DQT tables were found before the first scan") if tables.empty?
-
-        missing_ids = @parsed_jpeg.used_table_ids - @parsed_jpeg.tables.keys
-        unless missing_ids.empty?
-          return(
-            unknown(
-              "frame references undefined DQT table#{"s" if missing_ids.length > 1} #{missing_ids.join(", ")}",
-            )
-          )
+        total = tables.values.sum { |table| table.values.sum }
+        coefficients = tables[0].values[2] + tables[0].values[53]
+        if tables[1]
+          coefficients += tables[1].values[0] + tables[1].values[63]
+          coefficient_sums = COLOR_COEFFICIENT_SUMS
+          table_sums = COLOR_TABLE_SUMS
+        else
+          coefficient_sums = GRAYSCALE_COEFFICIENT_SUMS
+          table_sums = GRAYSCALE_TABLE_SUMS
         end
 
-        roles = component_roles
-        return unknown("JPEG component roles are ambiguous", tables) unless roles
+        100.times do |index|
+          next if coefficients < coefficient_sums[index] && total < table_sums[index]
 
-        role_tables = roles.map { |id, role| [@parsed_jpeg.tables.fetch(id), role] }
-        exact_quality =
-          role_tables
-            .map { |table, role| EXACT_QUALITIES[role].fetch(table.values, []) }
-            .reduce(&:&)
-            .min
-        return result(:exact, exact_quality, 0.0, tables) if exact_quality
+          exact = coefficients <= coefficient_sums[index] && total <= table_sums[index]
+          return result(exact ? :exact : :approximate, index + 1) if exact || index >= 50
 
-        quality, score =
-          (1..100).map { |candidate| [candidate, score(role_tables, candidate)] }.min_by(&:last)
-        result(:approximate, quality, Math.exp(score) - 1, tables)
+          return result(:undefined, 92)
+        end
+        result(:undefined, 92)
       end
 
       private
 
-      def component_roles
-        components = @parsed_jpeg.components
-        return [[components.first.last, 0]] if components.length == 1
-        return unless components.map(&:first) == [1, 2, 3]
-        return if @parsed_jpeg.adobe_transform && @parsed_jpeg.adobe_transform != 1
-
-        components.each_with_index.map { |(_, id), index| [id, index.zero? ? 0 : 1] }.uniq
-      end
-
-      def active_tables
-        ids = @parsed_jpeg.used_table_ids
-        ids = @parsed_jpeg.tables.keys if ids.empty?
-        ids.uniq.filter_map { |id| @parsed_jpeg.tables[id] }
-      end
-
-      def result(status, quality, deviation, tables)
+      def result(status, quality)
+        tables = @parsed_jpeg.tables.values
         Estimate.new(
           status: status,
           quality: quality,
-          deviation: deviation,
           table_count: tables.length,
           precisions: tables.map(&:precision).uniq.sort,
-        )
-      end
-
-      def score(tables, quality)
-        candidates = CANDIDATE_TABLES.fetch(quality)
-        total =
-          tables.sum do |table, role|
-            candidates[role].map { |candidate| table_score(table, candidate) }.min
-          end
-
-        Math.sqrt(total / tables.length)
-      end
-
-      def table_score(table, candidate)
-        total = 0.0
-        table.values.each_with_index do |actual, index|
-          ratio = actual.to_f / candidate[index]
-          total += Math.log(ratio)**2
-        end
-        total / 64.0
-      end
-
-      def unknown(reason, tables = [])
-        Estimate.new(
-          status: :unknown,
-          table_count: tables.length,
-          precisions: tables.map(&:precision).uniq.sort,
-          reason: reason,
         )
       end
     end

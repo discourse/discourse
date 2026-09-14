@@ -1224,14 +1224,14 @@ RSpec.describe Upload do
         expect(upload.target_jpeg_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(90)
       end
 
-      it "returns nil for optional recompression when JPEG component roles are ambiguous" do
+      it "returns the requested quality for a JPEG with an Adobe color transform" do
         jpeg = file_from_fixtures("exif_orientation.jpg")
         original = File.binread(jpeg.path)
         adobe = "Adobe" + [100, 0, 0].pack("n3") + "\x00"
         marker = [0xFF, 0xEE, adobe.bytesize + 2].pack("CCn") + adobe
         File.binwrite(jpeg.path, original.byteslice(0, 2) + marker + original.byteslice(2..))
 
-        expect(upload.target_jpeg_quality(jpeg.path, 90)).to eq(nil)
+        expect(upload.target_jpeg_quality(jpeg.path, 90)).to eq(90)
       end
     end
 
