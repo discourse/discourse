@@ -106,6 +106,7 @@ module DiscourseAi
             Tools::ListUsers,
             Tools::Time,
             Tools::Search,
+            Tools::SearchUploadedDocuments,
             Tools::Read,
             Tools::ReadPost,
             Tools::FlagPost,
