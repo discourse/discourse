@@ -86,17 +86,17 @@ RSpec.describe DiscourseWorkflows::Workflow::RevertToVersion do
         expect { result }.not_to change { workflow.workflow_versions.count }
       end
 
-      it "restores a setting field's value along with the chosen version" do
-        field =
-          workflow.setting_fields.create!(
+      it "restores a variable's value along with the chosen version" do
+        variable =
+          workflow.variables.create!(
             key: "priority",
-            label: "Priority",
-            field_type: "string",
+            variable_type: "string",
             value: "urgent",
+            created_by: user,
           )
         target_version = workflow.snapshot!(user: user)
 
-        field.update!(value: "changed")
+        variable.update!(value: "changed")
         workflow.snapshot!(user: user)
 
         described_class.call(
@@ -107,7 +107,7 @@ RSpec.describe DiscourseWorkflows::Workflow::RevertToVersion do
           guardian: user.guardian,
         )
 
-        expect(workflow.setting_fields.find_by(key: "priority").value).to eq("urgent")
+        expect(workflow.variables.find_by(key: "priority").value).to eq("urgent")
       end
 
       it_behaves_like "expires workflow caches"

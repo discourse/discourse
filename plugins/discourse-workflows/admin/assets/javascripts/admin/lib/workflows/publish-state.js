@@ -89,7 +89,7 @@ export default class WorkflowPublishState {
         versionCounter: response.workflow.version_counter,
         hasUnpublishedChanges: response.workflow.has_unpublished_changes,
         settings: response.workflow.settings || {},
-        settingFields: response.workflow.setting_fields || [],
+        variables: response.workflow.variables || [],
         timezone: response.workflow.timezone,
         staticData: response.workflow.static_data || {},
         pinData: response.workflow.pin_data || {},

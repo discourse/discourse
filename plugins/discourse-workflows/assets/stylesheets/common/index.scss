@@ -3,7 +3,7 @@
 @import "tags";
 @import "editor/editor";
 @import "publish-banner";
-@import "settings-publish-notice";
+@import "variables-publish-notice";
 @import "canvas/canvas";
 @import "canvas/ai-build-tool";
 @import "canvas/hover-toolbar";
@@ -23,6 +23,7 @@
 @import "executions/execution-detail";
 @import "data-table/data-tables";
 @import "settings";
+@import "variables";
 @import "form/workflows-form";
 @import "empty-state";
 @import "templates";

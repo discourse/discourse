@@ -21,7 +21,7 @@ module DiscourseWorkflows
                :last_execution_at,
                :last_execution_run_data,
                :pin_data,
-               :setting_fields,
+               :variables,
                :tags
 
     attribute :created_by
@@ -125,14 +125,14 @@ module DiscourseWorkflows
       !object.attributes.key?("last_execution_status_value")
     end
 
-    def setting_fields
+    def variables
       object
-        .setting_fields
+        .variables
         .order(:id)
-        .map { |field| WorkflowSettingFieldSerializer.new(field, root: false).as_json }
+        .map { |variable| WorkflowVariableSerializer.new(variable, root: false).as_json }
     end
 
-    def include_setting_fields?
+    def include_variables?
       !object.attributes.key?("last_execution_status_value")
     end
   end

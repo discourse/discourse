@@ -75,23 +75,23 @@ RSpec.describe DiscourseWorkflows::Workflow::DiscardDraft do
         expect(workflow).not_to have_unpublished_changes
       end
 
-      it "restores the published version's setting field value" do
-        field =
-          workflow.setting_fields.create!(
+      it "restores the published version's variable value" do
+        variable =
+          workflow.variables.create!(
             key: "priority",
-            label: "Priority",
-            field_type: "string",
+            variable_type: "string",
             value: "urgent",
+            created_by: user,
           )
         workflow.snapshot!(user: user)
         workflow.publish!(user: user)
 
-        field.update!(value: "changed")
+        variable.update!(value: "changed")
         workflow.snapshot!(user: user)
 
         result
 
-        expect(workflow.reload.setting_fields.find_by(key: "priority").value).to eq("urgent")
+        expect(workflow.reload.variables.find_by(key: "priority").value).to eq("urgent")
       end
 
       it_behaves_like "expires workflow caches"

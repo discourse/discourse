@@ -234,6 +234,23 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidateScript do
     )
   end
 
+  it "accepts code referencing $workflow_vars" do
+    result =
+      invoke_tool(
+        mode: "runOnceForAllItems",
+        code: "return [{ json: { priority: $workflow_vars.priority } }];",
+      )
+
+    expect(result).to include(valid: true, errors: [])
+  end
+
+  it "accepts code referencing $vars" do
+    result =
+      invoke_tool(mode: "runOnceForAllItems", code: "return [{ json: { region: $vars.region } }];")
+
+    expect(result).to include(valid: true, errors: [])
+  end
+
   it "reports output the Code node rejects" do
     result = invoke_tool(mode: "runOnceForAllItems", code: "return 5;")
 

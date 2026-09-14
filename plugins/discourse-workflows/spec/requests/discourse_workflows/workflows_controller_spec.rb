@@ -97,10 +97,10 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(json["workflows"][0]["id"]).to eq(workflow_1.id.to_s)
     end
 
-    it "omits setting fields and does not query them per workflow" do
+    it "omits variables and does not query them per workflow" do
       3.times do
         workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
-        Fabricate(:discourse_workflows_workflow_setting_field, workflow:, value: "urgent")
+        Fabricate(:discourse_workflows_workflow_variable, workflow:, value: "urgent")
       end
 
       queries = track_sql_queries { get "/admin/plugins/discourse-workflows/workflows.json" }
@@ -108,11 +108,10 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(response).to have_http_status(:ok)
       json = response.parsed_body
       expect(json["workflows"].length).to eq(3)
-      json["workflows"].each { |workflow| expect(workflow).not_to have_key("setting_fields") }
+      json["workflows"].each { |workflow| expect(workflow).not_to have_key("variables") }
 
-      setting_field_queries =
-        queries.select { |query| query.include?("discourse_workflows_workflow_setting_fields") }
-      expect(setting_field_queries).to be_empty
+      variable_queries = queries.select { |query| query.include?("discourse_workflows_variables") }
+      expect(variable_queries).to be_empty
     end
   end
 

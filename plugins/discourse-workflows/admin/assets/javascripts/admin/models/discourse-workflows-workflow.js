@@ -53,8 +53,8 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
     if (Object.hasOwn(json, "pin_data")) {
       result.pinData = json.pin_data;
     }
-    if (Object.hasOwn(json, "setting_fields")) {
-      result.settingFields = json.setting_fields;
+    if (Object.hasOwn(json, "variables")) {
+      result.variables = json.variables;
     }
 
     return result;
@@ -73,7 +73,7 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
   @tracked settings;
   @tracked staticData;
   @tracked pinData;
-  @tracked settingFields = [];
+  @tracked variables = [];
   @tracked nodes = [];
   @tracked connections = [];
   @tracked stickyNotes = [];

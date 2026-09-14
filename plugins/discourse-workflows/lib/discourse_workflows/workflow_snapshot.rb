@@ -47,13 +47,13 @@ module DiscourseWorkflows
         keyword_init: true,
       )
 
-    attr_reader :nodes, :connections, :pin_data, :workflow_name, :setting_schema
+    attr_reader :nodes, :connections, :pin_data, :workflow_name, :variables_schema
 
     def initialize(workflow_data)
       data = workflow_data.deep_stringify_keys
       @workflow_name = data["name"]
       @pin_data = data["pinData"] || {}
-      @setting_schema = data["settingSchema"] || []
+      @variables_schema = data["variablesSchema"] || []
       @nodes =
         data
           .fetch("nodes") { [] }
@@ -199,7 +199,7 @@ module DiscourseWorkflows
             connections,
           ),
         "pinData" => pin_data,
-        "settingSchema" => setting_schema,
+        "variablesSchema" => variables_schema,
       }.compact
     end
 
@@ -207,14 +207,14 @@ module DiscourseWorkflows
       nodes = published ? workflow.published_nodes : workflow.nodes
       connections = published ? workflow.published_connections : workflow.connections
       workflow_name = published ? workflow.active_version&.name : workflow.name
-      setting_schema =
-        published ? workflow.active_version&.setting_schema || [] : workflow.setting_fields_schema
+      variables_schema =
+        published ? workflow.active_version&.variables_schema || [] : workflow.variables_schema
       new(
         "name" => workflow_name || workflow.name,
         "nodes" => nodes,
         "connections" => connections,
         "pinData" => workflow.pin_data || {},
-        "settingSchema" => setting_schema,
+        "variablesSchema" => variables_schema,
       )
     end
 
@@ -223,7 +223,7 @@ module DiscourseWorkflows
         "name" => version.name || workflow.name,
         "nodes" => version.nodes,
         "connections" => version.connections,
-        "settingSchema" => version.setting_schema,
+        "variablesSchema" => version.variables_schema,
       )
     end
 

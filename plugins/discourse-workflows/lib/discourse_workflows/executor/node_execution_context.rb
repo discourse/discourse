@@ -132,7 +132,7 @@ module DiscourseWorkflows
         user: nil,
         resolver: nil,
         vars: nil,
-        workflow_settings: nil,
+        workflow_vars: nil,
         workflow: nil,
         workflow_version: nil,
         execution_id: nil,
@@ -167,7 +167,7 @@ module DiscourseWorkflows
         @user = user
         @resolver = resolver
         @vars = vars
-        @workflow_settings = workflow_settings
+        @workflow_vars = workflow_vars
         @workflow = workflow
         @workflow_version = workflow_version
         @execution_id = execution_id
@@ -772,7 +772,7 @@ module DiscourseWorkflows
             resolver_context: @resolver_context,
             user: @user,
             vars: @vars,
-            workflow_settings: @workflow_settings,
+            workflow_vars: @workflow_vars,
             flow_context: @flow_context,
             runtime_state: @runtime_state,
           )

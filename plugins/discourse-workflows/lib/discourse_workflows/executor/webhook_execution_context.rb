@@ -112,7 +112,7 @@ module DiscourseWorkflows
           DiscourseWorkflows::JsSandbox.new(
             resolver_context,
             user: user,
-            settings: preloaded_workflow_settings,
+            workflow_vars: preloaded_workflow_vars,
           )
         @resolver =
           DiscourseWorkflows::ExpressionResolver.new(
@@ -132,7 +132,7 @@ module DiscourseWorkflows
             node_context: node_context,
             user: user,
             resolver: @resolver,
-            workflow_settings: preloaded_workflow_settings,
+            workflow_vars: preloaded_workflow_vars,
             workflow: @execution.workflow,
             execution_id: @execution.id,
             resume_token: @execution.resume_token,
@@ -146,11 +146,11 @@ module DiscourseWorkflows
       end
 
       # Resolves from the same frozen snapshot the rest of this execution's
-      # node graph comes from, so $settings never mixes an old execution
-      # graph with a newer, unrelated field value.
-      def preloaded_workflow_settings
-        @preloaded_workflow_settings ||=
-          DiscourseWorkflows::SettingValueResolver.new(@snapshot.setting_schema).resolve
+      # node graph comes from, so $workflow_vars never mixes an old execution
+      # graph with a newer, unrelated variable value.
+      def preloaded_workflow_vars
+        @preloaded_workflow_vars ||=
+          DiscourseWorkflows::WorkflowVariableValueResolver.new(@snapshot.variables_schema).resolve
       end
 
       def execution_snapshot

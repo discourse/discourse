@@ -131,9 +131,9 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.deepEqual(Object.keys(ref.item.json), []);
   });
 
-  test("builds $vars from workflowVars", function (assert) {
+  test("builds $vars from globalVars", function (assert) {
     const scope = buildScope({
-      workflowVars: [
+      globalVars: [
         { key: "API_KEY", value: "secret" },
         { key: "URL", value: "https://example.com" },
       ],
@@ -143,40 +143,40 @@ module("Unit | lib | discourse-workflows | buildScope", function () {
     assert.strictEqual(scope.$vars.URL, "https://example.com");
   });
 
-  test("builds $settings with typed values from workflowSettingFields", function (assert) {
+  test("builds $workflow_vars with typed values from workflowVariables", function (assert) {
     const scope = buildScope({
-      workflowSettingFields: [
-        { key: "priority", field_type: "string", value: "urgent" },
-        { key: "max_retries", field_type: "integer", value: "3" },
-        { key: "enabled", field_type: "boolean", value: "true" },
-        { key: "categories", field_type: "category_list", value: "4|9" },
-        { key: "tags", field_type: "tag_list", value: "bug|urgent" },
-        { key: "category", field_type: "category", value: "7" },
-        { key: "group", field_type: "group", value: "12" },
+      workflowVariables: [
+        { key: "priority", variable_type: "string", value: "urgent" },
+        { key: "max_retries", variable_type: "integer", value: "3" },
+        { key: "enabled", variable_type: "boolean", value: "true" },
+        { key: "categories", variable_type: "category_list", value: "4|9" },
+        { key: "tags", variable_type: "tag_list", value: "bug|urgent" },
+        { key: "category", variable_type: "category", value: "7" },
+        { key: "group", variable_type: "group", value: "12" },
       ],
     });
 
-    assert.strictEqual(scope.$settings.priority, "urgent");
-    assert.strictEqual(scope.$settings.max_retries, 3);
-    assert.true(scope.$settings.enabled);
-    assert.deepEqual(scope.$settings.categories, [4, 9]);
-    assert.deepEqual(scope.$settings.tags, ["bug", "urgent"]);
-    assert.strictEqual(scope.$settings.category, 7);
-    assert.strictEqual(scope.$settings.group, 12);
+    assert.strictEqual(scope.$workflow_vars.priority, "urgent");
+    assert.strictEqual(scope.$workflow_vars.max_retries, 3);
+    assert.true(scope.$workflow_vars.enabled);
+    assert.deepEqual(scope.$workflow_vars.categories, [4, 9]);
+    assert.deepEqual(scope.$workflow_vars.tags, ["bug", "urgent"]);
+    assert.strictEqual(scope.$workflow_vars.category, 7);
+    assert.strictEqual(scope.$workflow_vars.group, 12);
   });
 
-  test("falls back to a type exemplar when a $settings field has no value", function (assert) {
+  test("falls back to a type exemplar when a $workflow_vars field has no value", function (assert) {
     const scope = buildScope({
-      workflowSettingFields: [
-        { key: "priority", field_type: "string" },
-        { key: "max_retries", field_type: "integer" },
-        { key: "categories", field_type: "category_list" },
+      workflowVariables: [
+        { key: "priority", variable_type: "string" },
+        { key: "max_retries", variable_type: "integer" },
+        { key: "categories", variable_type: "category_list" },
       ],
     });
 
-    assert.strictEqual(scope.$settings.priority, "");
-    assert.strictEqual(scope.$settings.max_retries, 0);
-    assert.deepEqual(scope.$settings.categories, []);
+    assert.strictEqual(scope.$workflow_vars.priority, "");
+    assert.strictEqual(scope.$workflow_vars.max_retries, 0);
+    assert.deepEqual(scope.$workflow_vars.categories, []);
   });
 
   test("builds $execution with standard fields", function (assert) {

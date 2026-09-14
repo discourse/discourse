@@ -22,14 +22,14 @@ module DiscourseWorkflows
       workflow_context,
       user: nil,
       vars: nil,
-      settings: nil,
+      workflow_vars: nil,
       capture_logs: false,
       budget_tracker: nil
     )
       @workflow_context = workflow_context
       @user = user
-      @vars = vars || DiscourseWorkflows::Variable.pluck(:key, :value).to_h
-      @settings = settings || {}
+      @vars = vars || DiscourseWorkflows::Variable.where(workflow_id: nil).pluck(:key, :value).to_h
+      @workflow_vars = workflow_vars || {}
       @budget_tracker = budget_tracker
       @site_setting_store = SiteSettingStore.new
       @js_context = create_js_context
@@ -129,7 +129,7 @@ module DiscourseWorkflows
 
       execution = @workflow_context.fetch("__execution") { {} }
       declare_json("__vars", @vars)
-      declare_json("__settings", @settings)
+      declare_json("__workflow_vars", @workflow_vars)
       declare_json("__executionData", execution)
       declare_json("__currentUser", build_current_user)
 
@@ -137,8 +137,8 @@ module DiscourseWorkflows
         Object.defineProperty(this, '$vars', {
           value: Object.freeze(__vars)
         });
-        Object.defineProperty(this, '$settings', {
-          value: Object.freeze(__settings)
+        Object.defineProperty(this, '$workflow_vars', {
+          value: Object.freeze(__workflow_vars)
         });
         Object.defineProperty(this, '$execution', {
           value: Object.freeze(__executionData)

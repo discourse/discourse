@@ -56,7 +56,7 @@ function fieldVisible(fieldDef, nodes) {
   );
 }
 
-const SETTING_FIELD_TYPE_SCHEMAS = {
+const WORKFLOW_VARIABLE_TYPE_SCHEMAS = {
   integer: "integer",
   category: "integer",
   group: "integer",
@@ -67,15 +67,15 @@ const SETTING_FIELD_TYPE_SCHEMAS = {
   simple_list: "array",
 };
 
-function settingFieldEntries(settingFields) {
-  return (settingFields || []).map((field) => ({
+function workflowVariableEntries(workflowVariables) {
+  return (workflowVariables || []).map((field) => ({
     key: field.key,
-    type: SETTING_FIELD_TYPE_SCHEMAS[field.field_type] || "string",
+    type: WORKFLOW_VARIABLE_TYPE_SCHEMAS[field.variable_type] || "string",
     id: field.key,
   }));
 }
 
-function schemaFieldToEntry(key, def, nodes, settingFields) {
+function schemaFieldToEntry(key, def, nodes, workflowVariables) {
   const displayKey = key.replace(/^\$/, "");
   const entry = {
     key: displayKey,
@@ -83,8 +83,8 @@ function schemaFieldToEntry(key, def, nodes, settingFields) {
     id: key,
   };
 
-  if (key === "$settings") {
-    entry.children = settingFieldEntries(settingFields);
+  if (key === "$workflow_vars") {
+    entry.children = workflowVariableEntries(workflowVariables);
   } else if (def.fields) {
     entry.children = Object.entries(def.fields)
       .filter(([, childDef]) => fieldVisible(childDef, nodes))
@@ -111,7 +111,7 @@ function environmentFields(
   expressionContext,
   nodes,
   nodeTypesService,
-  settingFields
+  workflowVariables
 ) {
   const env = expressionContext.environment;
   if (!env) {
@@ -128,7 +128,7 @@ function environmentFields(
       return true;
     })
     .map(([symbol, def]) =>
-      schemaFieldToEntry(symbol, def, nodes, settingFields)
+      schemaFieldToEntry(symbol, def, nodes, workflowVariables)
     );
 }
 
@@ -220,7 +220,7 @@ export default class InputContext extends Component {
       this.workflowsNodeTypes.expressionContext,
       this.args.nodes || [],
       this.workflowsNodeTypes,
-      this.args.session?.settingFields
+      this.args.session?.variables
     );
   }
 
