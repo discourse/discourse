@@ -1,0 +1,37 @@
+{
+  "source_head": "165da1aa309681cb306071342f6c289d71e30bdc",
+  "production_image": "discourse/base:2.0.20260812-0036@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
+  "source_sha256": {
+    "lib/discourse_vips.rb": "22e033695503925e9bf4e4f6a96d210eaaac09dc6c082162bf20b99e0376bca0",
+    "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
+    "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
+    "lib/discourse_vips/jpeg_quality.rb": "264b7caa6f5554bdcf75f98b5c0ec690492945b19bd13def23c0e56672d513ce",
+    "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
+    "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
+    "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
+    "script/discourse_vips_worker": "2c23d1cb4436d69c7cd1d30ee1a28b136d45d1adb30e0a0c33e58d43a5cea6b8",
+    "app/models/upload.rb": "25b911d5118f5783ef7bc3fe217db730d7512564341748c8d8e41f548ffaeebf",
+    "lib/upload_creator.rb": "f4f5c45ac54db0bd0c7fa70c4a97bb64402174a29bbb85cff463d47564e34d59"
+  },
+  "gist_revision": "5191bbf2abec0bdce138896420a8e6b4272223cf",
+  "optimization_comparison": {
+    "jpeg_count": 510,
+    "different_estimates": 0
+  },
+  "benchmark_sha256": "3971f0714d3a96c1ebda6cc201fd122ab8af105c94bdb7806c01ca984653d501",
+  "input_sha256": {
+    "standard-q80.jpg": "d686dc6599039a754e37b366e71211d326de5be1bb9d29c9042ab6bfd0a70755",
+    "standard-q30.jpg": "7df52fe0f995dfd37cc54aa106ad9f56cf4c72e9ef77fa6f6f18a18a370afbf0",
+    "custom-logo.jpg": "ad163c50a1a180d20695a4399e209a619c0ed8afde214cfd6d7cfe90ee555802",
+    "large-metadata.jpg": "200fd94038bd1d152cd3b367b2625ff67cd94b205b5c3bd83348544b3c1d3046",
+    "standard-q95.jpg": "0eaa5d489f56d1b7556ddd914fdd2ae3cb925041a6465612b5bbbbd9f164c8d0"
+  },
+  "measurement": "Median of 101 wall times; separate 101 sampled incremental cgroup memory.current peaks minus immediate idle baseline, 1 ms polls. Warmed worker persists across inputs. Includes conditional ImageMagick JPEG encoding, stat and discard; excludes the whole Rails/upload/storage pipeline.",
+  "resources": {
+    "uid": 1000,
+    "cpus": 2,
+    "memory_gib": 2,
+    "memory_plus_swap_gib": 3
+  },
+  "corpus": "Photo re-encoded with ImageMagick at Q30/Q80/Q95. Large metadata adds eight 60,000-byte APP15 payloads to Q95. Custom logo is the existing Discourse logo.jpg fixture."
+}
