@@ -55,7 +55,7 @@ module JsonApiKit
     end
 
     def declared_attributes(attributes)
-      attributes.each_key { declared_name(it) }
+      attributes.each_key { declared_names(it) }
       rules
         .each_with_index
         .reduce(attributes) do |result, (rule, index)|
@@ -65,8 +65,10 @@ module JsonApiKit
         end
     end
 
-    def declared_name(name)
-      declared_names[name] ||= declare_name(name, rules)
+    def declared_name(name) = declared_names(name).sole
+
+    def declared_names(name)
+      @declared_names[name] ||= declare_names(name, rules)
     rescue Correction => correction
       raise NotAMemberName.new(name, member_name(correction.name))
     end
@@ -97,7 +99,7 @@ module JsonApiKit
 
     private
 
-    attr_reader :rules, :declared_names, :member_names
+    attr_reader :rules, :member_names
 
     def member_names_before(names, rule_index)
       rules
@@ -106,17 +108,16 @@ module JsonApiKit
         .reduce(names) { |result, rule| result.map { rule.member_name(it) } }
     end
 
-    def declare_name(name, remaining_rules)
-      remaining_rules.reduce(name) do |result, rule|
-        rule.declared_name(result)
-      rescue Correction => correction
-        raise Correction.new(
-                declare_name(
-                  correction.name,
-                  remaining_rules.drop(remaining_rules.index(rule) + 1),
-                ),
-              )
-      end
+    def declare_names(name, remaining_rules)
+      remaining_rules
+        .each_with_index
+        .reduce([name]) do |names, (rule, index)|
+          names.flat_map { rule.declared_names(it) }.uniq
+        rescue Correction => correction
+          raise Correction.new(
+                  declare_names(correction.name, remaining_rules.drop(index + 1)).first,
+                )
+        end
     end
   end
 end

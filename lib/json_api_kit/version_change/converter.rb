@@ -3,6 +3,11 @@
 module JsonApiKit
   class VersionChange
     class Converter
+      def self.for(direction, callable, from:, to:)
+        return new(direction, callable, from) unless to.many?
+        Tuple.new(direction, callable, from, to:)
+      end
+
       class Failure < StandardError
         attr_reader :names
 
@@ -11,7 +16,7 @@ module JsonApiKit
           super("cannot convert the value of #{names.join(", ")}")
         end
 
-        def convert_names(&) = self.class.new(names.flat_map(&))
+        def convert_names(&) = self.class.new(names.flat_map(&).uniq)
       end
 
       def initialize(direction, callable, names)

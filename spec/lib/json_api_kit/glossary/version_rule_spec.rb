@@ -118,11 +118,11 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
     end
   end
 
-  describe "#declared_name" do
-    subject(:declared_name) { rule.declared_name(name) }
+  describe "#declared_names" do
+    subject(:declared_names) { rule.declared_names(name) }
 
     it "returns the current name of an old name" do
-      expect(declared_name).to eq(name.with(value: "published_at"))
+      expect(declared_names).to eq([name.with(value: "published_at")])
     end
 
     context "when a later change reuses a spelling of this version" do
@@ -131,14 +131,14 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
       let(:value) { "name" }
 
       it "returns the current name" do
-        expect(declared_name).to eq(name.with(value: "title"))
+        expect(declared_names).to eq([name.with(value: "title")])
       end
 
       context "when the name belongs to a later version" do
         let(:value) { "title" }
 
         it "raises a correction with the declared name" do
-          expect { declared_name }.to raise_error(having_attributes(name:))
+          expect { declared_names }.to raise_error(having_attributes(name:))
         end
       end
     end
@@ -147,7 +147,7 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
       let(:value) { "title" }
 
       it "returns the name" do
-        expect(declared_name).to eq(name)
+        expect(declared_names).to eq([name])
       end
     end
 
@@ -156,14 +156,14 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
       let(:value) { "posted_time" }
 
       it "returns the current name" do
-        expect(declared_name).to eq(name.with(value: "published_at"))
+        expect(declared_names).to eq([name.with(value: "published_at")])
       end
 
       context "when the name is the one they merge into" do
         let(:value) { "posted_at" }
 
         it "raises a correction with the declared name" do
-          expect { declared_name }.to raise_error(
+          expect { declared_names }.to raise_error(
             having_attributes(name: name.with(value: "published_at")),
           )
         end
@@ -174,7 +174,7 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
       let(:value) { "published_at" }
 
       it "raises a correction with the declared name" do
-        expect { declared_name }.to raise_error(
+        expect { declared_names }.to raise_error(
           an_instance_of(JsonApiKit::Glossary::Correction).and(having_attributes(name:)),
         )
       end
@@ -198,6 +198,17 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
           name.with(value: "posted_date") => "2026-08-01",
           name.with(value: "posted_time") => "00:00:00",
         )
+      end
+
+      context "when the merge converter returns too few values" do
+        subject(:member_attributes) { rule.member_attributes(name => "2026-08-01") }
+
+        it "reports an invalid converter result" do
+          expect { member_attributes }.to raise_error(
+            ArgumentError,
+            "down converter for posted_at must return 2 values (posted_date, posted_time). It returned 1.",
+          )
+        end
       end
     end
   end
@@ -225,6 +236,47 @@ RSpec.describe JsonApiKit::Glossary::VersionRule do
 
       it "returns the first of them" do
         expect(member_name).to eq(name.with(value: "posted_date"))
+      end
+    end
+
+    context "when a split and a merge produce the same historical name" do
+      let(:changes) { [first_change, split_change, merge_change] }
+      let(:split_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              split_attribute from: :created_at,
+                              to: %i[posted_date posted_time],
+                              up: ->(time) { time.split(" ") },
+                              down: ->(date, time) { "#{date} #{time}" }
+            end
+          end
+          .new(__FILE__)
+      end
+      let(:merge_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              merged_attributes from: %i[posted_date posted_time],
+                                to: :published_at,
+                                up: ->(date, time) { "#{date} #{time}" },
+                                down: ->(time) { time.split(" ") }
+            end
+          end
+          .new(__FILE__)
+      end
+
+      before { allow(first_change).to receive(:previous_names).and_call_original }
+
+      it "translates the converged name once" do
+        member_name
+        expect(first_change).to have_received(:previous_names).with(
+          name.with(value: "created_at"),
+        ).once
+      end
+
+      it "returns the historical name" do
+        expect(member_name).to eq(name.with(value: "posted_at"))
       end
     end
   end

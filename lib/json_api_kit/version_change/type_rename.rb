@@ -4,7 +4,7 @@ module JsonApiKit
   class VersionChange
     TypeRename =
       Data.define(:from, :to) do
-        def current = to
+        def current_names = [to]
 
         def previous_names = [from]
       end
