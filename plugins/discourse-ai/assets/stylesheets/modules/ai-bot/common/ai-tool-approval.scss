@@ -3,22 +3,25 @@
   border-radius: var(--d-border-radius);
   padding: var(--space-3) var(--space-4);
   margin: var(--space-2) 0;
-  background: var(--primary-very-low);
+  background: var(--secondary);
 
   &__summary {
     display: grid;
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: fit-content(35%) minmax(0, 1fr);
     gap: var(--space-1) var(--space-3);
     margin-bottom: var(--space-3);
   }
 
   &__label {
-    color: var(--primary-medium);
+    color: var(--primary-high);
     font-size: var(--font-down-1);
+    overflow-wrap: anywhere;
   }
 
   &__value {
-    word-break: break-word;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
   }
 
   &__actions {
@@ -28,16 +31,67 @@
   }
 
   &__status {
-    color: var(--primary-medium);
+    color: var(--primary-high);
     font-style: italic;
   }
 
-  &__toggle.btn-flat {
-    padding-inline: 0;
+  &.--resolved {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: none;
 
-    .d-button-label {
-      font-style: italic;
-      color: var(--primary-medium);
+    .ai-tool-approval__toggle {
+      display: flex;
+      align-items: center;
     }
+  }
+
+  &__toggle {
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: var(--space-1);
+    }
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+
+    &.--pending {
+      margin-bottom: var(--space-3);
+    }
+
+    .--resolved & {
+      font-weight: inherit;
+    }
+  }
+
+  &__badge {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1);
+    margin-inline-start: var(--space-2);
+
+    &.--approved {
+      background: color-mix(in srgb, var(--success-low) 50%, var(--secondary));
+      color: var(--primary);
+    }
+
+    &.--rejected {
+      background: color-mix(in srgb, var(--danger-low) 50%, var(--secondary));
+      color: var(--primary);
+    }
+  }
+
+  &__toggle + &__summary {
+    margin-top: var(--space-3);
+    margin-bottom: 0;
   }
 }
