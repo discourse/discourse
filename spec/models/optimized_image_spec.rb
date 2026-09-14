@@ -310,6 +310,24 @@ RSpec.describe OptimizedImage do
       ).to eq(35)
     end
 
+    it "uses the configured JPEG preview quality even when the source estimate is lower" do
+      global_setting :enable_vips_image_processing, true
+      SiteSetting.image_preview_jpg_quality = 100
+      source =
+        UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(
+          Discourse.system_user.id,
+        )
+
+      preview = described_class.create_for(source, 50, 50)
+
+      expect(
+        DiscourseVips.estimated_jpeg_quality(
+          input_path: Discourse.store.path_for(preview),
+          timeout: 5,
+        ),
+      ).to eq(100)
+    end
+
     context "with versioning" do
       let(:filename) { "logo.png" }
       let(:file) { file_from_fixtures(filename) }

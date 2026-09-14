@@ -1224,26 +1224,6 @@ RSpec.describe Upload do
         expect(upload.target_jpeg_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(90)
       end
 
-      it "returns the requested encoding quality when JPEG quality cannot be read" do
-        expect(
-          upload.target_jpeg_quality("/missing-quality-input.jpg", 90, operation: :encoding),
-        ).to eq(90)
-      end
-
-      it "limits the encoding quality to the known source quality" do
-        expect(upload.target_jpeg_quality(local_path, 100, operation: :encoding)).to eq(95)
-      end
-
-      it "uses the lower requested encoding quality" do
-        expect(upload.target_jpeg_quality(local_path, 90, operation: :encoding)).to eq(90)
-      end
-
-      it "returns nil for a non-JPEG source even when encoding is required" do
-        path = file_from_fixtures("logo.png").path
-
-        expect(upload.target_jpeg_quality(path, 90, operation: :encoding)).to eq(nil)
-      end
-
       it "returns nil for optional recompression when JPEG component roles are ambiguous" do
         jpeg = file_from_fixtures("exif_orientation.jpg")
         original = File.binread(jpeg.path)
@@ -1252,16 +1232,6 @@ RSpec.describe Upload do
         File.binwrite(jpeg.path, original.byteslice(0, 2) + marker + original.byteslice(2..))
 
         expect(upload.target_jpeg_quality(jpeg.path, 90)).to eq(nil)
-      end
-
-      it "returns the requested encoding quality when JPEG component roles are ambiguous" do
-        jpeg = file_from_fixtures("exif_orientation.jpg")
-        original = File.binread(jpeg.path)
-        adobe = "Adobe" + [100, 0, 0].pack("n3") + "\x00"
-        marker = [0xFF, 0xEE, adobe.bytesize + 2].pack("CCn") + adobe
-        File.binwrite(jpeg.path, original.byteslice(0, 2) + marker + original.byteslice(2..))
-
-        expect(upload.target_jpeg_quality(jpeg.path, 90, operation: :encoding)).to eq(90)
       end
     end
 

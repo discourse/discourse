@@ -388,20 +388,12 @@ class UploadCreator
     from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
     to = OptimizedImage.prepend_decoder!(to)
 
-    opts = {}
-
     desired_quality = [
       SiteSetting.ImageQuality.png_to_jpg_quality,
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
 
-    target_quality =
-      if @image_info.type == :jpeg
-        @upload.target_jpeg_quality(@file.path, desired_quality, operation: :encoding)
-      else
-        desired_quality
-      end
-    opts = { quality: target_quality } if target_quality
+    opts = { quality: desired_quality }
 
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]

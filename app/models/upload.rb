@@ -448,11 +448,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_jpeg_quality(local_path, requested_quality, operation: :recompression)
-    if %i[recompression encoding].exclude?(operation)
-      raise ArgumentError, "Unknown image quality operation: #{operation}"
-    end
-
+  def target_jpeg_quality(local_path, requested_quality)
     @file_quality ||=
       begin
         return if File.open(local_path, "rb") { |file| FastImage.type(file) } != :jpeg
@@ -477,11 +473,7 @@ class Upload < ActiveRecord::Base
         0
       end
 
-    if operation == :encoding
-      @file_quality == 0 ? requested_quality : [@file_quality, requested_quality].min
-    elsif @file_quality > requested_quality
-      requested_quality
-    end
+    requested_quality if @file_quality > requested_quality
   end
 
   def self.sha1_from_short_path(path)
