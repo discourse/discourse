@@ -1,11 +1,11 @@
 {
-  "source_head": "5b461339427e38ad4eeb3c0d574a59bfcdcd5bec",
+  "source_head": "838107ce3db0865d3011a077c5cd1a4ef1171c01",
   "production_image": "discourse/base:2.0.20260812-0036@sha256:837e8ed4b5916baa36856b842ad84fe262b6b1b5550701f8844b13cc7acad7a5",
   "source_sha256": {
     "lib/discourse_vips.rb": "b456937d58932af1254bc47084e53c6a143a21dbcb3c3c7b4311529acdc534c9",
     "lib/discourse_vips/client.rb": "58cb923b3c2d4d8cbad9f0fdb667003ee26579b448ec52d1c37fd9050efad376",
     "lib/discourse_vips/worker_process.rb": "82d2b8a205b5d128b6b14bf4d37e631f34ff0e4f832996073671bd57faf5805f",
-    "lib/discourse_vips/jpeg_quality.rb": "9b143515c378cccbd3931c3636745764d95275ea76e63ca1daaf4467d54c33e3",
+    "lib/discourse_vips/jpeg_quality.rb": "eea7f168e17d3201dd122b7b6914d4696dcc4ff41f1969d4c3d6ae0960122c2e",
     "lib/image_magick.rb": "987247f5f2adb918714813f0bf6e98dfc78f57915429ee8a4ef3b23732797c86",
     "lib/discourse/safe_exec.rb": "5672c53e2bbff98a00d8cf8b6d155ec0a0fab168878a878433d760e048c7b03f",
     "lib/image_processing/instrumentation.rb": "6765b77d45d003555c9692778bdb71ce841bb6a6589e7ab8732a428e741710a6",
@@ -495,5 +495,6 @@
     "scope": "Source estimation only decides optional existing-JPEG recompression. JPEG destinations receive configured output quality directly; other destinations receive no JPEG preview quality setting."
   },
   "measurement_source_head": "5b461339427e38ad4eeb3c0d574a59bfcdcd5bec",
-  "source_base": "f15bf9887c71fc906e512cf4ca47cd87f70764ee"
+  "source_base": "f15bf9887c71fc906e512cf4ca47cd87f70764ee",
+  "measurement_compatibility": "Only the estimator responsibility comment changed after measurement_source_head; executable estimator and worker behavior are unchanged. The comment update passed 22 estimator/worker examples and changed-file lint."
 }
