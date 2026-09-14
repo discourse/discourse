@@ -19004,6 +19004,13 @@ CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_e
 
 
 --
+-- Name: idx_bpe_created_at_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_session_id ON public.browser_pageview_events USING btree (created_at, session_id, source);
+
+
+--
 -- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25073,6 +25080,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260914213908'),
 ('20260914172801'),
 ('20260914172757'),
 ('20260910033302'),
