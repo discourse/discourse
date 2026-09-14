@@ -1,31 +1,16 @@
 /* eslint-disable ember/no-classic-components */
-import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import AceEditor from "discourse/components/ace-editor";
+import CodeEditor from "discourse/components/code-editor";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class EmailStylesEditor extends Component {
   @service dialog;
-
-  @tracked _editorIdOverride;
-
-  @computed("fieldName")
-  get editorId() {
-    if (this._editorIdOverride !== undefined) {
-      return this._editorIdOverride;
-    }
-    return this.fieldName;
-  }
-
-  set editorId(value) {
-    this._editorIdOverride = value;
-  }
 
   @computed("styles", "fieldName")
   get editorContents() {
@@ -67,12 +52,11 @@ export default class EmailStylesEditor extends Component {
 
   <template>
     <div ...attributes>
-      <AceEditor
-        @content={{this.editorContents}}
-        @editorId={{this.editorId}}
-        @mode={{this.currentEditorMode}}
+      <CodeEditor
+        @language={{this.currentEditorMode}}
         @onChange={{fn (mut this.editorContents)}}
         @save={{@save}}
+        @value={{this.editorContents}}
       />
 
       <div class="admin-footer">

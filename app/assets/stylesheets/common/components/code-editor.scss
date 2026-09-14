@@ -1,0 +1,194 @@
+.code-editor {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid var(--primary-400);
+  border-radius: var(--d-input-border-radius);
+
+  // Not clipped: on touch devices the completion popup is positioned inside
+  // the editor and would be cut off.
+  background: var(--secondary);
+
+  // The editor fills whatever height the box has, so dragging the grippie or
+  // setting a height on the host grows the text area rather than leaving a
+  // dead strip under it.
+  > .loading-container {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .codemirror-editor {
+    height: 100%;
+  }
+
+  .grippie {
+    background: var(--primary-low);
+    border-top: 1px solid var(--primary-400);
+
+    &::before {
+      border-top: 3px double var(--primary-medium);
+    }
+  }
+
+  .cm-editor {
+    height: 100%;
+    background: transparent;
+    color: var(--primary);
+
+    &.cm-focused {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -1px;
+    }
+  }
+
+  .cm-scroller {
+    overflow: auto;
+    font-family: var(--d-font-family--monospace), monospace;
+    font-size: var(--font-down-1);
+    line-height: 1.5;
+  }
+
+  .cm-content {
+    caret-color: var(--primary);
+  }
+
+  .cm-cursor {
+    border-left-color: var(--primary);
+  }
+
+  .cm-selectionBackground,
+  .cm-content ::selection {
+    background: var(--tertiary-low) !important;
+  }
+
+  .cm-activeLine {
+    background: var(--primary-very-low);
+  }
+
+  .cm-gutters {
+    border: 0;
+    background: transparent;
+    color: var(--primary-low-mid);
+  }
+
+  .cm-activeLineGutter {
+    background: transparent;
+    color: var(--primary-medium);
+  }
+
+  // CodeMirror injects a light-only baseTheme for its tooltips, so they need
+  // overriding to follow the colour scheme.
+  .cm-tooltip {
+    z-index: z("dropdown");
+    background: var(--secondary);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .cm-tooltip-autocomplete > ul {
+    font-family: var(--d-font-family--monospace), monospace;
+
+    > li {
+      padding: 1px 0.4em;
+      color: var(--primary);
+    }
+
+    > li[aria-selected] {
+      background: var(--tertiary-low);
+      color: var(--primary);
+    }
+  }
+
+  .cm-completionDetail {
+    color: var(--primary-medium);
+    font-style: normal;
+  }
+
+  .cm-completionMatchedText {
+    color: var(--tertiary);
+    text-decoration: none;
+    font-weight: 700;
+  }
+
+  // Diagnostics: the squiggle is drawn by CodeMirror, its panel is not themed.
+  .cm-diagnostic {
+    color: var(--primary);
+  }
+
+  .cm-diagnostic-warning {
+    border-left-color: var(--highlight-medium);
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.5;
+
+    .cm-scroller {
+      cursor: not-allowed;
+    }
+
+    .cm-activeLine,
+    .cm-activeLineGutter {
+      background: transparent;
+    }
+  }
+
+  // Syntax palette. Named by role rather than by any one language, so every
+  // shortcut lands somewhere sensible.
+  .cm-hl-keyword,
+  .cm-hl-control {
+    color: var(--tertiary);
+  }
+
+  .cm-hl-name,
+  .cm-hl-property,
+  .cm-hl-tag {
+    color: var(--primary-high);
+  }
+
+  .cm-hl-function,
+  .cm-hl-type {
+    color: var(--tertiary-hover);
+  }
+
+  .cm-hl-string,
+  .cm-hl-number {
+    color: var(--success);
+  }
+
+  .cm-hl-atom,
+  .cm-hl-meta {
+    color: var(--tertiary);
+  }
+
+  .cm-hl-comment {
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  .cm-hl-punctuation,
+  .cm-hl-bracket {
+    color: var(--primary);
+  }
+
+  .cm-hl-link {
+    color: var(--tertiary);
+    text-decoration: underline;
+  }
+
+  .cm-hl-invalid {
+    color: var(--danger);
+  }
+
+  .cm-hl-heading,
+  .cm-hl-strong {
+    font-weight: 700;
+  }
+
+  .cm-hl-emphasis {
+    font-style: italic;
+  }
+}

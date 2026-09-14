@@ -619,7 +619,7 @@ Displays date picker expanded on desktop. Defaults to true.
 
 ## Code
 
-Renders an `<AceEditor />` component.
+Renders a `<CodeEditor />` component.
 
 ### @height
 
@@ -627,7 +627,8 @@ Sets the height of the editor in pixels.
 
 ### @lang
 
-Sets the editor mode.
+Sets the language shortcut: one of `css`, `html`, `javascript`, `json`, `scss`,
+`sql`, `yaml`, or a name registered with `api.registerCodemirrorLanguage`.
 
 **Example**
 
