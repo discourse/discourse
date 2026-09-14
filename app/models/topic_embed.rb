@@ -120,7 +120,7 @@ class TopicEmbed < ActiveRecord::Base
 
       return post unless post&.topic
 
-      if post.user != user
+      if post.user_id != user.id
         PostOwnerChanger.new(
           post_ids: [post.id],
           topic_id: post.topic_id,
@@ -350,8 +350,21 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_embed_by_url(embed_url)
-    embed_url = normalize_url(embed_url).sub(%r{\Ahttps?\://}, "")
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").first
+    with_embed_urls([embed_url]).min_by(&:id)
+  end
+
+  def self.with_embed_urls(urls)
+    variants =
+      urls.flat_map do |url|
+        key = embed_url_key(url)
+        ["http://#{key}", "https://#{key}"]
+      end
+
+    where("lower(embed_url) IN (?)", variants)
+  end
+
+  def self.embed_url_key(url)
+    normalize_url(url).sub(%r{\Ahttps?\://}, "")
   end
 
   def self.topic_id_for_embed(embed_url)
@@ -441,5 +454,6 @@ end
 #
 # Indexes
 #
-#  index_topic_embeds_on_embed_url  (embed_url) UNIQUE
+#  index_topic_embeds_on_embed_url        (embed_url) UNIQUE
+#  index_topic_embeds_on_lower_embed_url  (lower((embed_url)::text))
 #

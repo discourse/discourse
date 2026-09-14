@@ -23538,6 +23538,13 @@ CREATE UNIQUE INDEX index_topic_embeds_on_embed_url ON public.topic_embeds USING
 
 
 --
+-- Name: index_topic_embeds_on_lower_embed_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embeds_on_lower_embed_url ON public.topic_embeds USING btree (lower((embed_url)::text));
+
+
+--
 -- Name: index_topic_groups_on_group_id_and_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25179,6 +25186,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914213908'),
 ('20260914172801'),
 ('20260914172757'),
+('20260914140746'),
 ('20260910033302'),
 ('20260910030427'),
 ('20260910030404'),
