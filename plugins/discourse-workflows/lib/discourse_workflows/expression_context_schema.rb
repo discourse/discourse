@@ -12,7 +12,7 @@ module DiscourseWorkflows
       "$vars" => {
         type: :object,
       },
-      "$settings" => {
+      "$workflow_vars" => {
         type: :object,
       },
       "$current_user" => {

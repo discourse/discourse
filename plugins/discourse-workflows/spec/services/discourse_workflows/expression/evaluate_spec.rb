@@ -104,22 +104,23 @@ RSpec.describe DiscourseWorkflows::Expression::Evaluate do
       end
     end
 
-    context "with a workflow setting field" do
+    context "with a workflow local variable" do
       fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin) }
-      fab!(:setting_field) do
+      fab!(:variable) do
         Fabricate(
-          :discourse_workflows_workflow_setting_field,
+          :discourse_workflows_workflow_variable,
           workflow:,
           key: "notify_categories",
-          label: "Notify categories",
-          field_type: "category_list",
+          variable_type: "category_list",
           value: "4|9",
         )
       end
 
-      let(:params) { { template: "{{ $settings.notify_categories }}", workflow_id: workflow.id } }
+      let(:params) do
+        { template: "{{ $workflow_vars.notify_categories }}", workflow_id: workflow.id }
+      end
 
-      it "resolves the field's current value" do
+      it "resolves the variable's current value" do
         expect(result).to run_successfully
         expect(result[:segments].first).to include(state: "valid", text: "4, 9")
       end

@@ -10,7 +10,8 @@ module DiscourseWorkflows
           //   $input.all()           - array of all input items
           //   $json                  - shortcut for $input.item.json
           //   $("NodeName").item     - access the paired item from another node
-          //   $vars.KEY              - workflow variables
+          //   $vars.KEY              - global variables
+          //   $workflow_vars.KEY     - this workflow's local variables
           //   $site_settings.NAME    - site settings
           //   $execution             - execution metadata (id, workflow_name, ...)
           //   $current_user          - user running the workflow

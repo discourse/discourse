@@ -111,6 +111,7 @@ module DiscourseWorkflows
             });
             var $json = __currentItem.json || {};
             var $vars = Object.freeze({});
+            var $workflow_vars = Object.freeze({});
             var $site_settings = Object.freeze({});
             var $execution = Object.freeze({});
             var $current_user = Object.freeze({});

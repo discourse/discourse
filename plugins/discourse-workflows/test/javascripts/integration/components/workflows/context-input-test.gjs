@@ -9,7 +9,7 @@ const EXPRESSION_CONTEXT = {
   environment: {
     $site_settings: { type: "object" },
     $vars: { type: "object" },
-    $settings: { type: "object" },
+    $workflow_vars: { type: "object" },
     $current_user: {
       type: "object",
       fields: { id: { type: "integer" }, username: { type: "string" } },
@@ -237,7 +237,7 @@ module(
       assert.true(allKeys.includes("resumeFormUrl"));
     });
 
-    test("settings expands to show the workflow's declared setting fields", async function (assert) {
+    test("workflow_vars expands to show the workflow's declared variables", async function (assert) {
       const node = {
         clientId: "n1",
         type: "action:http_request",
@@ -246,9 +246,9 @@ module(
       const nodes = makeNodes(node);
       this.session = new WorkflowEditorSession({
         lastExecutionRunData: {},
-        settingFields: [
-          { key: "notify_categories", field_type: "category_list" },
-          { key: "priority", field_type: "enum" },
+        variables: [
+          { key: "notify_categories", variable_type: "category_list" },
+          { key: "priority", variable_type: "enum" },
         ],
       });
 
@@ -264,17 +264,19 @@ module(
         </template>
       );
 
-      const settingFields = [
+      const schemaFields = [
         ...this.element.querySelectorAll(".workflows-schema-field"),
       ];
-      const settingsField = settingFields.find(
+      const workflowVarsField = schemaFields.find(
         (el) =>
           el
             .querySelector(".workflows-schema-field__key")
-            ?.textContent.trim() === "settings"
+            ?.textContent.trim() === "workflow_vars"
       );
 
-      await click(settingsField.querySelector(".workflows-schema-field__row"));
+      await click(
+        workflowVarsField.querySelector(".workflows-schema-field__row")
+      );
 
       const allKeys = [
         ...this.element.querySelectorAll(".workflows-schema-field__key"),
@@ -297,7 +299,7 @@ module(
 
       assert.strictEqual(
         JSON.parse(dragged[WORKFLOW_VARIABLE_MIME]).id,
-        "$settings.notify_categories"
+        "$workflow_vars.notify_categories"
       );
     });
 

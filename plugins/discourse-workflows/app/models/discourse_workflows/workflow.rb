@@ -41,8 +41,8 @@ module DiscourseWorkflows
              class_name: "DiscourseWorkflows::WorkflowTagMapping",
              foreign_key: "workflow_id",
              dependent: :delete_all
-    has_many :setting_fields,
-             class_name: "DiscourseWorkflows::WorkflowSettingField",
+    has_many :variables,
+             class_name: "DiscourseWorkflows::Variable",
              foreign_key: "workflow_id",
              dependent: :delete_all
     has_many :tags,
@@ -154,7 +154,7 @@ module DiscourseWorkflows
         nodes: nodes,
         connections: connections,
         settings: settings || {},
-        setting_schema: setting_fields_schema,
+        variables_schema: variables_schema,
         autosaved: autosaved,
         authors: authors,
         created_by: user,
@@ -170,7 +170,7 @@ module DiscourseWorkflows
         nodes: nodes,
         connections: connections,
         settings: settings || {},
-        setting_schema: setting_fields_schema,
+        variables_schema: variables_schema,
         autosaved: false,
         authors: authors,
         created_by: user,
@@ -217,7 +217,7 @@ module DiscourseWorkflows
           version_id: version.version_id,
           updated_by: user,
         )
-        restore_setting_fields_from!(version.setting_schema)
+        restore_variables_from!(version.variables_schema, user:)
       end
     end
 
@@ -240,13 +240,13 @@ module DiscourseWorkflows
           nodes: nodes || [],
           connections: connections || {},
           settings: settings || {},
-          setting_schema: setting_fields_schema,
+          variables_schema: variables_schema,
         }.to_json,
       )
     end
 
-    def setting_fields_schema
-      setting_fields.order(:id).map(&:to_version_entry)
+    def variables_schema
+      variables.order(:id).map(&:to_version_entry)
     end
 
     def find_node_in(node_collection, node_id)
@@ -399,19 +399,19 @@ module DiscourseWorkflows
       )
     end
 
-    def restore_setting_fields_from!(schema)
+    def restore_variables_from!(schema, user:)
       desired_by_key = Array(schema).index_by { |field| field["key"] }
-      existing_by_key = setting_fields.index_by(&:key)
+      existing_by_key = variables.index_by(&:key)
 
       keys_to_remove = existing_by_key.keys - desired_by_key.keys
-      setting_fields.where(key: keys_to_remove).delete_all if keys_to_remove.any?
+      variables.where(key: keys_to_remove).delete_all if keys_to_remove.any?
 
       desired_by_key.each do |key, field|
-        record = existing_by_key[key] || setting_fields.new(key: key)
+        record = existing_by_key[key]
+        record ||= variables.new(key: key, created_by: user)
         record.update!(
-          label: field["label"],
           description: field["description"],
-          field_type: field["type"],
+          variable_type: field["type"],
           type_options: field["type_options"] || {},
           value: field["value"],
         )

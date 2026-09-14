@@ -3,39 +3,39 @@
 RSpec.describe "Publish and discard a workflow" do
   fab!(:admin)
 
-  let(:settings_page) { PageObjects::Pages::DiscourseWorkflows::WorkflowSettings.new }
+  let(:variables_page) { PageObjects::Pages::DiscourseWorkflows::WorkflowVariables.new }
   let(:editor_page) { PageObjects::Pages::DiscourseWorkflows::WorkflowEditor.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
 
-  context "when acting from the Settings page" do
+  context "when acting from the Variables page" do
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: admin, published: true) }
 
     before { workflow.snapshot!(user: admin) }
 
     it "lets an admin publish pending changes" do
-      settings_page.visit(workflow.id)
-      expect(settings_page).to have_publish_notice
+      variables_page.visit_index(workflow.id)
+      expect(variables_page).to have_publish_notice
 
-      settings_page.click_publish
-      expect(settings_page).to have_no_publish_notice
+      variables_page.click_publish
+      expect(variables_page).to have_no_publish_notice
 
       page.refresh
-      expect(settings_page).to have_no_publish_notice
+      expect(variables_page).to have_no_publish_notice
     end
 
     it "lets an admin discard pending changes" do
-      settings_page.visit(workflow.id)
-      expect(settings_page).to have_publish_notice
+      variables_page.visit_index(workflow.id)
+      expect(variables_page).to have_publish_notice
 
-      settings_page.click_discard
+      variables_page.click_discard
       dialog.click_yes
 
-      expect(settings_page).to have_no_publish_notice
+      expect(variables_page).to have_no_publish_notice
 
       page.refresh
-      expect(settings_page).to have_no_publish_notice
+      expect(variables_page).to have_no_publish_notice
     end
   end
 

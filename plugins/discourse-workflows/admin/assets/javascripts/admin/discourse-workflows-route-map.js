@@ -11,11 +11,11 @@ export default {
         this.route("executions", function () {
           this.route("show", { path: "/:execution_id" });
         });
-        this.route("settings", function () {
-          this.route("fields", function () {
-            this.route("new");
-            this.route("edit", { path: "/:setting_field_id/edit" });
-          });
+        this.route("settings", function () {});
+        this.route("variables", function () {
+          this.route("manage");
+          this.route("new");
+          this.route("edit", { path: "/:variable_id/edit" });
         });
         this.route("versions");
       });

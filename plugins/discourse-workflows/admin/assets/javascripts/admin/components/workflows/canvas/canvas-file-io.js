@@ -40,31 +40,34 @@ function importedStaticData(data) {
   return structuredClone(staticData);
 }
 
-function importedSettingFields(data) {
-  if (!Object.hasOwn(data, "settingFields")) {
+function importedVariables(data) {
+  if (!Object.hasOwn(data, "variables")) {
     return undefined;
   }
 
-  const settingFields = data.settingFields;
-  if (!Array.isArray(settingFields)) {
+  const variables = data.variables;
+  if (!Array.isArray(variables)) {
     return { error: "invalid" };
   }
 
-  return settingFields
+  return variables
     .filter(
-      (field) =>
-        field && typeof field === "object" && typeof field.key === "string"
+      (variable) =>
+        variable &&
+        typeof variable === "object" &&
+        typeof variable.key === "string"
     )
-    .map((field) => ({
-      key: field.key,
-      label: typeof field.label === "string" ? field.label : field.key,
+    .map((variable) => ({
+      key: variable.key,
       description:
-        typeof field.description === "string" ? field.description : null,
-      field_type:
-        typeof field.field_type === "string" ? field.field_type : "string",
+        typeof variable.description === "string" ? variable.description : null,
+      variable_type:
+        typeof variable.variable_type === "string"
+          ? variable.variable_type
+          : "string",
       type_options:
-        field.type_options && typeof field.type_options === "object"
-          ? field.type_options
+        variable.type_options && typeof variable.type_options === "object"
+          ? variable.type_options
           : {},
     }));
 }
@@ -120,12 +123,11 @@ export function buildWorkflowExportPayload(
       ...(stickyNotes || []),
     ]),
     settings: cloneObject(workflowMetadata.settings),
-    settingFields: (workflowMetadata.settingFields || []).map((field) => ({
-      key: field.key,
-      label: field.label,
-      description: field.description,
-      field_type: field.field_type,
-      type_options: field.type_options,
+    variables: (workflowMetadata.variables || []).map((variable) => ({
+      key: variable.key,
+      description: variable.description,
+      variable_type: variable.variable_type,
+      type_options: variable.type_options,
     })),
     staticData: cloneObject(workflowMetadata.staticData),
     pinData: cloneObject(workflowMetadata.pinData),
@@ -186,9 +188,9 @@ export function parseWorkflowImport(text) {
     return staticData;
   }
 
-  const settingFields = importedSettingFields(data);
-  if (settingFields?.error) {
-    return settingFields;
+  const variables = importedVariables(data);
+  if (variables?.error) {
+    return variables;
   }
 
   const allImportedNodes = data.nodes.map((n) =>
@@ -238,8 +240,8 @@ export function parseWorkflowImport(text) {
     result.staticData = staticData;
   }
 
-  if (settingFields !== undefined) {
-    result.settingFields = settingFields;
+  if (variables !== undefined) {
+    result.variables = variables;
   }
 
   return result;

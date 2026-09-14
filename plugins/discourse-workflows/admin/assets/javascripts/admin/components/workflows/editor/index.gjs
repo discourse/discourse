@@ -165,7 +165,7 @@ export default class WorkflowsEditor extends Component {
     workflowId: this.args.workflow?.id,
     lastExecutionRunData: this.args.workflow?.lastExecutionRunData || null,
     pinData: this.args.workflow?.pinData || {},
-    settingFields: this.args.workflow?.settingFields || [],
+    variables: this.args.workflow?.variables || [],
   });
 
   formData = {
@@ -812,13 +812,7 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  importNodes(
-    newNodes,
-    newConnections,
-    newStickyNotes,
-    staticData,
-    settingFields
-  ) {
+  importNodes(newNodes, newConnections, newStickyNotes, staticData, variables) {
     const existingNodes = this.formApi.get("nodes");
     if (!this.#canAddNodes(newNodes.length, existingNodes)) {
       return;
@@ -856,7 +850,7 @@ export default class WorkflowsEditor extends Component {
       );
     }
 
-    this.#saveThenImportSettingFields(saveOptions, settingFields);
+    this.#saveThenImportVariables(saveOptions, variables);
   }
 
   @action
@@ -1096,7 +1090,7 @@ export default class WorkflowsEditor extends Component {
       versionCounter: workflow.version_counter,
       hasUnpublishedChanges: workflow.has_unpublished_changes,
       settings: workflow.settings || {},
-      settingFields: workflow.setting_fields || [],
+      variables: workflow.variables || [],
       timezone: workflow.timezone,
       staticData: workflow.static_data || {},
       pinData: workflow.pin_data || {},
@@ -1449,23 +1443,23 @@ export default class WorkflowsEditor extends Component {
     );
   }
 
-  async #saveThenImportSettingFields(saveOptions, settingFields) {
+  async #saveThenImportVariables(saveOptions, variables) {
     try {
       await this.handleSubmit({ ...saveOptions, throwOnError: true });
     } catch {
       return;
     }
 
-    if (settingFields?.length) {
-      await this.#importSettingFields(settingFields);
+    if (variables?.length) {
+      await this.#importVariables(variables);
     }
   }
 
-  async #importSettingFields(settingFields) {
+  async #importVariables(variables) {
     try {
       const response = await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}/setting-fields/import.json`,
-        { type: "POST", data: { setting_fields: settingFields } }
+        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}/variables/import.json`,
+        { type: "POST", data: { variables } }
       );
       this.replaceWorkflow(response.workflow);
 
@@ -1474,7 +1468,7 @@ export default class WorkflowsEditor extends Component {
           duration: "long",
           data: {
             message: i18n(
-              "discourse_workflows.canvas.import_setting_fields_skipped",
+              "discourse_workflows.canvas.import_variables_skipped",
               {
                 count: response.skipped_keys.length,
                 keys: response.skipped_keys.join(", "),

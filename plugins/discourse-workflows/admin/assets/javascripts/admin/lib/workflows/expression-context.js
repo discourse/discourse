@@ -306,20 +306,20 @@ function buildSiteSettingsScope(siteSettings) {
   return scope;
 }
 
-function buildVarsScope(workflowVars) {
+function buildVarsScope(globalVars) {
   const scope = Object.create(null);
-  if (workflowVars?.length) {
-    for (const v of workflowVars) {
+  if (globalVars?.length) {
+    for (const v of globalVars) {
       scope[v.key] = v.value ?? "";
     }
   }
   return scope;
 }
 
-function typedSettingValue(field) {
+function typedWorkflowVarValue(field) {
   const raw = field.value;
 
-  switch (field.field_type) {
+  switch (field.variable_type) {
     case "integer":
     case "category":
     case "group":
@@ -339,11 +339,11 @@ function typedSettingValue(field) {
   }
 }
 
-function buildWorkflowSettingsScope(settingFields) {
+function buildWorkflowVarsScope(workflowVariables) {
   const scope = Object.create(null);
-  if (settingFields?.length) {
-    for (const field of settingFields) {
-      scope[field.key] = typedSettingValue(field);
+  if (workflowVariables?.length) {
+    for (const field of workflowVariables) {
+      scope[field.key] = typedWorkflowVarValue(field);
     }
   }
   return scope;
@@ -405,8 +405,8 @@ export function buildScope({
   inputFields = [],
   ancestorNodes = [],
   siteSettings,
-  workflowVars,
-  workflowSettingFields,
+  globalVars,
+  workflowVariables,
   nodes,
 }) {
   const $json = buildScopeFromFields(inputFields);
@@ -430,8 +430,8 @@ export function buildScope({
     $trigger: triggerJson || Object.create(null),
     $site_settings: buildSiteSettingsScope(siteSettings),
     $current_user: cleanObject({ id: 0, username: "" }),
-    $vars: buildVarsScope(workflowVars),
-    $settings: buildWorkflowSettingsScope(workflowSettingFields),
+    $vars: buildVarsScope(globalVars),
+    $workflow_vars: buildWorkflowVarsScope(workflowVariables),
     $execution: buildExecutionScope(nodes),
     $helpers: buildHelpersScope(),
     $: (name) => nodeOutputs[name] || EMPTY_NODE_OUTPUT,

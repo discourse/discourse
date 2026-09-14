@@ -82,70 +82,109 @@ RSpec.describe DiscourseWorkflows::Workflow do
   describe "#restore_from_version!" do
     fab!(:workflow) { Fabricate(:discourse_workflows_workflow, created_by: user) }
 
-    it "restores a field's value from the target version" do
-      field =
-        workflow.setting_fields.create!(
+    it "restores a variable's value from the target version" do
+      variable =
+        workflow.variables.create!(
           key: "priority",
-          label: "Priority",
-          field_type: "string",
+          variable_type: "string",
           value: "urgent",
+          created_by: user,
         )
       old_version = workflow.snapshot!(user: user)
 
-      field.update!(value: "low")
+      variable.update!(value: "low")
       workflow.snapshot!(user: user)
 
       workflow.restore_from_version!(old_version, user: user)
 
-      expect(workflow.setting_fields.find_by(key: "priority").value).to eq("urgent")
+      expect(workflow.variables.find_by(key: "priority").value).to eq("urgent")
     end
 
-    it "recreates a deleted field with both its definition and value" do
-      field =
-        workflow.setting_fields.create!(
+    it "recreates a deleted variable with both its definition and value" do
+      variable =
+        workflow.variables.create!(
           key: "priority",
-          label: "Priority",
-          field_type: "string",
+          variable_type: "string",
           value: "urgent",
+          created_by: user,
         )
       old_version = workflow.snapshot!(user: user)
 
-      field.destroy!
+      variable.destroy!
       workflow.snapshot!(user: user)
       workflow.reload
 
       workflow.restore_from_version!(old_version, user: user)
 
-      restored = workflow.setting_fields.find_by(key: "priority")
+      restored = workflow.variables.find_by(key: "priority")
       expect(restored).to be_present
       expect(restored.label).to eq("Priority")
       expect(restored.value).to eq("urgent")
     end
 
-    it "deletes a field that no longer exists in the target version" do
-      field =
-        workflow.setting_fields.create!(
+    it "sets created_by to the restoring user on a recreated variable" do
+      variable =
+        workflow.variables.create!(
           key: "priority",
-          label: "Priority",
-          field_type: "string",
+          variable_type: "string",
           value: "urgent",
+          created_by: user,
         )
       old_version = workflow.snapshot!(user: user)
 
-      other_field =
-        workflow.setting_fields.create!(
+      variable.destroy!
+      workflow.snapshot!(user: user)
+      workflow.reload
+
+      restoring_user = Fabricate(:admin)
+      workflow.restore_from_version!(old_version, user: restoring_user)
+
+      expect(workflow.variables.find_by(key: "priority").created_by_id).to eq(restoring_user.id)
+    end
+
+    it "does not overwrite created_by on a variable that already exists" do
+      variable =
+        workflow.variables.create!(
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+          created_by: user,
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      variable.update!(value: "low")
+      workflow.snapshot!(user: user)
+
+      restoring_user = Fabricate(:admin)
+      workflow.restore_from_version!(old_version, user: restoring_user)
+
+      expect(workflow.variables.find_by(key: "priority").created_by_id).to eq(user.id)
+    end
+
+    it "deletes a variable that no longer exists in the target version" do
+      variable =
+        workflow.variables.create!(
+          key: "priority",
+          variable_type: "string",
+          value: "urgent",
+          created_by: user,
+        )
+      old_version = workflow.snapshot!(user: user)
+
+      other_variable =
+        workflow.variables.create!(
           key: "extra",
-          label: "Extra",
-          field_type: "string",
+          variable_type: "string",
           value: "keep-me",
+          created_by: user,
         )
       workflow.snapshot!(user: user)
 
       workflow.restore_from_version!(old_version, user: user)
 
-      expect(workflow.setting_fields.find_by(key: "priority")).to be_present
-      expect(workflow.setting_fields.find_by(id: other_field.id)).to be_nil
-      expect(field.reload).to be_present
+      expect(workflow.variables.find_by(key: "priority")).to be_present
+      expect(workflow.variables.find_by(id: other_variable.id)).to be_nil
+      expect(variable.reload).to be_present
     end
   end
 

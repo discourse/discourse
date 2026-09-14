@@ -32,8 +32,8 @@ module DiscourseWorkflows
       with_owned_sandbox(context, user: user) { |resolver| resolver.resolve_hash(hash) }
     end
 
-    def self.resolve_segments(template, context: {}, user: nil, settings: nil)
-      with_owned_sandbox(context, user: user, settings: settings) do |resolver|
+    def self.resolve_segments(template, context: {}, user: nil, workflow_vars: nil)
+      with_owned_sandbox(context, user: user, workflow_vars: workflow_vars) do |resolver|
         resolver.resolve_segments(template)
       end
     rescue MiniRacer::Error, JsSandbox::BudgetExceededError, JsSandbox::SandboxError => e
@@ -41,8 +41,8 @@ module DiscourseWorkflows
       []
     end
 
-    def self.with_owned_sandbox(context, user: nil, settings: nil)
-      sandbox = JsSandbox.new(context, user: user, settings: settings)
+    def self.with_owned_sandbox(context, user: nil, workflow_vars: nil)
+      sandbox = JsSandbox.new(context, user: user, workflow_vars: workflow_vars)
       resolver = new(context, user: user, sandbox: sandbox)
       yield resolver
     ensure

@@ -27,7 +27,7 @@ module DiscourseWorkflows
         resolver_context:,
         user:,
         vars:,
-        workflow_settings:,
+        workflow_vars:,
         flow_context:,
         runtime_state:
       )
@@ -37,7 +37,7 @@ module DiscourseWorkflows
         @resolver_context = resolver_context || {}
         @user = user
         @vars = vars
-        @workflow_settings = workflow_settings
+        @workflow_vars = workflow_vars
         @flow_context = flow_context || {}
         @runtime_state = runtime_state
       end
@@ -116,7 +116,7 @@ module DiscourseWorkflows
             resolver_context_for_item_index(item_index),
             user: @user,
             vars: @vars,
-            settings: @workflow_settings,
+            workflow_vars: @workflow_vars,
             capture_logs: capture_logs,
             budget_tracker: sandbox_budget_tracker,
           )

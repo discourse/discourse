@@ -32,13 +32,13 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
       id: 42,
       name: "Imported workflow",
       settings: { executionOrder: "v1" },
-      settingFields: [
+      variables: [
         {
           id: 7,
           key: "notify_categories",
           label: "Notify categories",
           description: "Categories to notify",
-          field_type: "category_list",
+          variable_type: "category_list",
           type_options: {},
           value: "2|24",
         },
@@ -68,22 +68,21 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
     assert.true(payload.nodes[0].alwaysOutputData);
     assert.false("settings" in payload.nodes[0]);
     assert.false("credentials" in payload.nodes[0].parameters);
-    assert.deepEqual(payload.settingFields, [
+    assert.deepEqual(payload.variables, [
       {
         key: "notify_categories",
-        label: "Notify categories",
         description: "Categories to notify",
-        field_type: "category_list",
+        variable_type: "category_list",
         type_options: {},
       },
     ]);
     assert.false(
-      "id" in payload.settingFields[0],
-      "export never includes a field's database id"
+      "id" in payload.variables[0],
+      "export never includes a variable's database id"
     );
     assert.false(
-      "value" in payload.settingFields[0],
-      "export never includes a field's site-specific value"
+      "value" in payload.variables[0],
+      "export never includes a variable's site-specific value"
     );
   });
 
@@ -341,7 +340,7 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
     }
   });
 
-  test("parseWorkflowImport preserves imported setting fields", function (assert) {
+  test("parseWorkflowImport preserves imported variables", function (assert) {
     const result = parseWorkflowImport(
       JSON.stringify({
         nodes: [
@@ -353,30 +352,28 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
           },
         ],
         connections: {},
-        settingFields: [
+        variables: [
           {
             key: "notify_categories",
-            label: "Notify categories",
             description: "Categories to notify",
-            field_type: "category_list",
+            variable_type: "category_list",
             type_options: {},
           },
         ],
       })
     );
 
-    assert.deepEqual(result.settingFields, [
+    assert.deepEqual(result.variables, [
       {
         key: "notify_categories",
-        label: "Notify categories",
         description: "Categories to notify",
-        field_type: "category_list",
+        variable_type: "category_list",
         type_options: {},
       },
     ]);
   });
 
-  test("parseWorkflowImport fills in defaults for a malformed setting field", function (assert) {
+  test("parseWorkflowImport fills in defaults for a malformed variable", function (assert) {
     const result = parseWorkflowImport(
       JSON.stringify({
         nodes: [
@@ -388,22 +385,21 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
           },
         ],
         connections: {},
-        settingFields: [{ key: "priority" }, { label: "No key, dropped" }],
+        variables: [{ key: "priority" }, { description: "No key, dropped" }],
       })
     );
 
-    assert.deepEqual(result.settingFields, [
+    assert.deepEqual(result.variables, [
       {
         key: "priority",
-        label: "priority",
         description: null,
-        field_type: "string",
+        variable_type: "string",
         type_options: {},
       },
     ]);
   });
 
-  test("parseWorkflowImport rejects a non-array settingFields", function (assert) {
+  test("parseWorkflowImport rejects a non-array variables", function (assert) {
     const result = parseWorkflowImport(
       JSON.stringify({
         nodes: [
@@ -415,7 +411,7 @@ module("Unit | lib | discourse-workflows | canvas-file-io", function () {
           },
         ],
         connections: {},
-        settingFields: "not-an-array",
+        variables: "not-an-array",
       })
     );
 

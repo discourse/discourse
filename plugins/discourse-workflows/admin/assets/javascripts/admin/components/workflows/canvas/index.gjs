@@ -482,7 +482,7 @@ export default class WorkflowCanvas extends Component {
         result.connections,
         result.stickyNotes,
         result.staticData,
-        result.settingFields
+        result.variables
       );
     } catch {
       this.#showImportError();

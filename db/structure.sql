@@ -5199,11 +5199,14 @@ ALTER SEQUENCE public.discourse_workflows_tags_id_seq OWNED BY public.discourse_
 CREATE TABLE public.discourse_workflows_variables (
     id bigint NOT NULL,
     key character varying(100) NOT NULL,
-    value character varying(1000) DEFAULT ''::character varying NOT NULL,
+    value text,
     description text,
     created_by_id integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    workflow_id bigint,
+    variable_type character varying(30) DEFAULT 'string'::character varying NOT NULL,
+    type_options jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -5374,43 +5377,6 @@ ALTER SEQUENCE public.discourse_workflows_workflow_publish_history_id_seq OWNED 
 
 
 --
--- Name: discourse_workflows_workflow_setting_fields; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.discourse_workflows_workflow_setting_fields (
-    id bigint NOT NULL,
-    workflow_id bigint NOT NULL,
-    key character varying(100) NOT NULL,
-    label character varying(255) NOT NULL,
-    description character varying(500),
-    field_type character varying(30) NOT NULL,
-    type_options jsonb DEFAULT '{}'::jsonb NOT NULL,
-    value text,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: discourse_workflows_workflow_setting_fields_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.discourse_workflows_workflow_setting_fields_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: discourse_workflows_workflow_setting_fields_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.discourse_workflows_workflow_setting_fields_id_seq OWNED BY public.discourse_workflows_workflow_setting_fields.id;
-
-
---
 -- Name: discourse_workflows_workflow_tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5459,7 +5425,7 @@ CREATE TABLE public.discourse_workflows_workflow_versions (
     updated_by_id integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    setting_schema jsonb DEFAULT '[]'::jsonb NOT NULL
+    variables_schema jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -14478,13 +14444,6 @@ ALTER TABLE ONLY public.discourse_workflows_workflow_publish_history ALTER COLUM
 
 
 --
--- Name: discourse_workflows_workflow_setting_fields id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.discourse_workflows_workflow_setting_fields ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_setting_fields_id_seq'::regclass);
-
-
---
 -- Name: discourse_workflows_workflow_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17071,14 +17030,6 @@ ALTER TABLE ONLY public.discourse_workflows_workflow_publish_history
 
 
 --
--- Name: discourse_workflows_workflow_setting_fields discourse_workflows_workflow_setting_fields_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.discourse_workflows_workflow_setting_fields
-    ADD CONSTRAINT discourse_workflows_workflow_setting_fields_pkey PRIMARY KEY (id);
-
-
---
 -- Name: discourse_workflows_workflow_tags discourse_workflows_workflow_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19372,13 +19323,6 @@ CREATE INDEX idx_dwf_publish_history_on_workflow_created_at_id_desc ON public.di
 
 
 --
--- Name: idx_dwf_setting_fields_on_workflow_key; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_dwf_setting_fields_on_workflow_key ON public.discourse_workflows_workflow_setting_fields USING btree (workflow_id, key);
-
-
---
 -- Name: idx_dwf_tags_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -19393,10 +19337,17 @@ CREATE INDEX idx_dwf_variables_on_created_by_id ON public.discourse_workflows_va
 
 
 --
--- Name: idx_dwf_variables_on_key; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_dwf_variables_on_key_global; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_dwf_variables_on_key ON public.discourse_workflows_variables USING btree (key);
+CREATE UNIQUE INDEX idx_dwf_variables_on_key_global ON public.discourse_workflows_variables USING btree (key) WHERE (workflow_id IS NULL);
+
+
+--
+-- Name: idx_dwf_variables_on_workflow_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_variables_on_workflow_key ON public.discourse_workflows_variables USING btree (workflow_id, key) WHERE (workflow_id IS NOT NULL);
 
 
 --
@@ -25143,13 +25094,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914213908'),
 ('20260914172801'),
 ('20260914172757'),
+('20260913105655'),
 ('20260910033302'),
 ('20260909181443'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
 ('20260904171256'),
-('20260904171245'),
 ('20260904065041'),
 ('20260904063128'),
 ('20260904000537'),
