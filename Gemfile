@@ -125,7 +125,6 @@ group :test do
   gem "simplecov", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
-  gem "minio_runner", require: false
   gem "capybara-playwright-driver"
 end
 
