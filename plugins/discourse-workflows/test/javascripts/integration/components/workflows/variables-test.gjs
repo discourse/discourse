@@ -52,4 +52,40 @@ module("Integration | Component | WorkflowVariables", function (hooks) {
         "the description renders as inert text"
       );
   });
+
+  test("hides the publish notice when the workflow has no local variables", async function (assert) {
+    const workflow = buildWorkflow({
+      hasUnpublishedChanges: true,
+      variables: [],
+    });
+
+    await render(
+      <template><WorkflowVariables @workflow={{workflow}} /></template>
+    );
+
+    assert.dom(".workflows-variables-publish-notice").doesNotExist();
+  });
+
+  test("shows the publish notice when the workflow has local variables and pending changes", async function (assert) {
+    const workflow = buildWorkflow({
+      hasUnpublishedChanges: true,
+      variables: [
+        {
+          id: 10,
+          key: "priority",
+          label: "Priority",
+          description: "",
+          variable_type: "string",
+          type_options: {},
+          value: "",
+        },
+      ],
+    });
+
+    await render(
+      <template><WorkflowVariables @workflow={{workflow}} /></template>
+    );
+
+    assert.dom(".workflows-variables-publish-notice").exists();
+  });
 });

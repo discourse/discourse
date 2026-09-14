@@ -127,7 +127,9 @@ export default class WorkflowVariables extends Component {
   }
 
   <template>
-    <VariablesPublishNotice @workflow={{@workflow}} />
+    {{#if @workflow.variables.length}}
+      <VariablesPublishNotice @workflow={{@workflow}} />
+    {{/if}}
 
     <DPageSubheader
       @descriptionLabel={{this.description}}
