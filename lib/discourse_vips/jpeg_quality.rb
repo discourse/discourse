@@ -58,12 +58,15 @@ module DiscourseVips
       LOSSLESS_SOF_MARKERS = [0xC3, 0xC7, 0xCB, 0xCF].freeze
       STANDALONE_MARKERS = ([0xD8, 0xD9] + (0xD0..0xD7).to_a).freeze
       DISCARD_CHUNK_SIZE = 16 * 1024
+      MAX_HEADER_BYTES = 16 * 1024 * 1024
 
       def initialize(io)
         @io = io
         @tables = {}
         @used_table_ids = []
         @lossless = false
+        @header_bytes = 0
+        @frame_seen = false
       end
 
       def parse
@@ -162,6 +165,8 @@ module DiscourseVips
       end
 
       def parse_sof(marker, payload)
+        raise InvalidJPEG, "multiple frame headers before first scan" if @frame_seen
+        @frame_seen = true
         raise InvalidJPEG, format("truncated FF%02X frame header", marker) if payload.bytesize < 6
 
         component_count = payload.getbyte(5)
@@ -173,6 +178,8 @@ module DiscourseVips
         component_count.times do |index|
           table_id = payload.getbyte(8 + (index * 3))
           raise InvalidJPEG, "invalid frame DQT table id #{table_id}" if table_id > 3
+
+          next if @used_table_ids.include?(table_id)
 
           @used_table_ids << table_id
         end
@@ -192,6 +199,9 @@ module DiscourseVips
       end
 
       def read_exact(length, error_message)
+        @header_bytes += length
+        raise InvalidJPEG, "JPEG header exceeds size limit" if @header_bytes > MAX_HEADER_BYTES
+
         result = +"".b
 
         while result.bytesize < length

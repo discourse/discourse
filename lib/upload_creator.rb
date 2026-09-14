@@ -395,7 +395,7 @@ class UploadCreator
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
 
-    target_quality = @upload.target_image_quality(@file.path, desired_quality)
+    target_quality = @upload.target_image_quality(@file.path, desired_quality, allow_unknown: true)
     opts = { quality: target_quality } if target_quality
 
     read = [@file.path]

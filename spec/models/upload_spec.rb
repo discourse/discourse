@@ -1200,8 +1200,34 @@ RSpec.describe Upload do
         expect(upload.target_image_quality(path, 95)).to eq(95)
       end
 
-      it "uses the requested quality when a JPEG cannot be read" do
-        expect(upload.target_image_quality("/missing-quality-input.jpg", 90)).to eq(90)
+      it "uses the configured quality for a static GIF preview" do
+        path = file_from_fixtures("static.gif").path
+
+        expect(upload.target_image_quality(path, 90)).to eq(90)
+      end
+
+      it "uses the configured quality for a static WebP preview" do
+        path = file_from_fixtures("static.webp").path
+
+        expect(upload.target_image_quality(path, 90)).to eq(90)
+      end
+
+      it "preserves a JPEG when its quality cannot be read" do
+        expect(upload.target_image_quality("/missing-quality-input.jpg", 90)).to eq(nil)
+      end
+
+      it "preserves a custom-table JPEG when recompression is disabled" do
+        expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 100)).to eq(nil)
+      end
+
+      it "preserves a custom-table JPEG when its quality is unknown" do
+        expect(upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90)).to eq(nil)
+      end
+
+      it "uses the configured quality for a required conversion of an unknown-quality JPEG" do
+        expect(
+          upload.target_image_quality(file_from_fixtures("logo.jpg").path, 90, allow_unknown: true),
+        ).to eq(90)
       end
     end
 

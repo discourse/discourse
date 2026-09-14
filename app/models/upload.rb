@@ -448,7 +448,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, test_quality)
+  def target_image_quality(local_path, test_quality, allow_unknown: false)
     @file_quality ||=
       begin
         return test_quality if File.open(local_path, "rb") { |file| FastImage.type(file) } != :jpeg
@@ -470,7 +470,7 @@ class Upload < ActiveRecord::Base
         0
       end
 
-    test_quality if @file_quality == 0 || @file_quality > test_quality
+    test_quality if (@file_quality == 0 && allow_unknown) || @file_quality > test_quality
   end
 
   def self.sha1_from_short_path(path)
