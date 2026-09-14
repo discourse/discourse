@@ -121,7 +121,7 @@ export default class BoardsColumn extends Component {
       model: {
         card: {},
         isNew: true,
-        canWrite: true,
+        board: this.args.board,
         onCreateCard: (data) =>
           this.args.onAddCard({ ...data, columnId: this.args.column.id }),
       },
@@ -492,7 +492,7 @@ export default class BoardsColumn extends Component {
             {{this.cardCount}}
           </span>
         </span>
-        {{#if @canManage}}
+        {{#if @board.canManage}}
           <DMenu
             @icon="ellipsis"
             @identifier="boards-column-controls"
@@ -556,7 +556,6 @@ export default class BoardsColumn extends Component {
             <BoardsCard
               @allSameCategory={{@allSameCategory}}
               @board={{@board}}
-              @canWrite={{@canWrite}}
               @card={{card}}
               @columnColor={{@column.color}}
               @columnIcon={{@column.icon}}
@@ -589,7 +588,7 @@ export default class BoardsColumn extends Component {
         {{/if}}
       </div>
 
-      {{#if @canWrite}}
+      {{#if @board.canWrite}}
         <div class="discourse-boards-column__footer">
           <DMenu
             @icon="plus"

@@ -708,4 +708,59 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
       "it leaves the recency column order unchanged"
     );
   });
+  test("archived boards disable editing and only offer unarchive to managers", async function (assert) {
+    const card = this.makeCard({ id: 101, columnId: 11, title: "Read only" });
+    await this.renderBoard(
+      [this.makeColumn({ id: 11, title: "Done", cards: [card] })],
+      {
+        archived: true,
+        can_manage: false,
+        can_write: false,
+        can_unarchive: true,
+      }
+    );
+    assert
+      .dom(cardSelector(101))
+      .hasAttribute("draggable", "false", "archived cards cannot be dragged");
+    assert.true(
+      this.messageBus.subscribe.calledWith("/boards/1"),
+      "archived boards stay subscribed to receive unarchive events"
+    );
+    await click('[data-identifier="boards-board-controls"]');
+    assert
+      .dom('[data-identifier="archive-board"]')
+      .hasText("Unarchive board...", "managers can restore the board");
+    assert
+      .dom('[data-identifier="add-column"]')
+      .doesNotExist("columns cannot be added");
+    assert
+      .dom('[data-identifier="board-settings"]')
+      .doesNotExist("board options cannot be edited");
+    assert
+      .dom('[data-identifier="delete-board"]')
+      .doesNotExist("archived boards cannot be deleted");
+  });
+
+  test("archived viewers have no board settings menu", async function (assert) {
+    await this.renderBoard([], {
+      archived: true,
+      can_manage: false,
+      can_write: false,
+      can_unarchive: false,
+    });
+    assert
+      .dom('[data-identifier="boards-board-controls"]')
+      .doesNotExist("viewers have no settings actions");
+  });
+
+  test("offers archive to a Manage ACL holder without ordinary configuration access", async function (assert) {
+    await this.renderBoard([], { can_manage: false, can_archive: true });
+    await click('[data-identifier="boards-board-controls"]');
+    assert
+      .dom('[data-identifier="archive-board"]')
+      .hasText("Archive board", "Manage ACL permits archiving");
+    assert
+      .dom('[data-identifier="board-settings"]')
+      .doesNotExist("existing configuration permission remains separate");
+  });
 });
