@@ -211,8 +211,22 @@ class PostAlerter
     DiscourseEvent.trigger(:post_alerter_before_linked, post, new_record, notified)
 
     # linked
-    linked_users = extract_linked_users(post)
-    notified += notify_non_pm_users(linked_users - notified, :linked, post)
+    #
+    # Notified one at a time rather than as a batch: each recipient's
+    # notification names the topics of *theirs* that were linked, so the
+    # custom data differs per user.
+    linked_topics_by_user = extract_linked_topics_by_user(post)
+    linked_users = extract_linked_users(post, linked_topics_by_user)
+
+    (linked_users - notified).uniq.each do |user|
+      notified +=
+        notify_non_pm_users(
+          user,
+          :linked,
+          post,
+          custom_data: linked_topics_notification_data(user, linked_topics_by_user[user]),
+        )
+    end
 
     DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
@@ -800,23 +814,74 @@ class PostAlerter
     User.where.not(id: post.user_id).where(username_lower: usernames)
   end
 
-  def extract_linked_users(post)
-    users =
-      post
-        .topic_links
-        .where(reflection: false)
-        .map do |link|
-          linked_post = link.link_post
-          if !linked_post && topic = link.link_topic
-            linked_post = topic.posts.find_by(post_number: 1)
-          end
-          (linked_post && post.user_id != linked_post.user_id && linked_post.user) || nil
-        end
-        .compact
+  # The most topics we name individually in a linked notification. Anything
+  # past this is reported as a count so the stored data stays bounded.
+  MAX_LINKED_TOPICS_IN_NOTIFICATION = 5
+
+  # `linked_topics_by_user` is accepted so the notify path can reuse a map it
+  # has already built rather than querying the links twice.
+  def extract_linked_users(post, linked_topics_by_user = nil)
+    linked_topics_by_user ||= extract_linked_topics_by_user(post)
+    users = linked_topics_by_user.flat_map { |user, links| [user] * links.size }
 
     DiscourseEvent.trigger(:after_extract_linked_users, users, post)
 
     users
+  end
+
+  # Maps each notifiable user to the topics of theirs that `post` links to.
+  #
+  # A single post can link several of one author's topics, but they only get
+  # one notification for it, so the notification has to name every topic
+  # rather than an arbitrary one of them.
+  def extract_linked_topics_by_user(post)
+    by_user = {}
+
+    post
+      .topic_links
+      .where(reflection: false)
+      .each do |link|
+        linked_post = link.link_post
+        linked_topic = link.link_topic
+        linked_post = linked_topic.posts.find_by(post_number: 1) if !linked_post && linked_topic
+        next if !linked_post
+        next if post.user_id == linked_post.user_id
+
+        user = linked_post.user
+        next if !user
+
+        linked_topic ||= linked_post.topic
+
+        # A user with no visible linked topic still gets notified, exactly as
+        # before; they just have no topic named for them.
+        by_user[user] ||= []
+        by_user[user] << linked_topic if linked_topic
+      end
+
+    by_user
+  end
+
+  # The `linked_topics` payload for one recipient, capped so a post linking
+  # many of their topics cannot bloat the notification.
+  #
+  # Titles are stored on the notification and sent to the client, so a topic
+  # the recipient cannot see is left out entirely: moving a post leaves a
+  # moderator post linking the destination, which may be restricted. They are
+  # still notified, just without a topic named.
+  def linked_topics_notification_data(user, topics)
+    return {} if topics.blank?
+
+    guardian = Guardian.new(user)
+    named = topics.uniq(&:id).select { |topic| guardian.can_see?(topic) }
+    return {} if named.empty?
+
+    {
+      linked_topics:
+        named
+          .first(MAX_LINKED_TOPICS_IN_NOTIFICATION)
+          .map { |topic| { topic_id: topic.id, title: topic.title, slug: topic.slug } },
+      linked_topics_count: named.size,
+    }
   end
 
   # Notify a bunch of users
