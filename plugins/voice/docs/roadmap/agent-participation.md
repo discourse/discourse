@@ -14,8 +14,9 @@ Agreed product decisions:
   rooms. Support valid negative user IDs; zero and arbitrary numeric identities
   are not authorization. There is no dependency on the AI plugin.
 - A customer runs their worker. An integration credential is exchanged for a
-  short-lived, room-scoped media token. Worker deployment and managed dispatch are
-  outside this change.
+  short-lived, room-scoped media token. Alternatively, admins can explicitly
+  dispatch an existing LiveKit Agent Builder deployment into an ongoing call.
+  Worker creation and deployment remain outside this change.
 - Discourse authorizes the account, room, and listener/speaker role. Verified
   provider events establish presence for an authorized agent session only.
 - Agents appear in the shared roster and use the existing media/role controls.
@@ -80,6 +81,30 @@ it is not general provider authority over room membership. Existing AI bot accou
 use negative IDs, whereas staged accounts are a separate account property.
 
 ## Validation and implementation notes
+
+### Dashboard dispatch
+
+Admin invitations use the configured LiveKit project and an existing scoped bot
+integration. Each dispatch has a separate admission proof and cleanup record.
+Provider snapshots must match the requested dispatch ID, room, agent name and
+metadata, and report a running job and an agent participant. Clients receive the
+verified provider identity in roster metadata; numeric identities remain reserved
+for the existing human and custom-worker paths.
+
+Dispatch cleanup survives revocation and retries provider failures. A response
+lost during creation is recovered by matching its server-generated metadata.
+Permission updates must succeed before roster admission. LiveKit controls the
+initial connection grants for managed agents, so these do not provide the same
+pre-connect grant restrictions as Discourse-minted worker tokens. See the
+[dashboard operations guide](../livekit.md#livekit-agent-builder) for testing and
+the provider access limitation.
+
+Local validation: the non-system Voice suite passed with **844 examples**, and
+the focused browser suites passed with **21 media tests and 2 admin form tests**.
+Provider dispatch responses are stubbed in the backend tests. A real Agent Builder
+conversation still needs the manual check in the operations guide.
+
+### Custom workers
 
 The implementation adds durable integration, room scope and exclusion records;
 the migration and schema dump are included. Bot selection uses existing negative-ID

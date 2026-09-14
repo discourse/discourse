@@ -89,6 +89,64 @@ RSpec.describe Voice::AdminAgentIntegrationsController do
     end
   end
 
+  describe "#invite" do
+    fab!(:integration) { Fabricate(:voice_agent_integration, bot_user: bot, rooms: [room]) }
+
+    it "requires administrator access" do
+      sign_in(Fabricate(:moderator))
+
+      post "/admin/plugins/voice/agent-integrations/#{integration.id}/dispatch.json",
+           params: {
+             room_id: room.id,
+             agent_name: "assistant",
+           }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns the dispatch ID without exposing connection credentials" do
+      sign_in(admin)
+      SiteSetting.voice_livekit_url = "wss://livekit.example.com"
+      SiteSetting.voice_livekit_api_key = "key"
+      SiteSetting.voice_livekit_api_secret = "secret"
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, admin.id)
+      request =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.AgentDispatchService/CreateDispatch",
+        ).with(
+          body:
+            hash_including("agent_name" => "assistant", "room" => Voice::Livekit.room_name(room)),
+        ).to_return(status: 200, body: { id: "AD_test" }.to_json)
+
+      post "/admin/plugins/voice/agent-integrations/#{integration.id}/dispatch.json",
+           params: {
+             room_id: room.id,
+             agent_name: "assistant",
+           }
+
+      expect(response.status).to eq(201)
+      expect(response.parsed_body).to eq("dispatch_id" => "AD_test")
+      expect(request).to have_been_requested.once
+    end
+
+    it "returns a useful error when no human is in a LiveKit call" do
+      sign_in(admin)
+
+      post "/admin/plugins/voice/agent-integrations/#{integration.id}/dispatch.json",
+           params: {
+             room_id: room.id,
+             agent_name: "assistant",
+           }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(
+        I18n.t("voice.errors.agent_dispatch_forbidden"),
+      )
+    end
+  end
+
   describe "#restore_exclusion" do
     it "clears a room exclusion without changing other room exclusions" do
       sign_in(admin)

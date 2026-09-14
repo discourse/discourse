@@ -269,6 +269,7 @@ export default class LivekitCoordinator {
     this.#rosterIds.set(roomId, next);
 
     const session = this.#sessions.get(roomId);
+    session?.syncAgentIdentities(participants);
     for (const participant of participants) {
       const userId = Number(participant.id);
       if (userId >= 0) {

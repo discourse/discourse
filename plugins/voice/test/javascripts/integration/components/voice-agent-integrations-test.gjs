@@ -8,6 +8,56 @@ import VoiceAgentIntegrations from "discourse/plugins/voice/admin/components/voi
 module("Integration | Component | VoiceAgentIntegrations", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("invites a dashboard agent through the selected integration", async function (assert) {
+    this.model = {
+      integrations: [
+        {
+          id: 1,
+          name: "Assistant",
+          bot_user: { id: -1400, username: "assistant" },
+          room_ids: [1],
+          role: "speaker",
+          excluded_room_ids: [],
+        },
+      ],
+      bots: [{ id: -1400, username: "assistant" }],
+      rooms: [{ id: 1, name: "Lounge" }],
+    };
+    pretender.post(
+      "/admin/plugins/voice/agent-integrations/1/dispatch",
+      (request) => {
+        const params = new URLSearchParams(request.requestBody);
+        assert.strictEqual(
+          params.get("room_id"),
+          "1",
+          "invites into the selected room"
+        );
+        assert.strictEqual(
+          params.get("agent_name"),
+          "dashboard-assistant",
+          "uses the dashboard dispatch name"
+        );
+        return response({ dispatch_id: "AD_test" });
+      }
+    );
+
+    await render(
+      <template><VoiceAgentIntegrations @model={{this.model}} /></template>
+    );
+    const form = formKit(".voice-agent-integrations__dispatch");
+    await form.field("integration_id").select("1");
+    await form.field("room_id").select("1");
+    await form.field("agent_name").fillIn("dashboard-assistant");
+    await form.submit();
+
+    assert
+      .dom('[role="status"]')
+      .includesText(
+        "Invitation sent",
+        "confirms dispatch without claiming the agent has connected"
+      );
+  });
+
   test("creates a scoped integration and reveals its credential", async function (assert) {
     this.model = {
       integrations: [],

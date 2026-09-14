@@ -76,6 +76,7 @@ Discourse::Application.routes.draw do
       delete "/agent-integrations/:id" => "voice/admin_agent_integrations#destroy"
       post "/agent-integrations/:id/restore" => "voice/admin_agent_integrations#restore"
       post "/agent-integrations/:id/rotate" => "voice/admin_agent_integrations#rotate"
+      post "/agent-integrations/:id/dispatch" => "voice/admin_agent_integrations#invite"
       delete "/agent-integrations/:id/exclusions/:room_id" =>
                "voice/admin_agent_integrations#restore_exclusion"
     end

@@ -63,6 +63,18 @@ module Voice
       render json: { integration: serialize(integration), credential: credential }
     end
 
+    def invite
+      integration = integrations.find(params[:id])
+      room = Room.find(params.require(:room_id))
+      dispatch_id =
+        AgentDispatcher.dispatch!(integration:, room:, agent_name: params.require(:agent_name))
+      render json: { dispatch_id: }, status: :created
+    rescue AgentManager::AuthorizationError
+      render_json_error(I18n.t("voice.errors.agent_dispatch_forbidden"), status: 403)
+    rescue AgentDispatcher::DispatchError
+      render_json_error(I18n.t("voice.errors.agent_dispatch_failed"), status: 503)
+    end
+
     private
 
     def integrations

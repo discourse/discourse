@@ -80,6 +80,8 @@ en:
       flag_already_handled: "Thanks, we have already been notified about this user and are looking into it."
       chat_threading_disabled: "The linked chat channel no longer has threading enabled, so a chat session can't be started."
       livekit_unavailable: "The voice server is unavailable. Contact your site administrator."
+      agent_dispatch_forbidden: "This agent cannot join the room. Check its room access and exclusions, and make sure a human has joined a LiveKit call."
+      agent_dispatch_failed: "LiveKit could not confirm the agent invitation. Check the agent's deployment and the server logs before trying again."
       livekit_room_instance_ended: "This call has ended. Rejoin the room to start a new one."
       livekit_no_signaling: "This room's call uses a media server; peer-to-peer signaling is disabled."
       recording_unavailable: "Recording is not available for this call."

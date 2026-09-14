@@ -87,6 +87,7 @@ module Voice
           user_id,
           session_key: session_key(room_id, user_id),
         )
+        AgentDispatcher.cancel(room_id, user_id)
       end
 
       def revoke_sessions!(integration)
@@ -134,6 +135,7 @@ module Voice
       end
 
       def evict_agents_in_room!(room, delete_room: true)
+        AgentDispatcher.cancel(room.id)
         agent_user_ids = ParticipantTracker.agent_user_ids(room.id)
         Discourse
           .redis
@@ -141,7 +143,9 @@ module Voice
             revoke_session(room.id, key.split(":").last.to_i)
           end
         agent_user_ids.each { |user_id| evict!(room:, user_id:) }
-        if !delete_room || Livekit::RoomServiceClient.delete_room(room)
+        AgentDispatcher.sessions(room) if AgentDispatcher.pending?(room.id)
+        room_deleted = !delete_room || Livekit::RoomServiceClient.delete_room(room)
+        if room_deleted && !AgentDispatcher.pending?(room.id)
           Discourse.redis.srem(PROVIDER_ROOMS_KEY, room.id)
         end
         ParticipantTracker.clear_transport_pin(room.id)
@@ -165,13 +169,19 @@ module Voice
         participants = Livekit::RoomServiceClient.list_participants(Livekit.room_name(room))
         return unless participants[:ok]
 
+        dispatched_sessions = AgentDispatcher.sessions(room)
         live_agents = Set.new
         Array(participants.dig(:data, "participants")).each do |participant|
           identity = participant["identity"].to_s
-          next unless /\A-[1-9]\d*\z/.match?(identity)
-
-          user_id = identity.to_i
-          session = authorized_session(room:, user_id:, metadata: participant["metadata"])
+          session = dispatched_sessions[identity]
+          if session
+            next if [4, "AGENT"].exclude?(participant["kind"])
+            user_id = session[:integration].bot_user_id
+          else
+            next unless /\A-[1-9]\d*\z/.match?(identity)
+            user_id = identity.to_i
+            session = authorized_session(room:, user_id:, metadata: participant["metadata"])
+          end
           unless session
             Livekit::RoomServiceClient.remove_participant(room, user_id)
             next
@@ -180,10 +190,20 @@ module Voice
           metadata = ParticipantTracker.get_metadata(room.id, user_id)
           metadata.merge!(
             external_agent: true,
+            livekit_identity: identity,
             agent_can_speak: session[:integration].role_name == "speaker",
             role: role_for(session[:integration], room),
             last_heartbeat_at: Time.now.to_f,
           )
+          if dispatched_sessions.key?(identity)
+            unless Livekit::RoomServiceClient.update_participant(
+                     room,
+                     session[:integration].bot_user,
+                     identity:,
+                   )
+              next
+            end
+          end
           unless ParticipantTracker.commit_agent(
                    room.id,
                    user_id,
@@ -193,13 +213,14 @@ module Voice
                    metadata: metadata,
                    sid: participant["sid"],
                  )
-            Livekit::RoomServiceClient.remove_participant(room, user_id)
+            Livekit::RoomServiceClient.remove_participant(room, user_id, identity:)
             next
           end
           live_agents << user_id
           can_publish = role_for(session[:integration], room) == "speaker"
           permission = participant["permission"] || {}
-          if (permission["canPublish"] || permission["can_publish"] || false) != can_publish
+          if !dispatched_sessions.key?(identity) &&
+               (permission["canPublish"] || permission["can_publish"] || false) != can_publish
             Livekit::RoomServiceClient.update_participant(room, session[:integration].bot_user)
           end
         end

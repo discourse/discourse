@@ -57,6 +57,9 @@ module Voice
       return if room.nil?
 
       identity = event.dig("participant", "identity").to_s
+      if AgentDispatcher.pending?(room.id) && !/\A[1-9]\d*\z/.match?(identity)
+        return AgentManager.reconcile(room)
+      end
       return unless /\A-?[1-9]\d*\z/.match?(identity)
 
       user_id = identity.to_i
@@ -70,6 +73,9 @@ module Voice
       return if room.nil?
 
       identity = event.dig("participant", "identity").to_s
+      if AgentDispatcher.pending?(room.id) && !/\A[1-9]\d*\z/.match?(identity)
+        return AgentManager.reconcile(room)
+      end
       return unless /\A-?[1-9]\d*\z/.match?(identity)
 
       user_id = identity.to_i

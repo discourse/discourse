@@ -11,12 +11,12 @@ module Voice
       TIMEOUT_SECONDS = 2
 
       class << self
-        def remove_participant(room, user_id)
+        def remove_participant(room, user_id, identity: nil)
           call(
             room,
             "RemoveParticipant",
             body: {
-              identity: user_id.to_s,
+              identity: identity || participant_identity(room, user_id),
             },
             agent_cleanup: user_id.to_i.negative?,
           )
@@ -26,7 +26,7 @@ module Voice
         # object, so this sends the full set mirroring the access-token
         # grants — sending only `canPublish` would silently revoke
         # `canSubscribe` and deafen the participant.
-        def update_participant(room, user)
+        def update_participant(room, user, identity: nil)
           integration = AgentIntegration.find_by(bot_user_id: user.id)
           can_publish =
             (
@@ -41,7 +41,7 @@ module Voice
             "UpdateParticipant",
             agent_cleanup: user.id.negative?,
             body: {
-              identity: user.id.to_s,
+              identity: identity || participant_identity(room, user.id),
               permission: {
                 canSubscribe: true,
                 canPublish: can_publish,
@@ -83,6 +83,14 @@ module Voice
         end
 
         private
+
+        def participant_identity(room, user_id)
+          if user_id.to_i.negative?
+            ParticipantTracker.get_metadata(room.id, user_id)[:livekit_identity] || user_id.to_s
+          else
+            user_id.to_s
+          end
+        end
 
         def sync?(room, agent_cleanup:)
           Livekit.configured? &&

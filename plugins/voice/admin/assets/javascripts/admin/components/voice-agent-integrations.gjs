@@ -18,10 +18,17 @@ export default class VoiceAgentIntegrations extends Component {
   @tracked integrations = [];
   @tracked editing = null;
   @tracked credential = null;
+  @tracked dispatchStatus = null;
+
+  dispatchData = {};
 
   constructor() {
     super(...arguments);
     this.integrations = this.args.model.integrations;
+  }
+
+  get activeIntegrations() {
+    return this.integrations.filter((integration) => !integration.revoked_at);
   }
 
   @cached
@@ -82,6 +89,26 @@ export default class VoiceAgentIntegrations extends Component {
       this.editing = null;
       this.credential = response.credential;
       this.a11y.announce(i18n("voice.admin.agent_integrations.saved"));
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async dispatch(data) {
+    this.dispatchStatus = null;
+    try {
+      await ajax(
+        `/admin/plugins/voice/agent-integrations/${data.integration_id}/dispatch`,
+        {
+          type: "POST",
+          data: { room_id: data.room_id, agent_name: data.agent_name },
+        }
+      );
+      this.dispatchStatus = i18n(
+        "voice.admin.agent_integrations.dispatch_requested"
+      );
+      this.a11y.announce(this.dispatchStatus);
     } catch (error) {
       popupAjaxError(error);
     }
@@ -265,6 +292,70 @@ export default class VoiceAgentIntegrations extends Component {
           {{/if}}
         </:content>
       </AdminConfigAreaCard>
+
+      {{#if this.activeIntegrations.length}}
+        <AdminConfigAreaCard
+          @heading="voice.admin.agent_integrations.dispatch_title"
+        >
+          <:content>
+            <p>{{i18n
+                "voice.admin.agent_integrations.dispatch_description"
+              }}</p>
+            <Form
+              class="voice-agent-integrations__dispatch"
+              @data={{this.dispatchData}}
+              @onSubmit={{this.dispatch}}
+              as |form|
+            >
+              <form.Field
+                @name="integration_id"
+                @title={{i18n "voice.admin.agent_integrations.integration"}}
+                @type="select"
+                @validation="required"
+                as |field|
+              >
+                <field.Control as |control|>
+                  {{#each this.activeIntegrations as |integration|}}
+                    <control.Option
+                      @value={{integration.id}}
+                    >{{integration.name}}</control.Option>
+                  {{/each}}
+                </field.Control>
+              </form.Field>
+              <form.Field
+                @name="room_id"
+                @title={{i18n "voice.admin.agent_integrations.room"}}
+                @type="select"
+                @validation="required"
+                as |field|
+              >
+                <field.Control as |control|>
+                  {{#each @model.rooms as |room|}}
+                    <control.Option
+                      @value={{room.id}}
+                    >{{room.name}}</control.Option>
+                  {{/each}}
+                </field.Control>
+              </form.Field>
+              <form.Field
+                @name="agent_name"
+                @title={{i18n "voice.admin.agent_integrations.agent_name"}}
+                @type="input"
+                @validation="required|length:1,256"
+                as |field|
+              >
+                <field.Control />
+              </form.Field>
+              <form.Submit
+                @label={{i18n "voice.admin.agent_integrations.dispatch"}}
+              />
+            </Form>
+            {{#if this.dispatchStatus}}
+              <p role="status">{{this.dispatchStatus}}</p>
+            {{/if}}
+          </:content>
+        </AdminConfigAreaCard>
+      {{/if}}
 
       <AdminConfigAreaCard @heading="voice.admin.agent_integrations.title">
         <:content>

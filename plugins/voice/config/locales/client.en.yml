@@ -301,6 +301,13 @@ en:
         remove_user: "Remove participant"
       admin:
         agent_integrations:
+          dispatch_title: "Invite dashboard agent"
+          dispatch_description: "Invite a deployed LiveKit Agent Builder agent to an ongoing call in an allowed room. Use its agent name from the same LiveKit project configured for this site."
+          integration: "Agent integration"
+          room: "Call room"
+          agent_name: "LiveKit agent name"
+          dispatch: "Invite agent"
+          dispatch_requested: "Invitation sent. The bot will appear once LiveKit starts the agent and Discourse verifies it. This can take about a minute."
           saved: "Agent integration saved."
           rotate: "Replace credential"
           title: "External agents"
