@@ -82,6 +82,95 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".heif_to_jpeg" do
+    shared_examples "HEIF conversion" do |filename|
+      it "converts #{filename} to JPEG without changing the source" do
+        input_path = file_from_fixtures(filename).path
+        original_content = File.binread(input_path)
+
+        Dir.mktmpdir do |directory|
+          output_path = File.join(directory, "converted.jpg")
+
+          described_class.heif_to_jpeg(input_path:, output_path:, timeout: 20)
+
+          expect(FastImage.type(output_path)).to eq(:jpeg)
+          expect(FastImage.size(output_path)).to eq([60, 40])
+          expect(File.binread(input_path)).to eq(original_content)
+        end
+      end
+    end
+
+    context "with an opaque 12-bit HEIF" do
+      include_examples "HEIF conversion", "heif-color-grid-12bit.heic"
+    end
+
+    context "with a transparent 12-bit HEIF" do
+      include_examples "HEIF conversion", "heif-color-grid-alpha-12bit.heic"
+    end
+
+    it "preserves image dimensions without changing the source" do
+      input_path = file_from_fixtures("should_be_jpeg.heic").path
+      original_content = File.binread(input_path)
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.heif_to_jpeg(input_path:, output_path:, timeout: 20)
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(FastImage.size(output_path)).to eq([846, 1129])
+        expect(File.binread(input_path)).to eq(original_content)
+      end
+    end
+
+    it "rejects a different image format without changing the source" do
+      input_path = file_from_fixtures("logo.png").path
+      original_content = File.binread(input_path)
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        expect {
+          described_class.heif_to_jpeg(input_path:, output_path:, timeout: 20)
+        }.to raise_error(DiscourseVips::InvalidImage)
+
+        expect(File.binread(input_path)).to eq(original_content)
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+
+    it "rejects overwriting the source image" do
+      original_content = File.binread(file_from_fixtures("should_be_jpeg.heic").path)
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "source.heic")
+        File.binwrite(input_path, original_content)
+
+        expect {
+          described_class.heif_to_jpeg(input_path:, output_path: input_path, timeout: 20)
+        }.to raise_error(DiscourseVips::Error, "input and output must be different files")
+
+        expect(File.binread(input_path)).to eq(original_content)
+      end
+    end
+
+    it "stops when reading the source exceeds the timeout" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "blocked.heic")
+        output_path = File.join(directory, "converted.jpg")
+        File.mkfifo(input_path)
+
+        File.open(input_path, File::RDWR) do
+          expect {
+            described_class.heif_to_jpeg(input_path:, output_path:, timeout: 0.05)
+          }.to raise_error(DiscourseVips::OperationTimeout)
+        end
+
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+  end
+
   describe "worker lifecycle" do
     it "recovers after the worker exits unexpectedly" do
       described_class.version

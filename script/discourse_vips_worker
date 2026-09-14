@@ -48,6 +48,8 @@ class DiscourseVipsWorker
         dominant_color(*arguments)
       when "animated"
         animated(*arguments)
+      when "heif-to-jpeg"
+        heif_to_jpeg(input_path: arguments[0], output_path: arguments[1])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -149,6 +151,30 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :animated
+
+    def self.heif_to_jpeg(input_path:, output_path:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        if File.identical?(input_path, output_path)
+          raise ArgumentError, "input and output must be different files"
+        end
+
+        block_loaders(allowed: %w[VipsForeignLoadHeif])
+
+        begin
+          image = Vips::Image.heifload(input_path, access: :sequential)
+          if image.has_alpha?
+            white = image.interpretation == :rgb16 ? 65_535 : 255
+            image = image.flatten(background: [white, white, white])
+          end
+          image.jpegsave(output_path, Q: 93, interlace: false, optimize_coding: true)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+
+        nil
+      end
+    end
+    private_class_method :heif_to_jpeg
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
