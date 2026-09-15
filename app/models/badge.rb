@@ -120,6 +120,7 @@ class Badge < ActiveRecord::Base
   validates :long_description, length: { maximum: 1000 }
 
   scope :enabled, -> { where(enabled: true) }
+  scope :available, -> { enabled.where(plugin_name: [nil, *available_plugin_names]) }
 
   before_save :sanitize_description
   before_create :ensure_not_system
@@ -139,6 +140,29 @@ class Badge < ActiveRecord::Base
   # fields that can not be edited on system badges
   def self.protected_system_fields
     %i[name badge_type_id multiple_grant target_posts show_posts query trigger auto_revoke listable]
+  end
+
+  def self.available_plugin_names
+    Discourse.plugins_by_name.filter_map { |name, plugin| name if plugin.badges_enabled? }
+  end
+
+  def self.seed_for_plugin(plugin_name, name)
+    badge = find_or_initialize_by(name:)
+    if badge.plugin_name && badge.plugin_name != plugin_name
+      raise ArgumentError, "Badge #{name.inspect} belongs to #{badge.plugin_name}"
+    end
+
+    yield badge
+    badge.plugin_name = plugin_name
+    badge.save! if badge.changed?
+    badge
+  end
+
+  def available?
+    return false unless enabled?
+    return true if plugin_name.nil?
+
+    Discourse.plugins_by_name[plugin_name]&.badges_enabled? || false
   end
 
   def self.trust_level_badge_ids
@@ -353,6 +377,7 @@ end
 #  long_description    :text
 #  multiple_grant      :boolean          default(FALSE), not null
 #  name                :string           not null
+#  plugin_name         :string
 #  query               :text
 #  show_in_post_header :boolean          default(FALSE), not null
 #  show_posts          :boolean          default(FALSE), not null

@@ -200,7 +200,7 @@ class UserStat < ActiveRecord::Base
         SELECT users.id user_id, COUNT(distinct user_badges.badge_id) distinct_badge_count
         FROM users
         LEFT JOIN user_badges ON user_badges.user_id = users.id
-                              AND (user_badges.badge_id IN (SELECT id FROM badges WHERE enabled))
+                              AND (user_badges.badge_id IN (#{Badge.available.select(:id).to_sql}))
         GROUP BY users.id
       ) x
       WHERE user_stats.user_id = x.user_id AND user_stats.distinct_badge_count <> x.distinct_badge_count

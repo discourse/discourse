@@ -1948,7 +1948,8 @@ CREATE TABLE public.badges (
     system boolean DEFAULT false NOT NULL,
     long_description text,
     image_upload_id integer,
-    show_in_post_header boolean DEFAULT false NOT NULL
+    show_in_post_header boolean DEFAULT false NOT NULL,
+    plugin_name character varying
 );
 
 
@@ -25183,6 +25184,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260915122138'),
 ('20260914213908'),
 ('20260914172801'),
 ('20260914172757'),

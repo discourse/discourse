@@ -1,6 +1,48 @@
 # frozen_string_literal: true
 
 RSpec.describe Badge do
+  describe ".seed_for_plugin" do
+    it "preserves choices and awards when adopting and reseeding a badge" do
+      badge = Fabricate(:badge, enabled: false)
+      award = Fabricate(:user_badge, badge:)
+
+      2.times do
+        described_class.seed_for_plugin("example", badge.name) do |record|
+          record.default_enabled = true
+          record.description = "Plugin badge"
+        end
+      end
+
+      expect(badge.reload).to have_attributes(
+        plugin_name: "example",
+        enabled: false,
+        description: "Plugin badge",
+      )
+      expect(award.reload.badge_id).to eq(badge.id)
+
+      expect do
+        described_class.seed_for_plugin("another", badge.name) do |record|
+          record.description = "Changed"
+        end
+      end.to raise_error(ArgumentError)
+      expect(badge.reload.description).to eq("Plugin badge")
+    end
+  end
+
+  describe ".available" do
+    it "excludes disabled and absent-plugin badges without losing stored preferences" do
+      badge = Fabricate(:badge)
+      disabled_badge = Fabricate(:badge, enabled: false)
+      plugin_badge = Fabricate(:badge, plugin_name: "absent-plugin")
+      badges = described_class.where(id: [badge.id, disabled_badge.id, plugin_badge.id])
+
+      expect(badges.available).to contain_exactly(badge)
+      expect(badges.enabled).to contain_exactly(badge, plugin_badge)
+      expect(plugin_badge.available?).to eq(false)
+      expect(badge.available?).to eq(true)
+    end
+  end
+
   describe "Validations" do
     subject(:badge) { Fabricate.build(:badge) }
 

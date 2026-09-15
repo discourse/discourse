@@ -2399,6 +2399,8 @@ class UsersController < ApplicationController
       current_user&.id.to_i,
       I18n.locale,
       ContentLocalization.automatically_translate?(guardian),
+      SiteSetting.enable_badges,
+      Badge.available.cache_key_with_version,
     ].join(":")
   end
 
