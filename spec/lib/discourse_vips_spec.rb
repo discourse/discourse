@@ -296,6 +296,116 @@ RSpec.describe DiscourseVips do
     end
   end
 
+  describe ".png_to_jpeg" do
+    it "flattens transparent PNG pixels onto white" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.png_to_jpeg(
+          input_path: file_from_fixtures("dominant-color-transparent.png").path,
+          output_path:,
+          quality: 92,
+          timeout: 5,
+        )
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq("FFFFFF")
+      end
+    end
+
+    it "rejects non-PNG input" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        expect {
+          described_class.png_to_jpeg(
+            input_path: file_from_fixtures("logo.jpg").path,
+            output_path:,
+            quality: 92,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::InvalidImage)
+        expect(File.exist?(output_path)).to eq(false)
+      end
+    end
+  end
+
+  describe ".avif_to_jpeg" do
+    it "converts AVIF inputs to JPEG" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.avif_to_jpeg(
+          input_path: file_from_fixtures("static.avif").path,
+          output_path:,
+          quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+          timeout: 5,
+        )
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(FastImage.size(output_path)).to eq([2, 1])
+      end
+    end
+  end
+
+  describe ".webp_to_jpeg" do
+    it "converts static WebP inputs to JPEG" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.webp_to_jpeg(
+          input_path: file_from_fixtures("static.webp").path,
+          output_path:,
+          quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+          timeout: 5,
+        )
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(FastImage.size(output_path)).to eq([2, 1])
+      end
+    end
+  end
+
+  describe ".recompress_jpeg" do
+    it "encodes JPEG inputs at the requested quality" do
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+        input_path = file_from_fixtures("logo.jpg").path
+
+        described_class.recompress_jpeg(input_path:, output_path:, quality: 40, timeout: 5)
+
+        expect(FastImage.type(output_path)).to eq(:jpeg)
+        expect(FastImage.size(output_path)).to eq(FastImage.size(input_path))
+        higher_quality_path = File.join(directory, "higher-quality.jpg")
+        described_class.recompress_jpeg(
+          input_path:,
+          output_path: higher_quality_path,
+          quality: 95,
+          timeout: 5,
+        )
+        expect(File.size(output_path)).to be < File.size(higher_quality_path)
+      end
+    end
+
+    it "preserves the input when the output refers to the same file" do
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "original.jpg")
+        FileUtils.cp(file_from_fixtures("logo.jpg").path, input_path)
+        original = File.binread(input_path)
+
+        expect {
+          described_class.recompress_jpeg(
+            input_path:,
+            output_path: input_path,
+            quality: 40,
+            timeout: 5,
+          )
+        }.to raise_error(DiscourseVips::Error, /separate input and output/)
+        expect(File.binread(input_path)).to eq(original)
+      end
+    end
+  end
+
   describe "worker lifecycle" do
     it "recovers after the worker exits unexpectedly" do
       described_class.version

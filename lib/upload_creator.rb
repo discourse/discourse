@@ -378,17 +378,27 @@ class UploadCreator
     return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
+    vips_enabled = GlobalSetting.enable_vips_image_processing
+    if vips_enabled
+      conversion_method =
+        case @image_info.type
+        when :avif
+          :avif_to_jpeg
+        when :gif
+          :gif_to_jpeg
+        when :jpeg
+          :recompress_jpeg
+        when :png
+          :png_to_jpeg
+        when :webp
+          :webp_to_jpeg
+        end
+      return if !conversion_method
+    end
+
     jpeg_tempfile = Tempfile.new(%w[image .jpg])
 
-    from = @file.path
-    to = jpeg_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    opts = {}
+    OptimizedImage.ensure_safe_paths!(@file.path, jpeg_tempfile.path)
 
     desired_quality = [
       SiteSetting.ImageQuality.png_to_jpg_quality,
@@ -396,16 +406,28 @@ class UploadCreator
     ].compact.min
 
     target_quality = @upload.target_image_quality(@file.path, desired_quality)
-    opts = { quality: target_quality } if target_quality
 
-    read = [@file.path]
-    write = [File.dirname(jpeg_tempfile.path)]
+    if vips_enabled
+      DiscourseVips.public_send(
+        conversion_method,
+        input_path: @file.path,
+        output_path: jpeg_tempfile.path,
+        quality: target_quality || desired_quality,
+        timeout: MAX_CONVERT_FORMAT_SECONDS,
+      )
+    else
+      from = OptimizedImage.prepend_decoder!(@file.path, nil, filename: "image.#{@image_info.type}")
+      to = OptimizedImage.prepend_decoder!(jpeg_tempfile.path)
+      opts = target_quality ? { quality: target_quality } : {}
+      read = [@file.path]
+      write = [File.dirname(jpeg_tempfile.path)]
 
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
+      begin
+        execute_convert(from, to, opts, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, to, opts.merge(debug: true), read:, write:)
+      end
     end
 
     new_size = File.size(jpeg_tempfile.path)
@@ -417,9 +439,9 @@ class UploadCreator
       @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = jpeg_tempfile
       extract_image_info!
-    else
-      jpeg_tempfile.close!
     end
+  ensure
+    jpeg_tempfile&.close! unless @file.equal?(jpeg_tempfile)
   end
 
   def convert_heif!

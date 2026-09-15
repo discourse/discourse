@@ -55,6 +55,20 @@ class DiscourseVipsWorker
         heif_to_jpeg(input_path: arguments[0], output_path: arguments[1])
       when "svg-dimensions"
         svg_dimensions(*arguments)
+      when "avif-to-jpeg", "gif-to-jpeg", "png-to-jpeg", "webp-to-jpeg"
+        jpeg_conversion(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          quality: arguments[2],
+          input_format: operation.delete_suffix("-to-jpeg").to_sym,
+        )
+      when "recompress-jpeg"
+        jpeg_conversion(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          quality: arguments[2],
+          input_format: :jpeg,
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -161,6 +175,49 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :animated
+
+    def self.jpeg_conversion(input_path:, output_path:, quality:, input_format:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        if File.expand_path(input_path) == File.expand_path(output_path) ||
+             (File.exist?(output_path) && File.identical?(input_path, output_path))
+          raise ArgumentError, "JPEG conversion requires separate input and output files"
+        end
+
+        begin
+          image =
+            case input_format
+            when :avif
+              block_loaders(allowed: %w[VipsForeignLoadHeif])
+              Vips::Image.heifload(input_path, n: 1)
+            when :gif
+              block_loaders(allowed: %w[VipsForeignLoadNsgif])
+              Vips::Image.gifload(input_path, n: 1)
+            when :jpeg
+              block_loaders(allowed: %w[VipsForeignLoadJpeg])
+              Vips::Image.jpegload(input_path)
+            when :png
+              block_loaders(allowed: %w[VipsForeignLoadPng])
+              Vips::Image.pngload(input_path)
+            when :webp
+              block_loaders(allowed: %w[VipsForeignLoadWebp])
+              Vips::Image.webpload(input_path, n: 1)
+            end
+          image = image.autorot
+          # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
+          image.jpegsave(
+            output_path,
+            background: [255, 255, 255],
+            Q: Integer(quality),
+            interlace: false,
+            optimize_coding: true,
+          )
+          nil
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :jpeg_conversion
 
     def self.heif_to_jpeg(input_path:, output_path:)
       new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
