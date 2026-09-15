@@ -332,6 +332,7 @@ module("Unit | Utility | uploads", function (hooks) {
       testUploadMarkdown("image.file.name.with.dots.png"),
       "![image.file.name.with.dots|100x200](/uploads/123/abcdef.ext)"
     );
+
     const short_url = "uploads://asdaasd.ext";
 
     assert.strictEqual(

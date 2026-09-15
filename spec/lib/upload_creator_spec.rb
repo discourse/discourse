@@ -922,7 +922,7 @@ RSpec.describe UploadCreator do
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      it "stores it as an attachment without conversion" do
+      it "stores it unchanged" do
         original_contents = File.binread(file.path)
 
         upload = described_class.new(file, filename).create_for(user.id)
@@ -951,10 +951,11 @@ RSpec.describe UploadCreator do
         invalid_file&.close!
       end
 
-      it "does not enqueue avatar thumbnails" do
-        expect {
-          described_class.new(file, filename, type: "avatar").create_for(user.id)
-        }.not_to change { Jobs::CreateAvatarThumbnails.jobs.size }
+      it "rejects it as an avatar" do
+        upload = described_class.new(file, filename, type: "avatar").create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(I18n.t("upload.ico_as_avatar"))
       end
     end
 

@@ -155,22 +155,6 @@ RSpec.describe UserAvatarsController do
       expect(response.headers["Content-Disposition"]).to start_with("attachment;")
     end
 
-    it "serves an ICO avatar unchanged without creating thumbnails" do
-      SiteSetting.authorized_extensions = "ico"
-      user = Fabricate(:user)
-      file = file_from_fixtures("smallest.ico", "images")
-      original_contents = File.binread(file)
-      upload = UploadCreator.new(file, "avatar.ico", type: "avatar").create_for(user.id)
-      user.user_avatar.update!(custom_upload_id: upload.id)
-      user.update!(uploaded_avatar_id: upload.id)
-
-      get "/user_avatar/default/#{user.username}/200/#{upload.id}.png"
-
-      expect(response.status).to eq(200)
-      expect(response.body.b).to eq(original_contents)
-      expect(OptimizedImage.where(upload_id: upload.id)).to be_empty
-    end
-
     it "handles non local content correctly" do
       setup_s3
       SiteSetting.avatar_sizes = "100|98|49"

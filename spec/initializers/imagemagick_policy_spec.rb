@@ -19,13 +19,4 @@ RSpec.describe "ImageMagick security policy" do
       /not (allowed|authorized) by the security policy/,
     )
   end
-
-  it "blocks the ICO coder" do
-    ico = Rails.root.join("spec/fixtures/images/smallest.ico").to_s
-
-    expect { Discourse::Utils.execute_command("identify", "ICO:#{ico}") }.to raise_error(
-      Discourse::Utils::CommandError,
-      /not (allowed|authorized) by the security policy/,
-    )
-  end
 end

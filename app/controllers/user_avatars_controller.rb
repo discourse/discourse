@@ -234,7 +234,7 @@ class UserAvatarsController < ApplicationController
 
   def get_optimized_image(upload, size)
     return if !upload
-    return upload if %w[svg ico].include?(upload.extension)
+    return upload if upload.extension == "svg"
 
     upload.get_optimized_image(size, size)
   end

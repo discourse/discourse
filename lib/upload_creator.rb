@@ -81,6 +81,12 @@ class UploadCreator
       rescue StandardError
         nil
       end
+
+    if @opts[:type] == "avatar" && @image_info&.type == :ico
+      @upload.errors.add(:base, I18n.t("upload.ico_as_avatar"))
+      return @upload
+    end
+
     is_image = FileHelper.is_supported_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
@@ -284,8 +290,7 @@ class UploadCreator
         )
       end
 
-      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" &&
-           !%w[svg ico].include?(@upload.extension)
+      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
         Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id)
       end
 
@@ -424,7 +429,8 @@ class UploadCreator
 
   MAX_CONVERT_FORMAT_SECONDS = 20
   def execute_convert(from, to, opts = {}, read: [], write: [])
-    command = [from, "-auto-orient", "-background", "white", "-interlace", "none", "-flatten"]
+    command = [from, "-auto-orient", "-background", "white", "-interlace", "none"]
+    command << "-flatten" unless opts[:flatten] == false
     command << "-debug" << "all" if opts[:debug]
     command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to

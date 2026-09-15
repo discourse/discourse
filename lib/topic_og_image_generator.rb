@@ -319,11 +319,8 @@ class TopicOgImageGenerator
 
     content_type = match[1]
     bytes = Base64.strict_decode64(match[2])
-    image_type = FastImage.type(StringIO.new(bytes))
 
     if content_type == "image/svg+xml"
-      return nil if image_type != :svg
-
       svg_path = File.join(directory, "#{basename}.svg")
       png_path = File.join(directory, "#{basename}.png")
       File.binwrite(svg_path, bytes)
@@ -340,7 +337,10 @@ class TopicOgImageGenerator
       return nil
     end
 
-    extension = { gif: "gif", jpeg: "jpg", png: "png", webp: "webp" }[image_type]
+    extension =
+      { "image/gif" => "gif", "image/jpeg" => "jpg", "image/png" => "png", "image/webp" => "webp" }[
+        content_type
+      ]
     return nil if extension.nil?
 
     path = File.join(directory, "#{basename}.#{extension}")
