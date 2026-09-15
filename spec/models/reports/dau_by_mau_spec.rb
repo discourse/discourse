@@ -2,7 +2,7 @@
 
 describe Reports::DauByMau do
   describe ".report_dau_by_mau" do
-    let(:report) { Report.find("dau_by_mau") }
+    let(:report) { Report.find("dau_by_mau", guardian: Discourse.system_user.guardian) }
 
     it "returns an empty report with no data" do
       expect(report.data).to be_blank
@@ -27,6 +27,7 @@ describe Reports::DauByMau do
       report =
         Report.find(
           "dau_by_mau",
+          guardian: Discourse.system_user.guardian,
           start_date: Time.zone.local(2026, 4, 10).beginning_of_day,
           end_date: Time.zone.local(2026, 4, 11).end_of_day,
           facets: [:prev_period],

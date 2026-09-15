@@ -69,6 +69,21 @@ describe "Post" do
       }.to change { topic_1.posts.count }.by(1)
     end
 
+    it "expands reports for the default system creator" do
+      freeze_time DateTime.parse("2022-02-25")
+      Fabricate(:like)
+      automation.upsert_field!(
+        "post",
+        "post",
+        { value: "Activity report: %%REPORT=likes%%" },
+        target: "script",
+      )
+
+      automation.trigger!
+
+      expect(topic_1.posts.last.raw).to eq("Activity report: \n|Day|Count|\n|-|-|\n|2022-02-25|1|")
+    end
+
     it "does not create post on a closed topic" do
       topic_1.update_status(:closed, true, topic_1.user)
 
@@ -140,6 +155,22 @@ describe "Post" do
     context "when creator is one of accepted context" do
       before do
         automation.upsert_field!("creator", "user", { value: "updated_user" }, target: "script")
+      end
+
+      it "omits reports for a nonstaff dynamic creator" do
+        freeze_time DateTime.parse("2022-02-25")
+        Fabricate(:like)
+        automation.upsert_field!(
+          "post",
+          "post",
+          { value: "Activity report for {{username}}: %%REPORT=likes%%" },
+          target: "script",
+        )
+
+        UserUpdater.new(user, user).update(location: "Japan")
+
+        expect(topic_1.posts.last.user).to eq(user)
+        expect(topic_1.posts.last.raw).to eq("Activity report for #{user.username}:")
       end
 
       it "sets the creator to the post creator" do

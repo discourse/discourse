@@ -33,11 +33,12 @@ module DiscourseAi
         accepted_solutions: "questions resolved (accepted solutions)",
       }.freeze
 
-      def self.compute(start_date:, end_date:)
-        new(start_date: start_date, end_date: end_date).compute
+      def self.compute(start_date:, end_date:, guardian:)
+        new(start_date: start_date, end_date: end_date, guardian: guardian).compute
       end
 
-      def initialize(start_date:, end_date:)
+      def initialize(start_date:, end_date:, guardian:)
+        @guardian = guardian
         @end_date = parse(end_date) || Date.current
         @start_date = parse(start_date) || (@end_date - 30)
         @start_date, @end_date = @end_date, @start_date if @start_date > @end_date
@@ -49,7 +50,14 @@ module DiscourseAi
       end
 
       def compute
-        kpis = AdminDashboardHighlights.build(start_date: @start_date, end_date: @end_date)[:kpis]
+        kpis =
+          AdminDashboardHighlights.build(
+            start_date: @start_date,
+            end_date: @end_date,
+            guardian: @guardian,
+          )[
+            :kpis
+          ]
 
         signals =
           [

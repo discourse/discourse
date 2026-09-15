@@ -34,7 +34,13 @@ describe Report do
       created_at: 1.day.ago,
     )
 
-    report = Report.find("reactions", start_date: 2.days.ago, end_date: Time.current)
+    report =
+      Report.find(
+        "reactions",
+        guardian: Discourse.system_user.guardian,
+        start_date: 2.days.ago,
+        end_date: Time.current,
+      )
 
     post_action_data = report.data.find { |x| x[:day] === 1.day.ago.to_date }
     expect(post_action_data[:like_count]).to eq(2)
@@ -57,7 +63,13 @@ describe Report do
       created_at: Time.current,
     )
 
-    report = Report.find("reactions", start_date: 2.days.ago, end_date: Time.current)
+    report =
+      Report.find(
+        "reactions",
+        guardian: Discourse.system_user.guardian,
+        start_date: 2.days.ago,
+        end_date: Time.current,
+      )
 
     expect(report.data).to contain_exactly(
       a_hash_including("cat_count" => 1, :day => 2.days.ago.to_date, :like_count => 0),
@@ -83,7 +95,13 @@ describe Report do
       deleted_at: 1.day.ago,
     )
 
-    report = Report.find("reactions", start_date: 2.days.ago, end_date: Time.current)
+    report =
+      Report.find(
+        "reactions",
+        guardian: Discourse.system_user.guardian,
+        start_date: 2.days.ago,
+        end_date: Time.current,
+      )
 
     post_action_data = report.data.find { |x| x[:day] === 1.day.ago.to_date }
     expect(post_action_data[:like_count]).to eq(1)

@@ -113,13 +113,15 @@ RSpec.shared_examples "backup store" do
       it "resets the storage stats report" do
         Report.stubs(:report_storage_stats)
         report_type = "storage_stats"
-        report = Report.find(report_type)
+        report = Report.find(report_type, guardian: Discourse.system_user.guardian)
 
         Report.cache(report)
-        expect(Report.find_cached(report_type)).to be_present
+        expect(
+          Report.find_cached(report_type, guardian: Discourse.system_user.guardian),
+        ).to be_present
 
         store.reset_cache
-        expect(Report.find_cached(report_type)).to be_nil
+        expect(Report.find_cached(report_type, guardian: Discourse.system_user.guardian)).to be_nil
       end
     end
 

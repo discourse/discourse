@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-# Including classes must expose `start_date` and `end_date`.
 module AdminDashboardKpis
   private
 
   def build_kpi(type, report_name)
     args = { start_date: start_date, end_date: end_date, facets: %i[prev_period] }
 
-    report = Report.find_cached(report_name, args)
+    report = Report.find_cached(report_name, guardian: guardian, **args)
     if report.nil?
-      report = Report.find(report_name, args)
+      report = Report.find(report_name, guardian: guardian, **args)
       Report.cache(report) if report && report.error.blank?
     end
 

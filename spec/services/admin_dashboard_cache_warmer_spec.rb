@@ -56,6 +56,7 @@ describe AdminDashboardCacheWarmer do
 
     Report.find_cached(
       "signups",
+      guardian: Discourse.system_user.guardian,
       facets: %i[prev_period],
       start_date: (end_date - 29).beginning_of_day,
       end_date: end_date.end_of_day,
@@ -64,7 +65,7 @@ describe AdminDashboardCacheWarmer do
 
   describe ".call" do
     it "warms the default window for the server date and the neighbouring days" do
-      described_class.call
+      described_class.call(guardian: Discourse.system_user.guardian)
 
       expect(warmed_signups(-1)).to be_present
       expect(warmed_signups(0)).to be_present
@@ -72,11 +73,15 @@ describe AdminDashboardCacheWarmer do
     end
 
     it "warms the reports backing the highlights and engagement KPIs" do
-      described_class.call
+      described_class.call(guardian: Discourse.system_user.guardian)
 
       types =
         described_class.report_specs.map do |spec|
-          Report.find_cached(spec[:type], spec[:opts].merge(described_class.windows.second))
+          Report.find_cached(
+            spec[:type],
+            guardian: Discourse.system_user.guardian,
+            **spec[:opts].merge(described_class.windows.second),
+          )
         end
 
       expect(types).to all(be_present)
@@ -89,7 +94,7 @@ describe AdminDashboardCacheWarmer do
         position: 0,
       )
 
-      described_class.call
+      described_class.call(guardian: Discourse.system_user.guardian)
 
       expect(prewarm_calls.map { |call| call[:identifiers] }).to eq(
         Array.new(described_class.windows.size, ["report-id"]),
@@ -112,7 +117,7 @@ describe AdminDashboardCacheWarmer do
         position: 0,
       )
 
-      described_class.call
+      described_class.call(guardian: Discourse.system_user.guardian)
 
       expect([warmed_signups(-1), warmed_signups(0), warmed_signups(1)]).to all(be_present)
     end

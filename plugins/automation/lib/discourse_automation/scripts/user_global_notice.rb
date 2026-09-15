@@ -33,7 +33,12 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::USER_GLOBAL_NO
       placeholders["username"] = username
     end
 
-    notice = utils.apply_placeholders(fields.dig("notice", "value") || "", placeholders)
+    notice =
+      utils.apply_placeholders(
+        fields.dig("notice", "value") || "",
+        placeholders,
+        guardian: user.guardian,
+      )
     level = fields.dig("level", "value")
 
     begin

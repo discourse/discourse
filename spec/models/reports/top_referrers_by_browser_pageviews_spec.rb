@@ -10,7 +10,12 @@ describe Reports::TopReferrersByBrowserPageviews do
     let(:report) do
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
       BrowserPageviewEvent.delete_all
-      Report.find("top_referrers_by_browser_pageviews", start_date: start_date, end_date: end_date)
+      Report.find(
+        "top_referrers_by_browser_pageviews",
+        start_date: start_date,
+        end_date: end_date,
+        guardian: Discourse.system_user.guardian,
+      )
     end
 
     it "ranks referrers by event count and computes each percent as a share of referred pageviews" do

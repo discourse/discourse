@@ -387,6 +387,79 @@ RSpec.describe Admin::ReportsController do
   end
 
   describe "#show" do
+    context "when the server hijacks the request" do
+      before { sign_in(moderator) }
+
+      it "renders a JSON 404 for a report the reader cannot view" do
+        io = StringIO.new
+
+        Scheduler::Defer.capture_later do
+          get "/admin/reports/admin_logins.json", env: { "rack.hijack" => -> { io } }
+        end
+
+        headers, body = io.string.split("\r\n\r\n", 2)
+        expect(headers).to start_with("HTTP/1.1 404 Not Found\r\n")
+        expect(JSON.parse(body)).to include(
+          "errors" => [I18n.t("not_found")],
+          "error_type" => "not_found",
+        )
+      end
+
+      it "renders a JSON 404 for a report hidden by site settings" do
+        sign_in(admin)
+        SiteSetting.use_legacy_pageviews = false
+        io = StringIO.new
+
+        Scheduler::Defer.capture_later do
+          get "/admin/reports/page_view_anon_reqs.json", env: { "rack.hijack" => -> { io } }
+        end
+
+        headers, body = io.string.split("\r\n\r\n", 2)
+        expect(headers).to start_with("HTTP/1.1 404 Not Found\r\n")
+        expect(JSON.parse(body)).to include("error_type" => "not_found")
+      end
+
+      it "renders a JSON 404 for a missing report" do
+        io = StringIO.new
+
+        Scheduler::Defer.capture_later do
+          get "/admin/reports/nonexistent.json", env: { "rack.hijack" => -> { io } }
+        end
+
+        headers, body = io.string.split("\r\n\r\n", 2)
+        expect(headers).to start_with("HTTP/1.1 404 Not Found\r\n")
+        expect(JSON.parse(body)).to include("error_type" => "not_found")
+      end
+
+      it "renders matching JSON for fresh and cached reports" do
+        freeze_time
+        Discourse.cache.clear
+        Fabricate(:topic)
+
+        payloads =
+          2.times.map do
+            io = StringIO.new
+
+            Scheduler::Defer.capture_later do
+              get "/admin/reports/topics.json",
+                  params: {
+                    cache: true,
+                  },
+                  env: {
+                    "rack.hijack" => -> { io },
+                  }
+            end
+
+            headers, body = io.string.split("\r\n\r\n", 2)
+            expect(headers).to start_with("HTTP/1.1 200 OK\r\n")
+            JSON.parse(body)
+          end
+
+        expect(payloads.first["report"]).to include("type" => "topics", "total" => 1)
+        expect(payloads.last).to eq(payloads.first)
+      end
+    end
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 

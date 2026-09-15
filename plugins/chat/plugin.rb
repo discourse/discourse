@@ -572,7 +572,12 @@ after_initialize do
           guardian: sender.guardian,
           params: {
             chat_channel_id: channel.id,
-            message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+            message:
+              utils.apply_placeholders(
+                fields.dig("message", "value"),
+                placeholders,
+                guardian: sender.guardian,
+              ),
           },
         )
 

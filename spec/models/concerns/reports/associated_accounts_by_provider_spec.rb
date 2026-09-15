@@ -35,7 +35,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     end
 
     it "returns data grouped by provider, enabled providers only" do
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       google_data = report.data.find { |d| d[:key] == "google_oauth2" }
       facebook_data = report.data.find { |d| d[:key] == "facebook" }
@@ -51,7 +52,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     end
 
     it "includes enabled providers with zero users" do
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       github_data = report.data.find { |d| d[:key] == "github" }
       expect(github_data).to be_present
@@ -59,7 +61,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     end
 
     it "includes total users count" do
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       total_data = report.data.find { |d| d[:key] == "total_users" }
       expect(total_data).to be_present
@@ -68,7 +71,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     end
 
     it "includes users with no associated accounts from enabled providers" do
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       no_accounts_data = report.data.find { |d| d[:key] == "no_accounts" }
       expect(no_accounts_data).to be_present
@@ -78,7 +82,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     end
 
     it "sorts data by count descending" do
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       expect(report.data.first[:count]).to be >= report.data.last[:count]
     end
@@ -86,7 +91,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     it "only includes active users" do
       user1.update!(active: false)
 
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       google_data = report.data.find { |d| d[:key] == "google_oauth2" }
       expect(google_data[:count]).to eq(1) # Only user2, not user1
@@ -96,7 +102,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       Fabricate(:user)
       Fabricate(:user)
 
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       total_data = report.data.find { |d| d[:key] == "total_users" }
       no_accounts_data = report.data.find { |d| d[:key] == "no_accounts" }
@@ -110,7 +117,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     it "handles case when no authenticators are enabled" do
       allow(Discourse).to receive(:enabled_authenticators).and_return([])
 
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       # Should only have total users and no accounts entries
       provider_entries = report.data.reject { |d| %w[total_users no_accounts].include?(d[:key]) }
@@ -124,7 +132,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
     end
 
     it "includes all enabled providers even with mixed zero and non-zero counts" do
-      report = Report.find("associated_accounts_by_provider")
+      report =
+        Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
       # Should have 3 enabled providers + total_users + no_accounts = 5 entries
       provider_entries =
@@ -146,7 +155,8 @@ RSpec.describe "Reports::AssociatedAccountsByProvider" do
       end
 
       it "includes DiscourseConnect user count and users without DiscourseConnect records" do
-        report = Report.find("associated_accounts_by_provider")
+        report =
+          Report.find("associated_accounts_by_provider", guardian: Discourse.system_user.guardian)
 
         discourse_connect_data = report.data.find { |d| d[:key] == "discourse_connect" }
         expect(discourse_connect_data).to be_present

@@ -8,7 +8,12 @@ describe Reports::TopCountriesByBrowserPageviews do
     let(:report) do
       BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
       BrowserPageviewEvent.delete_all
-      Report.find("top_countries_by_browser_pageviews", start_date: start_date, end_date: end_date)
+      Report.find(
+        "top_countries_by_browser_pageviews",
+        start_date: start_date,
+        end_date: end_date,
+        guardian: Discourse.system_user.guardian,
+      )
     end
 
     it "ranks countries by event count and computes percent of total browser pageviews" do

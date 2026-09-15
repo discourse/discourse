@@ -5,10 +5,12 @@ RSpec.describe Reports::TopEntryUrls do
   let(:end_date) { "2026-05-07".to_date }
 
   it "makes entry URLs navigable" do
-    expect(Report.find("top_entry_urls", start_date:, end_date:).labels.first).to include(
-      type: :link,
-      properties: %i[entry_url entry_url],
-    )
+    expect(
+      Report
+        .find("top_entry_urls", start_date:, end_date:, guardian: Discourse.system_user.guardian)
+        .labels
+        .first,
+    ).to include(type: :link, properties: %i[entry_url entry_url])
   end
 
   it "ranks entry URLs and calculates percentages from all qualifying pageviews" do
@@ -31,7 +33,14 @@ RSpec.describe Reports::TopEntryUrls do
       count: 2,
     )
 
-    expect(Report.find("top_entry_urls", start_date:, end_date:).data).to eq(
+    expect(
+      Report.find(
+        "top_entry_urls",
+        start_date:,
+        end_date:,
+        guardian: Discourse.system_user.guardian,
+      ).data,
+    ).to eq(
       [
         { entry_url: "/t/topic/1", count: 5, percent: 50 },
         { entry_url: "/categories", count: 3, percent: 30 },
@@ -54,9 +63,14 @@ RSpec.describe Reports::TopEntryUrls do
     SiteSetting.login_required = true
     SiteSetting.improved_crawler_detection = true
 
-    expect(Report.find("top_entry_urls", start_date:, end_date:).data).to eq(
-      [{ entry_url: "/latest", count: 2, percent: 100 }],
-    )
+    expect(
+      Report.find(
+        "top_entry_urls",
+        start_date:,
+        end_date:,
+        guardian: Discourse.system_user.guardian,
+      ).data,
+    ).to eq([{ entry_url: "/latest", count: 2, percent: 100 }])
   end
 
   it "keeps percentages based on all rows when the display is limited" do
@@ -80,7 +94,14 @@ RSpec.describe Reports::TopEntryUrls do
         count: 2,
       )
 
-      expect(Report.find("top_entry_urls", start_date:, end_date:).data).to eq(
+      expect(
+        Report.find(
+          "top_entry_urls",
+          start_date:,
+          end_date:,
+          guardian: Discourse.system_user.guardian,
+        ).data,
+      ).to eq(
         [{ entry_url: "/a", count: 5, percent: 50 }, { entry_url: "/b", count: 3, percent: 30 }],
       )
     end

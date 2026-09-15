@@ -75,6 +75,34 @@ describe "SendPms" do
     end
   end
 
+  describe "#trigger!" do
+    fab!(:receiver, :user)
+
+    [true, false].each do |staff|
+      it "#{staff ? "expands" : "omits"} reports for a configured #{staff ? "staff" : "nonstaff"} sender" do
+        freeze_time DateTime.parse("2022-02-25")
+        Fabricate(:like)
+        sender = Fabricate(:user, admin: staff, refresh_auto_groups: true)
+        automation.update!(trigger: DiscourseAutomation::Triggers::RECURRING)
+        automation.upsert_field!("sender", "user", { value: sender.username })
+        automation.upsert_field!("receiver", "user", { value: receiver.username })
+        automation.upsert_field!(
+          "sendable_pms",
+          "pms",
+          { value: [{ title: "Activity report", raw: "Activity report: %%REPORT=likes%%" }] },
+        )
+
+        automation.trigger!
+
+        pm = Topic.last
+        expect(pm.user).to eq(sender)
+        expect(pm.first_post.raw).to eq(
+          staff ? "Activity report: \n|Day|Count|\n|-|-|\n|2022-02-25|1|" : "Activity report:",
+        )
+      end
+    end
+  end
+
   context "with delay" do
     fab!(:user)
 

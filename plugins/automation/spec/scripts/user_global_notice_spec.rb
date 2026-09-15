@@ -38,6 +38,31 @@ describe "UserGlobalNotice" do
       end
     end
 
+    [true, false].each do |staff|
+      it "#{staff ? "expands" : "omits"} reports for a #{staff ? "staff" : "nonstaff"} recipient" do
+        freeze_time DateTime.parse("2022-02-25")
+        Fabricate(:like)
+        topic_1.user.update!(admin: staff)
+        automation_1.upsert_field!(
+          "notice",
+          "message",
+          { value: "Activity report: %%REPORT=likes%%" },
+          target: "script",
+        )
+
+        automation_1.trigger!(
+          "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
+          "topic" => topic_1,
+        )
+
+        notice = DiscourseAutomation::UserGlobalNotice.last
+        expect(notice.user_id).to eq(topic_1.user_id)
+        expect(notice.notice).to eq(
+          staff ? "Activity report: \n|Day|Count|\n|-|-|\n|2022-02-25|1|\n" : "Activity report: ",
+        )
+      end
+    end
+
     it "creates and destroy global notices" do
       post = Fabricate(:post, created_at: 1.day.ago)
 

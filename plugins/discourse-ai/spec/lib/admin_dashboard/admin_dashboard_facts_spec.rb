@@ -12,7 +12,11 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
   end
 
   def compute(start_date: 30.days.ago.to_date.to_s, end_date: Date.current.to_s)
-    described_class.compute(start_date: start_date, end_date: end_date)
+    described_class.compute(
+      start_date: start_date,
+      end_date: end_date,
+      guardian: Discourse.system_user.guardian,
+    )
   end
 
   it "returns tile-consistent metrics with friendly labels" do

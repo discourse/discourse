@@ -14,19 +14,19 @@ RSpec.describe DiscourseAi::Sentiment::SentimentAnalysisReport do
   end
 
   it "contains the correct filters" do
-    report = Report.find("sentiment_analysis")
+    report = Report.find("sentiment_analysis", guardian: admin.guardian)
     expect(report.available_filters).to include("group_by", "sort_by", "category", "tag")
   end
 
   it "contains the correct labels" do
-    report = Report.find("sentiment_analysis")
+    report = Report.find("sentiment_analysis", guardian: admin.guardian)
     expect(report.labels).to eq(%w[Positive Neutral Negative])
   end
 
   it "produces data that can be cached for the admin dashboard" do
     Fabricate(:sentiment_classification, target: post)
 
-    report = Report.find("sentiment_analysis")
+    report = Report.find("sentiment_analysis", guardian: admin.guardian)
 
     expect(report.data).to be_present
     expect(report.data).to all(be_a(Hash))

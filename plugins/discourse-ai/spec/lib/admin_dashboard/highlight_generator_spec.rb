@@ -114,6 +114,7 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
       generator = described_class.new(start_date: start_date, end_date: end_date)
       facts =
         DiscourseAi::AdminDashboard::AdminDashboardFacts.compute(
+          guardian: Discourse.system_user.guardian,
           start_date: start_date,
           end_date: end_date,
         )

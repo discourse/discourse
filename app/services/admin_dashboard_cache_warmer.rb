@@ -6,12 +6,11 @@ class AdminDashboardCacheWarmer
   # sit a day either side of the server's.
   DATE_OFFSETS = (-1..1)
 
-  def self.call
-    guardian = Guardian.new(Discourse.system_user)
+  def self.call(guardian:)
     pinned_reports = AdminDashboard::Reports::Section.build(guardian:)[:items]
 
     windows.each do |window|
-      warm_core_reports(window)
+      warm_core_reports(window, guardian:)
       warm_pinned_reports(pinned_reports, window, guardian:)
     end
   end
@@ -38,9 +37,9 @@ class AdminDashboardCacheWarmer
     end
   end
 
-  def self.warm_core_reports(window)
+  def self.warm_core_reports(window, guardian:)
     report_specs.each do |spec|
-      report = Report.find(spec[:type], spec[:opts].merge(window))
+      report = Report.find(spec[:type], guardian: guardian, **spec[:opts].merge(window))
       Report.cache(report) if report && report.error.blank?
     end
   end

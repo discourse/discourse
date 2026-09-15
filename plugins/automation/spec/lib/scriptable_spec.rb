@@ -138,10 +138,27 @@ describe DiscourseAutomation::Scriptable do
   end
 
   describe ".utils" do
+    fab!(:moderator)
+
     describe ".fetch_report" do
+      it "omits reports without an authorized reader" do
+        expect(automation.scriptable.utils.fetch_report(:likes)).to be_nil
+        expect(
+          automation.scriptable.utils.fetch_report(:likes, current_user: Fabricate(:user)),
+        ).to be_nil
+      end
+
+      it "accepts the supplied current user as the reader" do
+        expect(
+          automation.scriptable.utils.fetch_report(:likes, "current_user" => moderator),
+        ).to include("|Day|Count|")
+      end
+
       context "when the report doesn’t exist" do
         it "does nothing" do
-          expect(automation.scriptable.utils.fetch_report(:foo)).to eq(nil)
+          expect(
+            automation.scriptable.utils.fetch_report(:foo, guardian: moderator.guardian),
+          ).to eq(nil)
         end
       end
 
@@ -151,9 +168,9 @@ describe DiscourseAutomation::Scriptable do
           Fabricate(:like, user: Fabricate(:user))
           Fabricate(:like, user: Fabricate(:user))
 
-          expect(automation.scriptable.utils.fetch_report(:likes)).to eq(
-            "\n|Day|Count|\n|-|-|\n|2022-02-25|2|\n",
-          )
+          expect(
+            automation.scriptable.utils.fetch_report(:likes, guardian: moderator.guardian),
+          ).to eq("\n|Day|Count|\n|-|-|\n|2022-02-25|2|\n")
         end
       end
     end
@@ -164,6 +181,12 @@ describe DiscourseAutomation::Scriptable do
         map = { cool_cat: "siberian cat" }
         output = automation.scriptable.utils.apply_placeholders(input, map)
         expect(output).to eq("hello siberian cat siberian cat")
+      end
+
+      it "omits report placeholders without an authorized reader" do
+        expect(automation.scriptable.utils.apply_placeholders("hello %%REPORT=likes%%")).to eq(
+          "hello ",
+        )
       end
 
       it "replaces site_title by default" do
@@ -180,7 +203,12 @@ describe DiscourseAutomation::Scriptable do
             Fabricate(:like, user: Fabricate(:user))
             input = "hello %%REPORT=likes%%"
 
-            output = automation.scriptable.utils.apply_placeholders(input, {})
+            output =
+              automation.scriptable.utils.apply_placeholders(
+                input,
+                {},
+                guardian: moderator.guardian,
+              )
             expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|2022-02-22|2|\n")
           end
         end
@@ -193,7 +221,12 @@ describe DiscourseAutomation::Scriptable do
             group.add(Fabricate(:user, created_at: DateTime.parse("2022-02-12")))
             input = "hello %%REPORT=signups start_date=2022-02-10%%"
 
-            output = automation.scriptable.utils.apply_placeholders(input, {})
+            output =
+              automation.scriptable.utils.apply_placeholders(
+                input,
+                {},
+                guardian: moderator.guardian,
+              )
             expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|2022-02-12|1|\n")
           end
         end
@@ -206,7 +239,12 @@ describe DiscourseAutomation::Scriptable do
             Fabricate(:user)
             input = "hello %%REPORT=signups group=#{group.id}%%"
 
-            output = automation.scriptable.utils.apply_placeholders(input, {})
+            output =
+              automation.scriptable.utils.apply_placeholders(
+                input,
+                {},
+                guardian: moderator.guardian,
+              )
             expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|2022-02-15|1|\n")
           end
         end

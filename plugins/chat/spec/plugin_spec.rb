@@ -433,6 +433,42 @@ describe Chat do
         )
       end
 
+      [true, false].each do |system_sender|
+        it "#{system_sender ? "expands reports for the default system sender" : "omits reports for a nonstaff sender"}" do
+          freeze_time DateTime.parse("2022-02-25")
+          Fabricate(:like)
+          unless system_sender
+            sender = Fabricate(:user)
+            SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+            channel_1.add(sender)
+            automation_1.upsert_field!(
+              "sender",
+              "user",
+              { value: sender.username },
+              target: "script",
+            )
+          end
+          automation_1.upsert_field!(
+            "message",
+            "message",
+            { value: "Activity report: %%REPORT=likes%%" },
+            target: "script",
+          )
+
+          PostCreator.create!(user_1, title: "hello world topic", raw: "my name is fred")
+
+          expect(channel_1.chat_messages.last.message).to eq(
+            (
+              if system_sender
+                "Activity report: \n|Day|Count|\n|-|-|\n|2022-02-25|1|"
+              else
+                "Activity report:"
+              end
+            ),
+          )
+        end
+      end
+
       it "sends the message" do
         post = PostCreator.create(user_1, { title: "hello world topic", raw: "my name is fred" })
 
