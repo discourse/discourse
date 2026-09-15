@@ -259,7 +259,7 @@ RSpec.describe UploadsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["original_filename"]).to end_with("smallest.ico")
-        expect(response.parsed_body.slice("width", "height")).to eq("width" => nil, "height" => nil)
+        expect(response.parsed_body.slice("width", "height")).to eq("width" => 1, "height" => 1)
       end
 
       it "respects `authorized_extensions_for_staff` setting when staff upload file" do

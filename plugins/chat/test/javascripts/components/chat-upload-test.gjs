@@ -102,6 +102,24 @@ module("Component | ChatUpload", function (hooks) {
       );
   });
 
+  test("with an image without dimensions", async function (assert) {
+    this.set("upload", {
+      ...IMAGE_FIXTURE,
+      original_filename: "favicon.ico",
+      width: null,
+      height: null,
+    });
+
+    await render(<template><ChatUpload @upload={{this.upload}} /></template>);
+
+    assert
+      .dom("img.chat-img-upload")
+      .doesNotHaveAttribute("width", "uses the image's natural width");
+    assert
+      .dom("img.chat-img-upload")
+      .doesNotHaveAttribute("height", "uses the image's natural height");
+  });
+
   test("with a video", async function (assert) {
     this.set("upload", VIDEO_FIXTURE);
 

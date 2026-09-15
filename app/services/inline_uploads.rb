@@ -77,7 +77,7 @@ class InlineUploads
           extension = match[2].split(".")[-1].downcase
           index = $~.offset(2)[0]
           indexes << index
-          if FileHelper.supported_images.include?(extension)
+          if FileHelper.uploadable_images.include?(extension)
             raw_matches << [match[1], match[1], +"![](#{PLACEHOLDER})", index]
           else
             raw_matches << [match[1], match[1], +"#{Discourse.base_url}#{PATH_PLACEHOLDER}", index]

@@ -80,6 +80,21 @@ RSpec.describe MetadataController do
       expect(manifest["icons"].first["type"]).to eq("image/png")
     end
 
+    it "omits icons when the configured image cannot be resized" do
+      ico =
+        UploadCreator.new(
+          file_from_fixtures("smallest.ico", "images"),
+          "smallest.ico",
+          for_site_setting: true,
+        ).create_for(Discourse.system_user.id)
+      SiteSetting.manifest_icon = ico
+
+      get "/manifest.webmanifest"
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["icons"]).to be_empty
+    end
+
     it "defaults to display standalone for Android" do
       get "/manifest.webmanifest",
           params: {

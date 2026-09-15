@@ -81,7 +81,7 @@ class UploadCreator
       rescue StandardError
         nil
       end
-    is_image = FileHelper.is_supported_image?(@filename)
+    is_image = FileHelper.is_uploadable_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
     is_thumbnail = SiteSetting.video_thumbnails_enabled && @opts[:type] == "thumbnail"
@@ -106,7 +106,7 @@ class UploadCreator
 
         if @image_info.type == :svg
           clean_svg!
-        elsif !Rails.env.test? || @opts[:force_optimize]
+        elsif @image_info.type != :ico && (!Rails.env.test? || @opts[:force_optimize])
           convert_heif! if %i[heic heif].include?(@image_info.type)
           convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
           fix_orientation! if should_fix_orientation?
