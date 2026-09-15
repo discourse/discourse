@@ -1584,7 +1584,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       # double check this happened and user is in group
       agents = AiAgent.allowed_modalities(user: new_user.reload, allow_personal_messages: true)
-      expect(agents.count).to eq(1)
+      expect(agents.map { |agent| agent[:id] }).to include(ai_agent.id)
 
       io_out, io_in = IO.pipe
 
