@@ -614,7 +614,7 @@ basic:
     default: true
     hidden: true
   clean_up_browser_pageview_events:
-    default: false
+    default: true
     hidden: true
   browser_pageview_referrer_backfill_batch_size:
     default: 5000
