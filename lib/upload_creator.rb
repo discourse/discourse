@@ -388,15 +388,12 @@ class UploadCreator
     from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
     to = OptimizedImage.prepend_decoder!(to)
 
-    opts = {}
-
     desired_quality = [
       SiteSetting.ImageQuality.png_to_jpg_quality,
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
 
-    target_quality = @upload.target_image_quality(@file.path, desired_quality)
-    opts = { quality: target_quality } if target_quality
+    opts = { quality: desired_quality }
 
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
@@ -474,16 +471,9 @@ class UploadCreator
   def should_alter_quality?
     return false if animated?
 
-    desired_quality =
-      (
-        if @image_info.type == :png
-          SiteSetting.ImageQuality.png_to_jpg_quality
-        else
-          SiteSetting.ImageQuality.recompress_original_jpg_quality
-        end
-      )
+    desired_quality = SiteSetting.ImageQuality.recompress_original_jpg_quality
 
-    @upload.target_image_quality(@file.path, desired_quality).present?
+    @upload.target_jpeg_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?
