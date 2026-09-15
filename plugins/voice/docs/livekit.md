@@ -282,8 +282,13 @@ Discourse HTTP tool.
 3. As a member of `voice_livekit_agent_invite_allowed_groups` (admins by default),
    open the room's **…** menu (on its page or in the sidebar) and
    select **Invite LiveKit agent**. The same action is available in the widget’s
-   **…** menu. Enter the deployed agent’s dispatch name in the modal and invite it.
-   Choose a name for each invitation; do not use its `CA_` deployment ID.
+   **…** menu. The modal lists the agents deployed to the LiveKit Cloud project by
+   dispatch name; pick one and invite it. Agents without a dispatch name yet are not
+   listed, and workers running outside LiveKit's hosting (for example a local
+   `pnpm dev` worker) never are — use **Type a name instead** to enter such a dispatch
+   name by hand; when the list is empty or unavailable the modal shows the text field
+   directly. The list is cached for 30 seconds; use the refresh button after deploying
+   an agent while the modal is open. Do not use the `CA_` deployment ID.
 4. Wait for `livekit_agent_bot` to appear, then speak. With webhooks configured,
    presence can appear promptly; otherwise allow the next one-minute scheduled
    sweep. The agent's initial greeting may occur before roster admission.

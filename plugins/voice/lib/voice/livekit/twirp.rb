@@ -16,8 +16,17 @@ module Voice
 
       Response = Struct.new(:status, :body)
 
-      def self.post(service:, method:, body:, grants:, timeout:)
-        uri = URI.parse("#{api_base_url}/twirp/livekit.#{service}/#{method}")
+      def self.post(
+        service:,
+        method:,
+        body:,
+        timeout:,
+        grants: nil,
+        claims: {},
+        headers: {},
+        base_url: api_base_url
+      )
+        uri = URI.parse("#{base_url}/twirp/livekit.#{service}/#{method}")
 
         response =
           FinalDestination::HTTP.start(
@@ -31,10 +40,10 @@ module Voice
             http.post(
               uri.request_uri,
               body.to_json,
-              {
+              headers.merge(
                 "Content-Type" => "application/json",
-                "Authorization" => "Bearer #{admin_token(grants)}",
-              },
+                "Authorization" => "Bearer #{admin_token(grants, claims)}",
+              ),
             )
           end
 
@@ -47,12 +56,12 @@ module Voice
         SiteSetting.voice_livekit_url.sub(/\Awss:/, "https:").sub(/\Aws:/, "http:")
       end
 
-      def self.admin_token(grants)
+      def self.admin_token(grants, claims = {})
         payload = {
           iss: SiteSetting.voice_livekit_api_key,
           exp: TOKEN_TTL.from_now.to_i,
           video: grants,
-        }
+        }.compact.merge(claims)
         JWT.encode(payload, SiteSetting.voice_livekit_api_secret, "HS256")
       end
     end
