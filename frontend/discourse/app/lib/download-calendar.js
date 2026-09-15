@@ -212,48 +212,6 @@ function _formatIcsUtcOffset(offsetMinutes) {
   );
 }
 
-const SEASONAL_TRANSITION_WINDOW_MS = 370 * 24 * 60 * 60 * 1000;
-
-function _vTimezoneObservanceType(zone, index) {
-  const transitionAt = zone.untils[index];
-  const offsetFrom = -zone.offsets[index];
-  const offsetTo = -zone.offsets[index + 1];
-
-  const isReverseTransition = (candidateIndex) =>
-    -zone.offsets[candidateIndex] === offsetTo &&
-    -zone.offsets[candidateIndex + 1] === offsetFrom;
-
-  // Seasonal offset changes reverse within roughly a year. Requiring the
-  // reverse transition avoids treating a permanent base-offset change as
-  // daylight saving time.
-  for (let i = index - 1; i >= 0; i--) {
-    if (transitionAt - zone.untils[i] > SEASONAL_TRANSITION_WINDOW_MS) {
-      break;
-    }
-
-    if (isReverseTransition(i)) {
-      return offsetTo > offsetFrom ? "DAYLIGHT" : "STANDARD";
-    }
-  }
-
-  for (let i = index + 1; i < zone.untils.length - 1; i++) {
-    const candidateAt = zone.untils[i];
-
-    if (
-      !Number.isFinite(candidateAt) ||
-      candidateAt - transitionAt > SEASONAL_TRANSITION_WINDOW_MS
-    ) {
-      break;
-    }
-
-    if (isReverseTransition(i)) {
-      return offsetTo > offsetFrom ? "DAYLIGHT" : "STANDARD";
-    }
-  }
-
-  return "STANDARD";
-}
-
 function _vTimezoneTransition(zone, index) {
   const transitionAt = zone.untils[index];
   const offsetFrom = -zone.offsets[index];
@@ -263,61 +221,41 @@ function _vTimezoneTransition(zone, index) {
   const ordinal = day + 7 > localStart.daysInMonth() ? -1 : Math.ceil(day / 7);
 
   return {
-    transitionAt,
-    type: _vTimezoneObservanceType(zone, index),
     localStart: localStart.format("YYYYMMDDTHHmmss"),
-    year: localStart.year(),
     month: localStart.month() + 1,
     byDay: `${ordinal}${ICAL_WEEKDAYS[localStart.day()]}`,
-    time: localStart.format("HHmmss"),
     offsetFrom,
     offsetTo,
     name: zone.abbrs[index + 1],
   };
 }
 
-function _vTimezonePatternKey(observance) {
-  return JSON.stringify([
-    observance.type,
-    observance.offsetFrom,
-    observance.offsetTo,
-    observance.name,
-    observance.month,
-    observance.byDay,
-    observance.time,
-  ]);
-}
-
-function _vTimezoneBaseKey(observance) {
-  return JSON.stringify([
-    observance.type,
-    observance.offsetFrom,
-    observance.offsetTo,
-    observance.name,
-  ]);
-}
-
-function _renderVTimezoneObservance(first, { rrule, rdates = [] } = {}) {
-  const lines = [`BEGIN:${first.type}`, `DTSTART:${first.localStart}`];
-
-  if (rrule) {
-    lines.push(`RRULE:${rrule}`);
-  }
-
-  if (rdates.length) {
-    lines.push(`RDATE:${rdates.join(",")}`);
-  }
-
-  lines.push(
-    `TZOFFSETFROM:${_formatIcsUtcOffset(first.offsetFrom)}`,
-    `TZOFFSETTO:${_formatIcsUtcOffset(first.offsetTo)}`
+function _sameVTimezoneRule(a, b) {
+  return (
+    a.month === b.month &&
+    a.byDay === b.byDay &&
+    a.localStart.slice(8) === b.localStart.slice(8) &&
+    a.offsetFrom === b.offsetFrom &&
+    a.offsetTo === b.offsetTo
   );
+}
 
-  if (first.name) {
-    lines.push(`TZNAME:${first.name}`);
+function _renderVTimezoneObservance(observance) {
+  const type =
+    observance.offsetTo > observance.offsetFrom ? "DAYLIGHT" : "STANDARD";
+  const lines = [
+    `BEGIN:${type}`,
+    `DTSTART:${observance.localStart}`,
+    `RRULE:FREQ=YEARLY;BYMONTH=${observance.month};BYDAY=${observance.byDay}`,
+    `TZOFFSETFROM:${_formatIcsUtcOffset(observance.offsetFrom)}`,
+    `TZOFFSETTO:${_formatIcsUtcOffset(observance.offsetTo)}`,
+  ];
+
+  if (observance.name) {
+    lines.push(`TZNAME:${_escapeIcsValue(observance.name)}`);
   }
 
-  lines.push(`END:${first.type}`);
+  lines.push(`END:${type}`);
 
   return lines.map(_foldLine).join("\r\n") + "\r\n";
 }
@@ -339,7 +277,7 @@ function _fixedVTimezone(timezone, referenceMs) {
     `DTSTART:${start}\r\n` +
     `TZOFFSETFROM:${_formatIcsUtcOffset(offset)}\r\n` +
     `TZOFFSETTO:${_formatIcsUtcOffset(offset)}\r\n` +
-    _foldLine(`TZNAME:${reference.zoneAbbr()}`) +
+    _foldLine(`TZNAME:${_escapeIcsValue(reference.zoneAbbr())}`) +
     "\r\n" +
     "END:STANDARD\r\n" +
     "END:VTIMEZONE\r\n"
@@ -353,7 +291,8 @@ function _generateVTimezone(timezone, referenceMs) {
     return "";
   }
 
-  let startIndex = -1;
+  let previousIndex = -1;
+  let nextIndex = -1;
 
   for (let i = 0; i < zone.untils.length - 1; i++) {
     const transitionAt = zone.untils[i];
@@ -363,123 +302,49 @@ function _generateVTimezone(timezone, referenceMs) {
     }
 
     if (transitionAt <= referenceMs) {
-      startIndex = i;
+      previousIndex = i;
     } else {
+      nextIndex = i;
       break;
     }
   }
 
-  if (startIndex === -1) {
+  if (previousIndex === -1 || nextIndex === -1) {
     return _fixedVTimezone(timezone, referenceMs);
   }
 
-  const observances = [];
+  const previous = _vTimezoneTransition(zone, previousIndex);
+  const next = _vTimezoneTransition(zone, nextIndex);
+  const followingPreviousIndex = previousIndex + 2;
+  const followingNextIndex = nextIndex + 2;
 
-  for (let i = startIndex; i < zone.untils.length - 1; i++) {
-    if (!Number.isFinite(zone.untils[i])) {
-      break;
-    }
-
-    observances.push(_vTimezoneTransition(zone, i));
-  }
-
-  if (!observances.length) {
+  // A current seasonal pair reverses the same two UTC offsets and repeats
+  // the same calendar rules in the following cycle. Otherwise, use the
+  // current fixed offset rather than inventing an open-ended yearly rule.
+  if (
+    previous.offsetFrom !== next.offsetTo ||
+    previous.offsetTo !== next.offsetFrom ||
+    followingNextIndex >= zone.untils.length - 1
+  ) {
     return _fixedVTimezone(timezone, referenceMs);
   }
 
-  const maxYear = Math.max(...observances.map((item) => item.year));
-  const patternGroups = new Map();
+  const followingPrevious = _vTimezoneTransition(zone, followingPreviousIndex);
+  const followingNext = _vTimezoneTransition(zone, followingNextIndex);
 
-  for (const observance of observances) {
-    const key = _vTimezonePatternKey(observance);
-    const group = patternGroups.get(key) || [];
-    group.push(observance);
-    patternGroups.set(key, group);
+  if (
+    !_sameVTimezoneRule(previous, followingPrevious) ||
+    !_sameVTimezoneRule(next, followingNext)
+  ) {
+    return _fixedVTimezone(timezone, referenceMs);
   }
-
-  const recurringRuns = [];
-  const recurringTransitions = new Set();
-
-  for (const group of patternGroups.values()) {
-    group.sort((a, b) => a.transitionAt - b.transitionAt);
-
-    let run = [group[0]];
-
-    const finishRun = () => {
-      if (run.length >= 2) {
-        recurringRuns.push(run);
-        for (const observance of run) {
-          recurringTransitions.add(observance.transitionAt);
-        }
-      }
-    };
-
-    for (let i = 1; i < group.length; i++) {
-      if (group[i].year === group[i - 1].year + 1) {
-        run.push(group[i]);
-      } else {
-        finishRun();
-        run = [group[i]];
-      }
-    }
-
-    finishRun();
-  }
-
-  const components = recurringRuns.map((run) => {
-    const first = run[0];
-    const last = run[run.length - 1];
-
-    let rrule = `FREQ=YEARLY;BYMONTH=${first.month};BYDAY=${first.byDay}`;
-
-    // A long-running pattern which reaches the end of the bundled tzdb data
-    // is the zone's stable future rule, so allow it to continue indefinitely.
-    if (!(last.year === maxYear && run.length >= 5)) {
-      rrule += `;UNTIL=${moment
-        .utc(last.transitionAt)
-        .format("YYYYMMDDTHHmmss[Z]")}`;
-    }
-
-    return {
-      first,
-      rrule,
-      rdates: [],
-    };
-  });
-
-  const discreteGroups = new Map();
-
-  for (const observance of observances) {
-    if (recurringTransitions.has(observance.transitionAt)) {
-      continue;
-    }
-
-    const key = _vTimezoneBaseKey(observance);
-    const group = discreteGroups.get(key) || [];
-    group.push(observance);
-    discreteGroups.set(key, group);
-  }
-
-  for (const group of discreteGroups.values()) {
-    group.sort((a, b) => a.transitionAt - b.transitionAt);
-
-    components.push({
-      first: group[0],
-      rdates: group.slice(1).map((item) => item.localStart),
-    });
-  }
-
-  components.sort((a, b) => a.first.transitionAt - b.first.transitionAt);
 
   return (
     "BEGIN:VTIMEZONE\r\n" +
     _foldLine(`TZID:${timezone}`) +
     "\r\n" +
-    components
-      .map((component) =>
-        _renderVTimezoneObservance(component.first, component)
-      )
-      .join("") +
+    _renderVTimezoneObservance(previous) +
+    _renderVTimezoneObservance(next) +
     "END:VTIMEZONE\r\n"
   );
 }

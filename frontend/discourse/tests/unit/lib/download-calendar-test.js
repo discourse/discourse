@@ -153,27 +153,44 @@ module("Unit | Utility | download-calendar", function (hooks) {
     assert.true(data.includes("DTSTART;TZID=Asia/Kolkata:20260811T173000"));
   });
 
-  test("VTIMEZONE identifies seasonal transitions without relying on isDST", function (assert) {
-    const data = generateIcsData("Casablanca event", [
+  test("VTIMEZONE supports a zero standard UTC offset", function (assert) {
+    const data = generateIcsData("London event", [
       {
-        startsAt: "2025-08-11T12:00:00.000Z",
-        endsAt: "2025-08-11T13:00:00.000Z",
-        timezone: "Africa/Casablanca",
+        startsAt: "2026-08-11T12:00:00.000Z",
+        endsAt: "2026-08-11T13:00:00.000Z",
+        timezone: "Europe/London",
       },
     ]);
 
     assert.true(
-      data.includes("BEGIN:DAYLIGHT\r\nDTSTART:20250406T020000"),
-      "identifies the transition to the higher seasonal offset as daylight time"
+      data.includes(
+        [
+          "BEGIN:DAYLIGHT",
+          "DTSTART:20260329T010000",
+          "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU",
+          "TZOFFSETFROM:+0000",
+          "TZOFFSETTO:+0100",
+          "TZNAME:BST",
+          "END:DAYLIGHT",
+        ].join("\r\n")
+      ),
+      "includes the London daylight-saving observance"
     );
     assert.true(
-      data.includes("BEGIN:STANDARD\r\nDTSTART:20260215T030000"),
-      "identifies the transition to the lower seasonal offset as standard time"
+      data.includes(
+        [
+          "BEGIN:STANDARD",
+          "DTSTART:20261025T020000",
+          "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU",
+          "TZOFFSETFROM:+0100",
+          "TZOFFSETTO:+0000",
+          "TZNAME:GMT",
+          "END:STANDARD",
+        ].join("\r\n")
+      ),
+      "includes the London standard-time observance"
     );
-    assert.true(data.includes("TZOFFSETFROM:+0000"));
-    assert.true(data.includes("TZOFFSETTO:+0100"));
-    assert.true(data.includes("TZOFFSETFROM:+0100"));
-    assert.true(data.includes("TZOFFSETTO:+0000"));
+    assert.true(data.includes("DTSTART;TZID=Europe/London:20260811T130000"));
   });
 
   test("correct data for ICS without timezone (UTC)", function (assert) {
