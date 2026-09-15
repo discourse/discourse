@@ -51,7 +51,7 @@ class Admin::BadgesController < Admin::AdminController
     badge = Badge.find_by(id: params[:badge_id])
     raise Discourse::InvalidParameters if csv_file.try(:tempfile).nil? || badge.nil?
 
-    if !badge.enabled?
+    if !badge.available?
       error = I18n.t("badges.mass_award.errors.badge_disabled", badge_name: badge.display_name)
       return render_json_error(error, status: 422)
     end

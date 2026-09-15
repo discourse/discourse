@@ -4847,6 +4847,51 @@ RSpec.describe UsersController do
       user_deferred.user_stat.update!(post_count: 1)
     end
 
+    it "refreshes cached badges when badge availability changes" do
+      plugin = Plugin::Instance.new(Plugin::Metadata.parse("# name: discourse-sample-plugin"))
+      plugin.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugins = Discourse.plugins_by_name.merge(plugin.name => plugin)
+      Discourse.stubs(:plugins_by_name).returns(plugins)
+      SiteSetting.discourse_sample_plugin_enabled = true
+      badge = Fabricate(:badge, plugin_name: plugin.name)
+      independent_badge = Fabricate(:badge)
+      BadgeGranter.grant(badge, user)
+      BadgeGranter.grant(independent_badge, user)
+
+      get "/u/#{user.username}/summary.json"
+      expect(response.parsed_body.fetch("badges").pluck("id")).to contain_exactly(
+        badge.id,
+        independent_badge.id,
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+
+      get "/u/#{user.username}/summary.json"
+      expect(response.parsed_body.fetch("badges").pluck("id")).to contain_exactly(
+        independent_badge.id,
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+
+      get "/u/#{user.username}/summary.json"
+      expect(response.parsed_body.fetch("badges").pluck("id")).to contain_exactly(
+        badge.id,
+        independent_badge.id,
+      )
+
+      badge.update!(enabled: false)
+
+      get "/u/#{user.username}/summary.json"
+      expect(response.parsed_body.fetch("badges").pluck("id")).to contain_exactly(
+        independent_badge.id,
+      )
+
+      SiteSetting.enable_badges = false
+
+      get "/u/#{user.username}/summary.json"
+      expect(response.parsed_body).not_to have_key("badges")
+    end
+
     it "caches separately per automatic translation preference" do
       SiteSetting.content_localization_enabled = true
       SiteSetting.set_locale_from_accept_language_header = true

@@ -188,6 +188,19 @@ class Plugin::Instance
 
   delegate :name, to: :metadata
 
+  def badges_enabled?
+    enabled? && (!@badge_enabled_setting || SiteSetting.public_send(@badge_enabled_setting))
+  end
+
+  def badge_enabled_setting(setting = nil)
+    @badge_enabled_setting = setting if setting
+    @badge_enabled_setting
+  end
+
+  def seed_badge(name, &block)
+    Badge.seed_for_plugin(self.name, name, &block)
+  end
+
   def humanized_name
     (setting_category_name || name).sub(/\Adiscourse[\s\-_]+/i, "").tr("-_", "  ").upcase_first
   end
