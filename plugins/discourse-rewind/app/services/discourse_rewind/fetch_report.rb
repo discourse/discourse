@@ -24,8 +24,6 @@ module DiscourseRewind
     #   @option params [String] :for_user_username (optional) username of the user to see the rewind for, otherwise the guardian user is used
     #   @return [Service::Base::Context]
 
-    REPORTS_REQUIRING_CURRENT_CONTENT = [Action::BestTopics, Action::BestPosts].freeze
-
     params do
       attribute :index, :integer
       attribute :for_user_username, :string
@@ -47,9 +45,6 @@ module DiscourseRewind
     def fetch_report(params:, for_user:, year:, date:, guardian:)
       report_class = FetchReports::REPORTS[params.index]
       return if !report_class
-      if REPORTS_REQUIRING_CURRENT_CONTENT.include?(report_class)
-        return report_class.call(date:, user: for_user)
-      end
 
       report_name = report_class.name.demodulize
       report = load_single_report_from_cache(for_user.id, year, report_name)
@@ -58,13 +53,13 @@ module DiscourseRewind
         cache_single_report(for_user.id, year, report_name, report.as_json)
       end
 
-      report = filter_topic_report_for_viewer(report, guardian, report_class) if report_class.in?(
-        FetchReports::TOPIC_REPORTS,
+      report = filter_report_for_viewer(report, guardian, report_class) if report_class.in?(
+        FetchReports::VISIBILITY_FILTERED_REPORTS,
       )
       report
     end
 
-    def filter_topic_report_for_viewer(report, guardian, report_class)
+    def filter_report_for_viewer(report, guardian, report_class)
       case report_class.name
       when Action::BestTopics.name
         filter_best_topics_for_viewer(report, guardian)

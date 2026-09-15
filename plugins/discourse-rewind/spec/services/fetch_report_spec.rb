@@ -145,9 +145,25 @@ RSpec.describe(DiscourseRewind::FetchReport) do
           )
         end
 
-        it "returns the current report instead" do
+        it "filters the cached report without regenerating it" do
+          allow(DiscourseRewind::Action::BestTopics).to receive(:call)
+
           expect(result).to be_success
           expect(result.report[:data]).to eq([])
+          expect(DiscourseRewind::Action::BestTopics).to_not have_received(:call)
+          expect(
+            DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
+              current_user.id,
+              2021,
+              "BestTopics",
+            )[
+              :data
+            ],
+          ).to contain_exactly(
+            topic_id: 1,
+            title: "restricted topic",
+            excerpt: "restricted content",
+          )
         end
       end
     end
