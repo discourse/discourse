@@ -40,6 +40,22 @@ RSpec.describe StaticController do
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(upload.filesize)
       end
+
+      it "returns an ICO favicon with its original content type" do
+        ico =
+          UploadCreator.new(
+            file_from_fixtures("smallest.ico", "images"),
+            "smallest.ico",
+            for_site_setting: true,
+          ).create_for(Discourse.system_user.id)
+        SiteSetting.favicon = ico
+
+        get "/favicon/proxied"
+
+        expect(response.status).to eq(200)
+        expect(response.media_type).to eq("image/vnd.microsoft.icon")
+        expect(response.body.b).to eq(File.binread(file_from_fixtures("smallest.ico", "images")))
+      end
     end
 
     context "with external store" do

@@ -605,7 +605,7 @@ RSpec.describe Email::Sender do
       )
     end
 
-    it "renders an ICO remotely and includes the original file as an attachment" do
+    it "renders a public ICO remotely without attaching it" do
       SiteSetting.authorized_extensions = "*"
       SiteSetting.email_total_attachment_size_limit_kb = 10_000
       ico =
@@ -623,7 +623,7 @@ RSpec.describe Email::Sender do
         html.at_css(%(img[src="#{Discourse.base_url}#{ico.url}"][alt="smallest"])),
       ).to be_present
       expect(message.attachments.map(&:filename)).to contain_exactly(
-        *[small_pdf, large_pdf, csv_file, ico].map(&:original_filename),
+        *[small_pdf, large_pdf, csv_file].map(&:original_filename),
       )
     end
 
@@ -671,8 +671,42 @@ RSpec.describe Email::Sender do
         expect(message.attachments.length).to eq(3)
       end
 
+      it "does not attach secure ICO images when embedding them is not allowed" do
+        SiteSetting.authorized_extensions = "*"
+        secure_ico =
+          UploadCreator.new(file_from_fixtures("smallest.ico", "images"), "secure.ico").create_for(
+            Discourse.system_user.id,
+          )
+        secure_ico.update_secure_status(override: true)
+        secure_ico.update!(access_control_post_id: reply.id)
+        reply.update!(raw: UploadMarkdown.new(secure_ico).to_markdown)
+        reply.rebake!
+
+        Email::Sender.new(message, :valid_type).send
+
+        expect(message.attachments).to be_empty
+      end
+
       context "when embedding secure images in email is allowed" do
         before { SiteSetting.secure_uploads_allow_embed_images_in_emails = true }
+
+        it "attaches and embeds the original secure ICO image" do
+          SiteSetting.authorized_extensions = "*"
+          secure_ico =
+            UploadCreator.new(
+              file_from_fixtures("smallest.ico", "images"),
+              "secure.ico",
+            ).create_for(Discourse.system_user.id)
+          secure_ico.update_secure_status(override: true)
+          secure_ico.update!(access_control_post_id: reply.id)
+          reply.update!(raw: UploadMarkdown.new(secure_ico).to_markdown)
+          reply.rebake!
+
+          Email::Sender.new(message, :valid_type).send
+
+          expect(message.attachments.map(&:filename)).to contain_exactly("secure.ico")
+          expect(message.html_part.body.to_s).to include("cid:")
+        end
 
         it "can inline images with duplicate names" do
           @secure_image_2 =

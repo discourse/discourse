@@ -247,10 +247,6 @@ module PageObjects
         find("#{@composer_id} .d-editor-preview-wrapper")
       end
 
-      def has_preview_image?(extension:)
-        preview.has_css?("img[src$='.#{extension}']")
-      end
-
       def has_discard_draft_modal?
         page.has_css?(".discard-draft-modal")
       end

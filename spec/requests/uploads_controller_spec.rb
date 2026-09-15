@@ -244,6 +244,24 @@ RSpec.describe UploadsController do
         expect(upload.original_filename).to eq(logo_filename)
       end
 
+      it "allows staff to upload ICO images for site settings without processing them" do
+        SiteSetting.authorized_extensions = ""
+        user.update!(admin: true)
+        ico = Rack::Test::UploadedFile.new(file_from_fixtures("smallest.ico", "images"))
+
+        post "/uploads.json",
+             params: {
+               file: ico,
+               upload_type: "site_setting",
+               for_site_setting: "true",
+               site_setting_name: "favicon",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["original_filename"]).to end_with("smallest.ico")
+        expect(response.parsed_body.slice("width", "height")).to eq("width" => nil, "height" => nil)
+      end
+
       it "respects `authorized_extensions_for_staff` setting when staff upload file" do
         SiteSetting.authorized_extensions = ""
         SiteSetting.authorized_extensions_for_staff = "*"

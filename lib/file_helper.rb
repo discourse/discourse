@@ -6,6 +6,9 @@ require "mini_mime"
 require "open-uri"
 
 class FileHelper
+  PASSTHROUGH_IMAGES = %w[ico].freeze
+  private_constant :PASSTHROUGH_IMAGES
+
   def self.log(log_level, message)
     Rails.logger.public_send(
       log_level,
@@ -15,6 +18,10 @@ class FileHelper
 
   def self.is_supported_image?(filename)
     filename.match?(supported_images_regexp)
+  end
+
+  def self.is_uploadable_image?(filename)
+    is_supported_image?(filename) || is_inline_image?(filename)
   end
 
   def self.is_supported_video?(filename)
@@ -188,7 +195,11 @@ class FileHelper
 
   def self.inline_images
     # SVG cannot safely be shown as a document
-    @@inline_images ||= (supported_images - %w[svg]) | Set.new(%w[ico])
+    @@inline_images ||= (supported_images - %w[svg]) | PASSTHROUGH_IMAGES
+  end
+
+  def self.uploadable_images
+    supported_images | inline_images
   end
 
   # files which are safe to serve inline (no script execution risk)
@@ -228,7 +239,7 @@ class FileHelper
   def self.supported_media_regexp
     @@supported_media_regexp ||=
       begin
-        media = supported_images | supported_audio | supported_video
+        media = supported_images | PASSTHROUGH_IMAGES | supported_audio | supported_video
         /\.(#{media.to_a.join("|")})\z/i
       end
   end

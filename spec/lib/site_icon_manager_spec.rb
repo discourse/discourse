@@ -62,6 +62,21 @@ RSpec.describe SiteIconManager do
     expect(SiteSetting.site_manifest_icon_url).to eq(GlobalPath.full_cdn_url(manifest.url))
   end
 
+  it "uses an ICO favicon unchanged and omits derivatives that require resizing" do
+    ico =
+      UploadCreator.new(
+        file_from_fixtures("smallest.ico", "images"),
+        "smallest.ico",
+        for_site_setting: true,
+      ).create_for(Discourse.system_user.id)
+
+    SiteSetting.favicon = ico
+    SiteSetting.manifest_icon = ico
+
+    expect(SiteIconManager.favicon).to eq(ico)
+    expect(SiteIconManager.manifest_icon).to be_nil
+  end
+
   describe ".mobile_logo_url" do
     before do
       SiteSetting.logo = logo_image

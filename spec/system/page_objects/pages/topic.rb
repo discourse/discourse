@@ -64,10 +64,6 @@ module PageObjects
         find(post_by_number_selector(post_number)).has_content?(content)
       end
 
-      def has_post_image?(post_number:, extension:)
-        find(post_by_number_selector(post_number)).has_css?(".cooked img[src$='.#{extension}']")
-      end
-
       def has_deleted_post?(post)
         has_css?(".topic-post.deleted:has(#post_#{post.post_number})")
       end
