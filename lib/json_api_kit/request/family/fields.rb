@@ -21,7 +21,10 @@ module JsonApiKit
           Fieldsets::Fieldset
             .parse(raw)
             .try do |fieldset|
-              fieldset.names.map { declared_name(Name::Field.new(value: it, type:), path) }
+              fieldset
+                .names
+                .flat_map { declared_names(Name::Field.new(value: it, type:), path) }
+                .uniq
             end || raw
         end
       end
