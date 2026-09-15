@@ -7,7 +7,10 @@ module Voice
         raise Discourse::InvalidAccess
       end
 
-      result = Voice::Livekit::CloudAgentClient.list
+      refresh = params[:refresh].to_s == "true"
+      RateLimiter.new(current_user, "voice-agent-list-refresh", 6, 1.minute).performed! if refresh
+
+      result = Voice::Livekit::CloudAgentClient.list(refresh:)
       if result[:ok]
         render json: { agents: result[:agents] }
       else

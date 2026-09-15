@@ -12,17 +12,17 @@ module Voice
       end
 
       CACHE_KEY = "voice:livekit:cloud_agents"
-      CACHE_TTL = 1.minute
+      CACHE_TTL = 30.seconds
       TIMEOUT_SECONDS = 5
 
       # The catalogue API refuses requests that do not identify a CLI version.
       # This is the version whose response shape `agent_names` follows.
       CLIENT_VERSION = "2.18.6"
 
-      def self.list
+      def self.list(refresh: false)
         return { ok: false } unless Livekit.cloud? && Livekit.configured?
 
-        cached = Discourse.redis.get(CACHE_KEY)
+        cached = refresh ? nil : Discourse.redis.get(CACHE_KEY)
         return { ok: true, agents: JSON.parse(cached, symbolize_names: true) } if cached
 
         # The unfiltered listing is a summary whose dispatch name is blank for

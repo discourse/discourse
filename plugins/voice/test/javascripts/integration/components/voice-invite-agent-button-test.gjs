@@ -104,6 +104,33 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     assert.true(invited);
   });
 
+  test("refreshes the list and switches to the picker when agents appear", async function (assert) {
+    this.model = { room: this.room };
+    let agents = [];
+    const queries = [];
+    pretender.get("/voice/agents", (request) => {
+      queries.push(request.queryParams.refresh);
+      return response(200, { agents });
+    });
+    await render(
+      <template>
+        <VoiceInviteAgentModal
+          @closeModal={{this.closeModal}}
+          @inline={{true}}
+          @model={{this.model}}
+        />
+      </template>
+    );
+    assert.dom("[data-name='agent_name'] input").exists();
+
+    agents = [{ name: "assistant" }];
+    await click(".voice-invite-agent-modal__refresh");
+
+    assert.deepEqual(queries, [undefined, "true"]);
+    assert.dom("[data-name='agent_name'] select").exists();
+    assert.dom("[data-name='agent_name'] option[value='assistant']").exists();
+  });
+
   test("falls back to a typed name when the list is unavailable", async function (assert) {
     this.model = { room: this.room };
     pretender.get("/voice/agents", () => response(503, { errors: ["down"] }));

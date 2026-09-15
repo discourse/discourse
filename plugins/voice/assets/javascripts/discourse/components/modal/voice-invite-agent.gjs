@@ -16,6 +16,7 @@ export default class VoiceInviteAgentModal extends Component {
 
   @tracked agents = [];
   @tracked loading = true;
+  @tracked refreshing = false;
   @tracked typing = false;
 
   constructor() {
@@ -33,6 +34,16 @@ export default class VoiceInviteAgentModal extends Component {
   }
 
   @action
+  async refresh() {
+    this.refreshing = true;
+    try {
+      await this.#loadAgents({ refresh: true });
+    } finally {
+      this.refreshing = false;
+    }
+  }
+
+  @action
   async invite(data) {
     try {
       await ajax(`/voice/rooms/${this.args.model.room.id}/invite_agent`, {
@@ -47,13 +58,19 @@ export default class VoiceInviteAgentModal extends Component {
   }
 
   // An empty or unavailable catalogue falls back to the typed name, which is
-  // also the only path for agents running outside LiveKit's hosting.
-  async #loadAgents() {
+  // also the only path for agents running outside LiveKit's hosting. Only an
+  // explicit refresh surfaces the failure.
+  async #loadAgents({ refresh = false } = {}) {
     try {
-      const result = await ajax("/voice/agents");
+      const result = await ajax("/voice/agents", {
+        data: refresh ? { refresh: true } : {},
+      });
       this.agents = result.agents ?? [];
-    } catch {
+    } catch (error) {
       this.agents = [];
+      if (refresh) {
+        popupAjaxError(error);
+      }
     } finally {
       this.loading = false;
     }
@@ -96,6 +113,13 @@ export default class VoiceInviteAgentModal extends Component {
                     @icon="pencil"
                     @title="voice.agent.type_name"
                   />
+                  <DButton
+                    class="btn-flat voice-invite-agent-modal__refresh"
+                    @action={{this.refresh}}
+                    @icon="arrows-rotate"
+                    @isLoading={{this.refreshing}}
+                    @title="voice.agent.refresh"
+                  />
                 </div>
               </form.Field>
             {{else}}
@@ -107,19 +131,24 @@ export default class VoiceInviteAgentModal extends Component {
                 @validation="required"
                 as |field|
               >
-                {{#if this.agents.length}}
-                  <div class="voice-invite-agent-modal__picker">
-                    <field.Control maxlength="256" />
+                <div class="voice-invite-agent-modal__picker">
+                  <field.Control maxlength="256" />
+                  {{#if this.agents.length}}
                     <DButton
                       class="btn-flat voice-invite-agent-modal__toggle"
                       @action={{this.toggleTyping}}
                       @icon="list"
                       @title="voice.agent.pick_name"
                     />
-                  </div>
-                {{else}}
-                  <field.Control maxlength="256" />
-                {{/if}}
+                  {{/if}}
+                  <DButton
+                    class="btn-flat voice-invite-agent-modal__refresh"
+                    @action={{this.refresh}}
+                    @icon="arrows-rotate"
+                    @isLoading={{this.refreshing}}
+                    @title="voice.agent.refresh"
+                  />
+                </div>
               </form.Field>
             {{/if}}
             <form.Submit @label="voice.agent.invite" />

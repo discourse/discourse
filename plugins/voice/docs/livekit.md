@@ -287,7 +287,8 @@ Discourse HTTP tool.
    listed, and workers running outside LiveKit's hosting (for example a local
    `pnpm dev` worker) never are — use **Type a name instead** to enter such a dispatch
    name by hand; when the list is empty or unavailable the modal shows the text field
-   directly. Do not use the `CA_` deployment ID.
+   directly. The list is cached for 30 seconds; use the refresh button after deploying
+   an agent while the modal is open. Do not use the `CA_` deployment ID.
 4. Wait for `livekit_agent_bot` to appear, then speak. With webhooks configured,
    presence can appear promptly; otherwise allow the next one-minute scheduled
    sweep. The agent's initial greeting may occur before roster admission.

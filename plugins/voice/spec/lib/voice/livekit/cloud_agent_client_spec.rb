@@ -71,6 +71,15 @@ RSpec.describe Voice::Livekit::CloudAgentClient do
       expect(stub).to have_been_requested.twice
     end
 
+    it "bypasses the cached list when refreshing" do
+      stub = stub_catalogue("CA_1" => "assistant")
+      described_class.list
+
+      expect(described_class.list(refresh: true)[:agents]).to eq([{ name: "assistant" }])
+
+      expect(stub).to have_been_requested.times(4)
+    end
+
     it "is unavailable outside LiveKit Cloud" do
       SiteSetting.voice_livekit_url = "wss://livekit.example.com"
       stub = stub_request(:post, /livekit.example.com|agents\./)
