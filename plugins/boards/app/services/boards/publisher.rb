@@ -12,7 +12,17 @@ module Boards
       publish_card_event!(board, "card_updated", card_payload, client_id:)
     end
 
-    def self.publish_card_moved!(board, card_payload, client_id:)
+    def self.publish_card_moved!(board, card_payload, old_column_id = nil, acting_user:, client_id:)
+      new_column_id = card_payload.with_indifferent_access[:column_id]
+      old_column_id ||= new_column_id
+      if old_column_id.to_i != new_column_id.to_i
+        DiscourseEvent.trigger(
+          :boards_card_moved,
+          board,
+          card_payload.merge(old_column_id:),
+          acting_user,
+        )
+      end
       publish_card_event!(board, "card_moved", card_payload, client_id:)
     end
 
