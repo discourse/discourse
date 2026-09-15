@@ -7,10 +7,9 @@
 # when `PrettyText.cook` linkifies an anchor for that URL.
 #
 # Core's machinery for a bare absolute URL in prose is markdown-it's linkify, fed
-# by two engines whose admissions are unioned: the inline rule
-# (`markdown-it/rules_inline/linkify.mjs`, a scheme after anything outside
-# `[A-Za-z0-9.+-]`) and the core ruler (`rules_core/linkify.mjs` via linkify-it,
-# which also admits `.` and `-`). The net boundary before a scheme is "any
+# by two engines whose admissions are unioned: the inline linkify rule (a scheme
+# after anything outside `[A-Za-z0-9.+-]`) and the core linkify ruler
+# (linkify-it, which also admits `.` and `-`). The net boundary before a scheme is "any
 # character except an ASCII letter, digit or `+`" (and `\`, a markdown escape) —
 # far wider than the whitespace-or-paren gate the construct used to admit at, so it
 # is checked here against PrettyText rather than read off a regex. The URL is

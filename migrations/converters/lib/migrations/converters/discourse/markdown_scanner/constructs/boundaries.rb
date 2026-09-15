@@ -21,11 +21,10 @@ module Migrations
             # markdown-it linkifies a bare absolute schemed URL (`https://…`) in
             # prose unless the character right before its scheme is an ASCII
             # letter, digit, `+` or `\`. Two of core's engines feed this and
-            # their admissions are unioned: the inline rule
-            # (`markdown-it/rules_inline/linkify.mjs`, whose `SCHEME_RE` accepts
-            # a scheme after anything outside `[A-Za-z0-9.+-]`) and the core
-            # ruler (`rules_core/linkify.mjs` via linkify-it, which also admits
-            # `.` and `-` as Unicode punctuation). That leaves only
+            # their admissions are unioned: the inline linkify rule (its scheme
+            # pattern accepts a scheme after anything outside `[A-Za-z0-9.+-]`)
+            # and the core linkify ruler (linkify-it, which also admits `.` and
+            # `-` as Unicode punctuation). That leaves only
             # `[A-Za-z0-9+]` non-admitting, plus `\`, which markdown escapes
             # into the following character so no link forms. Verified against
             # PrettyText.
