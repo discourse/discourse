@@ -155,10 +155,16 @@ RSpec.describe Boards::MoveTopicToColumn do
         expect(result[:card]).to have_attributes(id: existing_card.id, created_by_id: writer.id)
       end
 
-      it "publishes a card_moved event" do
+      it "publishes a card_moved message" do
         expect(messages).to contain_exactly(
           have_attributes(data: include(type: "card_moved", client_id: client_id)),
         )
+      end
+
+      it "does not publish a card moved workflow event for the reorder" do
+        events = DiscourseEvent.track_events(:boards_card_moved) { result }
+
+        expect(events).to be_empty
       end
     end
 

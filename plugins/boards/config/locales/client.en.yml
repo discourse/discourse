@@ -6,9 +6,11 @@ en:
       nodes:
         "action:create_board_column": "Create board column"
         "action:create_board": "Create board"
+        "trigger:card_moved": "Card moved"
       node_descriptions:
         "action:create_board_column": "Create a column on a board with an optional icon, color, tag, and default sort"
         "action:create_board": "Create a board with access permissions and optional tag and category constraints"
+        "trigger:card_moved": "Fires when a card is moved from one column to another on a board"
       create_board_column:
         board_id: "Board"
         board_id_description: "Select a board or use a board ID from a previous step."
@@ -30,6 +32,10 @@ en:
         actor_username: "Performed by user"
         acl: "Board access"
         acl_description: "Choose who can view, edit, and manage the board."
+      card_moved:
+        board_id: "Board"
+        board_id_description: "Choose a board to limit this trigger, or leave blank for all boards."
+        board_id_placeholder: "All boards"
     boards:
       filter_boards: "Filter boards"
       filter_boards_no_results: "No boards match your search"
