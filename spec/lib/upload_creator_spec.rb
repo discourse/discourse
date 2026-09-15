@@ -916,21 +916,29 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context "when the upload is an ICO favicon" do
+    context "when the file contains an ICO image" do
       let(:filename) { "smallest.ico" }
       let(:file) { file_from_fixtures(filename, "images") }
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      it "stores it as a PNG" do
+      it "stores the original file without conversion" do
+        original_contents = File.binread(file.path)
+
         upload = described_class.new(file, filename).create_for(user.id)
         stored_path = Discourse.store.path_for(upload)
 
         expect(upload).to be_persisted
-        expect(upload.extension).to eq("png")
-        expect(upload.original_filename).to eq("smallest.png")
-        expect(FastImage.type(stored_path)).to eq(:png)
-        expect(FastImage.size(stored_path)).to eq([1, 1])
+        expect(upload.extension).to eq("ico")
+        expect(upload.original_filename).to eq(filename)
+        expect(File.binread(stored_path)).to eq(original_contents)
+      end
+
+      it "rejects ICO images for avatar uploads" do
+        upload = described_class.new(file, filename, type: "avatar").create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(I18n.t("upload.ico_as_avatar"))
       end
     end
 
