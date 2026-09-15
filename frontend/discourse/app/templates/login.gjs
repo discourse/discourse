@@ -125,7 +125,6 @@ export default <template>
                 @canLoginLocal={{@controller.canLoginLocal}}
                 @createAccount={{@controller.createAccount}}
                 @loggingIn={{@controller.loggingIn}}
-                @login={{@controller.localLogin}}
                 @loginButtonLabel={{@controller.loginButtonLabel}}
                 @loginDisabled={{@controller.loginDisabled}}
                 @showSecondFactor={{@controller.showSecondFactor}}
@@ -170,7 +169,6 @@ export default <template>
             @canLoginLocal={{@controller.canLoginLocal}}
             @createAccount={{@controller.createAccount}}
             @loggingIn={{@controller.loggingIn}}
-            @login={{@controller.localLogin}}
             @loginButtonLabel={{@controller.loginButtonLabel}}
             @loginDisabled={{@controller.loginDisabled}}
             @showSecondFactor={{@controller.showSecondFactor}}
