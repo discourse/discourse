@@ -574,7 +574,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       end
     end
 
-    it "does not create a missing bot user for personal messages alone" do
+    it "creates a missing bot user for a personal-message agent" do
       agent =
         Fabricate(
           :ai_agent,
@@ -591,7 +591,8 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           }
 
       expect(response).to have_http_status(:ok)
-      expect(agent.reload.user).to be_nil
+      expect(agent.reload.user).to be_present
+      expect(response.parsed_body.dig("ai_agent", "user", "id")).to eq(agent.user_id)
     end
 
     it "allows us to trivially clear top_p and temperature" do

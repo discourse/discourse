@@ -37,6 +37,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
   def build_session(query: "test question", resume_token: nil, tool_results: nil)
     described_class.new(
       agent: ai_agent,
+      llm_model: resume_token ? nil : ai_agent.default_llm,
       user: admin,
       topic: nil,
       query: query,
