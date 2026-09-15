@@ -503,6 +503,7 @@ module DiscourseAi
         attributed_user: nil,
         feature_context: nil,
         authorization_user_id: nil,
+        visibility_user: post.user,
         &blk
       )
         # this is a multithreading issue
@@ -530,16 +531,19 @@ module DiscourseAi
           )
 
         context_llm = bot.llm
+        visibility_guardian = Guardian.new(visibility_user)
         context =
           DiscourseAi::Agents::BotContext.new(
             post: post,
             user: attributed_user,
+            guardian: visibility_guardian,
             custom_instructions: custom_instructions,
             feature_name: feature_name,
             feature_context: feature_context,
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
+                guardian: visibility_guardian,
                 style: context_style,
                 max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
                 context_token_budget: context_token_budget(context_llm),
