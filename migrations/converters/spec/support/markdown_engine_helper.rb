@@ -31,6 +31,12 @@ module MarkdownEngineHelper
     )
   end
 
+  # Runs `js` inside a memoized context's isolate, for a spec that needs the
+  # engine's JavaScript surface itself rather than a scan of a body.
+  def self.eval_js(js, **config)
+    context_for(**config).instance_variable_get(:@context).eval(js)
+  end
+
   # An engine configuration matching a raw-extractor spec's Ruby-side name
   # sets. Whether a slug resolves as a category or a tag does not reach the
   # extracted rows (the forced type comes from the source's `::type` suffix),

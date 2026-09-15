@@ -180,40 +180,31 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
   describe "the named-entity allowlist" do
     # The gate's allowlist claims these names can never spell a construct.
     # markdown-it's own name table ships only as an encoded trie, so the claim
-    # is verified against the real decoder: every allowlisted name must decode
-    # to characters no construct can contain (or not decode at all — a
-    # non-entity can't spell anything either).
+    # is verified against the decoder of the engine the scanner runs: every
+    # allowlisted name must decode to characters no construct can contain (or
+    # not decode at all — a non-entity can't spell anything either).
     it "only lists names markdown-it decodes to non-construct characters" do
-      require "mini_racer"
+      construct_char = described_class.const_get(:CONSTRUCT_CHAR)
+      allowlist = described_class::IRRELEVANT_NAMED_ENTITIES
 
-      context = MiniRacer::Context.new
-      begin
-        dist =
-          File.join(
-            Migrations::Converters::MarkdownEngine.discourse_root,
-            "frontend/discourse-markdown-it/node_modules/markdown-it/dist/markdown-it.js",
-          )
-        context.eval(File.read(dist), filename: "markdown-it.js")
-        context.eval(
-          "const __md = markdownit(); function __decode(s) { const tokens = __md.parseInline(s, {}); return tokens[0].children.map(t => t.content).join(''); }",
+      decoded =
+        MarkdownEngineHelper.eval_js(
+          "#{allowlist.to_json}.map((name) => __pt.options.engine.utils.unescapeAll(`&${name};`))",
         )
 
-        construct_char = described_class.const_get(:CONSTRUCT_CHAR)
-        allowlist = described_class::IRRELEVANT_NAMED_ENTITIES
-
-        offenders =
-          allowlist.filter do |name|
-            decoded = context.call("__decode", "&#{name};")
-            decoded != "&#{name};" && decoded.each_char.any? { |c| construct_char.match?(c) }
+      offenders =
+        allowlist
+          .zip(decoded)
+          .filter_map do |name, text|
+            name if text != "&#{name};" && text.each_char.any? { |c| construct_char.match?(c) }
           end
 
-        expect(offenders).to be_empty
+      expect(offenders).to be_empty
 
-        # Positive control: the mechanism must see a construct-capable name.
-        expect(context.call("__decode", "&commat;")).to eq("@")
-      ensure
-        context.dispose
-      end
+      # Positive control: the mechanism must see a construct-capable name.
+      expect(
+        MarkdownEngineHelper.eval_js('__pt.options.engine.utils.unescapeAll("&commat;")'),
+      ).to eq("@")
     end
   end
 
