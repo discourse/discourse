@@ -100,5 +100,52 @@ RSpec.describe "Post event workflow triggers" do
         enqueued_workflow_ids("trigger-all", "trigger-topic", "trigger-other"),
       ).to contain_exactly(all_events.id, this_topic.id)
     end
+    it "preserves recurring metadata in the workflow payload when creating a successor topic" do
+      SiteSetting.discourse_post_event_recurring_topic_mode = "create_next_topic"
+
+      starts_at = 7.days.from_now.change(sec: 0)
+      ends_at = starts_at + 1.hour
+      category = Fabricate(:category)
+
+      post =
+        PostCreator.create!(
+          admin,
+          title: "Recurring workflow metadata",
+          category: category.id,
+          raw: <<~RAW,
+            [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+            Meeting notes.
+            [/event]
+          RAW
+        )
+
+      original_event = post.reload.event
+
+      publish_workflow(
+        "trigger-recurring",
+        "trigger:event_ended",
+        { "topic_id" => post.topic_id.to_s },
+      )
+
+      freeze_time(ends_at + 1.hour)
+      Jobs::DiscourseCalendar::MonitorEventDates.new.execute({})
+
+      completed_event = DiscourseEvents::Events::Event.find(original_event.id)
+
+      expect(completed_event.recurring?).to eq(false)
+      expect(completed_event.recurrence).to be_nil
+
+      job_args =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow
+          .jobs
+          .map { |job| job["args"].first }
+          .find { |args| args["trigger_node_id"] == "trigger-recurring" }
+
+      expect(job_args).to be_present
+      expect(job_args["trigger_data"]["event"]).to include(
+        "recurring" => true,
+        "recurrence" => "every_week",
+      )
+    end
   end
 end
