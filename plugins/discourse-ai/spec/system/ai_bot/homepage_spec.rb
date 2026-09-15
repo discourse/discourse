@@ -289,7 +289,8 @@ RSpec.describe "AI Bot - Homepage" do
     it "removes agent from selector when allow_personal_messages is disabled" do
       agent.update!(allow_personal_messages: false)
       ai_pm_homepage.visit
-      expect(page).to have_no_css(".agent-llm-selector__agent-dropdown")
+      ai_pm_homepage.agent_selector.expand
+      expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
     ensure
       agent.update!(allow_personal_messages: true)
     end

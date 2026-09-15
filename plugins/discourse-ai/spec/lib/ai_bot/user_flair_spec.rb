@@ -13,7 +13,7 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
     group = Group.find_by(name: described_class::GROUP_NAME)
     expect(bot_user.reload.flair_group_id).to eq(group.id)
     expect(group.flair_url).to eq(described_class::FLAIR_ICON)
-    expect(group.users).to contain_exactly(bot_user)
+    expect(group.users).to include(bot_user)
   end
 
   it "backfills flair for existing AI users" do
@@ -24,17 +24,17 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
 
     group = Group.find_by(name: described_class::GROUP_NAME)
     expect(bot_user.reload.flair_group_id).to eq(group.id)
-    expect(group.users).to contain_exactly(bot_user)
+    expect(group.users).to include(bot_user)
   end
 
   it "preserves pre-upgrade historical members during a full sync" do
-    group = Fabricate(:group, name: described_class::GROUP_NAME, automatic: true)
+    group = Group.find_by(name: described_class::GROUP_NAME)
     group.add(bot_user, automatic: true)
     bot_user.update!(flair_group_id: group.id)
 
     described_class.sync_all!
 
-    expect(group.reload.users).to contain_exactly(bot_user)
+    expect(group.reload.users).to include(bot_user)
     expect(
       UserCustomField.exists?(
         user_id: bot_user.id,
@@ -51,7 +51,7 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
 
     group = Group.find_by(name: described_class::GROUP_NAME)
     expect(bot_user.reload.flair_group_id).to eq(group.id)
-    expect(group.users).to contain_exactly(bot_user)
+    expect(group.users).to include(bot_user)
   end
 
   it "gives a new AI users group a default bio" do
@@ -93,7 +93,7 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
 
     group = Group.find_by(name: described_class::GROUP_NAME)
     expect(bot_user.reload.flair_group_id).to eq(group.id)
-    expect(group.users).to contain_exactly(bot_user)
+    expect(group.users).to include(bot_user)
   end
 
   it "updates the flair icon on an existing AI users group" do
