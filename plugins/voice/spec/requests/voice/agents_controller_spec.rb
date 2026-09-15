@@ -13,20 +13,21 @@ RSpec.describe Voice::AgentsController do
     SiteSetting.voice_livekit_api_secret = "secret"
     SiteSetting.voice_livekit_agent_enabled = true
     Voice::Livekit::CloudAgentClient.clear_cache!
+    catalogue = { "CA_2" => "support", "CA_1" => "assistant", "CA_3" => "" }
     @list =
       stub_request(
         :post,
         "https://agents.livekit.cloud/twirp/livekit.CloudAgent/ListAgents",
-      ).to_return(
-        status: 200,
-        body: {
-          agents: [
-            { agent_id: "CA_2", agent_name: "support" },
-            { agent_id: "CA_1", agent_name: "assistant" },
-            { agent_id: "CA_3", agent_name: "" },
-          ],
-        }.to_json,
-      )
+      ).to_return do |request|
+        id = JSON.parse(request.body)["agent_id"]
+        agents =
+          if id
+            [{ agent_id: id, agent_name: catalogue.fetch(id) }]
+          else
+            catalogue.keys.map { |agent_id| { agent_id:, agent_name: "" } }
+          end
+        { status: 200, body: { agents: }.to_json }
+      end
   end
 
   describe "#index" do
