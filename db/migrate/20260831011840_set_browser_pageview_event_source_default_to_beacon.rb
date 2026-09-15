@@ -7,7 +7,7 @@ class SetBrowserPageviewEventSourceDefaultToBeacon < ActiveRecord::Migration[8.0
     execute <<~SQL
       CREATE SCHEMA IF NOT EXISTS discourse_functions;
 
-      CREATE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events()
+      CREATE OR REPLACE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events()
       RETURNS trigger AS $$
       BEGIN
         IF NEW.source = 1 THEN
