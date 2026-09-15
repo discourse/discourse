@@ -3,6 +3,7 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import VoiceInviteAgentModal from "discourse/plugins/voice/discourse/components/modal/voice-invite-agent";
@@ -45,12 +46,59 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     assert.strictEqual(modal.model.room, this.room);
   });
 
-  test("submits the chosen agent name", async function (assert) {
+  test("submits an agent picked from the deployed list", async function (assert) {
     let invited = false;
     this.model = { room: this.room };
     this.closeModal = () => {
       this.closed = true;
     };
+    pretender.get("/voice/agents", () =>
+      response(200, { agents: [{ name: "assistant" }, { name: "support" }] })
+    );
+    pretender.post("/voice/rooms/1/invite_agent", (request) => {
+      invited = true;
+      assert.strictEqual(request.requestBody, "agent_name=assistant");
+      return response(201, { dispatch_id: "AD_test" });
+    });
+    await render(
+      <template>
+        <VoiceInviteAgentModal
+          @closeModal={{this.closeModal}}
+          @inline={{true}}
+          @model={{this.model}}
+        />
+      </template>
+    );
+    assert.dom("[data-name='agent_name'] input").doesNotExist();
+    await formKit().field("agent_name").select("assistant");
+    await click("button[type='submit']");
+    assert.true(invited);
+    assert.true(this.closed);
+  });
+
+  test("falls back to a typed name when the list is unavailable", async function (assert) {
+    this.model = { room: this.room };
+    pretender.get("/voice/agents", () => response(503, { errors: ["down"] }));
+    await render(
+      <template>
+        <VoiceInviteAgentModal
+          @closeModal={{this.closeModal}}
+          @inline={{true}}
+          @model={{this.model}}
+        />
+      </template>
+    );
+    assert.dom("[data-name='agent_name'] input").exists();
+    assert.dom("[data-name='agent_name'] select").doesNotExist();
+  });
+
+  test("submits a typed agent name when none are listed", async function (assert) {
+    let invited = false;
+    this.model = { room: this.room };
+    this.closeModal = () => {
+      this.closed = true;
+    };
+    pretender.get("/voice/agents", () => response(200, { agents: [] }));
     pretender.post("/voice/rooms/1/invite_agent", (request) => {
       invited = true;
       assert.strictEqual(request.requestBody, "agent_name=assistant");

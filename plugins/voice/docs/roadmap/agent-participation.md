@@ -5,7 +5,9 @@
 - `voice_livekit_agent_enabled` creates one negative-ID bot, `livekit_agent_bot`.
   Disabling preserves the account; enabling again reuses it. An existing unrelated
   account with that username is never adopted.
-- The invite modal accepts an agent dispatch name for each invitation. The feature
+- The invite modal lists the dispatch names of agents deployed to the LiveKit Cloud
+  project (read through the Cloud agents catalogue with the project credentials, cached
+  briefly) and falls back to a typed dispatch name when nothing is listed. The feature
   uses the existing LiveKit Cloud project credentials and dashboard deployment.
 - Members of `voice_livekit_agent_invite_allowed_groups` (admins by default, admins always
   included) explicitly invite the bot through a public Voice room's menu, including the widget
