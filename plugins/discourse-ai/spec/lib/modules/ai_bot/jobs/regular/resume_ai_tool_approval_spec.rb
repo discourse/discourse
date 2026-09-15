@@ -32,7 +32,7 @@ RSpec.describe Jobs::ResumeAiToolApproval do
         reason: "Collect bug reports",
       },
       ai_agent: ai_agent,
-      bot_user_id: llm_model.reload.user_id,
+      bot_user_id: ai_agent.user_id,
       post_id: source_post.id,
     )
   end
@@ -40,7 +40,7 @@ RSpec.describe Jobs::ResumeAiToolApproval do
   let(:reviewable) do
     ReviewableAiToolAction.needs_review!(
       target: tool_action,
-      created_by: llm_model.reload.user,
+      created_by: ai_agent.user,
       reviewable_by_moderator: true,
       payload: {
         agent_name: ai_agent.name,
