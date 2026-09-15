@@ -918,6 +918,11 @@ export default class TopicController extends Controller {
         } else {
           opts.reply = data.reply;
         }
+
+        if (Composer.isEditDraft(data)) {
+          opts.draft = { ...data, reply: opts.reply };
+          opts.topic = topic;
+        }
       } else if (quotedText) {
         opts.quote = quotedText;
       }
@@ -2013,7 +2018,7 @@ export default class TopicController extends Controller {
     this.set("editingTopic", true);
   }
 
-  _openComposerForEdit(topic, post) {
+  async _openComposerForEdit(topic, post) {
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
     if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
@@ -2038,7 +2043,20 @@ export default class TopicController extends Controller {
       opts.action === composerModel?.action &&
       opts.draftKey === composerModel?.draftKey;
 
-    return editingSamePost ? composer.unshrink() : composer.open(opts);
+    if (editingSamePost) {
+      return composer.unshrink();
+    }
+
+    const draftData = await Draft.get(opts.draftKey);
+    const data = draftData.draft && JSON.parse(draftData.draft);
+
+    if (Composer.isEditDraft(data) && data.postId === post.id) {
+      opts.draft = data;
+      opts.draftSequence = draftData.draft_sequence;
+      opts.topic = topic;
+    }
+
+    return composer.open(opts);
   }
 
   async _openComposerForEditTranslation(topic, post) {
