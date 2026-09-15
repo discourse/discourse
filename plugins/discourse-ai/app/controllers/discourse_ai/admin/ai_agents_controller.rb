@@ -167,10 +167,12 @@ module DiscourseAi
 
           if existing_agent && force_update
             agent = importer.import!(overwrite: true)
+            ensure_ai_agent_user(agent)
             log_ai_agent_update(agent, initial_attributes)
             render_ai_agent_resource(agent)
           else
             agent = importer.import!(overwrite: force_update)
+            ensure_ai_agent_user(agent)
             log_ai_agent_creation(agent)
             render_ai_agent_resource(agent, status: :created)
           end
@@ -215,6 +217,7 @@ module DiscourseAi
           DiscourseAi::AiBot::ResponseHttpStreamer.queue_streamed_reply(
             io: io,
             agent: nil,
+            llm_model: nil,
             user: nil,
             topic: nil,
             query: "",
@@ -270,12 +273,22 @@ module DiscourseAi
           end
         end
 
+        route =
+          DiscourseAi::AiBot::ConversationRoute.resolve(
+            authorization_user: current_user,
+            modality: :streaming,
+            agent_id: agent.id,
+            selection_source: :snapshot,
+            allow_general_fallback: false,
+          )
+
         hijack = request.env["rack.hijack"]
         io = hijack.call
 
         DiscourseAi::AiBot::ResponseHttpStreamer.queue_streamed_reply(
           io: io,
-          agent: agent,
+          agent: route.agent_record,
+          llm_model: route.model,
           user: user,
           topic: topic,
           query: params[:query].to_s,
@@ -283,6 +296,8 @@ module DiscourseAi
           current_user: current_user,
           custom_tools: custom_tools,
         )
+      rescue DiscourseAi::AiBot::ConversationRoute::Error => error
+        render_json_error error.message
       end
 
       private
@@ -456,14 +471,7 @@ module DiscourseAi
       end
 
       def ensure_ai_agent_user(agent)
-        return if agent.system? || agent.user_id.present? || !agent_needs_user?(agent)
-
-        agent.create_user!
-      end
-
-      def agent_needs_user?(agent)
-        agent.force_default_llm? || agent.allow_topic_mentions? ||
-          agent.allow_chat_direct_messages? || agent.allow_chat_channel_mentions?
+        agent.ensure_user! if agent.needs_user?
       end
 
       def ai_agent_params

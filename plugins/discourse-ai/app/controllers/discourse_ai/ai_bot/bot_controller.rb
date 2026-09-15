@@ -70,7 +70,7 @@ module DiscourseAi
         post = Post.find(params[:post_id])
         guardian.ensure_can_see!(post)
 
-        if !DiscourseAi::AiBot::EntryPoint.all_bot_ids.include?(post.user_id)
+        if !DiscourseAi::AiBot::EntryPoint.ai_response?(post)
           raise Discourse::InvalidParameters.new(:post_id)
         end
 
@@ -103,16 +103,17 @@ module DiscourseAi
       end
 
       def show_bot_username
-        bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(params[:username])
-        raise Discourse::InvalidParameters.new(:username) if !bot_user
-
-        render json: { bot_username: bot_user.username_lower }, status: :ok
+        render_json_error(
+          I18n.t("discourse_ai.ai_bot.errors.model_recipient_api_retired"),
+          status: :gone,
+        )
       end
 
       private
 
       def find_prompt_post(bot_reply_post)
-        bot_ids = DiscourseAi::AiBot::EntryPoint.all_bot_ids
+        bot_ids =
+          DiscourseAi::AiBot::EntryPoint.historical_bot_user_ids(topic: bot_reply_post.topic)
 
         bot_reply_post
           .topic

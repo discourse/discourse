@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Agents::Bot do
-  subject(:bot) { described_class.as(bot_user, agent: DiscourseAi::Agents::General.new) }
+  subject(:bot) { described_class.as(admin, agent: DiscourseAi::Agents::General.new, model: gpt_4) }
 
   fab!(:admin)
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
@@ -13,7 +13,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
     SiteSetting.ai_bot_enabled = true
   end
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_4.name) }
+  let(:bot_user) { admin }
 
   let!(:user) { Fabricate(:user) }
 
@@ -38,7 +38,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       toggle_enabled_bots(bots: [fake])
       Group.refresh_automatic_groups!
 
-      bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
+      bot_user = admin
       AiAgent.create!(
         name: "TestAgent",
         top_p: 0.5,
@@ -51,7 +51,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       agentClass = DiscourseAi::Agents::Agent.find_by(user: admin, name: "TestAgent")
 
-      bot = described_class.as(bot_user, agent: agentClass.new)
+      bot = described_class.as(bot_user, agent: agentClass.new, model: fake)
       bot.reply(
         DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "test" }]),
       ) { |_partial, _cancel, _placeholder| }
@@ -251,7 +251,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         DiscourseAi::Completions::Llm.with_prepared_responses(
           [search_call, spawn_call, "Child result", "Final answer"],
         ) do |_endpoint, _llm, prompts|
-          agent_bot = described_class.as(bot_user, agent: parent.class_instance.new)
+          agent_bot = described_class.as(bot_user, agent: parent.class_instance.new, model: gpt_4)
           raw_context = agent_bot.reply(context) { |_partial| }
 
           expect(raw_context.last.first).to eq("Final answer")
@@ -286,7 +286,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
         DiscourseAi::Completions::Llm.with_prepared_responses(
           [[first_tool_call, second_tool_call], "Final answer"],
         ) do |_endpoint, _llm, prompts|
-          agent_bot = described_class.as(bot_user, agent: agent_record.class_instance.new)
+          agent_bot =
+            described_class.as(bot_user, agent: agent_record.class_instance.new, model: gpt_4)
           raw_context = agent_bot.reply(context) { |_partial| }
           tool_results = prompts.last.messages.select { |message| message[:type] == :tool }
 
@@ -324,7 +325,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         call_count = 0
 
         DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
-          bot = described_class.as(bot_user, agent: agent_class.new)
+          bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(
               messages: [{ type: :user, content: "List categories" }],
@@ -370,7 +371,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         prompt_messages = []
 
         DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
-          bot = described_class.as(bot_user, agent: klass.new)
+          bot = described_class.as(bot_user, agent: klass.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(
               messages: [{ type: :user, content: "List categories" }],
@@ -416,7 +417,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         call_count = 0
 
         DiscourseAi::Completions::Llm.with_prepared_responses(["Final answer"]) do
-          agent_bot = described_class.as(bot_user, agent: agent_class.new)
+          agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "Answer" }])
 
@@ -460,7 +461,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         call_count = 0
 
         DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
-          agent_bot = described_class.as(bot_user, agent: klass.new)
+          agent_bot = described_class.as(bot_user, agent: klass.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "test" }])
 
@@ -495,7 +496,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
         captured_skip_trim = nil
 
         DiscourseAi::Completions::Llm.with_prepared_responses(["Final answer"]) do
-          agent_bot = described_class.as(bot_user, agent: no_budget_agent.class_instance.new)
+          agent_bot =
+            described_class.as(bot_user, agent: no_budget_agent.class_instance.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "test" }])
 
@@ -540,7 +542,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         main_generate_skip_trim_values = []
 
         DiscourseAi::Completions::Llm.with_prepared_responses(["Done"]) do
-          agent_bot = described_class.as(bot_user, agent: agent_class.new)
+          agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
           context = DiscourseAi::Agents::BotContext.new(messages: large_messages)
 
           allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
@@ -577,7 +579,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         main_generate_skip_trim_values = []
 
         DiscourseAi::Completions::Llm.with_prepared_responses(["Done"]) do
-          agent_bot = described_class.as(bot_user, agent: agent_class.new)
+          agent_bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
           context = DiscourseAi::Agents::BotContext.new(messages: large_messages)
 
           allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
@@ -625,7 +627,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         tool_choice_values = []
 
         DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
-          bot = described_class.as(bot_user, agent: klass.new)
+          bot = described_class.as(bot_user, agent: klass.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(
               messages: [{ type: :user, content: "List categories" }],
@@ -664,7 +666,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
           DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: tracker)
 
         DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
-          bot = described_class.as(bot_user, agent: agent_class.new)
+          bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
           context =
             DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "test" }])
 
@@ -690,7 +692,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       let(:agent_class) { agent_record.class_instance }
 
       it "compresses context when prompt exceeds default threshold of max_prompt_tokens" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         20.times do |i|
@@ -720,7 +722,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "compacts raw context so compressed checkpoints persist to later turns" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         raw_context = []
@@ -765,7 +767,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "skips compression when under threshold" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [
           { type: :system, content: "You are a bot" },
@@ -785,7 +787,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "keeps the latest message even when it exceeds the tail budget" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         10.times do |index|
@@ -809,7 +811,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       it "uses agent compression_threshold to control when compression triggers" do
         agent_record.update!(compression_threshold: 50)
         agent_class_with_threshold = agent_record.class_instance
-        bot = described_class.as(bot_user, agent: agent_class_with_threshold.new)
+        bot = described_class.as(bot_user, agent: agent_class_with_threshold.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         20.times do |i|
@@ -834,7 +836,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "keeps tool_call/tool pairs together in the tail" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         # build enough middle messages to trigger compression
@@ -876,7 +878,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "skips compression when removing a legacy hint makes the compression prompt invalid" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
         messages = [{ type: :system, content: "You are a bot" }]
         10.times do |index|
           content =
@@ -898,7 +900,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "skips compression when summarization returns blank" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         20.times do |i|
@@ -921,7 +923,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "skips compression when summarization raises an error" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         20.times do |i|
@@ -944,7 +946,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "skips compression when fewer than 6 middle messages" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         2.times do |i|
@@ -965,7 +967,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "skips compression when summary is larger than the original middle messages" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         # use short messages so middle section is small
@@ -991,7 +993,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "includes merge instruction when prior compressed context exists" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [
           { type: :system, content: "You are a bot" },
@@ -1028,7 +1030,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       end
 
       it "does not include merge instruction when no prior compressed context exists" do
-        bot = described_class.as(bot_user, agent: agent_class.new)
+        bot = described_class.as(bot_user, agent: agent_class.new, model: gpt_4)
 
         messages = [{ type: :system, content: "You are a bot" }]
         20.times do |i|
@@ -1072,8 +1074,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
       )
 
       agent_class = DiscourseAi::Agents::Agent.find_by(user: admin, name: "ApprovalAgent")
-      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
-      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      test_bot_user = admin
+      bot = described_class.as(test_bot_user, agent: agent_class.new, model: fake)
 
       tool =
         DiscourseAi::Agents::Tools::CloseTopic.new(
@@ -1108,8 +1110,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
         )
 
       agent_class = approval_agent.class_instance
-      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
-      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      test_bot_user = admin
+      bot = described_class.as(test_bot_user, agent: agent_class.new, model: fake)
       tool =
         DiscourseAi::Agents::Tools::ChangeSiteSetting.new(
           { setting_name: "min_post_length", value: "42", reason: "Testing" },
@@ -1145,8 +1147,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
         )
 
       agent_class = approval_agent.class_instance
-      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
-      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      test_bot_user = admin
+      bot = described_class.as(test_bot_user, agent: agent_class.new, model: fake)
       secret_value = "new-discourse-connect-secret"
       tool =
         DiscourseAi::Agents::Tools::ChangeSiteSetting.new(
@@ -1184,8 +1186,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
       )
 
       agent_class = DiscourseAi::Agents::Agent.find_by(user: admin, name: "NoApprovalAgent")
-      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
-      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      test_bot_user = admin
+      bot = described_class.as(test_bot_user, agent: agent_class.new, model: fake)
 
       tool =
         DiscourseAi::Agents::Tools::CloseTopic.new(
@@ -1223,8 +1225,8 @@ RSpec.describe DiscourseAi::Agents::Bot do
       )
 
       agent_class = DiscourseAi::Agents::Agent.find_by(user: admin, name: "PrecheckAgent")
-      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
-      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      test_bot_user = admin
+      bot = described_class.as(test_bot_user, agent: agent_class.new, model: fake)
 
       tool =
         failing_precheck_tool_class.new(

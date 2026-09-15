@@ -30,6 +30,7 @@ module DiscourseAi
         def queue_streamed_reply(
           io:,
           agent:,
+          llm_model:,
           user:,
           topic:,
           query:,
@@ -44,6 +45,7 @@ module DiscourseAi
               stream_custom_tool_reply(
                 io: io,
                 agent: agent,
+                llm_model: llm_model,
                 user: user,
                 topic: topic,
                 query: query,
@@ -57,6 +59,7 @@ module DiscourseAi
               stream_standard_reply(
                 io: io,
                 agent: agent,
+                llm_model: llm_model,
                 user: user,
                 topic: topic,
                 query: query,
@@ -77,6 +80,7 @@ module DiscourseAi
         def stream_standard_reply(
           io:,
           agent:,
+          llm_model:,
           user:,
           topic:,
           query:,
@@ -97,6 +101,12 @@ module DiscourseAi
             post_params[:title] = I18n.t("discourse_ai.ai_bot.default_pm_prefix")
             post_params[:archetype] = Archetype.private_message
             post_params[:target_usernames] = "#{user.username},#{agent.user.username}"
+            post_params[:topic_opts] = {
+              custom_fields: {
+                TOPIC_AI_AGENT_ID_FIELD => agent.id,
+                TOPIC_AI_LLM_MODEL_ID_FIELD => llm_model.id,
+              },
+            }
           end
 
           post = PostCreator.create!(user, post_params)
@@ -105,9 +115,18 @@ module DiscourseAi
           write_headers(io)
 
           agent_class = DiscourseAi::Agents::Agent.find_by(id: agent.id, user: current_user)
-          bot = DiscourseAi::Agents::Bot.as(agent.user, agent: agent_class.new)
+          raise DiscourseAi::Agents::Bot::BOT_NOT_FOUND if agent_class.blank?
+          bot = DiscourseAi::Agents::Bot.as(agent.user, agent: agent_class.new, model: llm_model)
 
-          write_chunk(io, { topic_id: topic.id, bot_user_id: agent.user.id, agent_id: agent.id })
+          write_chunk(
+            io,
+            {
+              topic_id: topic.id,
+              bot_user_id: agent.user.id,
+              agent_id: agent.id,
+              llm_model_id: llm_model.id,
+            },
+          )
 
           DiscourseAi::AiBot::Playground
             .new(bot)
@@ -115,6 +134,7 @@ module DiscourseAi
               post,
               custom_instructions: custom_instructions,
               feature_name: "bot",
+              authorization_user_id: current_user.id,
             ) do |partial|
               next if partial.empty?
 
@@ -127,6 +147,7 @@ module DiscourseAi
         def stream_custom_tool_reply(
           io:,
           agent:,
+          llm_model:,
           user:,
           topic:,
           query:,
@@ -143,6 +164,7 @@ module DiscourseAi
           session =
             DiscourseAi::AiBot::StreamReplyCustomToolsSession.new(
               agent: agent,
+              llm_model: llm_model,
               user: user,
               topic: topic,
               query: query,

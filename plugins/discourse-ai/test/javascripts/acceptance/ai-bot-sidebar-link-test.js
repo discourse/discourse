@@ -2,15 +2,19 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
+const AVAILABLE_AGENT = {
+  id: -1,
+  username: "forum_helper",
+  allow_personal_messages: true,
+  has_default_llm: true,
+};
+
+const AVAILABLE_MODEL = { id: 1, model_name: "gpt-4", display_name: "GPT-4" };
+
 acceptance("AI Bot - Sidebar community link", function (needs) {
   needs.user({
-    ai_enabled_chat_bots: [
-      {
-        id: 1,
-        model_name: "gpt-4",
-        is_agent: false,
-      },
-    ],
+    ai_enabled_agents: [AVAILABLE_AGENT],
+    ai_available_llm_models: [AVAILABLE_MODEL],
   });
 
   needs.settings({
@@ -38,13 +42,8 @@ acceptance("AI Bot - Sidebar community link", function (needs) {
 
 acceptance("AI Bot - Sidebar community link - disabled", function (needs) {
   needs.user({
-    ai_enabled_chat_bots: [
-      {
-        id: 1,
-        model_name: "gpt-4",
-        is_agent: false,
-      },
-    ],
+    ai_enabled_agents: [AVAILABLE_AGENT],
+    ai_available_llm_models: [AVAILABLE_MODEL],
   });
 
   needs.settings({
@@ -62,9 +61,10 @@ acceptance("AI Bot - Sidebar community link - disabled", function (needs) {
   });
 });
 
-acceptance("AI Bot - Sidebar community link - no bots", function (needs) {
+acceptance("AI Bot - Sidebar community link - no agents", function (needs) {
   needs.user({
-    ai_enabled_chat_bots: [],
+    ai_enabled_agents: [],
+    ai_available_llm_models: [AVAILABLE_MODEL],
   });
 
   needs.settings({
@@ -73,27 +73,28 @@ acceptance("AI Bot - Sidebar community link - no bots", function (needs) {
     ai_bot_add_to_community_section: true,
   });
 
-  test("does not display AI bot link when no bots are available", async function (assert) {
+  test("does not display AI bot link when no agents are available", async function (assert) {
     await visit("/");
 
     assert
       .dom(".sidebar-section-link[data-link-name='ai-bot']")
-      .doesNotExist("AI bot link is not displayed when no bots are available");
+      .doesNotExist(
+        "AI bot link is not displayed when no agents are available"
+      );
   });
 });
 
 acceptance(
-  "AI Bot - Sidebar community link - agent without default LLM",
+  "AI Bot - Sidebar community link - agent without a model",
   function (needs) {
     needs.user({
-      ai_enabled_chat_bots: [
+      ai_enabled_agents: [
         {
-          id: 1,
-          model_name: "custom-agent",
-          is_agent: true,
+          ...AVAILABLE_AGENT,
           has_default_llm: false,
         },
       ],
+      ai_available_llm_models: [],
     });
 
     needs.settings({
@@ -102,14 +103,12 @@ acceptance(
       ai_bot_add_to_community_section: true,
     });
 
-    test("does not display AI bot link when agent has no default LLM", async function (assert) {
+    test("does not display AI bot link when agent has no model", async function (assert) {
       await visit("/");
 
       assert
         .dom(".sidebar-section-link[data-link-name='ai-bot']")
-        .doesNotExist(
-          "AI bot link is not displayed when agent lacks default LLM"
-        );
+        .doesNotExist("AI bot link is not displayed when agent lacks a model");
     });
   }
 );
@@ -118,14 +117,8 @@ acceptance(
   "AI Bot - Sidebar community link - agent with default LLM",
   function (needs) {
     needs.user({
-      ai_enabled_chat_bots: [
-        {
-          id: 1,
-          model_name: "custom-agent",
-          is_agent: true,
-          has_default_llm: true,
-        },
-      ],
+      ai_enabled_agents: [AVAILABLE_AGENT],
+      ai_available_llm_models: [],
     });
 
     needs.settings({

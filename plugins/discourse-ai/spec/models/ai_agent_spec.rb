@@ -362,6 +362,13 @@ RSpec.describe AiAgent do
     end
   end
 
+  it "provisions a conversational agent idempotently" do
+    agent = Fabricate(:ai_agent, allow_personal_messages: true, default_llm: llm_model)
+
+    expect { 2.times { agent.ensure_user! } }.to change { User.count }.by(1)
+    expect(agent.reload.user).to be_present
+  end
+
   it "allows creation of user" do
     user = basic_agent.create_user!
     expect(user.username).to eq("test_bot")
@@ -383,7 +390,7 @@ RSpec.describe AiAgent do
   end
 
   it "does not recycle an id an llm model still points at" do
-    llm_model.update!(user_id: -5000)
+    llm_model.update_columns(user_id: -5000)
     PluginStore.remove(DiscourseAi::PLUGIN_NAME, DiscourseAi::BotUser::FLOOR_KEY)
 
     user = basic_agent.create_user!

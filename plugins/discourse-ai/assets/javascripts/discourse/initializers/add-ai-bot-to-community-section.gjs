@@ -11,13 +11,16 @@ export default {
     if (
       !currentUser ||
       !siteSettings.ai_bot_add_to_community_section ||
-      !currentUser.ai_enabled_chat_bots?.length
+      !currentUser.ai_enabled_agents?.length
     ) {
       return;
     }
 
-    const availableBots = currentUser.ai_enabled_chat_bots.filter(
-      (bot) => !bot.is_agent || bot.has_default_llm
+    const hasSelectableModel = currentUser.ai_available_llm_models?.length;
+    const availableBots = currentUser.ai_enabled_agents.filter(
+      (agent) =>
+        agent.allow_personal_messages &&
+        (agent.has_default_llm || hasSelectableModel)
     );
 
     if (availableBots.length === 0) {

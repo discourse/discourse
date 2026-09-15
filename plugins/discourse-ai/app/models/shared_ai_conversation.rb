@@ -60,13 +60,15 @@ class SharedAiConversation < ActiveRecord::Base
   # but this name works
   class SharedPost
     attr_accessor :user
-    attr_reader :id, :user_id, :created_at, :cooked, :agent
+    attr_reader :id, :user_id, :created_at, :cooked, :agent, :llm_name
+
     def initialize(post)
       @id = post[:id]
       @user_id = post[:user_id]
       @created_at = DateTime.parse(post[:created_at])
       @cooked = post[:cooked]
       @agent = post[:agent]
+      @llm_name = post[:llm_name]
     end
   end
 
@@ -85,7 +87,9 @@ class SharedAiConversation < ActiveRecord::Base
           cooked: post.cooked,
           username: post.user.username,
           created_at: post.created_at,
-        }
+          agent: post.agent,
+          llm_name: post.llm_name,
+        }.compact
       end
     { llm_name: llm_name, share_key: share_key, title: title, posts: posts }
   end
@@ -168,38 +172,59 @@ class SharedAiConversation < ActiveRecord::Base
 
   def self.build_conversation_data(topic, max_posts: DEFAULT_MAX_POSTS, include_usernames: false)
     allowed_user_ids = topic.topic_allowed_users.pluck(:user_id)
-    ai_bot_participant = DiscourseAi::AiBot::EntryPoint.find_participant_in(allowed_user_ids)
+    legacy_participant = DiscourseAi::AiBot::EntryPoint.find_participant_in(allowed_user_ids)
+    legacy_llm_name =
+      ActiveSupport::Inflector.humanize(legacy_participant&.llm) if legacy_participant
 
-    llm_name = ai_bot_participant&.llm
+    posts = conversation_posts(topic, max_posts: max_posts).to_a
+    Post.preload_custom_fields(
+      posts,
+      [
+        DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD,
+        DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD,
+        DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD,
+      ],
+    )
+    agent_ids =
+      posts.filter_map do |post|
+        post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].presence&.to_i
+      end
+    agent_names = AiAgent.where(id: agent_ids).pluck(:id, :name).to_h
+    unknown_model = I18n.t("discourse_ai.unknown_model")
+    historical_bot_user_ids = DiscourseAi::AiBot::EntryPoint.historical_bot_user_ids(topic: topic)
 
-    llm_name = ActiveSupport::Inflector.humanize(llm_name) if llm_name
-    llm_name ||= I18n.t("discourse_ai.unknown_model")
+    mapped_posts =
+      posts.map do |post|
+        ai_response = historical_bot_user_ids.include?(post.user_id)
+        agent_id = post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].presence&.to_i
+        llm_name =
+          post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD].presence if ai_response
+        llm_name ||= legacy_llm_name if ai_response && legacy_participant&.id == post.user_id
+        llm_name ||= unknown_model if ai_response && agent_id.blank?
+        agent_name = agent_names[agent_id] if ai_response
 
-    agent = nil
-    if agent_id = topic.custom_fields["ai_agent_id"]
-      agent = AiAgent.find_by(id: agent_id.to_i)&.name
-    end
+        {
+          id: post.id,
+          user_id: post.user_id,
+          created_at: post.created_at,
+          cooked: cook_artifacts(post),
+          agent: agent_name,
+          llm_name: llm_name,
+          username: include_usernames ? post.user&.username : nil,
+        }.compact
+      end
 
-    posts = conversation_posts(topic, max_posts: max_posts)
+    response_model_names = mapped_posts.filter_map { |post| post[:llm_name] }.uniq
+    llm_name =
+      if response_model_names.one?
+        response_model_names.first
+      elsif response_model_names.many?
+        I18n.t("discourse_ai.multiple_models")
+      else
+        unknown_model
+      end
 
-    {
-      llm_name: llm_name,
-      title: topic.title,
-      excerpt: excerpt(posts),
-      context:
-        posts.map do |post|
-          mapped = {
-            id: post.id,
-            user_id: post.user_id,
-            created_at: post.created_at,
-            cooked: cook_artifacts(post),
-          }
-
-          mapped[:agent] = agent if ai_bot_participant&.id == post.user_id
-          mapped[:username] = post.user&.username if include_usernames
-          mapped
-        end,
-    }
+    { llm_name: llm_name, title: topic.title, excerpt: excerpt(posts), context: mapped_posts }
   end
 
   def self.cook_artifacts(post)

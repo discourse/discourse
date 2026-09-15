@@ -37,6 +37,8 @@ module DiscourseAi
           json[:action].to_s != "enqueued"
 
         render json: json, status: status
+      rescue DiscourseAi::AiBot::ConversationRoute::Error => error
+        render_json_error error.message, status: :unprocessable_entity
       end
 
       def update_starred
@@ -59,14 +61,13 @@ module DiscourseAi
       private
 
       def create_params
-        bot_user = find_bot_user!
-        topic_custom_fields = create_topic_custom_fields
+        route = conversation_route
 
         create_params = {
           raw: params.require(:raw),
           title: I18n.t("discourse_ai.ai_bot.default_pm_prefix"),
           archetype: Archetype.private_message,
-          target_usernames: bot_user.username,
+          target_usernames: route.speaker.username,
           private_message_context: DiscourseAi::AiBot::PERSONAL_MESSAGE_CONTEXT,
           guardian: guardian,
           first_post_checks: true,
@@ -75,35 +76,29 @@ module DiscourseAi
           user_agent: request.user_agent,
           referrer: request.env["HTTP_REFERER"],
           writing_device: BrowserDetection.device(request.user_agent),
+          topic_opts: {
+            custom_fields: {
+              DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => route.agent_id,
+              DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => route.llm_model_id,
+            },
+          },
         }
-
-        if topic_custom_fields.present?
-          create_params[:topic_opts] = { custom_fields: topic_custom_fields }
-        end
 
         create_params
       end
 
-      def find_bot_user!
+      def conversation_route
         username = params.require(:target_username).to_s.downcase
-        bot_user = User.find_by(username_lower: username)
-        raise Discourse::InvalidParameters.new(:target_username) if bot_user.blank?
+        recipient_user = User.find_by(username_lower: username)
+        raise Discourse::InvalidParameters.new(:target_username) if recipient_user.blank?
 
-        guardian.ensure_can_send_pm_to_ai_bot!(bot_user)
-
-        bot_user
-      end
-
-      def create_topic_custom_fields
-        return {} if params[:ai_agent_id].blank?
-
-        agent_id = params[:ai_agent_id].to_i
-        agent = DiscourseAi::Agents::Agent.find_by(user: current_user, id: agent_id)
-        if agent.blank? || !agent.allow_personal_messages
-          raise Discourse::InvalidParameters.new(:ai_agent_id)
-        end
-
-        { "ai_agent_id" => agent.id }
+        DiscourseAi::AiBot::ConversationRoute.resolve(
+          authorization_user: current_user,
+          modality: :personal_message,
+          agent_id: params[:ai_agent_id],
+          llm_model_id: params[:ai_llm_model_id],
+          recipient_user:,
+        )
       end
 
       def star_service_params

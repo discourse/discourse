@@ -178,15 +178,13 @@ module DiscourseAi
 
         if matched
           user = User.find_by_username(canned_reply_user) if canned_reply_user.present?
-          original_user = user
-          user = user || Discourse.system_user
+          user ||= Discourse.system_user
           if reply_agent_id.present? && action != :edit
             begin
               DiscourseAi::AiBot::Playground.reply_to_post(
                 post: post,
                 agent_id: reply_agent_id,
                 whisper: whisper,
-                user: original_user,
                 attributed_user: Discourse.system_user,
               )
             rescue StandardError => e

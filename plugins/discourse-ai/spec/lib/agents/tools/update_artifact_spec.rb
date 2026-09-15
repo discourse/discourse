@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
 
   fab!(:post)
   fab!(:artifact) do

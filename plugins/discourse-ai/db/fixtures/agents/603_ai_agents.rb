@@ -130,3 +130,5 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
 
   agent.rag_document_sources.where(managed: true).where.not(id: source_ids).destroy_all
 end
+
+AiAgent.ensure_users!

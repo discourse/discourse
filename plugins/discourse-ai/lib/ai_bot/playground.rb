@@ -17,22 +17,19 @@ module DiscourseAi
       # and stream replies.
 
       def self.find_chat_agent(message, channel, user)
-        if channel.direct_message_channel?
-          AiAgent
-            .allowed_modalities(allow_chat_direct_messages: true)
-            .find do |p|
-              p[:user_id].in?(channel.allowed_user_ids) && (user.group_ids & p[:allowed_group_ids])
-            end
-        else
-          # let's defer on the parse if there is no @ in the message
-          if message.message.include?("@")
-            mentions = message.parsed_mentions.parsed_direct_mentions
-            if mentions.present?
-              AiAgent
-                .allowed_modalities(allow_chat_channel_mentions: true)
-                .find { |p| p[:username].in?(mentions) && (user.group_ids & p[:allowed_group_ids]) }
-            end
-          end
+        modality = channel.direct_message_channel? ? :chat_direct_message : :chat_channel_mention
+        candidates =
+          AiAgent.allowed_modalities(
+            user: user,
+            allow_chat_direct_messages: modality == :chat_direct_message,
+            allow_chat_channel_mentions: modality == :chat_channel_mention,
+          )
+
+        if modality == :chat_direct_message
+          candidates.find { |agent| agent[:user_id].in?(channel.allowed_user_ids) }
+        elsif message.message.include?("@")
+          mentions = message.parsed_mentions.parsed_direct_mentions
+          candidates.find { |agent| mentions.include?(agent[:username]) }
         end
       end
 
@@ -45,163 +42,219 @@ module DiscourseAi
             allow_chat_direct_messages: true,
           )
         return if all_chat.blank?
-        return if all_chat.any? { |m| m[:user_id] == user.id }
+        return if all_chat.any? { |agent| agent[:user_id] == user.id }
 
         agent = find_chat_agent(message, channel, user)
-        return if !agent
+        return if agent.blank?
 
-        post_ids = nil
+        modality = channel.direct_message_channel? ? :chat_direct_message : :chat_channel_mention
+        route =
+          ConversationRoute.resolve(
+            authorization_user: user,
+            modality:,
+            agent_id: agent[:id],
+            selection_source: :snapshot,
+          )
         post_ids = context.dig(:context, :post_ids) if context.is_a?(Hash)
 
         ::Jobs.enqueue(
           :create_ai_chat_reply,
           channel_id: channel.id,
           message_id: message.id,
-          agent_id: agent[:id],
+          agent_id: route.agent_id,
+          bot_user_id: route.speaker.id,
+          llm_model_id: route.llm_model_id,
+          model_selection_source: route.model_source.to_s,
+          authorization_user_id: user.id,
           context_post_ids: post_ids,
+        )
+      rescue ConversationRoute::Error => error
+        Rails.logger.warn("Unable to schedule AI chat reply: #{error.message}")
+        report_chat_route_error(
+          message:,
+          channel:,
+          authorization_user: user,
+          agent_id: agent&.dig(:id),
+          speaker_id: agent&.dig(:user_id),
+          details: error.message,
+        )
+      end
+
+      def self.report_chat_route_error(
+        message:,
+        channel:,
+        authorization_user:,
+        agent_id:,
+        details:,
+        speaker_id: nil
+      )
+        return if message.blank? || channel.blank? || authorization_user.blank?
+        return if !authorization_user.guardian.can_join_chat_channel?(channel)
+        return if !authorization_user.guardian.can_create_chat_message?
+
+        agent_record = AiAgent.find_by(id: agent_id)
+        speaker = User.find_by(id: speaker_id)
+        if speaker.blank? || !speaker.active? || agent_record&.user_id != speaker.id ||
+             !speaker.guardian.can_join_chat_channel?(channel)
+          modality = channel.direct_message_channel? ? :chat_direct_message : :chat_channel_mention
+          agent = DiscourseAi::Agents::Agent.find_by(user: authorization_user, id: agent_id.to_i)
+          allowed =
+            (
+              if modality == :chat_direct_message
+                agent&.allow_chat_direct_messages
+              else
+                agent&.allow_chat_channel_mentions
+              end
+            )
+          return if !allowed
+
+          speaker = AiAgent.find_by(id: agent.id)&.user
+          if speaker.blank? || !speaker.active? || !speaker.guardian.can_join_chat_channel?(channel)
+            return
+          end
+        end
+
+        ChatSDK::Message.create(
+          raw: I18n.t("discourse_ai.ai_bot.reply_error", details:),
+          channel_id: channel.id,
+          guardian: speaker.guardian,
+          thread_id: message.thread_id,
+          in_reply_to_id: channel.direct_message_channel? ? message.id : nil,
+          force_thread: message.thread_id.nil? && channel.direct_message_channel?,
+          enforce_membership: !channel.direct_message_channel?,
         )
       end
 
       def self.is_bot_user_id?(user_id)
-        # this will catch everything and avoid any feedback loops
-        # we could get feedback loops between say discobot and ai-bot or third party plugins
-        # and bots
         user_id.to_i <= 0
       end
 
-      def self.get_bot_user(post:, all_llm_users:, mentionables:)
-        bot_user = nil
-        if post.topic.private_message?
-          # this ensures that we reply using the correct llm
-          # 1. if we have a preferred llm user we use that
-          # 2. if we don't just take first topic allowed user
-          # 3. if we don't have that we take the first mentionable
-          bot_user = nil
-          if preferred_user =
-               all_llm_users.find { |id, username|
-                 id == post.topic.custom_fields[BOT_USER_PREF_ID_CUSTOM_FIELD].to_i
-               }
-            bot_user = User.find_by(id: preferred_user[0])
-          end
-          bot_user ||=
-            post.topic.topic_allowed_users.where(user_id: all_llm_users.map(&:first)).first&.user
-          bot_user ||=
-            post
-              .topic
-              .topic_allowed_users
-              .where(user_id: mentionables.map { |m| m[:user_id] })
-              .first
-              &.user
-        end
-        bot_user
-      end
-
-      def self.schedule_reply(post)
+      def self.schedule_reply(
+        post,
+        authorization_user: post.user,
+        requested_agent_id: nil,
+        requested_model_id: nil
+      )
         return if is_bot_user_id?(post.user_id)
-        mentionables = nil
+        return if post.custom_fields[BYPASS_AI_REPLY_CUSTOM_FIELD].present?
 
-        if post.topic.private_message?
-          mentionables = AiAgent.allowed_modalities(user: post.user, allow_personal_messages: true)
-        else
-          mentionables = AiAgent.allowed_modalities(user: post.user, allow_topic_mentions: true)
+        private_message = post.topic.private_message?
+        modality = private_message ? :personal_message : :topic_mention
+        mentionables =
+          AiAgent.allowed_modalities(
+            user: authorization_user,
+            allow_personal_messages: private_message,
+            allow_topic_mentions: !private_message,
+          )
+        mentions = post.mentions.map(&:downcase)
+        if post.reply_to_post_number && post.reply_to_post&.user
+          mentions << post.reply_to_post.user.username_lower
         end
-
-        mentioned = nil
-
-        all_llm_users =
-          LlmModel
-            .where(id: LlmModel.enabled_chat_bot_ids)
-            .joins(:user)
-            .pluck("users.id", "users.username_lower")
-
-        bot_user =
-          get_bot_user(post: post, all_llm_users: all_llm_users, mentionables: mentionables)
-
-        mentions = nil
-        if mentionables.present? || (bot_user && post.topic.private_message?)
-          mentions = post.mentions.map(&:downcase)
-
-          # in case we are replying to a post by a bot
-          if post.reply_to_post_number && post.reply_to_post&.user
-            mentions << post.reply_to_post.user.username_lower
-          end
-        end
-
-        if mentionables.present?
-          mentioned = mentionables.find { |mentionable| mentions.include?(mentionable[:username]) }
-
-          # direct PM to mentionable
-          if !mentioned && bot_user
-            mentioned = mentionables.find { |mentionable| bot_user.id == mentionable[:user_id] }
-          end
-
-          # public topic so we need to use the agent user
-          bot_user ||= User.find_by(id: mentioned[:user_id]) if mentioned
-        end
-
-        if !mentioned && bot_user && post.reply_to_post_number && !post.reply_to_post.user&.bot?
-          # replying to a non-bot user
+        mentioned_agent = mentionables.find { |agent| mentions.include?(agent[:username]) }
+        legacy_model_id = mentioned_legacy_model_id(mentions)
+        topic_agent_id = post.topic.custom_fields[TOPIC_AI_AGENT_ID_FIELD].presence
+        if !private_message && mentioned_agent.blank? && legacy_model_id.blank?
+          return
+        elsif !mentioned_agent && post.reply_to_post_number && !post.reply_to_post&.user&.bot?
           return
         end
 
-        if bot_user
-          topic_agent_id = post.topic.custom_fields["ai_agent_id"]
-          topic_agent_id = topic_agent_id.to_i if topic_agent_id.present?
-
-          authorization_user = post.user
-          if mentioned
-            agent_id = mentioned[:id]
+        requested_or_topic_agent_id = requested_agent_id.presence || topic_agent_id
+        authorized_agent_id =
+          mentionables.find { |agent| agent[:id] == requested_or_topic_agent_id.to_i }&.dig(:id)
+        authorized_agent_id ||= mentioned_agent&.dig(:id)
+        addressed_agent_user_id =
+          if requested_agent_id.present?
+            AiAgent.where(id: requested_agent_id.to_i).pick(:user_id)
+          elsif mentioned_agent
+            mentioned_agent[:user_id]
+          elsif topic_agent_id
+            AiAgent.where(id: topic_agent_id.to_i).pick(:user_id)
+          end
+        recipient_user =
+          if addressed_agent_user_id
+            User.find_by(id: addressed_agent_user_id)
           else
-            agent_id = topic_agent_id
-            authorization_user = post.topic.user if topic_agent_id
+            legacy_recipient_for(post.topic, mentionables)
           end
 
-          agent = nil
-
-          agent =
-            DiscourseAi::Agents::Agent.find_by(
-              user: authorization_user,
-              id: agent_id.to_i,
-            ) if agent_id && authorization_user
-
-          if !agent && (agent_name = post.topic.custom_fields["ai_agent"])
-            authorization_user = post.topic.user
-            agent =
-              DiscourseAi::Agents::Agent.find_by(
-                user: authorization_user,
-                name: agent_name,
-              ) if authorization_user
-          end
-
-          # edge case, llm was mentioned in an ai agent conversation
-          if agent_id == topic_agent_id && post.topic.private_message? && agent &&
-               all_llm_users.present?
-            if !agent.force_default_llm && mentions.present?
-              mentioned_llm_user_id, _ =
-                all_llm_users.find { |id, username| mentions.include?(username) }
-
-              if mentioned_llm_user_id
-                bot_user = User.find_by(id: mentioned_llm_user_id) || bot_user
-              end
-            end
-          end
-
-          if !agent
-            agent = DiscourseAi::Agents::General
-            authorization_user = post.user
-          end
-
-          bot_user = User.find(agent.user_id) if agent && agent.force_default_llm
-
-          bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent.new)
-          new(bot).update_playground_with(post, authorization_user: authorization_user)
+        if private_message && mentioned_agent.blank? && topic_agent_id.blank? &&
+             recipient_user.blank?
+          return
         end
+
+        route =
+          ConversationRoute.resolve(
+            authorization_user:,
+            modality:,
+            agent_id: requested_agent_id.presence || mentioned_agent&.dig(:id) || topic_agent_id,
+            llm_model_id: requested_model_id.presence || legacy_model_id,
+            topic: post.topic,
+            recipient_user:,
+            selection_source: requested_model_id.present? || legacy_model_id ? :request : :topic,
+          )
+
+        topic_model_id = post.topic.custom_fields[TOPIC_AI_LLM_MODEL_ID_FIELD].presence
+        turn_only_agent_mention =
+          requested_agent_id.blank? && mentioned_agent.present? && topic_agent_id.present? &&
+            mentioned_agent[:id] != topic_agent_id.to_i
+        normalize_topic_route!(
+          post.topic,
+          route,
+          persist_agent: requested_agent_id.present? || topic_agent_id.blank?,
+          persist_model:
+            requested_model_id.present? || requested_agent_id.present? ||
+              (topic_model_id.blank? && !turn_only_agent_mention),
+        )
+        add_agent_to_private_message!(post.topic, route.speaker) if private_message
+
+        bot =
+          DiscourseAi::Agents::Bot.as(
+            route.speaker,
+            agent: route.agent_class.new,
+            model: route.model,
+          )
+        new(bot, model_selection_source: route.model_source).update_playground_with(
+          post,
+          authorization_user: route.authorization_user,
+        )
+      rescue ConversationRoute::Error => error
+        Rails.logger.warn("Unable to schedule AI reply for post #{post.id}: #{error.message}")
+        report_route_error(post, error, authorized_agent_id, authorization_user:)
+      end
+
+      def self.report_route_error(post, error, agent_id, authorization_user:)
+        return if agent_id.blank? || authorization_user.blank?
+        return if !authorization_user.guardian.can_create_post_on_topic?(post.topic)
+
+        agent = DiscourseAi::Agents::Agent.find_by(user: authorization_user, id: agent_id.to_i)
+        allowed =
+          post.topic.private_message? ? agent&.allow_personal_messages : agent&.allow_topic_mentions
+        return if !allowed
+
+        speaker = AiAgent.find_by(id: agent.id)&.user
+        return if speaker.blank? || !speaker.active?
+        if post.topic.private_message? && !speaker.guardian.can_create_post_on_topic?(post.topic)
+          return
+        end
+
+        PostCreator.create!(
+          speaker,
+          topic_id: post.topic_id,
+          raw: I18n.t("discourse_ai.ai_bot.reply_error", details: error.message),
+          skip_validations: true,
+          skip_guardian: true,
+          custom_fields: {
+            POST_AI_AGENT_ID_FIELD => agent_id,
+          },
+        )
       end
 
       def self.reply_to_post(
         post:,
         user: nil,
         agent_id: nil,
+        llm_model_id: nil,
         whisper: nil,
         add_user_to_pm: false,
         stream_reply: false,
@@ -211,15 +264,28 @@ module DiscourseAi
         attributed_user: nil,
         feature_context: nil
       )
-        ai_agent = AiAgent.find_by(id: agent_id)
-        raise Discourse::InvalidParameters.new(:agent_id) if !ai_agent
-        agent_class = ai_agent.class_instance
-        agent = agent_class.new
+        route =
+          ConversationRoute.resolve(
+            authorization_user: attributed_user || post.user,
+            modality: :automation,
+            agent_id:,
+            llm_model_id:,
+            topic: post.topic,
+            selection_source: :snapshot,
+            allow_general_fallback: false,
+          )
+        if user.present? && user.id != route.speaker.id
+          raise Discourse::InvalidParameters.new(:user)
+        end
 
-        bot_user = user || ai_agent.user
-        raise Discourse::InvalidParameters.new(:user) if bot_user.nil?
-        bot = DiscourseAi::Agents::Bot.as(bot_user, agent: agent)
-        playground = new(bot)
+        playground =
+          new(
+            DiscourseAi::Agents::Bot.as(
+              route.speaker,
+              agent: route.agent_class.new,
+              model: route.model,
+            ),
+          )
 
         playground.reply_to(
           post,
@@ -232,13 +298,53 @@ module DiscourseAi
           feature_name: feature_name,
           attributed_user: attributed_user,
           feature_context: feature_context,
+          authorization_user_id: route.authorization_user&.id,
         )
-      rescue => e
-        raise e
       end
 
-      def initialize(bot)
+      def self.legacy_recipient_for(topic, mentionables)
+        return if !topic.private_message?
+
+        participant_ids = topic.topic_allowed_users.pluck(:user_id)
+        agent_user_ids = participant_ids & mentionables.map { |agent| agent[:user_id] }
+        model_user_ids = participant_ids & LlmModel.with_user.pluck(:user_id)
+        recipient_ids = (agent_user_ids + model_user_ids).uniq
+
+        if recipient_ids.many?
+          key = agent_user_ids.any? ? "ambiguous_agent" : "ambiguous_model"
+          raise ConversationRoute::Error.new(
+                  I18n.t("discourse_ai.ai_bot.errors.#{key}"),
+                  param: :target_username,
+                )
+        end
+
+        User.find_by(id: recipient_ids.first) if recipient_ids.one?
+      end
+
+      def self.mentioned_legacy_model_id(mentions)
+        return if mentions.blank?
+
+        matches = LlmModel.joins(:user).where(users: { username_lower: mentions }).pluck(:id)
+        matches.one? ? matches.first : nil
+      end
+
+      def self.normalize_topic_route!(topic, route, persist_agent:, persist_model:)
+        topic.with_lock do
+          topic.custom_fields[TOPIC_AI_AGENT_ID_FIELD] = route.agent_id if persist_agent
+          topic.custom_fields[TOPIC_AI_LLM_MODEL_ID_FIELD] = route.llm_model_id if persist_model
+          topic.save_custom_fields
+        end
+      end
+
+      def self.add_agent_to_private_message!(topic, speaker)
+        topic.topic_allowed_users.find_or_create_by!(user_id: speaker.id)
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+        topic.topic_allowed_users.find_by!(user_id: speaker.id)
+      end
+
+      def initialize(bot, model_selection_source: :snapshot)
         @bot = bot
+        @model_selection_source = model_selection_source
       end
 
       def update_playground_with(post, authorization_user: post.user)
@@ -407,6 +513,13 @@ module DiscourseAi
           end
 
         reply = streamer.reply
+        if reply
+          reply.custom_fields[CHAT_MESSAGE_AI_LLM_NAME_FIELD] = bot.model.display_name
+          reply.custom_fields[CHAT_MESSAGE_AI_LLM_MODEL_ID_FIELD] = bot.model.id
+          reply.custom_fields[CHAT_MESSAGE_AI_AGENT_ID_FIELD] = bot.agent.id
+          reply.custom_fields[CHAT_MESSAGE_AI_AGENT_AUTHORIZATION_USER_ID_FIELD] = message.user_id
+          reply.save_custom_fields
+        end
         if new_prompts.length > 1 && reply
           # Note: messages_from_chat does not read these back, so compressed
           # context checkpoints only persist across turns for post-based
@@ -561,32 +674,19 @@ module DiscourseAi
         end
 
         if existing_reply_post
-          if existing_reply_post.topic_id != post.topic_id
+          if existing_reply_post.topic_id != post.topic_id ||
+               !EntryPoint.ai_response?(existing_reply_post)
             raise Discourse::InvalidParameters.new(:reply_post_id)
           end
 
-          if existing_reply_post.user_id != reply_user.id
-            raise Discourse::InvalidParameters.new(:reply_post_id)
-          end
+          reply_user = existing_reply_post.user
         end
 
         stream_reply = post.topic.private_message? if stream_reply.nil?
 
         # we need to ensure agent user is allowed to reply to the pm
         if post.topic.private_message? && add_user_to_pm
-          if !post.topic.topic_allowed_users.exists?(user_id: reply_user.id)
-            post.topic.topic_allowed_users.create!(user_id: reply_user.id)
-          end
-          # edge case, maybe the llm user is missing?
-          if !post.topic.topic_allowed_users.exists?(user_id: bot.bot_user.id)
-            post.topic.topic_allowed_users.create!(user_id: bot.bot_user.id)
-          end
-
-          # we store the id of the last bot_user, this is then used to give it preference
-          if post.topic.custom_fields[BOT_USER_PREF_ID_CUSTOM_FIELD].to_i != bot.bot_user.id
-            post.topic.custom_fields[BOT_USER_PREF_ID_CUSTOM_FIELD] = bot.bot_user.id
-            post.topic.save_custom_fields
-          end
+          self.class.add_agent_to_private_message!(post.topic, reply_user)
         end
 
         if stream_reply
@@ -808,12 +908,11 @@ module DiscourseAi
       end
 
       def available_bot_usernames
-        @bot_usernames ||=
-          AiAgent.joins(:user).pluck(:username).concat(available_bot_users.map(&:username))
+        @bot_usernames ||= available_bot_users.pluck(:username)
       end
 
       def available_bot_user_ids
-        @bot_ids ||= AiAgent.joins(:user).pluck("users.id").concat(available_bot_users.map(&:id))
+        @bot_ids ||= available_bot_users.pluck(:id)
       end
 
       def include_image_uploads?
@@ -864,8 +963,7 @@ module DiscourseAi
       end
 
       def available_bot_users
-        @available_bots ||=
-          User.joins("INNER JOIN llm_models llm ON llm.user_id = users.id").where(active: true)
+        @available_bots ||= User.where(id: EntryPoint.historical_bot_user_ids)
       end
 
       def publish_final_update(reply_post, user_ids:, group_ids:)
@@ -912,6 +1010,8 @@ module DiscourseAi
           post_id: post.id,
           bot_user_id: bot.bot_user.id,
           agent_id: agent_id,
+          llm_model_id: bot.model.id,
+          model_selection_source: @model_selection_source.to_s,
           authorization_user_id: authorization_user&.id,
         )
       end
