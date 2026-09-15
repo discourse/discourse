@@ -294,6 +294,13 @@ en:
       memberships:
         add_user: "Add participant"
         remove_user: "Remove participant"
+      agent:
+        invite: "Invite LiveKit agent"
+        name: "Agent name"
+        type_name: "Type a name instead"
+        pick_name: "Choose from the list instead"
+        refresh: "Refresh the agent list"
+        invited: "Agent invited. It will appear when LiveKit connects it. This can take about a minute."
       admin:
         title: "Voice"
         dashboard_title: "Dashboard"
