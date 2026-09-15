@@ -1021,6 +1021,10 @@ table.group-reports {
     .query-created-at {
       color: var(--primary-medium);
     }
+
+    .d-table__cell-actions .btn {
+      min-width: 4.5em;
+    }
   }
 
   .query-row:hover {
