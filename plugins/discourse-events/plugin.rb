@@ -247,7 +247,6 @@ after_initialize do
   end
 
   reloadable_patch do
-    UserNotifications.prepend DiscourseEvents::UserNotificationsExtension
     register_category_type(DiscourseEvents::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
     Category.register_custom_field_type("disable_topic_resorting", :boolean)

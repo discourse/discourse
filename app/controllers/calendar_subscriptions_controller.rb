@@ -10,12 +10,12 @@ class CalendarSubscriptionsController < ApplicationController
   def show
     key = find_calendar_api_key
     scopes = key ? key.scopes.map(&:name) : []
-    subscribed_feeds =
+    generated_feeds =
       plugin_feeds.select { |feed| scopes.include?(feed[:scope].to_s) }.map { |feed| feed[:name] }
     render json: {
              has_subscription: key.present?,
              feeds: feed_names,
-             subscribed_feeds: subscribed_feeds,
+             generated_feeds: generated_feeds,
            }
   end
 

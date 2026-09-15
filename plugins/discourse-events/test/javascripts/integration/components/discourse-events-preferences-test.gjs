@@ -14,10 +14,11 @@ module(
 
     test("loads and saves the native delivery selector", async function (assert) {
       this.siteSettings.discourse_post_event_enabled = true;
+      this.siteSettings.enable_improved_event_reminders = true;
       addSaveableUserOptionField("event_reminder_preference");
       this.user = User.create({
         username: "sam",
-        user_option: { event_reminder_preference: "notification" },
+        user_option: { event_reminder_preference: "personal_message" },
       });
       let saved;
       pretender.put("/u/sam.json", (request) => {
@@ -34,12 +35,16 @@ module(
       assert
         .dom("select.d-native-select")
         .hasValue(
-          "notification",
+          "personal_message",
           "uses the current channel in a native select"
         );
-      await form().field("event_reminder_preference").select("email");
+      await form().field("event_reminder_preference").select("notification");
       await form().submit();
-      assert.strictEqual(saved, "email", "saves the selected channel");
+      assert.strictEqual(
+        saved,
+        "notification",
+        "saves the selected preference"
+      );
       const toasts = this.owner.lookup("service:toasts").activeToasts;
       assert.strictEqual(toasts.length, 1, "shows a confirmation toast");
       assert.strictEqual(
@@ -56,10 +61,20 @@ module(
 
     test("does not show preferences when events are disabled", async function (assert) {
       this.siteSettings.discourse_post_event_enabled = false;
+      this.siteSettings.enable_improved_event_reminders = true;
       await render(<template><DiscourseEventsPreferences /></template>);
       assert
         .dom(".event-reminder-preferences")
         .doesNotExist("does not offer disabled settings");
+    });
+
+    test("does not show preferences before the upcoming change is enabled", async function (assert) {
+      this.siteSettings.discourse_post_event_enabled = true;
+      this.siteSettings.enable_improved_event_reminders = false;
+      await render(<template><DiscourseEventsPreferences /></template>);
+      assert
+        .dom(".event-reminder-preferences")
+        .doesNotExist("does not expose the upcoming preference");
     });
   }
 );

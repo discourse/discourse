@@ -10,7 +10,7 @@ export default class DiscourseEventsPreferences extends Component {
 
   @service toasts;
 
-  preferences = ["notification", "email", "both", "none"];
+  preferences = ["none", "notification", "personal_message"];
 
   get data() {
     return {
@@ -31,16 +31,18 @@ export default class DiscourseEventsPreferences extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.discourse_post_event_enabled}}
+    {{#if
+      (and
+        this.siteSettings.discourse_post_event_enabled
+        this.siteSettings.enable_improved_event_reminders
+      )
+    }}
       <section class="event-reminder-preferences">
         <h3>{{i18n "discourse_events.preferences.reminders.title"}}</h3>
         <p>{{i18n "discourse_events.preferences.reminders.description"}}</p>
         <Form @data={{this.data}} @onSubmit={{this.save}} as |form|>
           <form.Field
             @format="large"
-            @helpText={{i18n
-              "discourse_events.preferences.reminders.away_only"
-            }}
             @name="event_reminder_preference"
             @title={{i18n "discourse_events.preferences.reminders.preference"}}
             @type="select"

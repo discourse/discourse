@@ -7,14 +7,17 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Event reminder preferences", function (needs) {
   needs.user();
-  needs.settings({ discourse_post_event_enabled: true });
+  needs.settings({
+    discourse_post_event_enabled: true,
+    enable_improved_event_reminders: true,
+  });
 
   let savedData;
   needs.pretender((server, helper) => {
     server.get("/u/eviltrout.json", () => {
       const profile = cloneJSON(userFixtures["/u/eviltrout.json"]);
       profile.user.can_edit = true;
-      profile.user.user_option.event_reminder_preference = "notification";
+      profile.user.user_option.event_reminder_preference = "personal_message";
       return helper.response(profile);
     });
     server.get("/calendar-subscriptions.json", () =>
@@ -28,14 +31,16 @@ acceptance("Event reminder preferences", function (needs) {
 
   test("saves the user option from the Calendar tab", async function (assert) {
     await visit("/u/eviltrout/preferences/calendar-subscriptions");
-    assert.dom(".event-reminder-preferences select").hasValue("notification");
+    assert
+      .dom(".event-reminder-preferences select")
+      .hasValue("personal_message");
     await form(".event-reminder-preferences form")
       .field("event_reminder_preference")
-      .select("both");
+      .select("notification");
     await form(".event-reminder-preferences form").submit();
     assert.strictEqual(
       savedData.event_reminder_preference,
-      "both",
+      "notification",
       "uses the user preferences endpoint"
     );
   });

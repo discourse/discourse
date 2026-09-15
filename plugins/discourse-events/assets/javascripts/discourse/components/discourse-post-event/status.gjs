@@ -202,8 +202,8 @@ export default class DiscoursePostEventStatus extends Component {
   async #hasCalendarSubscription() {
     const result = await ajax("/calendar-subscriptions.json");
     return (
-      result.subscribed_feeds?.includes("my_events") ||
-      result.subscribed_feeds?.includes("all_events") ||
+      result.generated_feeds?.includes("my_events") ||
+      result.generated_feeds?.includes("all_events") ||
       false
     );
   }

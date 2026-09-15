@@ -275,6 +275,151 @@ describe Jobs::DiscoursePostEventSendReminder do
       end
     end
 
+    context "with improved event reminders" do
+      fab!(:recipient) { Fabricate(:user, name: "Recipient Name") }
+      fab!(:organizer) { Fabricate(:user, name: "Organizer Name") }
+      fab!(:host) { Fabricate(:user, name: "Host Name") }
+      fab!(:event_post) { Fabricate(:post, user: organizer) }
+      fab!(:event) do
+        Fabricate(
+          :event,
+          post: event_post,
+          name: "Community breakfast",
+          description: "Breakfast before the conference.",
+          location: "Riverside Café",
+          original_starts_at: 3.hours.from_now,
+          original_ends_at: 4.hours.from_now,
+          timezone: "Australia/Brisbane",
+          reminders: "notification.5.minutes",
+        )
+      end
+
+      before do
+        SiteSetting.enable_improved_event_reminders = true
+        event.update!(host_user_ids: [host.id])
+        DiscourseEvents::Events::Invitee.create_attendance!(recipient.id, event.id, :going)
+      end
+
+      def reminder_message_for(user)
+        topic =
+          Topic
+            .private_messages
+            .joins(:topic_allowed_users)
+            .where(topic_allowed_users: { user_id: user.id })
+            .order(id: :desc)
+            .first
+        topic&.first_post
+      end
+
+      it "sends a personal message by default using the normal PM delivery path" do
+        expect { described_class.new.execute(event_id: event.id, reminder: reminders) }.to change {
+          Topic.private_messages.count
+        }.by(1)
+
+        message = reminder_message_for(recipient)
+        expect(message.topic.title).to eq("Community breakfast is about to start")
+        expect(message.raw).to include(
+          "### Community breakfast",
+          "**Location**",
+          "Riverside Café",
+          event_post.full_url,
+        )
+        expect(message.topic.subtype).to eq(TopicSubtype.system_message)
+      end
+
+      it "uses usernames for guests when usernames are prioritized" do
+        SiteSetting.prioritize_username_in_ux = true
+
+        described_class.new.execute(event_id: event.id, reminder: reminders)
+
+        raw = reminder_message_for(recipient).raw
+        expect(raw).to include(
+          "- #{organizer.username} - *organizer*",
+          "- #{host.username} - *host*",
+          "- #{recipient.username}",
+        )
+        expect(raw).not_to include(organizer.name, host.name, recipient.name)
+      end
+
+      it "orders guests by role and RSVP status and summarizes additional Going attendees" do
+        SiteSetting.prioritize_username_in_ux = false
+        regular_going_users = Fabricate.times(5, :user)
+        interested_user = Fabricate(:user, name: "Interested Guest")
+        regular_going_users.each do |user|
+          user.user_option.update!(event_reminder_preference: "none")
+          DiscourseEvents::Events::Invitee.create_attendance!(user.id, event.id, :going)
+        end
+        interested_user.user_option.update!(event_reminder_preference: "none")
+        DiscourseEvents::Events::Invitee.create_attendance!(
+          interested_user.id,
+          event.id,
+          :interested,
+        )
+
+        described_class.new.execute(event_id: event.id, reminder: reminders)
+
+        raw = reminder_message_for(recipient).raw
+        guest_lines = raw.lines.grep(/^-/).map(&:strip)
+        expect(guest_lines.first(3)).to eq(
+          ["- #{organizer.name} - *organizer*", "- #{host.name} - *host*", "- #{recipient.name}"],
+        )
+        expect(guest_lines.length).to eq(5)
+        expect(raw).to include("and 3 others")
+        expect(raw).not_to include(interested_user.name)
+      end
+
+      it "sends only the selected delivery type" do
+        recipient.user_option.update!(event_reminder_preference: "notification")
+
+        expect { described_class.new.execute(event_id: event.id, reminder: reminders) }.to change {
+          recipient
+            .notifications
+            .where(notification_type: Notification.types[:event_reminder])
+            .count
+        }.by(1).and not_change { Topic.private_messages.count }
+
+        recipient.notifications.delete_all
+        recipient.user_option.update!(event_reminder_preference: "none")
+        expect {
+          described_class.new.execute(event_id: event.id, reminder: reminders)
+        }.to not_change { recipient.notifications.count }.and not_change {
+                Topic.private_messages.count
+              }
+      end
+
+      it "links Zoom livestreams to the topic Zoom route" do
+        SiteSetting.livestream_zoom_enabled = true
+        event.update_columns(location: "https://zoom.us/j/123456789", livestream: true)
+
+        described_class.new.execute(event_id: event.id, reminder: reminders)
+
+        raw = reminder_message_for(recipient).raw
+        expect(raw).to include("[Join event](#{event.post.topic.url}/zoom)")
+        expect(raw).not_to include("**Location**")
+      end
+
+      it "links virtual events directly to their URL location" do
+        event.update!(location: "[Video call](https://meet.example.com/room)")
+
+        described_class.new.execute(event_id: event.id, reminder: reminders)
+
+        raw = reminder_message_for(recipient).raw
+        expect(raw).to include("[Join event](https://meet.example.com/room)")
+        expect(raw).not_to include("**Location**")
+      end
+
+      it "keeps legacy notifications while the upcoming change is disabled" do
+        SiteSetting.enable_improved_event_reminders = false
+
+        expect { described_class.new.execute(event_id: event.id, reminder: reminders) }.to change {
+          recipient
+            .notifications
+            .where(notification_type: Notification.types[:event_reminder])
+            .count
+        }.by(1).and not_change { Topic.private_messages.count }
+      end
+    end
+
     context "with recurring event" do
       let!(:recurring_event) do
         Fabricate(

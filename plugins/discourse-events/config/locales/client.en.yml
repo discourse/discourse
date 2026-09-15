@@ -41,21 +41,17 @@ en:
           rsvp_body: "Connect with other attendees before, during, and after the event."
       calendar_prompt:
         title: "Add this event to your calendar?"
-        subscribed: "Using your events subscription? You don’t need to add this separately."
-        add_individually: "Add individually"
+        subscribed: 'This event will be added to your <a href="%{calendarUrl}">subscribed calendar</a>.'
         dismiss: "Dismiss calendar prompt"
-        settings: "Calendar settings"
-        subscribe: "Or subscribe to your events"
+        subscribe: "Subscribe to events or change notification preferences"
       preferences:
         reminders:
           title: "Event reminders"
           description: "For events you're Going to or Interested in. The organizer chooses when reminders are sent."
           preference: "Send event reminders via"
-          away_only: "Reminder emails are sent only while you're away."
           preferences:
+            personal_message: "Send a personal message"
             notification: "Notification"
-            email: "Email"
-            both: "Notification and email"
             none: "None"
         all_events: "Discourse Events - All events"
         all_events_description: "All forum events"

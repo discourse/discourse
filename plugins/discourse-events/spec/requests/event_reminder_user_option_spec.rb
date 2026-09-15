@@ -13,10 +13,10 @@ RSpec.describe UsersController do
       sign_in(user)
       get "/u/#{user.username}.json"
       expect(response.parsed_body.dig("user", "user_option", "event_reminder_preference")).to eq(
-        "notification",
+        "personal_message",
       )
 
-      %w[email both none notification].each do |channel|
+      %w[personal_message none notification].each do |channel|
         put "/u/#{user.username}.json", params: { event_reminder_preference: channel }
         expect(response.status).to eq(200)
         expect(user.user_option.reload.event_reminder_preference).to eq(channel)
@@ -25,9 +25,9 @@ RSpec.describe UsersController do
 
     it "rejects invalid channels without changing the option" do
       sign_in(user)
-      put "/u/#{user.username}.json", params: { event_reminder_preference: "pm" }
+      put "/u/#{user.username}.json", params: { event_reminder_preference: "email" }
       expect(response.status).to eq(422)
-      expect(user.user_option.reload.event_reminder_preference).to eq("notification")
+      expect(user.user_option.reload.event_reminder_preference).to eq("personal_message")
     end
 
     it "requires login" do
@@ -39,7 +39,7 @@ RSpec.describe UsersController do
       sign_in(Fabricate(:user))
       put "/u/#{user.username}.json", params: { event_reminder_preference: "none" }
       expect(response.status).to eq(403)
-      expect(user.user_option.reload.event_reminder_preference).to eq("notification")
+      expect(user.user_option.reload.event_reminder_preference).to eq("personal_message")
     end
   end
 end

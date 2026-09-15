@@ -54,7 +54,7 @@ module("Integration | Component | EventCalendarPrompt", function (hooks) {
       "",
     ]);
     pretender.get("/calendar-subscriptions.json", () =>
-      response({ has_subscription: false, subscribed_feeds: [] })
+      response({ has_subscription: false, generated_feeds: [] })
     );
   });
 
@@ -69,6 +69,12 @@ module("Integration | Component | EventCalendarPrompt", function (hooks) {
       .includesText(
         "Add this event to your calendar?",
         "prompts after a successful Going RSVP"
+      );
+    assert
+      .dom(".event-calendar-prompt__settings")
+      .hasText(
+        "Subscribe to events or change notification preferences",
+        "links to calendar subscription and reminder settings"
       );
     await click(".event-calendar-prompt__heading button");
     assert.dom(".event-calendar-prompt").doesNotExist("dismisses the prompt");
@@ -92,19 +98,22 @@ module("Integration | Component | EventCalendarPrompt", function (hooks) {
 
   test("offers contextual guidance when events subscription URLs exist", async function (assert) {
     pretender.get("/calendar-subscriptions.json", () =>
-      response({ has_subscription: true, subscribed_feeds: ["my_events"] })
+      response({ has_subscription: true, generated_feeds: ["my_events"] })
     );
     await render(<template><Status @event={{this.event}} /></template>);
     await click(".interested-button");
     assert
       .dom(".event-calendar-prompt")
       .includesText(
-        "Using your events subscription?",
-        "acknowledges generated URLs without claiming synchronization"
+        "This event will be added to your subscribed calendar.",
+        "acknowledges the generated events subscription"
       );
     assert
       .dom(".event-calendar-prompt__actions")
-      .includesText("Add individually", "retains a manual fallback");
+      .doesNotExist("does not offer an individual calendar download");
+    assert
+      .dom(".event-calendar-prompt a")
+      .hasText("subscribed calendar", "links the calendar description");
     await click(".not-going-button");
     assert.dom(".event-calendar-prompt").doesNotExist("hides when not going");
   });
