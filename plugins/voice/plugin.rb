@@ -29,6 +29,7 @@ Discourse::Utils.atomic_ln_s(
 )
 
 enabled_site_setting :voice_enabled
+badge_enabled_setting :voice_badges_enabled
 
 register_svg_icon "microphone-lines"
 register_svg_icon "lock"
@@ -180,14 +181,6 @@ after_initialize do
   end
 
   on(:site_setting_changed) do |name, _old_value, new_value|
-    if name.to_sym == :voice_badges_enabled
-      if new_value
-        Voice::BadgeGranterHooks.enable_all!
-      else
-        Voice::BadgeGranterHooks.disable_all!
-      end
-    end
-
     clear_all_voice_statuses if name.to_sym == :voice_auto_status_enabled && !new_value
 
     # Surface a bad URL or key pair on the admin status panel within seconds
