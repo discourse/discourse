@@ -193,6 +193,36 @@ module("Unit | Utility | download-calendar", function (hooks) {
     assert.true(data.includes("DTSTART;TZID=Europe/London:20260811T130000"));
   });
 
+  test("VTIMEZONE falls back to a fixed offset for irregular seasonal zones", function (assert) {
+    // Morocco's transitions follow Ramadan, so the calendar rule differs every
+    // year. There is no stable RRULE to emit; the current offset is used instead.
+    const data = generateIcsData("Casablanca event", [
+      {
+        startsAt: "2025-08-11T12:00:00.000Z",
+        endsAt: "2025-08-11T13:00:00.000Z",
+        timezone: "Africa/Casablanca",
+      },
+    ]);
+
+    assert.true(data.includes("TZID:Africa/Casablanca"));
+    assert.strictEqual(
+      data.match(/BEGIN:STANDARD/g).length,
+      1,
+      "emits exactly one STANDARD observance"
+    );
+    assert.false(data.includes("BEGIN:DAYLIGHT"), "no DAYLIGHT observance");
+    assert.false(
+      /^RRULE:/m.test(data.split("BEGIN:VEVENT")[0]),
+      "no recurrence rule inside the VTIMEZONE"
+    );
+    assert.true(data.includes("TZOFFSETFROM:+0100"));
+    assert.true(data.includes("TZOFFSETTO:+0100"));
+    assert.true(
+      data.includes("DTSTART;TZID=Africa/Casablanca:20250811T130000"),
+      "event local time still uses the named timezone"
+    );
+  });
+
   test("correct data for ICS without timezone (UTC)", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
