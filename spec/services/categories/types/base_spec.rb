@@ -368,6 +368,27 @@ RSpec.describe Categories::Types::Base do
       expect(entry[:overridden]).to eq(true)
     end
 
+    it "loads site setting overrides once" do
+      test_type =
+        build_test_type(
+          :test_batched_overrides,
+          configuration_schema: {
+            site_settings: {
+              title: "My Forum",
+              allow_user_locale: false,
+              suggested_topics: 5,
+            },
+          },
+        )
+
+      provider = SiteSetting.provider
+
+      provider.expects(:all).once.returns([])
+      provider.expects(:find).never
+
+      test_type.send(:resolved_configuration_schema)
+    end
+
     it "passes through category settings" do
       test_type =
         build_test_type(
