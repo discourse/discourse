@@ -37,9 +37,49 @@ module DiscourseVips
     Client.call(["animated", input_path], operation: :upload_animation_probe, timeout:)
   end
 
-  def self.heif_to_jpeg(input_path:, output_path:, timeout:)
+  def self.heif_to_jpeg(input_path:, output_path:, quality:, timeout:)
     Client.call(
-      ["heif-to-jpeg", input_path, output_path],
+      ["heif-to-jpeg", input_path, output_path, quality],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
+  def self.avif_to_jpeg(input_path:, output_path:, quality:, timeout:)
+    Client.call(
+      ["avif-to-jpeg", input_path, output_path, quality],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
+  def self.gif_to_jpeg(input_path:, output_path:, quality:, timeout:)
+    Client.call(
+      ["gif-to-jpeg", input_path, output_path, quality],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
+  def self.recompress_jpeg(input_path:, output_path:, quality:, timeout:)
+    Client.call(
+      ["recompress-jpeg", input_path, output_path, quality],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
+  def self.png_to_jpeg(input_path:, output_path:, quality:, timeout:)
+    Client.call(
+      ["png-to-jpeg", input_path, output_path, quality],
+      operation: :upload_format_conversion,
+      timeout:,
+    )
+  end
+
+  def self.webp_to_jpeg(input_path:, output_path:, quality:, timeout:)
+    Client.call(
+      ["webp-to-jpeg", input_path, output_path, quality],
       operation: :upload_format_conversion,
       timeout:,
     )
