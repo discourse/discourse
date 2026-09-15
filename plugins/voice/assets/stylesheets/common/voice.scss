@@ -1303,5 +1303,11 @@
     display: flex;
     align-items: center;
     gap: 0.5em;
+
+    .form-kit__control-input-wrapper,
+    .form-kit__control-select {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
   }
 }
