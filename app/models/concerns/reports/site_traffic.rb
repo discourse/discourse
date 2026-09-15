@@ -16,22 +16,21 @@ module Reports::SiteTraffic
     def report_site_traffic(report)
       report.modes = [Report::MODES[:stacked_chart]]
 
-      first_browser_pageview_date =
-        DB.query_single(
-          <<~SQL,
-      SELECT date FROM application_requests
-      WHERE req_type = :page_view_logged_in_browser OR req_type = :page_view_anon_browser ORDER BY date LIMIT 1
-      SQL
-          page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
-          page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
-        ).first
+      browser_pageviews = ApplicationRequest.browser_pageviews
+      first_browser_pageview_date = browser_pageviews.minimum(:date)
 
       likely_crawlers_enabled = CrawlerScorer.enabled?
 
       data =
         DB.query(
           <<~SQL,
-            WITH likely_crawlers AS (
+            WITH browser_pageviews AS (
+              SELECT date,
+                SUM(count) FILTER (WHERE req_type IN (:logged_in_browser_types)) AS logged_in,
+                SUM(count) FILTER (WHERE req_type IN (:anonymous_browser_types)) AS anonymous
+              FROM (#{browser_pageviews.where(date: report.start_date..report.end_date).to_sql}) requests
+              GROUP BY date
+            ), likely_crawlers AS (
               SELECT
                 date,
                 COALESCE(SUM(count) FILTER (WHERE logged_in), 0)::bigint AS logged_in,
@@ -46,12 +45,12 @@ module Reports::SiteTraffic
               ar.date,
               GREATEST(
                 0,
-                SUM(CASE WHEN ar.req_type = :page_view_logged_in_browser THEN ar.count ELSE 0 END)
+                COALESCE(MAX(bp.logged_in), 0)
                   - COALESCE(MAX(lc.logged_in), 0)
               ) AS page_view_logged_in_browser,
               GREATEST(
                 0,
-                SUM(CASE WHEN ar.req_type = :page_view_anon_browser THEN ar.count ELSE 0 END)
+                COALESCE(MAX(bp.anonymous), 0)
                   - COALESCE(MAX(lc.anonymous), 0)
               ) AS page_view_anon_browser,
               (COALESCE(MAX(lc.logged_in), 0) + COALESCE(MAX(lc.anonymous), 0)) AS page_view_likely_crawler,
@@ -62,13 +61,12 @@ module Reports::SiteTraffic
                 SUM(
                   CASE WHEN ar.req_type = :page_view_anon THEN ar.count
                       WHEN ar.req_type = :page_view_logged_in THEN ar.count
-                      WHEN ar.req_type = :page_view_anon_browser THEN -ar.count
-                      WHEN ar.req_type = :page_view_logged_in_browser THEN -ar.count
                       ELSE 0
                   END
-                )
+                ) - COALESCE(MAX(bp.logged_in), 0) - COALESCE(MAX(bp.anonymous), 0)
               ) AS page_view_other
             FROM application_requests ar
+            LEFT JOIN browser_pageviews bp ON bp.date = ar.date
             LEFT JOIN likely_crawlers lc ON lc.date = ar.date
             WHERE ar.date >= :start_date AND ar.date <= :end_date AND ar.date >= :first_browser_pageview_date
 
@@ -81,8 +79,16 @@ module Reports::SiteTraffic
           page_view_anon: ApplicationRequest.req_types[:page_view_anon],
           page_view_crawler: ApplicationRequest.req_types[:page_view_crawler],
           page_view_logged_in: ApplicationRequest.req_types[:page_view_logged_in],
-          page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
-          page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
+          anonymous_browser_types:
+            ApplicationRequest.req_types.values_at(
+              "page_view_anon_browser",
+              "page_view_anon_browser_beacon",
+            ),
+          logged_in_browser_types:
+            ApplicationRequest.req_types.values_at(
+              "page_view_logged_in_browser",
+              "page_view_logged_in_browser_beacon",
+            ),
           page_view_embed: ApplicationRequest.req_types[:page_view_embed],
           first_browser_pageview_date: first_browser_pageview_date,
         )
