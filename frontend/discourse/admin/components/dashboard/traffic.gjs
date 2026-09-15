@@ -32,6 +32,7 @@ const PERIOD_COPY_KEYS = {
 
 export default class DashboardTraffic extends Component {
   @service currentUser;
+  @service siteSettings;
 
   hiddenLabels = ["page_view_crawler"];
 
@@ -161,6 +162,10 @@ export default class DashboardTraffic extends Component {
     }
 
     return { range: this.args.period };
+  }
+
+  get showTrafficExplorerLink() {
+    return this.currentUser.admin && !this.siteSettings.use_legacy_pageviews;
   }
 
   formatHeadlineCount(value) {
@@ -397,7 +402,7 @@ export default class DashboardTraffic extends Component {
               @options={{this.chartOptions}}
             />
           </div>
-          {{#if this.currentUser.admin}}
+          {{#if this.showTrafficExplorerLink}}
             <LinkTo
               class="db-traffic__see-details"
               @query={{this.explorerQuery}}

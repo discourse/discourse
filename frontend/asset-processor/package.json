@@ -30,7 +30,7 @@
     "magic-string": "^1.2.3",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "postcss": "^8.5.26",
+    "postcss": "^8.5.28",
     "postcss-nesting": "^14.0.1",
     "postcss-value-parser": "^4.2.0",
     "rolldown": "1.2.7",

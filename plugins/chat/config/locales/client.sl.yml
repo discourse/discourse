@@ -178,6 +178,8 @@ sl:
         sort:
           relevance: "Pomembnosti"
           latest: "Najnovejše"
+      direct_messages:
+        new_group: "Nov skupinski klepet"
       channel_list:
         options:
           filter: "Filter"

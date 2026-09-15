@@ -6,6 +6,8 @@
 
 hr:
   mcp:
+    errors:
+      topic_not_found: "Tema nije pronađena"
     oauth:
       deny: "Odbiti"
       approve: "Odobriti"

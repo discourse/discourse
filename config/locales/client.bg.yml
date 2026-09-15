@@ -3163,6 +3163,7 @@ bg:
       with_topics: "%{filter} теми"
       with_category: "%{filter} %{category} теми"
       filter:
+        reset: "изчисти"
         button:
           label: "Филтър"
       latest:

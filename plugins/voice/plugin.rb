@@ -98,6 +98,8 @@ add_admin_route "voice.admin.title", "voice", use_new_show_route: true
 require_relative "lib/voice"
 
 after_initialize do
+  register_stat("voice_users", expose_via_api: true) { Voice::Statistics.about_users }
+
   SeedFu.fixture_paths << Rails.root.join("plugins/voice/db/fixtures").to_s
 
   require_relative "lib/voice/user_extension"

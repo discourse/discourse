@@ -212,6 +212,7 @@ te:
       message: "మేము ఈ సైట్‌ని నవీకరించాము. ప్రతిదీ సజావుగా పని చేస్తుందని నిర్ధారించుకోవడానికి <span>దయచేసి ఈ పేజీని రిఫ్రెష్ చేయండి</span>."
       dismiss: "రద్దుచేయండి"
     back_button: "వెనుకకు"
+    confirm_button: "నిర్ధారించండి"
     welcome_banner:
       header:
         anonymous_members: "%{site_name} కు సుస్వాగతం!"
@@ -3728,6 +3729,7 @@ te:
       with_topics: "%{filter} విషయాలు"
       with_category: "%{filter} %{category} విషయాలు"
       filter:
+        reset: "రీసెట్"
         button:
           label: "ఫిల్టర్ చేయండి"
       latest:

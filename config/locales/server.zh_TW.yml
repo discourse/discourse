@@ -6,6 +6,8 @@
 
 zh_TW:
   mcp:
+    errors:
+      topic_not_found: "未找到話題"
     oauth:
       resource: "MCP 服務器"
       deny: "拒絕"
@@ -1715,13 +1717,7 @@ zh_TW:
       sidekiq_check: 'Sidekiq 未執行。許多工作（例如傳送電子郵件）會由 Sidekiq 非同步執行。請確認至少有一個 Sidekiq 程序正在執行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此瞭解 Sidekiq</a>。'
       queue_size: "隊列中有 %{queue_size} 個作業，比較多。這可能表明 Sidekiq 進程存在問題，或者需要添加更多 Sidekiq 工作進程。"
       ram: "您的服務器運行的總內存不足 1 GB。建議使用至少 1 GB 的內存。"
-      google_oauth2_config: '伺服器已設定允許透過 Google OAuth2 註冊及登入（enable_google_oauth2_logins），但尚未設定用戶端 ID 與用戶端密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">請參閱此指南以瞭解詳情</a>。'
-      facebook_config: '伺服器已設定允許透過 Facebook 註冊及登入（enable_facebook_logins），但尚未設定應用程式 ID 與應用程式密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">請參閱此指南以瞭解詳情</a>。'
-      twitter_config: '伺服器已設定允許透過 Twitter 註冊及登入（enable_twitter_logins），但尚未設定金鑰與密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">請參閱此指南以瞭解詳情</a>。'
-      github_config: '伺服器已設定允許透過 GitHub 註冊及登入（enable_github_logins），但尚未設定用戶端 ID 與密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">請參閱此指南以瞭解詳情</a>。'
       github_onebox_backoff: "GitHub 正在對伺服器套用速率限制，因此在限制重設前，GitHub 連結可能無法顯示預覽。設定 {{setting:github_onebox_access_tokens}} 可大幅提高上限。"
-      s3_upload_config: '服務器被配置為將文件上傳到 S3，但未設置以下設置中的至少一個：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。前往<a href="%{base_path}/admin/site_settings">網站設置</a>并更新設置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請參閱“如何設置將圖片上傳到 S3？”以了解詳情</a>。'
-      s3_backup_config: '服務器被配置為將備份上傳到 S3，但未設置以下設置中的至少一個：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。前往<a href="%{base_path}/admin/site_settings">網站設置</a>并更新設置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請參閱“如何設置將圖片上傳到 S3？”以了解詳情</a>。'
       s3_cdn: '伺服器已設定將檔案上傳至 S3，但未設定 S3 CDN。這可能導致高昂的 S3 費用及較慢的網站效能。<a href="https://meta.discourse.org/t/-/148916" target="_blank">請參閱「使用物件儲存空間上傳」以瞭解詳情</a>。'
       image_magick: '服務器被配置為創建大圖片縮略圖，但是未安裝 ImageMagick。使用您喜愛的軟件包管理器安裝 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下載最新版</a>。'
       failing_emails: '%{num_failed_jobs} 個電子郵件作業失敗。請檢查您的 app.yml 并確保郵件服務器設置正確。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失敗的作業</a>。'
@@ -2757,7 +2753,6 @@ zh_TW:
       markdown_linkify_tlds: "不能包含「*」值。"
       google_oauth2_hd_groups: "啟用此設定前，必須先設定所有「google oauth2 hd」設定。"
       discourse_id_registration: "無法自動向 Discourse ID 註冊。可能是網路連線問題、防火牆限制，或無法連線至 Discourse ID 服務所致。請檢查伺服器記錄以瞭解詳情，或聯絡支援人員。"
-      linkedin_oidc_credentials: "啟用此設定前，必須先設定 LinkedIn OIDC 認證資訊（「linkedin_oidc_client_id」與「linkedin_oidc_client_secret」）。"
       search_tokenize_chinese_enabled: "啟用此設定前，必須先停用「search_tokenize_chinese」。"
       search_tokenize_japanese_enabled: "啟用此設定前，必須先停用「search_tokenize_japanese」。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "強制使用雙因素驗證時，無法啟用 DiscourseConnect。"

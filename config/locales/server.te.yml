@@ -6,6 +6,8 @@
 
 te:
   mcp:
+    errors:
+      topic_not_found: "విషయం కనిపించలేదు"
     oauth:
       deny: "తిరస్కరించండి"
       approve: "అధికారం ఇవ్వండి"

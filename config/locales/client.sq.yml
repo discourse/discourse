@@ -214,6 +214,7 @@ sq:
       message: "Ne e kemi përditësuar këtë faqe, <span>ju lutemi rifreskoni</span> për të mos patur probleme në funksionim."
       dismiss: "Hiqe"
     back_button: "Kthehu mbrapa"
+    confirm_button: "Konfirmoni"
     welcome_banner:
       header:
         anonymous_members: "Mirë se vini tek %{site_name}!"
@@ -3700,6 +3701,7 @@ sq:
       with_topics: "Temat nga %{filter}"
       with_category: "Temat nga: %{filter}, %{category}"
       filter:
+        reset: "rivendosni"
         button:
           label: "Filtro"
       latest:

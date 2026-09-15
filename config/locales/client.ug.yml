@@ -6,6 +6,10 @@
 
 ug:
   js:
+    mcp_oauth_client_id_metadata_policy:
+      disabled: "باشقۇرغۇچى تىزىملىتىشى ئۈچۈنلا"
+      approved_domains: "دەلىللەنگەن تور دائىرىسىدىن كەلگەن CIMD"
+      any_domain: "خالىغان تور دائىرىسىدىن كەلگەن CIMD"
     ace_editor:
       resize: "كود تەھرىرلىگۈچنىڭ چوڭلۇقىنى ئۆزگەرتىدۇ"
     user_api_key:
@@ -350,6 +354,7 @@ ug:
     notifications_tracking:
       tooltip: "ئۇقتۇرۇش دەرىجىسى: %{level}"
     back_button: "كەينى"
+    confirm_button: "جەزملە"
     welcome_banner:
       header:
         new_members: "%{preferred_display_name} غا خۇش كەلدىڭىز!"
@@ -394,6 +399,7 @@ ug:
         no_outlet_args: "بۇ چىقىش ئېغىزىدىن ھېچقانداق ئۆزگەرگۈچى ئۆتمىدى"
         aliases: "تەخەللۇس"
         deprecated: "ئىشلىتىشتىن توختىتىلغان"
+      open_styleguide: "ئۇسلۇب قوللانمىسىنى ئاچ"
     s3:
       regions:
         ap_northeast_1: "ئاسىيا تىنچ ئوكيان (توكيو)"
@@ -490,6 +496,7 @@ ug:
       collapse: "تەڭشەش قەدىمىنى يىغ"
       dismiss: "تەڭشەشكە پەرۋا قىلما"
       select_theme:
+        description: "رەڭ، خەت نۇسخا ۋە تور بېكىتىڭىزنىڭ جايلاشتۇرۇلۇشى تاللىنىدۇ."
         action: "تاللانما كۆرسەت"
         completed: "تاللانما ئۆزگەرت"
         show_light_screenshot: "سۇس ئېكران كۆرۈنۈشىنى كۆرسەت"
@@ -506,18 +513,33 @@ ug:
         back: "كەينى"
     design_wizard:
       title: "تور بېكىتىڭىزنى خاسلاشتۇرىدۇ"
+      subtitle: "رەڭ، خەت نۇسخا ۋە تور بېكىتىڭىزنىڭ جايلاشتۇرۇلۇشى تاللىنىدۇ."
       step_label: "%{index}-قەدەمگە يۆتكەل"
       save: "ساقلا ۋە تاماملا"
       back: "كەينى"
       next: "كېيىنكى"
+      launch: "لايىھە يېتەكچىسى"
+      launch_description: "تور بېكىتىڭىزنىڭ ئۆرنەك، رەڭ، خەت نۇسخا ۋە جايلاشتۇرۇلۇشىنى قايتا كۆرۈڭ."
+      intro:
+        description: "بۇ يېتەكچى تور بېكىتىڭىزنىڭ ئۆرنەك، رەڭ، خەت نۇسخا، باش بەت جايلاشتۇرۇلۇشى، قارشى ئېلىش لەۋھەسى ۋە ئىزدەش ئۇسلۇبىنى قايتا كۆرسىتىدۇ."
+        autosave: "ھەر بىر قەدەم شۇ پەيتتە ساقلىنىدۇ، شۇڭا ئەزالار ئۆزگىرىشنى دەرھال كۆرەلەيدۇ. ياپقاندا ھەممە تەڭشەكنى ئەسلىگە كەلتۈرەلەيسىز."
+        start: "باشلاش"
+      close:
+        message: "تور بېكەت لايىھەسىنىڭ بەزى ئۆزگىرىشى ساقلاندى. ئۇلارنى ساقلاپ قالامسىز؟"
+        message_without_revert: "تور بېكەت لايىھەسىنىڭ بەزى ئۆزگىرىشى ساقلاندى. ئۇ مەشغۇلاتتىن بۇ جايدا يېنىۋالغىلى بولمايدۇ."
+        keep: "ئۆزگىرىشنى ساقلاپ قال"
+        revert: "ئۆزگىرىشنى ئەسلىگە ياندۇر"
+        continue_editing: "تەھرىرلەشنى داۋاملاشتۇر"
       sections:
         theme: "ئۆرنەك"
         colors: "كۆڭۈلدىكى رەڭ"
         fonts: "خەت نۇسخا"
         homepage: "باش بەت"
+        welcome_banner: "قارشى ئېلىش لەۋھەسى"
         search: "ئىزدە"
       theme:
         selected: "تاللاندى"
+        applying: "قوللىنىۋاتىدۇ…"
         custom_theme_notice: "تور بېكىتىڭىز نۆۋەتتە %{name} نى كۆڭۈلدىكى ئۆرنەك سۈپىتىدە ئىشلىتىۋاتىدۇ. تۆۋەندىكى ئۆرنەكتىن بىرىنى تاللاپ ئالدىن كۆزىتىڭ. ساقلانسا نۆۋەتتىكى ئۆرنەكنىڭ ئورنىنى ئالىدۇ."
       colors:
         light: "يورۇق"
@@ -542,6 +564,21 @@ ug:
           boxes: "قۇتا"
           with_topics: "تېمىلىق سەھىپە"
           only: "سەھىپىلا"
+      welcome_banner:
+        enable: "قارشى ئېلىش لەۋھەسىنى كۆرسەت"
+        enable_description: "مېھمانغا تور بېكىتىڭىزنىڭ ئىسمى ۋە ئىزدەش رامكىسىنى نامايان قىلىدۇ"
+        location: "لەۋھە ئورنى"
+        locations:
+          below_site_header: "بېكەت بەت قاشنىڭ ئاستىدا"
+          above_topic_content: "تېما تىزىمىنىڭ ئۈستىدە"
+      search:
+        experiences:
+          search_icon:
+            title: "ئىزدەش سىنبەلگىسى"
+            description: "ئىزدەشنى ئاچىدىغان بەت قاشتىكى چوڭايتقۇچ ئەينەك."
+          search_field:
+            title: "ئىزدەش بۆلىكى"
+            description: "بەت قاشتىكى تولۇق ئىزدەش بۆلىكى، ھەمىشە كۆرۈنىدۇ."
     about:
       edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
@@ -850,6 +887,7 @@ ug:
       deleted_post: "(يازما ئۆچۈرۈلدى)"
       deleted_user: "(ئىشلەتكۈچى ئۆچۈرۈلدى)"
       user:
+        avatar: "پاش قىلىنغاندىكى سىما"
         bio: "تەرجىمىھال"
         website: "تور بېكەت"
         username: "ئىشلەتكۈچى ئاتى"
@@ -1027,6 +1065,7 @@ ug:
         view_conversation: "شەخسىي ئۇچۇرنى كۆرسىتىدۇ"
         note_added: "رىياسەتچى ئىزاھاتى"
         note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
+        author_silenced_by: "يازغۇچىنى %{username} · %{relativeDate} ئۈنسىزلىدى"
         no_events: "كۆرسىتىدىغان ۋاقىت سىزىقى پائالىيىتى يوق"
       author_penalty:
         toast:
@@ -4763,6 +4802,7 @@ ug:
       with_category: "%{filter} %{category} تېما"
       filter:
         title: "%{filter} نىڭ سۈزۈلگەن نەتىجىسى"
+        reset: "ئەسلىگە قايتۇر"
         button:
           label: "سۈزگۈچ"
       latest:

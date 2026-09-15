@@ -7,6 +7,10 @@
 tr_TR:
   js:
     boards:
+      status:
+        all: "Tümü"
+        open: "Aç"
+        archived: "Arşivlendi"
       board:
         remove_card: "Kaldır"
         new_topic: "Yeni konu..."

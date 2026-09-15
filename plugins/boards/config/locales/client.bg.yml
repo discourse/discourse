@@ -7,6 +7,9 @@
 bg:
   js:
     boards:
+      status:
+        all: "Всички"
+        open: "Отвори"
       board:
         remove_card: "Премахване"
         title: "Заглавие"

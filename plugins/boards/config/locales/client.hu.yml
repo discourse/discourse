@@ -7,6 +7,10 @@
 hu:
   js:
     boards:
+      status:
+        all: "Összes"
+        open: "Nyitott"
+        archived: "Archivált"
       board:
         remove_card: "Eltávolítás"
         new_topic: "Új téma..."

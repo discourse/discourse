@@ -6,6 +6,8 @@
 
 ca:
   mcp:
+    errors:
+      topic_not_found: "Tema no trobat"
     oauth:
       deny: "Denega"
       approve: "Autoritza"
@@ -1169,8 +1171,6 @@ ca:
       host_names: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
       queue_size: "El nombre de tasques en cua és de %{queue_size}, que és elevat. Això podria indicar un problema amb un o més processos, o potser us cal afegir més treballadors de <i>Sidekiq</i>."
       ram: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
-      s3_upload_config: 'El servidor és configurat per a carregar fitxers a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
-      s3_backup_config: 'El servidor és configurat per a carregar còpies de seguretat a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu-la. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
       image_magick: 'El servidor és configurat per a crear miniatures d''imatges grans, però ImageMagick no és instal·lat. Instal·leu ImageMagick amb el vostre gestor de paquets preferit o <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixeu la versió més recent</a>.'
       failing_emails: 'Hi ha %{num_failed_jobs} tasques de correu electrònic que han fallat. Comproveu app.yml i assegureu-vos que la configuració del servidor de correu és correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Consulteu les tasques fallides en Sidekiq</a>.'
       subfolder_ends_in_slash: "La vostra configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."

@@ -7,6 +7,10 @@
 el:
   js:
     boards:
+      status:
+        all: "Όλα"
+        open: "Άνοιγμα"
+        archived: "Αρχειοθετημένο"
       board:
         remove_card: "Αφαίρεση"
         new_topic: "Νέο θέμα..."

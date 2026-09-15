@@ -1,5 +1,36 @@
 en:
   mcp:
+    errors:
+      draft_sequence_conflict: "Draft sequence conflict"
+      draft_too_long: "Draft is too long"
+      group_not_found: "Group not found"
+      invalid_date: "Invalid date"
+      invalid_directory_period: "Invalid directory period"
+      invalid_reply_mode: "Invalid reply mode"
+      post_not_found: "Post not found"
+      user_directory_disabled: "The user directory is disabled"
+      filter_only_for_filtered_view: "Filter is only supported by the filtered view"
+      filter_required: "A nonblank filter is required for the filtered view"
+      invalid_post_selection: "The post selection options are invalid"
+      invalid_search_query: "The search query is invalid"
+      group_mailbox_sent: "Group private-message mailboxes do not support sent messages"
+      invalid_upload_data: "The upload data is not valid base64"
+      invalid_upload_source: "Provide either base64 data with a filename or one remote URL"
+      invalid_upload_type: "The upload type is not supported"
+      invalid_upload_url: "The upload URL must use HTTP or HTTPS"
+      private_message_email_message: "A custom message is only valid with an email recipient"
+      private_message_group_notification: "Group notifications are only valid with a group recipient"
+      private_message_invite_failed: "The participant could not be added to the personal message"
+      private_message_not_found: "Personal message not found"
+      private_message_recipient_required: "At least one private-message recipient is required"
+      private_message_single_recipient: "Provide exactly one user, group, or email recipient"
+      topic_not_found: "Topic not found"
+      topic_update_required: "Provide at least one topic field to update"
+      top_period_only_for_top_view: "Top period is only supported by the top view"
+      upload_not_found: "Upload not found"
+      upload_too_large: "The upload is too large"
+      user_update_required: "Provide at least one profile field to update"
+      user_not_found: "User not found"
     oauth:
       authorize_title: "Authorize MCP client"
       client_request: "%{client_name} is requesting access to %{site_name}."
@@ -560,6 +591,7 @@ en:
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  site_archived_error: "This site is in archive mode. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
@@ -1371,7 +1403,8 @@ en:
     marked_insecure_from_theme_component_reason: "upload used in theme component"
 
   unsubscribe:
-    title: "Unsubscribe"
+    title: "Unsubscribe %{email}"
+    unsubscribe: "Unsubscribe"
     stop_watching_topic: "Stop watching this topic, %{link}"
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
@@ -1949,13 +1982,13 @@ en:
       sidekiq_check: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
       queue_size: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
       ram: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
-      google_oauth2_config: 'The server is configured to allow signup and login with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
-      facebook_config: 'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
-      twitter_config: 'The server is configured to allow signup and login with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
-      github_config: 'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
+      google_oauth2_config: '{{setting:enable_google_oauth2_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
+      facebook_config: '{{setting:enable_facebook_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
+      twitter_config: '{{setting:enable_twitter_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
+      github_config: '{{setting:enable_github_logins}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
       github_onebox_backoff: "GitHub is rate-limiting the server, so GitHub links may not preview until the limit resets. Configuring {{setting:github_onebox_access_tokens}} raises the limit significantly."
-      s3_upload_config: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-      s3_backup_config: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+      s3_upload_config: '{{setting:enable_s3_uploads}} is on, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+      s3_backup_config: '{{setting:backup_location}} is set to S3, but %{missing_settings} must still be set. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
       s3_cdn: 'The server is configured to upload files to S3, but there is no S3 CDN configured. This can lead to expensive S3 costs and slower site performance. <a href="https://meta.discourse.org/t/-/148916" target="_blank">See "Using Object Storage for Uploads" to learn more</a>.'
       image_magick: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
       failing_emails: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
@@ -2331,6 +2364,7 @@ en:
     linkedin_oidc_client_id: "Client ID for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     linkedin_oidc_client_secret: "Client secret for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
 
+    site_archived: "Put the site in archive mode. Reads and login remain available; new content, likes, and other write actions are disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
@@ -3186,7 +3220,7 @@ en:
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
       discourse_id_registration: "Failed to automatically register with Discourse ID. This could be due to network connectivity issues, firewall restrictions, or the Discourse ID service being unreachable. Please check server logs for more details or contact support."
-      linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
+      auth_provider_credentials_missing: "You must set %{settings} before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
@@ -3286,8 +3320,6 @@ en:
       tags_any: "Show topics with any of the specified tags (comma-separated)"
       tags_all: "Show topics with all of the specified tags (plus-separated)"
       exclude_tag: "Exclude topics with a specific tag"
-      exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
-      exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
@@ -3297,7 +3329,6 @@ en:
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
-      created_by_user: "Show topics created by username or group (without @)"
       created_by_multiple: "Show topics created by any of the specified users or groups (comma-separated)"
       latest_post_before: "Show topics with last post before a date (YYYY-MM-DD or days ago)"
       latest_post_after: "Show topics with last post after a date (YYYY-MM-DD or days ago)"
@@ -3320,6 +3351,7 @@ en:
       status_public: "Show topics in public categories"
       status_noreplies: "Show topics with no replies"
       status_single_user: "Show topics with a single participant"
+      status_scheduled: "Show topics scheduled to publish to a category"
       in_pinned: "Show pinned topics"
       in_bookmarked: "Show topics you've bookmarked"
       in_watching: "Show topics you're watching"
@@ -3331,6 +3363,7 @@ en:
       in_new_replies: "Show topics with new replies"
       in_new_topics: "Show new topics"
       in_unseen: "Show topics you haven't seen"
+      in_untagged: "Show topics without any tags"
       order_activity: "Sort by last activity (newest first)"
       order_activity_asc: "Sort by last activity (oldest first)"
       order_category: "Sort by category name (Z-A)"
@@ -3345,6 +3378,8 @@ en:
       order_likes_op_asc: "Sort by likes on first post (least first)"
       order_posters: "Sort by number of participants (most first)"
       order_posters_asc: "Sort by number of participants (least first)"
+      order_posts: "Sort by number of replies (most first)"
+      order_posts_asc: "Sort by number of replies (least first)"
       order_title: "Sort by title (Z-A)"
       order_title_asc: "Sort by title (A-Z)"
       order_views: "Sort by view count (most first)"
@@ -3637,6 +3672,16 @@ en:
     subject_template: "%{code} is your login code"
     text_body_template: |
       Use this code to finish logging in to %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
+
+  password_reset_code_mailer:
+    title: "Password reset code"
+    subject_template: "%{code} is your password reset code"
+    text_body_template: |
+      Use this code to reset your password on %{site_name}:
 
       ## %{code}
 
@@ -5297,6 +5342,7 @@ en:
     file_missing: "Sorry, you must provide a file to upload."
     empty: "Sorry, but the file you provided is empty."
     failed: "Sorry, but your upload failed. Please try again."
+    ico_as_avatar: "Sorry, ICO images cannot be used as avatars."
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."

@@ -265,6 +265,7 @@ fa_IR:
       message: "ما این سایت را به روز کرده ایم، <span>لطفاً آن را بازخوانی کنید</span> تا همه چیز به خوبی کار کند."
       dismiss: "رد کردن"
     back_button: "بازگشت"
+    confirm_button: "تایید"
     welcome_banner:
       header:
         new_members: "خوش آمدید، %{preferred_display_name}!"
@@ -4197,6 +4198,7 @@ fa_IR:
       with_category: "%{filter} %{category} موضوعات"
       filter:
         title: "نتایج فیلتر شده برای %{filter}"
+        reset: "بازنشانی"
         button:
           label: "فیلتر"
       latest:

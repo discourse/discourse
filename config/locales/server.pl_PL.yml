@@ -6,6 +6,37 @@
 
 pl_PL:
   mcp:
+    errors:
+      draft_sequence_conflict: "Konflikt sekwencji roboczej"
+      draft_too_long: "Szkic jest zbyt długi"
+      group_not_found: "Grupa nie znaleziona"
+      invalid_date: "Nieprawidłowa data"
+      invalid_directory_period: "Nieprawidłowy okres katalogu"
+      invalid_reply_mode: "Nieprawidłowy tryb odpowiedzi"
+      post_not_found: "Nie znaleziono wpisu"
+      user_directory_disabled: "Katalog użytkowników jest wyłączony"
+      filter_only_for_filtered_view: "Filtr jest obsługiwany tylko przez widok filtrowany"
+      filter_required: "Do widoku filtrowanego wymagany jest filtr niepusty"
+      invalid_post_selection: "Opcje wyboru postu są nieprawidłowe"
+      invalid_search_query: "Zapytanie wyszukiwania jest nieprawidłowe"
+      group_mailbox_sent: "Skrzynki pocztowe grupowe do przesyłania prywatnych wiadomości nie obsługują wysłanych wiadomości"
+      invalid_upload_data: "Przesłane dane nie są prawidłowym systemem base64"
+      invalid_upload_source: "Podaj dane w formacie base64 z nazwą pliku lub jednym zdalnym adresem URL"
+      invalid_upload_type: "Ten typ przesyłania nie jest obsługiwany"
+      invalid_upload_url: "Adres URL do przesyłania musi używać protokołu HTTP lub HTTPS"
+      private_message_email_message: "Wiadomość niestandardowa jest ważna tylko dla odbiorcy wiadomości e-mail"
+      private_message_group_notification: "Powiadomienia grupowe są ważne tylko dla odbiorców należących do grupy"
+      private_message_invite_failed: "Nie udało się dodać uczestnika do prywatnej wiadomości"
+      private_message_not_found: "Nie znaleziono prywatnej wiadomości"
+      private_message_recipient_required: "Wymagany jest co najmniej jeden odbiorca prywatnej wiadomości"
+      private_message_single_recipient: "Podaj dokładnie jednego użytkownika, grupę lub odbiorcę wiadomości e-mail"
+      topic_not_found: "Temat nie został znaleziony"
+      topic_update_required: "Podaj co najmniej jedno pole tematu do aktualizacji"
+      top_period_only_for_top_view: "Okres górny obsługiwany jest tylko przez widok górny"
+      upload_not_found: "Nie znaleziono pliku do przesłania"
+      upload_too_large: "Przesłany plik jest za duży"
+      user_update_required: "Podaj co najmniej jedno pole profilu do aktualizacji"
+      user_not_found: "Użytkownik nie został znaleziony"
     oauth:
       authorize_title: "Autoryzuj klienta MCP"
       client_request: "%{client_name} żąda dostępu do %{site_name}."
@@ -2006,13 +2037,13 @@ pl_PL:
       sidekiq_check: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie e-maili, jest wykonywanych asynchronicznie przez Sidekiq. Upewnij się, że co najmniej jeden proces Sidekiq jest uruchomiony. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiq tutaj</a>.'
       queue_size: "Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq."
       ram: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
-      google_oauth2_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie przy użyciu Google OAuth2 (enable_google_oauth2_logins), ale identyfikator klienta i jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-      facebook_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator aplikacji i jej sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-      twitter_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale wartości dla klucza i sekretu nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-      github_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta oraz jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      google_oauth2_config: '{{setting:enable_google_oauth2_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      facebook_config: '{{setting:enable_facebook_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      twitter_config: '{{setting:enable_twitter_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      github_config: '{{setting:enable_github_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
       github_onebox_backoff: "GitHub ogranicza przepustowość serwera, więc linki GitHub mogą nie być dostępne do momentu zresetowania limitu. Skonfigurowanie {{setting:github_onebox_access_tokens}} znacznie zwiększa limit."
-      s3_upload_config: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
-      s3_backup_config: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
+      s3_upload_config: '{{setting:enable_s3_uploads}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie obrazów do S3?”, aby dowiedzieć się więcej</a>.'
+      s3_backup_config: '{{setting:backup_location}} jest ustawione na S3, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie obrazów do S3?”, aby dowiedzieć się więcej</a>.'
       s3_cdn: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie skonfigurowano S3 CDN. Może to prowadzić do wysokich kosztów S3 i spowolnienia działania witryny. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zobacz "Używanie Object Storage do wysyłania", aby dowiedzieć się więcej</a>.'
       image_magick: 'Serwer jest skonfigurowany do tworzenia miniatur dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą swojego ulubionego menedżera pakietów lub <a href="https://www.imagemagick.org/script/download.php" target="_blank">pobierz najnowszą wersję</a> .'
       failing_emails: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
@@ -3083,7 +3114,7 @@ pl_PL:
       markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       google_oauth2_hd_groups: "Przed włączeniem tego ustawienia musisz skonfigurować wszystkie ustawienia 'google oauth2 hd'."
       discourse_id_registration: "Automatyczna rejestracja przy użyciu Discourse ID się nie powiodła. Może to być spowodowane problemami z łącznością sieciową, ograniczeniami zapory ogniowej lub niedostępnością usługi Discourse ID. Sprawdź dzienniki serwera, aby uzyskać więcej informacji lub skontaktuj się z pomocą techniczną."
-      linkedin_oidc_credentials: "Musisz skonfigurować poświadczenia LinkedIn OIDC (\"linkedin_oidc_client_id\" i \"linkedin_oidc_client_secret\") przed włączeniem tego ustawienia."
+      auth_provider_credentials_missing: "Przed włączeniem tego ustawienia należy ustawić %{settings}."
       search_tokenize_chinese_enabled: "Musisz wyłączyć 'search_tokenize_chinese' przed włączeniem tego ustawienia."
       search_tokenize_japanese_enabled: "Musisz wyłączyć 'search_tokenize_japanese' przed włączeniem tego ustawienia."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."

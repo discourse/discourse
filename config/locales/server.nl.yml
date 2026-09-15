@@ -6,6 +6,11 @@
 
 nl:
   mcp:
+    errors:
+      draft_too_long: "Concept is te lang"
+      post_not_found: "Bericht niet gevonden"
+      topic_not_found: "Topic niet gevonden"
+      user_not_found: "Gebruiker niet gevonden"
     oauth:
       resource: "MCP-server"
       deny: "Weigeren"
@@ -1690,12 +1695,6 @@ nl:
       host_names: "Je bestand config/database.yml gebruikt de standaard hostnaam localhost. Wijzig deze in de hostnaam van je website."
       queue_size: "Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit kan op een probleem met de Sidekiq-processen duiden, of mogelijk moet je meer Sidekiq-werkers toevoegen."
       ram: "Je server werkt met minder dan 1 GB aan geheugen in totaal. Minimaal 1 GB geheugen wordt aanbevolen."
-      google_oauth2_config: 'De server is geconfigureerd om registratie en aanmelding via Google OAuth2 toe te staan (enable_google_oauth2_logins), maar de waarden voor client-ID en clientgeheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-      facebook_config: 'De server is geconfigureerd om registratie en aanmelding via Facebook toe te staan (enable_facebook_logins), maar de waarden voor app-ID en app-geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-      twitter_config: 'De server is geconfigureerd om registratie en aanmelding via Twitter toe te staan (enable_twitter_logins), maar de waarden voor sleutel en geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-      github_config: 'De server is geconfigureerd om registratie en aanmelding via GitHub toe te staan (enable_github_logins), maar de waarden voor client-ID en -geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-      s3_upload_config: 'De server is geconfigureerd om bestanden naar S3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_upload_bucket. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk ''Afbeeldingsuploads naar S3 configureren'' voor meer info</a>.'
-      s3_backup_config: 'De server is geconfigureerd om back-ups naar S3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_backup_bucket. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk ''Afbeeldingsuploads naar S3 configureren'' voor meer info</a>.'
       s3_cdn: 'De server is geconfigureerd om bestanden te uploaden naar S3, maar er is geen S3-CDN geconfigureerd. Dit kan leiden tot hoge S3-kosten en tragere websiteprestaties. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zie "Objectenopslag gebruiken voor uploads" voor meer informatie</a>.'
       image_magick: 'De server is geconfigureerd om miniaturen van grote afbeeldingen te maken, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met je favoriete pakketbeheerder, of <a href="https://www.imagemagick.org/script/download.php" target="_blank">download de nieuwste versie</a>.'
       failing_emails: 'Er zijn %{num_failed_jobs} mislukte e-mailtaken. Controleer je bestand app.yml en zorg dat de mailserverinstellingen juist zijn. <a href="%{base_path}/sidekiq/retries" target="_blank">Bekijk de mislukte taken in Sidekiq</a>.'
@@ -2568,7 +2567,6 @@ nl:
       markdown_linkify_tlds: "Je kunt de waarde '*' niet gebruiken."
       google_oauth2_hd_groups: "Je moet alle 'Google OAuth2 HD'-instellingen configureren voordat je deze instelling inschakelt."
       discourse_id_registration: "Automatisch registreren bij Discourse ID is mislukt. Dit kan komen door problemen met de netwerkverbinding, firewallbeperkingen of doordat de Discourse ID-service onbereikbaar is. Controleer de serverlogs voor meer gegevens of neem contact op met de ondersteuning."
-      linkedin_oidc_credentials: "Je moet de LinkedIn OIDC-aanmeldgegevens ('linkedin_oidc_client_id' en 'linkedin_oidc_client_secret') configureren voordat je deze instelling inschakelt."
       search_tokenize_chinese_enabled: "Je moet 'search_tokenize_chinese' uitschakelen voordat je deze instelling inschakelt."
       search_tokenize_japanese_enabled: "Je moet 'search_tokenize_japanese' uitschakelen voordat je deze instelling inschakelt."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Je kunt DiscourseConnect niet inschakelen als 2FA wordt afgedwongen."

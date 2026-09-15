@@ -58,10 +58,7 @@ class McpController < ApplicationController
   rescue DiscourseMcp::AuthenticationError => error
     response.set_header(
       "WWW-Authenticate",
-      DiscourseMcp::Authenticator.challenge(
-        scope: DiscourseMcp::INITIAL_SCOPE,
-        error: error.oauth_error,
-      ),
+      DiscourseMcp::Authenticator.challenge(error: error.oauth_error),
     )
     render json: jsonrpc_error(nil, -32_001, "Authorization required"), status: :unauthorized
   end

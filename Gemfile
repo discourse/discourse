@@ -130,7 +130,6 @@ group :test do
   gem "simplecov", require: false
   gem "test-prof", require: false
   gem "rails-dom-testing", require: false
-  gem "minio_runner", require: false
   gem "capybara-playwright-driver", require: false
   gem "puma", require: false
 end

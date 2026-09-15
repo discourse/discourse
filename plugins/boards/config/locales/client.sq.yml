@@ -7,6 +7,9 @@
 sq:
   js:
     boards:
+      status:
+        all: "Të gjitha"
+        open: "Fillo"
       board:
         remove_card: "Hiq"
         title: "Titulli"

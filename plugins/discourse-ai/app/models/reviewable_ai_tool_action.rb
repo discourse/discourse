@@ -58,17 +58,29 @@ class ReviewableAiToolAction < Reviewable
 
     ensure_tool_succeeded!(result)
 
-    create_result(:success, :approved)
+    resolution_result(:approved, args, tool_result: result)
   end
 
   def perform_reject(performed_by, args)
     ensure_inline_post_contains_approval!(args)
     ensure_performed_by_is_a_real_person!(performed_by)
 
-    create_result(:success, :rejected)
+    resolution_result(:rejected, args)
   end
 
   private
+
+  def resolution_result(status, args, tool_result: nil)
+    result = create_result(:success, status)
+    inline_post_id = args[:post_id] || args["post_id"]
+    return result if inline_post_id.blank?
+
+    payload["continuation"] = { post_id: inline_post_id.to_i, tool_result: tool_result }
+    result.after_commit = -> do
+      DB.after_commit { Jobs.enqueue(:resume_ai_tool_approval, reviewable_id: id) }
+    end
+    result
+  end
 
   # Rebuilds the tool from the persisted action. Returns [tool, tool_class,
   # context]; the caller sets context.user for audit attribution as needed.
@@ -121,7 +133,7 @@ class ReviewableAiToolAction < Reviewable
       Post.find_by(
         id: inline_post_id,
         topic_id: topic_id,
-        user_id: target&.bot_user_id,
+        user_id: [target&.bot_user_id, target&.ai_agent&.user_id].compact,
         deleted_at: nil,
       )
     approval_marker = "data-ai-tool-approval-reviewable-id='#{id}'"
