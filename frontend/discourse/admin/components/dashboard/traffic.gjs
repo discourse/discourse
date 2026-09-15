@@ -163,6 +163,10 @@ export default class DashboardTraffic extends Component {
     return { range: this.args.period };
   }
 
+  get showTrafficExplorerLink() {
+    return this.currentUser.admin && this.showSessionMetrics;
+  }
+
   formatHeadlineCount(value) {
     if (value >= 1_000_000) {
       const formatted = I18n.toNumber(value / 1_000_000, { precision: 1 });
@@ -397,7 +401,7 @@ export default class DashboardTraffic extends Component {
               @options={{this.chartOptions}}
             />
           </div>
-          {{#if this.currentUser.admin}}
+          {{#if this.showTrafficExplorerLink}}
             <LinkTo
               class="db-traffic__see-details"
               @query={{this.explorerQuery}}
