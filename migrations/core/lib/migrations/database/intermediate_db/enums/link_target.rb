@@ -18,6 +18,9 @@ module Migrations
           TAG = 5
           GROUP = 6
           BADGE = 7
+          SITE = 8
+          CATEGORY_TAG = 9
+          TAG_INTERSECTION = 10
         end
       end
     end

@@ -4,9 +4,11 @@ PATH
     migrations-converters (0.0.1)
       activesupport
       colored2
+      discourse-emojis
       i18n
       markbridge (>= 0.4.0)
       migrations-core
+      mini_racer
       pg
       zeitwerk
 
