@@ -15,8 +15,11 @@ describe "Configure a LiveKit agent" do
   it "lets an admin enable the bot without configuring an agent name" do
     settings_page.visit("voice_livekit_agent")
     expect(settings_page).to have_setting("voice_livekit_agent_enabled")
+    expect(settings_page).to have_setting("voice_livekit_agent_invite_allowed_groups")
     expect(page).to have_content("Voice livekit agent enabled")
-    expect(page).to have_content(I18n.t("site_settings.voice_livekit_agent_enabled"))
+    # The description embeds a {{setting:...}} token that renders as a link,
+    # so only a token-free fragment can be matched literally.
+    expect(page).to have_content("to invite a LiveKit Cloud agent to public voice rooms")
 
     settings_page.toggle_bool_setting("voice_livekit_agent_enabled")
 
