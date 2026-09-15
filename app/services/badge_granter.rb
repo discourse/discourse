@@ -22,6 +22,25 @@ class BadgeGranter
     BadgeGranter.new(badge, user, opts).grant
   end
 
+  def self.sync_availability!(plugin_name)
+    badges = plugin_name ? Badge.where(plugin_name:) : Badge.where.not(plugin_name: nil)
+    User
+      .where(id: UserBadge.where(badge_id: badges.select(:id)).select(:user_id))
+      .in_batches do |users|
+        user_ids = users.ids
+        UserBadge.ensure_consistency!(user_ids)
+        UserStat.update_distinct_badge_count(user_ids)
+      end
+
+    return unless plugin_name
+
+    badges
+      .available
+      .where.not(query: nil)
+      .ids
+      .each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id:) }
+  end
+
   def self.enqueue_mass_grant_for_users(
     badge,
     emails: [],

@@ -13,6 +13,12 @@ Sidekiq.configure_server do |config|
   config.redis = Discourse.sidekiq_redis_config
   config[:skip_default_job_logging] = true
 
+  config.on(:startup) do
+    RailsMultisite::ConnectionManagement.safe_each_connection do
+      Jobs::SyncBadgeAvailability.enqueue
+    end
+  end
+
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
     chain.add Sidekiq::DiscourseEvent

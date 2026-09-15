@@ -274,6 +274,7 @@ task "db:seed" => "environment" do
 
   begin
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+    Jobs::SyncBadgeAvailability.enqueue
   rescue => error
     raise if ENV["RAISE_SEED_ERRORS"] == "1"
     puts error.full_message(highlight: false, order: :top)
