@@ -160,7 +160,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     dashboard.site_traffic.click_see_details
 
     expect(page).to have_current_path(
-      "/admin/reports/site_traffic?end_date=2026-05-12&start_date=2026-05-01",
+      "/admin/reports/consolidated_page_views?end_date=2026-05-12&start_date=2026-05-01",
     )
   end
 
