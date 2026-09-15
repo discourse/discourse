@@ -173,4 +173,170 @@ RSpec.describe Jobs::ResumeAiToolApproval do
       expect(reviewable.reload.payload["continuation_started_at"]).to be_nil
     end
   end
+
+  describe "#execute in chat" do
+    before do
+      SiteSetting.chat_enabled = true
+      ai_agent.update!(allow_chat_direct_messages: true)
+    end
+
+    let(:channel) do
+      Fabricate(
+        :direct_message_channel,
+        users: [requester, admin, ai_agent.user],
+        threading_enabled: true,
+      )
+    end
+    let(:message) { Fabricate(:chat_message, chat_channel: channel, user: requester) }
+    let(:thread) { Fabricate(:chat_thread, channel: channel, original_message: message) }
+    let(:approval_message) do
+      message.update!(thread: thread)
+      tool_action.update!(post_id: nil)
+      reviewable.update!(payload: reviewable.payload.merge("chat_message_id" => message.id))
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        thread: thread,
+        user: ai_agent.user,
+        blocks: DiscourseAi::AiBot::ChatToolApproval.pending_blocks(reviewable.id),
+      )
+    end
+
+    it "resumes once in the same thread with the executed tool result" do
+      reviewable.perform(admin, :approve, chat_message_id: approval_message.id)
+      category = Category.find_by!(name: "Bug reports")
+      prompts = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["The category is ready."],
+      ) do |_, _, captured_prompts|
+        job.execute(reviewable_id: reviewable.id)
+        job.execute(reviewable_id: reviewable.id)
+        prompts = captured_prompts
+      end
+
+      expect(prompts.size).to eq(1)
+      expect(JSON.parse(prompts.first.messages.last[:content])).to include(
+        "decision" => "approved",
+        "result" => include("category_id" => category.id),
+      )
+      reply = channel.chat_messages.order(:id).last
+      expect(reply.message).to eq("The category is ready.")
+      expect(reply.thread_id).to eq(thread.id)
+      expect(reply.user_id).to eq(ai_agent.user_id)
+      expect(Category.where(name: "Bug reports").count).to eq(1)
+    end
+
+    it "continues after rejection without executing the tool" do
+      reviewable.perform(admin, :reject, chat_message_id: approval_message.id)
+      prompts = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["I will leave the categories unchanged."],
+      ) do |_, _, captured_prompts|
+        job.execute(reviewable_id: reviewable.id)
+        prompts = captured_prompts
+      end
+
+      expect(JSON.parse(prompts.first.messages.last[:content])).to include(
+        "decision" => "rejected",
+        "result" => nil,
+      )
+      expect(prompts.first.messages.first[:content]).to include("do not retry it")
+      expect(channel.chat_messages.order(:id).last.message).to eq(
+        "I will leave the categories unchanged.",
+      )
+      expect(Category.exists?(name: "Bug reports")).to eq(false)
+    end
+
+    it "queues chat approvals with the original context and resumes subsequent approvals" do
+      requester.update!(admin: true)
+      ai_agent.update!(tools: ["CreateCategory"])
+      bot =
+        DiscourseAi::Agents::Bot.as(
+          ai_agent.user,
+          agent: ai_agent.class_instance.new,
+          model: llm_model,
+        )
+      tool_calls =
+        ["First category", "Second category"].map do |name|
+          DiscourseAi::Completions::ToolCall.new(
+            name: "create_category",
+            id: name.parameterize,
+            parameters: {
+              name: name,
+              reason: "Organize discussions",
+            },
+          )
+        end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_calls.first, "Awaiting approval."],
+      ) do
+        DiscourseAi::AiBot::Playground.new(bot).reply_to_chat_message(
+          message,
+          channel,
+          [source_post.id],
+        )
+      end
+
+      first_reviewable = ReviewableAiToolAction.order(:id).last
+      expect(first_reviewable.payload).to include(
+        "chat_message_id" => message.id,
+        "context_post_ids" => [source_post.id],
+      )
+      first_reviewable.perform(
+        admin,
+        :approve,
+        chat_message_id: channel.chat_messages.order(:id).last.id,
+      )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_calls.last, "Awaiting another approval."],
+      ) { job.execute(reviewable_id: first_reviewable.id) }
+
+      next_reviewable = ReviewableAiToolAction.order(:id).last
+      expect(next_reviewable).to be_pending
+      expect(next_reviewable.payload["chat_message_id"]).to eq(message.id)
+      expect(Category.exists?(name: "Second category")).to eq(false)
+      next_reviewable.perform(
+        admin,
+        :approve,
+        chat_message_id: channel.chat_messages.order(:id).last.id,
+      )
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Both categories are ready."]) do
+        job.execute(reviewable_id: next_reviewable.id)
+      end
+
+      reply = channel.chat_messages.order(:id).last
+      expect(reply.message).to eq("Both categories are ready.")
+      expect(reply.thread_id).to eq(message.reload.thread_id)
+      expect(Category.where(name: ["First category", "Second category"]).count).to eq(2)
+    end
+
+    it "skips continuation when the original requester loses access" do
+      reviewable.perform(admin, :reject, chat_message_id: approval_message.id)
+      channel.chatable.direct_message_users.where(user_id: requester.id).delete_all
+
+      expect { job.execute(reviewable_id: reviewable.id) }.not_to change { Chat::Message.count }
+      expect(reviewable.reload.payload["continuation_started_at"]).to be_nil
+    end
+
+    it "skips continuation when the agent is no longer available to the requester" do
+      reviewable.perform(admin, :reject, chat_message_id: approval_message.id)
+      ai_agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+
+      expect { job.execute(reviewable_id: reviewable.id) }.not_to change { Chat::Message.count }
+      expect(reviewable.reload.payload["continuation_started_at"]).to be_nil
+    end
+
+    it "skips continuation when the source message is deleted" do
+      reviewable.perform(admin, :reject, chat_message_id: approval_message.id)
+      message.trash!
+
+      expect { job.execute(reviewable_id: reviewable.id) }.not_to change { Chat::Message.count }
+      expect(reviewable.reload.payload["continuation_started_at"]).to be_nil
+    end
+  end
 end

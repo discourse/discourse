@@ -339,7 +339,13 @@ module DiscourseAi
         Discourse.warn_exception(e, message: "Discourse AI: Unable to generate title")
       end
 
-      def reply_to_chat_message(message, channel, context_post_ids)
+      def reply_to_chat_message(
+        message,
+        channel,
+        context_post_ids,
+        custom_instructions: nil,
+        additional_messages: []
+      )
         agent_user = User.find(bot.agent.class.user_id)
 
         participants = channel.user_chat_channel_memberships.map { |m| m.user.username }
@@ -355,6 +361,7 @@ module DiscourseAi
         context =
           DiscourseAi::Agents::BotContext.new(
             participants: participants,
+            custom_instructions: custom_instructions,
             message_id: message.id,
             channel_id: channel.id,
             context_post_ids: context_post_ids,
@@ -377,8 +384,10 @@ module DiscourseAi
             cancel_manager: DiscourseAi::Completions::CancelManager.new,
           )
 
+        context.messages.concat(additional_messages)
+
         reply = nil
-        guardian = Guardian.new(agent_user)
+        guardian = agent_user.guardian
 
         force_thread = message.thread_id.nil? && channel.direct_message_channel?
         in_reply_to_id = channel.direct_message_channel? ? message.id : nil

@@ -503,6 +503,8 @@ module DiscourseAi
               agent_name: @agent.class.name,
               reason: tool.parameters[:reason],
               llm_model_id: @model&.id,
+              chat_message_id: context.message_id,
+              context_post_ids: context.context_post_ids,
             },
           )
 
