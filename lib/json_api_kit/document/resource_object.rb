@@ -3,7 +3,7 @@
 module JsonApiKit
   class Document
     class ResourceObject
-      delegate :type, :id, to: :record, private: true
+      delegate :id, to: :record, private: true
       delegate :glossary, :urls, to: :client, private: true
 
       def initialize(record, client:, fieldsets:, meta: {})
@@ -19,7 +19,9 @@ module JsonApiKit
 
       attr_reader :record, :client, :fieldsets, :meta
 
-      def relationship(value) = Name::Relationship.new(value:, type:)
+      def type = glossary.member_type(record.type)
+
+      def relationship(value) = Name::Relationship.new(value:, type: record.type)
 
       def member_value(name) = glossary.member_name(name).value
 
@@ -30,7 +32,7 @@ module JsonApiKit
       def relationships
         record.relationships.to_h do |name, linkage|
           member = member_value(relationship(name))
-          [member, RelationshipObject.new(linkage, urls:, owner: record, name: member).to_h]
+          [member, RelationshipObject.new(linkage, client:, owner: record, name: member).to_h]
         end
       end
 
