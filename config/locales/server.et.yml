@@ -526,7 +526,7 @@ et:
     banner:
       title: "Teema Bänneriks"
   unsubscribe:
-    title: "Tühista tellimus"
+    unsubscribe: "Tühista tellimus"
     mailing_list_mode: "Lülita postiloendi režiim välja"
     log_out: "Logi välja"
     digest_frequency:

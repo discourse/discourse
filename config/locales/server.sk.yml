@@ -1290,7 +1290,7 @@ sk:
   uploads:
     marked_insecure_from_theme_component_reason: "upload použitý v komponente témy"
   unsubscribe:
-    title: "Odhlásiť"
+    unsubscribe: "Odhlásiť"
     stop_watching_topic: "Prestať pozerať túto tému, %{link}"
     mute_topic: "Stíšiť všetky upozornenia pre túto tému, %{link}"
     unwatch_category: "Prestať pozerať všetky témy v kategórii %{category}"
@@ -2644,8 +2644,6 @@ sk:
       tags_any: "Zobraziť témy s niektorou zo zadaných značiek (oddelených čiarkami)"
       tags_all: "Zobraziť témy so všetkými zadanými značkami (oddelenými plusom)"
       exclude_tag: "Vylúčenie tém s konkrétnou značkou"
-      exclude_tags_any: "Vylúčiť témy s niektorou zo zadaných značiek (oddelených čiarkami)"
-      exclude_tags_all: "Vylúčiť témy so všetkými zadanými značkami (oddelenými plusom)"
       tag_group: "Zobrazenie tém so značkami z konkrétnej skupiny značiek"
       exclude_tag_group: "Vylúčenie tém so značkami z určitej skupiny značiek"
       activity_before: "Zobraziť témy s poslednou aktivitou pred dátumom (RRRR-MM-DD alebo pred niekoľkými dňami)"

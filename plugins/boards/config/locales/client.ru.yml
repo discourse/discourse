@@ -6,6 +6,18 @@
 
 ru:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Название"
+        icon: "Значок"
+        color: "Цвет"
+        tag_name: "Теги"
+        default_sort_priority: "Приоритет"
+      create_board:
+        name: "Название"
+        slug: "Slug (текстовый идентификатор)"
+        tag_names: "Теги"
+        category_ids: "Категории"
     boards:
       status:
         all: "Все"

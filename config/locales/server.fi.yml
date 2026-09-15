@@ -1137,7 +1137,7 @@ fi:
   uploads:
     marked_insecure_from_theme_component_reason: "latausta käytetään teemakomponentissa"
   unsubscribe:
-    title: "Peru tilaus"
+    unsubscribe: "Peru tilaus"
     stop_watching_topic: "Lopeta ketjun tarkkailu, %{link}"
     mute_topic: "Vaimenna kaikki ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
@@ -2494,8 +2494,6 @@ fi:
       tags_any: "Näytä ketjut millä tahansa määritetyillä tunnisteilla (pilkuilla erotettuna)"
       tags_all: "Näytä ketjut kaikilla määritetyillä tunnisteilla (plus-merkillä erotettuna)"
       exclude_tag: "Jätä pois ketjut tietyllä tunnisteella"
-      exclude_tags_any: "Jätä pois ketjut millä tahansa määritetyillä tunnisteilla (pilkuilla erotettuna)"
-      exclude_tags_all: "Jätä pois ketjut kaikilla määritetyillä tunnisteilla (plus-merkillä erotettuna)"
       tag_group: "Näytä ketjut, joilla on tietyn tunnisteiryhmän tunnisteita"
       exclude_tag_group: "Jätä pois ketjut, joilla on tietyn tunnisteiryhmän tunnisteita"
       activity_before: "Näytä ketjut, joissa viimeisin toiminta on ennen tiettyä päivämäärää (VVVV-KK-PP tai päivää sitten)"

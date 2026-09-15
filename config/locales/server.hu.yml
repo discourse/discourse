@@ -1153,7 +1153,7 @@ hu:
   uploads:
     marked_insecure_from_theme_component_reason: "A feltöltés egy téma összetevőt használ"
   unsubscribe:
-    title: "Leiratkozás"
+    unsubscribe: "Leiratkozás"
     stop_watching_topic: "Ne figyelje tovább ezt a kategóriát: %{link}"
     mute_topic: "A téma összes értesítésének némítása, %{link}"
     unwatch_category: "Ne figyelje tovább ezt a kategóriát: %{category}"
@@ -2575,8 +2575,6 @@ hu:
       tags_any: "A megadott címkék bármelyikével jelölt témák megjelenítése (vesszővel elválasztva)"
       tags_all: "Az összes megadott címkével ellátott témák megjelenítése (pluszjellel elválasztva)"
       exclude_tag: "Egy adott címkével rendelkező témák kizárása"
-      exclude_tags_any: "Kizárja a megadott címkék bármelyikét tartalmazó témákat (vesszővel elválasztva)."
-      exclude_tags_all: "Kizárja a megadott címkékkel rendelkező témákat (plusz-szeparált)"
       tag_group: "Témák megjelenítése egy adott címkecsoport címkéivel"
       exclude_tag_group: "Címkékkel ellátott témák kizárása egy adott címkecsoportból"
       activity_before: "Mutassa a témákat, amelyek utolsó aktivitása egy adott dátum előtt (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) történt"
@@ -2584,7 +2582,6 @@ hu:
       created_before: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) előtt létrehozott témák megjelenítése"
       created_after: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) után létrehozott témák megjelenítése"
       created_by: "Egy adott felhasználó vagy csoport által létrehozott témák megjelenítése"
-      created_by_user: "Felhasználónév vagy csoport által létrehozott témák megjelenítése (@ jel nélkül)"
       created_by_multiple: "A megadott felhasználók vagy csoportok által létrehozott témák megjelenítése (vesszővel elválasztva)"
       latest_post_before: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum előtt történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
       latest_post_after: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum után történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."

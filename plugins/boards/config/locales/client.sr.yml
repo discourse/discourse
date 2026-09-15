@@ -6,6 +6,15 @@
 
 sr:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Naslov"
+        icon: "Ikona"
+        color: "Boja"
+      create_board:
+        name: "Ime foruma"
+        tag_names: "Tagovi"
+        category_ids: "Kategorije"
     boards:
       status:
         all: "Sve"

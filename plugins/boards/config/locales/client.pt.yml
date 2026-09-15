@@ -6,6 +6,17 @@
 
 pt:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Título"
+        icon: "Ícone"
+        color: "Cor"
+        tag_name: "Etiqueta"
+      create_board:
+        name: "Nome"
+        slug: "Slug"
+        tag_names: "Etiquetas"
+        category_ids: "Categorias"
     boards:
       status:
         all: "Todos"

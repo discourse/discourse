@@ -6,6 +6,18 @@
 
 de:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Titel"
+        icon: "Symbol"
+        color: "Farbe"
+        tag_name: "Schlagwort"
+        default_sort_priority: "Priorität"
+      create_board:
+        name: "Name"
+        slug: "Sprechender Name für URL"
+        tag_names: "Schlagwörter"
+        category_ids: "Kategorien"
     boards:
       status:
         all: "Alle"

@@ -6,6 +6,17 @@
 
 hr:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Titula"
+        icon: "Ikona"
+        color: "Boja"
+        tag_name: "Označiti"
+      create_board:
+        name: "Ime"
+        slug: "Puž"
+        tag_names: "Oznake"
+        category_ids: "Kategorije"
     boards:
       status:
         all: "Sve"

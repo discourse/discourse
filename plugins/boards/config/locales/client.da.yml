@@ -6,6 +6,17 @@
 
 da:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Titel"
+        icon: "Ikon"
+        color: "Farve"
+        tag_name: "Mærke"
+      create_board:
+        name: "Navn"
+        slug: "Alias (Slug)"
+        tag_names: "Mærker"
+        category_ids: "Kategorier"
     boards:
       status:
         all: "Alle"

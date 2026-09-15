@@ -1137,7 +1137,7 @@ it:
   uploads:
     marked_insecure_from_theme_component_reason: "caricamento utilizzato nel componente del tema"
   unsubscribe:
-    title: "Annulla iscrizione"
+    unsubscribe: "Annulla iscrizione"
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
@@ -2489,8 +2489,6 @@ it:
       tags_any: "Mostra gli argomenti con una qualsiasi delle etichette specificate (separate da una virgola)"
       tags_all: "Mostra gli argomenti di tutte le etichette specificate (separate dal segno più)"
       exclude_tag: "Escludi argomenti con un'etichetta specifica"
-      exclude_tags_any: "Escludi gli argomenti con una qualsiasi delle etichette specificate (separate da una virgola)"
-      exclude_tags_all: "Escludi gli argomenti di tutte le etichette specificate (separate dal segno più)"
       tag_group: "Mostra argomenti con etichetta da un gruppo di etichette specifico"
       exclude_tag_group: "Escludi argomenti con etichetta da un gruppo di etichette specifico"
       activity_before: "Mostra argomenti con ultima attività prima di una data (AAAA-MM-GG o giorni fa)"

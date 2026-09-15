@@ -6,6 +6,13 @@
 
 id:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Judul"
+      create_board:
+        name: "Nama"
+        tag_names: "Label"
+        category_ids: "Kategori"
     boards:
       status:
         all: "Semua"

@@ -489,7 +489,7 @@ pl_PL:
       reply_error: "Przepraszamy, wygląda na to, że nasz system napotkał nieoczekiwany problem podczas próby udzielenia odpowiedzi.\n\n[details='Szczegóły błędu']\n%{details}\n[/details]"
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
-      tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
+      tool_pending_approval: "Ta czynność wymaga zatwierdzenia:"
       spawn_agent:
         description: "Deleguj samodzielny monit do jednego z dozwolonych agentów i zwróć jego odpowiedź"
         prompt_description: "Kompletny, samodzielny monit wysyłany do wybranego agenta i wyświetlany w bloku myślowym"

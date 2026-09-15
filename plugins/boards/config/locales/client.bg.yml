@@ -6,6 +6,16 @@
 
 bg:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Заглавие"
+        icon: "Икона"
+        color: "Цвят"
+      create_board:
+        name: "Име"
+        slug: "Slug"
+        tag_names: "Етикети"
+        category_ids: "Категории"
     boards:
       status:
         all: "Всички"

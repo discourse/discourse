@@ -6,6 +6,17 @@
 
 cs:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Název"
+        icon: "Ikona"
+        color: "Barva"
+        tag_name: "Štítek"
+      create_board:
+        name: "Jméno"
+        slug: "URL"
+        tag_names: "Tagy"
+        category_ids: "Kategorie"
     boards:
       status:
         all: "Vše"

@@ -1149,7 +1149,7 @@ pt_BR:
   uploads:
     marked_insecure_from_theme_component_reason: "envio usado no componente de tema"
   unsubscribe:
-    title: "Cancelar associação"
+    unsubscribe: "Cancelar associação"
     stop_watching_topic: "Parar de acompanhar este tópico, %{link}"
     mute_topic: "Silenciar todas as notificações para este tópico, %{link} "
     unwatch_category: "Parar de acompanhar todos os tópicos na categoria %{category}"
@@ -2575,8 +2575,6 @@ pt_BR:
       tags_any: "Exibir tópicos com qualquer uma das etiquetas especificadas (separadas por vírgula)"
       tags_all: "Exibir tópicos com todas as etiquetas especificadas (separadas por vírgula)"
       exclude_tag: "Excluir tópicos com uma etiqueta especificada"
-      exclude_tags_any: "Excluir tópicos com qualquer uma das etiquetas especificadas (separadas por vírgula)"
-      exclude_tags_all: "Excluir tópicos com todas as etiquetas especificadas (separadas por vírgula)"
       tag_group: "Exibir tópicos com etiquetas de um grupo de etiquetas específico"
       exclude_tag_group: "Excluir tópicos com tags de um grupo de etiquetas específico"
       activity_before: "Exibir tópicos com atividade mais recente antes de uma data (DD-MM-AAAA ou dias atrás)"
@@ -2584,7 +2582,6 @@ pt_BR:
       created_before: "Exibir tópicos criados antes de uma data (DD-MM-AAAA ou dias atrás)"
       created_after: "Exibir tópicos criados após uma data (DD-MM-AAAA ou dias atrás)"
       created_by: "Exibir tópicos criados por usuário(a) ou grupo específico"
-      created_by_user: "Exibir tópicos criados por nome de usuário ou grupo (sem @)"
       created_by_multiple: "Exibir tópicos criados por qualquer um(a) dos(as) usuários(as) ou grupos especificados(as) (separados por vírgula)"
       latest_post_before: "Exibir tópicos com postagem mais recente antes de uma data (DD-MM-AAAA ou dias atrás)"
       latest_post_after: "Exibir tópicos com a postagem mais recente após a data (DD-MM-AAAA ou dias atrás)"
