@@ -2,6 +2,7 @@
 
 describe DiscourseAi::Completions::PromptMessagesBuilder do
   let(:builder) { DiscourseAi::Completions::PromptMessagesBuilder.new }
+
   fab!(:user)
   fab!(:admin)
   fab!(:bot_user, :user)
@@ -35,14 +36,14 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(content[3]).to eq({ upload_id: 2 })
   end
 
-  it "should allow merging user messages" do
+  it "allows merging user messages" do
     builder.push(type: :user, content: "Hello", id: "Alice")
     builder.push(type: :user, content: "World", id: "Bob")
 
     expect(builder.to_a).to eq([{ type: :user, content: "Alice: Hello\nBob: World" }])
   end
 
-  it "should allow adding uploads" do
+  it "allows adding uploads" do
     builder.push(type: :user, content: "Hello", name: "Alice", upload_ids: [1, 2])
 
     expect(builder.to_a).to eq(
@@ -50,7 +51,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     )
   end
 
-  it "should support function calls" do
+  it "supports function calls" do
     builder.push(type: :user, content: "Echo 123 please", name: "Alice")
     builder.push(type: :tool_call, content: "echo(123)", name: "echo", id: 1)
     builder.push(type: :tool, content: "123", name: "echo", id: 1)
@@ -64,7 +65,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(builder.to_a).to eq(expected)
   end
 
-  it "should drop a tool call if it is not followed by tool" do
+  it "drops a tool call if it is not followed by tool" do
     builder.push(type: :user, content: "Echo 123 please", id: "Alice")
     builder.push(type: :tool_call, content: "echo(123)", name: "echo", id: 1)
     builder.push(type: :user, content: "OK", id: "James")
@@ -73,7 +74,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(builder.to_a).to eq(expected)
   end
 
-  it "should format messages for topic style" do
+  it "formats messages for topic style" do
     # Create a topic with tags
     topic = Fabricate(:topic, title: "This is an Example Topic")
 
