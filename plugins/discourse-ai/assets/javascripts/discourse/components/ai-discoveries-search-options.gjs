@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import DButton from "discourse/ui-kit/d-button";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import shortcutLabel from "../lib/shortcut-label";
 
@@ -235,6 +236,10 @@ export default class AiDiscoveriesSearchOptions extends Component {
       : [...scopes, search, ask];
   }
 
+  get optionsKey() {
+    return this.options.map((option) => option.kind).join();
+  }
+
   get resolveOptions() {
     const search = {
       kind: "search",
@@ -352,10 +357,17 @@ export default class AiDiscoveriesSearchOptions extends Component {
   }
 
   <template>
-    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
+      aria-label={{i18n "discourse_ai.discobot_discoveries.search_options"}}
       class="ai-discoveries-search-options"
+      role="toolbar"
       {{on "keydown" this.search.handleArrowUpOrDown}}
+      {{dRovingFocus
+        orientation="horizontal"
+        itemSelector=".ai-discoveries-search-options__option"
+        entryFocus="first"
+        itemsKey=this.optionsKey
+      }}
     >
       {{#each this.options key="kind" as |option|}}
         <DButton
@@ -371,6 +383,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
       {{/each}}
       <DButton
         class="btn-default btn-small ai-discoveries-search-options__option --advanced"
+        data-search-menu-navigation-item
         @action={{@openAdvancedSearch}}
         @ariaLabel="search.open_advanced"
         @icon="sliders"
