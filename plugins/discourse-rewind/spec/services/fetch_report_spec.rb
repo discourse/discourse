@@ -129,6 +129,43 @@ RSpec.describe(DiscourseRewind::FetchReport) do
           expect(DiscourseRewind::Action::Reactions).to_not have_received(:call)
         end
       end
+
+      context "when a cached best topics report contains content from a now-restricted topic" do
+        let(:params) { { index: 7 } }
+
+        before do
+          DiscourseRewind::FetchReportsHelper.cache_single_report(
+            current_user.username,
+            2021,
+            "BestTopics",
+            {
+              data: [{ topic_id: 1, title: "restricted topic", excerpt: "restricted content" }],
+              identifier: "best-topics",
+            },
+          )
+        end
+
+        it "filters the cached report without regenerating it" do
+          allow(DiscourseRewind::Action::BestTopics).to receive(:call)
+
+          expect(result).to be_success
+          expect(result.report[:data]).to eq([])
+          expect(DiscourseRewind::Action::BestTopics).to_not have_received(:call)
+          expect(
+            DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
+              current_user.username,
+              2021,
+              "BestTopics",
+            )[
+              :data
+            ],
+          ).to contain_exactly(
+            topic_id: 1,
+            title: "restricted topic",
+            excerpt: "restricted content",
+          )
+        end
+      end
     end
 
     context "when a report is not cached" do

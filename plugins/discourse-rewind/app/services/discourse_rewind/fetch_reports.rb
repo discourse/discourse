@@ -20,6 +20,7 @@ module DiscourseRewind
     #   @return [Service::Base::Context]
 
     INITIAL_REPORT_COUNT = 3
+    VISIBILITY_FILTERED_REPORTS = [Action::BestTopics, Action::BestPosts].freeze
 
     # The order here controls the order of reports in the UI,
     # so be careful when moving these around.
