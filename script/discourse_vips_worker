@@ -51,10 +51,14 @@ class DiscourseVipsWorker
         dominant_color(*arguments)
       when "animated"
         animated(*arguments)
-      when "heif-to-jpeg"
-        heif_to_jpeg(input_path: arguments[0], output_path: arguments[1])
       when "svg-dimensions"
         svg_dimensions(*arguments)
+      when "heif-to-jpeg"
+        heif_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "png-to-jpeg"
+        png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "recompress-jpeg"
+        recompress_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -162,29 +166,67 @@ class DiscourseVipsWorker
     end
     private_class_method :animated
 
-    def self.heif_to_jpeg(input_path:, output_path:)
+    def self.heif_to_jpeg(input_path:, output_path:, quality:)
       new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
-        if File.identical?(input_path, output_path)
-          raise ArgumentError, "input and output must be different files"
-        end
-
         block_loaders(allowed: %w[VipsForeignLoadHeif])
 
         begin
-          image = Vips::Image.heifload(input_path, access: :sequential)
-          if image.has_alpha?
-            white = image.interpretation == :rgb16 ? 65_535 : 255
-            image = image.flatten(background: [white, white, white])
-          end
-          image.jpegsave(output_path, Q: 93, interlace: false, optimize_coding: true)
+          save_jpeg(
+            Vips::Image.heifload(input_path, access: :sequential),
+            input_path:,
+            output_path:,
+            quality:,
+          )
         rescue Vips::Error => error
           raise InvalidImage, error.message
         end
-
-        nil
       end
     end
     private_class_method :heif_to_jpeg
+
+    def self.png_to_jpeg(input_path:, output_path:, quality:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        block_loaders(allowed: %w[VipsForeignLoadPng])
+
+        begin
+          save_jpeg(Vips::Image.pngload(input_path), input_path:, output_path:, quality:)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :png_to_jpeg
+
+    def self.recompress_jpeg(input_path:, output_path:, quality:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        block_loaders(allowed: %w[VipsForeignLoadJpeg])
+
+        begin
+          save_jpeg(Vips::Image.jpegload(input_path), input_path:, output_path:, quality:)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :recompress_jpeg
+
+    def self.save_jpeg(image, input_path:, output_path:, quality:)
+      if File.expand_path(input_path) == File.expand_path(output_path) ||
+           (File.exist?(output_path) && File.identical?(input_path, output_path))
+        raise ArgumentError, "JPEG conversion requires separate input and output files"
+      end
+
+      # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
+      image.autorot.jpegsave(
+        output_path,
+        background: [255, 255, 255],
+        Q: Integer(quality),
+        interlace: false,
+        optimize_coding: true,
+      )
+      nil
+    end
+    private_class_method :save_jpeg
 
     def self.svg_dimensions(input_path)
       new(read_paths: [input_path], rlimits: SVG_DIMENSIONS_RLIMITS) do
