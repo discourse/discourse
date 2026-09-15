@@ -62,28 +62,44 @@ RSpec.describe Jobs::ResumeAiToolApproval do
   end
 
   describe "#execute" do
-    it "continues once with the actual result and the original user's authorization" do
+    it "continues once in the approval post with the actual result and original authorization" do
       reviewable.perform(admin, :approve, post_id: approval_post.id)
       category = Category.find_by!(name: "Bug reports")
+      original_raw = approval_post.reload.raw
       prompts = nil
 
-      DiscourseAi::Completions::Llm.with_prepared_responses(
-        ["The category is ready."],
-      ) do |_, _, captured_prompts|
-        job.execute(reviewable_id: reviewable.id)
-        job.execute(reviewable_id: reviewable.id)
-        prompts = captured_prompts
-      end
+      messages =
+        MessageBus.track_publish do
+          expect {
+            DiscourseAi::Completions::Llm.with_prepared_responses(
+              ["The category is ready."],
+            ) do |_, _, captured_prompts|
+              job.execute(reviewable_id: reviewable.id)
+              job.execute(reviewable_id: reviewable.id)
+              prompts = captured_prompts
+            end
+          }.not_to change { topic.posts.count }
+        end
 
       expect(prompts.size).to eq(1)
       decision = JSON.parse(prompts.first.messages.last[:content])
       expect(decision).to include(
         "tool" => "create_category",
         "decision" => "approved",
-        "result" => include("category_id" => category.id),
+        "result" =>
+          include(
+            "category_id" => category.id,
+            "url" => "#{Discourse.base_url}/c/bug-reports/#{category.id}",
+          ),
       )
       reply = topic.posts.order(:post_number).last
-      expect(reply.raw).to eq("The category is ready.")
+      expect(reply.id).to eq(approval_post.id)
+      expect(reply.raw).to eq("#{original_raw}\n\nThe category is ready.")
+      updates =
+        messages.select { |message| message.channel == "discourse-ai/ai-bot/topic/#{topic.id}" }
+      expect(updates).to be_present
+      expect(updates.map { |message| message.data[:post_id] }.uniq).to eq([approval_post.id])
+      expect(updates.filter_map { |message| message.data[:raw] }).to all(start_with(original_raw))
       expect(reply.user_id).to eq(ai_agent.user_id)
       expect(
         reply.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD].to_i,
@@ -93,6 +109,7 @@ RSpec.describe Jobs::ResumeAiToolApproval do
 
     it "continues after rejection without executing the tool" do
       reviewable.perform(admin, :reject, post_id: approval_post.id)
+      original_raw = approval_post.reload.raw
       prompts = nil
 
       DiscourseAi::Completions::Llm.with_prepared_responses(
@@ -106,8 +123,9 @@ RSpec.describe Jobs::ResumeAiToolApproval do
       expect(decision).to include("decision" => "rejected", "result" => nil)
       expect(prompts.first.messages.first[:content]).to include("do not retry it")
       expect(topic.posts.order(:post_number).last.raw).to eq(
-        "I will leave the categories unchanged.",
+        "#{original_raw}\n\nI will leave the categories unchanged.",
       )
+      expect(topic.posts.order(:post_number).last.id).to eq(approval_post.id)
       expect(Category.exists?(name: "Bug reports")).to eq(false)
     end
 
@@ -132,7 +150,9 @@ RSpec.describe Jobs::ResumeAiToolApproval do
       next_reviewable = ReviewableAiToolAction.order(:id).last
       next_approval_post = topic.posts.order(:post_number).last
       expect(next_reviewable).to be_pending
+      expect(next_approval_post.id).to eq(approval_post.id)
       expect(next_approval_post.raw).to include(
+        "data-ai-tool-approval-reviewable-id='#{reviewable.id}'",
         "data-ai-tool-approval-reviewable-id='#{next_reviewable.id}'",
       )
       expect(Category.exists?(name: "Feature requests")).to eq(false)
@@ -144,10 +164,32 @@ RSpec.describe Jobs::ResumeAiToolApproval do
 
       expect(Category.exists?(name: "Feature requests")).to eq(true)
       reply = topic.posts.order(:post_number).last
-      expect(reply.raw).to eq("Both categories are ready.")
+      expect(reply.id).to eq(approval_post.id)
+      expect(reply.raw).to start_with(next_approval_post.raw)
+      expect(reply.raw).to end_with("Both categories are ready.")
+      expect(reply.post_custom_prompt.custom_prompt.last.first).to eq("Both categories are ready.")
       expect(
         reply.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD].to_i,
       ).to eq(requester.id)
+    end
+
+    it "appends in public topics and preserves the previous custom prompt" do
+      topic.update!(archetype: Archetype.default)
+      original_raw = approval_post.raw
+      previous_prompt = [["I will create the category.", ai_agent.user.username]]
+      approval_post.create_post_custom_prompt!(custom_prompt: previous_prompt)
+      reviewable.perform(admin, :approve, post_id: approval_post.id)
+
+      expect {
+        DiscourseAi::Completions::Llm.with_prepared_responses(["The category is ready."]) do
+          job.execute(reviewable_id: reviewable.id)
+        end
+      }.not_to change { topic.posts.count }
+
+      expect(approval_post.reload.raw).to eq("#{original_raw}\n\nThe category is ready.")
+      prompt = approval_post.post_custom_prompt.custom_prompt
+      expect(prompt.first).to eq(previous_prompt.first)
+      expect(prompt.last.first).to eq("The category is ready.")
     end
 
     it "skips pending approvals" do
