@@ -84,7 +84,12 @@ module Chat
       end
 
       def base.chat_channel_list_sorts
-        @chat_channel_list_sorts ||= { alphabetical: 0, recent_activity: 1, priority: 2 }
+        @chat_channel_list_sorts ||= {
+          alphabetical: 0,
+          recent_activity: 1,
+          priority: 2,
+          unread_first: 3,
+        }
       end
 
       if !base.method_defined?(:chat_channel_list_sort_alphabetical?)
