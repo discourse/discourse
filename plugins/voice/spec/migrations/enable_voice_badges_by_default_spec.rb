@@ -9,7 +9,7 @@ RSpec.describe EnableVoiceBadgesByDefault do
     @original_verbose = ActiveRecord::Migration.verbose
     ActiveRecord::Migration.verbose = false
     SeedFu.seed(Rails.root.join("plugins/voice/db/fixtures"))
-    Voice::BadgeGranterHooks.disable_all!
+    voice_badges.update_all(enabled: false)
   end
 
   after { ActiveRecord::Migration.verbose = @original_verbose }
@@ -33,7 +33,7 @@ RSpec.describe EnableVoiceBadgesByDefault do
 
     described_class.new.up
 
-    expect(voice_badges.where(enabled: true)).to be_empty
+    expect(voice_badges.enabled).to be_empty
   end
 
   it "does not touch badges outside the Voice grouping" do

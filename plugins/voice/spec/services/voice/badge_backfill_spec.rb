@@ -10,7 +10,6 @@ RSpec.describe BadgeGranter, ".backfill" do
     SiteSetting.voice_enabled = true
     SiteSetting.voice_badges_enabled = true
     SeedFu.seed(Rails.root.join("plugins/voice/db/fixtures"))
-    Voice::BadgeGranterHooks.enable_all!
   end
 
   def backfill(badge_name)
@@ -41,6 +40,19 @@ RSpec.describe BadgeGranter, ".backfill" do
       total_seconds: total_seconds,
       session_count: 1,
     )
+  end
+
+  it "blocks direct and queued backfills when badges were disabled while Voice was off" do
+    create_session(user_id: user.id, joined_at: 2.hours.ago, duration: 1.hour)
+    rookie = Badge.find_by!(name: "Rookie")
+    SiteSetting.voice_enabled = false
+    SiteSetting.voice_badges_enabled = false
+    SiteSetting.voice_enabled = true
+
+    expect do
+      described_class.backfill(rookie)
+      Jobs::BackfillBadge.new.execute(badge_id: rookie.id)
+    end.not_to change { UserBadge.where(user: user, badge: rookie).count }
   end
 
   describe "airtime" do
@@ -126,12 +138,12 @@ RSpec.describe BadgeGranter, ".backfill" do
         create_session(user_id: user.id, joined_at: (day + 1).days.ago.change(hour: 14))
       end
       create_session(user_id: user.id, room_id: Fabricate(:voice_room).id, joined_at: 1.hour.ago)
-      backfill("Patron")
-      expect(holders_of("Patron")).to be_empty
+      backfill("Voice Patron")
+      expect(holders_of("Voice Patron")).to be_empty
 
       create_session(user_id: user.id, joined_at: 10.days.ago.change(hour: 12))
-      backfill("Patron")
-      expect(holders_of("Patron")).to contain_exactly(user.id)
+      backfill("Voice Patron")
+      expect(holders_of("Voice Patron")).to contain_exactly(user.id)
     end
   end
 

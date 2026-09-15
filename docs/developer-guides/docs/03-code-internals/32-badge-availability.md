@@ -29,3 +29,9 @@ The optional extra setting combines with the plugin's enabled setting. `seed_bad
 Setting changes enqueue one background job to refresh affected users' badge counts and featured ranks, and backfill available query badges. Ownership changes also enqueue it. Requests with the same plugin are coalesced until execution starts; the pending key expires after ten minutes if enqueueing is interrupted. Successful seeding and worker startup enqueue reconciliation for all plugin-owned awards, including removed plugins. The existing consistency job provides a fallback.
 
 Listings and cached user summaries reflect availability immediately. Stored counts and ranks update when the worker runs. Summary cache versions add one aggregate badge query per request. Awards and individual preferences are retained.
+
+## Upgrades
+
+Renames needed by fixtures must precede seeding. Migrations must work both before and after fixtures assign ownership. Historical name collisions and customized badges require evidence before assigning ownership.
+
+Recovering preferences after an old master switch bulk-disabled badges requires the staff action log. Explicit recorded choices can be preserved; unlogged or deleted choices cannot be distinguished from the bulk update.

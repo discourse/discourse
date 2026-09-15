@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Voice::BadgeGranterHooks do
+  BADGE_COUNT = 27
+
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:room, :voice_room) { Fabricate(:voice_room, public: true, max_participants: 3) }
 
@@ -11,7 +13,6 @@ RSpec.describe Voice::BadgeGranterHooks do
     SiteSetting.voice_badges_enabled = true
     SiteSetting.voice_analytics_enabled = true
     SeedFu.seed(Rails.root.join("plugins/voice/db/fixtures"))
-    described_class.enable_all!
   end
 
   describe ".on_leave" do
@@ -250,71 +251,37 @@ RSpec.describe Voice::BadgeGranterHooks do
       Badge.joins(:badge_grouping).where(badge_groupings: { name: "Voice" })
     end
 
-    it "creates all badges enabled" do
-      expect(voice_badges.count).to eq(27)
-      expect(voice_badges.where(enabled: false).count).to eq(0)
-    end
-
-    it "never auto-revokes scheduled badges" do
+    it "seeds the Voice badges with their grant and title options" do
+      expect(voice_badges.where(plugin_name: Voice::PLUGIN_NAME).enabled.count).to eq(BADGE_COUNT)
       expect(voice_badges.where.not(query: nil)).to all(have_attributes(auto_revoke: false))
+      expect(voice_badges.where(badge_type_id: BadgeType::Gold)).to all(
+        have_attributes(allow_title: true),
+      )
+      expect(
+        voice_badges.where(
+          name: [
+            "Mic Check",
+            "Host",
+            "Icebreaker",
+            "Packed House",
+            "Night Owl",
+            "Early Bird",
+            "Marathoner",
+          ],
+        ),
+      ).to all(have_attributes(query: nil))
     end
 
-    it "creates the Voice badge grouping" do
-      expect(BadgeGrouping.exists?(name: "Voice")).to eq(true)
-    end
+    it "preserves other plugins' badges when reseeded" do
+      other_badge =
+        Fabricate(:badge, name: "Patron", plugin_name: "discourse-patreon", enabled: false)
+      original_attributes = other_badge.attributes
 
-    it "is idempotent" do
       expect { SeedFu.seed(Rails.root.join("plugins/voice/db/fixtures")) }.not_to change {
         Badge.count
       }
-    end
 
-    it "sets SQL queries on scheduled badges" do
-      expect(Badge.find_by(name: "Rookie").query).to include("voice_sessions")
-      expect(Badge.find_by(name: "Social Butterfly").query).to include("voice_co_presences")
-    end
-
-    it "does not set queries on instant badges" do
-      %w[Mic\ Check Host Icebreaker Packed\ House Night\ Owl Early\ Bird Marathoner].each do |name|
-        expect(Badge.find_by(name: name).query).to be_nil, "Expected #{name} to have no query"
-      end
-    end
-
-    it "allows gold badges to be used as title" do
-      gold_badges = voice_badges.where(badge_type_id: BadgeType::Gold)
-      expect(gold_badges).to all(have_attributes(allow_title: true))
-    end
-  end
-
-  describe ".enable_all!" do
-    before { described_class.disable_all! }
-
-    it "enables all Voice badges and schedules a backfill for the scheduled ones" do
-      described_class.enable_all!
-
-      voice_badges = Badge.joins(:badge_grouping).where(badge_groupings: { name: "Voice" })
-      expect(voice_badges.where(enabled: false).count).to eq(0)
-      expect_job_enqueued(
-        job: :backfill_badge,
-        args: {
-          badge_id: Badge.find_by(name: "Rookie").id,
-        },
-      )
-      expect_not_enqueued_with(
-        job: :backfill_badge,
-        args: {
-          badge_id: Badge.find_by(name: "Mic Check").id,
-        },
-      )
-    end
-  end
-
-  describe ".disable_all!" do
-    it "disables all Voice badges" do
-      described_class.disable_all!
-
-      voice_badges = Badge.joins(:badge_grouping).where(badge_groupings: { name: "Voice" })
-      expect(voice_badges.where(enabled: true).count).to eq(0)
+      expect(other_badge.reload.attributes).to eq(original_attributes)
     end
   end
 end
