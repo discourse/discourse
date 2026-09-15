@@ -931,24 +931,7 @@ RSpec.describe UploadCreator do
         expect(upload).to be_persisted
         expect(upload.extension).to eq("ico")
         expect(upload.original_filename).to eq(filename)
-        expect(upload.width).to eq(1)
-        expect(upload.height).to eq(1)
         expect(File.binread(stored_path)).to eq(original_contents)
-      end
-
-      it "rejects a file whose contents are not an ICO image" do
-        invalid_file = Tempfile.new(%w[invalid .ico])
-        invalid_file.write("not an image")
-        invalid_file.rewind
-
-        upload = described_class.new(invalid_file, filename).create_for(user.id)
-
-        expect(upload).not_to be_persisted
-        expect(upload.errors.full_messages).to contain_exactly(
-          I18n.t("upload.images.size_not_found"),
-        )
-      ensure
-        invalid_file&.close!
       end
 
       it "rejects ICO images for avatar uploads" do

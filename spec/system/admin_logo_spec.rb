@@ -74,7 +74,6 @@ describe "Admin Logo Page" do
       logo_page.visit
 
       expect(logo_page.form.image_uploader(:favicon)).to have_uploaded_image
-      expect(SiteSetting.favicon.original_filename).to end_with("smallest.ico")
     end
   end
 

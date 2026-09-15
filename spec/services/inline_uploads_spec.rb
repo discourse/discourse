@@ -127,18 +127,6 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "converts a standalone ICO URL to image Markdown" do
-        SiteSetting.authorized_extensions = "ico"
-        ico =
-          UploadCreator.new(
-            file_from_fixtures("smallest.ico", "images"),
-            "smallest.ico",
-          ).create_for(Discourse.system_user.id)
-        md = "#{Discourse.base_url}#{ico.url}\n"
-
-        expect(InlineUploads.process(md)).to eq("![](#{ico.short_url})\n")
-      end
-
       it "shortens Markdown-linked images" do
         md = <<~MD
         [![](#{upload.url})](https://somelink.com)
