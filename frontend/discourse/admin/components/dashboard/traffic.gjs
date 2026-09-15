@@ -164,7 +164,7 @@ export default class DashboardTraffic extends Component {
   }
 
   get showTrafficExplorerLink() {
-    return this.currentUser.admin && this.showSessionMetrics;
+    return this.currentUser.admin && !this.siteSettings.use_legacy_pageviews;
   }
 
   formatHeadlineCount(value) {
