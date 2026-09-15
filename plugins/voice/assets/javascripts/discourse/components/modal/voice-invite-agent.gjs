@@ -75,7 +75,6 @@ export default class VoiceInviteAgentModal extends Component {
           >
             {{#if this.showPicker}}
               <form.Field
-                @description={{i18n "voice.agent.pick_help"}}
                 @format="large"
                 @name="agent_name"
                 @title={{i18n "voice.agent.name"}}
