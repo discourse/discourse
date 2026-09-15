@@ -77,8 +77,6 @@ module("Component | ChatMessageReaction", function (hooks) {
   });
 
   test("opens the users popup on focus, not only on hover", async function (assert) {
-    this.siteSettings.enable_new_chat_reactions_popup = true;
-
     const fabricators = new ChatFabricators(getOwner(this));
     const message = fabricators.message();
     const reaction = fabricators.reaction({ emoji: "heart", count: 1 });
