@@ -95,6 +95,8 @@ module Jobs
           authorization_user_id: user.id,
           feature_name: "bot",
           auto_set_title: false,
+          existing_reply_post: post,
+          append_to_existing_reply: true,
           custom_instructions: custom_instructions,
           additional_messages: additional_messages,
         )
