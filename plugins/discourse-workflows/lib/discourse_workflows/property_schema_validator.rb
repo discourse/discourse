@@ -75,6 +75,7 @@ module DiscourseWorkflows
       acl_target_name
       required_permissions
       permissions
+      allow_anonymous
       action_icon
       action_label
       action_route

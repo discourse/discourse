@@ -37,6 +37,17 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoardColumn::V1 do
       },
     )
     expect(described_class.property_schema[:board_id][:ui]).to include(control: :combo_box)
+    expect(described_class.property_schema[:actor_username]).to include(
+      type: :string,
+      required: false,
+      default: "system",
+      ui: {
+        control: :actor,
+      },
+      control_options: {
+        allow_anonymous: false,
+      },
+    )
     expect(described_class).to be_available
     SiteSetting.boards_enabled = false
     expect(described_class).not_to be_available
@@ -96,8 +107,8 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoardColumn::V1 do
         .map { |item| item.fetch("json") }
     end
 
-    it "creates a column with defaults and returns exactly its id and title" do
-      output = execute_node.first
+    it "creates a column with defaults as the configured actor" do
+      output = execute_node(configuration.merge("actor_username" => manager.username)).first
       column = Boards::Column.find(output.fetch("column_id"))
 
       expect(column).to have_attributes(
@@ -108,13 +119,17 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoardColumn::V1 do
         color: nil,
         tag_id: nil,
       )
-      expect(output).to eq("column_id" => column.id, "title" => column.title)
+      expect(output).to eq(
+        "column_id" => column.id,
+        "title" => column.title,
+        "unicode_title" => column.unicode_title,
+      )
       expect(output).to match_node_output_schema(described_class)
       expect(board.history.sole).to have_attributes(action: "column_added", acting_user: manager)
     end
 
-    it "uses the system user when there is no execution user" do
-      execute_node(user: nil)
+    it "defaults to the system user regardless of the triggering user" do
+      execute_node(user: Fabricate(:user))
 
       expect(board.history.sole.acting_user).to eq(Discourse.system_user)
     end
@@ -173,9 +188,13 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoardColumn::V1 do
       outputs.each { |output| expect(output).to match_node_output_schema(described_class) }
     end
 
-    it "rejects unauthorized execution users without creating a column" do
+    it "rejects an unauthorized configured actor without creating a column" do
+      user = Fabricate(:user)
+
       expect do
-        expect { execute_node(user: Fabricate(:user)) }.to raise_error(
+        expect do
+          execute_node(configuration.merge("actor_username" => user.username))
+        end.to raise_error(
           DiscourseWorkflows::NodeError,
           I18n.t("discourse_workflows.errors.create_board_column.forbidden"),
         )
@@ -199,6 +218,9 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoardColumn::V1 do
     end
 
     it "reports invalid sort and unknown tags as node errors" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+      config = configuration.merge("actor_username" => manager.username)
+
       [
         [
           { "default_sort" => "random" },
@@ -209,7 +231,7 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoardColumn::V1 do
           I18n.t("boards.errors.unknown_tag_name", tag_name: "missing-tag"),
         ],
       ].each do |invalid_params, error|
-        expect { execute_node(configuration.merge(invalid_params)) }.to raise_error(
+        expect { execute_node(config.merge(invalid_params)) }.to raise_error(
           DiscourseWorkflows::NodeError,
           I18n.t("discourse_workflows.errors.create_board_column.invalid_params", errors: error),
         )

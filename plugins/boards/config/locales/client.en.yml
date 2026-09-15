@@ -19,12 +19,15 @@ en:
         default_sort: "Default sort"
         default_sort_priority: "Priority"
         default_sort_recency: "Recency"
+        actor_username: "Performed by user"
       create_board:
         name: "Name"
         slug: "Slug"
         slug_description: "Leave blank to generate a slug from the board name."
         tag_names: "Tags"
         category_ids: "Categories"
+        category_ids_description: "Select one or more categories that topic cards can belong to for the board."
+        actor_username: "Performed by user"
         acl: "Board access"
         acl_description: "Choose who can view, edit, and manage the board."
     boards:

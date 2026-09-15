@@ -55,7 +55,7 @@ module DiscourseWorkflows
       end
 
       def groups_exist(input_group_ids:)
-        Group.where(id: input_group_ids, automatic: false).count == input_group_ids.uniq.size
+        Group.where(id: input_group_ids).count == input_group_ids.uniq.size
       end
 
       def merge_grants(params:, input_group_ids:)

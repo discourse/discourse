@@ -3,6 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
@@ -154,18 +155,25 @@ export default class DAccessControl extends Component {
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
   get rows() {
-    const mappedAcl = this.acl.map((entry) => ({
-      key: `${granteeValue(entry.type, entry.id)}:${entry.permission}`,
-      id: entry.id,
-      permission: entry.permission,
-      display_name: entry.display_name,
-      sort_name: entry.sort_name || entry.name || entry.display_name,
-      username: entry.username,
-      name: entry.name,
-      avatar_template: entry.avatar_template,
-      type: entry.type,
-      mandatory: Boolean(entry.mandatory),
-    }));
+    const mappedAcl = this.acl.map((entry) => {
+      const hydratedEntry = this.#hydrateDisplayName({ ...entry });
+
+      return {
+        key: `${granteeValue(hydratedEntry.type, hydratedEntry.id)}:${hydratedEntry.permission}`,
+        id: hydratedEntry.id,
+        permission: hydratedEntry.permission,
+        display_name: hydratedEntry.display_name,
+        sort_name:
+          hydratedEntry.sort_name ||
+          hydratedEntry.name ||
+          hydratedEntry.display_name,
+        username: hydratedEntry.username,
+        name: hydratedEntry.name,
+        avatar_template: hydratedEntry.avatar_template,
+        type: hydratedEntry.type,
+        mandatory: Boolean(hydratedEntry.mandatory),
+      };
+    });
 
     return mappedAcl.sort((a, b) => {
       if (a.mandatory !== b.mandatory) {
@@ -356,6 +364,21 @@ export default class DAccessControl extends Component {
           banned.id === grantee.id
       );
     });
+  }
+
+  #hydrateDisplayName(entry) {
+    if (!isEmpty(entry.display_name)) {
+      return entry;
+    }
+
+    if (entry.type === "group") {
+      const group = (this.args.groups || []).find(({ id }) => id === entry.id);
+      entry.display_name = group?.full_name || group?.name;
+    } else if (entry.type === "user") {
+      entry.display_name = prioritizeNameFallback(entry.name, entry.username);
+    }
+
+    return entry;
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission

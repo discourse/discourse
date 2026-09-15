@@ -17,7 +17,6 @@ register_asset "stylesheets/boards-topic-pill.scss"
 register_asset "stylesheets/boards-add-from-topic-menu.scss"
 register_svg_icon "table-columns"
 register_svg_icon "boards"
-register_svg_icon "box-archive"
 
 module ::Boards
   PLUGIN_NAME = "boards"

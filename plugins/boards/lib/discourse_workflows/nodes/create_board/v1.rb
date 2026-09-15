@@ -40,6 +40,17 @@ if defined?(DiscourseWorkflows)
                   multiple: true,
                 },
               },
+              actor_username: {
+                type: :string,
+                required: false,
+                default: "system",
+                ui: {
+                  control: :actor,
+                },
+                control_options: {
+                  allow_anonymous: false,
+                },
+              },
               acl: {
                 type: :object,
                 required: true,
@@ -58,15 +69,20 @@ if defined?(DiscourseWorkflows)
           )
 
           def execute(exec_ctx)
-            actor = exec_ctx.user || Discourse.system_user
             items =
               exec_ctx.input_items.map.with_index do |_item, item_index|
+                actor = exec_ctx.actor_from_parameter("actor_username", item_index)
                 config = {
                   "name" => exec_ctx.get_node_parameter("name", item_index),
                   "slug" => exec_ctx.get_node_parameter("slug", item_index),
-                  "tag_names" => exec_ctx.get_node_parameter("tag_names", item_index, default: []),
+                  "tag_names" =>
+                    DiscourseWorkflows::NodeType.normalize_tag_names(
+                      exec_ctx.get_node_parameter("tag_names", item_index, default: []),
+                    ),
                   "category_ids" =>
-                    exec_ctx.get_node_parameter("category_ids", item_index, default: []),
+                    DiscourseWorkflows::NodeType.normalize_category_ids(
+                      exec_ctx.get_node_parameter("category_ids", item_index, default: []),
+                    ),
                   "acl" => exec_ctx.get_node_parameter("acl", item_index, default: []),
                 }
                 wrap(create_board(actor.guardian, config))
@@ -78,7 +94,14 @@ if defined?(DiscourseWorkflows)
 
           def create_board(guardian, config)
             Boards::CreateBoard.call(guardian:, params: config, raw_board_params: config) do
-              on_success { |board:| { "board_id" => board.id, "slug" => board.slug } }
+              on_success do |board:|
+                {
+                  "board_id" => board.id,
+                  "slug" => board.slug,
+                  "name" => board.name,
+                  "unicode_name" => board.unicode_name,
+                }
+              end
               on_failed_policy(:can_manage) do
                 raise_node_error!(I18n.t("discourse_workflows.errors.create_board.forbidden"))
               end

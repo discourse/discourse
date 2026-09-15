@@ -92,6 +92,41 @@ function rowNames() {
 module("Integration | Component | DAccessControl", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("hydrates missing group and user display names", async function (assert) {
+    const state = controlledState([
+      { type: "group", id: 42, permission: "edit" },
+      {
+        type: "user",
+        id: 7,
+        username: "alice",
+        name: "alice",
+        display_name: "",
+        permission: "view",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @acl={{state.acl}}
+          @groups={{GROUPS}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(
+        '.d-access-control__row[data-row-type="group"][data-row-id="42"] .d-access-control__item-name'
+      )
+      .hasText("Team A");
+    assert
+      .dom(
+        '.d-access-control__row[data-row-type="user"][data-row-id="7"] .d-access-control__item-name'
+      )
+      .hasText("alice");
+  });
+
   test("renders additional rows without fixed ACL entries", async function (assert) {
     const state = controlledState();
 

@@ -60,13 +60,27 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
         permissions: %w[view edit manage],
       },
     )
+    expect(described_class.property_schema[:actor_username]).to include(
+      type: :string,
+      required: false,
+      default: "system",
+      ui: {
+        control: :actor,
+      },
+      control_options: {
+        allow_anonymous: false,
+      },
+    )
     expect(described_class).to be_available
     SiteSetting.boards_enabled = false
     expect(described_class).not_to be_available
   end
 
-  it "creates a board with an explicit slug as the execution user" do
-    output = execute_node(configuration.merge("slug" => "custom-board")).first
+  it "creates a board with an explicit slug as the configured actor" do
+    output =
+      execute_node(
+        configuration.merge("slug" => "custom-board", "actor_username" => manager.username),
+      ).first
     board = Boards::Board.find(output.fetch("board_id"))
 
     expect(board).to have_attributes(
@@ -74,7 +88,12 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
       slug: "custom-board",
       created_by: manager,
     )
-    expect(output).to eq("board_id" => board.id, "slug" => board.slug)
+    expect(output).to eq(
+      "board_id" => board.id,
+      "slug" => board.slug,
+      "name" => board.name,
+      "unicode_name" => board.unicode_name,
+    )
     expect(output).to match_node_output_schema(described_class)
     expect(board.history.sole).to have_attributes(action: "board_created", acting_user: manager)
     expect(board.permission_acl.permission_group_ids("manage")).to contain_exactly(
@@ -83,8 +102,8 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     )
   end
 
-  it "generates a slug and uses the system user when no execution user is present" do
-    output = execute_node(user: nil).first
+  it "generates a slug and defaults to the system user regardless of the triggering user" do
+    output = execute_node(user: Fabricate(:user)).first
     board = Boards::Board.find(output.fetch("board_id"))
 
     expect(board).to have_attributes(slug: "project-board", created_by: Discourse.system_user)
@@ -176,14 +195,18 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     expect do
       expect { execute_node(config, items:) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        I18n.t("discourse_workflows.errors.access_control.missing_groups"),
+        I18n.t("discourse_workflows.errors.create_board.acl_failed"),
       )
     end.not_to change { Boards::Board.count }
   end
 
-  it "rejects unauthorized execution users without creating a board" do
+  it "rejects an unauthorized configured actor without creating a board" do
+    user = Fabricate(:user)
+
     expect do
-      expect { execute_node(user: Fabricate(:user)) }.to raise_error(
+      expect {
+        execute_node(configuration.merge("actor_username" => user.username))
+      }.to raise_error(
         DiscourseWorkflows::NodeError,
         I18n.t("discourse_workflows.errors.create_board.forbidden"),
       )
@@ -214,7 +237,10 @@ RSpec.describe DiscourseWorkflows::Nodes::CreateBoard::V1 do
     SiteSetting.boards_manage_board_allowed_groups = group.id.to_s
 
     expect do
-      execute_node(configuration.merge("tag_names" => ["missing-tag"]), user:)
+      execute_node(
+        configuration.merge("tag_names" => ["missing-tag"], "actor_username" => user.username),
+        user:,
+      )
     end.to raise_error(DiscourseWorkflows::NodeError, /Unknown tag names: missing-tag/)
   end
 

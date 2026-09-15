@@ -72,6 +72,17 @@ if defined?(DiscourseWorkflows)
                 options: %w[priority recency],
                 default: "priority",
               },
+              actor_username: {
+                type: :string,
+                required: false,
+                default: "system",
+                ui: {
+                  control: :actor,
+                },
+                control_options: {
+                  allow_anonymous: false,
+                },
+              },
             },
           )
 
@@ -108,9 +119,9 @@ if defined?(DiscourseWorkflows)
           end
 
           def execute(exec_ctx)
-            guardian = (exec_ctx.user || Discourse.system_user).guardian
             items =
               exec_ctx.input_items.map.with_index do |_item, item_index|
+                guardian = exec_ctx.actor_from_parameter("actor_username", item_index).guardian
                 params =
                   %w[board_id title icon color tag_name default_sort].index_with do |name|
                     exec_ctx.get_node_parameter(name, item_index)
@@ -128,7 +139,13 @@ if defined?(DiscourseWorkflows)
 
           def create_column(guardian, params)
             Boards::CreateColumn.call(guardian:, params:) do
-              on_success { |column:| { "column_id" => column.id, "title" => column.title } }
+              on_success do |column:|
+                {
+                  "column_id" => column.id,
+                  "title" => column.title,
+                  "unicode_title" => column.unicode_title,
+                }
+              end
               on_model_not_found(:board) do
                 raise_node_error!(
                   I18n.t("discourse_workflows.errors.create_board_column.board_not_found"),

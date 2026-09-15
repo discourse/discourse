@@ -18,7 +18,10 @@ import {
 } from "../../../lib/workflows/property-engine";
 import ExpressionWrapper from "./expression-wrapper";
 
-const GROUP_SCHEMA = { type: "array" };
+const GROUP_SCHEMA = {
+  type: "array",
+  item_schema: { type: "integer" },
+};
 
 function accessControlValue(value) {
   return Array.isArray(value) || !value

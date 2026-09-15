@@ -13,8 +13,11 @@ module Boards
           "title" => {
             "type" => "string",
           },
+          "unicode_title" => {
+            "type" => "string",
+          },
         },
-        "required" => %w[column_id title],
+        "required" => %w[column_id title unicode_title],
         "additionalProperties" => false,
       }.freeze
 
@@ -28,8 +31,14 @@ module Boards
           "slug" => {
             "type" => "string",
           },
+          "name" => {
+            "type" => "string",
+          },
+          "unicode_name" => {
+            "type" => "string",
+          },
         },
-        "required" => %w[board_id slug],
+        "required" => %w[board_id slug name unicode_name],
         "additionalProperties" => false,
       }.freeze
     end
