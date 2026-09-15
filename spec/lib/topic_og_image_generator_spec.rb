@@ -108,6 +108,21 @@ RSpec.describe TopicOgImageGenerator do
       expect([png.width, png.height]).to eq([1200, 630])
       expect(png[180, 520]).to eq(png[500, 520])
     end
+
+    it "does not materialize ICO bytes mislabeled as PNG" do
+      ico_data_uri =
+        "data:image/png;base64,#{Base64.strict_encode64(File.binread(file_from_fixtures("smallest.ico", "images")))}"
+      generator = described_class.new(topic)
+      ImageMagick.expects(:magick).never
+
+      Dir.mktmpdir do |directory|
+        path =
+          generator.send(:materialize_asset, ico_data_uri, directory: directory, basename: "avatar")
+
+        expect(path).to be_nil
+        expect(Dir.children(directory)).to be_empty
+      end
+    end
   end
 
   describe ".eligible?" do
