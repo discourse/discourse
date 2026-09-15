@@ -349,10 +349,28 @@ tr_TR:
       configuration_missing: "YZ spam algılama yapılandırması eksik. Etkinleştirmeden önce \"Yönetici > Eklentiler > Discourse YZ > Spam\" bölümüne yapılandırmayı ekleyin."
       logging_subject: "Spam tespiti"
     ai_bot:
+      navigation:
+        settings:
+          title: "Site ayarları"
+        users:
+          title: "Kullanıcılar"
+        groups:
+          title: "Gruplar"
+        review:
+          title: "Değerlendirme kuyruğu"
+        categories:
+          title: "Kategoriler"
+        tags:
+          title: "Etiketler"
+        themes:
+          title: "Temalar"
+        authentication:
+          title: "Giriş ve kimlik doğrulama"
+        backups:
+          title: "Yedeklemeler"
       reply_error: "Üzgünüz, sistemimiz yanıtlamaya çalışırken beklenmeyen bir sorunla karşılaşmış gibi görünüyor.\n\n[details='Hata ayrıntıları']\n%{details}\n[/details]"
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"
-      tool_pending_approval: "Bu işlemin gerçekleştirilebilmesi için moderatör onayı gereklidir."
       read_post:
         unknown_post: "gönderi"
       chat_tool_approval:

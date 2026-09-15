@@ -39,16 +39,16 @@ acceptance("AI Bot - Drafts dropdown icon", function (needs) {
     await waitFor(".topic-drafts-menu-content");
   }
 
-  test("uses the robot icon for a draft addressed to a bot", async function (assert) {
+  test("uses the discobot icon for a draft addressed to a bot", async function (assert) {
     await openDraftsMenu("gpt4_bot");
 
-    assert.dom(".topic-drafts-item svg.d-icon-robot").exists();
+    assert.dom(".topic-drafts-item svg.d-icon-discobot").exists();
   });
 
-  test("uses the robot icon when a bot is one of several recipients", async function (assert) {
+  test("uses the discobot icon when a bot is one of several recipients", async function (assert) {
     await openDraftsMenu("charlie,gpt4_bot");
 
-    assert.dom(".topic-drafts-item svg.d-icon-robot").exists();
+    assert.dom(".topic-drafts-item svg.d-icon-discobot").exists();
   });
 
   test("keeps the envelope icon when no recipient is a bot", async function (assert) {

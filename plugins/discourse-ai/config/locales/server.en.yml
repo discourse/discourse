@@ -498,7 +498,7 @@ en:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
-      tool_pending_approval: "This action requires moderator approval before it can be executed."
+      tool_pending_approval: "This action requires approval:"
       spawn_agent:
         description: "Delegate a self-contained prompt to one of the allowed agents and return its response"
         prompt_description: "The complete self-contained prompt sent to the selected agent and shown in the thinking block"

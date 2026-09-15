@@ -488,6 +488,7 @@ ar:
     notifications_tracking:
       tooltip: "مستوى الإشعارات: %{level}"
     back_button: "الرجوع"
+    confirm_button: "تأكيد"
     welcome_banner:
       header:
         new_members: "مرحبًا بك، %{preferred_display_name}!"
@@ -6345,6 +6346,7 @@ ar:
       with_category: "موضوعات %{filter} في %{category}"
       filter:
         title: "تمت تصفية النتائج حسب %{filter}"
+        reset: "إعادة التعيين"
         button:
           label: "المرشح"
       latest:

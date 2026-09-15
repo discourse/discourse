@@ -5,7 +5,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import moment from "moment";
 import DSegmentedControl from "discourse/components/d-segmented-control";
-import Badge from "discourse/models/badge";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
@@ -16,37 +15,16 @@ import {
   hasDates,
 } from "../lib/chart-helpers";
 import { dataExplorerStore } from "../lib/data-explorer-store";
+import {
+  buildColumnComponents,
+  buildRelationTables,
+  displayColumnNames,
+  relationLabel,
+} from "../lib/result-columns";
 import DataExplorerChart from "./data-explorer-chart";
 import QueryChartEmptyState from "./query-chart-empty-state";
 import QueryResultDownloadButtons from "./query-result-download-buttons";
 import QueryRowContent from "./query-row-content";
-import BadgeViewComponent from "./result-types/badge";
-import CategoryViewComponent from "./result-types/category";
-import GroupViewComponent from "./result-types/group";
-import HtmlViewComponent from "./result-types/html";
-import JsonViewComponent from "./result-types/json";
-import PostViewComponent from "./result-types/post";
-import ReltimeViewComponent from "./result-types/reltime";
-import TagGroupViewComponent from "./result-types/tag-group";
-import TextViewComponent from "./result-types/text";
-import TopicViewComponent from "./result-types/topic";
-import UrlViewComponent from "./result-types/url";
-import UserViewComponent from "./result-types/user";
-
-const VIEW_COMPONENTS = {
-  topic: TopicViewComponent,
-  text: TextViewComponent,
-  post: PostViewComponent,
-  reltime: ReltimeViewComponent,
-  badge: BadgeViewComponent,
-  url: UrlViewComponent,
-  user: UserViewComponent,
-  group: GroupViewComponent,
-  html: HtmlViewComponent,
-  json: JsonViewComponent,
-  category: CategoryViewComponent,
-  tag_group: TagGroupViewComponent,
-};
 
 const CHART_FORMS = ["line", "bar", "stacked", "dual-axis"];
 
@@ -219,39 +197,12 @@ export default class QueryResult extends Component {
   }
 
   get columnNames() {
-    if (!this.columns) {
-      return [];
-    }
-    return this.columns.map((colName) => {
-      if (colName.endsWith("_id")) {
-        return colName.slice(0, -3);
-      }
-      const dIdx = colName.indexOf("$");
-      if (dIdx >= 0) {
-        return colName.substring(dIdx + 1);
-      }
-      return colName;
-    });
+    return displayColumnNames(this.columns);
   }
 
   @cached
   get columnComponents() {
-    if (!this.columns) {
-      return [];
-    }
-
-    const hiddenRelations = this.args.content.hidden_relations ?? {};
-
-    return this.columns.map((_, idx) => {
-      const type = this.colRender[idx] || "text";
-
-      return {
-        name: type,
-        component: VIEW_COMPONENTS[type],
-        table: this._relationTables[type],
-        hidden: hiddenRelations[type],
-      };
-    });
+    return buildColumnComponents(this.args.content, this._relationTables);
   }
 
   get resultCount() {
@@ -280,24 +231,7 @@ export default class QueryResult extends Component {
 
   @cached
   get _relationTables() {
-    const { relations = {} } = this.args.content;
-    const tables = {
-      group: this.site.groupsById,
-      category: transformedRelTable(this.site.categories),
-    };
-
-    for (const [type, table] of Object.entries(relations)) {
-      if (tables[type]) {
-        continue;
-      }
-
-      tables[type] = transformedRelTable(
-        table,
-        type === "badge" ? Badge : undefined
-      );
-    }
-
-    return tables;
+    return buildRelationTables(this.args.content.relations, this.site);
   }
 
   @cached
@@ -485,19 +419,6 @@ export default class QueryResult extends Component {
   </template>
 }
 
-function transformedRelTable(table, modelClass) {
-  return Object.fromEntries(
-    (table ?? []).map((item) => [
-      item.id,
-      modelClass ? modelClass.create(item) : item,
-    ])
-  );
-}
-
 function joinNames(names) {
   return names.join(", ");
-}
-
-function relationLabel(relation) {
-  return relation?.username ?? relation?.title ?? relation?.name;
 }

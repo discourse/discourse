@@ -1297,3 +1297,25 @@
     opacity: 0;
   }
 }
+
+.voice-invite-agent-modal {
+  // The field content wrapper is a column flex box aligned to flex-start, so
+  // the row must stretch to the field width before its controls can share it.
+  &__picker {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    align-self: stretch;
+    min-width: 0;
+
+    .form-kit__control-input-wrapper,
+    .form-kit__control-select {
+      flex: 1 1 0;
+      min-width: 12em;
+    }
+
+    .form-kit__control-input {
+      width: 100%;
+    }
+  }
+}

@@ -284,7 +284,9 @@ module DiscourseMcp
             limit: limit + 1,
             action_types:,
             guardian:,
-            ignore_private_messages: arguments["action_types"].blank?,
+            ignore_private_messages:
+              arguments["action_types"].blank? ||
+                !request_context.has_scopes?("mcp:private-messages:read"),
             acting_username: arguments["acting_username"],
           ).to_a
         has_more = actions.length > limit

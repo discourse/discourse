@@ -1153,7 +1153,7 @@ hu:
   uploads:
     marked_insecure_from_theme_component_reason: "A feltöltés egy téma összetevőt használ"
   unsubscribe:
-    title: "Leiratkozás"
+    unsubscribe: "Leiratkozás"
     stop_watching_topic: "Ne figyelje tovább ezt a kategóriát: %{link}"
     mute_topic: "A téma összes értesítésének némítása, %{link}"
     unwatch_category: "Ne figyelje tovább ezt a kategóriát: %{category}"
@@ -1674,12 +1674,6 @@ hu:
       host_names: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
       queue_size: "A sorba állított feladatok száma %{queue_size}, ami magas. Ez a Sidekiq-folyamat(ok) problémáját jelezheti, vagy több Sidekiq-kezelőt kell hozzáadni."
       ram: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
-      google_oauth2_config: 'A szerver úgy van beállítva, hogy engedélyezze a regisztrációt és a bejelentkezést a Google OAuth2 használatával (enable_google_oauth2_logins), de az ügyfélazonosító és az ügyfél titkossága nincs beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      facebook_config: 'A szerver úgy van konfigurálva, hogy engedélyezze a regisztrációt és a bejelentkezést a Facebookon (enable_facebook_logins), de az alkalmazásazonosító és az alkalmazás titkos értékei nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      twitter_config: 'A szerver úgy van konfigurálva, hogy engedélyezze az X-en keresztüli regisztrációt és bejelentkezést (enable_twitter_logins), de a kulcs és a titkos értékek nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      github_config: 'A szerver úgy van konfigurálva, hogy engedélyezze a regisztrációt és a bejelentkezést a Facebookon (enable_facebook_logins), de az alkalmazásazonosító és az alkalmazás titkos értékei nincsenek beállítva. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">További információért tekintse meg ezt az útmutatót</a>.'
-      s3_upload_config: 'A kiszolgáló úgy van beállítva, hogy fájlokat töltsön fel az S3-ba, de a következő beállítások közül legalább egy nincs beállítva: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile vagy s3_upload_bucket. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lásd "Hogyan állíthatom be a képfeltöltést az S3-ba?" a részletekért</a>.'
-      s3_backup_config: 'A kiszolgáló úgy van beállítva, hogy biztonsági másolatokat töltsön fel az S3-ba, de a következő beállítások közül legalább egy nincs beállítva: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile vagy s3_backup_bucket. Lépjen a <a href="%{base_path}/admin/site_settings">oldalra a Webhelybeállítások</a> menüpontba, és frissítse a beállításokat. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lásd: "Hogyan állíthatom be a képfeltöltést az S3-ba?" a részletekért</a>.'
       s3_cdn: 'A szerver úgy van beállítva, hogy fájlokat töltsön fel az S3-ba, de nincs konfigurálva S3 CDN. Ez drága S3-költségekhez és lassabb webhelyteljesítményhez vezethet. <a href="https://meta.discourse.org/t/-/148916" target="_blank">További információért olvassa el az "Object Storage használata feltöltéshez" részt</a>.'
       image_magick: 'A szerver úgy van beállítva, hogy nagyméretű képek miniatűrjeit hozza létre, de az ImageMagick nincs telepítve. Telepítse az ImageMagick-et kedvenc csomagkezelőjével, vagy <a href="https://www.imagemagick.org/script/download.php" target="_blank">töltse le a legújabb kiadást</a>.'
       failing_emails: 'Van %{num_failed_jobs} e-mail feladat, amelyek meghiúsultak. Ellenőrizze az app.yml fájlt, és győződjön meg arról, hogy a levelezőszerver beállításai helyesek. <a href="%{base_path}/sidekiq/retries" target="_blank">Tekintse meg a sikertelen feladatokat a Sidekiq</a>-ban.'
@@ -2534,7 +2528,6 @@ hu:
       markdown_linkify_tlds: "Nem adhat meg „*” értéket."
       google_oauth2_hd_groups: "A beállítás engedélyezése előtt konfigurálnia kell a „google oauth2 hd” összes beállítását."
       discourse_id_registration: "Nem sikerült az automatikus regisztráció a Discourse ID-vel. Ezt hálózati kapcsolódási problémák, tűzfalkorlátozások vagy a Discourse ID szolgáltatás elérhetetlensége okozhatja. További részletekért ellenőrizze a szervernaplókat, vagy lépjen kapcsolatba az ügyfélszolgálattal."
-      linkedin_oidc_credentials: "A beállítás engedélyezése előtt konfigurálnia kell a LinkedIn OIDC hitelesítő adatait (\"linkedin_oidc_client_id\" és \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_chinese” beállítást."
       search_tokenize_japanese_enabled: "A beállítás engedélyezése előtt le kell tiltania a „search_tokenize_japanese” beállítást."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "A DiscourseConnect nem engedélyezhető, ha a 2FA kényszerítve van."
@@ -2582,8 +2575,6 @@ hu:
       tags_any: "A megadott címkék bármelyikével jelölt témák megjelenítése (vesszővel elválasztva)"
       tags_all: "Az összes megadott címkével ellátott témák megjelenítése (pluszjellel elválasztva)"
       exclude_tag: "Egy adott címkével rendelkező témák kizárása"
-      exclude_tags_any: "Kizárja a megadott címkék bármelyikét tartalmazó témákat (vesszővel elválasztva)."
-      exclude_tags_all: "Kizárja a megadott címkékkel rendelkező témákat (plusz-szeparált)"
       tag_group: "Témák megjelenítése egy adott címkecsoport címkéivel"
       exclude_tag_group: "Címkékkel ellátott témák kizárása egy adott címkecsoportból"
       activity_before: "Mutassa a témákat, amelyek utolsó aktivitása egy adott dátum előtt (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) történt"
@@ -2591,7 +2582,6 @@ hu:
       created_before: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) előtt létrehozott témák megjelenítése"
       created_after: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) után létrehozott témák megjelenítése"
       created_by: "Egy adott felhasználó vagy csoport által létrehozott témák megjelenítése"
-      created_by_user: "Felhasználónév vagy csoport által létrehozott témák megjelenítése (@ jel nélkül)"
       created_by_multiple: "A megadott felhasználók vagy csoportok által létrehozott témák megjelenítése (vesszővel elválasztva)"
       latest_post_before: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum előtt történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
       latest_post_after: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum után történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."

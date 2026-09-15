@@ -356,6 +356,7 @@ el:
     notifications_tracking:
       tooltip: "Επίπεδο ειδοποίησης: %{level}"
     back_button: "Πίσω"
+    confirm_button: "Επιβεβαίωση"
     welcome_banner:
       header:
         new_members: "Καλώς ήρθες, %{preferred_display_name}!"
@@ -4938,6 +4939,7 @@ el:
       with_category: "%{filter} %{category} θέματα"
       filter:
         title: "Φιλτραρισμένα αποτελέσματα για %{filter}"
+        reset: "επαναφορά"
         button:
           label: "Φίλτρο"
       latest:

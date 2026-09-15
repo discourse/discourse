@@ -241,6 +241,25 @@ it:
       configuration_missing: "Nessuna configurazione per il rilevamento IA dello spam trovata. Prima di abilitare l'opzione, aggiungi la configurazione in \"Amministrazione > Plugin > Discourse AI > Spam\"."
       logging_subject: "Rilevamento spam"
     ai_bot:
+      navigation:
+        settings:
+          title: "Impostazioni del sito"
+        users:
+          title: "Utenti"
+        groups:
+          title: "Gruppi"
+        review:
+          title: "Coda di revisione"
+        categories:
+          title: "Categorie"
+        tags:
+          title: "Etichette"
+        themes:
+          title: "Temi"
+        authentication:
+          title: "Accesso e autenticazione"
+        backups:
+          title: "Backup"
       reply_error: "Spiacenti, il nostro sistema ha riscontrato un problema imprevisto durante il tentativo di risposta.\n\n[details='Dettagli errore']\n%{details}\n[/details]"
       default_pm_prefix: "[MP di bot IA senza titolo]"
       read_post:

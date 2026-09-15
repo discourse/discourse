@@ -515,6 +515,9 @@ en:
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
     multiple_errors: "Multiple errors occurred: %{errors}"
+    too_many_requests:
+      one: "You’ve performed this action too many times. Please wait %{count} second before trying again."
+      other: "You’ve performed this action too many times. Please wait %{count} seconds before trying again."
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -2945,6 +2948,10 @@ en:
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
       signup_disabled: "Signing up is disabled while the site is in read only mode."
+    site_archived:
+      enabled: "This site is in archive mode. Please continue to browse, but replying, likes, and other actions are disabled."
+      enabled_anonymous: "This site is in archive mode. Please continue to browse or log in, but replying, likes, and other actions are disabled."
+      signup_disabled: "Signing up is disabled while the site is in archive mode."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
       enabled_anonymous: "This site is in staff only mode. Please continue to browse, but signing up is unavailable and only staff members can log in."
@@ -3097,6 +3104,7 @@ en:
         login: "Log In"
 
     forgot_password:
+      code_instructions: "If a matching account exists, we sent a verification code to its email address. Enter the code to reset your password."
       title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
@@ -8941,6 +8949,14 @@ en:
           disable:
             title: "Disable read-only mode"
             label: "Disable read-only"
+        site_archived:
+          enable:
+            title: "Enable archive mode"
+            label: "Enable archive mode"
+            confirm: "Are you sure you want to enable archive mode? Users will still be able to log in and browse, but all write actions will be disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
+          disable:
+            title: "Disable archive mode"
+            label: "Disable archive mode"
         logs:
           none: "No logs yet…"
         columns:

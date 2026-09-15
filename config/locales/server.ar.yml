@@ -1523,7 +1523,7 @@ ar:
   uploads:
     marked_insecure_from_theme_component_reason: "التحميل المُستخدَم في مكوِّن السمة"
   unsubscribe:
-    title: "إلغاء الاشتراك"
+    unsubscribe: "إلغاء الاشتراك"
     stop_watching_topic: "إيقاف مراقبة هذا الموضوع، %{link}"
     mute_topic: "كتم جميع الإشعارات لهذا الموضوع، %{link}"
     unwatch_category: "إيقاف مراقبة كل الموضوعات في %{category}"
@@ -2092,13 +2092,7 @@ ar:
       sidekiq_check: 'Sidekiq ليس قيد التشغيل! يتم تنفيذ العديد من المهام، مثل إرسال الرسائل الإلكترونية، بشكلٍ غير متزامن من خلال sidekiq. يُرجى التأكد من وجود عملية sidekiq واحدة على الأقل قيد التشغيل. <a href="https://github.com/mperham/sidekiq" target="_blank">معرفة المزيد عن Sidekiq من هنا</a>.'
       queue_size: "عدد المهام في قائمة الانتظار هو %{queue_size}، وهذا رقم كبير. قد يكون ذلك مؤشرًا على وجود مشكلة في عمليات Sidekiq، أو قد تحتاج إلى إضافة المزيد من عمال Sidekiq."
       ram: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
-      google_oauth2_config: 'تم إعداد الخادم للسماح بالتسجيل وتسجيل الدخول باستخدام Google OAuth2 (enable_google_oauth2_logins)، ولكن لم يتم تعيين قيم معرِّف العميل والمفتاح السري للعميل. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وقم بتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
-      facebook_config: 'تم إعداد الخادم للسماح بالتسجيل وتسجيل الدخول باستخدام Facebook (enable_facebook_logins)، ولكن لم يتم تعيين قيم معرِّف التطبيق والمفتاح السري للعميل. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وقم بتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
-      twitter_config: 'تم إعداد الخادم للسماح بالتسجيل وتسجيل الدخول باستخدام Twitter (enable_twitter_logins)، ولكن لم يتم تعيين قيم المفتاح والسرية. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وقم بتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
-      github_config: 'تم إعداد الخادم للسماح بالتسجيل وتسجيل الدخول باستخدام GitHub (enable_github_logins)، ولكن لم يتم تعيين قيم معرِّف العميل والسرية. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وقم بتحديث الإعدادات. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
       github_onebox_backoff: "GitHub يقيِّد معدَّل الطلبات إلى الخادم، لذا قد لا تتمكن من معاينة روابط GitHub قبل إعادة تعيين الحد. يمكنك زيادة الحد بشكلٍ كبير من خلال تكوين {{setting:github_onebox_access_tokens}}."
-      s3_upload_config: 'تم إعداد الخادم لتحميل الملفات إلى S3، ولكن لم يتم تعيين أحد الإعدادات التالية على الأقل: s3_access_key_id أو s3_secret_access_key أو s3_use_iam_profile أو s3_upload_bucket. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وقم بتحديث الإعدادات. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">راجع "كيفية إعداد تحميل الصور إلى S3؟" لمعرفة المزيد</a>.'
-      s3_backup_config: 'تم إعداد الخادم لتحميل النسخ الاحتياطية إلى S3، ولكن لم يتم تعيين أحد الإعدادات التالية على الأقل: s3_access_key_id، أو s3_secret_access_key، أو s3_use_iam_profile، أو s3_backup_bucket. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وقم بتحديث الإعدادات. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">راجع "كيفية إعداد تحميل الصور إلى S3؟" لمعرفة المزيد</a>.'
       s3_cdn: 'تم إعداد الخادم لتحميل الملفات إلى S3، ولكن لم يتم إعداد شبكة توصيل المحتوى على S3. يمكن أن يؤدي ذلك إلى تكاليف باهظة لخدمة S3 وأداء أبطأ للموقع. <a href="https://meta.discourse.org/t/-/148916" target="_blank">راجع "استخدام مساحة تخزين الكائنات للتحميلات" لمعرفة المزيد</a>.'
       image_magick: 'تم إعداد الخادم لإنشاء صور مصغرة للصور الكبيرة، ولكن لم يتم تثبيت ImageMagick. قم بتثبيت ImageMagick باستخدام مدير الحزم المفضل لديك أو <a href="https://www.imagemagick.org/script/download.php" target="_blank">قم بتنزيل أحدث إصدار</a>.'
       failing_emails: 'هناك %{num_failed_jobs} مهمة بريد إلكتروني فشلت. تحقق من ملف app.yml الخاص بك وتأكَّد من صحة إعدادات خادم البريد. <a href="%{base_path}/sidekiq/retries" target="_blank">راجع المهام الفاشلة في Sidekiq</a>.'
@@ -3146,7 +3140,6 @@ ar:
       markdown_linkify_tlds: "لا يمكنك تضمين قيمة '*'."
       google_oauth2_hd_groups: "يجب عليك تعيين جميع إعدادات 'google oauth2 hd' قبل تفعيل هذا الإعداد."
       discourse_id_registration: "تعذر التسجيل تلقائيًا عبر معرف Discourse. قد يعود السبب إلى مشكلات في الاتصال بالشبكة، أو قيود جدار الحماية، أو تعذر الوصول إلى خدمة معرف Discourse. يُرجى الاطلاع على سجلات الخادم لمزيد من التفاصيل أو التواصل مع الدعم الفني."
-      linkedin_oidc_credentials: "يتعيَّن عليك إعداد بيانات اعتماد LinkedIn OIDC ('linkedin_oidc_client_id' و'linkedin_oidc_client_secret') قبل تقعيل هذا الإعداد."
       search_tokenize_chinese_enabled: "يجب عليك إيقاف `email editable` قبل تفعيل هذا الإعداد."
       search_tokenize_japanese_enabled: "يجب عليك إيقاف 'search_tokenize_japanese' قبل تفعيل هذا الإعداد."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "لا يمكنك تفعيل DiscourseConnect في حال فرض المصادقة الثنائية."
@@ -3238,8 +3231,6 @@ ar:
       tags_any: "عرض الموضوعات التي تحتوي على أي من الوسوم المحدَّدة (مفصولة بفواصل)"
       tags_all: "عرض الموضوعات التي تحتوي على جميع الوسوم المحدَّدة (مفصولة بعلامة الجمع)"
       exclude_tag: "استبعاد الموضوعات التي تحتوي على وسم محدَّد"
-      exclude_tags_any: "استبعاد الموضوعات التي تحتوي على أي من الوسوم المحدَّدة (مفصولة بفواصل)"
-      exclude_tags_all: "استبعاد الموضوعات التي تحتوي على جميع الوسوم المحدَّدة (مفصولة بعلامة الجمع)"
       tag_group: "عرض الموضوعات التي تحمل وسومًا من مجموعة وسوم محدَّدة"
       exclude_tag_group: "استبعاد الموضوعات التي تحمل وسومًا من مجموعة وسوم محدَّدة"
       activity_before: "عرض الموضوعات التي وقع آخر نشاط فيها قبل تاريخ محدَّد (YYYY-MM-DD أو قبل أيام)"
@@ -3249,7 +3240,6 @@ ar:
       created_before: "عرض الموضوعات التي تم إنشاؤها قبل تاريخ محدَّد (YYYY-MM-DD أو قبل أيام)"
       created_after: "عرض الموضوعات التي تم إنشاؤها بعد تاريخ محدَّد (YYYY-MM-DD أو قبل أيام)"
       created_by: "عرض الموضوعات التي أنشأها مستخدم أو مجموعة محدَّدة"
-      created_by_user: "عرض الموضوعات التي أنشأها اسم المستخدم أو المجموعة (بدون استخدام @)"
       created_by_multiple: "عرض الموضوعات التي أنشأها أي من المستخدمين أو المجموعات المحدَّدة (مفصولة بفواصل)"
       latest_post_before: "عرض الموضوعات التي تحتوي على آخر منشور قبل تاريخ محدَّد (YYYY-MM-DD أو قبل أيام)"
       latest_post_after: "عرض الموضوعات التي تحتوي على آخر منشور بعد تاريخ محدَّد (YYYY-MM-DD أو قبل أيام)"

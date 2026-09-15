@@ -223,6 +223,7 @@ sv:
       message: "Vi har uppdaterat den här webbplatsen, <span>ladda om</span> för att få saker att fungera smidigt."
       dismiss: "Avfärda"
     back_button: "Tillbaka"
+    confirm_button: "Bekräfta"
     welcome_banner:
       header:
         anonymous_members: "Välkommen till %{site_name}!"
@@ -3772,6 +3773,7 @@ sv:
       with_topics: "%{filter} ämnen"
       with_category: "%{filter} %{category} ämnen"
       filter:
+        reset: "återställ"
         button:
           label: "Filter"
       latest:

@@ -916,74 +916,111 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context "when the upload is an ICO favicon" do
+    context "when the file contains an ICO image" do
       let(:filename) { "smallest.ico" }
       let(:file) { file_from_fixtures(filename, "images") }
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      it "stores it as a PNG" do
+      it "stores the original file without conversion" do
+        original_contents = File.binread(file.path)
+
         upload = described_class.new(file, filename).create_for(user.id)
         stored_path = Discourse.store.path_for(upload)
 
         expect(upload).to be_persisted
-        expect(upload.extension).to eq("png")
-        expect(upload.original_filename).to eq("smallest.png")
-        expect(FastImage.type(stored_path)).to eq(:png)
-        expect(FastImage.size(stored_path)).to eq([1, 1])
+        expect(upload.extension).to eq("ico")
+        expect(upload.original_filename).to eq(filename)
+        expect(File.binread(stored_path)).to eq(original_contents)
+      end
+
+      it "rejects ICO images for avatar uploads" do
+        upload = described_class.new(file, filename, type: "avatar").create_for(user.id)
+
+        expect(upload).not_to be_persisted
+        expect(upload.errors.full_messages).to contain_exactly(I18n.t("upload.ico_as_avatar"))
       end
     end
-  end
 
-  describe "svg sizes expressed in units other than pixels" do
-    let(:tiny_svg_filename) { "tiny.svg" }
-    let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
+    context "when reading SVG upload dimensions" do
+      shared_examples "SVG upload dimensions" do |expected_zero_dimensions|
+        let(:tiny_svg_filename) { "tiny.svg" }
+        let(:tiny_svg_file) { file_from_fixtures(tiny_svg_filename) }
 
-    let(:massive_svg_filename) { "massive.svg" }
-    let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
+        let(:massive_svg_filename) { "massive.svg" }
+        let(:massive_svg_file) { file_from_fixtures(massive_svg_filename) }
 
-    let(:zero_sized_svg_filename) { "zero_sized.svg" }
-    let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
+        let(:zero_sized_svg_filename) { "zero_sized.svg" }
+        let(:zero_sized_svg_file) { file_from_fixtures(zero_sized_svg_filename) }
 
-    it "remains viewable when a dimension is fractional" do
-      upload =
-        UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
-          user.id,
-        )
+        it "remains viewable when a dimension is fractional" do
+          upload =
+            UploadCreator.new(tiny_svg_file, tiny_svg_filename, force_optimize: true).create_for(
+              user.id,
+            )
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+          expect(upload.width).to be > 50
+          expect(upload.height).to be > 50
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-    end
+          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+        end
 
-    it "does not exceed the maximum thumbnail size" do
-      upload =
-        UploadCreator.new(massive_svg_file, massive_svg_filename, force_optimize: true).create_for(
-          user.id,
-        )
+        it "does not exceed the maximum thumbnail size" do
+          upload =
+            UploadCreator.new(
+              massive_svg_file,
+              massive_svg_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+          expect(upload.width).to be > 50
+          expect(upload.height).to be > 50
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
-    end
+          expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
+          expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+        end
 
-    it "handles files with a zero dimension" do
-      upload =
-        UploadCreator.new(
-          zero_sized_svg_file,
-          zero_sized_svg_filename,
-          force_optimize: true,
-        ).create_for(user.id)
+        it "stores the detected dimensions for a zero-sized SVG" do
+          upload =
+            UploadCreator.new(
+              zero_sized_svg_file,
+              zero_sized_svg_filename,
+              force_optimize: true,
+            ).create_for(user.id)
 
-      expect(upload.width).to be > 50
-      expect(upload.height).to be > 50
+          expect(upload).to be_persisted
+          expect([upload.width, upload.height]).to eq(expected_zero_dimensions)
 
-      expect(upload.thumbnail_width).to be <= SiteSetting.max_image_width
-      expect(upload.thumbnail_height).to be <= SiteSetting.max_image_height
+          expect([upload.thumbnail_width, upload.thumbnail_height]).to eq(expected_zero_dimensions)
+        end
+
+        it "stores zero dimensions when the SVG has no usable dimensions" do
+          file =
+            file_from_contents(
+              '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"/>',
+              "zero.svg",
+            )
+
+          upload = described_class.new(file, "zero.svg").create_for(user.id)
+
+          expect(upload).to be_persisted
+          expect([upload.width, upload.height]).to eq([0, 0])
+          expect([upload.thumbnail_width, upload.thumbnail_height]).to eq([0, 0])
+        end
+      end
+
+      context "with libvips disabled" do
+        before { global_setting :enable_vips_image_processing, false }
+
+        include_examples "SVG upload dimensions", [120, 90]
+      end
+
+      context "with libvips enabled" do
+        before { global_setting :enable_vips_image_processing, true }
+
+        include_examples "SVG upload dimensions", [0, 0]
+      end
     end
   end
 

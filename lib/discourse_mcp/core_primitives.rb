@@ -1245,6 +1245,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Resource not found"
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
         {
           uri: uri,
           mimeType: "application/json",
@@ -1260,6 +1261,7 @@ module DiscourseMcp
         if post.blank? || !request_context.guardian.can_see?(post)
           raise ToolError, "Resource not found"
         end
+        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :read)
         { uri: uri, mimeType: "application/json", text: JSON.generate(ToolHelpers.post_json(post)) }
       end
     end
@@ -1290,6 +1292,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Topic not found"
         end
+        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
         {
           description: "Draft a reply to #{topic.title}",
           messages: [

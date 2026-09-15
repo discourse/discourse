@@ -26,6 +26,7 @@ import {
   applyBehaviorTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
+import DiscourseURL from "discourse/lib/url";
 import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-helper";
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
@@ -82,7 +83,14 @@ export default class CodeLoginForm extends Component {
   #cooldownTimer;
   #postSignupRedirectUrl;
   #usernameCheckSeq = 0;
-  @tracked _step = "email";
+  @tracked _step = this.args.initialStep ?? "email";
+
+  constructor() {
+    super(...arguments);
+    if (this.isCodeStep) {
+      this.startResendCooldown();
+    }
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -105,6 +113,10 @@ export default class CodeLoginForm extends Component {
 
   get isInvite() {
     return this.args.context === "invite";
+  }
+
+  get isPasswordReset() {
+    return this.args.context === "password-reset";
   }
 
   get isInviteEmailLocked() {
@@ -189,6 +201,10 @@ export default class CodeLoginForm extends Component {
   }
 
   get codeInstructions() {
+    if (this.isPasswordReset) {
+      return i18n("forgot_password.code_instructions");
+    }
+
     return trustHTML(
       i18n("code_login.code_instructions", { email: escape(this.email) })
     );
@@ -256,6 +272,7 @@ export default class CodeLoginForm extends Component {
     this.notice = null;
     this.otpGeneration++;
     this.step = "email";
+    this.args.onChangeEmail?.();
   }
 
   @action
@@ -294,7 +311,10 @@ export default class CodeLoginForm extends Component {
       data.second_factor_method = this.secondFactorMethod;
     }
 
-    if (this.isUserFieldsStep || this.#prefillUserFields()) {
+    if (
+      !this.isPasswordReset &&
+      (this.isUserFieldsStep || this.#prefillUserFields())
+    ) {
       data.user_fields = {};
       this.userFields.forEach((f) => (data.user_fields[f.field.id] = f.value));
       if (this.nameRequired) {
@@ -303,8 +323,11 @@ export default class CodeLoginForm extends Component {
     }
 
     try {
+      const endpoint = this.isPasswordReset
+        ? "/session/password-reset-code/verify"
+        : "/session/login-code/verify";
       const verify = () =>
-        ajax("/session/login-code/verify", {
+        ajax(endpoint, {
           type: "POST",
           data,
         });
@@ -346,6 +369,11 @@ export default class CodeLoginForm extends Component {
           this.code = "";
           this.otpGeneration++;
         }
+        return;
+      }
+
+      if (this.isPasswordReset) {
+        DiscourseURL.redirectTo(result.redirect_url);
         return;
       }
 
@@ -599,6 +627,15 @@ export default class CodeLoginForm extends Component {
     this.notice = null;
 
     try {
+      if (this.isPasswordReset) {
+        await ajax("/session/forgot_password", {
+          type: "POST",
+          data: { login: this.email.trim() },
+        });
+        this.startResendCooldown();
+        return true;
+      }
+
       const honeypot = await ajax("/session/hp.json");
       const result = await ajax("/session/login-code", {
         type: "POST",

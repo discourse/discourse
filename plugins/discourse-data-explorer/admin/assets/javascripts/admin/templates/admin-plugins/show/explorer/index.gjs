@@ -196,7 +196,11 @@ export default <template>
                             @route="adminPlugins.show.explorer.edit"
                             {{on "click" @controller.scrollTop}}
                           >
-                            {{i18n "edit"}}
+                            {{#if query.is_default}}
+                              {{i18n "explorer.view_query"}}
+                            {{else}}
+                              {{i18n "edit"}}
+                            {{/if}}
                           </LinkTo>
                         </div>
 

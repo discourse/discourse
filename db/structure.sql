@@ -158,6 +158,23 @@ CREATE FUNCTION discourse_functions.raise_topic_timers_topic_id_readonly() RETUR
 $$;
 
 
+--
+-- Name: skip_piggyback_browser_pageview_events(); Type: FUNCTION; Schema: discourse_functions; Owner: -
+--
+
+CREATE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF NEW.source = 1 THEN
+    RETURN NULL;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -2115,6 +2132,27 @@ CREATE TABLE public.browser_pageview_event_scores (
 
 
 --
+-- Name: browser_pageview_event_scores_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_event_scores_backup (
+    id bigint NOT NULL,
+    event_id bigint NOT NULL,
+    automation_ua_score smallint NOT NULL,
+    known_asn_score smallint NOT NULL,
+    velocity_score smallint NOT NULL,
+    churn_score smallint NOT NULL,
+    rapid_nav_score smallint NOT NULL,
+    referrer_score smallint NOT NULL,
+    engagement_score smallint NOT NULL,
+    ip_rotation_score smallint NOT NULL,
+    datacenter_asn_score smallint NOT NULL,
+    single_request_no_referrer_score smallint NOT NULL,
+    stale_browser_score smallint NOT NULL
+);
+
+
+--
 -- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2152,7 +2190,35 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL,
+    source smallint DEFAULT 2 NOT NULL,
+    normalized_url character varying(2000),
+    normalized_url_version integer,
+    browser smallint,
+    language character varying(255),
+    normalized_language character varying
+);
+
+
+--
+-- Name: browser_pageview_events_backup; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_events_backup (
+    id bigint NOT NULL,
+    url character varying(2000) NOT NULL,
+    ip_address inet NOT NULL,
+    referrer character varying(2000),
+    user_agent character varying(1000) NOT NULL,
+    session_id character varying(32) NOT NULL,
+    topic_id integer,
+    user_id integer,
+    country_code character varying(2),
+    created_at timestamp without time zone NOT NULL,
+    asn integer,
+    score integer,
+    normalized_referrer character varying(2000),
+    normalized_referrer_version smallint,
+    source smallint NOT NULL,
     normalized_url character varying(2000),
     normalized_url_version integer,
     browser smallint,
@@ -5650,7 +5716,8 @@ CREATE TABLE public.email_login_codes (
     expires_at timestamp(6) without time zone NOT NULL,
     consumed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    purpose integer DEFAULT 0 NOT NULL
 );
 
 
@@ -16274,11 +16341,27 @@ ALTER TABLE ONLY public.browser_pageview_entry_url_daily_rollups
 
 
 --
+-- Name: browser_pageview_event_scores_backup browser_pageview_event_scores_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_event_scores_backup
+    ADD CONSTRAINT browser_pageview_event_scores_backup_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: browser_pageview_event_scores browser_pageview_event_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.browser_pageview_event_scores
     ADD CONSTRAINT browser_pageview_event_scores_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_events_backup browser_pageview_events_backup_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_events_backup
+    ADD CONSTRAINT browser_pageview_events_backup_pkey PRIMARY KEY (id);
 
 
 --
@@ -18986,7 +19069,7 @@ CREATE INDEX idx_bpe_beacon_created_at_id ON public.browser_pageview_events USIN
 -- Name: idx_bpe_browser_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC) WHERE (browser IS NULL);
+CREATE INDEX idx_bpe_browser_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE (browser IS NULL);
 
 
 --
@@ -18997,10 +19080,24 @@ CREATE INDEX idx_bpe_created_at_country_code ON public.browser_pageview_events U
 
 
 --
+-- Name: idx_bpe_created_at_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_id ON public.browser_pageview_events USING btree (created_at DESC, id DESC);
+
+
+--
 -- Name: idx_bpe_created_at_normalized_referrer; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_events USING btree (created_at, normalized_referrer);
+
+
+--
+-- Name: idx_bpe_created_at_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_created_at_session_id ON public.browser_pageview_events USING btree (created_at, session_id, source);
 
 
 --
@@ -19011,17 +19108,10 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 
 
 --
--- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_bpe_referrer_backfill; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
-
-
---
--- Name: idx_bpe_normalized_url_version; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events USING btree (normalized_url_version);
+CREATE INDEX idx_bpe_referrer_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)));
 
 
 --
@@ -19029,6 +19119,13 @@ CREATE INDEX idx_bpe_normalized_url_version ON public.browser_pageview_events US
 --
 
 CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
+
+
+--
+-- Name: idx_bpe_url_backfill; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_url_backfill ON public.browser_pageview_events USING btree (created_at DESC, id DESC) WHERE ((normalized_url_version IS NULL) OR (normalized_url_version < 1));
 
 
 --
@@ -23442,6 +23539,13 @@ CREATE UNIQUE INDEX index_topic_embeds_on_embed_url ON public.topic_embeds USING
 
 
 --
+-- Name: index_topic_embeds_on_lower_embed_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_embeds_on_lower_embed_url ON public.topic_embeds USING btree (lower((embed_url)::text));
+
+
+--
 -- Name: index_topic_groups_on_group_id_and_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24828,6 +24932,13 @@ CREATE TRIGGER discourse_rss_polling_rss_feeds_author_readonly BEFORE INSERT OR 
 
 
 --
+-- Name: browser_pageview_events skip_piggyback_browser_pageview_events; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER skip_piggyback_browser_pageview_events BEFORE INSERT OR UPDATE OF source ON public.browser_pageview_events FOR EACH ROW WHEN ((new.source = ANY (ARRAY[1, 2]))) EXECUTE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events();
+
+
+--
 -- Name: topic_timers topic_timers_topic_id_readonly; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -25073,8 +25184,16 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260914213908'),
+('20260914172801'),
+('20260914172757'),
+('20260914140746'),
 ('20260914032737'),
 ('20260910033302'),
+('20260910030427'),
+('20260910030404'),
+('20260910030345'),
+('20260909181443'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),
@@ -25084,8 +25203,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260903195501'),
 ('20260903065141'),
 ('20260902150024'),
+('20260902075239'),
 ('20260901020329'),
 ('20260831162602'),
+('20260831011840'),
+('20260831011839'),
+('20260831011836'),
 ('20260828145150'),
 ('20260827064809'),
 ('20260826133816'),

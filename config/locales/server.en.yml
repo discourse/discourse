@@ -591,6 +591,7 @@ en:
   provider_not_enabled: "You are not permitted to view the requested resource. The authentication provider is not enabled."
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  site_archived_error: "This site is in archive mode. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
@@ -1402,7 +1403,8 @@ en:
     marked_insecure_from_theme_component_reason: "upload used in theme component"
 
   unsubscribe:
-    title: "Unsubscribe"
+    title: "Unsubscribe %{email}"
+    unsubscribe: "Unsubscribe"
     stop_watching_topic: "Stop watching this topic, %{link}"
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
@@ -2362,6 +2364,7 @@ en:
     linkedin_oidc_client_id: "Client ID for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     linkedin_oidc_client_secret: "Client secret for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
 
+    site_archived: "Put the site in archive mode. Reads and login remain available; new content, likes, and other write actions are disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
@@ -3317,8 +3320,6 @@ en:
       tags_any: "Show topics with any of the specified tags (comma-separated)"
       tags_all: "Show topics with all of the specified tags (plus-separated)"
       exclude_tag: "Exclude topics with a specific tag"
-      exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
-      exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
@@ -3328,7 +3329,6 @@ en:
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
       created_by: "Show topics created by a specific user or group"
-      created_by_user: "Show topics created by username or group (without @)"
       created_by_multiple: "Show topics created by any of the specified users or groups (comma-separated)"
       latest_post_before: "Show topics with last post before a date (YYYY-MM-DD or days ago)"
       latest_post_after: "Show topics with last post after a date (YYYY-MM-DD or days ago)"
@@ -3351,6 +3351,7 @@ en:
       status_public: "Show topics in public categories"
       status_noreplies: "Show topics with no replies"
       status_single_user: "Show topics with a single participant"
+      status_scheduled: "Show topics scheduled to publish to a category"
       in_pinned: "Show pinned topics"
       in_bookmarked: "Show topics you've bookmarked"
       in_watching: "Show topics you're watching"
@@ -3362,6 +3363,7 @@ en:
       in_new_replies: "Show topics with new replies"
       in_new_topics: "Show new topics"
       in_unseen: "Show topics you haven't seen"
+      in_untagged: "Show topics without any tags"
       order_activity: "Sort by last activity (newest first)"
       order_activity_asc: "Sort by last activity (oldest first)"
       order_category: "Sort by category name (Z-A)"
@@ -3376,6 +3378,8 @@ en:
       order_likes_op_asc: "Sort by likes on first post (least first)"
       order_posters: "Sort by number of participants (most first)"
       order_posters_asc: "Sort by number of participants (least first)"
+      order_posts: "Sort by number of replies (most first)"
+      order_posts_asc: "Sort by number of replies (least first)"
       order_title: "Sort by title (Z-A)"
       order_title_asc: "Sort by title (A-Z)"
       order_views: "Sort by view count (most first)"
@@ -3668,6 +3672,16 @@ en:
     subject_template: "%{code} is your login code"
     text_body_template: |
       Use this code to finish logging in to %{site_name}:
+
+      ## %{code}
+
+      This code expires in %{minutes} minutes. If you didn't request it, you can safely ignore this email.
+
+  password_reset_code_mailer:
+    title: "Password reset code"
+    subject_template: "%{code} is your password reset code"
+    text_body_template: |
+      Use this code to reset your password on %{site_name}:
 
       ## %{code}
 
@@ -5328,6 +5342,7 @@ en:
     file_missing: "Sorry, you must provide a file to upload."
     empty: "Sorry, but the file you provided is empty."
     failed: "Sorry, but your upload failed. Please try again."
+    ico_as_avatar: "Sorry, ICO images cannot be used as avatars."
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."

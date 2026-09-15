@@ -27,7 +27,13 @@ describe DiscourseMcp::Tools do
             "query" => "regular parity search needle",
             "max_results" => 1,
           },
-          request_context: request_context(user),
+          request_context:
+            instance_double(
+              DiscourseMcp::RequestContext,
+              user:,
+              guardian: user.guardian,
+              has_scopes?: true,
+            ),
         ).fetch(:structuredContent)
 
       expect(result[:results].sole).to eq(
@@ -233,11 +239,11 @@ describe DiscourseMcp::Tools do
       private_topic =
         Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       hidden_notification = Fabricate(:notification, user:, topic: private_topic)
+      context = request_context(user)
+      allow(context).to receive(:has_scopes?).with("mcp:private-messages:read").and_return(true)
 
       result =
-        described_class.call(arguments: {}, request_context: request_context(user)).fetch(
-          :structuredContent,
-        )
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
 
       notification_ids = result.fetch(:notifications).pluck(:id)
       expect(notification_ids).to include(visible_notification.id)

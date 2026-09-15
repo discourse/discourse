@@ -503,6 +503,8 @@ module DiscourseAi
               agent_name: @agent.class.name,
               reason: tool.parameters[:reason],
               llm_model_id: @model&.id,
+              chat_message_id: context.message_id,
+              context_post_ids: context.context_post_ids,
             },
           )
 
@@ -529,12 +531,9 @@ module DiscourseAi
           # `.ai-tool-approval` element exists only once, on the component itself.
           approval_card = "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>"
 
-          approval_content =
-            build_placeholder(
-              tool.summary,
-              I18n.t("discourse_ai.ai_bot.tool_pending_approval"),
-              custom_raw: approval_card,
-            )
+          approval_notice =
+            ERB::Util.html_escape(I18n.t("discourse_ai.ai_bot.tool_pending_approval"))
+          approval_content = "#{approval_notice}\n\n#{approval_card}\n\n"
           update_blk.call(approval_content, nil, :custom_raw)
         end
 

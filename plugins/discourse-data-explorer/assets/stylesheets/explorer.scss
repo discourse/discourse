@@ -15,6 +15,11 @@
   &__table {
     overflow: auto;
     font-size: var(--font-down-2);
+
+    th,
+    td {
+      white-space: nowrap;
+    }
   }
 
   &__empty {
@@ -989,15 +994,8 @@ table.group-reports {
     }
 
     .query-desc {
+      @include line-clamp(2);
       color: var(--primary-high);
-      max-width: 20vw;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-
-      @include viewport.until(md) {
-        max-width: 90vw;
-      }
     }
 
     .query-created-by {
@@ -1022,6 +1020,10 @@ table.group-reports {
 
     .query-created-at {
       color: var(--primary-medium);
+    }
+
+    .d-table__cell-actions .btn {
+      min-width: 4.5em;
     }
   }
 

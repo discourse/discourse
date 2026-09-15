@@ -15,6 +15,14 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "GET #index" do
+    it "offers uploaded document search in the tool catalog" do
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+
+      expect(response.parsed_body.dig("meta", "tools")).to include(
+        a_hash_including("id" => "SearchUploadedDocuments"),
+      )
+    end
+
     it "returns a success response" do
       get "/admin/plugins/discourse-ai/ai-agents.json"
       expect(response).to be_successful

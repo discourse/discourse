@@ -418,6 +418,7 @@ ru:
     notifications_tracking:
       tooltip: "Уровень уведомлений: %{level}"
     back_button: "Назад"
+    confirm_button: "Подтвердить"
     welcome_banner:
       header:
         new_members: "Добро пожаловать в %{preferred_display_name}!"
@@ -5300,6 +5301,7 @@ ru:
       with_category: "%{category} — %{filter} темы"
       filter:
         title: "Отфильтрованные результаты по «%{filter}»"
+        reset: "Сброс"
         button:
           label: "Фильтр"
       latest:

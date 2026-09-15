@@ -135,7 +135,8 @@ module DiscourseMcp
       user
     end
 
-    def visible_post!(post_id, guardian)
+    def visible_post!(post_id, request_context)
+      guardian = request_context.guardian
       post = Post.with_deleted.find_by(id: post_id)
       topic = Topic.with_deleted.find_by(id: post&.topic_id)
       post.association(:topic).target = topic if post && topic
@@ -144,7 +145,14 @@ module DiscourseMcp
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.post_not_found")
       end
 
+      ensure_private_message_scope!(topic, request_context, access: :read)
       post
+    end
+
+    def ensure_private_message_scope!(topic, request_context, access:)
+      return unless topic.private_message?
+
+      request_context.ensure_scopes!("mcp:private-messages:#{access}")
     end
 
     def ensure_current_author!(arguments, user)

@@ -484,6 +484,7 @@ after_initialize do
   end
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT
 
   add_to_serializer(
     :topic_view,
@@ -506,15 +507,18 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_starts_at,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_starts_at
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_STARTS_AT) &&
+        object.event_starts_at
     end,
   ) { object.event_starts_at }
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT
 
   add_to_serializer(
     :topic_view,
@@ -535,15 +539,18 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_ends_at,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_ends_at
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_ENDS_AT) &&
+        object.event_ends_at
     end,
   ) { object.event_ends_at }
 
   add_preloaded_topic_list_custom_field DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY
+  CategoryList.preloaded_topic_custom_fields << DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY
 
   add_to_serializer(
     :topic_view,
@@ -564,11 +571,13 @@ after_initialize do
   end
 
   add_to_serializer(
-    :topic_list_item,
+    :listable_topic,
     :event_all_day,
     include_condition: -> do
       SiteSetting.discourse_post_event_enabled &&
-        SiteSetting.display_post_event_date_on_topic_title && object.event_all_day
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.custom_field_preloaded?(DiscourseEvents::Events::TOPIC_POST_EVENT_ALL_DAY) &&
+        object.event_all_day
     end,
   ) { object.event_all_day }
 

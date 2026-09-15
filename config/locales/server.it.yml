@@ -1137,7 +1137,7 @@ it:
   uploads:
     marked_insecure_from_theme_component_reason: "caricamento utilizzato nel componente del tema"
   unsubscribe:
-    title: "Annulla iscrizione"
+    unsubscribe: "Annulla iscrizione"
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
@@ -1641,12 +1641,6 @@ it:
       host_names: "Il tuo file config/database.yml usa l'hostname predefinito: localhost. Aggiornalo con l'hostname del tuo sito."
       queue_size: "Il numero di job in coda è %{queue_size}, molto elevato. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
       ram: "Il tuo server sta funzionando con meno di 1 GB di memoria. Si consiglia almeno 1 GB di memoria."
-      google_oauth2_config: 'Il server è configurato per permettere la registrazione e l''accesso con Google OAuth2 (enable_google_oauth2_logins), ma i valori ID client e segreto client non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> per aggiornare le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Per ulteriori informazioni, consulta questa guida</a>.'
-      facebook_config: 'Il server è configurato per consentire la registrazione e l''accesso con Facebook (enable_facebook_logins), ma i valori ID app e segreto app non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Per ulteriori informazioni, consulta questa guida</a> .'
-      twitter_config: 'Il server è configurato per consentire la registrazione e l''accesso con Twitter (enable_twitter_logins), ma i valori chiave e segreto non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Per ulteriori informazioni, consulta questa guida</a>.'
-      github_config: 'Il server è configurato per consentire la registrazione e l''accesso con GitHub (enable_github_logins), ma i valori ID client e segreto non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Per ulteriori informazioni, consulta questa guida</a>.'
-      s3_upload_config: 'Il server è configurato per caricare file su S3, ma almeno una delle seguenti impostazioni non è definita: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta "Come configurare caricamenti di immagini su S3?" per approfondimenti</a>.'
-      s3_backup_config: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è definita: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le relative impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulta "Come configurare caricamenti di immagini su S3?" per approfondimenti</a>.'
       s3_cdn: 'Il server è configurato per caricare file su S3, ma non è configurato nessun CDN S3. Questo può portare a costi S3 onerosi e a prestazioni del sito più lente. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consulta la sezione "Uso di un archivio oggetti per i caricamenti" per approfondimenti</a>.'
       image_magick: 'Il server è configurato per creare miniature di immagini di grandi dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando un''utilità di gestione pacchetti a tua scelta o <a href="https://www.imagemagick.org/script/download.php" target="_blank">scarica l''ultima versione</a>.'
       failing_emails: 'Sono presenti %{num_failed_jobs} processi di posta elettronica non riusciti. Controlla che le impostazioni del server di posta sul tuo app.yml siano corrette. <a href="%{base_path}/sidekiq/retries" target="_blank">Visualizza i processi non riusciti in Sidekiq</a>.'
@@ -2450,7 +2444,6 @@ it:
         other: "L'elenco deve contenere esattamente %{count} valori."
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
       google_oauth2_hd_groups: "Prima di attivare questa impostazione, devi configurare le opzioni 'google oauth2 hd'."
-      linkedin_oidc_credentials: "Per abilitare questa impostazione, configura prima le credenziali OIDC di LinkedIn (\"linkedin_oidc_client_id\" e \"linkedin_oidc_client_secret\")."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Non è possibile abilitare DiscourseConnect se è stata forzata l'autenticazione a due fattori 2FA."
@@ -2496,8 +2489,6 @@ it:
       tags_any: "Mostra gli argomenti con una qualsiasi delle etichette specificate (separate da una virgola)"
       tags_all: "Mostra gli argomenti di tutte le etichette specificate (separate dal segno più)"
       exclude_tag: "Escludi argomenti con un'etichetta specifica"
-      exclude_tags_any: "Escludi gli argomenti con una qualsiasi delle etichette specificate (separate da una virgola)"
-      exclude_tags_all: "Escludi gli argomenti di tutte le etichette specificate (separate dal segno più)"
       tag_group: "Mostra argomenti con etichetta da un gruppo di etichette specifico"
       exclude_tag_group: "Escludi argomenti con etichetta da un gruppo di etichette specifico"
       activity_before: "Mostra argomenti con ultima attività prima di una data (AAAA-MM-GG o giorni fa)"

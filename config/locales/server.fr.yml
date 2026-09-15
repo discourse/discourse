@@ -1204,7 +1204,7 @@ fr:
   uploads:
     marked_insecure_from_theme_component_reason: "fichier utilisé dans un composant de thème"
   unsubscribe:
-    title: "Se désabonner"
+    unsubscribe: "Se désabonner"
     stop_watching_topic: "Arrêter de surveiller ce sujet, %{link}"
     mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
     unwatch_category: "Arrêter de surveiller les sujets de la catégorie %{category}"
@@ -1773,13 +1773,7 @@ fr:
       sidekiq_check: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi d''e-mails, sont exécutées de manière asynchrone par Sidekiq. Veuillez vous assurer qu''au moins un processus Sidekiq est en cours d''exécution. <a href="https://github.com/mperham/sidekiq" target="_blank">En savoir plus sur Sidekiq ici</a>.'
       queue_size: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est assez élevé. Cela peut indiquer un problème avec les processus Sidekiq ou que ces derniers ne sont pas assez nombreux pour traiter efficacement les tâches."
       ram: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
-      google_oauth2_config: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les valeurs de l''identifiant client et le secret client ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">paramètres du site</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consultez ce guide pour en savoir plus</a>.'
-      facebook_config: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consultez ce guide pour en savoir plus</a>.'
-      twitter_config: 'Le serveur est configuré pour permettre l''authentification par X (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consultez ce guide pour en savoir plus</a>.'
-      github_config: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consultez ce guide pour en savoir plus</a>.'
       github_onebox_backoff: "GitHub limite le débit du serveur, de sorte que les liens GitHub peuvent ne pas être prévisualisés tant que la limite n'est pas réinitialisée. La configuration de {{setting:github_onebox_access_tokens}} augmente la limite de manière significative."
-      s3_upload_config: 'Le serveur est configuré pour envoyer les sauvegardes à S3, mais au moins l''un des paramètres suivants n''est pas défini : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Accédez aux <a href="%{base_path}/admin/site_settings">paramètres du site</a> et actualisez les paramètres. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultez « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
-      s3_backup_config: 'Le serveur est configuré pour envoyer les sauvegardes à S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Accédez aux <a href="%{base_path}/admin/site_settings">Paramètres</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultez « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
       s3_cdn: 'Le serveur est configuré pour envoyer les fichiers à S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et réduire les performances du site. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consultez « Utiliser un espace de stockage d''objets pour les envois » pour en savoir plus</a>.'
       image_magick: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">téléchargez directement la dernière version</a>.'
       failing_emails: 'Il y a %{num_failed_jobs} tâches d''envoi d''e-mail échouées. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de messagerie. <a href="%{base_path}/sidekiq/retries" target="_blank">Consultez également les processus en échec dans Sidekiq</a>.'
@@ -2803,7 +2797,6 @@ fr:
       markdown_linkify_tlds: "Vous ne pouvez pas inclure la valeur « * »."
       google_oauth2_hd_groups: "Vous devez configurer tous les paramètres « google oauth2 HD » avant d'activer ce paramètre."
       discourse_id_registration: "Échec de l'inscription automatique auprès de Discourse ID. Cela peut être dû à des problèmes de connectivité réseau, à des restrictions de pare-feu ou à l'indisponibilité du service Discourse ID. Consultez les journaux du serveur pour en savoir plus ou contactez l'assistance."
-      linkedin_oidc_credentials: "Vous devez configurer les informations d'identification OIDC de LinkedIn (« linkedin_oidc_client_id » et « linkedin_oidc_client_secret ») avant d'activer ce paramètre."
       search_tokenize_chinese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_chinese »."
       search_tokenize_japanese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_japanese »."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Vous ne pouvez pas activer DiscourseConnect si la 2FA est obligatoire."
@@ -2895,8 +2888,6 @@ fr:
       tags_any: "Afficher les sujets avec l'une des étiquettes spécifiées (séparés par des virgules)"
       tags_all: "Afficher les sujets avec toutes les étiquettes spécifiées (séparées par des plus)"
       exclude_tag: "Exclure les sujets avec une étiquette spécifique"
-      exclude_tags_any: "Exclure les sujets avec l'une des étiquettes spécifiées (séparés par des virgules)"
-      exclude_tags_all: "Exclure les sujets comportant toutes les étiquettes spécifiées (séparées par des plus)"
       tag_group: "Afficher les sujets dont les étiquettes appartiennent à un groupe de balises spécifique"
       exclude_tag_group: "Exclure les sujets comportant des balises d'un groupe de balises spécifique"
       activity_before: "Afficher les sujets dont la dernière activité est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
@@ -2906,7 +2897,6 @@ fr:
       created_before: "Afficher les sujets créés avant une date (AAAA-MM-JJ ou il y a quelques jours)"
       created_after: "Afficher les sujets créés après une date (AAAA-MM-JJ ou il y a quelques jours)"
       created_by: "Afficher les sujets créés par un utilisateur ou un groupe précis"
-      created_by_user: "Afficher les sujets créés par un nom d'utilisateur ou un groupe (sans @)"
       created_by_multiple: "Afficher les sujets créés par l'un des utilisateurs ou groupes indiqués (séparés par des virgules)"
       latest_post_before: "Afficher les sujets dont la dernière publication est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
       latest_post_after: "Afficher les sujets dont la dernière publication est postérieure à une date (YYYY-MM-DD ou il y a quelques jours)"

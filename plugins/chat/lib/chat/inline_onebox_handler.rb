@@ -23,7 +23,7 @@ module Chat
         return if !chat_channel
 
         if route[:thread_id].present?
-          thread = Chat::Thread.find_by(id: route[:thread_id])
+          thread = chat_channel.threads.find_by(id: route[:thread_id])
           return if !thread
 
           title =
@@ -44,7 +44,7 @@ module Chat
         end
       end
 
-      return if !Guardian.new.can_preview_chat_channel?(chat_channel)
+      return if !Guardian.new.can_preview_anonymous_public_chat_channel?(chat_channel)
 
       { url: url, title: title }
     end

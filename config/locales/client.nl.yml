@@ -349,6 +349,7 @@ nl:
     notifications_tracking:
       tooltip: "Meldingsniveau: %{level}"
     back_button: "Terug"
+    confirm_button: "Bevestigen"
     welcome_banner:
       header:
         new_members: "Welkom, %{preferred_display_name}!"
@@ -4962,6 +4963,7 @@ nl:
       with_category: "%{filter} topics in %{category}"
       filter:
         title: "Gefilterde resultaten voor %{filter}"
+        reset: "resetten"
         button:
           label: "Filter"
       latest:

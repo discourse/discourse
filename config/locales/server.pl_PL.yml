@@ -613,6 +613,7 @@ pl_PL:
   provider_not_enabled: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie został upoważniony w systemie."
   provider_not_found: "Nie masz dostępu do żądanego zasobu. Poświadczający uwierzytelnienie nie istnieje."
   read_only_mode_enabled: "Strona jest w trybie tylko do odczytu. Możliwość interakcji jest wyłączona."
+  site_archived_error: "Ta strona jest w trybie archiwizacji. Interakcje są wyłączone."
   invalid_grant_badge_reason_link: "Zewnętrzny lub nieprawidłowy link do Disocurse jest niedozwolony z przyczyn związanych z odznaką"
   email_template_cant_be_modified: "Ten szablon e-mail nie może być zmodyfikowany"
   invalid_whisper_access: "Albo szepty nie są włączone, albo nie masz dostępu do tworzenia wpisów szeptanych"
@@ -1464,7 +1465,8 @@ pl_PL:
   uploads:
     marked_insecure_from_theme_component_reason: "przesyłanie użyte w komponencie motywu"
   unsubscribe:
-    title: "Wypisz"
+    title: "Anuluj subskrypcję %{email}"
+    unsubscribe: "Anuluj subskrypcję"
     stop_watching_topic: "Przestań obserwować ten temat, %{link}"
     mute_topic: "Wycisz wszystkie powiadomienia dla tego tematu, %{link}"
     unwatch_category: "Przestań obserwować wszystkie tematy w %{category}"
@@ -2037,13 +2039,13 @@ pl_PL:
       sidekiq_check: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie e-maili, jest wykonywanych asynchronicznie przez Sidekiq. Upewnij się, że co najmniej jeden proces Sidekiq jest uruchomiony. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiq tutaj</a>.'
       queue_size: "Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq."
       ram: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
-      google_oauth2_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie przy użyciu Google OAuth2 (enable_google_oauth2_logins), ale identyfikator klienta i jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-      facebook_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator aplikacji i jej sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-      twitter_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale wartości dla klucza i sekretu nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-      github_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta oraz jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      google_oauth2_config: '{{setting:enable_google_oauth2_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      facebook_config: '{{setting:enable_facebook_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      twitter_config: '{{setting:enable_twitter_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      github_config: '{{setting:enable_github_logins}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
       github_onebox_backoff: "GitHub ogranicza przepustowość serwera, więc linki GitHub mogą nie być dostępne do momentu zresetowania limitu. Skonfigurowanie {{setting:github_onebox_access_tokens}} znacznie zwiększa limit."
-      s3_upload_config: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
-      s3_backup_config: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
+      s3_upload_config: '{{setting:enable_s3_uploads}} jest włączone, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie obrazów do S3?”, aby dowiedzieć się więcej</a>.'
+      s3_backup_config: '{{setting:backup_location}} jest ustawione na S3, ale %{missing_settings} nadal musi być ustawione. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie obrazów do S3?”, aby dowiedzieć się więcej</a>.'
       s3_cdn: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie skonfigurowano S3 CDN. Może to prowadzić do wysokich kosztów S3 i spowolnienia działania witryny. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zobacz "Używanie Object Storage do wysyłania", aby dowiedzieć się więcej</a>.'
       image_magick: 'Serwer jest skonfigurowany do tworzenia miniatur dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą swojego ulubionego menedżera pakietów lub <a href="https://www.imagemagick.org/script/download.php" target="_blank">pobierz najnowszą wersję</a> .'
       failing_emails: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
@@ -2392,6 +2394,7 @@ pl_PL:
     enable_linkedin_oidc_logins: "Włącz uwierzytelnianie LinkedIn, wymaga {{setting:linkedin_oidc_client_id}} i {{setting:linkedin_oidc_client_secret}}."
     linkedin_oidc_client_id: "Identyfikator klienta do uwierzytelniania LinkedIn, zarejestrowany na stronie <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     linkedin_oidc_client_secret: "Klucz tajny klienta do uwierzytelniania LinkedIn, zarejestrowany pod adresem <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+    site_archived: "Przełącz witrynę w tryb archiwizacji. Odczyty i logowanie pozostają dostępne; nowe treści, polubienia i inne akcje zapisu są wyłączone. Operacyjne przyczyny tylko do odczytu (przełączenie awaryjne, konserwacja) nadal mają pierwszeństwo, gdy są aktywne."
     enable_backups: "Pozwól administratorom tworzyć kopie zapasowe forum"
     allow_restore: "Zezwól na przywracanie, które może zastąpić WSZYSTKIE dane witryny! Pozostaw wyłączone, chyba że planujesz przywrócić kopię zapasową"
     maximum_backups: "Maksymalna liczba przechowywanych kopii zapasowych. Starsze kopie zapasowe są automatycznie usuwane"
@@ -3114,7 +3117,7 @@ pl_PL:
       markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       google_oauth2_hd_groups: "Przed włączeniem tego ustawienia musisz skonfigurować wszystkie ustawienia 'google oauth2 hd'."
       discourse_id_registration: "Automatyczna rejestracja przy użyciu Discourse ID się nie powiodła. Może to być spowodowane problemami z łącznością sieciową, ograniczeniami zapory ogniowej lub niedostępnością usługi Discourse ID. Sprawdź dzienniki serwera, aby uzyskać więcej informacji lub skontaktuj się z pomocą techniczną."
-      linkedin_oidc_credentials: "Musisz skonfigurować poświadczenia LinkedIn OIDC (\"linkedin_oidc_client_id\" i \"linkedin_oidc_client_secret\") przed włączeniem tego ustawienia."
+      auth_provider_credentials_missing: "Przed włączeniem tego ustawienia należy ustawić %{settings}."
       search_tokenize_chinese_enabled: "Musisz wyłączyć 'search_tokenize_chinese' przed włączeniem tego ustawienia."
       search_tokenize_japanese_enabled: "Musisz wyłączyć 'search_tokenize_japanese' przed włączeniem tego ustawienia."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Nie można włączyć DiscourseConnect, jeśli wymuszono 2FA."
@@ -3209,8 +3212,6 @@ pl_PL:
       tags_any: "Pokaż tematy zawierające dowolne ze wskazanych tagów (rozdzielone przecinkami)"
       tags_all: "Pokaż tematy ze wszystkimi określonymi tagami (rozdzielonymi znakiem plus)"
       exclude_tag: "Wyklucz tematy z określonym tagiem"
-      exclude_tags_any: "Wyklucz tematy zawierające dowolne ze wskazanych tagów (rozdzielone przecinkami)"
-      exclude_tags_all: "Wyklucz tematy zawierające wszystkie określone tagi (rozdzielone znakiem plus)"
       tag_group: "Pokaż tematy z tagami z określonej grupy tagów"
       exclude_tag_group: "Wyklucz tematy z tagami z określonej grupy tagów"
       activity_before: "Pokaż tematy z ostatnią aktywnością przed datą (RRRR-MM-DD lub dni temu)"
@@ -3220,7 +3221,6 @@ pl_PL:
       created_before: "Pokaż tematy utworzone przed datą (RRRR-MM-DD lub dni temu)"
       created_after: "Pokaż tematy utworzone po określonej dacie (RRRR-MM-DD lub dni temu)"
       created_by: "Pokaż tematy utworzone przez określonego użytkownika lub grupę"
-      created_by_user: "Pokaż tematy utworzone według nazwy użytkownika lub grupy (bez znaku @)"
       created_by_multiple: "Pokaż tematy utworzone przez dowolnego z określonych użytkowników lub grup (rozdzielone przecinkami)"
       latest_post_before: "Pokaż tematy z ostatnim postem przed datą (RRRR-MM-DD lub dni temu)"
       latest_post_after: "Pokaż tematy z ostatnim postem po dacie (RRRR-MM-DD lub dni temu)"
@@ -3243,6 +3243,7 @@ pl_PL:
       status_public: "Pokaż tematy w kategoriach publicznych"
       status_noreplies: "Pokaż tematy bez odpowiedzi"
       status_single_user: "Pokaż tematy z jednym uczestnikiem"
+      status_scheduled: "Pokaż tematy zaplanowane do opublikowania w kategorii"
       in_pinned: "Pokaż przypięte tematy"
       in_bookmarked: "Pokaż tematy, które dodałeś do zakładek"
       in_watching: "Pokaż tematy, które oglądasz"
@@ -3254,6 +3255,7 @@ pl_PL:
       in_new_replies: "Pokaż tematy z nowymi odpowiedziami"
       in_new_topics: "Pokaż nowe tematy"
       in_unseen: "Pokaż tematy, których nie widziałeś"
+      in_untagged: "Pokaż tematy bez żadnych tagów"
       order_activity: "Sortuj według ostatniej aktywności (od najnowszych)"
       order_activity_asc: "Sortuj według ostatniej aktywności (najstarsze na początku)"
       order_category: "Sortuj według nazwy kategorii (Z-A)"
@@ -3268,6 +3270,8 @@ pl_PL:
       order_likes_op_asc: "Sortuj według polubień pierwszego posta (najmniej na początku)"
       order_posters: "Sortuj według liczby uczestników (najwięcej na początku)"
       order_posters_asc: "Sortuj według liczby uczestników (najmniej na początku)"
+      order_posts: "Sortuj według liczby odpowiedzi (najwięcej na początku)"
+      order_posts_asc: "Sortuj według liczby odpowiedzi (najmniej na początku)"
       order_title: "Sortuj według tytułu (Z-A)"
       order_title_asc: "Sortuj według tytułu (A-Z)"
       order_views: "Sortuj według liczby wyświetleń (najczęściej na początku)"
@@ -3593,6 +3597,15 @@ pl_PL:
       ## %{code}
 
       Ten kod wygasa za %{minutes} minut(y). Jeśli nie prosiłeś o jego otrzymanie, możesz zignorować tego e-maila.
+  password_reset_code_mailer:
+    title: "Kod resetowania hasła"
+    subject_template: "%{code} to kod resetowania hasła"
+    text_body_template: |
+      Użyj tego kodu, aby zresetować hasło w dniu %{site_name}:
+
+      ## %{code}
+
+      Ten kod wygasa za %{minutes} minut. Jeśli nie prosiłeś o jego wysłanie, możesz zignorować tę wiadomość e-mail.
   invite_mailer:
     title: "Zaproś mailera"
     subject_template: "%{inviter_name} zaprosił Cię do '%{topic_title}' na %{site_domain_name}"
@@ -5099,6 +5112,7 @@ pl_PL:
     file_missing: "Przepraszamy, należy podać plik do przesłania."
     empty: "Przepraszamy, plik który wysłałeś/łaś jest pusty."
     failed: "Przepraszamy, ale przesyłanie nie powiodło się. Proszę spróbuj ponownie."
+    ico_as_avatar: "Niestety, obrazów ICO nie można używać jako awatarów."
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
     download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."

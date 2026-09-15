@@ -607,14 +607,8 @@ basic:
     default: false
     hidden: true
     client: true
-  trigger_browser_pageview_events:
-    default: false
-    hidden: true
-  persist_browser_pageview_events:
-    default: true
-    hidden: true
   clean_up_browser_pageview_events:
-    default: false
+    default: true
     hidden: true
   browser_pageview_referrer_backfill_batch_size:
     default: 5000
@@ -1437,7 +1431,7 @@ posting:
     client: true
     hidden: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
@@ -3734,6 +3728,9 @@ legal:
     area: "legal"
 
 backups:
+  site_archived:
+    default: false
+    client: true
   enable_backups:
     default: true
     client: true

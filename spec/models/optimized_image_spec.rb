@@ -245,6 +245,17 @@ RSpec.describe OptimizedImage do
   end
 
   describe ".create_for" do
+    it "returns nil for an ICO upload" do
+      upload.extension = "ico"
+      optimized_image = nil
+
+      expect { optimized_image = described_class.create_for(upload, 10, 10) }.not_to change(
+        OptimizedImage,
+        :count,
+      )
+      expect(optimized_image).to be_nil
+    end
+
     context "with versioning" do
       let(:filename) { "logo.png" }
       let(:file) { file_from_fixtures(filename) }

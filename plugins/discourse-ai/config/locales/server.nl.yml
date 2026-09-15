@@ -349,10 +349,28 @@ nl:
       configuration_missing: "De configuratie voor de AI-spamdetectie ontbreekt. Voeg de configuratie toe via 'Beheer > Plug-ins > Discourse AI > Spam' voordat u deze inschakelt."
       logging_subject: "Spamdetectie"
     ai_bot:
+      navigation:
+        settings:
+          title: "Site-instellingen"
+        users:
+          title: "Gebruikers"
+        groups:
+          title: "Groepen"
+        review:
+          title: "Beoordelingswachtrij"
+        categories:
+          title: "Categorieën"
+        tags:
+          title: "Tags"
+        themes:
+          title: "Thema's"
+        authentication:
+          title: "Aanmelden en verificatie"
+        backups:
+          title: "Back-ups"
       reply_error: "Het lijkt erop dat ons systeem een onverwacht probleem heeft ondervonden terwijl het probeerde te antwoorden.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
       thinking: "Denken"
-      tool_pending_approval: "Deze actie vereist goedkeuring van een moderator voordat deze kan worden uitgevoerd."
       read_post:
         unknown_post: "bericht"
       chat_tool_approval:

@@ -393,6 +393,7 @@ cs:
     notifications_tracking:
       tooltip: "Úroveň oznámení: %{level}"
     back_button: "Zpět"
+    confirm_button: "Potvrdit"
     welcome_banner:
       header:
         new_members: "Vítejte, %{preferred_display_name}!"
@@ -5175,6 +5176,7 @@ cs:
       with_category: "%{filter} %{category} témata"
       filter:
         title: "Filtrované výsledky pro %{filter}"
+        reset: "resetovat"
         button:
           label: "Filtr"
       latest:

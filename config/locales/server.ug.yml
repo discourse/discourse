@@ -1135,7 +1135,7 @@ ug:
   uploads:
     marked_insecure_from_theme_component_reason: "تېما بۆلىكىدىكى يۈكلەش ئىشلىتىلگەن"
   unsubscribe:
-    title: "مۇشتەرىلىكنى قالدۇر"
+    unsubscribe: "مۇشتەرىلىكنى قالدۇر"
     stop_watching_topic: "بۇ تېمىنى كۆزىتىشنى توختات، %{link}"
     mute_topic: "بۇ تېمىنىڭ بارلىق ئۇقتۇرۇشلىرىنى ئۈنسىزلە، %{link}"
     unwatch_category: "%{category} سەھىپىدىكى بارلىق تېمىنى كۆزىتىشنى توختات"
@@ -1646,12 +1646,6 @@ ug:
       host_names: "سىزنىڭ config/database.yml ھۆججىتىڭىز كۆڭۈلدىكى localhost مۇلازىمېتىر ئىسمىنى ئىشلىتىۋاتىدۇ. ئۇنى تور بېكىتىڭىزنىڭ مۇلازىمېتىر ئىسمىغا يېڭىلاڭ."
       queue_size: "ئۆچرەتتە %{queue_size} ۋەزىپە بار، ۋەزىپە ئېغىر. بۇ بەلكىم Sidekiq جەريانىدا مەسىلە بارلىقى سەۋەبىدىن بولۇشى ياكى تېخىمۇ كۆپ Sidekiq جەريانى قوشۇش كېرەكلىكىنى بىلدۈرۈشى مۇمكىن."
       ram: "مۇلازىمېتىرىڭىزدىكى جەمئىي ئەسلەك 1GB دىن ئاز ھالەتتە ئىجرا قىلىنىۋاتىدۇ. كەم دېگەندە 1GB ئەسلەك تەۋسىيە قىلىنىدۇ."
-      google_oauth2_config: 'مۇلازىمېتىر Google OAuth2 ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_google_oauth2_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما خېرىدار كىملىكى ۋە خېرىدار شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      facebook_config: 'مۇلازىمېتىر Facebook ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_facebook_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما ئەپ كىملىكى ۋە ئەپ شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      twitter_config: 'مۇلازىمېتىر Twitter ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_twitter_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما ئەپ كىملىكى ۋە ئەپ شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      github_config: 'مۇلازىمېتىر GitHub ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_google_oauth2_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما خېرىدار كىملىكى ۋە شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
-      s3_upload_config: 'مۇلازىمېتىر ھۆججەتنى S3 كە يۈكلەشكە سەپلەندى، ئەمما كەم دېگەندە تۆۋەندىكى تەڭشەكتىن بىرى تەڭشەلمىگەن: s3_access_key_id، s3_secret_access_key، s3_use_iam_profile ياكى s3_upload_bucket. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">تەپسىلاتىنى «سۈرەتنى S3 كە يۈكلەشنى قانداق سەپلەيدۇ؟» دىن كۆرۈڭ</a>.'
-      s3_backup_config: 'مۇلازىمېتىر زاپاسنى S3 كە يۈكلەشكە سەپلەندى، ئەمما كەم دېگەندە تۆۋەندىكى تەڭشەكتىن بىرى تەڭشەلمىگەن: s3_access_key_id، s3_secret_access_key، s3_use_iam_profile ياكى s3_backup_bucket. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">تەپسىلاتىنى «سۈرەتنى S3 كە يۈكلەشنى قانداق سەپلەيدۇ؟» دىن كۆرۈڭ</a>.'
       s3_cdn: 'مۇلازىمېتىر ھۆججەتنى S3 كە يۈكلەيدىغان قىلىپ سەپلەنگەن. بۇ قىممەت S3 چىقىمى ۋە تور بېكەتنىڭ ئاستىلىشىنى كەلتۈرۈپ چىقىرىشى مۇمكىن. <a href="https://meta.discourse.org/t/-/148916" target="_blank">تەپسىلاتىنى «يۈكلەشكە ئوبيېكت ساقلىغۇچىسىنى ئىشلىتىش» تىن كۆرۈڭ</a>.'
       image_magick: 'مۇلازىمېتىر چوڭ سۈرەتنىڭ كىچىك سۈرىتىنى قۇرۇشقا سەپلەنگەن ئەمما ImageMagick ئورنىتىلمىغان. سىز ياقتۇرىدىغان بوغچا باشقۇرغۇچنى ئىشلىتىپ ImageMagick نى ئورنىتىڭ ياكى <a href="https://www.imagemagick.org/script/download.php" target="_blank">ئەڭ يېڭى نەشرىنى چۈشۈرۈڭ</a>.'
       failing_emails: '%{num_failed_jobs} ئېلخەت خىزمىتى مەغلۇپ بولدى. app.yml ۋە ئېلخەت مۇلازىمېتىر تەڭشىكىنىڭ توغرىلىقىنى تەكشۈرۈڭ. <a href="%{base_path}/sidekiq/retries" target="_blank">مەغلۇپ بولغان خىزمەتنى Sidekiq دىن كۆرۈڭ</a>.'
@@ -2448,7 +2442,6 @@ ug:
         other: "تىزىم چوقۇم ئېنىق %{count} قىممەتنى ئۆز ئىچىگە ئېلىشى كېرەك."
       markdown_linkify_tlds: "سىز «*» قىممەتنى ئۆز ئىچىگە ئالسىڭىز بولمايدۇ."
       google_oauth2_hd_groups: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم بارلىق «google oauth2 hd» تەڭشىكىنى سەپلىشىڭىز كېرەك."
-      linkedin_oidc_credentials: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم LinkedIn OIDC سالاھىيەت كىملىكى (linkedin_oidc_client_id' ۋە 'linkedin_oidc_client_secret) نى سەپلىشىڭىز كېرەك."
       search_tokenize_chinese_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم «search_tokenize_chinese» نى چەكلىشىڭىز كېرەك."
       search_tokenize_japanese_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم «search_tokenize_japanese» نى چەكلىشىڭىز كېرەك."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "ئەگەر ئىككى ئامىللىق دەلىللەش يەنى 2FA مەجبۇرىي ئىجرا قىلىنغان بولسا DiscourseConnect نى قوزغىتالمايسىز."
@@ -2487,8 +2480,6 @@ ug:
       tags_any: "بەلگىلەنگەن خالىغان بەلگە (پەش بىلەن ئايرىلغان) بار تېمىنى كۆرسىتىدۇ"
       tags_all: "بەلگىلەنگەن ھەممە بەلگە (قوشۇش بەلگىسى بىلەن ئايرىلغان) بار تېمىنى كۆرسىتىدۇ"
       exclude_tag: "مۇئەييەن بەلگە بار تېمىنى ئۆز ئىچىگە ئالمايدۇ"
-      exclude_tags_any: "بەلگىلەنگەن خالىغان بەلگە (پەش بىلەن ئايرىلغان) بار تېمىنى ئۆز ئىچىگە ئالمايدۇ"
-      exclude_tags_all: "بەلگىلەنگەن ھەممە بەلگە (قوشۇش بەلگىسى بىلەن ئايرىلغان) بار تېمىنى ئۆز ئىچىگە ئالمايدۇ"
       tag_group: "بەلگىلەنگەن بەلگە گۇرۇپپىسىدىن بەلگىسى بار تېمىنى كۆرسىتىدۇ"
       exclude_tag_group: "بەلگىلەنگەن بەلگە گۇرۇپپىسىدىن بەلگىسى بار تېمىنى چىقىرىۋېتىدۇ"
       status_open: "ئوچۇق تېمىنى كۆرسەت (تاقالمىغان ياكى ئارخىپلانمىغان)"

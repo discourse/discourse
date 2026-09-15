@@ -562,7 +562,7 @@ acceptance("AI Discoveries - header search", function (needs) {
     await triggerKeyEvent(document, "keypress", "/".charCodeAt(0));
     await fillIn("#icon-search-input", "雰囲");
     await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
 
@@ -716,11 +716,11 @@ acceptance("AI Discoveries - header search", function (needs) {
     await fillIn("#icon-search-input", "dev");
 
     await triggerKeyEvent("#icon-search-input", "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
 
     assert
       .dom(".ai-discoveries-search-options__option.--topic")
-      .isFocused("arrow navigation focuses the topic scope option");
+      .isFocused("right moves along the options to the topic scope");
 
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
     assert
@@ -743,19 +743,19 @@ acceptance("AI Discoveries - header search", function (needs) {
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
     assert
-      .dom(".ai-discoveries-search-options__option.--search")
-      .isFocused("up from the first result skips advanced search");
+      .dom(".ai-discoveries-search-options__option.--topic")
+      .isFocused("up from the first result returns to the option last used");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     assert
       .dom(results[0])
-      .isFocused("down from the buttons skips advanced search");
+      .isFocused("down from the options enters the results");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
     assert
-      .dom(".ai-discoveries-search-options__option.--topic")
-      .isFocused("the topic scope remains reachable with arrow keys");
+      .dom("#icon-search-input")
+      .isFocused("the options are a single stop on the way up to the query");
   });
 
   test("still offers itself from a message inbox", async function (assert) {

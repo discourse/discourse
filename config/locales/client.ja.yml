@@ -308,6 +308,7 @@ ja:
       message: "このサイトを更新しました。スムーズに動作するように<span>更新してください</span>。"
       dismiss: "閉じる"
     back_button: "戻る"
+    confirm_button: "確認"
     welcome_banner:
       header:
         new_members: "%{preferred_display_name}、ようこそ！"
@@ -4440,6 +4441,7 @@ ja:
       with_category: "%{filter} %{category} トピック"
       filter:
         title: "%{filter} の絞り込み結果"
+        reset: "リセット"
         button:
           label: "フィルタ"
       latest:

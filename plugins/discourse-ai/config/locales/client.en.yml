@@ -1704,6 +1704,7 @@ en:
         dismiss_default_preference: "Hide this setting"
         default_preference_dismissed: "This setting is also available in your user preferences"
         shortcut_hint: "or %{shortcut}"
+        search_options: "Search options"
         advanced_with_shortcut: "Open advanced search (%{shortcut})"
         search_all_topics: "All topics"
         search_this_topic: "This topic"
