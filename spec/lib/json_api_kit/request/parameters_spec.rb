@@ -1,8 +1,18 @@
 # frozen_string_literal: true
 
 module JsonApiKitSpec
+  class ParametersAuthorResource < JsonApiKit::Resource
+    type :users
+  end
+
+  class ParametersPostResource < JsonApiKit::Resource
+    type :posts
+    has_one :last_poster, resource: ParametersAuthorResource
+  end
+
   class ParametersResource < JsonApiKit::Resource
     type :topics
+    has_many :ordered_posts, resource: ParametersPostResource
   end
 
   class ParametersChange < JsonApiKit::VersionChange
@@ -93,6 +103,39 @@ RSpec.describe JsonApiKit::Request::Parameters do
 
     it "converts every segment of the path" do
       expect(declared_parameters).to eq("include" => "ordered_posts.last_poster")
+    end
+
+    context "when both relationships have historical names" do
+      let(:parameters) { { "include" => "olderPosts.author,olderPosts" } }
+      let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              renamed_relationship from: :older_posts, to: :ordered_posts
+            end
+            resource :posts do
+              renamed_relationship from: :author, to: :last_poster
+            end
+          end
+          .new(__FILE__)
+      end
+
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
+
+      it "translates every path against the resource declarations" do
+        expect(declared_parameters).to eq("include" => "ordered_posts.last_poster,ordered_posts")
+      end
+
+      context "when the paths are an array" do
+        let(:parameters) { { "include" => ["olderPosts.author"] } }
+
+        it "preserves the array while translating its paths" do
+          expect(declared_parameters).to eq("include" => ["ordered_posts.last_poster"])
+        end
+      end
     end
   end
 

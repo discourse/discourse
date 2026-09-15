@@ -5,14 +5,16 @@ module JsonApiKit
     class Family
       LIST_ITEM = /\A(?<direction>-?)(?<name>.*)\z/m
 
-      def initialize(glossary:, type:)
+      def initialize(glossary:, resource:)
         @glossary = glossary
-        @type = type
+        @resource = resource
       end
 
       private
 
-      attr_reader :glossary, :type
+      attr_reader :glossary, :resource
+
+      def type = glossary.member_type(resource.type)
 
       def names(value, path, &name_for)
         case value

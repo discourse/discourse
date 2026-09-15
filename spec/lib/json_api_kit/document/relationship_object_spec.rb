@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Document::RelationshipObject do
-  subject(:relationship_object) { described_class.new(linkage, client:, owner:, name: "posts") }
+  subject(:relationship_object) { described_class.new(linkage, client:, owner:, name:) }
 
   fab!(:author, :user)
   fab!(:topic)
@@ -41,11 +41,37 @@ RSpec.describe JsonApiKit::Document::RelationshipObject do
     )
   end
   let(:namespace) { nil }
+  let(:name) { "posts" }
   let(:linkage) { JsonApiKit::Linkage::ToOne.new([record]) }
   let(:relationship_url) { "https://example.com/api/topics/#{topic.id}/relationships/posts" }
   let(:related_url) { "https://example.com/api/topics/#{topic.id}/posts" }
 
   describe "#to_h" do
+    context "when the current relationship name has several words" do
+      let(:name) { "ordered_posts" }
+      let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+      let(:version_change) do
+        Class
+          .new(JsonApiKit::VersionChange) do
+            resource :topics do
+              renamed_relationship from: :archived_posts, to: :ordered_posts
+            end
+          end
+          .new(__FILE__)
+      end
+
+      before do
+        allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return([version_change])
+      end
+
+      it "uses the current names with kebab casing in URLs" do
+        expect(relationship_object.to_h[:links]).to eq(
+          self: "https://example.com/api/topics/#{topic.id}/relationships/ordered-posts",
+          related: "https://example.com/api/topics/#{topic.id}/ordered-posts",
+        )
+      end
+    end
+
     context "when the type has a historical name" do
       let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
       let(:version_change) do

@@ -75,7 +75,7 @@ module JsonApiKit
           },
           %i[include no_such_name] => {
             title: "No such relationship path",
-            detail: ->(error) { "There is no relationship path named #{error.name}." },
+            detail: ->(error) { "There is no relationship path named #{error.relationship_path}." },
           },
           %i[fields bad_shape] => {
             title: "Invalid fields parameter",
