@@ -45,18 +45,19 @@ RSpec.describe Voice::Livekit::CloudAgentClient do
       ).to have_been_requested.once
     end
 
-    it "resolves each agent's dispatch name by id, sorted and without blanks or duplicates" do
+    it "resolves each agent's dispatch name by id, sorted, without blanks, placeholders or duplicates" do
       stub =
         stub_catalogue(
           "CA_1" => "support",
           "CA_2" => "assistant",
           "CA_3" => "",
           "CA_4" => "support",
+          "CA_5" => "<Pending>",
         )
 
       expect(described_class.list[:agents]).to eq([{ name: "assistant" }, { name: "support" }])
 
-      expect(stub).to have_been_requested.times(5)
+      expect(stub).to have_been_requested.times(6)
       expect(
         a_request(:post, endpoint).with(body: { agent_id: "CA_2" }.to_json),
       ).to have_been_made.once

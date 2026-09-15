@@ -72,12 +72,13 @@ module Voice
       private_class_method :fetch
 
       # Agents still being created have no dispatch name yet and cannot be
-      # invited, so they are left out.
+      # invited, so they are left out. LiveKit reports such names either blank
+      # or as a bracketed placeholder like "<Pending>".
       def self.agent_names(agents)
         agents
           .filter_map do |agent|
             name = (agent["agent_name"] || agent["agentName"]).to_s.strip
-            { name: } if name.present?
+            { name: } if name.present? && !name.start_with?("<")
           end
           .uniq
           .sort_by { |agent| agent[:name] }
