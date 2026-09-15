@@ -39,10 +39,6 @@ export default class ChatUpload extends Component {
     const width = this.args.upload.width;
     const height = this.args.upload.height;
 
-    if (!width || !height) {
-      return {};
-    }
-
     // Shrink to fit, never blow up small images.
     const ratio = Math.min(
       1,

@@ -288,12 +288,9 @@ function markdownNameFromFileName(fileName) {
 }
 
 function imageMarkdown(upload) {
-  const dimensions =
-    upload.thumbnail_width && upload.thumbnail_height
-      ? `|${upload.thumbnail_width}x${upload.thumbnail_height}`
-      : "";
-
-  return `![${markdownNameFromFileName(upload.original_filename)}${dimensions}](${upload.short_url || upload.url})`;
+  return `![${markdownNameFromFileName(upload.original_filename)}|${
+    upload.thumbnail_width
+  }x${upload.thumbnail_height}](${upload.short_url || upload.url})`;
 }
 
 function playableMediaMarkdown(upload, type) {

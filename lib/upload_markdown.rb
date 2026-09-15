@@ -16,8 +16,7 @@ class UploadMarkdown
   end
 
   def image_markdown(display_name: nil)
-    dimensions = "|#{@upload.width}x#{@upload.height}" if @upload.width && @upload.height
-    "![#{display_label(display_name)}#{dimensions}](#{@upload.short_url})"
+    "![#{display_label(display_name)}|#{@upload.width}x#{@upload.height}](#{@upload.short_url})"
   end
 
   def attachment_markdown(display_name: nil, with_filesize: true)
