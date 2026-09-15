@@ -55,6 +55,10 @@ module Jobs
           )
         end
       end
+
+      Discourse.redis.del(POLL_MAILBOX_TIMEOUT_ERROR_KEY)
+      clear_problem(:poll_pop3_timeout)
+      clear_problem(:poll_pop3_auth_error)
     rescue Net::OpenTimeout => e
       count = Discourse.redis.incr(POLL_MAILBOX_TIMEOUT_ERROR_KEY).to_i
 
@@ -106,6 +110,10 @@ module Jobs
 
     def track_problem(identifier)
       ProblemCheckTracker[identifier].problem!
+    end
+
+    def clear_problem(identifier)
+      ProblemCheckTracker[identifier].no_problem!
     end
   end
 end
