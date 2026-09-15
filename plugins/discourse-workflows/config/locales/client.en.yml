@@ -676,6 +676,12 @@ en:
         mode_run_once_for_all_items: "Run once for all items"
         code: "JavaScript code"
         code_description: "Access the previous step's output via $json. Return an object to pass data to the next step."
+      access_control:
+        groups_from_input: "Groups from input"
+        permission: "Permission"
+        input_placeholder: "Drop a group input here"
+        invalid_input: "Groups from input must be an array of group IDs or an expression."
+        invalid_permission: "Choose a valid permission."
       parameter_field:
         fixed: "Fixed"
         plain: "Plain"
