@@ -1297,3 +1297,11 @@
     opacity: 0;
   }
 }
+
+.voice-invite-agent-modal {
+  &__picker {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+}

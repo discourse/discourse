@@ -97,7 +97,7 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
         />
       </template>
     );
-    await click(".voice-invite-agent__toggle");
+    await click(".voice-invite-agent-modal__toggle");
     assert.dom("[data-name='agent_name'] select").doesNotExist();
     await fillIn("[data-name='agent_name'] input", "custom-agent");
     await click("button[type='submit']");

@@ -61,6 +61,7 @@ export default class VoiceInviteAgentModal extends Component {
 
   <template>
     <DModal
+      class="voice-invite-agent-modal"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
       @title={{i18n "voice.agent.invite"}}
@@ -81,13 +82,21 @@ export default class VoiceInviteAgentModal extends Component {
                 @validation="required"
                 as |field|
               >
-                <field.Control as |select|>
-                  {{#each this.agents as |agent|}}
-                    <select.Option @value={{agent.name}}>
-                      {{agent.name}}
-                    </select.Option>
-                  {{/each}}
-                </field.Control>
+                <div class="voice-invite-agent-modal__picker">
+                  <field.Control as |select|>
+                    {{#each this.agents as |agent|}}
+                      <select.Option @value={{agent.name}}>
+                        {{agent.name}}
+                      </select.Option>
+                    {{/each}}
+                  </field.Control>
+                  <DButton
+                    class="btn-flat voice-invite-agent-modal__toggle"
+                    @action={{this.toggleTyping}}
+                    @icon="pencil"
+                    @title="voice.agent.type_name"
+                  />
+                </div>
               </form.Field>
             {{else}}
               <form.Field
@@ -98,20 +107,20 @@ export default class VoiceInviteAgentModal extends Component {
                 @validation="required"
                 as |field|
               >
-                <field.Control maxlength="256" />
+                {{#if this.agents.length}}
+                  <div class="voice-invite-agent-modal__picker">
+                    <field.Control maxlength="256" />
+                    <DButton
+                      class="btn-flat voice-invite-agent-modal__toggle"
+                      @action={{this.toggleTyping}}
+                      @icon="list"
+                      @title="voice.agent.pick_name"
+                    />
+                  </div>
+                {{else}}
+                  <field.Control maxlength="256" />
+                {{/if}}
               </form.Field>
-            {{/if}}
-            {{#if this.agents.length}}
-              <DButton
-                class="btn-flat voice-invite-agent__toggle"
-                @action={{this.toggleTyping}}
-                @icon={{if this.typing "list" "pencil"}}
-                @label={{if
-                  this.typing
-                  "voice.agent.pick_name"
-                  "voice.agent.type_name"
-                }}
-              />
             {{/if}}
             <form.Submit @label="voice.agent.invite" />
           </Form>
