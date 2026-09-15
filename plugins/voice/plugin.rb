@@ -162,7 +162,7 @@ after_initialize do
   Voice::AgentBot.ensure! if SiteSetting.voice_enabled?
 
   add_to_serializer(:site, :voice_livekit_agent_bot_id) do
-    Voice::AgentBot.user&.id if scope.is_admin? && Voice::AgentBot.available?
+    Voice::AgentBot.user&.id if scope.can_invite_voice_agents? && Voice::AgentBot.available?
   end
 
   # This can't live in the on(:site_setting_changed) handler below: plugin

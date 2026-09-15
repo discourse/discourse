@@ -7,10 +7,11 @@
   account with that username is never adopted.
 - The invite modal accepts an agent dispatch name for each invitation. The feature
   uses the existing LiveKit Cloud project credentials and dashboard deployment.
-- Admins explicitly invite the bot through a public Voice room's menu, including the widget menu. A human
-  must already be present, and the call must already use LiveKit.
+- Members of `voice_livekit_agent_invite_allowed_groups` (admins by default, admins always
+  included) explicitly invite the bot through a public Voice room's menu, including the widget
+  menu. A human must already be present, and the call must already use LiveKit.
 - The bot speaks and listens. Room managers can kick it without a timed exclusion;
-  admins can immediately invite it again. Private rooms and mesh calls are outside
+  inviters can immediately invite it again. Private rooms and mesh calls are outside
   this feature's scope.
 - Bots leave when the last human leaves and do not contribute to human capacity,
   attendance, co-presence, badges, or statistics.
@@ -20,7 +21,7 @@
 ## Authorization and lifecycle
 
 The invite endpoint uses normal session authentication, CSRF protection, and
-Guardian admin/public-room checks. The dispatcher independently requires the
+Guardian invite-group/public-room checks. The dispatcher independently requires the
 feature, a configured Cloud project and a valid invitation name, an active bot, human presence, and a
 LiveKit transport pin.
 

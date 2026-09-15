@@ -22,7 +22,6 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     logIn(this.owner);
     this.owner.unregister("service:modal");
     this.owner.register("service:modal", ModalStub);
-    this.owner.lookup("service:current-user").set("admin", true);
     this.owner.lookup("service:site").set("voice_livekit_agent_bot_id", -2);
     this.room = {
       id: 1,
@@ -94,18 +93,7 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     }
   });
 
-  test("requires an admin and an available bot", async function (assert) {
-    this.owner.lookup("service:current-user").set("admin", false);
-    await render(
-      <template>
-        <DDropdownMenu as |dropdown|>
-          <VoiceInviteAgentButton @item={{dropdown.item}} @room={{this.room}} />
-        </DDropdownMenu>
-      </template>
-    );
-    assert.dom(".voice-invite-agent").doesNotExist();
-
-    this.owner.lookup("service:current-user").set("admin", true);
+  test("requires an available bot the user may invite", async function (assert) {
     this.owner.lookup("service:site").set("voice_livekit_agent_bot_id", null);
     await render(
       <template>

@@ -279,7 +279,8 @@ Discourse HTTP tool.
 2. Make a public Voice room use LiveKit through the existing room policy. Join it
    as a human and confirm that the call uses LiveKit. Mesh calls cannot invite an
    agent and do not switch transport automatically.
-3. As an admin, open the room's **…** menu (on its page or in the sidebar) and
+3. As a member of `voice_livekit_agent_invite_allowed_groups` (admins by default),
+   open the room's **…** menu (on its page or in the sidebar) and
    select **Invite LiveKit agent**. The same action is available in the widget’s
    **…** menu. Enter the deployed agent’s dispatch name in the modal and invite it.
    Choose a name for each invitation; do not use its `CA_` deployment ID.
@@ -292,8 +293,8 @@ Discourse HTTP tool.
 6. Leave as the last human and verify the bot disconnects. Repeat after closing
    the human browser abruptly, allowing presence expiry and reconciliation.
 7. Disable the feature while the bot is present and verify that it is removed.
-   Enabling again reuses the same bot account. Private rooms, empty calls, non-admins, and a missing
-   or inactive bot cannot initiate an invitation.
+   Enabling again reuses the same bot account. Private rooms, empty calls, users outside the
+   invite groups, and a missing or inactive bot cannot initiate an invitation.
 
 Set the LiveKit webhook URL to the site's public HTTPS origin followed by
 `/voice/livekit/webhook`. Keep scheduled jobs running even
@@ -301,8 +302,9 @@ when webhooks are configured so missed events and cleanup failures are retried.
 
 Agents always join as speakers. They do not count toward human capacity,
 attendance, badges, or participation statistics. Room managers can kick them;
-only admins can invite them. Nothing automatically dispatches an agent when
-humans join a room.
+only members of `voice_livekit_agent_invite_allowed_groups` (admins by default)
+can invite them. Nothing automatically dispatches an agent when humans join a
+room.
 
 ### Hosting and provider behavior
 

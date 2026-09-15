@@ -97,6 +97,16 @@ plugins:
     default: false
     validator: "VoiceLivekitAgentValidator"
     refresh: true
+  voice_livekit_agent_invite_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "1" # auto group admins
+    allow_any: false
+    refresh: true
+    mandatory_values: "1" # auto group admins
+    disallowed_groups: "0|4"
+    depends_on:
+      - voice_livekit_agent_enabled
   voice_livekit_recording_enabled:
     default: false
     client: true

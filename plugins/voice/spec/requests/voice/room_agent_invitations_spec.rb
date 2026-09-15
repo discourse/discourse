@@ -49,13 +49,24 @@ RSpec.describe Voice::RoomsController do
       expect(@dispatch).not_to have_been_requested
     end
 
-    it "rejects non-admin invitations" do
+    it "rejects users outside the invite groups" do
       [user, moderator].each do |actor|
         sign_in(actor)
         post "/voice/rooms/#{room.id}/invite_agent.json", params: { agent_name: "assistant" }
         expect(response.status).to eq(403)
       end
       expect(@dispatch).not_to have_been_requested
+    end
+
+    it "dispatches for a non-admin in the invite groups" do
+      SiteSetting.voice_livekit_agent_invite_allowed_groups =
+        "#{Group::AUTO_GROUPS[:admins]}|#{Group::AUTO_GROUPS[:moderators]}"
+      sign_in(moderator)
+
+      post "/voice/rooms/#{room.id}/invite_agent.json", params: { agent_name: "assistant" }
+
+      expect(response.status).to eq(201)
+      expect(@dispatch).to have_been_requested.once
     end
 
     it "rejects invitations when disabled or the bot no longer exists" do

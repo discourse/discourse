@@ -5,7 +5,6 @@ import DButton from "discourse/ui-kit/d-button";
 import VoiceInviteAgentModal from "./modal/voice-invite-agent";
 
 export default class VoiceInviteAgentButton extends Component {
-  @service currentUser;
   @service site;
   @service modal;
 
@@ -14,7 +13,6 @@ export default class VoiceInviteAgentButton extends Component {
     const botId = this.site.voice_livekit_agent_bot_id;
     const participants = room.active_participants ?? [];
     return (
-      this.currentUser?.admin &&
       botId &&
       room.public &&
       room.expected_transport === "livekit" &&
