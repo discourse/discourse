@@ -244,7 +244,7 @@ RSpec.describe UploadsController do
         expect(upload.original_filename).to eq(logo_filename)
       end
 
-      it "allows staff to upload ICO images for site settings without processing them" do
+      it "accepts an ICO favicon from staff" do
         SiteSetting.authorized_extensions = ""
         user.update!(admin: true)
         ico = Rack::Test::UploadedFile.new(file_from_fixtures("smallest.ico", "images"))

@@ -916,13 +916,13 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context "when the upload is an ICO file" do
+    context "when the file contains an ICO image" do
       let(:filename) { "smallest.ico" }
       let(:file) { file_from_fixtures(filename, "images") }
 
       before { SiteSetting.authorized_extensions = "png|jpg|ico" }
 
-      it "stores it unchanged" do
+      it "stores the original file without conversion" do
         original_contents = File.binread(file.path)
 
         upload = described_class.new(file, filename).create_for(user.id)
@@ -936,7 +936,7 @@ RSpec.describe UploadCreator do
         expect(File.binread(stored_path)).to eq(original_contents)
       end
 
-      it "rejects invalid ICO contents" do
+      it "rejects a file whose contents are not an ICO image" do
         invalid_file = Tempfile.new(%w[invalid .ico])
         invalid_file.write("not an image")
         invalid_file.rewind
@@ -951,7 +951,7 @@ RSpec.describe UploadCreator do
         invalid_file&.close!
       end
 
-      it "rejects it as an avatar" do
+      it "rejects ICO images for avatar uploads" do
         upload = described_class.new(file, filename, type: "avatar").create_for(user.id)
 
         expect(upload).not_to be_persisted

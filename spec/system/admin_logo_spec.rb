@@ -62,7 +62,7 @@ describe "Admin Logo Page" do
       primary_section_logos.each { |image_type| expect(SiteSetting.send(image_type)).to eq(nil) }
     end
 
-    it "can upload an ICO favicon" do
+    it "lets an administrator upload an ICO favicon" do
       logo_page.visit
       logo_page.form.upload_image(:favicon, file_from_fixtures("smallest.ico", "images"))
 

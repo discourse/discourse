@@ -41,7 +41,7 @@ RSpec.describe StaticController do
         expect(response.body.bytesize).to eq(upload.filesize)
       end
 
-      it "returns an ICO favicon with its original content type" do
+      it "serves the original ICO favicon with its content type" do
         ico =
           UploadCreator.new(
             file_from_fixtures("smallest.ico", "images"),

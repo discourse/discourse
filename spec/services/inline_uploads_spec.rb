@@ -127,7 +127,7 @@ RSpec.describe InlineUploads do
         MD
       end
 
-      it "shortens standalone ICO URLs as images" do
+      it "converts a standalone ICO URL to image Markdown" do
         SiteSetting.authorized_extensions = "ico"
         ico =
           UploadCreator.new(

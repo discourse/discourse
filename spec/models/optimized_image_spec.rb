@@ -245,11 +245,15 @@ RSpec.describe OptimizedImage do
   end
 
   describe ".create_for" do
-    it "does not process ICO images" do
+    it "returns nil for an ICO upload" do
       upload.extension = "ico"
-      described_class.expects(:resize).never
+      optimized_image = nil
 
-      expect(described_class.create_for(upload, 10, 10)).to be_nil
+      expect { optimized_image = described_class.create_for(upload, 10, 10) }.not_to change(
+        OptimizedImage,
+        :count,
+      )
+      expect(optimized_image).to be_nil
     end
 
     context "with versioning" do

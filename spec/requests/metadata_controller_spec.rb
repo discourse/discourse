@@ -80,7 +80,7 @@ RSpec.describe MetadataController do
       expect(manifest["icons"].first["type"]).to eq("image/png")
     end
 
-    it "omits icons when the configured image cannot be resized" do
+    it "returns a manifest without icons when the configured icon is an ICO image" do
       ico =
         UploadCreator.new(
           file_from_fixtures("smallest.ico", "images"),
