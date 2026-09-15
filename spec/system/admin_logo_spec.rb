@@ -61,6 +61,21 @@ describe "Admin Logo Page" do
 
       primary_section_logos.each { |image_type| expect(SiteSetting.send(image_type)).to eq(nil) }
     end
+
+    it "can upload an ICO favicon" do
+      logo_page.visit
+      logo_page.form.upload_image(:favicon, file_from_fixtures("smallest.ico", "images"))
+
+      expect(logo_page.form.image_uploader(:favicon)).to have_uploaded_image
+
+      logo_page.form.submit
+      expect(logo_page.form).to have_saved_successfully
+
+      logo_page.visit
+
+      expect(logo_page.form.image_uploader(:favicon)).to have_uploaded_image
+      expect(SiteSetting.favicon.original_filename).to end_with("smallest.ico")
+    end
   end
 
   describe "mobile section" do
