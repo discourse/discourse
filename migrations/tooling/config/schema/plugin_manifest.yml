@@ -252,7 +252,7 @@ plugins:
     columns: {}
 plugin_checksums:
   automation: d168107063ed75d7e568f1c1250866f8
-  boards: 3cf883c6ddde0b28b45ebafcc0058d6d
+  boards: 7196f10413674b3c08480ff2aa42b2e8
   chat: 9c46fca8e1650c913c2b249268020d77
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
