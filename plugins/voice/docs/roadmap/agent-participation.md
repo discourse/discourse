@@ -39,7 +39,10 @@ The scheduled sweep reconciles missed events and expires absent agents.
 
 Kicking revokes local authorization before cancelling the provider dispatch.
 Cleanup records remain separate from admission proofs, allowing deletion retries
-and recovery of dispatch creation whose response was lost. A new invitation
+and recovery of dispatch creation whose response was lost. Room cleanup resolves
+session keys from the room's dispatch records and the shared bot, without scanning
+Redis. The scheduled sweep also retries provider cleanup for deleted rooms using
+their retained IDs; successful cleanup removes them from the provider-room index. A new invitation
 supersedes earlier sessions. Disabling the feature revokes current sessions. Last-human cleanup also handles pending dispatches.
 
 LiveKit supplies the initial permissions for managed agents. Discourse updates

@@ -145,11 +145,10 @@ module Voice
       private
 
       def revoke_room_sessions(room)
-        Discourse
-          .redis
-          .scan_each(match: "voice:agent:session:#{room.id}:*") do |key|
-            revoke_session(room.id, key.split(":").last.to_i)
-          end
+        return unless provider_room?(room.id)
+
+        user_ids = AgentDispatcher.bot_user_ids(room.id) | [AgentBot.user&.id].compact
+        user_ids.each { |user_id| revoke_session(room.id, user_id) }
       end
 
       def session_key(room_id, user_id)

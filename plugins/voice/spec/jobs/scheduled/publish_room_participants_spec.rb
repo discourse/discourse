@@ -103,6 +103,60 @@ RSpec.describe Jobs::PublishRoomParticipants do
     expect(stub).to have_been_requested.once
   end
 
+  describe "deleted room agent cleanup" do
+    before do
+      SiteSetting.voice_livekit_url = "wss://test.livekit.cloud"
+      SiteSetting.voice_livekit_api_key = "key"
+      SiteSetting.voice_livekit_api_secret = "secret"
+      SiteSetting.voice_livekit_agent_enabled = true
+      room.update!(public: true)
+      Voice::ParticipantTracker.pin_transport!(room.id, "livekit")
+      Voice::ParticipantTracker.add(room.id, user1.id)
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/CreateDispatch",
+      ).to_return(status: 200, body: { id: "AD_test" }.to_json)
+      Voice::AgentDispatcher.dispatch!(room:, agent_name: "assistant")
+    end
+
+    it "retries failed cleanup after the room row and transport pin are gone" do
+      room.destroy!
+      delete_dispatch =
+        stub_request(
+          :post,
+          "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/DeleteDispatch",
+        ).to_return(status: 503)
+      stub_request(
+        :post,
+        "https://test.livekit.cloud/twirp/livekit.AgentDispatchService/ListDispatch",
+      ).to_return(status: 503)
+      delete_room =
+        stub_request(
+          :post,
+          "https://test.livekit.cloud/twirp/livekit.RoomService/DeleteRoom",
+        ).to_return(status: 503)
+
+      Voice::AgentManager.evict_agents_in_room!(room)
+
+      expect(Voice::ParticipantTracker.pinned_transport(room.id)).to be_nil
+      expect(Voice::AgentDispatcher.pending?(room.id)).to eq(true)
+      expect(Voice::AgentManager.provider_room_ids).to contain_exactly(room.id)
+
+      delete_dispatch.to_return(status: 200, body: "{}")
+      delete_room.to_return(status: 200, body: "{}")
+      messages = MessageBus.track_publish { job.execute({}) }
+
+      expect(Voice::AgentDispatcher.pending?(room.id)).to eq(false)
+      expect(Voice::AgentManager.provider_room_ids).to be_empty
+      expect(messages.map(&:channel)).not_to include(Voice.room_channel(room.id))
+      expect(delete_room).to have_been_requested.twice
+
+      job.execute({})
+
+      expect(delete_room).to have_been_requested.twice
+    end
+  end
+
   describe "stale status sweep" do
     before do
       SiteSetting.enable_user_status = true

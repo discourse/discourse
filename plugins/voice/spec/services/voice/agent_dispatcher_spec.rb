@@ -219,6 +219,16 @@ RSpec.describe Voice::AgentDispatcher do
   end
 
   describe ".cancel" do
+    it "cancels a dispatch after its room has been deleted" do
+      described_class.dispatch!(room:, agent_name: "assistant")
+      room.destroy!
+
+      described_class.cancel(room.id)
+
+      expect(@delete).to have_been_requested.once
+      expect(described_class.pending?(room.id)).to eq(false)
+    end
+
     it "removes local admission immediately and retries failed dispatch deletion after a kick" do
       described_class.dispatch!(room:, agent_name: "assistant")
       Voice::AgentManager.reconcile(room)

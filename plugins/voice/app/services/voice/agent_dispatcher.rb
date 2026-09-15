@@ -44,8 +44,7 @@ module Voice
     # Keep cleanup records separate from admission proofs so revocation still
     # takes effect when the provider is unavailable, and deletion can be retried.
     def self.cancel(room_id, user_id = nil)
-      room = Room.find_by(id: room_id)
-      return unless room
+      room = Room.find_by(id: room_id) || Room.new(id: room_id)
 
       records(room_id).each do |record|
         next if user_id && record["bot_user_id"] != user_id
@@ -53,6 +52,10 @@ module Voice
         save(room_id, record)
         delete_dispatch(room, record) if record["dispatch_id"]
       end
+    end
+
+    def self.bot_user_ids(room_id)
+      records(room_id).map { |record| record["bot_user_id"] }.uniq
     end
 
     def self.pending?(room_id)
