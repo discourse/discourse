@@ -542,17 +542,19 @@ module DiscourseAi
           )
 
         context_llm = bot.llm
+        visibility_guardian = Guardian.new(visibility_user)
         context =
           DiscourseAi::Agents::BotContext.new(
             post: post,
             user: attributed_user,
+            guardian: visibility_guardian,
             custom_instructions: custom_instructions,
             feature_name: feature_name,
             feature_context: feature_context,
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
-                guardian: (attributed_user || post.user).guardian,
+                guardian: visibility_guardian,
                 style: context_style,
                 max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
                 context_token_budget: context_token_budget(context_llm),
@@ -561,7 +563,6 @@ module DiscourseAi
                 include_document_uploads: include_document_uploads?,
                 allowed_attachment_types: bot.model.allowed_attachment_types,
                 bot_usernames: available_bot_usernames,
-                visibility_user: visibility_user,
               ),
           )
 

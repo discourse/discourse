@@ -624,23 +624,30 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(404)
     end
 
-    it "does not send hidden post content to the LLM when an eligible user retries a moderator's reply" do
+    it "does not expose a moderator's secure upload when a regular user retries the reply" do
       moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      native_vision_model = Fabricate(:llm_model, vision_enabled: true)
+      llm_model.update!(vision_llm_model: native_vision_model)
+      ai_agent.update!(vision_enabled: true)
+      AiAgent.agent_cache.flush!
+
+      source_topic = Fabricate(:private_message_topic, user: moderator)
+      source_post = Fabricate(:post, topic: source_topic, user: moderator)
+      secure_upload = Fabricate(:image_upload, user: moderator)
+      secure_upload.update!(secure: true, access_control_post: source_post)
+
       topic = Fabricate(:topic, user: moderator)
-      hidden_post =
+      trigger_post =
         Fabricate(
           :post,
           topic: topic,
           user: moderator,
-          raw: "Hidden context that must not reach the LLM",
-          hidden: true,
+          raw: "Inspect this private image: ![private](#{secure_upload.short_url})",
         )
-      trigger_post =
-        Fabricate(:post, topic: topic, user: moderator, raw: "Hello @#{bot_user.username}")
 
       aggregate_failures do
-        expect(Guardian.new(moderator).can_see?(hidden_post)).to eq(true)
-        expect(Guardian.new(user).can_see?(hidden_post)).to eq(false)
+        expect(Guardian.new(moderator).can_see_upload?(secure_upload)).to eq(true)
+        expect(Guardian.new(user).can_see_upload?(secure_upload)).to eq(false)
       end
 
       reply_post =
@@ -668,7 +675,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         expect(response_status).to eq(200)
         expect(response_body).to include("success")
         expect(job_args[:visibility_user_id]).to eq(user.id)
-        expect(prompt_content).not_to include(hidden_post.raw)
+        expect(prompt_content).to include("[Image unavailable]")
+        expect(prompt_content).not_to include("upload_id #{secure_upload.id}")
       end
     end
 

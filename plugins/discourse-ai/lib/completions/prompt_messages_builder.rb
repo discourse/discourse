@@ -128,8 +128,7 @@ module DiscourseAi
         include_uploads: nil,
         include_image_uploads: nil,
         include_document_uploads: nil,
-        allowed_attachment_types: nil,
-        visibility_user: post.user
+        allowed_attachment_types: nil
       )
         include_image_uploads, include_document_uploads =
           normalize_upload_inclusion(
@@ -143,8 +142,6 @@ module DiscourseAi
 
         post_types = [Post.types[:regular]]
         post_types << Post.types[:whisper] if post.post_type == Post.types[:whisper]
-
-        guardian = Guardian.new(visibility_user)
 
         context_query =
           post
