@@ -1,87 +1,89 @@
 # frozen_string_literal: true
 
+require "ostruct"
+
 module Migrations
   module Importer
     module Uploads
       module Tasks
+        # Verifies that every recorded upload still has its file in the store, and
+        # removes the rows whose file has gone missing so a later run recreates
+        # them. Read-only on the workers; the writer thread does the deletions.
         class Fixer < Base
-          def run!
-            return if max_count.zero?
+          def title
+            "Fixing missing uploads"
+          end
 
-            puts "Fixing missing uploads..."
+          def max_count
+            @max_count ||= files_db.query_value("SELECT COUNT(*) FROM uploads")
+          end
 
-            status_thread = start_status_thread
-            consumer_threads = start_consumer_threads
-            producer_thread = start_producer_thread
+          def before_run
+            # `discourse_store.external?` never changes during a run, so resolve it
+            # once instead of on every processed row.
+            @external_store = discourse_store.external?
+          end
 
-            producer_thread.join
-            work_queue.close
-            consumer_threads.each(&:join)
-            status_queue.close
-            status_thread.join
+          # The pipeline also passes `emit_result:` (for rows a task resolves up
+          # front); the fixer resolves nothing early, so it is ignored. An
+          # underscore-prefixed keyword would NOT do that — it renames the required
+          # keyword and the pipeline's call raises ArgumentError.
+          def produce(emit_work:, **)
+            files_db.query("SELECT id AS upload_id, url FROM uploads ORDER BY id DESC") do |row|
+              emit_work.call(row)
+            end
+          end
+
+          def build_worker_resource
+            OpenStruct.new(url: "", secure?: SiteSetting.secure_uploads, optimized_images: [])
+          end
+
+          def process(row, fake_upload)
+            fake_upload.url = row[:url]
+            path = add_multisite_prefix(discourse_store.get_path_for_upload(fake_upload))
+
+            return { upload_id: row[:upload_id], status: :missing } unless file_exists?(path)
+
+            # The file is still there. On an external store a fix_missing run
+            # doubles as a repair pass for the upload's ACL and access-control tags.
+            discourse_store.update_upload_access_control(fake_upload) if @external_store
+
+            { upload_id: row[:upload_id], status: :ok }
+          rescue StandardError => e
+            { upload_id: row[:upload_id], status: :error, error: e.message }
+          end
+
+          def write(result)
+            case result[:status]
+            when :ok
+              :ok
+            when :missing
+              remove_missing_upload(result[:upload_id])
+              reporter.notice(I18n.t("importer.uploads.fixer_missing", id: result[:upload_id]))
+              :warning
+            else
+              reporter.notice(
+                I18n.t(
+                  "importer.uploads.fixer_error",
+                  id: result[:upload_id],
+                  error: result[:error],
+                ),
+              )
+              :error
+            end
           end
 
           private
 
-          def max_count
-            @max_count ||=
-              uploads_db.db.query_single_splat(
-                "SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL",
-              )
-          end
-
-          def enqueue_jobs
-            uploads_db
-              .db
-              .query(
-                "SELECT id, upload FROM uploads WHERE upload IS NOT NULL ORDER BY rowid DESC",
-              ) { |row| work_queue << row }
-          end
-
-          def instantiate_task_resource
-            OpenStruct.new(url: "")
-          end
-
-          def handle_status_update(result)
-            @current_count += 1
-
-            case result[:status]
-            when :ok
-              # ignore
-            when :error
-              @error_count += 1
-              puts " Error in #{result[:id]}"
-            when :missing
-              @missing_count += 1
-              puts " Missing #{result[:id]}"
-
-              uploads_db.db.execute("DELETE FROM uploads WHERE id = ?", result[:id])
-              Upload.delete_by(id: result[:upload_id])
-            end
-          end
-
-          def process_upload(row, fake_upload)
-            upload = JSON.parse(row[:upload], symbolize_names: true)
-            fake_upload.url = upload[:url]
-            path = add_multisite_prefix(discourse_store.get_path_for_upload(fake_upload))
-
-            status = file_exists?(path) ? :ok : :missing
-
-            update_status_queue(row, upload, status)
-          rescue StandardError => error
-            puts error.message
-            status = :error
-            update_status_queue(row, upload, status)
-          end
-
-          def update_status_queue(row, upload, status)
-            status_queue << { id: row[:id], upload_id: upload[:id], status: }
-          end
-
-          def log_status
-            error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
-            print "\r%7d / %7d (%s, %s missing)" %
-                    [current_count, max_count, error_count_text, missing_count]
+          # Drops the upload everywhere it's recorded — the Discourse record, the
+          # staging row, its optimized images, and every result that points at it.
+          # With the result rows gone, the uploader's incremental skip no longer
+          # sees those source ids and recreates them on the next run.
+          def remove_missing_upload(upload_id)
+            Upload.delete_by(id: upload_id)
+            files_db.execute("DELETE FROM optimized_images WHERE upload_id = ?", upload_id)
+            files_db.execute("DELETE FROM uploads WHERE id = ?", upload_id)
+            files_db.execute("DELETE FROM upload_results WHERE upload_id = ?", upload_id)
           end
         end
       end
