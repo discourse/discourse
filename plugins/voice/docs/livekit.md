@@ -285,8 +285,9 @@ Discourse HTTP tool.
    **…** menu. The modal lists the agents deployed to the LiveKit Cloud project by
    dispatch name; pick one and invite it. Agents without a dispatch name yet are not
    listed, and workers running outside LiveKit's hosting (for example a local
-   `pnpm dev` worker) never are — when the list is empty or unavailable the modal
-   falls back to a text field for the dispatch name. Do not use the `CA_` deployment ID.
+   `pnpm dev` worker) never are — use **Type a name instead** to enter such a dispatch
+   name by hand; when the list is empty or unavailable the modal shows the text field
+   directly. Do not use the `CA_` deployment ID.
 4. Wait for `livekit_agent_bot` to appear, then speak. With webhooks configured,
    presence can appear promptly; otherwise allow the next one-minute scheduled
    sweep. The agent's initial greeting may occur before roster admission.

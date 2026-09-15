@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
@@ -15,10 +16,20 @@ export default class VoiceInviteAgentModal extends Component {
 
   @tracked agents = [];
   @tracked loading = true;
+  @tracked typing = false;
 
   constructor() {
     super(...arguments);
     this.#loadAgents();
+  }
+
+  get showPicker() {
+    return this.agents.length > 0 && !this.typing;
+  }
+
+  @action
+  toggleTyping() {
+    this.typing = !this.typing;
   }
 
   @action
@@ -61,7 +72,7 @@ export default class VoiceInviteAgentModal extends Component {
             @onSubmit={{this.invite}}
             as |form|
           >
-            {{#if this.agents.length}}
+            {{#if this.showPicker}}
               <form.Field
                 @description={{i18n "voice.agent.pick_help"}}
                 @name="agent_name"
@@ -89,6 +100,18 @@ export default class VoiceInviteAgentModal extends Component {
               >
                 <field.Control maxlength="256" />
               </form.Field>
+            {{/if}}
+            {{#if this.agents.length}}
+              <DButton
+                class="btn-flat voice-invite-agent__toggle"
+                @action={{this.toggleTyping}}
+                @icon={{if this.typing "list" "pencil"}}
+                @label={{if
+                  this.typing
+                  "voice.agent.pick_name"
+                  "voice.agent.type_name"
+                }}
+              />
             {{/if}}
             <form.Submit @label="voice.agent.invite" />
           </Form>

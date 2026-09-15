@@ -76,6 +76,34 @@ module("Integration | Component | VoiceInviteAgentButton", function (hooks) {
     assert.true(this.closed);
   });
 
+  test("lets the inviter type a name instead of picking one", async function (assert) {
+    let invited = false;
+    this.model = { room: this.room };
+    this.closeModal = () => {};
+    pretender.get("/voice/agents", () =>
+      response(200, { agents: [{ name: "assistant" }] })
+    );
+    pretender.post("/voice/rooms/1/invite_agent", (request) => {
+      invited = true;
+      assert.strictEqual(request.requestBody, "agent_name=custom-agent");
+      return response(201, { dispatch_id: "AD_test" });
+    });
+    await render(
+      <template>
+        <VoiceInviteAgentModal
+          @closeModal={{this.closeModal}}
+          @inline={{true}}
+          @model={{this.model}}
+        />
+      </template>
+    );
+    await click(".voice-invite-agent__toggle");
+    assert.dom("[data-name='agent_name'] select").doesNotExist();
+    await fillIn("[data-name='agent_name'] input", "custom-agent");
+    await click("button[type='submit']");
+    assert.true(invited);
+  });
+
   test("falls back to a typed name when the list is unavailable", async function (assert) {
     this.model = { room: this.room };
     pretender.get("/voice/agents", () => response(503, { errors: ["down"] }));
