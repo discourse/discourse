@@ -457,6 +457,12 @@ class Reviewable < ActiveRecord::Base
   end
 
   def transition_to(status_symbol, performed_by)
+    # Claims are held per topic, so one left behind would claim the topic's next reviewable.
+    # Released while still pending so the unclaim is recorded on this reviewable's timeline.
+    if topic_id && pending? && status_symbol.to_sym != :pending
+      ReviewableClaimedTopic.release_manual_claim(topic_id, performed_by)
+    end
+
     self.status = status_symbol
     save!
 
