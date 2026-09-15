@@ -6,6 +6,17 @@
 
 fa_IR:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "عنوان"
+        icon: "آیکن"
+        color: "رنگ"
+        tag_name: "برچسب"
+      create_board:
+        name: "نام"
+        slug: "نشانک (slug)"
+        tag_names: "برچسب‌ها"
+        category_ids: "دسته‌بندی‌ها"
     boards:
       status:
         all: "همه"

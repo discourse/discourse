@@ -3020,6 +3020,10 @@ pl_PL:
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
       signup_disabled: "Rejestracja jest wyłączona, gdy witryna działa w trybie tylko do odczytu."
+    site_archived:
+      enabled: "Ta strona jest w trybie archiwizacji. Proszę kontynuować przeglądanie, ale odpowiadanie, polubienia i inne czynności są wyłączone."
+      enabled_anonymous: "Ta strona jest w trybie archiwizacji. Kontynuuj przeglądanie lub zaloguj się, ale odpowiadanie, polubienia i inne czynności są wyłączone."
+      signup_disabled: "Rejestracja jest wyłączona, gdy witryna znajduje się w trybie archiwizacji."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
       enabled_anonymous: "Ta witryna jest dostępna tylko dla personelu. Proszę kontynuować przeglądanie, ale rejestracja jest niedostępna i tylko pracownicy mogą się zalogować."
@@ -3167,6 +3171,7 @@ pl_PL:
         approve: "Zatwierdź"
         login: "Zaloguj się"
     forgot_password:
+      code_instructions: "Jeśli istnieje pasujące konto, wysłaliśmy kod weryfikacyjny na jego adres e-mail. Wprowadź kod, aby zresetować hasło."
       title: "Reset hasła"
       action: "Nie pamiętam hasła"
       invite: "Wpisz swoją nazwę użytkownika lub adres e-mail. Wyślemy do ciebie e-mail z linkiem do zresetowania hasła."
@@ -9223,6 +9228,14 @@ pl_PL:
           disable:
             title: "Wyłącz tryb tylko do odczytu"
             label: "Wyłącz tylko do odczytu"
+        site_archived:
+          enable:
+            title: "Włącz tryb archiwizacji"
+            label: "Włącz tryb archiwizacji"
+            confirm: "Czy na pewno chcesz włączyć tryb archiwizacji? Użytkownicy nadal będą mogli się logować i przeglądać, ale wszystkie akcje zapisu zostaną wyłączone. Powody operacyjne przeznaczone tylko do odczytu (przełączenie awaryjne, konserwacja) nadal mają pierwszeństwo, gdy są aktywne."
+          disable:
+            title: "Wyłącz tryb archiwizacji"
+            label: "Wyłącz tryb archiwizacji"
         logs:
           none: "Nie ma jeszcze logów…"
         columns:

@@ -1144,7 +1144,7 @@ zh_TW:
   uploads:
     marked_insecure_from_theme_component_reason: "佈景主題元件中使用的上傳項目"
   unsubscribe:
-    title: "退訂"
+    unsubscribe: "退訂"
     stop_watching_topic: "停止關注此主題，%{link}"
     mute_topic: "將此主題的所有通知設為免打擾，%{link}"
     unwatch_category: "停止關注%{category}中的所有主題"
@@ -2847,8 +2847,6 @@ zh_TW:
       tags_any: "顯示具有指定標籤中任一標籤的主題（以逗號分隔）"
       tags_all: "顯示具有所有指定標籤的主題（以加號分隔）"
       exclude_tag: "排除具有特定標籤的主題"
-      exclude_tags_any: "排除具有指定標籤中任一標籤的主題（以逗號分隔）"
-      exclude_tags_all: "排除具有所有指定標籤的主題（以加號分隔）"
       tag_group: "顯示具有特定標籤群組之標籤的主題"
       exclude_tag_group: "排除具有特定標籤群組之標籤的主題"
       activity_before: "顯示最後活動早於某日期的主題（YYYY-MM-DD 或幾天前）"
@@ -2858,7 +2856,6 @@ zh_TW:
       created_before: "顯示某日期之前建立的主題（YYYY-MM-DD 或幾天前）"
       created_after: "顯示某日期之後建立的主題（YYYY-MM-DD 或幾天前）"
       created_by: "顯示由特定使用者或群組建立的主題"
-      created_by_user: "顯示由使用者名稱或群組建立的主題（不加 @）"
       created_by_multiple: "顯示由任一指定使用者或群組建立的主題（以逗號分隔）"
       latest_post_before: "顯示最後一篇貼文早於某日期的主題（YYYY-MM-DD 或幾天前）"
       latest_post_after: "顯示最後一篇貼文晚於某日期的主題（YYYY-MM-DD 或幾天前）"

@@ -6,6 +6,17 @@
 
 hu:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Cím"
+        icon: "Ikon"
+        color: "Szín"
+        tag_name: "Címke"
+      create_board:
+        name: "Név"
+        slug: "URL slug"
+        tag_names: "Címkék"
+        category_ids: "Kategóriák"
     boards:
       status:
         all: "Összes"

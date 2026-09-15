@@ -6,6 +6,15 @@
 
 ca:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Títol"
+        icon: "Icona"
+        color: "Color"
+      create_board:
+        name: "Nom"
+        tag_names: "Etiquetes"
+        category_ids: "Categories"
     boards:
       status:
         all: "Tots"

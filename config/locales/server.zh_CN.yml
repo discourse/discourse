@@ -1215,7 +1215,7 @@ zh_CN:
   uploads:
     marked_insecure_from_theme_component_reason: "在主题组件中使用上传"
   unsubscribe:
-    title: "退订"
+    unsubscribe: "退订"
     stop_watching_topic: "停止关注此话题，%{link}"
     mute_topic: "将此话题的所有通知设为免打扰，%{link}"
     unwatch_category: "停止关注%{category}中的所有话题"
@@ -2935,8 +2935,6 @@ zh_CN:
       tags_any: "显示具有任意指定标签（以逗号分隔）的话题"
       tags_all: "显示带有所有指定标签（以加号分隔）的话题"
       exclude_tag: "排除带有特定标签的话题"
-      exclude_tags_any: "排除带有任意指定标签（以逗号分隔）的话题"
-      exclude_tags_all: "排除带有所有指定标签（以加号分隔）的话题"
       tag_group: "显示带有特定标签组的标签的话题"
       exclude_tag_group: "排除带有特定标签组的标签的话题"
       activity_before: "显示最新活动在某个日期之前（YYYY-MM-DD 或几天前）的话题"
@@ -2946,7 +2944,6 @@ zh_CN:
       created_before: "显示在某个日期之前（YYYY-MM-DD 或几天前）创建的话题"
       created_after: "显示在某个日期之后（YYYY-MM-DD 或几天前）创建的话题"
       created_by: "显示特定用户或群组创建的话题"
-      created_by_user: "显示由用户名或群组创建的话题（不带 @）"
       created_by_multiple: "显示任何指定用户或群组创建的话题（以逗号分隔）"
       latest_post_before: "显示最新帖子在某个日期之前（YYYY-MM-DD 或几天前）的话题"
       latest_post_after: "显示最新帖子在某个日期之后（YYYY-MM-DD 或几天前）的话题"

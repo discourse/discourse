@@ -6,6 +6,18 @@
 
 nl:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Titel"
+        icon: "Pictogram"
+        color: "Kleur"
+        tag_name: "Taggen"
+        default_sort_priority: "Prioriteit"
+      create_board:
+        name: "Naam"
+        slug: "Slug"
+        tag_names: "Tags"
+        category_ids: "Categorieën"
     boards:
       status:
         all: "Alles"

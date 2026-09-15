@@ -1162,7 +1162,7 @@ es:
   uploads:
     marked_insecure_from_theme_component_reason: "subida usada en componente de tema"
   unsubscribe:
-    title: "Cancelar suscripción"
+    unsubscribe: "Cancelar suscripción"
     stop_watching_topic: "Dejar de vigilar este tema, %{link}"
     mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
     unwatch_category: "Dejar de vigilar todos los temas de %{category}"
@@ -2598,8 +2598,6 @@ es:
       tags_any: "Mostrar temas con cualquiera de las etiquetas especificadas (separadas por comas)"
       tags_all: "Mostrar temas con todas las etiquetas especificadas (separadas por comas)"
       exclude_tag: "Excluir temas con una etiqueta específica"
-      exclude_tags_any: "Excluir temas con cualquiera de las etiquetas especificadas (separadas por comas)"
-      exclude_tags_all: "Excluir temas con todas las etiquetas especificadas (separadas por comas)"
       tag_group: "Mostrar temas con etiquetas de un grupo de etiquetas específico"
       exclude_tag_group: "Excluir temas con etiquetas de un grupo de etiquetas específico"
       activity_before: "Mostrar temas con última actividad antes de una fecha (AAAA-MM-DD o hace días)"
@@ -2609,7 +2607,6 @@ es:
       created_before: "Mostrar temas creados antes de una fecha (AAAA-MM-DD o hace días)"
       created_after: "Mostrar temas creados después de una fecha (AAAA-MM-DD o hace días)"
       created_by: "Mostrar temas creados por un usuario o grupo específico"
-      created_by_user: "Mostrar temas creados por nombre de usuario o grupo (sin @)"
       created_by_multiple: "Mostrar temas creados por cualquiera de los usuarios o grupos especificados (separados por comas)"
       latest_post_before: "Mostrar temas con última publicación antes de una fecha (AAAA-MM-DD o hace días)"
       latest_post_after: "Mostrar temas con última publicación después de una fecha (AAAA-MM-DD o hace días)"

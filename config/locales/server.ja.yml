@@ -1067,7 +1067,7 @@ ja:
   uploads:
     marked_insecure_from_theme_component_reason: "アップロードはテーマのコンポーネントに使用されています"
   unsubscribe:
-    title: "購読解除"
+    unsubscribe: "購読解除"
     stop_watching_topic: "%{link} のトピックのウォッチを停止する"
     mute_topic: "%{link} のトピックのすべての通知をミュートにする"
     unwatch_category: "%{category} 内のすべてのトピックのウォッチを停止する"
@@ -2463,8 +2463,6 @@ ja:
       tags_any: "指定されたタグのいずれかが付いたトピックを表示します (カンマ区切り)"
       tags_all: "指定されたすべてのタグが付いたトピックを表示します (プラス区切り)"
       exclude_tag: "特定のタグが付いたトピックを除外します"
-      exclude_tags_any: "指定されたタグのいずれかが付いたトピックを除外します (カンマ区切り)"
-      exclude_tags_all: "指定されたすべてのタグが付いたトピックを除外します (プラス区切り)"
       tag_group: "特定のタググループのタグが付いたトピックを表示します"
       exclude_tag_group: "特定のタググループのタグが付いたトピックを除外します"
       activity_before: "日付より前に最終アクティビティがあるトピックを表示します (YYYY-MM-DD または数日前)"
@@ -2472,7 +2470,6 @@ ja:
       created_before: "日付より前に作成されたトピックを表示します (YYYY-MM-DD または数日前)"
       created_after: "日付より後に作成されたトピックを表示します (YYYY-MM-DD または数日前)"
       created_by: "特定のユーザーまたはグループが作成したトピックを表示します"
-      created_by_user: "ユーザー名またはグループが作成したトピックを表示します (@ を使用しない)"
       created_by_multiple: "いずれかの特定のユーザーまたはグループが作成したトピックを表示します (カンマ区切り)"
       latest_post_before: "日付より前に最終投稿があるトピックを表示します (YYYY-MM-DD または数日前)"
       latest_post_after: "日付より後に最終投稿があるトピックを表示します (YYYY-MM-DD または数日前)"

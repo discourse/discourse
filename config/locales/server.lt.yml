@@ -826,7 +826,7 @@ lt:
   uploads:
     marked_insecure_from_theme_component_reason: "įkėlimas naudojamas temos komponente"
   unsubscribe:
-    title: "Nebeprenumeruoti"
+    unsubscribe: "Nebeprenumeruoti"
     stop_watching_topic: "Nebestebėti šios temos, %{link}"
     mute_topic: "Nutildyti visus šios temos pranešimus, %{link}"
     unwatch_category: "Nustokite žiūrėti visas temas %{category}"

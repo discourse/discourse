@@ -436,7 +436,6 @@ zh_TW:
       reply_error: "很抱歉，系統嘗試回覆時似乎遇到未預期的問題。\n\n[details='錯誤詳細資料']\n%{details}\n[/details]"
       default_pm_prefix: "[未命名的 AI 機器人私人訊息]"
       thinking: "思考中"
-      tool_pending_approval: "執行此動作前需要版主核准。"
       spawn_agent:
         description: "將獨立完整的提示詞委派給其中一個允許的代理程式，並傳回其回應"
         prompt_description: "傳送給所選代理程式並顯示於思考區塊中的完整獨立提示詞"

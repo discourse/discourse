@@ -6,6 +6,17 @@
 
 te:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "శీర్షిక"
+        icon: "చిహ్నం"
+        color: "రంగు"
+        tag_name: "ట్యాగ్"
+      create_board:
+        name: "పేరు"
+        slug: "స్లగ్"
+        tag_names: "ట్యాగులు"
+        category_ids: "వర్గాలు"
     boards:
       status:
         all: "అన్నీ"

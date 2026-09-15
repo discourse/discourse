@@ -1167,7 +1167,7 @@ tr_TR:
   uploads:
     marked_insecure_from_theme_component_reason: "tema bileşeninde kullanılan yükleme"
   unsubscribe:
-    title: "Abonelikten çık"
+    unsubscribe: "Abonelikten çık"
     stop_watching_topic: "Bu konuyu izlemeyi bırak, %{link}"
     mute_topic: "Bu konu için tüm bildirimleri sessize al, %{link}"
     unwatch_category: "%{category} kategorisindeki tüm konuları izlemeyi durdur"
@@ -2614,8 +2614,6 @@ tr_TR:
       tags_any: "Belirtilen etiketlerden herhangi birine sahip konuları gösterin (virgülle ayrılmış)"
       tags_all: "Belirtilen tüm etiketlere sahip konuları gösterin (artı ile ayrılmış)"
       exclude_tag: "Belirli bir etikete sahip konuları hariç tutun"
-      exclude_tags_any: "Belirtilen etiketlerden herhangi birine sahip konuları hariç tutun (virgülle ayrılmış)"
-      exclude_tags_all: "Belirtilen etiketlerin tümüne sahip konuları hariç tutun (artı ile ayrılmış)"
       tag_group: "Belirli bir etiket grubundan etiketlere sahip konuları gösterin"
       exclude_tag_group: "Belirli bir etiket grubundan etiketli konuları hariç tutun"
       activity_before: "Belirli bir tarihten önceki son aktiviteye sahip konuları gösterin (YYYY-AA-GG veya günler önce)"
@@ -2625,7 +2623,6 @@ tr_TR:
       created_before: "Belirli bir tarihten önce (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_by: "Belirli bir kullanıcı veya grup tarafından oluşturulan konuları göster"
-      created_by_user: "Kullanıcı adı veya grup tarafından oluşturulan konuları göster (@ işareti olmadan)"
       created_by_multiple: "Belirtilen kullanıcılar veya gruplar (virgülle ayrılmış) tarafından oluşturulan konuları göster"
       latest_post_before: "Son gönderisi belirli bir tarihten önce (YYYY-AA-GG veya günler önce) olan konuları gösterin"
       latest_post_after: "Son gönderisi belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) olan konuları gösterin"
