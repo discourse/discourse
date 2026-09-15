@@ -153,6 +153,17 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
     )
   end
 
+  it "keeps the aggregate traffic report available to admins when legacy pageviews are enabled" do
+    SiteSetting.use_legacy_pageviews = true
+
+    dashboard.visit_with_query(range: "custom", start_date: "2026-05-01", end_date: "2026-05-12")
+    dashboard.site_traffic.click_see_details
+
+    expect(page).to have_current_path(
+      "/admin/reports/consolidated_page_views?end_date=2026-05-12&start_date=2026-05-01",
+    )
+  end
+
   it "keeps the aggregate traffic report available to moderators" do
     sign_in(moderator)
 
