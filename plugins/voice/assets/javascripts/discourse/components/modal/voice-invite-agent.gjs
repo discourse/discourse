@@ -100,7 +100,6 @@ export default class VoiceInviteAgentModal extends Component {
               </form.Field>
             {{else}}
               <form.Field
-                @description={{i18n "voice.agent.name_help"}}
                 @format="large"
                 @name="agent_name"
                 @title={{i18n "voice.agent.name"}}

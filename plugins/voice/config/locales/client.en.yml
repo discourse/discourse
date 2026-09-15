@@ -297,7 +297,6 @@ en:
       agent:
         invite: "Invite LiveKit agent"
         name: "Agent name"
-        name_help: "Enter the dispatch name of a deployed agent in your LiveKit Cloud project."
         type_name: "Type a name instead"
         pick_name: "Choose from the list instead"
         invited: "Agent invited. It will appear when LiveKit connects it. This can take about a minute."
