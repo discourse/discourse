@@ -248,6 +248,11 @@ RSpec.describe UserStat do
       stat.update(distinct_badge_count: 999)
       stat2.update(distinct_badge_count: 999)
 
+      described_class.update_distinct_badge_count([user.id])
+
+      expect(stat.reload.distinct_badge_count).to eq(2)
+      expect(stat2.reload.distinct_badge_count).to eq(999)
+
       UserStat.ensure_consistency!
 
       expect(stat.reload.distinct_badge_count).to eq(2)

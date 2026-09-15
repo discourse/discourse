@@ -19,6 +19,7 @@ RSpec.describe Badge do
         description: "Plugin badge",
       )
       expect(award.reload.badge_id).to eq(badge.id)
+      expect_job_enqueued(job: :sync_badge_availability, args: { plugin_name: "example" })
 
       expect do
         described_class.seed_for_plugin("another", badge.name) do |record|
