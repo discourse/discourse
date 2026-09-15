@@ -183,6 +183,7 @@ RSpec.describe FileHelper do
         expect(FileHelper.is_inline_safe?("image.gif")).to eq(true)
         expect(FileHelper.is_inline_safe?("picture.webp")).to eq(true)
         expect(FileHelper.is_inline_safe?("pic.avif")).to eq(true)
+        expect(FileHelper.is_inline_safe?("icon.ico")).to eq(true)
       end
 
       it "returns true for PDFs" do
@@ -209,10 +210,6 @@ RSpec.describe FileHelper do
         expect(FileHelper.is_inline_safe?("IMAGE.SVG")).to eq(false)
       end
 
-      it "returns false for ICO files" do
-        expect(FileHelper.is_inline_safe?("icon.ico")).to eq(false)
-      end
-
       it "returns false for HTML files" do
         expect(FileHelper.is_inline_safe?("page.html")).to eq(false)
         expect(FileHelper.is_inline_safe?("page.htm")).to eq(false)
@@ -234,7 +231,7 @@ RSpec.describe FileHelper do
     describe ".inline_safe_files" do
       it "includes non-SVG images" do
         safe_files = FileHelper.inline_safe_files
-        expect(safe_files).to include("png", "jpg", "jpeg", "gif", "webp", "avif")
+        expect(safe_files).to include("png", "jpg", "jpeg", "gif", "webp", "avif", "ico")
       end
 
       it "includes PDF" do

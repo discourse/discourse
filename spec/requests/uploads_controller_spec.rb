@@ -468,10 +468,15 @@ RSpec.describe UploadsController do
   end
 
   describe "#show_short" do
-    it "inlines only supported image files" do
+    it "inlines browser-renderable image files" do
       upload = upload_file("smallest.png")
       get upload.short_path
       expect(response.header["Content-Type"]).to eq("image/png")
+      expect(response.header["Content-Disposition"]).to include("inline;")
+
+      upload = upload_file("smallest.ico")
+      get upload.short_path
+      expect(response.header["Content-Type"]).to eq("image/vnd.microsoft.icon")
       expect(response.header["Content-Disposition"]).to include("inline;")
 
       upload.update!(original_filename: "test.xml")

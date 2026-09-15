@@ -605,6 +605,28 @@ RSpec.describe Email::Sender do
       )
     end
 
+    it "renders an ICO remotely and includes the original file as an attachment" do
+      SiteSetting.authorized_extensions = "*"
+      SiteSetting.email_total_attachment_size_limit_kb = 10_000
+      ico =
+        UploadCreator.new(file_from_fixtures("smallest.ico", "images"), "smallest.ico").create_for(
+          Discourse.system_user.id,
+        )
+      reply.update!(raw: "#{reply.raw}\n![smallest](#{ico.short_url})")
+      reply.link_post_uploads
+      reply.rebake!
+
+      Email::Sender.new(message, :valid_type).send
+
+      html = Nokogiri.HTML5(message.html_part.body.to_s)
+      expect(
+        html.at_css(%(img[src="#{Discourse.base_url}#{ico.url}"][alt="smallest"])),
+      ).to be_present
+      expect(message.attachments.map(&:filename)).to contain_exactly(
+        *[small_pdf, large_pdf, csv_file, ico].map(&:original_filename),
+      )
+    end
+
     it "changes hashtags to their slug with a # symbol rather than the full resource name" do
       category = Fabricate(:category, slug: "dev")
       reply.update!(raw: reply.raw + "\n wow this is #dev")

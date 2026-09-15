@@ -188,7 +188,7 @@ class FileHelper
 
   def self.inline_images
     # SVG cannot safely be shown as a document
-    @@inline_images ||= supported_images - %w[svg]
+    @@inline_images ||= (supported_images - %w[svg]) | Set.new(%w[ico])
   end
 
   # files which are safe to serve inline (no script execution risk)

@@ -22,6 +22,24 @@ describe "Uploading files in the composer" do
     expect(composer.preview).to have_css(".image-wrapper", count: 2)
   end
 
+  it "renders an unprocessed ICO image" do
+    SiteSetting.authorized_extensions += "|ico"
+    visit "/new-topic"
+    expect(composer).to be_opened
+    topic.fill_in_composer_title("Unprocessed ICO image")
+
+    file_path = file_from_fixtures("smallest.ico", "images").path
+    attach_file("file-uploader", file_path, make_visible: true)
+
+    expect(composer).to have_no_in_progress_uploads
+    expect(composer.composer_input.value).to match(%r{!\[[^|]+\]\(upload://\w+\.ico\)})
+    expect(composer).to have_preview_image(extension: "ico")
+
+    composer.submit
+
+    expect(topic).to have_post_image(post_number: 1, extension: "ico")
+  end
+
   it "allows cancelling uploads" do
     visit "/new-topic"
     expect(composer).to be_opened
