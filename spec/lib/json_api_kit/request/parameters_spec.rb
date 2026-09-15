@@ -166,10 +166,12 @@ RSpec.describe JsonApiKit::Request::Parameters do
   context "with a version change" do
     let(:glossary) { JsonApiKit::Glossary.resource(version) }
     let(:version) { JsonApiKit::Timeline::FIRST_RELEASE }
-    let(:change) { JsonApiKitSpec::ParametersChange.new(__FILE__) }
+    let(:version_change) { JsonApiKitSpec::ParametersChange.new(__FILE__) }
 
     before do
-      allow(JsonApiKit::VersionChange).to receive(:after).with(version).and_return([change])
+      allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(
+        [version_change],
+      )
     end
 
     context "when a fieldset has a renamed field" do
@@ -205,7 +207,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
     end
 
     context "when the sort has two fields that merge into one" do
-      let(:change) { JsonApiKitSpec::ParametersMergeChange.new(__FILE__) }
+      let(:version_change) { JsonApiKitSpec::ParametersMergeChange.new(__FILE__) }
       let(:parameters) { { "sort" => "postedDate,postedTime" } }
 
       it "converts both to the one field" do
@@ -256,7 +258,7 @@ RSpec.describe JsonApiKit::Request::Parameters do
     end
 
     context "when the anchor has a reshaped field" do
-      let(:change) { JsonApiKitSpec::ParametersShapeChange.new(__FILE__) }
+      let(:version_change) { JsonApiKitSpec::ParametersShapeChange.new(__FILE__) }
       let(:parameters) { { "page" => { "anchor" => { "words" => %w[Anchors and pages] } } } }
 
       it "converts the field to its current name and shape" do
@@ -338,7 +340,9 @@ RSpec.describe JsonApiKit::Request::Parameters do
     end
 
     before do
-      allow(JsonApiKit::VersionChange).to receive(:after).and_return([field_change, type_change])
+      allow(JsonApiKit::VersionChanges.core).to receive(:after).and_return(
+        [field_change, type_change],
+      )
     end
 
     context "when the request supplies a fieldset" do
