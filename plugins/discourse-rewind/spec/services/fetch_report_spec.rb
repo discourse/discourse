@@ -135,7 +135,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
 
         before do
           DiscourseRewind::FetchReportsHelper.cache_single_report(
-            current_user.id,
+            current_user.username,
             2021,
             "BestTopics",
             {
@@ -153,7 +153,7 @@ RSpec.describe(DiscourseRewind::FetchReport) do
           expect(DiscourseRewind::Action::BestTopics).to_not have_received(:call)
           expect(
             DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
-              current_user.id,
+              current_user.username,
               2021,
               "BestTopics",
             )[

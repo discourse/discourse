@@ -240,7 +240,7 @@ RSpec.describe DiscourseRewind::RewindsController do
         it "omits an unlisted topic from a cached shared Best Topics report" do
           cached_report =
             DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
-              rewind_owner.id,
+              rewind_owner.username,
               2022,
               "BestTopics",
             )
@@ -260,7 +260,7 @@ RSpec.describe DiscourseRewind::RewindsController do
           expect(response.body).not_to include(cached_topic[:excerpt])
           expect(
             DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
-              rewind_owner.id,
+              rewind_owner.username,
               2022,
               "BestTopics",
             ),
@@ -295,7 +295,7 @@ RSpec.describe DiscourseRewind::RewindsController do
         it "omits hidden and deleted posts from a cached shared Best Posts report" do
           cached_report =
             DiscourseRewind::FetchReportsHelper.load_single_report_from_cache(
-              rewind_owner.id,
+              rewind_owner.username,
               2022,
               "BestPosts",
             )
