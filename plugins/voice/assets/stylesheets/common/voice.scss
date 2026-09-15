@@ -1299,13 +1299,13 @@
 }
 
 .voice-invite-agent-modal {
-  // The field content wrapper is itself a shrink-wrapping flex row, so the
-  // picker has to claim its width before its controls can share it equally.
+  // The field content wrapper is a column flex box aligned to flex-start, so
+  // the row must stretch to the field width before its controls can share it.
   &__picker {
     display: flex;
     align-items: center;
     gap: 0.5em;
-    flex: 1 1 auto;
+    align-self: stretch;
     min-width: 0;
 
     .form-kit__control-input-wrapper,
