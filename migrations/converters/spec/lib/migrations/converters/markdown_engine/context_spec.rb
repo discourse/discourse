@@ -142,6 +142,23 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context do
     )
   end
 
+  it "reports a reference definition's destination, not the uses that resolve through it" do
+    result = scan_one("see [a][1] and ![b][1]\n\n[1]: https://example.com/ref\n")
+    expect(result["blocks"]).to contain_exactly(
+      a_hash_including(
+        "map" => [2, 3],
+        "links" => [{ "href" => "https://example.com/ref", "labelHits" => 0 }],
+      ),
+    )
+  end
+
+  it "reports only the first definition of a repeated label" do
+    result = scan_one("[x][1]\n\n[1]: https://example.com/one\n[1]: https://example.com/two\n")
+    expect(result["blocks"].flat_map { |block| block["links"] }).to eq(
+      [{ "href" => "https://example.com/one", "labelHits" => 0 }],
+    )
+  end
+
   it "counts a self-link's destination appearing in its label" do
     result = scan_one("[https://example.com/page](https://example.com/page)")
     expect(result["blocks"].first["links"]).to eq(

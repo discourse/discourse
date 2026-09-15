@@ -54,7 +54,6 @@ module Migrations
               @pattern_spans = {}
               @tracked_url_values = nil
               @unfiltered_url_values = EMPTY_VALUES
-              @definition_offsets = {}
               build_line_index
             end
 
@@ -132,28 +131,6 @@ module Migrations
               @unfiltered_url_values = unfiltered
             end
 
-            # The `[offset, length]` pairs of every spelling of `value` in
-            # destination position on a reference-definition line (`[label]:
-            # <url>`). Both passes ask for it — count matching to refuse a
-            # definition serving several links, a substitution check to accept
-            # the matching token delta.
-            def definition_offsets(value)
-              @definition_offsets[value] ||= begin
-                offsets = Set.new
-                url_readings_for(value).each do |reading|
-                  text = reading.text
-                  pattern =
-                    /^ {0,3}\[[^\]\n]*\]:[^\S\n]*<?(?<dest>#{Regexp.escape(text)})>?(?=\s|\z)/
-                  pos = 0
-                  while (match = pattern.match(@input, pos))
-                    offsets << [match.byteoffset(:dest).first, text.bytesize]
-                    pos = match.end(0)
-                  end
-                end
-                offsets.freeze
-              end
-            end
-
             def occurrences_within(occurrences, range)
               occurrences.select do |occurrence|
                 occurrence.offset >= range.begin &&
@@ -229,13 +206,14 @@ module Migrations
 
             # A confirmed occurrence that is its own whole construct: a bare
             # schemeless domain (linkify links it, but no construct grammar has
-            # a byte to trigger on) or a reference definition's destination. The
+            # a byte to trigger on) or a reference definition's destination,
+            # which the engine reports from the definition's own line. The
             # engine's href carries the scheme the route parses from; the span
             # replaced is exactly the raw spelling.
             def bare_value_match(value, occurrence)
               raw_spelling = @input.byteslice(occurrence.offset, occurrence.length)
               node =
-                destination_upload_node(value, occurrence, raw_spelling) ||
+                destination_upload_node(occurrence, raw_spelling) ||
                   bare_link_node(value, occurrence, raw_spelling)
               return nil if node.nil?
 
@@ -271,11 +249,12 @@ module Migrations
             # upload constructs answer for it and only the destination is
             # replaced: the `![alt][id]` that uses a definition keeps its own
             # syntax, and so does a `[![…](upload://x)](upload://x)` lightbox
-            # link, whose label no grammar takes whole.
-            def destination_upload_node(value, occurrence, raw_spelling)
-              key = [occurrence.offset, occurrence.length]
-              unless definition_offsets(value).include?(key) ||
-                       link_destination_before?(@input, occurrence.offset)
+            # link, whose label no grammar takes whole. The two look-backs name
+            # which construct the occurrence belongs to, nothing about how many
+            # occurrences are live.
+            def destination_upload_node(occurrence, raw_spelling)
+              unless link_destination_before?(@input, occurrence.offset) ||
+                       definition_destination_before?(@input, occurrence.offset)
                 return nil
               end
 

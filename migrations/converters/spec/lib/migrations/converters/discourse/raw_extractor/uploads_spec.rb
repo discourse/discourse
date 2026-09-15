@@ -629,6 +629,16 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.engine_refusals).to be_empty
     end
 
+    it "defers an angle-bracket short-URL definition" do
+      url = "upload://wfnzm0tBLXg6BRQWnIoNfnl8HNs.jpg"
+      result = extract("![a|1x1][1]\n\n[1]: <#{url}>")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: "wfnzm0tBLXg6BRQWnIoNfnl8HNs", original_markdown: url)
+      expect(result).to eq("![a|1x1][1]\n\n[1]: <#{upload[:placeholder]}>")
+      expect(extractor.engine_refusals).to be_empty
+    end
+
     it "defers the destination of a full-URL definition" do
       url = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
       result = extract("![a][1]\n\n[1]: #{url}")

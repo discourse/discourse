@@ -7,10 +7,8 @@ module Migrations
         class EngineScanner
           # The pass answers one question: does the number of raw occurrences of
           # a value equal the number of engine tokens for it, exactly. Any
-          # inequality escalates to the substitution pass, and so does any value
-          # where the two numbers can legitimately differ (a reference
-          # definition serving several links). It never accepts on unequal
-          # counts and never decides from the shape of the bytes —
+          # inequality escalates to the substitution pass. It never accepts on
+          # unequal counts and never decides from the shape of the bytes —
           # {MarkdownScanner} explains why that is what makes the equality mean
           # anything.
           class CountingPass
@@ -115,19 +113,11 @@ module Migrations
             # code fence elsewhere stays untouched; a value matched against the
             # whole body replaces every occurrence, and the entity check widens
             # accordingly.
-            #
-            # A value with a reference-definition line never matches by
-            # counting. One definition can serve several `[text][label]` links,
-            # so the token count no longer says how many raw occurrences are
-            # live — an equality can hold while one of the counted occurrences
-            # is a copy inside a code fence.
             def match_all_counts
               whole = 0...@input.bytesize
               @matched = {}
 
               @expected.each do |(kind, value), entry|
-                return :count_mismatch if kind == :url && @locator.definition_offsets(value).any?
-
                 occurrences = match_region_counts(kind, value, entry)
 
                 if occurrences

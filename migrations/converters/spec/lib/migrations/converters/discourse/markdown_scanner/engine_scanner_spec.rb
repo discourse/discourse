@@ -354,8 +354,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "rewrites one reference definition that several links share" do
-      # Two link tokens, one raw destination: replacing the definition
-      # rewrites both links, so one row is enough.
+      # The uses spell no URL of their own; the definition line does, and
+      # rewriting it carries both links along, so one row is enough.
       raw =
         "see [profile][prefs] and [settings][prefs] `x`\n\n" \
           "[prefs]: https://forum.example.com/t/slug/5\n"
@@ -379,11 +379,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "rewrites a shared definition but not a copy of its URL inside code" do
-      # The code-span copy makes the raw count two against two link tokens —
-      # a bare count equality would attribute the code span to the
-      # definition's reuse. A definition-bearing value never matches by
-      # counting; the substitution checks confirm the definition (both
-      # tokens vanish) and skip the code copy (nothing changes).
+      # The definition is counted in its own line region, where it is the only
+      # occurrence. The code-span copy sits outside that region, and no region
+      # expects it, so nothing touches it.
       raw =
         "see [a][1] and [b][1] and `https://forum.example.com/t/slug/5`\n\n" \
           "[1]: https://forum.example.com/t/slug/5\n"
@@ -396,11 +394,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "rewrites a shared definition but not a definition-shaped line inside a fence" do
-      # Two link tokens, two raw occurrences — the counts are equal, and the
-      # fenced copy is even shaped like a definition. Equality must not
-      # accept a definition-bearing value: only the substitution checks can
-      # tell the live definition (both tokens vanish) from the fenced copy
-      # (nothing changes).
+      # Two raw occurrences, both shaped like a definition. Only the live one
+      # produces a token, and it is counted inside its own line region; the
+      # fenced copy lies in no region with a count of its own.
       fenced_line = "[also]: https://forum.example.com/t/slug/5"
       raw =
         "see [a][1] and [b][1]\n\n" \
@@ -411,6 +407,47 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.links.size).to eq(1)
       expect(output).to include(fenced_line)
       expect(output).to include("[1]: #{buffer.links.first[:placeholder]}")
+      expect(refusals).to be_empty
+    end
+
+    it "keeps a definition-shaped line inside a fence that defines nothing" do
+      # Nothing outside the fence spells the URL, so no region expects it and
+      # the fenced line is left exactly as the author wrote it.
+      fenced_line = "[1]: https://forum.example.com/t/slug/5"
+      raw = "see `x`\n\n```text\n#{fenced_line}\n```\n"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+      expect(refusals).to be_empty
+    end
+
+    it "rewrites the first definition of a repeated label and leaves the second verbatim" do
+      # Every use resolves through the first definition of a label; the second
+      # spells a URL the parse never reaches, so it is no occurrence of
+      # anything and keeps its own bytes.
+      shadowed = "https://forum.example.com/t/slug/7"
+      raw = "see [x][1] `y`\n\n[1]: https://forum.example.com/t/slug/5\n[1]: #{shadowed}\n"
+      output = extract(raw)
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first).to include(target_id: 5)
+      expect(output).to include("[1]: #{buffer.links.first[:placeholder]}")
+      expect(output).to include("[1]: #{shadowed}")
+      expect(refusals).to be_empty
+    end
+
+    it "resolves a shared definition without a substitution check" do
+      # The definition's line region expects one occurrence and holds one, so
+      # the body is placed by the counting pass alone — the single parse.
+      parses = []
+      raw =
+        "see [profile][prefs] and [settings][prefs] `x`\n\n" \
+          "[prefs]: https://forum.example.com/t/slug/5\n"
+      output = extractor_recording_parses(parses).extract(raw)
+
+      expect(parses.size).to eq(1)
+      expect(buffer.links.size).to eq(1)
+      expect(output).to include("[prefs]: #{buffer.links.first[:placeholder]}")
       expect(refusals).to be_empty
     end
 

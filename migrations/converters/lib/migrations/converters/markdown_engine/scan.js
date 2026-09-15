@@ -1,8 +1,10 @@
 /* eslint-disable no-undef, no-unused-vars */
 // Reads the parsed token tree into compact per-post data: per inline block, the
 // construct values the engine recognized plus the block's line map, and
-// separately the line maps of code/html/quote blocks. Only this compact data
-// crosses the V8 boundary, never the token tree itself.
+// separately the line maps of code/html/quote blocks. A reference definition
+// becomes a block of its own holding the destination its line spells, because
+// the links and images that resolve through it spell no URL where they stand.
+// Only this compact data crosses the V8 boundary, never the token tree itself.
 
 function __scanCountOccurrences(haystack, needle) {
   // An empty needle would match at every position without ever advancing the
@@ -62,6 +64,11 @@ function __scanWalk(children, block) {
           slug: child.attrGet("data-ref") || child.attrGet("data-slug") || "",
         });
         linkStack.push(null);
+      } else if (child.meta && child.meta.label) {
+        // A reference-style `[text][label]` link carries the destination its
+        // definition spells, and the raw here holds none of it. The definition
+        // line reports that destination itself.
+        linkStack.push(null);
       } else if (href !== null && href[0] !== "#") {
         // Fragment-only hrefs are intra-post anchors, never remapped. A
         // linkified or autolinked URL is its own label but exists once in the
@@ -82,7 +89,9 @@ function __scanWalk(children, block) {
       }
     } else if (child.type === "image") {
       const src = child.attrGet("data-orig-src") || child.attrGet("src");
-      if (src !== null) {
+      // A reference-style `![alt][label]` image spells no URL either, but its
+      // alt text can still hold constructs of its own.
+      if (src !== null && !(child.meta && child.meta.label)) {
         block.images.push(src);
       }
       __scanWalk(child.children, block);
@@ -107,10 +116,41 @@ function __scanWalk(children, block) {
   }
 }
 
+// The destination of a reference definition, as a block of its own: the
+// definition line is the one place the raw spells that URL. markdown-it keeps
+// the first definition of a label and ignores every later one, so a repeated
+// label spells a destination the parse resolves nothing through.
+function __scanDefinition(token, env, seenLabels) {
+  const label = token.meta ? token.meta.label : null;
+  if (!label || seenLabels.has(label)) {
+    return null;
+  }
+  seenLabels.add(label);
+
+  // A label colliding with an Object member ("toString") is never stored, and
+  // the parse resolves nothing through it either.
+  const reference = env.references ? env.references[label] : null;
+  if (!reference || typeof reference.href !== "string") {
+    return null;
+  }
+
+  return {
+    map: token.map,
+    mentions: [],
+    hashtags: [],
+    links: [{ href: reference.href, labelHits: 0 }],
+    images: [],
+    emojis: [],
+    code: 0,
+  };
+}
+
 function __scanOne(post) {
-  const tokens = __pt.parse(post.raw);
+  const env = {};
+  const tokens = __pt.parse(post.raw, env);
   const blocks = [];
   const blockTokens = [];
+  const seenLabels = new Set();
   let quoteHeader = null;
   for (const token of tokens) {
     if (token.type === "bbcode_open" && token.attrGet("data-username") !== null) {
@@ -136,6 +176,11 @@ function __scanOne(post) {
         block.code > 0
       ) {
         blocks.push(block);
+      }
+    } else if (token.type === "reference_definition") {
+      const definition = __scanDefinition(token, env, seenLabels);
+      if (definition) {
+        blocks.push(definition);
       }
     } else if (
       token.map &&

@@ -99,6 +99,19 @@ module Migrations
               pos >= 2 && input.getbyte(pos - 1) == 0x28 && input.getbyte(pos - 2) == 0x5d
             end
 
+            # A `]:` right before `pos`, past any spaces and an optional `<`:
+            # the destination of a reference definition (`[label]: <url>`).
+            # Asked only of an occurrence the engine already confirmed, to name
+            # which construct it belongs to — an upload rather than a bare link
+            # — so it takes no part in deciding how many occurrences are live.
+            def definition_destination_before?(input, pos)
+              pos -= 1 if pos > 0 && input.getbyte(pos - 1) == 0x3c # `<`
+              # 0x20 = space, 0x09 = tab
+              pos -= 1 while pos > 0 && [0x20, 0x09].include?(input.getbyte(pos - 1))
+              # 0x3a = `:`, 0x5d = `]`
+              pos >= 2 && input.getbyte(pos - 1) == 0x3a && input.getbyte(pos - 2) == 0x5d
+            end
+
             def bang_before?(input, pos)
               return false if pos.zero?
 

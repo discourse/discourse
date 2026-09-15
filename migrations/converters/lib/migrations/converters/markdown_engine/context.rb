@@ -247,6 +247,10 @@ module Migrations
             __pt = require("discourse-markdown-it").default
               .withCustomFeatures(require("discourse/static/markdown-it/features").default())
               .withOptions(__optInput);
+            // A reference definition's destination is a construct occurrence the
+            // scan has to count, and this rule drops the only token that says
+            // where that occurrence is.
+            __pt.options.engine.core.ruler.disable("strip_references");
           JS
         end
       end

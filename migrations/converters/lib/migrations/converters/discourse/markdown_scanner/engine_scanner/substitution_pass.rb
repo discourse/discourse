@@ -7,10 +7,9 @@ module Migrations
         class EngineScanner
           # The escalation when count matching refused a body: confirm each
           # candidate occurrence on its own. One occurrence's bytes are replaced
-          # with a marker word and the body is parsed again. When only instances
-          # of that construct disappear from the parse — normally exactly one,
-          # several for a reference definition that serves several links — and
-          # nothing appears that the marker itself does not explain, then the
+          # with a marker word and the body is parsed again. When exactly one
+          # instance of that construct disappears from the parse and nothing
+          # appears that the marker itself does not explain, then the
           # occurrence was that construct, at that position. The check compares
           # token multisets and needs no line maps, so bodies with CR line
           # endings or entity spellings can use it too.
@@ -80,9 +79,8 @@ module Migrations
                 break if @limit_hit
                 occurrences_for(entry).each do |occurrence|
                   break if @limit_hit
-                  outcome, covered = confirm(base, entry, occurrence, marker)
-                  next unless outcome == :confirmed
-                  confirmed += covered if place(entry, occurrence, spans)
+                  next unless confirm(base, entry, occurrence, marker) == :confirmed
+                  confirmed += 1 if place(entry, occurrence, spans)
                 end
               end
               unconfirmed_quotes = confirm_quotes(base, marker, spans)
@@ -159,31 +157,26 @@ module Migrations
               end
             end
 
-            # The delta rule: replacing the occurrence must remove only
-            # instances of the target construct, and may only add constructs
-            # that spell the marker word. Anything else fails the check: a block
+            # The delta rule: replacing the occurrence must remove exactly one
+            # instance of the target construct, and may only add constructs that
+            # spell the marker word. Anything else fails the check: a block
             # appearing or vanishing, a suppressed construct showing up, the
-            # code-span count changing. Normally exactly one instance must
-            # disappear; a URL occurrence on a reference-definition line may
-            # remove several, because one definition serves every
-            # `[text][label]` link that uses its label.
+            # code-span count changing.
             #
-            # Returns `[outcome, covered]`; `covered` is how many of the
-            # target's tokens the confirmed occurrence accounts for. The outcome
-            # says why a check did not confirm: `:not_construct` (empty delta —
-            # the occurrence is not a live construct here, so skipping it is
-            # correct), `:mismatch`, `:limit`/`:budget` when no check ran. The
-            # distinction lets the caller count real unconfirmed constructs
-            # without counting shielded look-alikes.
+            # The outcome says why a check did not confirm: `:not_construct`
+            # (empty delta — the occurrence is not a live construct here, so
+            # skipping it is correct), `:mismatch`, `:limit`/`:budget` when no
+            # check ran. The distinction lets the caller count real unconfirmed
+            # constructs without counting shielded look-alikes.
             def confirm(base, entry, occurrence, marker)
               elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - @started_at
               if elapsed > @seconds_budget
                 @limit_hit = :substitution_budget
-                return :budget, 0
+                return :budget
               end
               if (@substitutions += 1) > MAX_SUBSTITUTIONS
                 @limit_hit ||= :substitution_limit
-                return :limit, 0
+                return :limit
               end
 
               substituted_body =
@@ -196,7 +189,7 @@ module Migrations
                   )
               rescue EngineScanner::RetryDeadlineError
                 @limit_hit = :substitution_budget
-                return :budget, 0
+                return :budget
               rescue MiniRacer::ScriptTerminatedError
                 # On the slow retry the call's ceiling is the time left until
                 # the per-body deadline, so a terminated check means the
@@ -205,46 +198,35 @@ module Migrations
 
                 @scanner.reset_engine!
                 @limit_hit = :substitution_budget
-                return :budget, 0
+                return :budget
               end
 
               removed = diff(base, substituted)
               added = diff(substituted, base)
-              return :not_construct, 0 if removed.empty? && added.empty?
+              return :not_construct if removed.empty? && added.empty?
 
               if entry[:kind] == :quote
                 # An opener core made no quote of (no closer, say) is text; the
                 # header may hold a mention that moves, but no quote does.
-                return :not_construct, 0 if removed.keys.none? { |key| quote_key?(key) }
+                return :not_construct if removed.keys.none? { |key| quote_key?(key) }
 
                 # The marker keeps the quote a quote, so only its header fields
                 # move; the body's own blocks stay where they are.
                 unless removed.size == 1 && quote_key?(removed.keys.first) &&
                          removed.values.first == 1
-                  return :mismatch, 0
+                  return :mismatch
                 end
-                covered = 1
               else
-                return :mismatch, 0 if removed.keys != [entry[:key]]
-
-                covered = removed[entry[:key]]
-                if covered != 1
-                  unless entry[:kind] == :url && definition_occurrence?(entry[:text], occurrence)
-                    return :mismatch, 0
-                  end
-                end
+                return :mismatch if removed.keys != [entry[:key]]
+                return :mismatch if removed[entry[:key]] != 1
               end
 
               added.each_key do |key|
                 unless key.is_a?(Array) && key.any? { |part| part.to_s.include?(marker) }
-                  return :mismatch, 0
+                  return :mismatch
                 end
               end
-              [:confirmed, covered]
-            end
-
-            def definition_occurrence?(text, occurrence)
-              @locator.definition_offsets(text).include?([occurrence.offset, occurrence.length])
+              :confirmed
             end
 
             def diff(left, right)
@@ -309,7 +291,7 @@ module Migrations
                     offset: match.start_pos,
                     length: match.end_pos - match.start_pos,
                   )
-                outcome, = confirm(base, quote_entry, occurrence, marker)
+                outcome = confirm(base, quote_entry, occurrence, marker)
                 if outcome == :confirmed
                   spans[[match.start_pos, match.end_pos]] ||= match
                 elsif outcome != :not_construct

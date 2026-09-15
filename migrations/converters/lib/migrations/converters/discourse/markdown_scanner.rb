@@ -30,6 +30,10 @@ module Migrations
       # the freed token then gets matched to a look-alike inside a code span
       # instead, which corrupts the body.
       #
+      # A link that resolves through a reference definition spells no URL where
+      # it stands, so the engine reports that destination once, from the
+      # definition's own line, and the premise holds there too.
+      #
       # Two conditions are allowed anyway, because they protect the premise that
       # the bytes are there at all:
       #

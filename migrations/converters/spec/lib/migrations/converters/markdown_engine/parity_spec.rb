@@ -69,6 +69,9 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
         __pt = require("discourse-markdown-it").default
           .withCustomFeatures(require("discourse/static/markdown-it/features").default())
           .withOptions(optInput);
+        // The same rule `Context` disables, so both sides see the reference
+        // definition tokens the scan counts destinations from.
+        __pt.options.engine.core.ruler.disable("strip_references");
         return result;
       };
     JS
