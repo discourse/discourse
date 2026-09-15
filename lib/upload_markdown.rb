@@ -6,7 +6,7 @@ class UploadMarkdown
   end
 
   def to_markdown(display_name: nil)
-    if FileHelper.is_uploadable_image?(@upload.original_filename)
+    if FileHelper.is_supported_image?(@upload.original_filename)
       image_markdown(display_name: display_name)
     elsif FileHelper.is_supported_playable_media?(@upload.original_filename)
       playable_media_markdown(display_name: display_name)

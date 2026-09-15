@@ -26,7 +26,7 @@ class UploadValidator < ActiveModel::Validator
     return true if changing_upload_security?(upload)
 
     if is_authorized?(upload, extension)
-      if uploadable_image?(upload)
+      if FileHelper.is_supported_image?(upload.original_filename)
         authorized_image_extension(upload, extension)
         maximum_image_file_size(upload)
       else
@@ -56,7 +56,7 @@ class UploadValidator < ActiveModel::Validator
 
       validate_site_setting_file_size(upload, setting_opts)
     else
-      unless uploadable_image?(upload)
+      unless FileHelper.is_supported_image?(upload.original_filename)
         upload.errors.add(:original_filename, I18n.t("upload.images_only"))
         return false
       end
@@ -120,7 +120,7 @@ class UploadValidator < ActiveModel::Validator
           ),
         )
       end
-    elsif uploadable_image?(upload)
+    elsif FileHelper.is_supported_image?(upload.original_filename)
       maximum_image_file_size(upload)
     else
       maximum_attachment_file_size(upload)
@@ -156,15 +156,11 @@ class UploadValidator < ActiveModel::Validator
   end
 
   def authorized_images(upload)
-    authorized_extensions(upload) & FileHelper.uploadable_images
+    authorized_extensions(upload) & FileHelper.supported_images
   end
 
   def authorized_attachments(upload)
-    authorized_extensions(upload) - FileHelper.uploadable_images
-  end
-
-  def uploadable_image?(upload)
-    FileHelper.is_uploadable_image?(upload.original_filename)
+    authorized_extensions(upload) - FileHelper.supported_images
   end
 
   def authorizes_all_extensions?(upload)

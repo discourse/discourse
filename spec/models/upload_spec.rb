@@ -1060,8 +1060,6 @@ RSpec.describe Upload do
     end
 
     it "stores an empty dominant color for ICO images" do
-      global_setting :enable_vips_image_processing, true
-
       expect(ico_image.dominant_color(calculate_if_missing: true)).to eq("")
       expect(ico_image.dominant_color).to eq("")
     end

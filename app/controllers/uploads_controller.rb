@@ -372,7 +372,7 @@ class UploadsController < ApplicationController
   # as they may be further reduced in size by UploadCreator (at this point
   # they may have already been reduced in size by preprocessors)
   def attachment_too_big?(file_name, file_size)
-    !FileHelper.is_uploadable_image?(file_name) &&
+    !FileHelper.is_supported_image?(file_name) &&
       file_size >= UploadsController.max_attachment_size_for_user(current_user).kilobytes
   end
 

@@ -366,7 +366,7 @@ module Email
         post.uploads.each do |original_upload|
           optimized_1X = original_upload.optimized_images.first
 
-          if FileHelper.is_uploadable_image?(original_upload.original_filename)
+          if FileHelper.is_supported_image?(original_upload.original_filename)
             next if !should_attach_image?(original_upload, optimized_1X)
             # Don't attach images that aren't rendered in the e-mail.
             next if is_digest && !@message.html_part.body.include?(original_upload.sha1)

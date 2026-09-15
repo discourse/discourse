@@ -78,7 +78,7 @@ module SiteIconManager
         icon = resolve_original(info)
 
         if info[:height] && info[:width]
-          next if !icon || !FileHelper.is_supported_image?(icon.original_filename)
+          next if !icon || icon.extension == "ico"
           OptimizedImage.create_for(icon, info[:width], info[:height])
         end
       end

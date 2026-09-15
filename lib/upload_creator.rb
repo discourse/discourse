@@ -81,7 +81,7 @@ class UploadCreator
       rescue StandardError
         nil
       end
-    is_image = FileHelper.is_uploadable_image?(@filename)
+    is_image = FileHelper.is_supported_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
     is_thumbnail = SiteSetting.video_thumbnails_enabled && @opts[:type] == "thumbnail"

@@ -11,30 +11,6 @@ RSpec.describe FileHelper do
     stub_request(:get, url).to_return(body: png)
   end
 
-  describe ".is_supported_image?" do
-    it "does not support ICO files" do
-      expect(described_class.is_supported_image?("icon.ico")).to eq(false)
-    end
-  end
-
-  describe ".is_uploadable_image?" do
-    it "recognizes ICO files as images" do
-      expect(described_class.is_uploadable_image?("icon.ico")).to eq(true)
-    end
-  end
-
-  describe ".uploadable_images" do
-    it "includes ICO files" do
-      expect(described_class.uploadable_images).to include("ico")
-    end
-  end
-
-  describe ".is_supported_media?" do
-    it "supports ICO files" do
-      expect(described_class.is_supported_media?("icon.ico")).to eq(true)
-    end
-  end
-
   describe "download" do
     it "correctly raises an OpenURI HTTP error if it gets a 404 even with redirect" do
       url = "http://fourohfour.com/404"
