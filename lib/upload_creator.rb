@@ -284,7 +284,8 @@ class UploadCreator
         )
       end
 
-      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
+      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" &&
+           !%w[svg ico].include?(@upload.extension)
         Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id)
       end
 

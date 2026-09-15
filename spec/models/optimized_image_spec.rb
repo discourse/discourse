@@ -245,6 +245,13 @@ RSpec.describe OptimizedImage do
   end
 
   describe ".create_for" do
+    it "does not process ICO images" do
+      upload.extension = "ico"
+      described_class.expects(:resize).never
+
+      expect(described_class.create_for(upload, 10, 10)).to be_nil
+    end
+
     context "with versioning" do
       let(:filename) { "logo.png" }
       let(:file) { file_from_fixtures(filename) }

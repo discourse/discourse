@@ -950,6 +950,12 @@ RSpec.describe UploadCreator do
       ensure
         invalid_file&.close!
       end
+
+      it "does not enqueue avatar thumbnails" do
+        expect {
+          described_class.new(file, filename, type: "avatar").create_for(user.id)
+        }.not_to change { Jobs::CreateAvatarThumbnails.jobs.size }
+      end
     end
 
     context "when reading SVG upload dimensions" do
