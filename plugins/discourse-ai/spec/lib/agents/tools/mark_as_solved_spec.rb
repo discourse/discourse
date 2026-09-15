@@ -4,7 +4,7 @@ return unless defined?(::DiscourseSolved)
 
 RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
   fab!(:llm_model)
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }

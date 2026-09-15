@@ -48,6 +48,7 @@ export default class AiBotConversations extends Component {
   @service tooltip;
 
   @tracked creditStatus = null;
+  @tracked selectedAgentId = null;
   @tracked selectedLlmId = null;
   @tracked uploads = trackedArray();
 
@@ -174,7 +175,12 @@ export default class AiBotConversations extends Component {
   }
 
   get isSubmitDisabled() {
-    return this.creditStatus?.hard_limit_reached === true;
+    return (
+      !this.selectedAgentId ||
+      (this.currentUser.ai_available_llm_models?.length > 0 &&
+        !this.selectedLlmId) ||
+      this.creditStatus?.hard_limit_reached === true
+    );
   }
 
   get sendOnMetaEnter() {
@@ -185,6 +191,7 @@ export default class AiBotConversations extends Component {
 
   @action
   async setAgentId(id) {
+    this.selectedAgentId = id;
     this.aiBotConversationsHiddenSubmit.agentId = id;
     // Only check agent credits if no LLM is explicitly selected
     // (e.g., when agent has force_default_llm)
@@ -196,6 +203,7 @@ export default class AiBotConversations extends Component {
   @action
   async setLlmId(llmModelId) {
     this.selectedLlmId = llmModelId;
+    this.aiBotConversationsHiddenSubmit.llmModelId = llmModelId;
     await this.#checkCreditStatus(llmModelId, "llm");
   }
 

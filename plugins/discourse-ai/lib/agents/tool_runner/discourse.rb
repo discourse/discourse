@@ -130,8 +130,15 @@ module DiscourseAi
                 agent_class = AiAgent.all_agents.find { |agent| agent.name == agent_name }
                 return { error: "Agent not found" } if agent_class.nil?
 
+                agent_record = AiAgent.find_by(id: agent_class.id)
+                return { error: "Agent user not found" } if agent_record&.user.blank?
+
+                llm_model_id = agent_record.default_llm_id || SiteSetting.ai_default_llm_model
+                llm_model = LlmModel.find_by(id: llm_model_id)
+                return { error: "Agent model not found" } if llm_model.blank?
+
                 agent = agent_class.new
-                bot = DiscourseAi::Agents::Bot.as(@bot_user || agent.user, agent: agent)
+                bot = DiscourseAi::Agents::Bot.as(agent_record.user, agent: agent, model: llm_model)
                 playground = DiscourseAi::AiBot::Playground.new(bot)
 
                 if @context.post_id

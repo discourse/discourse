@@ -9,7 +9,7 @@ acceptance("AI Bot - Drafts dropdown icon", function (needs) {
   let recipients;
 
   needs.user({
-    ai_enabled_chat_bots: [{ id: -110, username: "gpt4_bot" }],
+    ai_enabled_agents: [{ id: -1, user_id: -110, username: "helper_bot" }],
   });
 
   needs.settings({
@@ -40,13 +40,13 @@ acceptance("AI Bot - Drafts dropdown icon", function (needs) {
   }
 
   test("uses the robot icon for a draft addressed to a bot", async function (assert) {
-    await openDraftsMenu("gpt4_bot");
+    await openDraftsMenu("helper_bot");
 
     assert.dom(".topic-drafts-item svg.d-icon-robot").exists();
   });
 
   test("uses the robot icon when a bot is one of several recipients", async function (assert) {
-    await openDraftsMenu("charlie,gpt4_bot");
+    await openDraftsMenu("charlie,helper_bot");
 
     assert.dom(".topic-drafts-item svg.d-icon-robot").exists();
   });

@@ -6,10 +6,43 @@ module DiscourseAi
       Bot = Struct.new(:id, :name, :llm)
 
       def self.all_bot_ids
-        AiAgent
-          .agent_users
-          .map { |agent| agent[:user_id] }
-          .concat(LlmModel.where(id: LlmModel.enabled_chat_bot_ids).pluck(:user_id).compact)
+        historical_bot_user_ids
+      end
+
+      def self.historical_bot_user_ids(topic: nil)
+        ids =
+          AiAgent
+            .with_user
+            .pluck(:user_id)
+            .concat(LlmModel.with_user.pluck(:user_id))
+            .concat(UserCustomField.where(name: HISTORICAL_AI_USER_CUSTOM_FIELD).pluck(:user_id))
+        if topic
+          ids.concat(
+            topic
+              .posts
+              .joins(:_custom_fields)
+              .where(
+                post_custom_fields: {
+                  name: [
+                    POST_AI_AGENT_ID_FIELD,
+                    POST_AI_LLM_MODEL_ID_FIELD,
+                    POST_AI_LLM_NAME_FIELD,
+                  ],
+                },
+              )
+              .where("posts.user_id <= 0")
+              .pluck(:user_id),
+          )
+        end
+        ids.compact.uniq
+      end
+
+      def self.ai_response?(post)
+        return false if post.blank?
+        return true if historical_bot_user_ids(topic: post.topic).include?(post.user_id)
+
+        post.user_id.to_i <= 0 &&
+          post.custom_fields.slice(POST_AI_AGENT_ID_FIELD, POST_AI_LLM_NAME_FIELD).present?
       end
 
       def self.find_participant_in(participant_ids)
@@ -30,39 +63,65 @@ module DiscourseAi
         LlmModel.joins(:user).where(name: name).last&.user
       end
 
-      def self.enabled_user_ids_and_models_map
+      def self.available_agents(user)
+        classes_by_id = DiscourseAi::Agents::Agent.all(user: user).index_by(&:id)
+        agent_users = AiAgent.agent_users(user: user)
+        model_names =
+          LlmModel
+            .where(id: agent_users.filter_map { |agent| agent[:default_llm_id] })
+            .pluck(:id, :display_name)
+            .to_h
+
+        agent_users.filter_map do |agent_user|
+          agent = classes_by_id[agent_user[:id]]
+          next if agent.blank? || agent_user[:username].blank?
+
+          {
+            id: agent.id,
+            user_id: agent_user[:user_id],
+            name: agent.name,
+            description: agent.description,
+            default_llm_id: agent_user[:default_llm_id],
+            default_llm_name: model_names[agent_user[:default_llm_id]],
+            has_default_llm:
+              agent_user[:default_llm_id].present? || SiteSetting.ai_default_llm_model.present?,
+            force_default_llm: agent_user[:force_default_llm],
+            username: agent_user[:username],
+            allow_personal_messages: agent_user[:allow_personal_messages],
+          }
+        end
+      end
+
+      def self.available_llm_models
         enabled_ids = LlmModel.enabled_chat_bot_ids
         return [] if enabled_ids.empty?
 
-        DB.query_hash(<<~SQL, ids: enabled_ids)
-          SELECT users.username AS username, users.id AS id, llms.id AS llm_model_id, llms.name AS model_name, llms.display_name AS display_name
-          FROM llm_models llms
-          INNER JOIN users ON llms.user_id = users.id
-          WHERE llms.id IN (:ids)
-        SQL
+        LlmModel
+          .where(id: enabled_ids)
+          .order(:display_name)
+          .map do |model|
+            {
+              "id" => model.id,
+              "model_name" => model.name,
+              "display_name" => model.display_name,
+              "vision_enabled" => model.agent_image_capable?,
+              "legacy_user_id" => model.user_id,
+            }.compact
+          end
+      end
+
+      def self.enabled_user_ids_and_models_map
+        available_llm_models
       end
 
       def self.personal_message_bot_user_ids(user)
         return [] if user.blank? || !SiteSetting.ai_bot_enabled
+        return [] if !user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
 
-        bot_user_ids = []
-
-        if user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
-          bot_user_ids.concat(
-            LlmModel
-              .where(id: LlmModel.enabled_chat_bot_ids)
-              .where.not(user_id: nil)
-              .pluck(:user_id),
-          )
-        end
-
-        bot_user_ids.concat(
-          AiAgent
-            .allowed_modalities(user: user, allow_personal_messages: true)
-            .map { |agent| agent[:user_id] },
-        )
-
-        bot_user_ids.compact
+        AiAgent
+          .allowed_modalities(user: user, allow_personal_messages: true)
+          .map { |agent| agent[:user_id] }
+          .compact
       end
 
       # Most errors are simply "not_allowed"
@@ -90,7 +149,14 @@ module DiscourseAi
       def inject_into(plugin)
         # Long term we need a better API here
         # we only want to load this custom field for bots
-        TopicView.default_post_custom_fields << POST_AI_LLM_NAME_FIELD
+        TopicView.default_post_custom_fields.concat(
+          [
+            POST_AI_LLM_NAME_FIELD,
+            POST_AI_LLM_MODEL_ID_FIELD,
+            POST_AI_AGENT_ID_FIELD,
+            POST_AI_AGENT_AUTHORIZATION_USER_ID_FIELD,
+          ],
+        )
 
         plugin.register_topic_custom_field_type(TOPIC_AI_BOT_PM_FIELD, :string)
 
@@ -158,13 +224,6 @@ module DiscourseAi
           user_ids
         end
 
-        plugin.on(:site_setting_changed) do |name, _old_value, _new_value|
-          if name == :ai_bot_enabled || name == :discourse_ai_enabled ||
-               name == :ai_bot_enabled_llms
-            DiscourseAi::AiBot::SiteSettingsExtension.enable_or_disable_ai_bots
-          end
-        end
-
         Oneboxer.register_local_handler(
           "discourse_ai/ai_bot/shared_ai_conversations",
         ) do |url, route|
@@ -194,28 +253,39 @@ module DiscourseAi
           :post,
           :llm_name,
           include_condition: -> do
-            object&.topic&.private_message? && object.custom_fields[POST_AI_LLM_NAME_FIELD]
+            object.user_id.to_i <= 0 && object.custom_fields[POST_AI_LLM_NAME_FIELD].present?
           end,
         ) { object.custom_fields[POST_AI_LLM_NAME_FIELD] }
+
+        plugin.add_to_serializer(
+          :post,
+          :ai_llm_model_id,
+          include_condition: -> do
+            object.user_id.to_i <= 0 && object.custom_fields[POST_AI_LLM_MODEL_ID_FIELD].present?
+          end,
+        ) { object.custom_fields[POST_AI_LLM_MODEL_ID_FIELD].to_i }
+
+        plugin.add_to_serializer(
+          :post,
+          :ai_agent_id,
+          include_condition: -> do
+            object.user_id.to_i <= 0 && object.custom_fields[POST_AI_AGENT_ID_FIELD].present?
+          end,
+        ) { object.custom_fields[POST_AI_AGENT_ID_FIELD].to_i }
+
+        plugin.add_to_serializer(
+          :post,
+          :ai_agent_name,
+          include_condition: -> do
+            object.user_id.to_i <= 0 && object.custom_fields[POST_AI_AGENT_ID_FIELD].present?
+          end,
+        ) { AiAgent.find_by_id_from_cache(object.custom_fields[POST_AI_AGENT_ID_FIELD].to_i)&.name }
 
         plugin.add_to_serializer(
           :current_user,
           :ai_enabled_agents,
           include_condition: -> { scope.authenticated? },
-        ) do
-          DiscourseAi::Agents::Agent
-            .all(user: scope.user)
-            .map do |agent|
-              {
-                id: agent.id,
-                name: agent.name,
-                description: agent.description,
-                force_default_llm: agent.force_default_llm,
-                username: agent.username,
-                allow_personal_messages: agent.allow_personal_messages,
-              }
-            end
-        end
+        ) { DiscourseAi::AiBot::EntryPoint.available_agents(scope.user) }
 
         plugin.add_to_serializer(
           :current_user,
@@ -229,35 +299,64 @@ module DiscourseAi
 
         plugin.add_to_serializer(
           :current_user,
+          :ai_available_llm_models,
+          include_condition: -> do
+            SiteSetting.ai_bot_enabled && scope.authenticated? &&
+              scope.user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          end,
+        ) { DiscourseAi::AiBot::EntryPoint.available_llm_models }
+
+        plugin.add_to_serializer(
+          :current_user,
           :ai_enabled_chat_bots,
           include_condition: -> do
             SiteSetting.ai_bot_enabled && scope.authenticated? &&
               scope.user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
           end,
         ) do
-          bots_map = DiscourseAi::AiBot::EntryPoint.enabled_user_ids_and_models_map
+          AiAgent
+            .agent_users(user: scope.user)
+            .filter_map do |agent_user|
+              next if agent_user[:username].blank?
 
-          agent_users = AiAgent.agent_users(user: scope.user)
-          if agent_users.present?
-            agent_users.filter! { |agent_user| agent_user[:username].present? }
-
-            bots_map.concat(
-              agent_users.map do |agent_user|
-                {
-                  "id" => agent_user[:user_id],
-                  "username" => agent_user[:username],
-                  "has_default_llm" =>
-                    agent_user[:default_llm_id].present? ||
-                      SiteSetting.ai_default_llm_model.present?,
-                  "force_default_llm" => agent_user[:force_default_llm],
-                  "is_agent" => true,
-                }
-              end,
-            )
-          end
-
-          bots_map
+              {
+                "id" => agent_user[:user_id],
+                "agent_id" => agent_user[:id],
+                "username" => agent_user[:username],
+                "has_default_llm" =>
+                  agent_user[:default_llm_id].present? || SiteSetting.ai_default_llm_model.present?,
+                "force_default_llm" => agent_user[:force_default_llm],
+                "is_agent" => true,
+              }
+            end
         end
+
+        plugin.add_to_serializer(
+          :"chat/message",
+          :ai_llm_name,
+          include_condition: -> do
+            object.user_id.to_i <= 0 &&
+              object.custom_fields[CHAT_MESSAGE_AI_LLM_NAME_FIELD].present?
+          end,
+        ) { object.custom_fields[CHAT_MESSAGE_AI_LLM_NAME_FIELD] }
+
+        plugin.add_to_serializer(
+          :"chat/message",
+          :ai_llm_model_id,
+          include_condition: -> do
+            object.user_id.to_i <= 0 &&
+              object.custom_fields[CHAT_MESSAGE_AI_LLM_MODEL_ID_FIELD].present?
+          end,
+        ) { object.custom_fields[CHAT_MESSAGE_AI_LLM_MODEL_ID_FIELD].to_i }
+
+        plugin.add_to_serializer(
+          :"chat/message",
+          :ai_agent_id,
+          include_condition: -> do
+            object.user_id.to_i <= 0 &&
+              object.custom_fields[CHAT_MESSAGE_AI_AGENT_ID_FIELD].present?
+          end,
+        ) { object.custom_fields[CHAT_MESSAGE_AI_AGENT_ID_FIELD].to_i }
 
         plugin.add_to_serializer(:current_user, :can_share_ai_bot_conversations) do
           scope.user.in_any_groups?(SiteSetting.ai_bot_public_sharing_allowed_groups_map)
@@ -265,16 +364,41 @@ module DiscourseAi
 
         plugin.add_to_serializer(
           :topic_view,
+          :ai_agent_id,
+          include_condition: -> do
+            SiteSetting.ai_bot_enabled &&
+              object.topic.custom_fields[TOPIC_AI_AGENT_ID_FIELD].present?
+          end,
+        ) { object.topic.custom_fields[TOPIC_AI_AGENT_ID_FIELD].to_i }
+
+        plugin.add_to_serializer(
+          :topic_view,
+          :ai_llm_model_id,
+          include_condition: -> do
+            SiteSetting.ai_bot_enabled &&
+              object.topic.custom_fields[TOPIC_AI_LLM_MODEL_ID_FIELD].present?
+          end,
+        ) { object.topic.custom_fields[TOPIC_AI_LLM_MODEL_ID_FIELD].to_i }
+
+        plugin.add_to_serializer(
+          :topic_view,
           :ai_agent_name,
           include_condition: -> { SiteSetting.ai_bot_enabled && object.topic.private_message? },
         ) do
           topic = object.topic
-          id = topic.custom_fields["ai_agent_id"]
+          id = topic.custom_fields[TOPIC_AI_AGENT_ID_FIELD]
           name = DiscourseAi::Agents::Agent.find_by(user: scope.user, id: id.to_i)&.name if id
           name || topic.custom_fields["ai_agent"]
         end
 
-        plugin.on(:post_created) { |post| DiscourseAi::AiBot::Playground.schedule_reply(post) }
+        plugin.on(:post_created) do |post, opts, user|
+          DiscourseAi::AiBot::Playground.schedule_reply(
+            post,
+            authorization_user: user || post.user,
+            requested_agent_id: opts[:ai_agent_id],
+            requested_model_id: opts[:ai_llm_model_id],
+          )
+        end
 
         plugin.on(:chat_message_created) do |chat_message, channel, user, context|
           DiscourseAi::AiBot::Playground.schedule_chat_reply(chat_message, channel, user, context)
@@ -284,12 +408,16 @@ module DiscourseAi
           DiscourseAi::AiBot::ChatToolApproval.handle_interaction(interaction)
         end
 
-        plugin.register_editable_topic_custom_field(:ai_agent_id)
+        plugin.add_permitted_post_create_param(:ai_agent_id)
+        plugin.add_permitted_post_create_param(:ai_llm_model_id)
+        plugin.register_editable_topic_custom_field(TOPIC_AI_AGENT_ID_FIELD.to_sym)
         plugin.register_topic_custom_field_type(
-          :ai_agent_id,
+          TOPIC_AI_AGENT_ID_FIELD.to_sym,
           :string,
-          max_length: TOPIC_AI_AGENT_ID_MAX_LENGTH,
+          max_length: TOPIC_AI_FIELD_ID_MAX_LENGTH,
         )
+        plugin.register_editable_topic_custom_field(TOPIC_AI_LLM_MODEL_ID_FIELD.to_sym)
+        plugin.register_topic_custom_field_type(TOPIC_AI_LLM_MODEL_ID_FIELD.to_sym, :integer)
 
         plugin.on(:after_validate_topic) do |topic, topic_creator|
           DiscourseAi::AiBot::TopicAgentValidator.validate(topic, topic_creator)

@@ -379,7 +379,7 @@ export default class ChatMessage extends Component {
     this.initMentionedUsers();
     this.decorateMentions(element);
     _chatMessageDecorators.forEach((decorator) => {
-      decorator(element, helper);
+      decorator(element, helper, this.args.message);
     });
   }
 

@@ -13,7 +13,7 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
     group = Group.find_by(name: described_class::GROUP_NAME)
     expect(bot_user.reload.flair_group_id).to eq(group.id)
     expect(group.flair_url).to eq(described_class::FLAIR_ICON)
-    expect(group.users).to contain_exactly(bot_user)
+    expect(group.users).to include(bot_user)
   end
 
   it "backfills flair for existing AI users" do
@@ -24,7 +24,23 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
 
     group = Group.find_by(name: described_class::GROUP_NAME)
     expect(bot_user.reload.flair_group_id).to eq(group.id)
-    expect(group.users).to contain_exactly(bot_user)
+    expect(group.users).to include(bot_user)
+  end
+
+  it "preserves pre-upgrade historical members during a full sync" do
+    group = Group.find_by(name: described_class::GROUP_NAME)
+    group.add(bot_user, automatic: true)
+    bot_user.update!(flair_group_id: group.id)
+
+    described_class.sync_all!
+
+    expect(group.reload.users).to include(bot_user)
+    expect(
+      UserCustomField.exists?(
+        user_id: bot_user.id,
+        name: DiscourseAi::AiBot::HISTORICAL_AI_USER_CUSTOM_FIELD,
+      ),
+    ).to eq(true)
   end
 
   it "backfills flair for users attached to an LLM model" do
@@ -35,7 +51,7 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
 
     group = Group.find_by(name: described_class::GROUP_NAME)
     expect(bot_user.reload.flair_group_id).to eq(group.id)
-    expect(group.users).to contain_exactly(bot_user)
+    expect(group.users).to include(bot_user)
   end
 
   it "gives a new AI users group a default bio" do
@@ -67,6 +83,19 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
     expect(group.reload.bio_raw).to eq("Our helpful bots")
   end
 
+  it "keeps flair for a historical LLM user after the model is deleted" do
+    model = Fabricate(:llm_model)
+    model.update_column(:user_id, bot_user.id)
+    described_class.sync_all!
+
+    model.destroy!
+    described_class.sync_all!
+
+    group = Group.find_by(name: described_class::GROUP_NAME)
+    expect(bot_user.reload.flair_group_id).to eq(group.id)
+    expect(group.users).to include(bot_user)
+  end
+
   it "updates the flair icon on an existing AI users group" do
     agent = Fabricate(:ai_agent, user: bot_user)
     group = Group.find_by(name: described_class::GROUP_NAME)
@@ -80,6 +109,7 @@ RSpec.describe DiscourseAi::AiBot::UserFlair do
   it "removes flair when a user is no longer attached to an AI model" do
     agent = Fabricate(:ai_agent, user: bot_user)
     group = Group.find_by(name: described_class::GROUP_NAME)
+    described_class.sync_all!
 
     agent.update!(user: nil)
 

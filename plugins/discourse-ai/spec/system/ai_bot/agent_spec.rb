@@ -9,6 +9,7 @@ RSpec.describe "AI agents" do
     SiteSetting.ai_bot_enabled = true
     SiteSetting.ai_bot_add_to_header = true
     toggle_enabled_bots(bots: [gpt_4])
+    AiAgent.ensure_users!
     sign_in(admin)
   end
 
@@ -42,7 +43,12 @@ RSpec.describe "AI agents" do
     find(".d-header .ai-bot-button").click()
     agent_selector = PageObjects::Components::SelectKit.new(".agent-llm-selector__agent-dropdown")
 
-    id = DiscourseAi::Agents::Agent.all(user: admin).first.id
+    id =
+      DiscourseAi::AiBot::EntryPoint
+        .available_agents(admin)
+        .find { |available_agent| available_agent[:allow_personal_messages] }[
+        :id
+      ]
 
     expect(agent_selector).to have_selected_value(id)
 

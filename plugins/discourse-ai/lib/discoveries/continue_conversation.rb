@@ -25,15 +25,25 @@ module DiscourseAi
 
         result = DiscourseAi::Discoveries.cached_result_for(user: @user, request_id:)
         raise ResultExpired if result.nil? || result["agent_id"] != @discovery_agent.id
+        if !SiteSetting.ai_bot_enabled ||
+             !@user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          raise Discourse::InvalidAccess
+        end
         if @follow_up_agent.nil? || !@follow_up_agent.enabled? ||
              !@user.in_any_groups?(@follow_up_agent.allowed_group_ids) ||
              !@follow_up_agent.allow_personal_messages
           raise Discourse::InvalidAccess
         end
 
-        bot_user = follow_up_bot_user
-        raise Discourse::InvalidAccess if bot_user.nil?
-        @guardian.ensure_can_send_pm_to_ai_bot!(bot_user)
+        route =
+          DiscourseAi::AiBot::ConversationRoute.resolve(
+            authorization_user: @user,
+            modality: :personal_message,
+            agent_id: @follow_up_agent.id,
+            selection_source: :snapshot,
+            allow_general_fallback: false,
+          )
+        @guardian.ensure_can_send_pm_to_ai_bot!(route.speaker)
         question = normalized_question(question)
 
         DistributedMutex.synchronize(lock_key(request_id), validity: 30) do
@@ -43,7 +53,7 @@ module DiscourseAi
 
           RateLimiter.new(@user, "ai_discover_#{@user.id}_continue_convo", 3, 1.minute).performed!
 
-          topic_id = create_conversation(result, bot_user, question, request_id).id
+          topic_id = create_conversation(result, route, question, request_id).id
           Discourse.redis.set(
             topic_key(request_id),
             topic_id,
@@ -71,21 +81,6 @@ module DiscourseAi
         question
       end
 
-      def follow_up_bot_user
-        allowed_bot_user_ids = DiscourseAi::AiBot::EntryPoint.personal_message_bot_user_ids(@user)
-
-        preferred_user_ids = []
-        if !@follow_up_agent.force_default_llm
-          enabled_model_ids = LlmModel.enabled_chat_bot_ids
-          user_ids_by_model_id = LlmModel.where(id: enabled_model_ids).pluck(:id, :user_id).to_h
-          preferred_user_ids.concat(enabled_model_ids.filter_map { |id| user_ids_by_model_id[id] })
-        end
-        preferred_user_ids << @follow_up_agent.user_id
-
-        user_id = preferred_user_ids.compact.find { |id| allowed_bot_user_ids.include?(id) }
-        User.find_by(id: user_id)
-      end
-
       def existing_topic(request_id)
         topic_id = Discourse.redis.get(topic_key(request_id))
         topic_id ||=
@@ -102,9 +97,10 @@ module DiscourseAi
         nil
       end
 
-      def create_conversation(result, bot_user, question, request_id)
+      def create_conversation(result, route, question, request_id)
         query = result.fetch("query")
         topic = nil
+        question_post = nil
 
         Post.transaction do
           title =
@@ -118,11 +114,12 @@ module DiscourseAi
               title:,
               raw: neutralize_mentions(query),
               archetype: Archetype.private_message,
-              target_usernames: bot_user.username,
               private_message_context: DiscourseAi::AiBot::PERSONAL_MESSAGE_CONTEXT,
+              target_usernames: route.speaker.username,
               topic_opts: {
                 custom_fields: {
-                  DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => @follow_up_agent.id,
+                  DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD => route.agent_id,
+                  DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD => route.llm_model_id,
                   TOPIC_REQUEST_ID_FIELD => request_token(request_id),
                 },
               },
@@ -134,23 +131,44 @@ module DiscourseAi
           topic = query_post.topic
 
           PostCreator.create!(
-            bot_user,
+            route.speaker,
             topic_id: topic.id,
             raw: model_turn(result),
             custom_fields: {
-              DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => @follow_up_agent.id,
+              DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD => @discovery_agent.id,
             },
             skip_validations: true,
           )
 
           if question.present?
-            PostCreator.create!(
-              @user,
-              topic_id: topic.id,
-              raw: neutralize_mentions(question),
-              skip_validations: true,
-            )
+            question_post =
+              PostCreator.create!(
+                @user,
+                topic_id: topic.id,
+                raw: neutralize_mentions(question),
+                custom_fields: {
+                  DiscourseAi::AiBot::Playground::BYPASS_AI_REPLY_CUSTOM_FIELD => true,
+                },
+                skip_validations: true,
+              )
           end
+        end
+
+        if question_post
+          bot =
+            DiscourseAi::Agents::Bot.as(
+              route.speaker,
+              agent: route.agent_class.new,
+              model: route.model,
+            )
+          question_post.custom_fields.delete(
+            DiscourseAi::AiBot::Playground::BYPASS_AI_REPLY_CUSTOM_FIELD,
+          )
+          question_post.save_custom_fields
+          DiscourseAi::AiBot::Playground.new(bot).update_playground_with(
+            question_post,
+            authorization_user: @user,
+          )
         end
 
         topic

@@ -7,7 +7,7 @@ import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiRetryStreamingButton from "../components/post-menu/ai-retry-streaming-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
-import { isGPTBot } from "../lib/ai-bot-helper";
+import { isGPTBot, isPostFromAiBot } from "../lib/ai-bot-helper";
 import {
   cleanupStreamingData,
   streamPostText,
@@ -183,7 +183,7 @@ function initializeAIBotReplies(api) {
 }
 
 function initializeAgentDecorator(api) {
-  api.renderAfterWrapperOutlet("post-meta-data-poster-name", AiAgentFlair);
+  api.renderInOutlet("post-meta-data-poster-name", AiAgentFlair);
 }
 
 function initializePauseButton(api) {
@@ -191,7 +191,7 @@ function initializePauseButton(api) {
   api.registerValueTransformer(
     "post-menu-buttons",
     ({ value: dag, context: { post, firstButtonKey } }) => {
-      if (isGPTBot(post.user)) {
+      if (isPostFromAiBot(post, api.getCurrentUser())) {
         dag.add("ai-cancel-gpt", AiCancelStreamingButton, {
           before: firstButtonKey,
           after: ["ai-share", "ai-debug"],
@@ -229,7 +229,7 @@ function initializeRetryButton(api) {
 
 function initializeDebugButton(api) {
   const currentUser = api.getCurrentUser();
-  if (!currentUser || !currentUser.ai_enabled_chat_bots || !allowDebug) {
+  if (!currentUser || !currentUser.ai_enabled_agents || !allowDebug) {
     return;
   }
 
@@ -248,7 +248,7 @@ function initializeDebugButton(api) {
 
 function initializeShareButton(api) {
   const currentUser = api.getCurrentUser();
-  if (!currentUser || !currentUser.ai_enabled_chat_bots) {
+  if (!currentUser || !currentUser.ai_enabled_agents) {
     return;
   }
 
@@ -280,24 +280,49 @@ function initializeFooterButtonsVisibility(api) {
   );
 }
 
+function initializeChatModelAttribution(api) {
+  if (!api.decorateChatMessage) {
+    return;
+  }
+
+  api.decorateChatMessage((element, _helper, message) => {
+    if (
+      !message?.ai_llm_name ||
+      element.querySelector(".ai-chat-message__model")
+    ) {
+      return;
+    }
+
+    const label = document.createElement("span");
+    label.classList.add("ai-chat-message__model");
+    label.textContent = message.ai_llm_name;
+    element.append(label);
+  });
+}
+
 export default {
   name: "discourse-ai-bot-replies",
 
   initialize(container) {
     const user = container.lookup("service:current-user");
 
-    if (user?.ai_enabled_chat_bots) {
-      allowDebug = user.can_debug_ai_bot_conversations;
+    withPluginApi((api) => {
+      initializeAgentDecorator(api);
 
-      withPluginApi((api) => {
-        attachHeaderIcon(api);
-        initializeAIBotReplies(api);
-        initializeAgentDecorator(api);
-        initializeDebugButton(api, container);
-        initializeShareButton(api, container);
-        initializeFooterButtonsVisibility(api);
-        initializeRetryButton(api);
-      });
-    }
+      if (!user?.ai_enabled_agents) {
+        return;
+      }
+
+      allowDebug = user.can_debug_ai_bot_conversations;
+      api.serializeOnCreate("ai_agent_id", "aiAgentId");
+      api.serializeOnCreate("ai_llm_model_id", "aiLlmModelId");
+      attachHeaderIcon(api);
+      initializeAIBotReplies(api);
+      initializeChatModelAttribution(api);
+      initializeDebugButton(api, container);
+      initializeShareButton(api, container);
+      initializeFooterButtonsVisibility(api);
+      initializeRetryButton(api);
+    });
   },
 };

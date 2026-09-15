@@ -303,6 +303,7 @@ en:
       change_description: "Change Description"
       copied: "Copied to clipboard"
     unknown_model: "Unknown AI model"
+    multiple_models: "Multiple models"
 
     discourse_workflows:
       ai_agent:
@@ -493,8 +494,25 @@ en:
       ai_users: "AI users"
       ai_users_bio: "Automatic group of AI bot accounts"
       errors:
-        invalid_agent_id: "The specified AI agent does not exist or you do not have access to it"
+        agent_required: "Select an AI agent before sending your message"
+        agent_recipient_mismatch: "The selected AI agent does not match the conversation recipient"
+        agent_unavailable: "The selected AI agent is no longer available"
+        ambiguous_agent: "The conversation recipient matches more than one AI agent"
+        ambiguous_model: "Select a model to continue this conversation"
+        bot_disabled: "AI bot conversations are disabled"
+        bot_not_allowed: "You are not allowed to use AI bot conversations"
         cannot_send_pm_to_agent: "You cannot send personal messages to this AI agent"
+        cannot_send_pm_to_model: "Language models cannot be personal message recipients. Select an AI agent instead."
+        invalid_agent_id: "The specified AI agent does not exist or you do not have access to it"
+        invalid_agent_modality: "The selected AI agent cannot be used in this conversation"
+        invalid_model_id: "The specified AI model is invalid"
+        model_conflicts_with_agent: "This AI agent is locked to a different model"
+        model_not_selectable: "The selected AI model is not available"
+        model_recipient_api_retired: "Models no longer have usernames. Select an AI agent as the conversation recipient."
+        model_unavailable: "The selected AI model is no longer available"
+        no_model_available: "No language model is configured for this AI agent"
+        no_user_for_agent: "The selected AI agent has no conversation user"
+        target_unavailable: "You can no longer reply in this conversation"
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
@@ -1237,6 +1255,7 @@ en:
         agent_user_required: "The Discord search agent must have an associated user before Discord agent mode can be enabled."
 
     llm:
+      user_association_is_legacy_only: "can only be retained or cleared for an existing model"
       configuration:
         create_llm: "You need to setup an LLM before enabling this feature"
         disable_modules_first: "You must disable these modules first: %{settings}"

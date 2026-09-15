@@ -3,7 +3,10 @@
 RSpec.describe "AI Bot conversation sidebar share" do
   fab!(:admin) { Fabricate(:admin, username: "ai_sharer") }
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model("gpt-4") }
+  fab!(:agent) do
+    Fabricate(:ai_agent, name: "Sidebar Agent", default_llm: gpt_4).tap(&:ensure_user!)
+  end
+  let(:bot_user) { agent.user }
 
   let(:pm) do
     Fabricate(
@@ -29,7 +32,9 @@ RSpec.describe "AI Bot conversation sidebar share" do
     Group.refresh_automatic_groups!
 
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
-    pm.save!
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_AGENT_ID_FIELD] = agent.id
+    pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_LLM_MODEL_ID_FIELD] = gpt_4.id
+    pm.save_custom_fields
     Fabricate(:post, topic: pm, user: admin, raw: "How do I do stuff?")
     Fabricate(:post, topic: pm, user: bot_user, raw: "Here is how you do stuff")
 
