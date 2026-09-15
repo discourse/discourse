@@ -14,6 +14,13 @@ module DiscourseMcp
             .includes(:topic)
             .order(id: :desc)
             .limit(limit)
+        if !request_context.has_scopes?("mcp:private-messages:read")
+          notifications =
+            notifications.left_joins(:topic).where(
+              "topics.id IS NULL OR topics.archetype <> ?",
+              Archetype.private_message,
+            )
+        end
         notifications =
           Notification.filter_inaccessible_topic_notifications(
             request_context.guardian,

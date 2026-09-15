@@ -300,6 +300,26 @@ describe "MCP content access" do
     )
   end
 
+  it "filters private-message notifications before the limit unless the read scope is granted" do
+    public_notification = Fabricate(:notification, user:)
+    other_notification = Fabricate(:notification, user:, topic: nil)
+    private_notification = Fabricate(:private_message_notification, user:, topic: message.topic)
+    authorize
+
+    call_tool("discourse_notification_list", { limit: 2 })
+
+    expect(response.status).to eq(200)
+    notifications = response.parsed_body.dig("result", "structuredContent", "notifications")
+    expect(notifications.pluck("id")).to eq([other_notification.id, public_notification.id])
+
+    authorize("mcp:private-messages:read")
+    call_tool("discourse_notification_list", { limit: 2 })
+
+    expect(response.status).to eq(200)
+    notifications = response.parsed_body.dig("result", "structuredContent", "notifications")
+    expect(notifications.pluck("id")).to eq([private_notification.id, other_notification.id])
+  end
+
   it "filters hidden private-message posts when category moderation is enabled" do
     SiteSetting.enable_category_group_moderation = true
     authorize("mcp:private-messages:read")
