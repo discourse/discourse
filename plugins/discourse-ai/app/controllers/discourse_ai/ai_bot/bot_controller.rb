@@ -62,6 +62,7 @@ module DiscourseAi
           post_id: prompt_post.id,
           bot_user_id: post.user_id,
           persona_id: persona_id,
+          visibility_user_id: current_user.id,
           reply_post_id: post.id,
         }
 

@@ -91,22 +91,34 @@ module DiscourseAi
         )
       end
 
-      def self.messages_from_post(post, style: nil, max_posts:, bot_usernames:, include_uploads:)
+      def self.messages_from_post(
+        post,
+        style: nil,
+        max_posts:,
+        bot_usernames:,
+        include_uploads:,
+        guardian: post.user.guardian
+      )
         # Pay attention to the `post_number <= ?` here.
         # We want to inject the last post as context because they are translated differently.
 
         post_types = [Post.types[:regular]]
         post_types << Post.types[:whisper] if post.post_type == Post.types[:whisper]
 
-        context =
+        context_query =
           post
             .topic
             .posts
+            .joins(:topic)
             .joins(:user)
             .joins("LEFT JOIN post_custom_prompts ON post_custom_prompts.post_id = posts.id")
             .where("post_number <= ?", post.post_number)
-            .order("post_number desc")
             .where("post_type in (?)", post_types)
+
+        context =
+          guardian
+            .filter_hidden_posts(context_query, category: post.topic.category)
+            .order("post_number desc")
             .limit(max_posts)
             .pluck(
               "posts.raw",
@@ -131,7 +143,12 @@ module DiscourseAi
               # Tool syntax requires a tool_call_id which we don't have.
               if message[2] != "function"
                 custom_context = {
-                  content: message[0],
+                  content:
+                    filtered_custom_prompt_content(
+                      message[0],
+                      include_uploads: include_uploads,
+                      guardian: guardian,
+                    ),
                   type: message[2].present? ? message[2].to_sym : :model,
                 }
 
@@ -155,7 +172,9 @@ module DiscourseAi
 
             context[:id] = username if context[:type] == :user
 
-            context[:upload_ids] = upload_ids.compact if upload_ids.present? && include_uploads
+            if upload_ids.present? && include_uploads
+              context[:upload_ids] = filtered_upload_ids(upload_ids, guardian)
+            end
             context[:created_at] = created_at
 
             builder.push(**context)
@@ -163,6 +182,38 @@ module DiscourseAi
         end
 
         builder.to_a(style: style || (post.topic.private_message? ? :bot : :topic))
+      end
+
+      def self.filtered_custom_prompt_content(content, include_uploads:, guardian:)
+        return content if !content.is_a?(Array)
+
+        upload_ids =
+          content.filter_map { |part| part[:upload_id] || part["upload_id"] if part.is_a?(Hash) }
+        allowed_upload_ids = include_uploads ? filtered_upload_ids(upload_ids, guardian) : []
+
+        content.reject do |part|
+          part.is_a?(Hash) && (upload_id = part[:upload_id] || part["upload_id"]) &&
+            !allowed_upload_ids.include?(upload_id.to_i)
+        end
+      end
+
+      def self.filtered_upload_ids(upload_ids, guardian)
+        upload_ids = Array(upload_ids).compact.map(&:to_i)
+        uploads_by_id =
+          Post.unscoped do
+            Upload.where(id: upload_ids).includes(:access_control_post).index_by(&:id)
+          end
+
+        upload_ids.select do |upload_id|
+          upload = uploads_by_id[upload_id]
+          upload && upload_allowed_for_prompt?(upload, guardian)
+        end
+      end
+
+      def self.upload_allowed_for_prompt?(upload, guardian)
+        return !upload.secure? if upload.access_control_post_id.blank?
+
+        guardian.can_see?(upload.access_control_post)
       end
 
       def initialize

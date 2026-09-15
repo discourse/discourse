@@ -11,6 +11,14 @@ module Jobs
       return if args[:reply_post_id].present? && reply_post.nil?
       return if reply_post && reply_post.topic_id != post.topic_id
       persona_id = args[:persona_id]
+      visibility_user =
+        if args.key?(:visibility_user_id)
+          User.find_by(id: args[:visibility_user_id])
+        else
+          post.user
+        end
+      return if visibility_user.nil?
+
       llm_model_id = args[:llm_model_id]
 
       begin
@@ -24,6 +32,7 @@ module Jobs
           post,
           feature_name: "bot",
           existing_reply_post: reply_post,
+          visibility_user: visibility_user,
         )
       rescue DiscourseAi::Personas::Bot::BOT_NOT_FOUND
         Rails.logger.warn(
