@@ -167,11 +167,7 @@ module(
       this.siteSettings.assign_enabled = false;
       await render(
         <template>
-          <BoardsCard
-            @board={{this.board}}
-            @canWrite={{this.board.can_write}}
-            @card={{this.card}}
-          />
+          <BoardsCard @board={{this.board}} @card={{this.card}} />
         </template>
       );
       assert.dom(".discourse-boards-card__assign-btn").doesNotExist();
@@ -181,11 +177,7 @@ module(
       this.card.card_type = "floater";
       await render(
         <template>
-          <BoardsCard
-            @board={{this.board}}
-            @canWrite={{this.board.can_write}}
-            @card={{this.card}}
-          />
+          <BoardsCard @board={{this.board}} @card={{this.card}} />
         </template>
       );
       assert.dom(".discourse-boards-card__assign-btn").exists();
@@ -199,14 +191,25 @@ module(
 
       await render(
         <template>
-          <BoardsCard
-            @board={{this.board}}
-            @canWrite={{this.board.can_write}}
-            @card={{this.card}}
-          />
+          <BoardsCard @board={{this.board}} @card={{this.card}} />
         </template>
       );
       assert.dom(".discourse-boards-card__assign-btn").exists();
+    });
+
+    test("does not offer assignment on an archived board", async function (assert) {
+      this.board.archived = true;
+      this.card = this.fabricators.card({
+        topic: { id: 42, title: "Archived work" },
+      });
+      await render(
+        <template>
+          <BoardsCard @board={{this.board}} @card={{this.card}} />
+        </template>
+      );
+      assert
+        .dom(".discourse-boards-card__assign-btn")
+        .doesNotExist("archived topic cards cannot be assigned");
     });
 
     test("does not render assignment for a closed topic card", async function (assert) {
@@ -218,11 +221,7 @@ module(
       topic.closed = true;
       await render(
         <template>
-          <BoardsCard
-            @board={{this.board}}
-            @canWrite={{this.board.can_write}}
-            @card={{this.card}}
-          />
+          <BoardsCard @board={{this.board}} @card={{this.card}} />
         </template>
       );
       assert.dom(".discourse-boards-card__assign-btn").doesNotExist();

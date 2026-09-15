@@ -39,6 +39,7 @@ zh_CN:
         ai: "使用 AI 生成"
       or: "或者"
       admins_only: "数据资源管理器仅供管理员使用。"
+      hidden_relation: "您无权访问此内容。"
       allow_groups: "允许群组访问此查询"
       title: "数据资源管理器"
       create: "创建"

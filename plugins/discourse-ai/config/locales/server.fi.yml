@@ -241,6 +241,25 @@ fi:
       configuration_missing: "Tekoälyroskapostihavaitsemisen määritys puuttuu. Lisää määritys kohdassa Ylläpito > Lisäosat > Discourse AI > Roskaposti ennen käyttöönottoa."
       logging_subject: "Roskapostin havaitseminen"
     ai_bot:
+      navigation:
+        settings:
+          title: "Sivustoasetukset"
+        users:
+          title: "Käyttäjiä"
+        groups:
+          title: "Ryhmät"
+        review:
+          title: "Tarkastusjono"
+        categories:
+          title: "Kategoriat"
+        tags:
+          title: "Tunnisteet"
+        themes:
+          title: "Teemat"
+        authentication:
+          title: "Kirjautuminen ja todennus"
+        backups:
+          title: "Varmuuskopiot"
       reply_error: "Näyttää siltä, että järjestelmässä tapahtui odottamaton ongelma, kun se yritti vastata.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
       read_post:

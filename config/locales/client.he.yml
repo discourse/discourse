@@ -387,6 +387,7 @@ he:
     notifications_tracking:
       tooltip: "רמת התראה: %{level}"
     back_button: "חזרה"
+    confirm_button: "אישור"
     welcome_banner:
       header:
         new_members: "ברוך בואך, %{preferred_display_name}!"
@@ -5066,6 +5067,7 @@ he:
       with_category: "%{filter} %{category} נושאים"
       filter:
         title: "תוצאות מסוננות עבור %{filter}"
+        reset: "אתחול"
         button:
           label: "סינון"
       latest:

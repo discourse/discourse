@@ -560,6 +560,7 @@ sk:
       direct_messages:
         title: "DMs"
         aria_label: "Prepnúť na priame správy"
+        new_group: "Nový skupinový chat"
         create: "Choď"
         leave: "Opustiť kanál"
         close: "Zatvoriť kanál"

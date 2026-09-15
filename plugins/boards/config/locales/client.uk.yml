@@ -9,6 +9,10 @@ uk:
     boards:
       filter_boards: "Фільтрувальні дошки"
       filter_boards_no_results: "Немає дощок, що відповідають вашому пошуку"
+      status:
+        all: "Всі"
+        open: "Відкрити"
+        archived: "Архівовано"
       topic_footer:
         add_to_board: "Додати до дошки"
         already_added: "Вже додано"

@@ -7,6 +7,9 @@
 da:
   js:
     boards:
+      status:
+        all: "Alle"
+        open: "Åbn"
       board:
         remove_card: "Fjern"
         new_topic: "Nyt emne..."

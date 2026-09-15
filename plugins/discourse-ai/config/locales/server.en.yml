@@ -311,6 +311,14 @@ en:
           locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+          uploads_not_sent: "Agent '%{agent}' did not receive every upload"
+          upload_not_found: "Upload %{upload_id} was not found"
+          upload_not_visible: "%{username} cannot see upload %{upload_id}"
+          agent_cannot_see_images: "Upload %{upload_id} is an image and agent '%{agent}' has vision disabled"
+          llm_cannot_see_images: "Upload %{upload_id} is an image and LLM '%{llm}' has vision disabled"
+          llm_cannot_read_documents: "Upload %{upload_id} is a document and LLM '%{llm}' accepts no attachments"
+          unsupported_image_format: "Upload %{upload_id} is not a supported image format (%{formats})"
+          upload_skipped: "Upload %{upload_id} (%{filename}) was not sent: %{message}"
 
     tools:
       custom_name: "%{name} (custom)"
@@ -448,6 +456,40 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      search_discourse_navigation:
+        not_allowed: "You are not allowed to search administration destinations."
+        invalid_query: "Enter a search query between 1 and %{max} characters."
+      navigation:
+        settings:
+          title: "Site settings"
+          description: "Search and change all site configuration settings."
+        users:
+          title: "Users"
+          description: "Find and manage member accounts and user permissions."
+        groups:
+          title: "Groups"
+          description: "Manage groups and group membership."
+        review:
+          title: "Review queue"
+          description: "Moderate flagged posts and approve pending users and content."
+        invites:
+          title: "Create an invite"
+          description: "Invite people to join this community."
+        categories:
+          title: "Categories"
+          description: "Browse, create, and manage discussion categories."
+        tags:
+          title: "Tags"
+          description: "Browse and manage topic tags."
+        themes:
+          title: "Themes"
+          description: "Install and customize themes to change the site's appearance and design."
+        authentication:
+          title: "Login and authentication"
+          description: "Configure login, signup, authentication, and single sign-on."
+        backups:
+          title: "Backups"
+          description: "Create, download, and restore site backups."
       ai_users: "AI users"
       ai_users_bio: "Automatic group of AI bot accounts"
       errors:
@@ -456,7 +498,7 @@ en:
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
-      tool_pending_approval: "This action requires moderator approval before it can be executed."
+      tool_pending_approval: "This action requires approval:"
       spawn_agent:
         description: "Delegate a self-contained prompt to one of the allowed agents and return its response"
         prompt_description: "The complete self-contained prompt sent to the selected agent and shown in the thinking block"
@@ -761,6 +803,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        search_discourse_navigation: "Searching site navigation"
         read_site_setting: "Read site setting"
         change_site_setting: "Change site setting"
         dall_e: "Generate image"
@@ -822,6 +865,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        search_discourse_navigation: "Find verified links to available pages on this site"
         read_site_setting: "Read the current value of a site setting"
         change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
@@ -904,6 +948,9 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        search_discourse_navigation:
+          one: "Found %{count} destination"
+          other: "Found %{count} destinations"
         read_site_setting: "Reading site setting %{setting_name}"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:

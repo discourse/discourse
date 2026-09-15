@@ -95,11 +95,9 @@ hu:
           raw_invitees_length: "Egy esemény %{count} felhasználóra/csoportra korlátozódik."
           raw_invitees:
             only_group: "Egy esemény csak csoportneveket fogad el."
-          ends_at_before_starts_at: "Egy esemény nem érhet véget, mielőtt elkezdődne."
           max_attendees_reached: "Ez az esemény megtelt."
           start_must_be_present_and_a_valid_date: "Az eseményhez érvényes kezdési dátum szükséges."
           end_must_be_a_valid_date: "A befejezés dátumának érvényes dátumnak kell lennie."
-          invalid_recurrence: "Az ismétlődés a következők egyike kell, hogy legyen: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
           invalid_timezone: "Ismeretlen időzóna"
           acting_user_not_allowed_to_create_event: "A jelenlegi felhasználó nem hozhat létre eseményeket."
           acting_user_not_allowed_to_act_on_this_event: "A jelenlegi felhasználó nem tehet semmit ennél az eseménynél."

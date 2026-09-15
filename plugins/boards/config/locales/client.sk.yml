@@ -7,6 +7,10 @@
 sk:
   js:
     boards:
+      status:
+        all: "Všetky"
+        open: "Zahájiť"
+        archived: "Archivované"
       board:
         remove_card: "Odstrániť"
         new_topic: "Nová téma..."

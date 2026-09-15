@@ -320,6 +320,7 @@ pt:
       message: "Nós atualizámos este site, <span>por favor, recarregue-o</span> para manter as coisas a funcionar sem problemas."
       dismiss: "Ignorar"
     back_button: "Anterior"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "Bem-vindo(a), %{preferred_display_name}!"
@@ -4170,6 +4171,7 @@ pt:
       with_topics: "%{filter} tópicos"
       with_category: "%{filter} %{category} tópicos"
       filter:
+        reset: "repor"
         button:
           label: "Filtrar"
       latest:

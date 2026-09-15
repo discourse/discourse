@@ -439,6 +439,27 @@ uk:
       configuration_missing: "Конфігурація виявлення спаму AI відсутня. Додайте конфігурацію в розділі «Адміністратор > Плагіни > Discourse AI > Спам» перед увімкненням."
       logging_subject: "Виявлення спаму"
     ai_bot:
+      search_discourse_navigation:
+        invalid_query: "Введіть пошуковий запит довжиною від 1 до %{max} символів."
+      navigation:
+        settings:
+          title: "Налаштування сайту"
+        users:
+          title: "Користувачі"
+        groups:
+          title: "Групи"
+        review:
+          title: "Премодерація"
+        categories:
+          title: "Розділи"
+        tags:
+          title: "Теґи"
+        themes:
+          title: "Стилі"
+        authentication:
+          title: "Вхід і аутентифікація"
+        backups:
+          title: "Резервні копії"
       ai_users: "Користувачі штучного інтелекту"
       errors:
         invalid_agent_id: "Вказаний агент штучного інтелекту не існує, або у вас немає до нього доступу"

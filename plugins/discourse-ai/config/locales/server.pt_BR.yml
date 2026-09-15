@@ -309,6 +309,25 @@ pt_BR:
       configuration_missing: "Não foi encontrada a configuração de detecção de spam de IA. Adicione a configuração em \"Administração > Plugins > Discourse AI > Spam\" antes de ativar."
       logging_subject: "Detecção de spam"
     ai_bot:
+      navigation:
+        settings:
+          title: "Configurações do site"
+        users:
+          title: "Usuários(as)"
+        groups:
+          title: "Grupos"
+        review:
+          title: "Fila de revisão"
+        categories:
+          title: "Categorias"
+        tags:
+          title: "Tags"
+        themes:
+          title: "Temas"
+        authentication:
+          title: "Acesso e autenticação"
+        backups:
+          title: "Backups"
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
       thinking: "Pensando"

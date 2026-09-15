@@ -61,7 +61,7 @@ after_initialize do
   add_to_serializer(:current_user, :can_manage_boards) { scope.can_manage_boards? }
 
   add_to_serializer(:current_user, :can_edit_any_boards) do
-    scope.target_ids_with_any_acl_permissions(Boards::Board, %w[edit manage]).any?
+    Boards::Board.open.with_any_acl_permissions(scope, %w[edit manage]).exists?
   end
 
   add_to_class(:topic, :board_cards_map) { @board_cards_map }

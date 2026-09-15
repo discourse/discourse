@@ -246,8 +246,8 @@
   }
 
   ins,
-  .diff-ins,
   del,
+  .diff-ins,
   .diff-del {
     color: var(--primary);
 
@@ -262,6 +262,11 @@
 
     a {
       text-decoration: none;
+    }
+
+    > .title,
+    > blockquote {
+      background: transparent;
     }
   }
 

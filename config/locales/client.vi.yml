@@ -304,6 +304,7 @@ vi:
       message: "Chúng tôi đã cập nhật trang này, <span>vui lòng tải lại trang</span> để cho mọi thứ hoạt động ổn định."
       dismiss: "Hủy bỏ"
     back_button: "Quay lại"
+    confirm_button: "Xác nhận"
     welcome_banner:
       header:
         new_members: "Chào mừng, %{preferred_display_name}!"
@@ -4482,6 +4483,7 @@ vi:
       with_category: "%{filter} %{category} chủ đề"
       filter:
         title: "Kết quả đã lọc cho %{filter}"
+        reset: "trạng thái đầu"
         button:
           label: "Lọc"
       latest:

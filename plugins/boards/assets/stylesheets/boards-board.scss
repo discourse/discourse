@@ -503,7 +503,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   }
 
   &[draggable="false"] {
-    cursor: default;
+    cursor: not-allowed;
   }
 
   &--dragging {

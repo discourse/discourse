@@ -430,7 +430,29 @@ zh_CN:
       configuration_missing: "缺少 AI 垃圾信息检测配置。请先在“管理 > 插件 > Discourse AI > 垃圾信息”中添加配置，然后再启用。"
       logging_subject: "垃圾信息检测"
     ai_bot:
+      search_discourse_navigation:
+        invalid_query: "输入 1 到 %{max} 个字符之间的搜索查询。"
+      navigation:
+        settings:
+          title: "站点设置"
+        users:
+          title: "用户"
+        groups:
+          title: "群组"
+        review:
+          title: "审核队列"
+        categories:
+          title: "类别"
+        tags:
+          title: "标签"
+        themes:
+          title: "主题"
+        authentication:
+          title: "登录和身份验证"
+        backups:
+          title: "备份"
       ai_users: "AI 用户"
+      ai_users_bio: "自动分组人工智能机器人账户"
       errors:
         invalid_agent_id: "指定的 AI 智能体不存在，或者您没有访问权限。"
         cannot_send_pm_to_agent: "您无法向该 AI 智能体发送个人信息"

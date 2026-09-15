@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
@@ -7,6 +9,8 @@ import bodyClass from "discourse/helpers/body-class";
 import { bind } from "discourse/lib/decorators";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class DiscoveryFilterNavigation extends Component {
   @service site;
@@ -21,6 +25,10 @@ export default class DiscoveryFilterNavigation extends Component {
     );
 
     return this.args.canBulkSelect && (this.site.mobileView || enableOnDesktop);
+  }
+
+  get queryLabel() {
+    return this.args.queryLabel?.trim();
   }
 
   @bind
@@ -43,11 +51,27 @@ export default class DiscoveryFilterNavigation extends Component {
           </div>
         {{/if}}
 
-        <FilterNavigationMenu
-          @initialInputValue={{this.filterQueryString}}
-          @onChange={{this.updateQueryString}}
-          @tips={{@tips}}
-        />
+        {{#if this.queryLabel}}
+          <LinkTo
+            class="topic-query-filter__query"
+            @query={{hash q="" query_label=""}}
+            @route="discovery.filter"
+          >
+            {{dIcon "filter" class="topic-query-filter__icon"}}
+            <span class="topic-query-filter__query-text">
+              {{i18n "filters.filter.results_for" query=this.queryLabel}}
+            </span>
+            <span class="topic-query-filter__reset">
+              {{i18n "filters.filter.reset"}}
+            </span>
+          </LinkTo>
+        {{else}}
+          <FilterNavigationMenu
+            @initialInputValue={{this.filterQueryString}}
+            @onChange={{this.updateQueryString}}
+            @tips={{@tips}}
+          />
+        {{/if}}
 
         <PluginOutlet @name="after-filter-navigation-menu" />
       </div>

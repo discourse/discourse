@@ -155,7 +155,7 @@ RSpec.describe ApplicationController do
 
     it "redirects to the sole authenticator when local logins are disabled" do
       # Local logins and google enabled, show login UI
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
@@ -166,7 +166,7 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/auth/google_oauth2")
 
       # Google and GitHub enabled, direct to login UI
-      SiteSetting.enable_github_logins = true
+      enable_auth_provider(:github)
       get "/"
       expect(response).not_to redirect_to("/login")
       expect(response.status).to eq(200)
@@ -185,7 +185,7 @@ RSpec.describe ApplicationController do
 
     it "does not redirect to the authenticator when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
-      SiteSetting.enable_google_oauth2_logins = true
+      enable_auth_provider(:google_oauth2)
       SiteSetting.enable_local_logins = false
 
       get "/"
@@ -215,7 +215,7 @@ RSpec.describe ApplicationController do
 
       it "does not redirect to the authenticator during registration" do
         SiteSetting.enable_local_logins = false
-        SiteSetting.enable_google_oauth2_logins = true
+        enable_auth_provider(:google_oauth2)
 
         get "/"
         expect(response).to redirect_to("/auth/google_oauth2")

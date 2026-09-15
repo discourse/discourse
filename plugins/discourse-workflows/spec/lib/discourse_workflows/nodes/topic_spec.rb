@@ -438,6 +438,18 @@ RSpec.describe DiscourseWorkflows::Nodes::Topic::V1 do
         )
       end
 
+      it "raises when the query contains a fragment it cannot parse" do
+        expect {
+          execute_list(
+            configuration: {
+              "operation" => "list",
+              "query" => "status:nonsense",
+              "limit" => "10",
+            },
+          )
+        }.to raise_error(DiscourseWorkflows::NodeError, "Invalid topic filter: status:nonsense.")
+      end
+
       it "returns topics when query is not provided" do
         result = execute_list(configuration: { "operation" => "list", "limit" => "10" })
 

@@ -2973,6 +2973,18 @@ RSpec.describe TopicsController do
             expect(topic.reload.tags).to include(tag1)
           end
 
+          it "does not reveal a hidden current tag when a category change is rejected" do
+            hidden_tag = Fabricate(:tag)
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+            topic.update!(tags: [hidden_tag])
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: restricted_category.id }
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"].first).not_to include(hidden_tag.name)
+          end
+
           it "allows category change when topic has a read-only tag" do
             Fabricate(
               :tag_group,

@@ -357,6 +357,7 @@ pt_BR:
     notifications_tracking:
       tooltip: "Nível de notificação: %{level}"
     back_button: "Voltar"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         new_members: "Bem-vindo(a), %{preferred_display_name}"
@@ -4866,6 +4867,7 @@ pt_BR:
       with_category: "%{filter} %{category} tópicos"
       filter:
         title: "Resultados filtrados para %{filter}"
+        reset: "redefinir"
         button:
           label: "Filtro"
       latest:
