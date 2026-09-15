@@ -221,6 +221,7 @@ module JsLocaleHelper
           throw new Error("globalThis.moment not defined. Failed to initialize locales.")
         }
         #{moment_locale(locale_str)}
+        #{moment_ascii_digits}
         #{moment_locale(locale_str, timezone_names: true)}
         #{moment_formats}
       }
@@ -327,6 +328,16 @@ module JsLocaleHelper
   def self.moment_format_function(name)
     format = I18n.t("dates.#{name}")
     "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
+  end
+
+  # Some locales format dates with native-script digits, which breaks dates
+  # sent in URLs, request params and input values.
+  def self.moment_ascii_digits
+    <<~JS
+      if (moment.localeData().postformat("0") !== "0") {
+        moment.updateLocale(moment.locale(), { postformat: (string) => string });
+      }
+    JS
   end
 
   def self.moment_locale(locale, timezone_names: false)
