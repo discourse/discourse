@@ -120,6 +120,7 @@ module DiscourseAi
 
       def self.messages_from_post(
         post,
+        guardian: post.user.guardian,
         style: nil,
         max_posts:,
         context_token_budget: nil,
@@ -143,15 +144,20 @@ module DiscourseAi
         post_types = [Post.types[:regular]]
         post_types << Post.types[:whisper] if post.post_type == Post.types[:whisper]
 
-        context =
+        context_query =
           post
             .topic
             .posts
+            .joins(:topic)
             .joins(:user)
             .joins("LEFT JOIN post_custom_prompts ON post_custom_prompts.post_id = posts.id")
             .where("post_number <= ?", post.post_number)
-            .order("post_number desc")
             .where("post_type in (?)", post_types)
+
+        context =
+          guardian
+            .filter_hidden_posts(context_query, category: post.topic.category)
+            .order("post_number desc")
             .limit(max_posts)
             .pluck(
               "posts.raw",
@@ -168,7 +174,6 @@ module DiscourseAi
 
         builder = new
         builder.topic = post.topic
-        guardian = Guardian.new(post.user)
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
           filtered_upload_ids =
@@ -188,7 +193,14 @@ module DiscourseAi
               # Tool syntax requires a tool_call_id which we don't have.
               if message[2] != "function"
                 custom_context = {
-                  content: message[0],
+                  content:
+                    filtered_custom_prompt_content(
+                      message[0],
+                      include_image_uploads: include_image_uploads,
+                      include_document_uploads: include_document_uploads,
+                      allowed_attachment_types: allowed_attachment_types,
+                      guardian: guardian,
+                    ),
                   type: message[2].present? ? message[2].to_sym : :model,
                 }
 
@@ -278,6 +290,32 @@ module DiscourseAi
         include_document_uploads = include_uploads if include_document_uploads.nil?
 
         [!!include_image_uploads, !!include_document_uploads]
+      end
+
+      def self.filtered_custom_prompt_content(
+        content,
+        include_image_uploads:,
+        include_document_uploads:,
+        guardian:,
+        allowed_attachment_types: nil
+      )
+        return content if !content.is_a?(Array)
+
+        upload_ids =
+          content.filter_map { |part| part[:upload_id] || part["upload_id"] if part.is_a?(Hash) }
+        allowed_upload_ids =
+          filtered_upload_ids_for_prompt(
+            upload_ids,
+            include_image_uploads: include_image_uploads,
+            include_document_uploads: include_document_uploads,
+            allowed_attachment_types: allowed_attachment_types,
+            guardian: guardian,
+          ) || []
+
+        content.reject do |part|
+          part.is_a?(Hash) && (upload_id = part[:upload_id] || part["upload_id"]) &&
+            !allowed_upload_ids.include?(upload_id.to_i)
+        end
       end
 
       def self.filtered_upload_ids_for_prompt(
