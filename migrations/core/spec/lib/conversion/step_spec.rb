@@ -243,6 +243,12 @@ RSpec.describe Migrations::Conversion::Step do
       expect { step_class.processor_class.new.process(1) }.to raise_error(NotImplementedError)
     end
 
+    it "raises `NotImplementedError` when `process_batch` is not defined" do
+      expect { step_class.processor_class.new.process_batch([1]) }.to raise_error(
+        NotImplementedError,
+      )
+    end
+
     it "uses a no-op as default `setup`" do
       expect { step_class.processor_class.new.setup }.not_to raise_error
     end
@@ -444,6 +450,38 @@ RSpec.describe Migrations::Conversion::Step do
       expect(source.items).to eq([1])
       expect(source.max_progress).to eq(1)
       expect(step_class.processor_class.new.process(1)).to eq(2)
+    end
+  end
+
+  describe "batch_size" do
+    it "defaults to no batching" do
+      processor_class = define_step.processor_class
+
+      expect(processor_class.batch_size).to be_nil
+      expect(processor_class.batched?).to be(false)
+    end
+
+    it "reads back the declared size" do
+      processor_class = define_step { processor { batch_size 64 } }.processor_class
+
+      expect(processor_class.batch_size).to eq(64)
+      expect(processor_class.batched?).to be(true)
+    end
+
+    it "rejects a size that isn't a positive integer" do
+      expect { define_step { processor { batch_size 0 } }.processor_class }.to raise_error(
+        ArgumentError,
+        /`batch_size` must be a positive integer/,
+      )
+      expect { define_step { processor { batch_size "64" } }.processor_class }.to raise_error(
+        ArgumentError,
+      )
+    end
+
+    it "keeps the declaration on the step that made it" do
+      define_step { processor { batch_size 64 } }
+
+      expect(define_step.processor_class.batch_size).to be_nil
     end
   end
 

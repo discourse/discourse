@@ -70,15 +70,16 @@ module Migrations
 
       def process_items(source, processor)
         tracker = processor.tracker
+        batched = processor.class.batched?
         progress = warnings = errors = 0
 
-        source.items.each do |item|
+        units(source, processor).each do |unit|
           tracker.reset_stats!
 
-          begin
-            processor.process(item)
-          rescue StandardError => e
-            tracker.log_error("Failed to process item", exception: e, details: item)
+          if batched
+            process_batch(processor, tracker, unit)
+          else
+            process_item(processor, tracker, unit)
           end
 
           stats = tracker.stats
@@ -93,6 +94,35 @@ module Migrations
 
         return if progress.zero? && warnings.zero? && errors.zero?
         @channel.report_progress(progress:, warnings:, errors:)
+      end
+
+      # One unit of work per iteration: a row, or a slice of rows for a batched
+      # processor. `each_slice` pulls from the source enumerator as it goes, so a
+      # worker holds one slice at a time and never materializes its chunk.
+      def units(source, processor)
+        batch_size = processor.class.batch_size
+        batch_size ? source.items.each_slice(batch_size) : source.items
+      end
+
+      def process_item(processor, tracker, item)
+        processor.process(item)
+      rescue StandardError => e
+        tracker.log_error("Failed to process item", exception: e, details: item)
+      end
+
+      def process_batch(processor, tracker, items)
+        tracker.progress = items.size
+        processor.process_batch(items)
+      rescue StandardError => e
+        tracker.log_error("Failed to process batch", exception: e, details: batch_details(items))
+      end
+
+      # A batch's rows are the reason the step batches at all — they can be large
+      # (a whole post body each), and the failure is about which rows were in
+      # flight, so the entry names them and leaves the rows out.
+      def batch_details(items)
+        ids = items.filter_map { |item| item[:id] if item.is_a?(Hash) }
+        ids.empty? ? { size: items.size } : { size: items.size, ids: }
       end
 
       # The worker's one map/reduce message: the processor's accumulated result,
