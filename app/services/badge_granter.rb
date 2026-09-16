@@ -74,7 +74,7 @@ class BadgeGranter
   end
 
   def self.mass_grant(badge, user, count:)
-    return if !badge.enabled?
+    return unless badge.available?
 
     raise ArgumentError.new("count can't be less than 1") if count < 1
 
@@ -116,7 +116,7 @@ class BadgeGranter
 
   def grant
     return if @granted_by && !Guardian.new(@granted_by).can_grant_badges?(@user)
-    return unless @badge.present? && @badge.enabled?
+    return unless @badge.present? && @badge.available?
     return if @user.blank?
 
     find_by = { badge_id: @badge.id, user_id: @user.id }
@@ -260,7 +260,7 @@ class BadgeGranter
   end
 
   def self.find_by_type(type)
-    Badge.where(trigger: "Badge::Trigger::#{type}".constantize)
+    Badge.available.where(trigger: "Badge::Trigger::#{type}".constantize)
   end
 
   def self.queue_key
@@ -391,7 +391,7 @@ class BadgeGranter
   MAX_ITEMS_FOR_DELTA = 200
   def self.backfill(badge, opts = nil)
     return unless SiteSetting.enable_badges
-    return unless badge.enabled
+    return unless badge.available?
     return if badge.query.blank?
 
     post_ids = user_ids = nil

@@ -9,7 +9,7 @@ module Jobs
     def execute(args)
       return unless SiteSetting.enable_badges
 
-      badge = Badge.enabled.find_by(id: args[:badge_id])
+      badge = Badge.available.find_by(id: args[:badge_id])
       return unless badge
 
       revoked_user_ids = Set.new

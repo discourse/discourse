@@ -16,7 +16,7 @@ class BadgesController < ApplicationController
 
     if !guardian.is_staff? || params[:only_listable] == "true" || !request.xhr?
       # NOTE: this is sorted client side if needed
-      badges = badges.where(enabled: true, listable: true)
+      badges = badges.available.where(listable: true)
     end
 
     badges = badges.includes(:badge_grouping).includes(:badge_type, :image_upload)
@@ -50,7 +50,7 @@ class BadgesController < ApplicationController
     raise Discourse::NotFound unless SiteSetting.enable_badges
 
     params.require(:id)
-    @badge = Badge.enabled.find(params[:id])
+    @badge = Badge.available.find(params[:id])
     @rss_title =
       I18n.t(
         "rss_description.badge",

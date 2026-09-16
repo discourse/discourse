@@ -233,10 +233,9 @@ class TopicView
     user_ids = Set.new
     posts.each { |post| user_ids << post.user_id if post.user_id }
 
-    return if !user_ids.present?
+    return if user_ids.blank?
 
-    badges =
-      Badge.where("LOWER(name) IN (?)", badge_names.map(&:downcase)).where(enabled: true).to_a
+    badges = Badge.available.where("LOWER(name) IN (?)", badge_names.map(&:downcase)).to_a
 
     sql = <<~SQL
      SELECT user_id, badge_id

@@ -28,8 +28,7 @@ class UserBadge < ActiveRecord::Base
           )
         end
 
-  scope :for_enabled_badges,
-        -> { where("user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)") }
+  scope :for_enabled_badges, -> { where(badge_id: Badge.available.select(:id)) }
 
   scope :by_post_and_user,
         ->(posts) do
@@ -40,7 +39,11 @@ class UserBadge < ActiveRecord::Base
   scope :for_post_header_badges,
         ->(posts) do
           by_post_and_user(posts).where(
-            "user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled AND listable AND show_in_post_header)",
+            badge_id:
+              Badge
+                .available
+                .where(show_posts: true, listable: true, show_in_post_header: true)
+                .select(:id),
           )
         end
 
@@ -91,7 +94,7 @@ class UserBadge < ActiveRecord::Base
           user_badges.badge_id,
           RANK() OVER (
             PARTITION BY user_badges.user_id -- Do a separate rank for each user
-            ORDER BY BOOL_OR(badges.enabled) DESC, -- Disabled badges last
+            ORDER BY BOOL_OR(badges.id IN (#{Badge.available.select(:id).to_sql})) DESC,
                     MAX(featured_tl_badge.user_id) NULLS LAST, -- Best tl badge first
                     BOOL_OR(user_badges.is_favorite) DESC NULLS LAST, -- Favorite badges next
                     CASE WHEN user_badges.badge_id IN (1,2,3,4) THEN 1 ELSE 0 END ASC, -- Non-featured tl badges last

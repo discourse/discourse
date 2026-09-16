@@ -266,11 +266,11 @@ class Notification < ActiveRecord::Base
 
     return notifications if badge_ids.empty?
 
-    enabled_badge_ids = Badge.where(id: badge_ids, enabled: true).pluck(:id).to_set
+    available_badge_ids = Badge.available.where(id: badge_ids).ids.to_set
 
     notifications.reject do |n|
       n.notification_type == types[:granted_badge] &&
-        !enabled_badge_ids.include?(n.data_hash[:badge_id])
+        !available_badge_ids.include?(n.data_hash[:badge_id])
     end
   end
 

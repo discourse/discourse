@@ -10,7 +10,7 @@ module Jobs
 
     def execute(args)
       return unless SiteSetting.enable_badges
-      Badge.enabled.pluck(:id).each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id: badge_id) }
+      Badge.available.ids.each { |badge_id| Jobs.enqueue(:backfill_badge, badge_id:) }
     end
   end
 end
