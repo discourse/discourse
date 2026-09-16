@@ -50,7 +50,8 @@
   &__code-step,
   &__second-factor-step,
   &__user-fields-step,
-  &__complete-step {
+  &__complete-step,
+  &__pending-approval-step {
     display: flex;
     flex-direction: column;
     align-items: flex-start;

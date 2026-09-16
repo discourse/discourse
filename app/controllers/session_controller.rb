@@ -1034,7 +1034,7 @@ class SessionController < ApplicationController
     raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
     if login_not_approved_for?(user)
-      render json: login_not_approved
+      render json: { pending_approval: true }
     elsif payload = login_error_check(user)
       render json: payload
     elsif created_account

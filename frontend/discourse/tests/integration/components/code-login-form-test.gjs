@@ -219,6 +219,33 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".d-otp-input").hasValue("", "the code input is cleared");
   });
 
+  test("shows the pending approval screen after a valid signup code", async function (assert) {
+    stubCodeRequest();
+    pretender.post("/session/login-code/verify", () =>
+      response({ pending_approval: true })
+    );
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "123456");
+
+    assert
+      .dom(".login-title")
+      .hasText(i18n("code_login.pending_approval_title"));
+    assert
+      .dom(".login-subheader")
+      .hasText(i18n("code_login.pending_approval_instructions"));
+    assert
+      .dom(".code-login-form__pending-approval-step")
+      .hasText(i18n("code_login.pending_approval_next_step"));
+    assert.dom(".d-otp-input").doesNotExist("removes the code input");
+    assert.dom(".code-login-form__resend").doesNotExist("removes resend");
+  });
+
   test("shows the second factor form when required", async function (assert) {
     stubCodeRequest();
     pretender.post("/session/login-code/verify", () =>

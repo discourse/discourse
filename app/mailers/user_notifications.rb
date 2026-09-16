@@ -30,10 +30,18 @@ class UserNotifications < ActionMailer::Base
         locale: locale,
       )
 
+    passwordless_code_login = !user.has_password? && Invite.email_code_enabled?(user)
+
     build_email(
       user.email,
-      template: "user_notifications.signup_after_approval",
+      template:
+        if passwordless_code_login
+          "user_notifications.signup_after_approval_with_code"
+        else
+          "user_notifications.signup_after_approval"
+        end,
       locale: locale,
+      login_url: "#{Discourse.base_url}/login?mode=code",
       new_user_tips: tips,
       recipient_user: user,
     )

@@ -149,8 +149,18 @@ export default class CodeLoginForm extends Component {
     return this.step === "complete";
   }
 
-  // Login has its own page heading; only signup needs a per-step one here.
+  get isPendingApprovalStep() {
+    return this.step === "pending-approval";
+  }
+
   get heading() {
+    if (this.isPendingApprovalStep) {
+      return {
+        title: i18n("code_login.pending_approval_title"),
+        subtitle: i18n("code_login.pending_approval_instructions"),
+      };
+    }
+
     if (!this.isSignup) {
       return null;
     }
@@ -374,6 +384,11 @@ export default class CodeLoginForm extends Component {
 
       if (this.isPasswordReset) {
         DiscourseURL.redirectTo(result.redirect_url);
+        return;
+      }
+
+      if (result?.pending_approval) {
+        this.step = "pending-approval";
         return;
       }
 
@@ -905,6 +920,12 @@ export default class CodeLoginForm extends Component {
               />
             {{/unless}}
           </div>
+        </div>
+      {{else if this.isPendingApprovalStep}}
+        <div class="code-login-form__pending-approval-step" role="status">
+          <p class="code-login-form__instructions">
+            {{i18n "code_login.pending_approval_next_step"}}
+          </p>
         </div>
       {{else if this.isCompleteStep}}
         <div class="code-login-form__complete-step">

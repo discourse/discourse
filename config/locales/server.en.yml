@@ -5248,6 +5248,26 @@ en:
 
         Enjoy your stay!
 
+    signup_after_approval_with_code:
+      title: "Signup After Approval With Code"
+      preview: "New account approved."
+      subject_template: "You've been approved on %{site_name}!"
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        A staff member approved your account on %{site_name}.
+
+        Your account does not need a password. Use this link to request a fresh login code:
+        %{login_url}
+
+        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+        %{new_user_tips}
+
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
+
     signup_after_reject:
       title: "Signup After Reject"
       subject_template: "You've been rejected on %{site_name}"

@@ -1149,18 +1149,36 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to be_nil
     end
 
-    it "does not log in an unapproved user when approval is required" do
+    it "shows the pending approval result for an existing unapproved user" do
       SiteSetting.must_approve_users = true
 
       post "/session/login-code/verify.json", params: { email: user.email, code: }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
+      expect(response.parsed_body).to eq("pending_approval" => true)
       expect(session[:current_user_id]).to be_nil
+      expect(login_code.reload.consumed_at).to be_present
     end
 
     context "when the email does not belong to a user" do
       let(:login_code) { EmailLoginCode.generate!(email: "newuser@example.com") }
+
+      it "creates a passwordless account awaiting staff approval" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        new_user = User.find_by_email("newuser@example.com")
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(new_user).to be_active
+        expect(new_user).not_to be_approved
+        expect(new_user.user_password).to be_nil
+        expect(ReviewableUser.find_by(target: new_user)).to be_present
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_present
+      end
 
       it "creates and logs in a new user" do
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }

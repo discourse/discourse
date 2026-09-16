@@ -21,16 +21,17 @@ import { i18n } from "discourse-i18n";
 
 export default class LoginPageController extends Controller {
   @service siteSettings;
+
   @service capabilities;
   @service dialog;
   // eslint-disable-next-line discourse/no-unused-services
   @service site; // used in the route template
   @service login;
   @service modal;
-
   @controller application;
 
   @tracked loggingIn = false;
+
   @tracked loggedIn = false;
   @tracked showLoginButtons = true;
   @tracked showLogin = true;
@@ -49,7 +50,8 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
-  @tracked showCodeLoginForm = false;
+  @tracked loginMode = null;
+  queryParams = [{ loginMode: "mode" }];
 
   @computed("siteSettings.enable_local_logins")
   get canLoginLocal() {
@@ -62,6 +64,14 @@ export default class LoginPageController extends Controller {
       this.siteSettings.enable_local_logins_via_email &&
       this.siteSettings.enable_local_logins
     );
+  }
+
+  get showCodeLoginForm() {
+    if (!this.canUseCodeLogin) {
+      return false;
+    }
+
+    return this.loginMode !== "password";
   }
 
   @computed("siteSettings.enable_local_logins_via_email")
@@ -89,8 +99,7 @@ export default class LoginPageController extends Controller {
     if (
       this.hasAtLeastOneLoginButton &&
       !this.showSecondFactor &&
-      !this.showSecurityKey &&
-      !this.showCodeLoginForm
+      !this.showSecurityKey
     ) {
       classes.push("has-alt-auth");
     }
@@ -170,12 +179,12 @@ export default class LoginPageController extends Controller {
 
   @action
   showCodeLogin() {
-    this.showCodeLoginForm = true;
+    this.loginMode = "code";
   }
 
   @action
   usePassword() {
-    this.showCodeLoginForm = false;
+    this.loginMode = "password";
   }
 
   @action

@@ -19,7 +19,7 @@ function sessionRequests() {
 }
 
 acceptance("Signing In", function (needs) {
-  needs.settings({ enable_local_logins_via_code: true });
+  needs.settings({ enable_local_logins_via_code: false });
 
   test("submits username credentials with the login button", async function (assert) {
     await visit("/login");
@@ -65,20 +65,6 @@ acceptance("Signing In", function (needs) {
       "submits the email address"
     );
     assert.dom(".code-login-form").doesNotExist("keeps the password flow");
-  });
-
-  test("opens code login only from its explicit link", async function (assert) {
-    await visit("/login");
-
-    await click("#one-time-code-link");
-
-    assert.dom("#login-form").doesNotExist("hides the password form");
-    assert.dom(".code-login-form").exists("shows the code login form");
-    assert.strictEqual(
-      sessionRequests().length,
-      0,
-      "does not try password login"
-    );
   });
 
   test("sign in", async function (assert) {
@@ -228,5 +214,39 @@ acceptance("Signing In", function (needs) {
     assert
       .dom(".alert-error")
       .exists("shows an error when the code is invalid");
+  });
+});
+
+acceptance("Signing In with code", function (needs) {
+  needs.settings({ enable_local_logins_via_code: true });
+
+  test("defaults to code login and keeps other methods available", async function (assert) {
+    await visit("/login");
+
+    assert.dom("#login-form").doesNotExist("hides the password form");
+    assert.dom(".code-login-form").exists("shows the code login form");
+    assert
+      .dom("#login-buttons .btn-social")
+      .isVisible("keeps external login methods accessible");
+
+    await click(".code-login-form__password-toggle");
+
+    assert.dom("#login-form").exists("keeps password login available");
+    assert.dom("#one-time-code-link").exists("keeps code login available");
+
+    await click("#one-time-code-link");
+
+    assert.dom(".code-login-form").exists("returns to the code login form");
+    assert.strictEqual(
+      sessionRequests().length,
+      0,
+      "does not try password login"
+    );
+  });
+
+  test("an explicit code mode opens code login", async function (assert) {
+    await visit("/login?mode=code");
+
+    assert.dom(".code-login-form").exists("shows the code login form");
   });
 });

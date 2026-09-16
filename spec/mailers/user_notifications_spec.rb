@@ -77,6 +77,54 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".signup_after_approval" do
+    before do
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.enable_local_logins = true
+      SiteSetting.enable_local_logins_via_email = true
+    end
+
+    it "directs a passwordless user to request a fresh login code" do
+      passwordless_user = Fabricate(:user, password: nil)
+      email = UserNotifications.signup_after_approval(passwordless_user)
+      body = email.body.to_s
+
+      expect(body).to include("does not need a password")
+      expect(body).to include("request a fresh login code")
+      expect(body).to include("#{Discourse.base_url}/login?mode=code")
+      expect(body).not_to include("code=")
+    end
+
+    it "preserves the legacy login instructions for a user with a password" do
+      email = UserNotifications.signup_after_approval(user)
+      body = email.body.to_s
+
+      expect(body).to include("logging in at:")
+      expect(body).to include(Discourse.base_url)
+      expect(body).not_to include("request a fresh login code")
+    end
+
+    it "preserves the legacy login instructions when code login is unavailable" do
+      SiteSetting.enable_local_logins_via_code = false
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:")
+      expect(body).not_to include("request a fresh login code")
+    end
+
+    it "preserves the legacy login instructions when external login is required" do
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "s" * 32
+      SiteSetting.enable_discourse_connect = true
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:")
+      expect(body).not_to include("request a fresh login code")
+    end
+  end
+
   describe ".forgot_password" do
     subject(:email) { UserNotifications.forgot_password(user) }
 
