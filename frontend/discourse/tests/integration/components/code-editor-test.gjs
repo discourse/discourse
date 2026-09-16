@@ -1,6 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { render, settled, waitFor, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  render,
+  settled,
+  triggerKeyEvent,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { startCompletion } from "@codemirror/autocomplete";
 import { undo } from "@codemirror/commands";
 import { module, test } from "qunit";
@@ -38,6 +47,36 @@ function highlightedTokens(element) {
 
 module("Integration | Component | code-editor", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("finds and replaces text inside the editor", async function (assert) {
+    await render(<template><CodeEditor @value="one two one" /></template>);
+    pressWithModifier(find(".cm-content"), "f");
+    await waitFor(".cm-search");
+    await fillIn('.cm-search input[name="search"]', "one");
+    await fillIn('.cm-search input[name="replace"]', "three");
+    await click('.cm-search button[name="replaceAll"]');
+
+    assert
+      .dom(".cm-content")
+      .hasText("three two three", "replace all edits the document");
+  });
+
+  test("indents and outdents with Tab", async function (assert) {
+    await render(<template><CodeEditor @value="one" /></template>);
+    await triggerKeyEvent(".cm-content", "keydown", "Tab");
+    const view = find(".codemirror-editor").codemirrorView;
+    assert.strictEqual(
+      view.state.doc.toString(),
+      "  one",
+      "Tab indents the line"
+    );
+    await triggerKeyEvent(".cm-content", "keydown", "Tab", { shiftKey: true });
+    assert.strictEqual(
+      view.state.doc.toString(),
+      "one",
+      "Shift-Tab outdents the line"
+    );
+  });
 
   test("renders an editor for the value", async function (assert) {
     await render(<template><CodeEditor @value="select 1" /></template>);
