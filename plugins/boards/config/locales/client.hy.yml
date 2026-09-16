@@ -6,6 +6,15 @@
 
 hy:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Վերնագիր"
+        icon: "Պատկերակ"
+        color: "Գույն"
+      create_board:
+        name: "Անուն"
+        tag_names: "Պիտակներ"
+        category_ids: "Կատեգորիաներ"
     boards:
       status:
         all: "Բոլոր"

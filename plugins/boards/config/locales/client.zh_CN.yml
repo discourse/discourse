@@ -6,6 +6,24 @@
 
 zh_CN:
   js:
+    discourse_workflows:
+      create_board_column:
+        board_id: "看板"
+        title: "标题"
+        icon: "图标"
+        color: "颜色"
+        tag_name: "标签"
+        default_sort: "默认排序"
+        default_sort_priority: "优先级"
+        default_sort_recency: "最近"
+      create_board:
+        name: "名称"
+        slug: "缩略名"
+        tag_names: "标签"
+        category_ids: "类别"
+      card_moved:
+        board_id: "看板"
+        board_id_placeholder: "所有看板"
     boards:
       filter_boards: "过滤看板"
       filter_boards_no_results: "没有符合您搜索条件的看板"

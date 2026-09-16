@@ -6,6 +6,15 @@
 
 sl:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Naziv"
+        icon: "Ikona"
+        color: "Barva"
+      create_board:
+        name: "Ime"
+        tag_names: "Oznake"
+        category_ids: "Kategorije"
     boards:
       status:
         all: "Vsi"

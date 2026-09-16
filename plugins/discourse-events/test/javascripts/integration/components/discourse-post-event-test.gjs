@@ -221,6 +221,29 @@ module("Integration | Component | DiscoursePostEvent", function (hooks) {
       );
   });
 
+  test("shows a chat icon for events with a channel", async function (assert) {
+    stubApi.call(
+      this,
+      buildEvent({
+        channel: {
+          id: 2,
+          title: "Product team chat",
+          slug: "product-team-chat",
+          chatable_type: "Category",
+          chatable: { color: "0088cc", read_restricted: false },
+        },
+      })
+    );
+
+    const event = { id: 1 };
+    await render(<template><DiscoursePostEvent @event={{event}} /></template>);
+    await waitFor(".event-chat-channel");
+
+    assert
+      .dom(".event-chat-channel > .d-icon-comment")
+      .exists("shows the chat icon beside the channel link");
+  });
+
   test("hides the url row when it carries the zoom livestream", async function (assert) {
     stubApi.call(
       this,

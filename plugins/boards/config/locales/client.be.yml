@@ -6,6 +6,15 @@
 
 be:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Загаловак"
+        icon: "Значок"
+        color: "Колер"
+      create_board:
+        name: "Імя"
+        tag_names: "Цэтлікі"
+        category_ids: "катэгорыі"
     boards:
       status:
         all: "Усе"

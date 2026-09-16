@@ -6,6 +6,18 @@
 
 es:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Título"
+        icon: "Icono"
+        color: "Color"
+        tag_name: "Etiquetar"
+        default_sort_priority: "Prioridad"
+      create_board:
+        name: "Nombre"
+        slug: "Slug"
+        tag_names: "Etiquetas"
+        category_ids: "Categorías"
     boards:
       status:
         all: "Todo"

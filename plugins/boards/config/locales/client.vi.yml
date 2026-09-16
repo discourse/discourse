@@ -6,6 +6,17 @@
 
 vi:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Tiêu đề"
+        icon: "Biểu tượng"
+        color: "Màu sắc"
+        tag_name: "Thẻ"
+      create_board:
+        name: "Tên"
+        slug: "tên đường dẫn"
+        tag_names: "Thẻ"
+        category_ids: "Danh mục"
     boards:
       status:
         all: "Tất cả"

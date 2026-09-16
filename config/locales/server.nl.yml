@@ -1167,7 +1167,7 @@ nl:
   uploads:
     marked_insecure_from_theme_component_reason: "upload gebruikt in themaonderdeel"
   unsubscribe:
-    title: "Uitschrijven"
+    unsubscribe: "Uitschrijven"
     stop_watching_topic: "Dit topic niet meer observeren, %{link}"
     mute_topic: "Alle meldingen voor dit topic negeren, %{link}"
     unwatch_category: "Geen topics in %{category} meer observeren"
@@ -2614,8 +2614,6 @@ nl:
       tags_any: "Geef topics weer met een van de opgegeven tags (door komma's gescheiden)"
       tags_all: "Geef topics weer met alle opgegeven tags (door plustekens gescheiden)"
       exclude_tag: "Sluit topics met een specifieke tag uit"
-      exclude_tags_any: "Sluit topics met een van de opgegeven tags uit (door komma's gescheiden)"
-      exclude_tags_all: "Sluit topics met alle opgegeven tags uit (door plustekens gescheiden)"
       tag_group: "Geef topics met tags van een specifieke taggroep weer"
       exclude_tag_group: "Sluit topics met tags van een specifieke taggroep uit"
       activity_before: "Geef topics weer met de laatste activiteit vóór een datum (JJJJ-MM-DD of aantal dagen geleden)"
@@ -2625,7 +2623,6 @@ nl:
       created_before: "Toon topics gemaakt vóór een datum (JJJJ-MM-DD of aantal dagen geleden)"
       created_after: "Toon topics gemaakt na een datum (JJJJ-MM-DD of aantal dagen geleden)"
       created_by: "Geef topics weer die door een specifieke gebruiker of groep zijn gemaakt"
-      created_by_user: "Geef topics weer die zijn gemaakt door een gebruikersnaam of groep (zonder @)"
       created_by_multiple: "Geef topics weer die zijn gemaakt door een van de opgegeven gebruikers of groepen (door komma's gescheiden)"
       latest_post_before: "zijn gemaakt met laatste bericht vóór een datum (JJJJ-MM-DD of aantal dagen geleden)"
       latest_post_after: "Geef topics weer met laatste bericht na een datum (JJJJ-MM-DD of aantal dagen geleden)"

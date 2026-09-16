@@ -6,12 +6,46 @@
 
 pl_PL:
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_boards: "Wymaga włączenia tablic"
+      nodes:
+        "action:create_board_column": "Utwórz kolumnę tablicy"
+        "action:create_board": "Utwórz tablicę"
+      node_descriptions:
+        "action:create_board_column": "Utwórz kolumnę na tablicy z opcjonalną ikoną, kolorem, tagiem i domyślnym sortowaniem"
+        "action:create_board": "Utwórz tablicę z uprawnieniami dostępu i opcjonalnymi ograniczeniami tagów i kategorii"
+      create_board_column:
+        board_id: "Tablica"
+        board_id_description: "Wybierz tablicę lub użyj identyfikatora tablicy z poprzedniego kroku."
+        title: "Tytuł"
+        icon: "Ikona"
+        color: "Kolor"
+        tag_name: "Tag"
+        default_sort: "Sortowanie domyślne"
+        default_sort_priority: "Priorytet"
+        default_sort_recency: "Niedawność"
+        actor_username: "Wykonane przez użytkownika"
+      create_board:
+        name: "Nazwa"
+        slug: "Identyfikator tekstowy"
+        slug_description: "Pozostaw puste miejsce, aby wygenerować ślimak z nazwy tablicy."
+        tag_names: "Tagi"
+        category_ids: "Kategorie"
+        category_ids_description: "Wybierz jedną lub więcej kategorii, do których mogą należeć karty tematyczne tablicy."
+        actor_username: "Wykonane przez użytkownika"
+        acl: "Dostęp do tablicy"
+        acl_description: "Wybierz, kto może przeglądać, edytować i zarządzać tablicą."
+      card_moved:
+        board_id: "Tablica"
+        board_id_placeholder: "Wszystkie tablice"
     boards:
       filter_boards: "Filtruj tablice"
       filter_boards_no_results: "Brak tablic odpowiadających wyszukiwaniu"
       status:
         all: "Wszystkie"
         open: "Otwórz"
+        archived: "Zarchiwizowane"
       topic_footer:
         add_to_board: "Dodaj do tablicy"
         already_added: "Już dodano"
@@ -63,6 +97,15 @@ pl_PL:
         column_settings_title: "Ustawienia kolumn"
         new_column_title: "Nowa kolumna"
         new_board: "Nowa tablica"
+        archive_board: "Archiwizuj tablicę"
+        unarchive_board: "Usuń archiwizację tablicy"
+        unarchive_board_menu: "Usuń archiwizację tablicy..."
+        confirm_archive: 'Czy na pewno chcesz zarchiwizować tę tablicę? Zarchiwizowane tablice możesz zobaczyć na liście tablic <a href="%{boards_url}"></a> , wybierając opcję „Zarchiwizowane” z listy rozwijanej filtrów.'
+        confirm_unarchive: "Czy na pewno chcesz przywrócić archiwizację tej tablicy?"
+        archived_successfully: "Tablica zarchiwizowana pomyślnie"
+        unarchived_successfully: "Tablicy pomyślnie usunięto archiwizacje"
+        unarchive_slug_required: "Oryginalny skrót adresu URL tablicy jest już w użyciu. Wybierz nowy skrót adresu URL, aby przywrócić archiwum tej tablicy."
+        archived_tooltip: "Ta tablica została zarchiwizowana. Kart i kolumn nie można już zmieniać."
         delete_board: "Usuń tablicę"
         remove_card: "Usuń"
         new_topic: "Nowy temat..."

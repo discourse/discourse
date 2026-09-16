@@ -661,7 +661,7 @@ ro:
   unsubscribed:
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
-    title: "Dezabonare"
+    unsubscribe: "Dezabonare"
     stop_watching_topic: "Încetează să urmărești activ acest subiect, %{link}"
     mute_topic: "Setează pe silențios toate notificările cu privire la acest subiect, %{link}"
     unwatch_category: "Încetează să urmărești activ toate subiectele din categoria %{category}"
@@ -1404,8 +1404,6 @@ ro:
       tags_any: "Arată subiectele cu oricare dintre etichetele specificate (separate prin virgulă)"
       tags_all: "Arată subiectele cu toate etichetele specificate (separate prin virgulă)"
       exclude_tag: "Exclude subiectele cu o anumită etichetă"
-      exclude_tags_any: "Exclude subiectele cu oricare dintre etichetele specificate (separate prin virgulă)"
-      exclude_tags_all: "Exclude subiectele cu toate etichetele specificate (separate prin virgulă)"
       tag_group: "Arată subiectele cu etichete dintr-un anumit grup de etichete"
       exclude_tag_group: "Exclude subiectele cu etichete dintr-un anumit grup de etichete"
       activity_before: "Arată subiectele cu ultima activitate înainte de o dată (AAAA-LL-ZZ sau acum câteva zile)"

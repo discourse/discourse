@@ -568,20 +568,20 @@ RSpec.describe SessionController do
     context "when local logins are disabled" do
       before { SiteSetting.enable_local_logins = false }
 
-      it "returns a 403" do
+      it "returns a 404 because login via code is unavailable" do
         post "/session/login-code.json", params: { email: user.email }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 
     context "when email login is disabled" do
       before { SiteSetting.enable_local_logins_via_email = false }
 
-      it "returns a 403" do
+      it "returns a 404 because login via code is unavailable" do
         post "/session/login-code.json", params: { email: user.email }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 
@@ -821,20 +821,20 @@ RSpec.describe SessionController do
     context "when local logins are disabled" do
       before { SiteSetting.enable_local_logins = false }
 
-      it "returns a 403" do
+      it "returns a 404 because login via code is unavailable" do
         post "/session/login-code/verify.json", params: { email: user.email, code: "123456" }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 
     context "when email login is disabled" do
       before { SiteSetting.enable_local_logins_via_email = false }
 
-      it "returns a 403" do
+      it "returns a 404 because login via code is unavailable" do
         post "/session/login-code/verify.json", params: { email: user.email, code: "123456" }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 

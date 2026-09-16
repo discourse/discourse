@@ -159,12 +159,18 @@ after_initialize do
   end
 
   Voice::DefaultRoomSeeder.ensure! if SiteSetting.voice_enabled?
+  Voice::AgentBot.ensure! if SiteSetting.voice_enabled?
+
+  add_to_serializer(:site, :voice_livekit_agent_bot_id) do
+    Voice::AgentBot.user&.id if scope.can_invite_voice_agents? && Voice::AgentBot.available?
+  end
 
   # This can't live in the on(:site_setting_changed) handler below: plugin
   # event handlers are skipped while the plugin is disabled, which silently
   # covers the disabling transition itself.
   on_enabled_change do |_old_value, new_value|
     Voice::DefaultRoomSeeder.ensure! if new_value
+    new_value ? Voice::AgentBot.ensure! : Voice::AgentManager.stop_all!
     clear_all_voice_statuses unless new_value
     refresh_chat_hashtag_configurations
   end
@@ -180,6 +186,9 @@ after_initialize do
   end
 
   on(:site_setting_changed) do |name, _old_value, new_value|
+    if name.to_sym == :voice_livekit_agent_enabled
+      new_value ? Voice::AgentBot.ensure! : Voice::AgentManager.stop_all!
+    end
     if name.to_sym == :voice_badges_enabled
       if new_value
         Voice::BadgeGranterHooks.enable_all!

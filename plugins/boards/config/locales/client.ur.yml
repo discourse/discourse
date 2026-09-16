@@ -6,6 +6,18 @@
 
 ur:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "عنوان"
+        icon: "آئیکن"
+        color: "رنگ"
+        tag_name: "ٹیگ"
+        default_sort_priority: "ترجیح"
+      create_board:
+        name: "نام"
+        slug: "سلگ"
+        tag_names: "ٹیگز"
+        category_ids: "زمرہ جات"
     boards:
       status:
         all: "تمام"

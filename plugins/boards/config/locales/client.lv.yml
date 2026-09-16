@@ -6,6 +6,15 @@
 
 lv:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Virsraksts"
+        icon: "Ikona"
+        color: "Krāsa"
+      create_board:
+        name: "Vārds"
+        tag_names: "Birkas"
+        category_ids: "Sadaļas"
     boards:
       status:
         all: "Visi"

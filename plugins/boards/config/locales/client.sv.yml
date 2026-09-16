@@ -6,6 +6,17 @@
 
 sv:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Rubrik"
+        icon: "Ikon"
+        color: "Färg"
+        tag_name: "Tagg"
+      create_board:
+        name: "Namn"
+        slug: "Slug"
+        tag_names: "Taggar"
+        category_ids: "Kategorier"
     boards:
       status:
         all: "Alla"

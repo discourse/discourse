@@ -1204,7 +1204,7 @@ fr:
   uploads:
     marked_insecure_from_theme_component_reason: "fichier utilisé dans un composant de thème"
   unsubscribe:
-    title: "Se désabonner"
+    unsubscribe: "Se désabonner"
     stop_watching_topic: "Arrêter de surveiller ce sujet, %{link}"
     mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
     unwatch_category: "Arrêter de surveiller les sujets de la catégorie %{category}"
@@ -2888,8 +2888,6 @@ fr:
       tags_any: "Afficher les sujets avec l'une des étiquettes spécifiées (séparés par des virgules)"
       tags_all: "Afficher les sujets avec toutes les étiquettes spécifiées (séparées par des plus)"
       exclude_tag: "Exclure les sujets avec une étiquette spécifique"
-      exclude_tags_any: "Exclure les sujets avec l'une des étiquettes spécifiées (séparés par des virgules)"
-      exclude_tags_all: "Exclure les sujets comportant toutes les étiquettes spécifiées (séparées par des plus)"
       tag_group: "Afficher les sujets dont les étiquettes appartiennent à un groupe de balises spécifique"
       exclude_tag_group: "Exclure les sujets comportant des balises d'un groupe de balises spécifique"
       activity_before: "Afficher les sujets dont la dernière activité est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
@@ -2899,7 +2897,6 @@ fr:
       created_before: "Afficher les sujets créés avant une date (AAAA-MM-JJ ou il y a quelques jours)"
       created_after: "Afficher les sujets créés après une date (AAAA-MM-JJ ou il y a quelques jours)"
       created_by: "Afficher les sujets créés par un utilisateur ou un groupe précis"
-      created_by_user: "Afficher les sujets créés par un nom d'utilisateur ou un groupe (sans @)"
       created_by_multiple: "Afficher les sujets créés par l'un des utilisateurs ou groupes indiqués (séparés par des virgules)"
       latest_post_before: "Afficher les sujets dont la dernière publication est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
       latest_post_after: "Afficher les sujets dont la dernière publication est postérieure à une date (YYYY-MM-DD ou il y a quelques jours)"

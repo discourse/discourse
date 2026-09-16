@@ -6,6 +6,15 @@
 
 th:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "ชื่อเรื่อง"
+        icon: "ไอคอน"
+        color: "สี"
+      create_board:
+        name: "ชื่อ"
+        tag_names: "ป้าย"
+        category_ids: "หมวดหมู่"
     boards:
       status:
         all: "ทั้งหมด"

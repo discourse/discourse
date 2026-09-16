@@ -42,6 +42,7 @@ class ReviewableAiToolAction < Reviewable
 
   def perform_approve(performed_by, args)
     ensure_inline_post_contains_approval!(args)
+    ensure_chat_message_contains_approval!(args)
     ensure_performed_by_is_a_real_person!(performed_by)
 
     tool, tool_class, context = build_tool!
@@ -63,6 +64,7 @@ class ReviewableAiToolAction < Reviewable
 
   def perform_reject(performed_by, args)
     ensure_inline_post_contains_approval!(args)
+    ensure_chat_message_contains_approval!(args)
     ensure_performed_by_is_a_real_person!(performed_by)
 
     resolution_result(:rejected, args)
@@ -73,9 +75,14 @@ class ReviewableAiToolAction < Reviewable
   def resolution_result(status, args, tool_result: nil)
     result = create_result(:success, status)
     inline_post_id = args[:post_id] || args["post_id"]
-    return result if inline_post_id.blank?
+    chat_message_id = args[:chat_message_id] || args["chat_message_id"]
+    return result if inline_post_id.blank? && chat_message_id.blank?
 
-    payload["continuation"] = { post_id: inline_post_id.to_i, tool_result: tool_result }
+    payload["continuation"] = if chat_message_id.present?
+      { chat_message_id: chat_message_id.to_i, tool_result: tool_result }
+    else
+      { post_id: inline_post_id.to_i, tool_result: tool_result }
+    end
     result.after_commit = -> do
       DB.after_commit { Jobs.enqueue(:resume_ai_tool_approval, reviewable_id: id) }
     end
@@ -142,6 +149,32 @@ class ReviewableAiToolAction < Reviewable
       raise Discourse::InvalidAccess.new(
               I18n.t("discourse_ai.reviewables.ai_tool_action.post_mismatch"),
             )
+    end
+  end
+
+  def ensure_chat_message_contains_approval!(args)
+    message_id = args[:chat_message_id] || args["chat_message_id"]
+    return if message_id.blank?
+
+    message = ::Chat::Message.find_by(id: message_id)
+    source = ::Chat::Message.find_by(id: payload["chat_message_id"])
+    action_id = DiscourseAi::AiBot::ChatToolApproval.build_action_id("approve", id)
+    valid_block =
+      message&.blocks.to_a.any? do |block|
+        block["elements"].to_a.any? { |element| element["action_id"] == action_id }
+      end
+
+    if !message || !message.chat_channel.direct_message_channel? ||
+         ![target&.bot_user_id, target&.ai_agent&.user_id].compact.include?(message.user_id) ||
+         !valid_block ||
+         (
+           source &&
+             (
+               source.chat_channel_id != message.chat_channel_id ||
+                 source.thread_id != message.thread_id
+             )
+         )
+      raise Discourse::InvalidAccess
     end
   end
 

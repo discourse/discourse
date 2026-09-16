@@ -101,11 +101,13 @@ export default class Search extends Service {
         return;
       }
 
+      const groupedItem =
+        ".search-menu .results [data-search-menu-navigation-item]:not([tabindex='-1'])";
       const focusableItems = document.querySelectorAll(
-        ".search-menu .results a, .search-menu .results [data-search-menu-navigation-item]"
+        `.search-menu .results a, ${groupedItem}`
       );
       const navigationItems = document.querySelectorAll(
-        ".search-menu .results .search-link, .search-menu .results [data-search-menu-navigation-item]"
+        `.search-menu .results .search-link, ${groupedItem}`
       );
 
       if (!navigationItems.length) {

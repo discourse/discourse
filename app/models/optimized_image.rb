@@ -97,7 +97,7 @@ class OptimizedImage < ActiveRecord::Base
         temp_path = temp_file.path
 
         target_quality =
-          upload.target_image_quality(
+          upload.target_jpeg_image_quality(
             original_path,
             SiteSetting.ImageQuality.image_preview_jpg_quality,
           )

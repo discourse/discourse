@@ -1296,7 +1296,7 @@ cs:
   uploads:
     marked_insecure_from_theme_component_reason: "nahraný soubor použitý v komponentě motivu"
   unsubscribe:
-    title: "Odhlášení"
+    unsubscribe: "Odhlásit z odběru emailů"
     stop_watching_topic: "Přestat sledovat toto téma, %{link}"
     mute_topic: "Ztlumit všechna oznámení pro toto téma, %{link}"
     unwatch_category: "Přestat sledovat všechna témata v %{category}"
@@ -2372,8 +2372,6 @@ cs:
       tags_any: "Zobrazit témata s kterýmkoli ze zadaných štítků (oddělených čárkami)"
       tags_all: "Zobrazit témata se všemi zadanými štítky (oddělenými plusem)"
       exclude_tag: "Vyloučit témata s konkrétním štítkem"
-      exclude_tags_any: "Vyloučit témata s kterýmkoli ze zadaných štítků (oddělenými čárkou)"
-      exclude_tags_all: "Vyloučit témata se všemi zadanými štítky (oddělenými plusem)"
       tag_group: "Zobrazit témata se štítky z konkrétní skupiny štítků"
       exclude_tag_group: "Vyloučit témata se štítky z konkrétní skupiny štítků"
       activity_before: "Zobrazit témata s poslední činností před datem (RRRR-MM-DD nebo před x dny)"

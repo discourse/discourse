@@ -459,7 +459,6 @@ zh_CN:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
-      tool_pending_approval: "此操作需要版主批准，然后才能执行。"
       spawn_agent:
         description: "将一个独立的提示委托给一个允许的代理，并返回其响应。"
         prompt_description: "发送给选定代理并在思考框中显示的完整独立提示。"

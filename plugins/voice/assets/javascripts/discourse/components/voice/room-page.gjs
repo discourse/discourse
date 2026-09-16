@@ -28,6 +28,7 @@ import {
 } from "../../lib/voice/video-grid-layout";
 import VoiceInviteUsersModal from "../modal/voice-invite-users";
 import VoiceRoomInfoModal from "../modal/voice-room-info";
+import VoiceInviteAgentButton from "../voice-invite-agent-button";
 import VoiceCallControls from "./call-controls";
 import VoiceCallSubmenu from "./call-submenu";
 import VoiceCaptionOverlay from "./caption-overlay";
@@ -698,6 +699,11 @@ export default class VoiceRoomPage extends Component {
                 >
                   <:content as |roomMenu|>
                     <DDropdownMenu as |dropdown|>
+                      <VoiceInviteAgentButton
+                        @closeMenu={{roomMenu.close}}
+                        @item={{dropdown.item}}
+                        @room={{this.room}}
+                      />
                       {{#if this.chatAvailable}}
                         <dropdown.item>
                           <DButton

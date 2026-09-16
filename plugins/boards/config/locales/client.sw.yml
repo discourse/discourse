@@ -6,6 +6,15 @@
 
 sw:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Kichwa cha Habari"
+        icon: "ikoni"
+        color: "Rangi"
+      create_board:
+        name: "Jina"
+        tag_names: "Lebo"
+        category_ids: "Kategoria"
     boards:
       status:
         all: "Yote"

@@ -15,6 +15,8 @@ module Voice
     def self.on_join(user, room, participants)
       return unless badges_enabled?
 
+      participants = participants.reject(&:bot?)
+
       grant("Packed House", user) if room_full?(room, participants)
       grant("Icebreaker", user) if icebreaker?(user, participants)
     end
@@ -55,6 +57,8 @@ module Voice
       private
 
       def grant(badge_name, user)
+        return if user.bot?
+
         badge = Badge.find_by(name: badge_name)
         BadgeGranter.grant(badge, user) if badge&.enabled?
       end

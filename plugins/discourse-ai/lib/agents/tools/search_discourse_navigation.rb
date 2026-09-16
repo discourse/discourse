@@ -24,13 +24,19 @@ module DiscourseAi
           {
             name: name,
             description:
-              "Find verified navigation URLs on this site, including available plugin pages. Use concise keywords for the destination or task, such as 'billing subscription' or 'themes'. Reuse returned URLs exactly. No results means no verified destination was found; never invent a URL.",
+              "Find verified navigation URLs on this site, including available plugin pages. Use concise keywords for the destination or task, such as 'billing subscription' or 'themes'. Reuse returned URLs exactly. Optionally provide a URL to verify against available navigation destinations and category URLs. If verification returns a canonical_url, use it unchanged. If neither a destination nor a canonical_url is returned, no verified destination was found; never invent a URL.",
             parameters: [
               {
                 name: "query",
                 description: "Keywords describing the page or task",
                 type: "string",
                 required: true,
+              },
+              {
+                name: "url",
+                description:
+                  "An absolute site URL to verify before linking to it. Verification requires an exact match, including the absence of extra IDs, path segments, query parameters, or fragments.",
+                type: "string",
               },
             ],
           }
@@ -60,10 +66,10 @@ module DiscourseAi
           end
 
           terms = query.downcase.split(/\s+/).uniq
+          available_destinations =
+            destinations.select { |destination| destination.available?(guardian) }
           matches =
-            destinations.filter_map do |destination|
-              next if !destination.available?(guardian)
-
+            available_destinations.filter_map do |destination|
               search_text = destination.search_text
               score = terms.count { |term| search_text.include?(term) }
               next if score.zero?
@@ -78,10 +84,39 @@ module DiscourseAi
               .map { |_, destination| destination.to_h }
           @result_count = results.length
 
-          { destinations: results }
+          result = { destinations: results }
+          if parameters[:url].present?
+            result[:url_verification] = verify_url(parameters[:url].to_s, available_destinations)
+          end
+          result
         end
 
         private
+
+        def verify_url(url, available_destinations)
+          canonical_urls = available_destinations.map { |destination| destination.to_h[:url] }
+
+          category_prefix = "#{Discourse.base_url}/c/"
+          if url.start_with?(category_prefix)
+            category_ids = url.delete_prefix(category_prefix).split(%r{[/?#]}).grep(/\A\d+\z/)
+            canonical_urls.concat(
+              Category
+                .secured(guardian)
+                .where(id: category_ids)
+                .map { |category| "#{Discourse.base_url_no_prefix}#{category.url}" },
+            )
+          end
+
+          canonical_url = canonical_urls.find { |candidate| candidate == url }
+          canonical_url ||=
+            canonical_urls
+              .sort_by { |candidate| -candidate.length }
+              .find do |candidate|
+                %w[/ ? #].any? { |separator| url.start_with?("#{candidate}#{separator}") }
+              end
+
+          { verified: canonical_url == url, canonical_url: canonical_url }
+        end
 
         def destinations
           core =

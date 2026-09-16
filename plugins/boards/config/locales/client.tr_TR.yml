@@ -6,6 +6,18 @@
 
 tr_TR:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Başlık"
+        icon: "Simge"
+        color: "Renk"
+        tag_name: "Etiket"
+        default_sort_priority: "Öncelik"
+      create_board:
+        name: "Ad"
+        slug: "Kısa ad"
+        tag_names: "Etiketler"
+        category_ids: "Kategoriler"
     boards:
       status:
         all: "Tümü"

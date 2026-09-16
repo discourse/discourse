@@ -339,7 +339,13 @@ module DiscourseAi
         Discourse.warn_exception(e, message: "Discourse AI: Unable to generate title")
       end
 
-      def reply_to_chat_message(message, channel, context_post_ids)
+      def reply_to_chat_message(
+        message,
+        channel,
+        context_post_ids,
+        custom_instructions: nil,
+        additional_messages: []
+      )
         agent_user = User.find(bot.agent.class.user_id)
 
         participants = channel.user_chat_channel_memberships.map { |m| m.user.username }
@@ -355,6 +361,7 @@ module DiscourseAi
         context =
           DiscourseAi::Agents::BotContext.new(
             participants: participants,
+            custom_instructions: custom_instructions,
             message_id: message.id,
             channel_id: channel.id,
             context_post_ids: context_post_ids,
@@ -377,8 +384,10 @@ module DiscourseAi
             cancel_manager: DiscourseAi::Completions::CancelManager.new,
           )
 
+        context.messages.concat(additional_messages)
+
         reply = nil
-        guardian = Guardian.new(agent_user)
+        guardian = agent_user.guardian
 
         force_thread = message.thread_id.nil? && channel.direct_message_channel?
         in_reply_to_id = channel.direct_message_channel? ? message.id : nil
@@ -500,10 +509,12 @@ module DiscourseAi
         silent_mode: false,
         feature_name: nil,
         existing_reply_post: nil,
+        append_to_existing_reply: false,
         cancel_manager: nil,
         attributed_user: nil,
         feature_context: nil,
         authorization_user_id: nil,
+        visibility_user: post.user,
         &blk
       )
         # this is a multithreading issue
@@ -531,17 +542,19 @@ module DiscourseAi
           )
 
         context_llm = bot.llm
+        visibility_guardian = Guardian.new(visibility_user)
         context =
           DiscourseAi::Agents::BotContext.new(
             post: post,
             user: attributed_user,
+            guardian: visibility_guardian,
             custom_instructions: custom_instructions,
             feature_name: feature_name,
             feature_context: feature_context,
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
-                guardian: (attributed_user || post.user).guardian,
+                guardian: visibility_guardian,
                 style: context_style,
                 max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
                 context_token_budget: context_token_budget(context_llm),
@@ -568,6 +581,13 @@ module DiscourseAi
           if existing_reply_post.user_id != reply_user.id
             raise Discourse::InvalidParameters.new(:reply_post_id)
           end
+
+          if append_to_existing_reply
+            reply << existing_reply_post.raw << "\n\n"
+            previous_custom_prompts =
+              existing_reply_post.post_custom_prompt&.custom_prompt.presence ||
+                [[existing_reply_post.raw, reply_user.username]]
+          end
         end
 
         stream_reply = post.topic.private_message? if stream_reply.nil?
@@ -593,8 +613,10 @@ module DiscourseAi
           reply_post = existing_reply_post
 
           if reply_post
-            reply_post.update_columns(raw: "", cooked: "")
-            reply_post.post_custom_prompt = nil
+            if !append_to_existing_reply
+              reply_post.update_columns(raw: "", cooked: "")
+              reply_post.post_custom_prompt = nil
+            end
           else
             reply_post =
               PostCreator.create!(
@@ -617,7 +639,7 @@ module DiscourseAi
           publish_update(
             reply_post,
             payload: {
-              raw: "",
+              raw: reply.dup,
             },
             user_ids: stream_user_ids,
             group_ids: stream_group_ids,
@@ -711,7 +733,7 @@ module DiscourseAi
           )
         elsif existing_reply_post
           reply_post = existing_reply_post
-          reply_post.post_custom_prompt = nil
+          reply_post.post_custom_prompt = nil if !append_to_existing_reply
           reply_post.revise(
             bot.bot_user,
             { raw: reply },
@@ -736,9 +758,10 @@ module DiscourseAi
         # a bit messy internally, but this is how we tell
         is_thinking = new_custom_prompts.any? { |prompt| prompt[4].present? }
 
-        if is_thinking || new_custom_prompts.length > 1
+        if previous_custom_prompts || is_thinking || new_custom_prompts.length > 1
           reply_post.post_custom_prompt ||= reply_post.build_post_custom_prompt(custom_prompt: [])
-          prompt = reply_post.post_custom_prompt.custom_prompt || []
+          prompt =
+            (previous_custom_prompts || reply_post.post_custom_prompt.custom_prompt || []).dup
           prompt.concat(new_custom_prompts)
           reply_post.post_custom_prompt.update!(custom_prompt: prompt)
         end

@@ -6,6 +6,24 @@
 
 uk:
   js:
+    discourse_workflows:
+      create_board_column:
+        board_id: "Дошка"
+        title: "Назва"
+        icon: "Іконка"
+        color: "Колір"
+        tag_name: "Теґ"
+        default_sort: "Сортування за замовчуванням"
+        default_sort_priority: "Пріоритет"
+        default_sort_recency: "Останні"
+      create_board:
+        name: "Імʼя"
+        slug: "Мітка"
+        tag_names: "Теґи"
+        category_ids: "Розділи"
+      card_moved:
+        board_id: "Дошка"
+        board_id_placeholder: "Усі дошки"
     boards:
       filter_boards: "Фільтрувальні дошки"
       filter_boards_no_results: "Немає дощок, що відповідають вашому пошуку"
