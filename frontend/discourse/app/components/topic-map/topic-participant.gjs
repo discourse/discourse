@@ -61,10 +61,10 @@ export default class TopicParticipant extends Component {
     >
       <div class={{this.participantClasses}}>
         <DUserLink
-          @username={{@participant.username}}
-          @href={{this.userUrl}}
           class={{this.linkClasses}}
           title={{@participant.username}}
+          @href={{this.userUrl}}
+          @username={{@participant.username}}
         >
 
           {{this.avatarImage}}

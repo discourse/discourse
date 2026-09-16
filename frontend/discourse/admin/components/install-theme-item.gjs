@@ -11,10 +11,10 @@ export default class InstallThemeItem extends Component {
   <template>
     <div class={{this.classes}}>
       <DRadioButton
-        @name="install-items"
         @id={{@value}}
-        @value={{@value}}
+        @name="install-items"
         @selection={{@selection}}
+        @value={{@value}}
       />
       <label class="radio" for={{@value}}>
         {{#if @showIcon}}

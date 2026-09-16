@@ -182,12 +182,12 @@ export default class ChatMessageReactionsUsers extends Component {
           >
             {{#each this.reactions as |reaction|}}
               <button
-                type="button"
                 class={{dConcatClass
                   "users-popup__filter"
                   (if (eq reaction.emoji this.activeFilter) "is-active")
                 }}
                 data-reaction-filter={{reaction.emoji}}
+                type="button"
                 {{on "click" (fn this.selectFilter reaction.emoji)}}
               >
                 {{dEmoji reaction.emoji skipTitle=true}}

@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import AuthTokenModal from "discourse/components/modal/auth-token";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
@@ -90,30 +91,6 @@ export default class SecurityController extends Controller {
       : this.model?.user_auth_tokens?.slice(0, DEFAULT_AUTH_TOKENS_COUNT);
   }
 
-  @action
-  changePassword(event) {
-    event?.preventDefault();
-    if (!this.passwordProgress) {
-      this.set("passwordProgress", i18n("user.change_password.in_progress"));
-      return this.model
-        .changePassword()
-        .then(() => {
-          // password changed
-          this.setProperties({
-            changePasswordProgress: false,
-            passwordProgress: i18n("user.change_password.success"),
-          });
-        })
-        .catch(() => {
-          // password failed to change
-          this.setProperties({
-            changePasswordProgress: false,
-            passwordProgress: i18n("user.change_password.error"),
-          });
-        });
-    }
-  }
-
   @computed(
     "model.is_anonymous",
     "model.no_password",
@@ -146,6 +123,40 @@ export default class SecurityController extends Controller {
 
   get associatedAccountsLoaded() {
     return typeof this.model.associated_accounts !== "undefined";
+  }
+
+  @action
+  changePassword(event) {
+    event?.preventDefault();
+    if (!this.passwordProgress) {
+      this.set("passwordProgress", i18n("user.change_password.in_progress"));
+      return this.model
+        .changePassword()
+        .then((result) => {
+          if (result.email_code) {
+            this.set("passwordProgress", null);
+            this.modal.show(ForgotPassword, {
+              model: {
+                codeSent: true,
+                emailOrUsername: this.model.email || this.model.username,
+              },
+            });
+            return;
+          }
+
+          this.setProperties({
+            changePasswordProgress: false,
+            passwordProgress: i18n("user.change_password.success"),
+          });
+        })
+        .catch(() => {
+          // password failed to change
+          this.setProperties({
+            changePasswordProgress: false,
+            passwordProgress: i18n("user.change_password.error"),
+          });
+        });
+    }
   }
 
   removePasswordConfirm() {

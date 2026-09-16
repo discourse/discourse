@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 bg:
+  mcp:
+    errors:
+      topic_not_found: "Темата не е намерена"
+    oauth:
+      deny: "Отказ"
   llms_txt:
     sections:
       optional: "По избор"
@@ -429,6 +434,7 @@ bg:
     os:
       android: "Android"
   admin_site_traffic_explorer:
+    unknown: "Неизвестно"
     traffic_types:
       anonymous: "Анонимен"
   change_email:
@@ -495,7 +501,7 @@ bg:
         make: "Тази тема сега е банер. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя."
         remove: "Тази тема вече не е банер. Тя няма да се появява повече най-отгоре на всяка страница."
   unsubscribe:
-    title: "Отписвам"
+    unsubscribe: "Отписвам"
     log_out: "Изход "
     digest_frequency:
       never: "никога"
@@ -1511,13 +1517,6 @@ bg:
         title: "Да"
       approve_and_unhide:
         title: "Да"
-      delete_post:
-        title: "Изтрий публикацията"
-        complete: "Публикацията е изтрита"
-      hide_post:
-        title: "Скриване на публикацията"
-      restore_post:
-        title: "Възстановяване на публикацията"
       silence_user:
         title: "Заглушаване на потребителя"
       suspend_user:

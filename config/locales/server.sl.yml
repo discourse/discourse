@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sl:
+  mcp:
+    errors:
+      topic_not_found: "Ne najdemo temo."
+    oauth:
+      deny: "Zavrni"
   llms_txt:
     sections:
       optional: "Neobvezno"
@@ -492,6 +497,7 @@ sl:
       windows: "Microsoft Windows"
       unknown: "neznan operacijski sistem"
   admin_site_traffic_explorer:
+    unknown: "Neznano"
     traffic_types:
       anonymous: "Anonimni"
   change_email:
@@ -568,7 +574,7 @@ sl:
   unsubscribed:
     title: "Nastavitve e-pošte spremenjene!"
   unsubscribe:
-    title: "Odjavi"
+    unsubscribe: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
     log_out: "Odjava"
     submit: "Shrani nastavitve"
@@ -2093,8 +2099,6 @@ sl:
         title: "Da"
       approve_and_unhide:
         title: "Da"
-      delete_post:
-        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

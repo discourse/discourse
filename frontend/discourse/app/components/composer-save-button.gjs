@@ -26,8 +26,8 @@ export default class ComposerSaveButton extends Component {
 
   <template>
     <DButton
-      class={{dConcatClass "btn-primary create" (if @disableSubmit "disabled")}}
       aria-keyshortcuts={{if this.capabilities.hasKeyboard this.shortcut.aria}}
+      class={{dConcatClass "btn-primary create" (if @disableSubmit "disabled")}}
       ...attributes
       @action={{@action}}
       @forwardEvent={{@forwardEvent}}

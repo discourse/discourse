@@ -31,19 +31,6 @@ export default class ChatMessageFlag {
     return false;
   }
 
-  _rewriteFlagDescriptions(flags) {
-    return flags.map((flag) => {
-      flag.set(
-        "description",
-        i18n(`chat.flags.${flag.name_key}`, {
-          basePath: getURL(""),
-          defaultValue: flag.description,
-        })
-      );
-      return flag;
-    });
-  }
-
   flagsAvailable(flagModal) {
     let flagsAvailable = flagModal.site.flagTypes;
 
@@ -85,5 +72,18 @@ export default class ChatMessageFlag {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  _rewriteFlagDescriptions(flags) {
+    return flags.map((flag) => {
+      flag.set(
+        "description",
+        i18n(`chat.flags.${flag.name_key}`, {
+          basePath: getURL(""),
+          defaultValue: flag.description,
+        })
+      );
+      return flag;
+    });
   }
 }

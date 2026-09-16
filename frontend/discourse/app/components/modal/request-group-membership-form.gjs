@@ -45,10 +45,10 @@ export default class RequestGroupMembershipForm extends Component {
 
   <template>
     <DModal
-      @title={{this.title}}
+      class="request-group-membership-form"
       @closeModal={{@closeModal}}
       @inline={{@inline}}
-      class="request-group-membership-form"
+      @title={{this.title}}
     >
       <:body>
         <div class="control-group">
@@ -57,23 +57,23 @@ export default class RequestGroupMembershipForm extends Component {
           </label>
 
           <DExpandingTextArea
-            {{on "input" (withEventValue (fn (mut this.reason)))}}
-            @value={{this.reason}}
             maxlength="5000"
+            @value={{this.reason}}
+            {{on "input" (withEventValue (fn (mut this.reason)))}}
           />
         </div>
       </:body>
 
       <:footer>
         <DButton
-          @action={{this.requestMember}}
-          @label="groups.membership_request.submit"
-          @disabled={{this.disableSubmit}}
           class="btn-primary"
+          @action={{this.requestMember}}
+          @disabled={{this.disableSubmit}}
+          @label="groups.membership_request.submit"
         />
 
         <DModalCancel @close={{@closeModal}} />
-        <DConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+        <DConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
       </:footer>
     </DModal>
   </template>

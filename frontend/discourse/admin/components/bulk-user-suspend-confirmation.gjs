@@ -47,25 +47,6 @@ export default class BulkUserSuspendConfirmation extends Component {
     );
   }
 
-  #logError(line) {
-    this.#log(line, "error");
-  }
-
-  #logSuccess(line) {
-    this.#log(line, "success");
-  }
-
-  #logNeutral(line) {
-    this.#log(line, "neutral");
-  }
-
-  #log(line, type) {
-    this.logs.push({
-      line,
-      type,
-    });
-  }
-
   @bind
   onSuspendProgress(data) {
     if (data.success) {
@@ -140,6 +121,25 @@ export default class BulkUserSuspendConfirmation extends Component {
     }
   }
 
+  #logError(line) {
+    this.#log(line, "error");
+  }
+
+  #logSuccess(line) {
+    this.#log(line, "success");
+  }
+
+  #logNeutral(line) {
+    this.#log(line, "neutral");
+  }
+
+  #log(line, type) {
+    this.logs.push({
+      line,
+      type,
+    });
+  }
+
   <template>
     <DModal
       class="bulk-user-suspend-confirmation"
@@ -170,31 +170,31 @@ export default class BulkUserSuspendConfirmation extends Component {
             }}
           </p>
           <DFutureDateInput
-            @label="admin.user.suspend_duration"
+            class="suspend-until"
             @clearable={{false}}
             @input={{this.suspendUntil}}
+            @label="admin.user.suspend_duration"
             @onChangeInput={{fn (mut this.suspendUntil)}}
-            class="suspend-until"
           />
           <AdminPenaltyReason
+            @message={{this.message}}
             @penaltyType="suspend"
             @reason={{this.reason}}
-            @message={{this.message}}
           />
         {{/if}}
       </:body>
       <:footer>
         <DButton
           class="confirm-suspend btn-danger"
+          @action={{this.startSuspend}}
+          @disabled={{this.submitDisabled}}
           @icon="ban"
           @label="admin.users.bulk_actions.suspend.confirmation_modal.confirm"
-          @disabled={{this.submitDisabled}}
-          @action={{this.startSuspend}}
         />
         <DButton
           class="btn-default"
-          @label="admin.users.bulk_actions.suspend.confirmation_modal.close"
           @action={{this.closeModal}}
+          @label="admin.users.bulk_actions.suspend.confirmation_modal.close"
         />
       </:footer>
     </DModal>

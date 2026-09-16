@@ -13,6 +13,9 @@ hy:
       sections:
         typography:
           example: "Բարի գալուստ Discourse"
+        context_menu:
+          actions:
+            delete: "Ջնջել"
         colors:
           title: "Գույներ"
         icons:

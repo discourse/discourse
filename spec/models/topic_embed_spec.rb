@@ -14,6 +14,7 @@ RSpec.describe TopicEmbed do
     let(:contents) do
       "<p>hello world new post <a href='/hello'>hello</a> <img src='images/wat.jpg'></p>"
     end
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)
@@ -159,13 +160,13 @@ RSpec.describe TopicEmbed do
         expect(post.reload.cook_method).to eq(Post.cook_methods[:regular])
       end
 
-      it "Should leave uppercase Feed Entry URL untouched in content" do
+      it "leaves an uppercase feed entry URL untouched in content" do
         cased_url = "http://eviltrout.com/ABCD"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
-      it "Should leave lowercase Feed Entry URL untouched in content" do
+      it "leaves a lowercase feed entry URL untouched in content" do
         cased_url = "http://eviltrout.com/abcd"
         post = TopicEmbed.import(user, cased_url, title, "some random content")
         expect(post.cooked).to match(/#{cased_url}/)
@@ -330,7 +331,7 @@ RSpec.describe TopicEmbed do
           expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
         end
 
-        it "will revert to defaults if the modifier returns nil" do
+        it "reverts to defaults when the modifier returns nil" do
           plugin = Plugin::Instance.new
           plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
 
@@ -393,6 +394,22 @@ RSpec.describe TopicEmbed do
       it "does update tags if tags are empty" do
         imported_page = TopicEmbed.import(user, url, title, contents, tags: [])
         expect(imported_page.topic.tags).to match_array([])
+      end
+
+      it "does not revise the post when the tags cannot all be saved" do
+        SiteSetting.max_tags_per_topic = 1
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+
+        Post.any_instance.expects(:revise).never
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+      end
+
+      it "does not revise the post when the existing tags match the incoming tags" do
+        TopicEmbed.import(user, url, title, contents, tags: tags)
+        SiteSetting.max_tags_per_topic = 1
+
+        Post.any_instance.expects(:revise).never
+        TopicEmbed.import(user, url, title, contents, tags: tags)
       end
     end
 
@@ -577,6 +594,23 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.topic_id_for_embed("http://examples.com/post/248")).to eq(nil)
       expect(TopicEmbed.topic_id_for_embed("http://example.com/post/24")).to eq(nil)
       expect(TopicEmbed.topic_id_for_embed("http://example.com/post")).to eq(nil)
+    end
+
+    it "finds the topic id when the stored embed_url has mixed case" do
+      topic_embed = Fabricate(:topic_embed, embed_url: "https://Example.com/Post/248")
+
+      expect(TopicEmbed.topic_id_for_embed("http://example.com/post/248")).to eq(
+        topic_embed.topic_id,
+      )
+    end
+
+    it "returns the oldest topic id when both http and https embeds exist" do
+      http_embed = Fabricate(:topic_embed, embed_url: "http://example.com/post/248")
+      Fabricate(:topic_embed, embed_url: "https://example.com/post/248")
+
+      expect(TopicEmbed.topic_id_for_embed("https://example.com/post/248")).to eq(
+        http_embed.topic_id,
+      )
     end
 
     it "finds the topic id when the embed_url contains a query string" do
@@ -913,6 +947,7 @@ RSpec.describe TopicEmbed do
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) { "<p>hello world new post :D</p>" }
+
     fab!(:embeddable_host)
     fab!(:category)
     fab!(:tag)

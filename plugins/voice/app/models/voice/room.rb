@@ -46,6 +46,28 @@ module Voice
     scope :persistent, -> { where(ephemeral: false) }
     scope :ephemeral, -> { where(ephemeral: true) }
 
+    def self.visible_to(guardian)
+      rooms = persistent
+      return rooms.none unless SiteSetting.voice_enabled?
+
+      unless guardian.can_access_voice?
+        return guardian.voice_public_access? ? rooms.public_rooms : rooms.none
+      end
+
+      return rooms if guardian.is_staff?
+
+      rooms.where(<<~SQL, user_id: guardian.user.id)
+          "voice_rooms"."public"
+          OR "voice_rooms"."creator_id" = :user_id
+          OR EXISTS (
+            SELECT 1
+            FROM "voice_room_memberships"
+            WHERE "voice_room_memberships"."room_id" = "voice_rooms"."id"
+              AND "voice_room_memberships"."user_id" = :user_id
+          )
+        SQL
+    end
+
     # Strict by design: the column is an integer, so letting an unknown name
     # through means AR casts it with to_i and silently produces an open room.
     def self.room_type_from_name!(name)
@@ -80,12 +102,38 @@ module Voice
       SiteSetting.voice_video_enabled && video_enabled
     end
 
+    def membership_for(user)
+      return if user.blank?
+
+      if room_memberships.loaded?
+        room_memberships.find { |membership| membership.user_id == user.id }
+      else
+        room_memberships.find_by(user_id: user.id)
+      end
+    end
+
+    def member?(user)
+      membership_for(user).present?
+    end
+
+    def moderator?(user)
+      membership_for(user)&.moderator? || false
+    end
+
     def moderator_ids
-      room_memberships.moderator.pluck(:user_id)
+      if room_memberships.loaded?
+        room_memberships.select(&:moderator?).map(&:user_id)
+      else
+        room_memberships.moderator.pluck(:user_id)
+      end
     end
 
     def member_ids
-      room_memberships.pluck(:user_id)
+      if room_memberships.loaded?
+        room_memberships.map(&:user_id)
+      else
+        room_memberships.pluck(:user_id)
+      end
     end
 
     def message_bus_targets
@@ -106,6 +154,11 @@ module Voice
         @chat_channel = ::Chat::Channel.find_by(id: chat_channel_id)
       end
       @chat_channel
+    end
+
+    def preload_chat_channel(channel)
+      @chat_channel_for_id = chat_channel_id
+      @chat_channel = channel
     end
 
     def reload(...)

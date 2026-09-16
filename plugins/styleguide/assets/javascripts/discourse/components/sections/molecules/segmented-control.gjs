@@ -4,8 +4,8 @@ import segmentedControlSource from "../../examples/molecules/segmented-control?s
 
 export default <template>
   <StyleguideExample
-    @title="<DSegmentedControl>"
     @code={{segmentedControlSource}}
+    @title="<DSegmentedControl>"
   >
     <SegmentedControlExample />
   </StyleguideExample>

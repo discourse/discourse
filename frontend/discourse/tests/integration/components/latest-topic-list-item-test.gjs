@@ -7,6 +7,19 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | LatestTopicListItem", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    withPluginApi((api) => {
+      api.renderInOutlet(
+        "topic-list-after-title",
+        <template>
+          {{#if @outletArgs.topic.event_starts_at}}
+            <span class="event-date test-badge">in 14 hours</span>
+          {{/if}}
+        </template>
+      );
+    });
+  });
+
   test("latest-topic-list-item-class value transformer", async function (assert) {
     withPluginApi((api) => {
       api.registerValueTransformer(
@@ -34,5 +47,20 @@ module("Integration | Component | LatestTopicListItem", function (hooks) {
     assert
       .dom(".latest-topic-list-item[data-topic-id='1235']")
       .doesNotHaveClass("bar");
+  });
+
+  test("renders the topic-list-after-title connector (event badge) for event topics", async function (assert) {
+    const store = this.owner.lookup("service:store");
+    const topic = store.createRecord("topic", {
+      id: 1234,
+      title: "My event topic",
+      event_starts_at: "2026-06-01T10:00:00.000Z",
+    });
+
+    await render(<template><LatestTopicListItem @topic={{topic}} /></template>);
+
+    assert
+      .dom(".latest-topic-list-item .event-date.test-badge")
+      .exists("renders the event badge after the topic title");
   });
 });

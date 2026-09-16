@@ -30,10 +30,10 @@ const SKIPPED_FILTERS = [
 
 export default <template>
   <EmailLogsList
-    @status="skipped"
-    @logType="skipped"
-    @headers={{SKIPPED_HEADERS}}
     @filters={{SKIPPED_FILTERS}}
+    @headers={{SKIPPED_HEADERS}}
+    @logType="skipped"
+    @status="skipped"
   >
     <:default as |emailLog|>
       <tr data-test-email-log-row-id={{emailLog.id}}>
@@ -41,7 +41,7 @@ export default <template>
         <td>
           {{#if emailLog.user}}
             <span class="email-logs-user">
-              <LinkTo @route="adminUser" @model={{emailLog.user}}>
+              <LinkTo @model={{emailLog.user}} @route="adminUser">
                 {{dAvatar emailLog.user imageSize="tiny"}}
                 {{emailLog.user.username}}
               </LinkTo>

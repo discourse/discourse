@@ -3,7 +3,7 @@ import CharCounterExample from "../../examples/molecules/char-counter";
 import charCounterSource from "../../examples/molecules/char-counter?source=file";
 
 export default <template>
-  <StyleguideExample @title="<DCharCounter>" @code={{charCounterSource}}>
+  <StyleguideExample @code={{charCounterSource}} @title="<DCharCounter>">
     <CharCounterExample />
   </StyleguideExample>
 </template>

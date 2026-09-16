@@ -15,6 +15,11 @@ module DiscoursePolicy
       old_policies = extract_policies(@post.cooked)
       new_policies = extract_policies(PrettyText.cook(new_raw, {}))
 
+      if @post.wiki? && new_policies.present?
+        @post.errors.add(:base, I18n.t("discourse_policy.errors.policy_cannot_be_wiki"))
+        return false
+      end
+
       return true if old_policies == new_policies
 
       if !user_allowed?(@post.acting_user) || !user_allowed?(@post.user) ||

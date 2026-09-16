@@ -22,17 +22,17 @@ export default class PostMetaDataPosterNameIcon extends Component {
       {{#if @url}}
         <a href={{@url}}>
           <Content
-            @icon={{@icon}}
             @emojis={{this.emojis}}
             @emojiTitle={{@emojiTitle}}
+            @icon={{@icon}}
             @text={{@text}}
           />
         </a>
       {{else}}
         <Content
-          @icon={{@icon}}
           @emojis={{this.emojis}}
           @emojiTitle={{@emojiTitle}}
+          @icon={{@icon}}
           @text={{@text}}
         />
       {{/if}}

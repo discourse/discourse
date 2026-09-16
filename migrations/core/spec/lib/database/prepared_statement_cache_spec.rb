@@ -9,7 +9,7 @@ RSpec.describe Migrations::Database::PreparedStatementCache do
     instance_double(Extralite::Query, close: nil)
   end
 
-  it "should inherit behavior from LruRedux::Cache" do
+  it "inherits behavior from LruRedux::Cache" do
     expect(described_class).to be < LruRedux::Cache
   end
 

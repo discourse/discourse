@@ -99,9 +99,9 @@ export default class BoardsConstraintFix extends Component {
 
   <template>
     <DModal
+      class="discourse-boards-constraint-fix-modal"
       @closeModal={{this.cancel}}
       @title={{i18n "boards.board.constraint_fix_title"}}
-      class="discourse-boards-constraint-fix-modal"
     >
       <:body>
         <p class="discourse-boards-constraint-fix__description">
@@ -114,14 +114,14 @@ export default class BoardsConstraintFix extends Component {
             <div class="discourse-boards-constraint-fix__options">
               {{#each this.categoryOptions as |cat|}}
                 <DButton
-                  @action={{fn this.selectCategory cat.id}}
-                  @translatedLabel={{cat.name}}
                   class={{if
                     (eq this.selectedCategoryId cat.id)
                     "btn-primary discourse-boards-constraint-fix__option--selected"
                     "btn-default"
                   }}
                   data-category-id={{cat.id}}
+                  @action={{fn this.selectCategory cat.id}}
+                  @translatedLabel={{cat.name}}
                 />
               {{/each}}
             </div>
@@ -134,14 +134,14 @@ export default class BoardsConstraintFix extends Component {
             <div class="discourse-boards-constraint-fix__options">
               {{#each this.tagOptions as |tagName|}}
                 <DButton
-                  @action={{fn this.toggleTag tagName}}
-                  @translatedLabel={{tagName}}
                   class={{if
                     (includes this.selectedTagNames tagName)
                     "btn-primary discourse-boards-constraint-fix__option--selected"
                     "btn-default"
                   }}
                   data-tag-name={{tagName}}
+                  @action={{fn this.toggleTag tagName}}
+                  @translatedLabel={{tagName}}
                 />
               {{/each}}
             </div>
@@ -150,12 +150,12 @@ export default class BoardsConstraintFix extends Component {
       </:body>
       <:footer>
         <DButton
-          @action={{this.confirm}}
-          @label="boards.board.constraint_fix_confirm"
-          @disabled={{not this.canSave}}
           class="btn-primary"
+          @action={{this.confirm}}
+          @disabled={{not this.canSave}}
+          @label="boards.board.constraint_fix_confirm"
         />
-        <DButton @action={{this.cancel}} @label="cancel" class="btn-flat" />
+        <DButton class="btn-flat" @action={{this.cancel}} @label="cancel" />
       </:footer>
     </DModal>
   </template>

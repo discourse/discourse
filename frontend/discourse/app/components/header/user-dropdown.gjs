@@ -25,19 +25,19 @@ export default class UserDropdown extends Component {
 
   <template>
     <li
-      id="current-user"
       class={{dConcatClass
         (if @active "active")
         "header-dropdown-toggle current-user user-menu-panel"
       }}
+      id="current-user"
     >
       <PluginOutlet @name="user-dropdown-button__before" />
       <DButton
-        id="toggle-current-user"
-        class="icon btn-flat"
-        aria-haspopup="true"
         aria-expanded={{@active}}
+        aria-haspopup="true"
         aria-label={{i18n "user.avatar.header_title"}}
+        class="icon btn-flat"
+        id="toggle-current-user"
         title={{i18n "user.avatar.header_title"}}
         {{on "click" this.click}}
       >

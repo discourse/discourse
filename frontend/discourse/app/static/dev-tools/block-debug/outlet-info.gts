@@ -81,8 +81,8 @@ export default class OutletInfo extends Component<OutletInfoSignature> {
       <DTooltip
         @identifier="block-outlet-info"
         @interactive={{true}}
-        @placement="bottom-start"
         @maxWidth={{400}}
+        @placement="bottom-start"
         @triggers={{hash
           mobile=(array "click")
           desktop=(array "click" "hover")
@@ -111,8 +111,8 @@ export default class OutletInfo extends Component<OutletInfoSignature> {
               <a
                 class="github-link"
                 href="https://github.com/search?q=repo%3Adiscourse%2Fdiscourse%20BlockOutlet%20@name=%22{{@outletName}}%22&type=code"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
                 title="Find on GitHub"
               >{{dIcon "fab-github"}}</a>
             </div>

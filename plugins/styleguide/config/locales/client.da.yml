@@ -27,6 +27,10 @@ da:
           title: "Dato/klokkeslæt input"
         menus:
           title: "Menuer"
+        context_menu:
+          actions:
+            duplicate: "Dupliker"
+            delete: "Slet"
         font_scale:
           title: "Skrifttype"
         colors:

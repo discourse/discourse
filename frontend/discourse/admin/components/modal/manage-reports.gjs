@@ -215,9 +215,9 @@ export default class ManageReports extends Component {
 
   <template>
     <DModal
-      @title={{i18n "admin.dashboard.reports_section.modal.title"}}
-      @closeModal={{@closeModal}}
       class="manage-reports has-search manageable-row-list"
+      @closeModal={{@closeModal}}
+      @title={{i18n "admin.dashboard.reports_section.modal.title"}}
     >
 
       <:belowModalTitle>
@@ -233,12 +233,12 @@ export default class ManageReports extends Component {
       <:belowHeader>
         <div class="manageable-row-list__search-wrapper">
           <DFilterInput
-            @icons={{hash left="magnifying-glass"}}
-            @value={{this.search}}
-            @filterAction={{this.updateSearch}}
             placeholder={{i18n
               "admin.dashboard.reports_section.modal.search_placeholder"
             }}
+            @filterAction={{this.updateSearch}}
+            @icons={{hash left="magnifying-glass"}}
+            @value={{this.search}}
           />
         </div>
       </:belowHeader>
@@ -256,17 +256,17 @@ export default class ManageReports extends Component {
             {{#each this.visibleRows key="key" as |row index|}}
               <ManageableRowListItem
                 @ariaLabelPrefix={{ARIA_LABEL_PREFIX}}
-                @row={{row}}
                 @index={{index}}
                 @lastEnabledIndex={{this.lastEnabledIndex}}
-                @reorderable={{this.list.reorderable}}
-                @toggleDisabled={{this.toggleDisabled row}}
-                @onToggle={{this.toggle}}
-                @onMoveUp={{this.moveUp}}
-                @onMoveDown={{this.moveDown}}
+                @onDragEnd={{this.onDragEnd}}
                 @onDragStart={{this.onDragStart}}
                 @onDrop={{this.onDrop}}
-                @onDragEnd={{this.onDragEnd}}
+                @onMoveDown={{this.moveDown}}
+                @onMoveUp={{this.moveUp}}
+                @onToggle={{this.toggle}}
+                @reorderable={{this.list.reorderable}}
+                @row={{row}}
+                @toggleDisabled={{this.toggleDisabled row}}
               />
             {{/each}}
           </ul>
@@ -296,16 +296,16 @@ export default class ManageReports extends Component {
         <div class="manage-reports__footer-actions">
 
           <DButton
-            @label="js.cancel_value"
-            @action={{@closeModal}}
             class="btn-transparent manage-reports__cancel"
+            @action={{@closeModal}}
+            @label="js.cancel_value"
           />
           <DButton
-            @label="admin.dashboard.reports_section.modal.apply"
+            class="btn-primary manage-reports__apply"
             @action={{this.apply}}
             @disabled={{this.applying}}
             @isLoading={{this.applying}}
-            class="btn-primary manage-reports__apply"
+            @label="admin.dashboard.reports_section.modal.apply"
           />
         </div>
 

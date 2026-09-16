@@ -40,6 +40,10 @@ en:
         tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
     errors:
+      access_control:
+        invalid_groups: "Groups from input must resolve to an array of valid group IDs."
+        missing_groups: "Groups from input contains groups that no longer exist."
+        required_permission: "Access must include at least one %{permissions} permission."
       too_many_tags: "A workflow can have at most %{max} tags."
       tag_too_long: "Tags can have at most %{max} characters."
       tag_contains_comma: "Tags cannot contain commas."
@@ -85,10 +89,11 @@ en:
       topic:
         create_failed: "Failed to create topic."
         bump_failed: "Failed to bump topic."
+        invalid_filter: "Invalid topic filter: %{fragments}."
       post:
         topic_closed_or_archived: "Cannot create a post in a closed or archived topic."
         edit_failed: "Failed to edit post."
-        invalid_filter: "Invalid post filter fragment: %{fragments}."
+        invalid_filter: "Invalid post filter: %{fragments}."
       flag_post:
         unknown_flag_type: "Unknown flag type: %{flag_type}."
         actor_not_staff: "The acting user must be a staff member to flag posts."
@@ -183,6 +188,8 @@ en:
         execution_failed: "Called workflow finished with status '%{status}'."
         execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+    post:
+      destroy_context: "Deleted by a workflow"
     flag_post:
       flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
     user:

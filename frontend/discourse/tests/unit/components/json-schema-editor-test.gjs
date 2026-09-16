@@ -30,9 +30,9 @@ module("Unit | Component | <JsonSchemaEditor />", function (hooks) {
     await render(
       <template>
         <JsonSchemaEditor
+          @closeModal={{closeModal}}
           @inline={{true}}
           @model={{model}}
-          @closeModal={{closeModal}}
         />
       </template>
     );
@@ -58,9 +58,9 @@ module("Unit | Component | <JsonSchemaEditor />", function (hooks) {
     await render(
       <template>
         <JsonSchemaEditor
+          @closeModal={{closeModal}}
           @inline={{true}}
           @model={{model}}
-          @closeModal={{closeModal}}
         />
       </template>
     );

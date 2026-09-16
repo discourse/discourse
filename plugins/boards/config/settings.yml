@@ -18,3 +18,5 @@ boards:
     allow_any: false
     client: true
     mandatory_values: "1" # auto group admins
+    depends_on:
+      - boards_enabled

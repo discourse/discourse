@@ -26,7 +26,7 @@ RSpec.describe NewPostManager do
       }
     end
 
-    it "should render the poll upon approval" do
+    it "renders the poll upon approval" do
       result = NewPostManager.new(user, params).perform
       expect(result.action).to eq(:enqueued)
       expect(result.reviewable).to be_present

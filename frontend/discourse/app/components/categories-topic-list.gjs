@@ -13,11 +13,11 @@ import { i18n } from "discourse-i18n";
 export default class CategoriesTopicList extends Component {
   <template>
     <div ...attributes>
-      <div role="heading" aria-level="2" class="table-heading">
+      <div aria-level="2" class="table-heading" role="heading">
         {{i18n (concat "filters." this.filter ".title")}}
         <PluginOutlet
-          @name="categories-topics-table-heading"
           @connectorTagName="div"
+          @name="categories-topics-table-heading"
         />
       </div>
 
@@ -34,13 +34,13 @@ export default class CategoriesTopicList extends Component {
             )
           }}
             <a
-              href={{getUrl (concat "/" this.filter "?order=created")}}
               class="btn btn-default pull-right"
+              href={{getUrl (concat "/" this.filter "?order=created")}}
             >{{i18n "more"}}</a>
           {{else}}
             <a
-              href={{getUrl (concat "/" this.filter)}}
               class="btn btn-default pull-right"
+              href={{getUrl (concat "/" this.filter)}}
             >{{i18n "more"}}</a>
           {{/if}}
         </div>

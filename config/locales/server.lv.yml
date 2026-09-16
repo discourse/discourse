@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 lv:
+  mcp:
+    errors:
+      topic_not_found: "Tēma nav atrasta "
+    oauth:
+      deny: "Atteikt"
   llms_txt:
     sections:
       optional: "Pēc izvēles"
@@ -223,6 +228,7 @@ lv:
   password_reset:
     title: "Atjaunot paroli"
   admin_site_traffic_explorer:
+    unknown: "Nezināms"
     traffic_types:
       anonymous: "Anonīmi"
   reviewable_score_types:
@@ -647,8 +653,6 @@ lv:
         title: "Jā"
       approve_and_unhide:
         title: "Jā"
-      delete_post:
-        complete: "Ieraksts dzēsts"
       delete_user:
         complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"

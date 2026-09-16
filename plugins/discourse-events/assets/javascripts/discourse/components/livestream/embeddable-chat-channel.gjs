@@ -54,6 +54,16 @@ export default class EmbedableChatChannel extends Component {
     return messageId ? [Number(messageId)] : [];
   }
 
+  // Inline means the channel is laid out by its parent rather than pinned over
+  // the page, so neither the visibility toggle nor a way to dismiss it applies.
+  get showCloseButton() {
+    if (this.args.inline) {
+      return false;
+    }
+
+    return this.args.onClose || !this.embeddableChat.isMobileModal;
+  }
+
   @bind
   async onMessage(message) {
     const membership = JSON.parse(message).user_channel_membership;
@@ -63,16 +73,6 @@ export default class EmbedableChatChannel extends Component {
     }
 
     this.activeChannel.currentUserMembership = membership;
-  }
-
-  // Inline means the channel is laid out by its parent rather than pinned over
-  // the page, so neither the visibility toggle nor a way to dismiss it applies.
-  get showCloseButton() {
-    if (this.args.inline) {
-      return false;
-    }
-
-    return this.args.onClose || !this.embeddableChat.isMobileModal;
   }
 
   @action
@@ -87,7 +87,6 @@ export default class EmbedableChatChannel extends Component {
 
   <template>
     <div
-      id="custom-chat-container"
       class={{if
         @inline
         "inline"
@@ -96,16 +95,17 @@ export default class EmbedableChatChannel extends Component {
           (unless this.embeddableChat.isMobileModal "no-modal-mobile")
         )
       }}
+      id="custom-chat-container"
       {{this.updateChannel}}
     >
       {{#if this.showCloseButton}}
         <div class="c-navbar-container livestream-chat-close">
 
           <DButton
-            @icon="xmark"
-            @action={{this.close}}
-            @title="chat.close"
             class="btn-transparent no-text c-navbar__close-drawer-button"
+            @action={{this.close}}
+            @icon="xmark"
+            @title="chat.close"
           />
         </div>
       {{/if}}
@@ -115,9 +115,9 @@ export default class EmbedableChatChannel extends Component {
             <ChatChannel
               @channel={{channel}}
               @context={{LIVESTREAM_CHAT_CONTEXT}}
-              @hiddenMessageIds={{this.hiddenMessageIds}}
-              @disableKeystrokeCapture={{true}}
               @disableAutoFocus={{true}}
+              @disableKeystrokeCapture={{true}}
+              @hiddenMessageIds={{this.hiddenMessageIds}}
             />
           {{/each}}
         {{/if}}

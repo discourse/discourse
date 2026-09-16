@@ -32,14 +32,14 @@ export default class Dropdown extends Component {
       ...attributes
     >
       <DButton
-        class="icon btn-flat"
         aria-expanded={{@active}}
         aria-haspopup="true"
-        @translatedTitle={{i18n @title}}
         aria-label={{i18n @title}}
+        class="icon btn-flat"
         id={{@iconId}}
         @icon={{@icon}}
         @translatedLabel={{@contents}}
+        @translatedTitle={{i18n @title}}
         {{on "click" this.click}}
       />
 

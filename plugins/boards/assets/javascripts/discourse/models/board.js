@@ -18,13 +18,17 @@ export default class Board {
   }
 
   @tracked anonymous_can_read;
+  @tracked archived;
+  @tracked can_archive;
   @tracked can_manage;
+  @tracked can_unarchive;
   @tracked can_write;
   @tracked card_style;
   @tracked category_ids;
   @tracked columns;
   @tracked id;
   @tracked name;
+  @tracked old_slug_used;
   @tracked require_confirmation;
   @tracked show_tags;
   @tracked show_topic_thumbnail;
@@ -36,6 +40,14 @@ export default class Board {
   constructor(args = {}) {
     Object.assign(this, args);
     this.columns = (args.columns || []).map((column) => Column.create(column));
+  }
+
+  get canManage() {
+    return !this.archived && this.can_manage;
+  }
+
+  get canWrite() {
+    return !this.archived && this.can_write;
   }
 
   get fancyTitle() {

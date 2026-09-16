@@ -43,15 +43,16 @@ module DiscourseDataExplorer
     end
 
     def self.fetch_many(identifiers, guardian:, filters: {})
-      return {} if guardian&.user.nil?
+      user = guardian&.user
+      return {} if user.nil?
 
       params = filters.with_indifferent_access
 
       load_queries(identifiers).each_with_object({}) do |query, hash|
         next if !guardian.user_can_access_query?(query) || !mountable?(query)
         result =
-          QueryRunner.cached_result(query, params, max_age: CACHE_MAX_AGE) ||
-            QueryRunner.run(query, params, current_user: guardian.user)
+          QueryRunner.cached_result(query, params, current_user: user, max_age: CACHE_MAX_AGE) ||
+            QueryRunner.run(query, params, current_user: user)
         result = result.merge(empty: Array(result[:rows]).empty?) if result.is_a?(Hash)
         hash[query.id.to_s] = result
       end

@@ -9,16 +9,34 @@ export default class Search extends Service {
   @service siteSettings;
 
   @tracked activeGlobalSearchTerm = "";
-  @tracked searchContext;
   @tracked highlightTerm;
   @tracked inTopicContext = false;
   @tracked visible = false;
   @tracked results = {};
   @tracked noResults = false;
   @tracked welcomeBannerSearchInViewport = false;
-
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search
+
+  @tracked _searchContext;
+
+  get searchContext() {
+    return this._searchContext;
+  }
+
+  set searchContext(context) {
+    if (
+      this.inTopicContext &&
+      (context?.type !== this._searchContext?.type ||
+        context?.id !== this._searchContext?.id)
+    ) {
+      this.inTopicContext = false;
+      this.results = {};
+      this.noResults = false;
+    }
+
+    this._searchContext = context;
+  }
 
   get currentSearchInputId() {
     if (this.welcomeBannerSearchInViewport) {
@@ -34,12 +52,12 @@ export default class Search extends Service {
     return this.siteSettings.search_experience;
   }
 
-  focusSearchInput() {
-    document.getElementById(this.currentSearchInputId)?.focus();
-  }
-
   get contextType() {
     return this.searchContext?.type || null;
+  }
+
+  focusSearchInput() {
+    document.getElementById(this.currentSearchInputId)?.focus();
   }
 
   // The need to navigate with the keyboard creates a lot shared logic
@@ -83,44 +101,55 @@ export default class Search extends Service {
         return;
       }
 
-      let links = document.querySelectorAll(".search-menu .results a");
-      let results = document.querySelectorAll(
-        ".search-menu .results .search-link"
+      const groupedItem =
+        ".search-menu .results [data-search-menu-navigation-item]:not([tabindex='-1'])";
+      const focusableItems = document.querySelectorAll(
+        `.search-menu .results a, ${groupedItem}`
+      );
+      const navigationItems = document.querySelectorAll(
+        `.search-menu .results .search-link, ${groupedItem}`
       );
 
-      if (!results.length) {
+      if (!navigationItems.length) {
         return;
       }
 
-      let prevResult;
-      let result;
+      let previousNavigationItem;
+      let navigationItem;
 
-      links.forEach((item) => {
-        if (item.classList.contains("search-link")) {
-          prevResult = item;
+      focusableItems.forEach((item) => {
+        if (
+          item.classList.contains("search-link") ||
+          item.hasAttribute("data-search-menu-navigation-item")
+        ) {
+          previousNavigationItem = item;
         }
 
         if (item === focused) {
-          result = prevResult;
+          navigationItem = previousNavigationItem;
         }
       });
 
       let index = -1;
-      if (result) {
-        index = Array.prototype.indexOf.call(results, result);
+      if (navigationItem) {
+        index = Array.prototype.indexOf.call(navigationItems, navigationItem);
       }
 
       if (index === -1 && e.key === "ArrowDown") {
-        // change focus from the search input to the first result item
-        const firstResult = results[0] || links[0];
+        const firstResult =
+          focused
+            .closest(".search-menu")
+            .querySelector(
+              ".search-result-topic .search-link, .search-result-post .search-link"
+            ) || navigationItems[0];
         firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
         this.focusSearchInput();
       } else if (index > -1) {
-        // change focus to the next result item if present
+        // change focus to the next navigation item if present
         index += e.key === "ArrowDown" ? 1 : -1;
-        if (index >= 0 && index < results.length) {
-          results[index].focus();
+        if (index >= 0 && index < navigationItems.length) {
+          navigationItems[index].focus();
         }
       }
 

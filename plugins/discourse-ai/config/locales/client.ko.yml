@@ -8,6 +8,10 @@ ko:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "날짜"
+          outcomes:
+            failed: "실패"
         reports:
           filters:
             sort_by:

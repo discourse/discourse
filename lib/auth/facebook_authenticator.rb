@@ -15,17 +15,23 @@ class Auth::FacebookAuthenticator < Auth::ManagedAuthenticator
     "https://www.facebook.com"
   end
 
-  def enabled?
-    SiteSetting.enable_facebook_logins
+  def enable_setting
+    :enable_facebook_logins
+  end
+
+  def required_settings
+    %i[facebook_app_id facebook_app_secret]
   end
 
   def register_middleware(omniauth)
+    require "omniauth-facebook"
     omniauth.provider :facebook,
                       setup:
                         lambda { |env|
                           strategy = env["omniauth.strategy"]
                           strategy.options[:client_id] = SiteSetting.facebook_app_id
                           strategy.options[:client_secret] = SiteSetting.facebook_app_secret
+                          strategy.options[:client_options][:auth_scheme] = :request_body
                           strategy.options[:info_fields] = "name,first_name,last_name,email"
                           strategy.options[:image_size] = {
                             width: AVATAR_SIZE,

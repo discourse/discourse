@@ -12,6 +12,7 @@ RSpec.describe "s3:upload_assets rake task" do
 
   let(:task) { Rake::Task["s3:upload_assets"] }
   let(:logger) { instance_double(Logger) }
+
   before do
     allow(Logger).to receive(:new).and_return(logger)
     allow(logger).to receive(:<<)

@@ -93,7 +93,6 @@ es:
     ai_helper_post_illustrator_agent: "El agente que se utilizará para la característica de ilustrar publicación del ayudante de IA. Nota: También debes crear una herramienta de generación de imágenes (Administración > Plugins > Discourse AI > Herramientas) para que esta característica funcione."
     ai_helper_chat_thread_title_agent: "El agente que se utilizará para generar los títulos de los hilos de chat."
     ai_embeddings_selected_model: "Utiliza el modelo seleccionado para generar incrustaciones."
-    ai_embeddings_generate_for_pms: "Generar incrustaciones para mensajes personales."
     ai_embeddings_semantic_related_topics_enabled: "Utilizar la Búsqueda semántica para temas relacionados."
     ai_embeddings_semantic_related_topics: "Número máximo de temas que se mostrarán en la sección de temas relacionados."
     ai_embeddings_backfill_batch_size: "Número de incrustaciones a rellenar cada 15 minutos."
@@ -350,10 +349,28 @@ es:
       configuration_missing: "Falta la configuración de detección de spam de IA. Añade la configuración en «Administración > Plugins > Discourse AI > Spam» antes de activarla."
       logging_subject: "Detección de spam"
     ai_bot:
+      navigation:
+        settings:
+          title: "Ajustes del sitio"
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        review:
+          title: "Cola de revisión"
+        categories:
+          title: "Categorías"
+        tags:
+          title: "Etiquetas"
+        themes:
+          title: "Tema"
+        authentication:
+          title: "Inicio de sesión y autenticación"
+        backups:
+          title: "Copias de seguridad"
       reply_error: "Lo sentimos, parece que nuestro sistema ha encontrado un problema inesperado al intentar responder.\n\n[details='Detalles del error']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA sin título]"
       thinking: "Pensando"
-      tool_pending_approval: "Esta acción requiere la aprobación del moderador antes de poder ejecutarse."
       read_post:
         unknown_post: "publicación"
       chat_tool_approval:

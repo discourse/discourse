@@ -54,6 +54,7 @@ module UpcomingChanges
     # local logins via email are possible. Must stay visible once enabled so
     # admins can still find and disable it.
     def self.should_display_enable_local_logins_via_code?
+      return true if SiteSetting.current[:enable_local_logins_via_code]
       return true if UpcomingChanges.enabled?(:enable_local_logins_via_code)
 
       SiteSetting.enable_local_logins && SiteSetting.enable_local_logins_via_email &&
@@ -253,6 +254,8 @@ module UpcomingChanges
     # what is causing those effects. The stored opt-in is deliberately left
     # untouched, so the change resumes when the plugin is re-enabled.
     return false if !owning_plugin_enabled?(change_setting_name)
+
+    return false if !change_dependencies_met?(change_setting_name)
 
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
@@ -557,9 +560,8 @@ module UpcomingChanges
   end
 
   # Whether the settings the change itself depends_on (in site_settings.yml)
-  # currently hold the values the change needs. Used by the admin UI to warn
-  # admins when a change's prerequisites are not met, since enabling the change
-  # would have no effect (or be rejected by a validator) until they are.
+  # currently hold the values the change needs. Unmet prerequisites prevent
+  # the change from taking effect, even after automatic promotion or opt-in.
   def self.change_dependencies_met?(change_setting_name)
     dependencies = settings_provider.type_supervisor.dependencies[change_setting_name.to_sym]
     return true if dependencies.blank?

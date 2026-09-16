@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 te:
+  mcp:
+    errors:
+      topic_not_found: "విషయం కనిపించలేదు"
+    oauth:
+      deny: "తిరస్కరించండి"
+      approve: "అధికారం ఇవ్వండి"
   llms_txt:
     sections:
       optional: "ఐచ్ఛికం"
@@ -629,7 +635,7 @@ te:
   uploads:
     marked_insecure_from_theme_component_reason: "థీమ్ భాగంలో ఉపయోగించిన అప్లోడ్"
   unsubscribe:
-    title: "చందాను తీసివేయండి"
+    unsubscribe: "చందాను తీసివేయండి"
     stop_watching_topic: "ఈ విషయాన్నీ అనుసరించటం ఆపివేయండి, %{link}"
     unwatch_category: "%{category} లో అన్ని విషయాలను అనుసరించడం ఆపివేయండి"
     mailing_list_mode: "మెయిలింగ్ జాబితా మోడ్ను ఆపివేయండి"
@@ -1630,7 +1636,6 @@ te:
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
       valid_username: "ఆ సభ్యనామంతో ఒక సభ్యుడు ఉన్నారు."
-      invalid_group: "ఆ పేరుతో సమూహం లేదు."
       invalid_integer_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
       invalid_integer_min: "విలువ %{min} లేదా అంతకంటే ఎక్కువ ఉండాలి."
       invalid_integer_max: "విలువ %{max} కంటే ఎక్కువగా ఉండకూడదు."
@@ -2574,12 +2579,6 @@ te:
         title: "అవును"
       approve_and_unhide:
         title: "అవును"
-      delete_post:
-        title: "పోస్ట్ తొలగించండి"
-      hide_post:
-        title: "పోస్ట్ను దాచండి"
-      restore_post:
-        title: "పోస్ట్‌ని పునరుద్ధరించండి"
       silence_user:
         title: "సభ్యుని నిశ్శబ్దం చేయండి"
       suspend_user:

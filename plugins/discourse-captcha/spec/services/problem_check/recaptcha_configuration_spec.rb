@@ -42,6 +42,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
         SiteSetting.recaptcha_secret_key = "just a string"
         SiteSetting.recaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end
@@ -70,6 +71,7 @@ RSpec.describe ProblemCheck::RecaptchaConfiguration do
         SiteSetting.recaptcha_secret_key = "just a string"
         SiteSetting.recaptcha_site_key = "just a string"
       end
+
       include_examples "passes_problem_check"
     end
   end

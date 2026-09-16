@@ -17,8 +17,16 @@ RSpec.describe Voice::ParticipantTracker do
 
     it "ignores invalid user ids" do
       described_class.add(room.id, 0)
-      described_class.add(room.id, -1)
+      described_class.add(room.id, nil)
       expect(described_class.user_ids(room.id)).to be_empty
+    end
+
+    it "includes bot identities in both individual and batched rosters" do
+      bot = Fabricate(:user, id: -1400)
+      described_class.add(room.id, bot.id)
+      expect(described_class.list(room.id)).to contain_exactly(bot)
+      expect(described_class.room_states([room.id])[room.id].participant_ids).to eq([bot.id])
+      expect(described_class.human_user_ids(room.id)).to be_empty
     end
   end
 
@@ -293,6 +301,69 @@ RSpec.describe Voice::ParticipantTracker do
 
       expect(described_class.user_ids(room.id)).to be_empty
       expect(described_class.get_metadata(room.id, user1.id)).to eq({})
+    end
+  end
+
+  describe ".room_states" do
+    fab!(:other_room, :voice_room)
+
+    after { described_class.clear(other_room.id) }
+
+    it "loads participant, metadata, transport, and recording state for several rooms" do
+      described_class.add(room.id, user1.id)
+      described_class.update_metadata(room.id, user1.id, role: "moderator")
+      described_class.pin_transport!(room.id, "livekit")
+      described_class.set_recording(
+        room.id,
+        egress_id: "EG_1",
+        user_id: user1.id,
+        username: user1.username,
+        started_at: 123.0,
+      )
+      described_class.add(other_room.id, user2.id)
+
+      states = described_class.room_states([room.id, other_room.id])
+
+      expect(states[room.id].to_h).to eq(
+        participant_ids: [user1.id],
+        participant_metadata: {
+          user1.id => {
+            role: "moderator",
+          },
+        },
+        pinned_transport: "livekit",
+        recording_info: {
+          egress_id: "EG_1",
+          user_id: user1.id,
+          username: user1.username,
+          started_at: 123.0,
+        },
+      )
+      expect(states[other_room.id].to_h).to eq(
+        participant_ids: [user2.id],
+        participant_metadata: {
+        },
+        pinned_transport: nil,
+        recording_info: nil,
+      )
+    end
+
+    it "filters expired participants and repairs legacy participant keys" do
+      participant_key = "#{described_class::KEY_NAMESPACE}:#{room.id}:participants"
+      Discourse.redis.set(participant_key, user1.id)
+      described_class.add(other_room.id, user2.id)
+      Discourse.redis.zadd(
+        "#{described_class::KEY_NAMESPACE}:#{other_room.id}:participants",
+        1.hour.ago.to_f,
+        user1.id,
+      )
+
+      states = described_class.room_states([room.id, other_room.id])
+
+      expect(states.transform_values(&:participant_ids)).to eq(
+        room.id => [],
+        other_room.id => [user2.id],
+      )
     end
   end
 

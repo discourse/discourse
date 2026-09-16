@@ -32,11 +32,6 @@ export default class ChatMessageSeparator extends Component {
     };
   });
 
-  @action
-  onDateClick() {
-    return this.args.fetchMessagesByDate?.(this.firstMessageOfTheDayAt);
-  }
-
   @cached
   get firstMessageOfTheDayAt() {
     const message = this.args.message;
@@ -64,6 +59,11 @@ export default class ChatMessageSeparator extends Component {
 
   get isNewestMessage() {
     return this.args.message.id === this.args.message.channel.newestMessage?.id;
+  }
+
+  @action
+  onDateClick() {
+    return this.args.fetchMessagesByDate?.(this.firstMessageOfTheDayAt);
   }
 
   #areDatesOnSameDay(a, b) {
@@ -95,9 +95,9 @@ export default class ChatMessageSeparator extends Component {
           "chat-message-separator-date"
           (if this.isNewestMessage "with-last-visit")
         }}
+        data-id={{@message.id}}
         role="button"
         {{on "click" this.onDateClick passive=true}}
-        data-id={{@message.id}}
       >
         <div class="chat-message-separator__text-container" {{this.track}}>
           <span class="chat-message-separator__text">

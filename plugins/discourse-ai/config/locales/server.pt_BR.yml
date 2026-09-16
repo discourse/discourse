@@ -88,7 +88,6 @@ pt_BR:
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
-    ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
     ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."
     ai_embeddings_semantic_related_topics: "Número máximo de tópicos na seção do tópico relacionado."
     ai_embeddings_backfill_batch_size: "O número de incorporações para provisionamento a cada 15 minutos."
@@ -310,6 +309,25 @@ pt_BR:
       configuration_missing: "Não foi encontrada a configuração de detecção de spam de IA. Adicione a configuração em \"Administração > Plugins > Discourse AI > Spam\" antes de ativar."
       logging_subject: "Detecção de spam"
     ai_bot:
+      navigation:
+        settings:
+          title: "Configurações do site"
+        users:
+          title: "Usuários(as)"
+        groups:
+          title: "Grupos"
+        review:
+          title: "Fila de revisão"
+        categories:
+          title: "Categorias"
+        tags:
+          title: "Tags"
+        themes:
+          title: "Temas"
+        authentication:
+          title: "Acesso e autenticação"
+        backups:
+          title: "Backups"
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
       thinking: "Pensando"

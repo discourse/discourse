@@ -109,7 +109,7 @@ describe DiscourseAi::Automation::LlmTriage do
     # nothing should happen, no classification, its a PM
   end
 
-  it "will triage PMs if automation allows it" do
+  it "triages PMs if automation allows it" do
     # needs to be admin or it will not be able to just step in to
     # PM
     reply_user.update!(admin: true)

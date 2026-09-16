@@ -39,11 +39,6 @@ export default class CredentialModal extends Component {
     this.#loadCredentialTypes();
   }
 
-  async #loadCredentialTypes() {
-    await this.workflowsNodeTypes.load();
-    this.credentialTypes = this.workflowsNodeTypes.credentialTypes || [];
-  }
-
   get isEditing() {
     return !!this.args.model.credential;
   }
@@ -96,27 +91,32 @@ export default class CredentialModal extends Component {
     }
   }
 
+  async #loadCredentialTypes() {
+    await this.workflowsNodeTypes.load();
+    this.credentialTypes = this.workflowsNodeTypes.credentialTypes || [];
+  }
+
   <template>
     <DModal
+      @closeModal={{@closeModal}}
       @title={{if
         this.isEditing
         (i18n "discourse_workflows.credentials.edit")
         (i18n "discourse_workflows.credentials.add")
       }}
-      @closeModal={{@closeModal}}
     >
       <:body>
         <Form
+          class="workflows-configurator-form"
           @data={{this.formData}}
           @onSubmit={{fn this.handleSubmit this.credentialTypes}}
-          class="workflows-configurator-form"
           as |form transientData|
         >
           <form.Field
+            @format="full"
             @name="name"
             @title={{i18n "discourse_workflows.credentials.name"}}
             @type="input"
-            @format="full"
             @validation="required"
             as |field|
           >
@@ -129,21 +129,21 @@ export default class CredentialModal extends Component {
 
           {{#if this.isEditing}}
             <form.Field
+              @disabled={{true}}
+              @format="full"
               @name="credential_type"
               @title={{i18n "discourse_workflows.credentials.type"}}
               @type="input"
-              @format="full"
-              @disabled={{true}}
               as |field|
             >
               <field.Control @disabled={{true}} />
             </form.Field>
           {{else}}
             <form.Field
+              @format="full"
               @name="credential_type"
               @title={{i18n "discourse_workflows.credentials.type"}}
               @type="select"
-              @format="full"
               @validation="required"
               as |field|
             >
@@ -169,25 +169,25 @@ export default class CredentialModal extends Component {
           }}
             {{#if (fieldVisible fieldSchema transientData)}}
               <Field
-                @form={{form}}
-                @formApi={{form.api}}
+                @configuration={{transientData}}
                 @fieldName={{if
                   (eq fieldSchema.name "name")
                   "credential_data_name"
                   fieldSchema.name
                 }}
+                @form={{form}}
+                @formApi={{form.api}}
                 @label={{propertyLabel
                   (credentialTypeDefinition
                     this.credentialTypes transientData.credential_type
                   )
                   fieldSchema.name
                 }}
-                @schema={{fieldSchema}}
-                @configuration={{transientData}}
                 @nodeDefinition={{credentialTypeDefinition
                   this.credentialTypes
                   transientData.credential_type
                 }}
+                @schema={{fieldSchema}}
               />
             {{/if}}
           {{/each}}

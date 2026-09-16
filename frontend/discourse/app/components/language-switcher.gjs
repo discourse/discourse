@@ -20,27 +20,6 @@ export default class LanguageSwitcher extends Component {
   @service languageNameLookup;
   @service currentUser;
 
-  @action
-  async changeLocale(locale) {
-    if (this.currentUser) {
-      this.currentUser.set("locale", locale);
-      await ajax(`/u/${this.currentUser.username}.json`, {
-        type: "PUT",
-        data: { locale },
-      });
-    } else {
-      cookie(LOCALE_COOKIE, locale, {
-        path: getURL("/"),
-        expires: LOCALE_COOKIE_EXPIRY,
-      });
-    }
-
-    this.dMenu.close();
-    // content should switch immediately,
-    // but we need a hard refresh here for controls to switch to the new locale
-    window.location.reload();
-  }
-
   get currentLocale() {
     return I18n.locale;
   }
@@ -75,6 +54,27 @@ export default class LanguageSwitcher extends Component {
     }
 
     return langs;
+  }
+
+  @action
+  async changeLocale(locale) {
+    if (this.currentUser) {
+      this.currentUser.set("locale", locale);
+      await ajax(`/u/${this.currentUser.username}.json`, {
+        type: "PUT",
+        data: { locale },
+      });
+    } else {
+      cookie(LOCALE_COOKIE, locale, {
+        path: getURL("/"),
+        expires: LOCALE_COOKIE_EXPIRY,
+      });
+    }
+
+    this.dMenu.close();
+    // content should switch immediately,
+    // but we need a hard refresh here for controls to switch to the new locale
+    window.location.reload();
   }
 
   normalizeUKEnglish(text) {
@@ -115,10 +115,10 @@ export default class LanguageSwitcher extends Component {
 
   <template>
     <DMenu
-      @identifier="language-switcher"
-      @title={{i18n "language_switcher.title"}}
       class="btn-flat"
+      @identifier="language-switcher"
       @onRegisterApi={{this.onRegisterApi}}
+      @title={{i18n "language_switcher.title"}}
     >
       <:trigger>
         <span class="language-switcher__locale">
@@ -134,8 +134,8 @@ export default class LanguageSwitcher extends Component {
               data-menu-option-id={{option.value}}
             >
               <DButton
-                @translatedLabel={{option.name}}
                 @action={{fn this.changeLocale option.value}}
+                @translatedLabel={{option.name}}
               />
             </dropdown.item>
           {{/each}}

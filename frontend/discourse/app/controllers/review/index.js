@@ -109,17 +109,17 @@ export default class ReviewIndexController extends Controller {
     return this.filtersExpanded ? "chevron-up" : "chevron-down";
   }
 
+  @computed("unknownReviewableTypes")
+  get displayUnknownReviewableTypesWarning() {
+    return this.unknownReviewableTypes?.length > 0 && this.currentUser.admin;
+  }
+
   setRange(range) {
     this.setProperties(range);
   }
 
   refreshModel() {
     next(() => this.send("refreshRoute"));
-  }
-
-  @computed("unknownReviewableTypes")
-  get displayUnknownReviewableTypesWarning() {
-    return this.unknownReviewableTypes?.length > 0 && this.currentUser.admin;
   }
 
   @action

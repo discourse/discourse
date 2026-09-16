@@ -55,7 +55,8 @@ RSpec.describe CustomEmoji::Export do
 
       it "writes a manifest row per emoji with a blank group for the default group" do
         with_archive do |zip|
-          manifest = CSV.parse(zip.read("emojis.csv"), headers: true)
+          csv = zip.read("emojis.csv").force_encoding(Encoding::UTF_8)
+          manifest = CSV.parse(csv.delete_prefix(Encodings::BOM), headers: true)
 
           expect(manifest.map { |row| row.to_h.slice("name", "group", "filename") }).to eq(
             [

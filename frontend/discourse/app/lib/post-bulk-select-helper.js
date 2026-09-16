@@ -25,46 +25,6 @@ export default class PostBulkSelectHelper {
     this.posts = posts;
   }
 
-  /**
-   * Update posts and clean up stale selections
-   * @param {Array} newPosts - New posts array
-   */
-  updatePosts(newPosts) {
-    this.posts = newPosts;
-    this.#cleanupStaleSelections();
-  }
-
-  /**
-   * Remove selections for posts that no longer exist
-   */
-  #cleanupStaleSelections() {
-    if (!this.posts) {
-      this.selected.length = 0;
-      return;
-    }
-
-    const validPostIds = new Set(
-      this.posts.map((post) => this.getPostId(post))
-    );
-    const validSelections = this.selected.filter((selected) =>
-      validPostIds.has(this.getPostId(selected))
-    );
-
-    // Only update if there are stale selections
-    if (validSelections.length !== this.selected.length) {
-      this.selected.length = 0;
-      this.selected.push(...validSelections);
-
-      // Clear last clicked if it's no longer valid
-      if (
-        this.lastClickedPost &&
-        !validPostIds.has(this.getPostId(this.lastClickedPost))
-      ) {
-        this.lastClickedPost = null;
-      }
-    }
-  }
-
   get selectedCount() {
     return this.selected.length;
   }
@@ -75,6 +35,15 @@ export default class PostBulkSelectHelper {
 
   get allSelected() {
     return this.posts && this.selected.length === this.posts.length;
+  }
+
+  /**
+   * Update posts and clean up stale selections
+   * @param {Array} newPosts - New posts array
+   */
+  updatePosts(newPosts) {
+    this.posts = newPosts;
+    this.#cleanupStaleSelections();
   }
 
   @action
@@ -188,6 +157,37 @@ export default class PostBulkSelectHelper {
       this.clearAll();
     } finally {
       this.loading = false;
+    }
+  }
+
+  /**
+   * Remove selections for posts that no longer exist
+   */
+  #cleanupStaleSelections() {
+    if (!this.posts) {
+      this.selected.length = 0;
+      return;
+    }
+
+    const validPostIds = new Set(
+      this.posts.map((post) => this.getPostId(post))
+    );
+    const validSelections = this.selected.filter((selected) =>
+      validPostIds.has(this.getPostId(selected))
+    );
+
+    // Only update if there are stale selections
+    if (validSelections.length !== this.selected.length) {
+      this.selected.length = 0;
+      this.selected.push(...validSelections);
+
+      // Clear last clicked if it's no longer valid
+      if (
+        this.lastClickedPost &&
+        !validPostIds.has(this.getPostId(this.lastClickedPost))
+      ) {
+        this.lastClickedPost = null;
+      }
     }
   }
 }

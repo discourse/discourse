@@ -16,12 +16,6 @@ export default class DiscoursePostEventOneboxPreview extends Component {
     this.load();
   }
 
-  async load() {
-    this.event = await this.discoursePostEventApi.cachedEventByTopicId(
-      this.args.topicId
-    );
-  }
-
   get eventName() {
     return this.event.name || this.event.post?.topic?.title;
   }
@@ -36,6 +30,12 @@ export default class DiscoursePostEventOneboxPreview extends Component {
 
   get fallback() {
     return trustHTML(this.args.fallbackHtml);
+  }
+
+  async load() {
+    this.event = await this.discoursePostEventApi.cachedEventByTopicId(
+      this.args.topicId
+    );
   }
 
   #displayTime(time) {

@@ -63,6 +63,8 @@ class GroupActionLogger
       log_make_user_group_owner(group_user.user) if group_user.owner?
       log_add_user_to_group(group_user.user)
     end
+
+    StaffActionLogger.new(@acting_user).log_group_creation(@group)
   end
 
   private

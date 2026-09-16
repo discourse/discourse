@@ -252,19 +252,31 @@ module DiscourseDataExplorer
           id: -42,
           name: "Crawler and Bot Traffic Overview",
           description:
-            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
+            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
         },
         "crawler-traffic-detailed": {
           id: -43,
           name: "Crawler and Bot Traffic Detailed Report",
           description:
-            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
         },
         "suspected-bot-networks": {
           id: -44,
           name: "Suspected Automated Traffic by IP and Network",
           description:
-            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. WARNING: requires browser pageview event collection to be enabled (hidden site setting persist_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
+            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
+        },
+        "ask-ai-asks-over-time": {
+          id: -45,
+          name: "Ask AI - Asks over time",
+          description:
+            "Daily Ask AI counts between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
+        },
+        "ask-ai-ask-outcomes": {
+          id: -46,
+          name: "Ask AI - Ask outcomes",
+          description:
+            "Ask AI outcome counts and percentages between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
         },
       }.with_indifferent_access
 
@@ -315,8 +327,8 @@ module DiscourseDataExplorer
 
       WITH query_period as (
           SELECT
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' as period_start,
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
       )
 
       SELECT
@@ -336,8 +348,8 @@ module DiscourseDataExplorer
       -- int :months_ago = 1
 
       WITH query_period AS
-      (SELECT date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' AS period_start,
-                                                          date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)
+      (SELECT date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' AS period_start,
+                                                          date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' AS period_end)
       SELECT t.id AS topic_id,
           t.category_id,
           COUNT(p.id) AS reply_count
@@ -358,8 +370,8 @@ module DiscourseDataExplorer
 
       WITH query_period AS (
           SELECT
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' as period_start,
-              date_trunc('month', CURRENT_DATE) - INTERVAL ':months_ago months' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' as period_start,
+              date_trunc('month', CURRENT_DATE) - :months_ago * INTERVAL '1 month' + INTERVAL '1 month' - INTERVAL '1 second' as period_end
               )
 
           SELECT
@@ -754,7 +766,7 @@ module DiscourseDataExplorer
           COALESCE(SUM(tvs.anonymous_views + tvs.logged_in_views), 0) AS total_views
       FROM topics t
       JOIN topic_view_stats tvs ON tvs.topic_id = t.id
-          AND tvs.viewed_at >= CURRENT_DATE - :days_ago
+          AND tvs.viewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       WHERE t.deleted_at IS NULL
           AND t.archetype = 'regular'
       GROUP BY t.id, t.category_id
@@ -771,7 +783,7 @@ module DiscourseDataExplorer
           COUNT(*) AS searches,
           COUNT(DISTINCT user_id) AS distinct_users
       FROM search_logs
-      WHERE created_at >= CURRENT_DATE - :days_ago
+      WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY term
       ORDER BY distinct_users DESC, searches DESC
       LIMIT 200
@@ -785,7 +797,7 @@ module DiscourseDataExplorer
       -- gapless day series, so days with zero activity still show up as rows
       WITH day_series AS (
           SELECT generate_series(
-              CURRENT_DATE - :days_ago,
+              CURRENT_DATE - CAST(:days_ago AS integer),
               CURRENT_DATE,
               '1 day'::interval
           )::date AS day
@@ -797,7 +809,7 @@ module DiscourseDataExplorer
           FROM topic_link_clicks tlc
           JOIN topic_links tl ON tl.id = tlc.topic_link_id
           WHERE tl.topic_id = :topic_id
-              AND tlc.created_at >= CURRENT_DATE - :days_ago
+              AND tlc.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           GROUP BY tlc.created_at::date
       ),
       daily_views AS (
@@ -807,7 +819,7 @@ module DiscourseDataExplorer
               COALESCE(SUM(logged_in_views), 0) AS logged_in_views
           FROM topic_view_stats
           WHERE topic_id = :topic_id
-              AND viewed_at >= CURRENT_DATE - :days_ago
+              AND viewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           GROUP BY viewed_at
       )
       SELECT
@@ -947,10 +959,10 @@ module DiscourseDataExplorer
           LEFT JOIN (
               SELECT DISTINCT target_user_id
               FROM user_histories
-              WHERE created_at >= CURRENT_DATE - :days_ago
+              WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
                   AND action IN (2, 15) -- change_trust_level, auto_trust_level_change
           ) tlc ON u.id = tlc.target_user_id
-          WHERE u.created_at >= CURRENT_DATE - :days_ago
+          WHERE u.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
               AND tlc.target_user_id IS NULL
       ),
       trust_level_changes AS (
@@ -959,7 +971,7 @@ module DiscourseDataExplorer
               COUNT(DISTINCT uh.target_user_id) AS users_gained
           FROM user_histories uh
           JOIN users u ON uh.target_user_id = u.id
-          WHERE uh.created_at >= CURRENT_DATE - :days_ago
+          WHERE uh.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
               AND uh.action IN (2, 15) -- change_trust_level, auto_trust_level_change
               AND uh.new_value IN ('1', '2', '3', '4')
           GROUP BY uh.new_value
@@ -999,9 +1011,9 @@ module DiscourseDataExplorer
                   AND p.post_type = 1
               WHERE t.archetype = 'regular'
                   AND t.deleted_at IS NULL
-                  AND t.created_at >= CURRENT_DATE - :days_ago
+                  AND t.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
                   AND (
-                      :category_id IS NULL
+                      CAST(:category_id AS integer) IS NULL
                       OR t.category_id = :category_id
                       OR (:include_subcategories AND t.category_id IN (
                           SELECT id FROM categories WHERE parent_category_id = :category_id
@@ -1317,7 +1329,7 @@ module DiscourseDataExplorer
           w.topic_id,
           w.created_at
       FROM user_warnings w
-      WHERE w.created_at >= CURRENT_DATE - :days_ago
+      WHERE w.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       ORDER BY w.created_at DESC
       SQL
 
@@ -1413,7 +1425,7 @@ module DiscourseDataExplorer
           COUNT(*) AS total
       FROM reviewable_scores rs
       LEFT JOIN flags f ON f.id = rs.reviewable_score_type
-      WHERE rs.created_at >= CURRENT_DATE - :days_ago
+      WHERE rs.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY 1
       ORDER BY total DESC
       SQL
@@ -1428,7 +1440,7 @@ module DiscourseDataExplorer
       FROM reviewable_scores rs
       JOIN users u ON u.id = rs.reviewed_by_id
       WHERE (u.admin OR u.moderator)
-          AND rs.reviewed_at >= CURRENT_DATE - :days_ago
+          AND rs.reviewed_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY rs.reviewed_by_id
       ORDER BY flags_handled DESC
       LIMIT 100
@@ -1483,7 +1495,7 @@ module DiscourseDataExplorer
       WHERE t.locale IS NOT NULL
           AND t.locale <> ''
           AND split_part(t.locale, '_', 1) <> split_part(:primary_locale, '_', 1)
-          AND t.created_at >= CURRENT_DATE - :days_ago
+          AND t.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           AND t.deleted_at IS NULL
       ORDER BY t.created_at DESC
       SQL
@@ -1503,7 +1515,7 @@ module DiscourseDataExplorer
       WHERE p.locale IS NOT NULL
           AND p.locale <> ''
           AND split_part(p.locale, '_', 1) <> split_part(:primary_locale, '_', 1)
-          AND p.created_at >= CURRENT_DATE - :days_ago
+          AND p.created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
           AND p.deleted_at IS NULL
       ORDER BY p.created_at DESC
       SQL
@@ -1516,7 +1528,6 @@ module DiscourseDataExplorer
           SELECT score
           FROM browser_pageview_events
           WHERE created_at >= NOW() - (:hours * INTERVAL '1 hour')
-            AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       )
       SELECT 'Not scored (pending or no signals)' AS bucket, COUNT(*) FILTER (WHERE score IS NULL) AS pageviews FROM events
       UNION ALL
@@ -1574,7 +1585,6 @@ module DiscourseDataExplorer
       FROM browser_pageview_events e
       JOIN browser_pageview_event_scores s ON s.event_id = e.id
       WHERE e.created_at >= NOW() - (:hours * INTERVAL '1 hour')
-          AND e.source = #{BrowserPageviewEvent::SOURCE_BEACON}
           AND e.score > :min_score
       GROUP BY e.ip_address, e.user_agent, e.asn, e.country_code, e.user_id, e.session_id
       ORDER BY max_score DESC, pageviews DESC
@@ -1600,11 +1610,50 @@ module DiscourseDataExplorer
           MAX(created_at) AS last_seen,
           (array_agg(user_agent ORDER BY created_at DESC))[1] AS sample_user_agent
       FROM browser_pageview_events
-      WHERE created_at >= CURRENT_DATE - :days_ago
-          AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
+      WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
       GROUP BY ip_address, asn, country_code
       ORDER BY asn_total_pageviews DESC, pageviews DESC
       LIMIT 100
+      SQL
+
+      queries["ask-ai-asks-over-time"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      WITH daily_asks AS (
+        SELECT asked_at::date AS date, COUNT(*) AS asks
+        FROM ask_ai_logs
+        WHERE asked_at >= :start_date::date
+          AND asked_at < :end_date::date + INTERVAL '1 day'
+        GROUP BY asked_at::date
+      )
+      SELECT days.date::date AS date, COALESCE(daily_asks.asks, 0) AS asks
+      FROM generate_series(:start_date::date, :end_date::date, INTERVAL '1 day') AS days(date)
+      LEFT JOIN daily_asks ON daily_asks.date = days.date::date
+      ORDER BY days.date
+      SQL
+
+      queries["ask-ai-ask-outcomes"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        CASE ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome,
+        COUNT(*) AS asks,
+        ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1) AS percentage
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
+      GROUP BY ask_outcome
+      ORDER BY ask_outcome NULLS LAST
       SQL
 
       # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.

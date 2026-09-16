@@ -8,6 +8,10 @@ bg:
   admin_js:
     admin:
       dashboard:
+        ask_ai:
+          date: "Дата"
+          outcomes:
+            failed: "Провалени"
         reports:
           filters:
             sort_by:

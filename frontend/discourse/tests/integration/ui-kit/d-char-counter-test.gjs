@@ -15,7 +15,7 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <DCharCounter @value={{this.value}} @max={{this.max}} />
+        <DCharCounter @max={{this.max}} @value={{this.value}} />
       </template>
     );
 
@@ -27,7 +27,7 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <DCharCounter @value={{this.charCounterContent}} @max={{this.max}}>
+        <DCharCounter @max={{this.max}} @value={{this.charCounterContent}}>
           <textarea
             {{on "input" (withEventValue (fn (mut this.charCounterContent)))}}
           ></textarea>
@@ -52,7 +52,7 @@ module("Integration | ui-kit | DCharCounter", function (hooks) {
 
     await render(
       <template>
-        <DCharCounter @value={{this.value}} @max={{this.max}} />
+        <DCharCounter @max={{this.max}} @value={{this.value}} />
       </template>
     );
 

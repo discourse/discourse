@@ -37,31 +37,6 @@ export default class GroupAssigned extends Controller {
     return !this.site?.mobileView;
   }
 
-  _setFilter(filter) {
-    this.set("loading", true);
-    this.set("offset", 0);
-    this.set("filter", filter);
-
-    const groupName = this.group.name;
-    ajax(`/assign/members/${groupName}`, {
-      type: "GET",
-      data: { filter: this.filter, offset: this.offset },
-    })
-      .then((result) => {
-        if (this.router.currentRoute.params.filter !== "everyone") {
-          this.router.transitionTo(
-            "group.assigned.show",
-            groupName,
-            "everyone"
-          );
-        }
-        this.set("members", result.members);
-      })
-      .finally(() => {
-        this.set("loading", false);
-      });
-  }
-
   async findMembers(refresh) {
     if (refresh) {
       this.members = this.model.members;
@@ -97,5 +72,30 @@ export default class GroupAssigned extends Controller {
   @action
   onChangeFilterName(value) {
     discourseDebounce(this, this._setFilter, value, INPUT_DELAY * 2);
+  }
+
+  _setFilter(filter) {
+    this.set("loading", true);
+    this.set("offset", 0);
+    this.set("filter", filter);
+
+    const groupName = this.group.name;
+    ajax(`/assign/members/${groupName}`, {
+      type: "GET",
+      data: { filter: this.filter, offset: this.offset },
+    })
+      .then((result) => {
+        if (this.router.currentRoute.params.filter !== "everyone") {
+          this.router.transitionTo(
+            "group.assigned.show",
+            groupName,
+            "everyone"
+          );
+        }
+        this.set("members", result.members);
+      })
+      .finally(() => {
+        this.set("loading", false);
+      });
   }
 }

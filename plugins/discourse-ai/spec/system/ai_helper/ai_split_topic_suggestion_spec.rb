@@ -30,6 +30,7 @@ RSpec.describe "AI Post helper" do
   end
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:suggestion_menu) { PageObjects::Components::AiSplitTopicSuggester.new }
+
   fab!(:video, :tag)
   fab!(:music, :tag)
   fab!(:cloud, :tag)

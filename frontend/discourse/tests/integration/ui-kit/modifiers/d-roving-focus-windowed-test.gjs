@@ -33,16 +33,16 @@ module(
             role="listbox"
             {{dRovingFocus itemSelector="[role=option]" onRegisterApi=register}}
           >
-            <button role="option" data-index="100">100</button>
-            <button role="option" data-index="101">101</button>
-            <button role="option" data-index="102">102</button>
-            <button role="option" data-index="103">103</button>
-            <button role="option" data-index="104">104</button>
-            <button role="option" data-index="105">105</button>
-            <button role="option" data-index="106">106</button>
-            <button role="option" data-index="107">107</button>
-            <button role="option" data-index="108">108</button>
-            <button role="option" data-index="109">109</button>
+            <button data-index="100" role="option">100</button>
+            <button data-index="101" role="option">101</button>
+            <button data-index="102" role="option">102</button>
+            <button data-index="103" role="option">103</button>
+            <button data-index="104" role="option">104</button>
+            <button data-index="105" role="option">105</button>
+            <button data-index="106" role="option">106</button>
+            <button data-index="107" role="option">107</button>
+            <button data-index="108" role="option">108</button>
+            <button data-index="109" role="option">109</button>
           </div>
         </template>
       );
@@ -78,9 +78,9 @@ module(
             role="listbox"
             {{dRovingFocus itemSelector="[role=option]" onRegisterApi=register}}
           >
-            <button role="option" data-index="104">104</button>
-            <button role="option" data-index="105">105</button>
-            <button role="option" data-index="106">106</button>
+            <button data-index="104" role="option">104</button>
+            <button data-index="105" role="option">105</button>
+            <button data-index="106" role="option">106</button>
           </div>
         </template>
       );
@@ -380,7 +380,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -429,7 +429,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -469,7 +469,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -505,7 +505,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -538,7 +538,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -571,7 +571,7 @@ module(
             }}
           >
             {{#each SMALL_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -629,14 +629,14 @@ module(
       await render(
         <template>
           <div
+            aria-controls="rf-lb"
             class="ctrl"
             role="combobox"
-            aria-controls="rf-lb"
             tabindex="0"
           ></div>
           <div
-            id="rf-lb"
             class="list"
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
               focusStrategy="active-descendant"
@@ -649,7 +649,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -683,10 +683,10 @@ module(
 
       await render(
         <template>
-          <input class="search" role="combobox" aria-controls="rf-lb" />
+          <input aria-controls="rf-lb" class="search" role="combobox" />
           <div
-            id="rf-lb"
             class="list"
+            id="rf-lb"
             role="listbox"
             {{dRovingFocus
               focusStrategy="active-descendant"
@@ -699,7 +699,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -744,7 +744,7 @@ module(
             {{dRovingFocus orientation="vertical" itemSelector="[role=option]"}}
           >
             {{#each SMALL_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -793,9 +793,9 @@ module(
           >
             {{#each WINDOW_ROWS_ONE_DISABLED key="index" as |row|}}
               <button
-                role="option"
-                data-index={{row.index}}
                 aria-disabled={{row.disabled}}
+                data-index={{row.index}}
+                role="option"
               >{{row.index}}</button>
             {{/each}}
           </div>
@@ -831,7 +831,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -863,7 +863,7 @@ module(
             }}
           >
             {{#each WINDOW_ROWS as |n|}}
-              <button role="option" data-index={{n}}>{{n}}</button>
+              <button data-index={{n}} role="option">{{n}}</button>
             {{/each}}
           </div>
         </template>
@@ -945,15 +945,15 @@ module(
           >
             <button
               class="a"
-              role="option"
               data-index="0"
               data-logical-index="40"
+              role="option"
             >A</button>
             <button
               class="b"
-              role="option"
               data-index="1"
               data-logical-index="41"
+              role="option"
             >B</button>
           </div>
         </template>
@@ -988,8 +988,8 @@ module(
               onRegisterApi=register
             }}
           >
-            <button class="r1" role="option" data-index="0105">105</button>
-            <button class="r2" role="option" data-index="106">106</button>
+            <button class="r1" data-index="0105" role="option">105</button>
+            <button class="r2" data-index="106" role="option">106</button>
           </div>
         </template>
       );

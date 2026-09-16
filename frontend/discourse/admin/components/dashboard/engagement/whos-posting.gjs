@@ -146,30 +146,6 @@ export default class WhosPosting extends Component {
     });
   }
 
-  #persist() {
-    if (!this.currentUser?.admin) {
-      return;
-    }
-
-    ajax("/admin/dashboard/sections/engagement/settings/whos_posting.json", {
-      type: "PUT",
-      contentType: "application/json",
-      data: JSON.stringify({
-        category_ids: this.selectedCategories.map((c) => c.id),
-        groups: this.selectedGroups,
-      }),
-    }).catch(() => {
-      this.toasts.error({
-        duration: "short",
-        data: {
-          message: i18n(
-            "admin.dashboard.sections.engagement.whos_posting.save_error"
-          ),
-        },
-      });
-    });
-  }
-
   @action
   onPeriodChange() {
     const hasCustomSelection =
@@ -217,6 +193,30 @@ export default class WhosPosting extends Component {
     }
   }
 
+  #persist() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax("/admin/dashboard/sections/engagement/settings/whos_posting.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({
+        category_ids: this.selectedCategories.map((c) => c.id),
+        groups: this.selectedGroups,
+      }),
+    }).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n(
+            "admin.dashboard.sections.engagement.whos_posting.save_error"
+          ),
+        },
+      });
+    });
+  }
+
   <template>
     <div
       class="db-whos-posting"
@@ -224,10 +224,10 @@ export default class WhosPosting extends Component {
     >
       <div class="db-section__row-block-header">
         <LinkTo
-          @route="adminReports.show"
+          class="db-section__row-block-title --label"
           @model="posters_by_member_type"
           @query={{this.reportQuery}}
-          class="db-section__row-block-title --label"
+          @route="adminReports.show"
         >
           {{i18n "admin.dashboard.sections.engagement.whos_posting.title"}}
         </LinkTo>
@@ -243,9 +243,9 @@ export default class WhosPosting extends Component {
 
       {{#if this.hasData}}
         <div
+          aria-label={{this.ariaLabel}}
           class="db-whos-posting__bars"
           role="img"
-          aria-label={{this.ariaLabel}}
         >
           {{#each this.rows as |row|}}
             <div class="db-whos-posting__bar-row">
@@ -269,10 +269,10 @@ export default class WhosPosting extends Component {
       {{/if}}
 
       <DButton
+        class="btn-transparent db-whos-posting__add-group"
         @action={{this.openCompareGroups}}
         @icon="plus"
         @label="admin.dashboard.sections.engagement.whos_posting.add_group"
-        class="btn-transparent db-whos-posting__add-group"
       />
     </div>
   </template>

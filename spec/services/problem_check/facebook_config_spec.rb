@@ -33,7 +33,7 @@ RSpec.describe ProblemCheck::FacebookConfig do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.',
+          '{{setting:enable_facebook_logins}} is on, but {{setting:facebook_app_id}} must still be set. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.',
         )
       end
     end
@@ -48,7 +48,7 @@ RSpec.describe ProblemCheck::FacebookConfig do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          'The server is configured to allow signup and login with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.',
+          '{{setting:enable_facebook_logins}} is on, but {{setting:facebook_app_secret}} must still be set. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.',
         )
       end
     end

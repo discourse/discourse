@@ -77,17 +77,17 @@ export default class Members extends Component {
 
         {{#each @members as |member|}}
           <Member
+            @highlighted={{eq member @highlightedMember}}
             @member={{member}}
             @onSelect={{@onSelectMember}}
-            @highlighted={{eq member @highlightedMember}}
           />
         {{/each}}
 
         <Input
-          placeholder={{this.addMoreMembersLabel}}
-          class="chat-message-creator__members-input"
-          @value={{@filter}}
           autofocus={{true}}
+          class="chat-message-creator__members-input"
+          placeholder={{this.addMoreMembersLabel}}
+          @value={{@filter}}
           {{on "input" this.onFilter}}
           {{on "keydown" this.handleKeypress}}
           {{didInsert this.registerFocusFilterAction}}

@@ -63,9 +63,9 @@ export default class ImageAltTextInput extends Component {
     >
       {{#if this.isExpanded}}
         <textarea
-          value={{this.transientAltText}}
-          placeholder={{i18n "composer.image_alt_text.title"}}
           class="image-alt-text-input__field"
+          placeholder={{i18n "composer.image_alt_text.title"}}
+          value={{this.transientAltText}}
           {{on "input" this.onInputChange}}
           {{on "blur" this.onBlur}}
           {{on "keydown" this.onKeyDown}}
@@ -73,8 +73,8 @@ export default class ImageAltTextInput extends Component {
         />
       {{else}}
         <div
-          tabindex="0"
           class="image-alt-text-input__display"
+          tabindex="0"
           {{on "focus" this.expandInput}}
           {{on "click" this.expandInput}}
         >

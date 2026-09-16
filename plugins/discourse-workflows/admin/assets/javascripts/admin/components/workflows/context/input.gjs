@@ -133,24 +133,6 @@ export default class InputContext extends Component {
     return this.args.session?.lastExecutionRunData || {};
   }
 
-  itemCountLabel(summary) {
-    if (!summary?.itemCount) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.configurator.schema_item_count", {
-      count: summary.itemCount,
-    });
-  }
-
-  emptyMessage(summary) {
-    if (summary?.itemCount > 0) {
-      return i18n("discourse_workflows.configurator.no_input_fields");
-    }
-
-    return i18n("discourse_workflows.configurator.no_input_context");
-  }
-
   get inputSections() {
     return this.inputConnections
       .map((connection) => {
@@ -203,16 +185,6 @@ export default class InputContext extends Component {
         };
       })
       .filter(Boolean);
-  }
-
-  inputConnectionLabel(inputIndex) {
-    if (this.inputConnections.length < 2 && inputIndex === 0) {
-      return null;
-    }
-
-    return i18n("discourse_workflows.configurator.schema_input_label", {
-      number: inputIndex + 1,
-    });
   }
 
   get environmentFields() {
@@ -269,6 +241,34 @@ export default class InputContext extends Component {
       .filter((ancestor) => ancestor.fields.length);
   }
 
+  itemCountLabel(summary) {
+    if (!summary?.itemCount) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_item_count", {
+      count: summary.itemCount,
+    });
+  }
+
+  emptyMessage(summary) {
+    if (summary?.itemCount > 0) {
+      return i18n("discourse_workflows.configurator.no_input_fields");
+    }
+
+    return i18n("discourse_workflows.configurator.no_input_context");
+  }
+
+  inputConnectionLabel(inputIndex) {
+    if (this.inputConnections.length < 2 && inputIndex === 0) {
+      return null;
+    }
+
+    return i18n("discourse_workflows.configurator.schema_input_label", {
+      number: inputIndex + 1,
+    });
+  }
+
   <template>
     <div class="workflows-context-panel">
       {{#if @hasConfiguration}}
@@ -295,7 +295,7 @@ export default class InputContext extends Component {
           {{#if section.fields.length}}
             <ul class="workflows-schema-field-list">
               {{#each section.fields as |field|}}
-                <SchemaField @field={{field}} @draggable={{true}} />
+                <SchemaField @draggable={{true}} @field={{field}} />
               {{/each}}
             </ul>
           {{else}}
@@ -314,7 +314,7 @@ export default class InputContext extends Component {
 
         <ul class="workflows-schema-field-list">
           {{#each this.environmentFields as |field|}}
-            <SchemaField @field={{field}} @draggable={{true}} />
+            <SchemaField @draggable={{true}} @field={{field}} />
           {{/each}}
         </ul>
       </div>
@@ -335,7 +335,7 @@ export default class InputContext extends Component {
 
           <ul class="workflows-schema-field-list">
             {{#each ancestor.fields as |field|}}
-              <SchemaField @field={{field}} @draggable={{true}} />
+              <SchemaField @draggable={{true}} @field={{field}} />
             {{/each}}
           </ul>
         </div>

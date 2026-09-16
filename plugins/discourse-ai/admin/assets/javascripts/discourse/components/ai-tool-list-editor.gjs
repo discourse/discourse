@@ -218,54 +218,54 @@ export default class AiToolListEditor extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-tools"
       @label={{i18n "discourse_ai.tools.short_title"}}
+      @path="/admin/plugins/{{this.adminPluginNavManager.currentPlugin.name}}/ai-tools"
     />
     <section class="ai-tool-list-editor__current admin-detail pull-left">
       <DPageSubheader
-        @titleLabel={{i18n "discourse_ai.tools.short_title"}}
-        @learnMoreUrl="https://meta.discourse.org/t/ai-bot-custom-tools/314103"
         @descriptionLabel={{i18n "discourse_ai.tools.subheader_description"}}
+        @learnMoreUrl="https://meta.discourse.org/t/ai-bot-custom-tools/314103"
+        @titleLabel={{i18n "discourse_ai.tools.short_title"}}
       >
         <:actions as |actions|>
           <actions.Default
-            @label="discourse_ai.tools.import"
+            class="ai-tool-list-editor__import-button"
             @action={{this.importTool}}
             @icon="upload"
-            class="ai-tool-list-editor__import-button"
+            @label="discourse_ai.tools.import"
           />
           <actions.Default
-            @label="discourse_ai.mcp_servers.new"
+            class="ai-tool-list-editor__new-mcp-button"
             @action={{this.routeToNewMcpServer}}
             @icon="plus"
-            class="ai-tool-list-editor__new-mcp-button"
+            @label="discourse_ai.mcp_servers.new"
           />
           <actions.Wrapped>
             <DMenu
-              @triggerClass="btn-default btn-small ai-tool-list-editor__new-button"
-              @label={{i18n "discourse_ai.tools.new"}}
               @icon="plus"
-              @placement="bottom-end"
+              @label={{i18n "discourse_ai.tools.new"}}
               @onClose={{this.resetMenuState}}
+              @placement="bottom-end"
+              @triggerClass="btn-default btn-small ai-tool-list-editor__new-button"
             >
               <:content>
                 <DDropdownMenu as |dropdown|>
                   {{#if this.expandedCategory}}
                     <dropdown.item>
                       <DButton
-                        @label="back_button"
-                        @icon="chevron-left"
-                        @action={{this.collapseCategory}}
                         class="btn-transparent"
+                        @action={{this.collapseCategory}}
+                        @icon="chevron-left"
+                        @label="back_button"
                       />
                     </dropdown.item>
                     <dropdown.divider />
                     {{#each this.categoryPresets.otherPresets as |preset|}}
                       <dropdown.item>
                         <div
-                          role="button"
                           class="ai-tool-preset-item"
                           data-option={{preset.preset_id}}
+                          role="button"
                           {{on "click" (fn this.routeToNewTool preset)}}
                         >
                           <span
@@ -282,13 +282,13 @@ export default class AiToolListEditor extends Component {
                       <dropdown.divider />
                       <dropdown.item>
                         <DButton
-                          @translatedLabel={{this.categoryPresets.customPreset.preset_name}}
+                          class="btn-transparent"
+                          data-option={{this.categoryPresets.customPreset.preset_id}}
                           @action={{fn
                             this.routeToNewTool
                             this.categoryPresets.customPreset
                           }}
-                          class="btn-transparent"
-                          data-option={{this.categoryPresets.customPreset.preset_id}}
+                          @translatedLabel={{this.categoryPresets.customPreset.preset_name}}
                         />
                       </dropdown.item>
                     {{/if}}
@@ -300,14 +300,14 @@ export default class AiToolListEditor extends Component {
 
                       <dropdown.item>
                         <DButton
-                          @translatedLabel={{preset.preset_name}}
+                          class="btn-transparent"
+                          data-option={{preset.preset_id}}
                           @action={{if
                             preset.is_category
                             (fn this.expandCategory preset)
                             (fn this.routeToNewTool preset)
                           }}
-                          class="btn-transparent"
-                          data-option={{preset.preset_id}}
+                          @translatedLabel={{preset.preset_name}}
                         />
                       </dropdown.item>
                     {{/each}}
@@ -333,8 +333,8 @@ export default class AiToolListEditor extends Component {
             <tbody>
               {{#each this.sortedTools as |tool|}}
                 <tr
-                  data-tool-id={{tool.id}}
                   class="ai-tool-list__row d-table__row"
+                  data-tool-id={{tool.id}}
                 >
                   <td class="d-table__cell --overview">
                     <div class="ai-tool-list__name-with-description">
@@ -378,9 +378,9 @@ export default class AiToolListEditor extends Component {
                   </td>
                   <td class="d-table__cell --controls">
                     <LinkTo
-                      @route="adminPlugins.show.discourse-ai-tools.edit"
-                      @model={{tool}}
                       class="btn btn-default btn-text btn-small"
+                      @model={{tool}}
+                      @route="adminPlugins.show.discourse-ai-tools.edit"
                     >{{i18n "discourse_ai.tools.edit"}}</LinkTo>
                   </td>
                 </tr>
@@ -402,8 +402,8 @@ export default class AiToolListEditor extends Component {
             <tbody>
               {{#each this.sortedMcpServers as |server|}}
                 <tr
-                  data-mcp-server-id={{server.id}}
                   class="ai-tool-list__row d-table__row"
+                  data-mcp-server-id={{server.id}}
                 >
                   <td class="d-table__cell --overview">
                     <div class="ai-tool-list__name-with-description">
@@ -416,8 +416,8 @@ export default class AiToolListEditor extends Component {
                       <div class="ai-tool-list__mcp-meta">
                         {{#if server.tools.length}}
                           <button
-                            type="button"
                             class="ai-tool-list__mcp-tools-button"
+                            type="button"
                             {{on "click" (fn this.showMcpServerTools server)}}
                           >
                             {{i18n
@@ -452,9 +452,9 @@ export default class AiToolListEditor extends Component {
                   </td>
                   <td class="d-table__cell --controls">
                     <LinkTo
-                      @route="adminPlugins.show.discourse-ai-tools.mcp-server-edit"
-                      @model={{server}}
                       class="btn btn-default btn-text btn-small"
+                      @model={{server}}
+                      @route="adminPlugins.show.discourse-ai-tools.mcp-server-edit"
                     >{{i18n "discourse_ai.mcp_servers.edit"}}</LinkTo>
                   </td>
                 </tr>
@@ -466,30 +466,30 @@ export default class AiToolListEditor extends Component {
         <AdminConfigAreaEmptyList @emptyLabel="discourse_ai.tools.no_tools">
           <div class="ai-tool-list-editor__empty-list-buttons">
             <DMenu
-              @triggerClass="btn-default btn-small ai-tool-list-editor__empty-new-button"
-              @label={{i18n "discourse_ai.tools.new"}}
               @icon="plus"
-              @placement="bottom-end"
+              @label={{i18n "discourse_ai.tools.new"}}
               @onClose={{this.resetMenuState}}
+              @placement="bottom-end"
+              @triggerClass="btn-default btn-small ai-tool-list-editor__empty-new-button"
             >
               <:content>
                 <DDropdownMenu as |dropdown|>
                   {{#if this.expandedCategory}}
                     <dropdown.item>
                       <DButton
-                        @label="back_button"
-                        @icon="chevron-left"
-                        @action={{this.collapseCategory}}
                         class="btn-transparent"
+                        @action={{this.collapseCategory}}
+                        @icon="chevron-left"
+                        @label="back_button"
                       />
                     </dropdown.item>
                     <dropdown.divider />
                     {{#each this.categoryPresets.otherPresets as |preset|}}
                       <dropdown.item>
                         <div
-                          role="button"
                           class="ai-tool-preset-item"
                           data-option={{preset.preset_id}}
+                          role="button"
                           {{on "click" (fn this.routeToNewTool preset)}}
                         >
                           <span
@@ -506,13 +506,13 @@ export default class AiToolListEditor extends Component {
                       <dropdown.divider />
                       <dropdown.item>
                         <DButton
-                          @translatedLabel={{this.categoryPresets.customPreset.preset_name}}
+                          class="btn-transparent"
+                          data-option={{this.categoryPresets.customPreset.preset_id}}
                           @action={{fn
                             this.routeToNewTool
                             this.categoryPresets.customPreset
                           }}
-                          class="btn-transparent"
-                          data-option={{this.categoryPresets.customPreset.preset_id}}
+                          @translatedLabel={{this.categoryPresets.customPreset.preset_name}}
                         />
                       </dropdown.item>
                     {{/if}}
@@ -524,14 +524,14 @@ export default class AiToolListEditor extends Component {
 
                       <dropdown.item>
                         <DButton
-                          @translatedLabel={{preset.preset_name}}
+                          class="btn-transparent"
+                          data-option={{preset.preset_id}}
                           @action={{if
                             preset.is_category
                             (fn this.expandCategory preset)
                             (fn this.routeToNewTool preset)
                           }}
-                          class="btn-transparent"
-                          data-option={{preset.preset_id}}
+                          @translatedLabel={{preset.preset_name}}
                         />
                       </dropdown.item>
                     {{/each}}
@@ -541,10 +541,10 @@ export default class AiToolListEditor extends Component {
               </:content>
             </DMenu>
             <DButton
-              @label="discourse_ai.mcp_servers.new"
-              @icon="plus"
-              @action={{this.routeToNewMcpServer}}
               class="btn-default btn-small ai-tool-list-editor__empty-new-mcp-button"
+              @action={{this.routeToNewMcpServer}}
+              @icon="plus"
+              @label="discourse_ai.mcp_servers.new"
             />
           </div></AdminConfigAreaEmptyList>
       {{/if}}

@@ -125,7 +125,9 @@ class ReviewablePostVotingComment < Reviewable
   def disagree(performed_by)
     yield if block_given?
 
-    UserSilencer.unsilence(comment_creator, performed_by) if UserSilencer.was_silenced_for?(post)
+    if UserSilencer.was_silenced_for?(post)
+      UserSilencer.unsilence(comment_creator, performed_by, reviewable_id: id)
+    end
 
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }

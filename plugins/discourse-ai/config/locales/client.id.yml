@@ -10,6 +10,15 @@ id:
       site_settings:
         categories:
           discourse_ai: "Discourse"
+      dashboard:
+        sections:
+          ask_ai:
+            title: "Tanya AI"
+        ask_ai:
+          title: "Tanya AI"
+          date: "Tanggal"
+          outcomes:
+            failed: "Gagal"
   js:
     discourse_automation:
       scriptables:

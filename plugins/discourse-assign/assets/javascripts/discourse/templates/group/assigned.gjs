@@ -12,53 +12,53 @@ export default <template>
   <section class="user-secondary-navigation group-assignments">
     {{bodyClass "group-assign"}}
     <MobileNav
-      @desktopClass="action-list activity-list nav-stacked"
       class="activity-nav"
+      @desktopClass="action-list activity-list nav-stacked"
     >
       {{#if @controller.isDesktop}}
         <div class="search-div">
           <Input
-            {{on "input" (withEventValue @controller.onChangeFilterName)}}
-            @type="text"
-            @value={{readonly @controller.filterName}}
+            class="search"
             placeholder={{i18n
               "discourse_assign.sidebar_name_filter_placeholder"
             }}
-            class="search"
+            @type="text"
+            @value={{readonly @controller.filterName}}
+            {{on "input" (withEventValue @controller.onChangeFilterName)}}
           />
         </div>
       {{/if}}
 
-      <DLoadMore @selector=".activity-nav li" @action={{@controller.loadMore}}>
+      <DLoadMore @action={{@controller.loadMore}} @selector=".activity-nav li">
         <GroupAssignedFilter
-          @showAvatar={{false}}
-          @filter="everyone"
-          @routeType={{@controller.route_type}}
-          @assignmentCount={{@controller.group.assignment_count}}
-          @search={{@controller.search}}
           @ascending={{@controller.ascending}}
+          @assignmentCount={{@controller.group.assignment_count}}
+          @filter="everyone"
           @order={{@controller.order}}
+          @routeType={{@controller.route_type}}
+          @search={{@controller.search}}
+          @showAvatar={{false}}
         />
 
         <GroupAssignedFilter
-          @showAvatar={{false}}
-          @groupName={{@controller.group.name}}
-          @filter={{@controller.group.name}}
-          @routeType={{@controller.route_type}}
-          @assignmentCount={{@controller.group.group_assignment_count}}
-          @search={{@controller.search}}
           @ascending={{@controller.ascending}}
+          @assignmentCount={{@controller.group.group_assignment_count}}
+          @filter={{@controller.group.name}}
+          @groupName={{@controller.group.name}}
           @order={{@controller.order}}
+          @routeType={{@controller.route_type}}
+          @search={{@controller.search}}
+          @showAvatar={{false}}
         />
 
         {{#each @controller.members as |member|}}
           <GroupAssignedFilter
-            @showAvatar={{true}}
+            @ascending={{@controller.ascending}}
             @filter={{member}}
+            @order={{@controller.order}}
             @routeType={{@controller.route_type}}
             @search={{@controller.search}}
-            @ascending={{@controller.ascending}}
-            @order={{@controller.order}}
+            @showAvatar={{true}}
           />
         {{/each}}
 

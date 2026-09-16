@@ -19,6 +19,7 @@ uk:
         countdown:
           passed: дата минула
       title: Вставити дату / час
+      edit: Редагувати дату/час
       edit_date: Редагувати %{date}
       create:
         form:

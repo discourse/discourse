@@ -82,7 +82,6 @@ ru:
     ai_helper_automatic_chat_thread_title: "Автоматически устанавливать заголовки тем чата в зависимости от содержимого темы."
     post_ai_helper_allowed_groups: "Группы пользователей, которым разрешен доступ к функциям AI-помощника в публикациях"
     ai_embeddings_selected_model: "Использовать выбранную модель для создания встраиваний."
-    ai_embeddings_generate_for_pms: "Генерировать векторные представления для личных сообщений."
     ai_embeddings_semantic_related_topics_enabled: "Использовать семантический поиск для связанных тем."
     ai_embeddings_semantic_related_topics: "Максимальное количество тем для показа в разделе связанных тем."
     ai_embeddings_backfill_batch_size: "Количество векторных представлений для обратного заполнения каждые 15 минут."
@@ -284,6 +283,25 @@ ru:
       configuration_missing: "Отсутствует конфигурация AI-системы обнаружения спама. Перед включением добавьте конфигурацию в разделе «Администрирование > Плагины > AI для Discourse > Спам»."
       logging_subject: "Обнаружение спама"
     ai_bot:
+      navigation:
+        settings:
+          title: "Настройки сайта"
+        users:
+          title: "По пользователям"
+        groups:
+          title: "Группы"
+        review:
+          title: "Очередь проверки"
+        categories:
+          title: "Категории"
+        tags:
+          title: "Теги"
+        themes:
+          title: "тем"
+        authentication:
+          title: "Вход и аутентификация"
+        backups:
+          title: "Резервные копии"
       reply_error: "Извините, похоже, наша система столкнулась с неожиданной проблемой при попытке ответить.\n\n[details='Сведения об ошибке']\n%{details}\n[/details]"
       default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
       read_post:

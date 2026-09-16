@@ -28,6 +28,7 @@ describe "UserPromoted" do
 
   context "when there is a group restriction" do
     let!(:group) { Fabricate(:group) }
+
     before do
       automation.upsert_field!(
         "restricted_group",

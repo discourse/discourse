@@ -80,9 +80,9 @@ const TagInfo = <template>
 
       {{#if @currentUser.canEditTags}}
         <PluginOutlet
+          @connectorTagName="section"
           @name="tag-custom-settings"
           @outletArgs={{lazyHash tag=@tagInfo}}
-          @connectorTagName="section"
         />
       {{/if}}
     </section>

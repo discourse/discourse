@@ -15,8 +15,8 @@ export default <template>
     {{#if @controller.tagName}}
       <li class="archive">
         <LinkTo
-          @route="userPrivateMessages.tags.show"
           @model={{@controller.tagName}}
+          @route="userPrivateMessages.tags.show"
         >
           {{@controller.tagName}}
         </LinkTo>

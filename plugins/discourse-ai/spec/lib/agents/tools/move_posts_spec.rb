@@ -21,6 +21,29 @@ RSpec.describe DiscourseAi::Agents::Tools::MovePosts do
 
   let(:context) { DiscourseAi::Agents::BotContext.new }
 
+  describe "#invoke" do
+    fab!(:user, :trust_level_4)
+    let(:context) { DiscourseAi::Agents::BotContext.new(user: user) }
+
+    it "leaves posts unchanged when the user can only reply in the destination category" do
+      category = Fabricate(:category)
+      category.set_permissions(everyone: :reply)
+      category.save!
+
+      expect do
+        expect do
+          tool(
+            topic_id: topic.id,
+            post_ids: [post2.id],
+            new_title: "A separate discussion",
+            category_id: category.id,
+            reason: "Organizing the discussion",
+          ).invoke
+        end.to raise_error(Discourse::InvalidAccess)
+      end.not_to change { [Topic.count, Post.count, post2.reload.topic_id] }
+    end
+  end
+
   it "moves posts to an existing topic" do
     result =
       tool(

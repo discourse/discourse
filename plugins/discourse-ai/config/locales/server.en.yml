@@ -125,7 +125,7 @@ en:
     ai_helper_chat_thread_title_agent: "The agent to use for generating chat thread titles."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
-    ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
+    ai_embeddings_generate_for_pms: "Generate embeddings for personal messages. This is also required for semantic personal-message results in Ask AI."
     ai_embeddings_semantic_related_topics_enabled: "Use Semantic Search for related topics."
     ai_embeddings_semantic_related_topics: "Maximum number of topics to show in related topic section."
     ai_embeddings_backfill_batch_size: "Number of embeddings to backfill every 15 minutes."
@@ -167,7 +167,7 @@ en:
     ai_ask_ai_agent: "Agent that selects sources and writes Ask AI answers."
     ai_ask_ai_query_rewriter_agent: "Agent used to prepare separate keyword and semantic queries for Ask AI. If this agent or its model is unavailable, Ask AI searches with the user's original query."
     ai_ask_ai_follow_up_agent: "Agent used when a user wants to follow up an Ask AI result. The selected agent must be enabled, allow personal messages, and be available to the user."
-    ai_ask_ai_allowed_groups: "Groups allowed to use Ask AI and its follow-up handoff. The Ask AI agent's permissions, the follow-up agent's permissions, and normal topic and category visibility still apply. Personal messages are always excluded from search. Content from restricted categories visible to an allowed user may be sent to the configured LLM provider."
+    ai_ask_ai_allowed_groups: "Groups allowed to use Ask AI and its follow-up handoff. The Ask AI agent's permissions, the follow-up agent's permissions, and normal topic, category, and personal-message visibility still apply. Semantic personal-message search requires {{setting:ai_embeddings_generate_for_pms}}. Content visible to an allowed user, including restricted topics and personal messages, may be sent to the configured LLM provider."
 
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
@@ -311,6 +311,14 @@ en:
           locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+          uploads_not_sent: "Agent '%{agent}' did not receive every upload"
+          upload_not_found: "Upload %{upload_id} was not found"
+          upload_not_visible: "%{username} cannot see upload %{upload_id}"
+          agent_cannot_see_images: "Upload %{upload_id} is an image and agent '%{agent}' has vision disabled"
+          llm_cannot_see_images: "Upload %{upload_id} is an image and LLM '%{llm}' has vision disabled"
+          llm_cannot_read_documents: "Upload %{upload_id} is a document and LLM '%{llm}' accepts no attachments"
+          unsupported_image_format: "Upload %{upload_id} is not a supported image format (%{formats})"
+          upload_skipped: "Upload %{upload_id} (%{filename}) was not sent: %{message}"
 
     tools:
       custom_name: "%{name} (custom)"
@@ -448,13 +456,49 @@ en:
       logging_subject: "Spam detection"
 
     ai_bot:
+      search_discourse_navigation:
+        not_allowed: "You are not allowed to search administration destinations."
+        invalid_query: "Enter a search query between 1 and %{max} characters."
+      navigation:
+        settings:
+          title: "Site settings"
+          description: "Search and change all site configuration settings."
+        users:
+          title: "Users"
+          description: "Find and manage member accounts and user permissions."
+        groups:
+          title: "Groups"
+          description: "Manage groups and group membership."
+        review:
+          title: "Review queue"
+          description: "Moderate flagged posts and approve pending users and content."
+        invites:
+          title: "Create an invite"
+          description: "Invite people to join this community."
+        categories:
+          title: "Categories"
+          description: "Browse, create, and manage discussion categories."
+        tags:
+          title: "Tags"
+          description: "Browse and manage topic tags."
+        themes:
+          title: "Themes"
+          description: "Install and customize themes to change the site's appearance and design."
+        authentication:
+          title: "Login and authentication"
+          description: "Configure login, signup, authentication, and single sign-on."
+        backups:
+          title: "Backups"
+          description: "Create, download, and restore site backups."
+      ai_users: "AI users"
+      ai_users_bio: "Automatic group of AI bot accounts"
       errors:
         invalid_agent_id: "The specified AI agent does not exist or you do not have access to it"
         cannot_send_pm_to_agent: "You cannot send personal messages to this AI agent"
       reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
-      tool_pending_approval: "This action requires moderator approval before it can be executed."
+      tool_pending_approval: "This action requires approval:"
       spawn_agent:
         description: "Delegate a self-contained prompt to one of the allowed agents and return its response"
         prompt_description: "The complete self-contained prompt sent to the selected agent and shown in the thinking block"
@@ -710,6 +754,7 @@ en:
           name: "Code execution (native)"
           help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
+        load_discourse_website_page: "Load Discourse website page"
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
         view_image: "Inspect image"
@@ -758,6 +803,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        search_discourse_navigation: "Searching site navigation"
         read_site_setting: "Read site setting"
         change_site_setting: "Change site setting"
         dall_e: "Generate image"
@@ -768,6 +814,7 @@ en:
         researcher: "Researching"
         researcher_dry_run: "Preparing research"
       tool_help:
+        load_discourse_website_page: "Load a named page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         search_uploaded_documents: "Search documents uploaded to this agent"
         view_image: "Inspect an image available during this task"
@@ -818,6 +865,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        search_discourse_navigation: "Find verified links to available pages on this site"
         read_site_setting: "Read the current value of a site setting"
         change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
@@ -825,6 +873,7 @@ en:
         javascript_evaluator: "Evaluate JavaScript"
         researcher: "Research forum information using the AI Bot"
       tool_description:
+        load_discourse_website_page: "Loaded the %{page_name} page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         view_image: "Inspected an image available during this task"
         search_uploaded_documents:
@@ -899,6 +948,9 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        search_discourse_navigation:
+          one: "Found %{count} destination"
+          other: "Found %{count} destinations"
         read_site_setting: "Reading site setting %{setting_name}"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
@@ -1137,6 +1189,10 @@ en:
           hidden: "Site setting '%{setting_name}' is hidden and cannot be read here."
           secret: "Site setting '%{setting_name}' contains a secret and cannot be read here."
           themeable: "Site setting '%{setting_name}' requires a theme and cannot be read here."
+      load_discourse_website_page:
+        errors:
+          page_not_found: "The Discourse website page '%{page_name}' is not available."
+          fetch_failed: "The '%{page_name}' page from the official Discourse website could not be loaded."
 
     reviewables:
       ai_tool_action:

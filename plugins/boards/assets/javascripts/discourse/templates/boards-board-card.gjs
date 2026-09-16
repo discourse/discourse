@@ -6,8 +6,8 @@ export default <template>
   {{bodyClass "discourse-boards-board"}}
   {{#each (array @controller.model) as |model|}}
     <BoardsBoardViewer
-      @model={{model}}
       @initialCardId={{model.initialCardId}}
+      @model={{model}}
     />
   {{/each}}
 </template>

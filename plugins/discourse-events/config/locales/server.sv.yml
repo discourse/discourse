@@ -78,7 +78,6 @@ sv:
           raw_invitees_length: "Ett evenemang är begränsat till %{count} användare/grupper."
           raw_invitees:
             only_group: "För ett evenemang godkänns endast gruppnamn."
-          ends_at_before_starts_at: "Ett evenemang kan inte avslutas innan det börjar."
           start_must_be_present_and_a_valid_date: "Ett evenemang kräver ett giltigt startdatum."
           end_must_be_a_valid_date: "Slutdatumet måste vara ett giltigt datum."
           invalid_timezone: "Tidszonen känns inte igen."

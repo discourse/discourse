@@ -106,6 +106,19 @@ export default class AdminUsersListShowController extends Controller {
     return this.query === "new";
   }
 
+  get showEmptyState() {
+    return (
+      !this.refreshing &&
+      this.users.length === 0 &&
+      !this.listFilter &&
+      !this.activation
+    );
+  }
+
+  get bulkSelectedUsers() {
+    return Object.values(this.bulkSelectedUsersMap);
+  }
+
   resetFilters() {
     this._page = 1;
     this._results.length = 0;
@@ -119,42 +132,6 @@ export default class AdminUsersListShowController extends Controller {
     }
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || "";
-  }
-
-  _refreshUsers() {
-    if (!this._canLoadMore) {
-      return;
-    }
-
-    const page = this._page;
-    this.set("refreshing", true);
-
-    return AdminUser.findAll(this.query, {
-      filter: this.listFilter,
-      show_emails: this.showEmails,
-      order: this.order,
-      asc: this.asc,
-      activation: this.activation,
-      page,
-    })
-      .then((result) => {
-        this._results[page] = result;
-        if (result.length === 0) {
-          this._canLoadMore = false;
-        }
-      })
-      .finally(() => {
-        this.set("refreshing", false);
-      });
-  }
-
-  get showEmptyState() {
-    return (
-      !this.refreshing &&
-      this.users.length === 0 &&
-      !this.listFilter &&
-      !this.activation
-    );
   }
 
   @action
@@ -282,33 +259,11 @@ export default class AdminUsersListShowController extends Controller {
     this.displayBulkActions = this.bulkSelectedUsers.length > 0;
   }
 
-  get bulkSelectedUsers() {
-    return Object.values(this.bulkSelectedUsersMap);
-  }
-
   @bind
   async afterBulkAction() {
     await this.resetFilters();
     this.bulkSelectedUsersMap = {};
     this.displayBulkActions = false;
-  }
-
-  #openBulkActionConfirmation({ canBeActioned, emptyMessageKey, modal }) {
-    const userIds = this.bulkSelectedUsers
-      .filter(canBeActioned)
-      .map((user) => user.id);
-
-    if (userIds.length === 0) {
-      this.toasts.error({
-        duration: "short",
-        data: { message: i18n(emptyMessageKey) },
-      });
-      return;
-    }
-
-    this.modal.show(modal, {
-      model: { userIds, afterBulkAction: this.afterBulkAction },
-    });
   }
 
   @action
@@ -326,6 +281,24 @@ export default class AdminUsersListShowController extends Controller {
       canBeActioned: (user) => user.can_be_suspended,
       emptyMessageKey: "admin.users.bulk_actions.no_users_can_be_suspended",
       modal: BulkUserSuspendConfirmation,
+    });
+  }
+
+  #openBulkActionConfirmation({ canBeActioned, emptyMessageKey, modal }) {
+    const userIds = this.bulkSelectedUsers
+      .filter(canBeActioned)
+      .map((user) => user.id);
+
+    if (userIds.length === 0) {
+      this.toasts.error({
+        duration: "short",
+        data: { message: i18n(emptyMessageKey) },
+      });
+      return;
+    }
+
+    this.modal.show(modal, {
+      model: { userIds, afterBulkAction: this.afterBulkAction },
     });
   }
 
@@ -348,5 +321,32 @@ export default class AdminUsersListShowController extends Controller {
         }),
       },
     });
+  }
+
+  _refreshUsers() {
+    if (!this._canLoadMore) {
+      return;
+    }
+
+    const page = this._page;
+    this.set("refreshing", true);
+
+    return AdminUser.findAll(this.query, {
+      filter: this.listFilter,
+      show_emails: this.showEmails,
+      order: this.order,
+      asc: this.asc,
+      activation: this.activation,
+      page,
+    })
+      .then((result) => {
+        this._results[page] = result;
+        if (result.length === 0) {
+          this._canLoadMore = false;
+        }
+      })
+      .finally(() => {
+        this.set("refreshing", false);
+      });
   }
 }

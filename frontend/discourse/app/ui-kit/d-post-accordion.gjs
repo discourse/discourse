@@ -14,6 +14,14 @@ export default class DPostAccordion extends Component {
     this.resetExpandedIds();
   }
 
+  get posts() {
+    return this.args.posts ?? [];
+  }
+
+  get allExpanded() {
+    return this.posts.every((post) => this.expandedIds.has(post.id));
+  }
+
   @action
   resetExpandedIds() {
     const defaultExpanded = this.args.defaultExpanded;
@@ -34,14 +42,6 @@ export default class DPostAccordion extends Component {
           this.expandedIds.add(firstPostId);
         }
     }
-  }
-
-  get posts() {
-    return this.args.posts ?? [];
-  }
-
-  get allExpanded() {
-    return this.posts.every((post) => this.expandedIds.has(post.id));
   }
 
   @action
@@ -83,12 +83,12 @@ export default class DPostAccordion extends Component {
             {{#each this.posts as |post|}}
               <DPostAccordionItem
                 @decoratorState={{@decoratorState}}
-                @post={{post}}
-                @isExpanded={{this.itemIsExpanded post.id}}
-                @onToggleExpanded={{fn this.toggleItemExpanded post.id}}
-                @linesDisplayed={{@linesDisplayed}}
-                @hasItemMetadataBlock={{has-block "itemMetadata"}}
                 @hasBeforeItemContentBlock={{has-block "beforeItemContent"}}
+                @hasItemMetadataBlock={{has-block "itemMetadata"}}
+                @isExpanded={{this.itemIsExpanded post.id}}
+                @linesDisplayed={{@linesDisplayed}}
+                @onToggleExpanded={{fn this.toggleItemExpanded post.id}}
+                @post={{post}}
               >
 
                 <:itemMetadata>

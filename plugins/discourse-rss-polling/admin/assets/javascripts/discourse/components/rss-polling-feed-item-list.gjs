@@ -33,8 +33,8 @@ export default class RssPollingFeedItemList extends Component {
               <a
                 class="rss-polling-feed-test__item-title"
                 href={{item.url}}
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 {{item.label}}
               </a>

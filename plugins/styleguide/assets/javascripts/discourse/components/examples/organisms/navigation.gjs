@@ -8,7 +8,7 @@ export default <template>
     <div class="container">
       <section class="navigation-container">
         <BreadCrumbs @categories={{@categories}} />
-        <NavigationBar @navItems={{@navItems}} @filterMode="latest" />
+        <NavigationBar @filterMode="latest" @navItems={{@navItems}} />
 
         <div class="navigation-controls">
           <CategoriesAdminDropdown />

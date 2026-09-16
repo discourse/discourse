@@ -7,11 +7,11 @@ export default <template>
     {{#each @suggestions as |suggestion index|}}
       <dropdown.item>
         <DButton
-          @translatedLabel={{suggestion}}
-          @action={{fn @onSelect suggestion}}
           data-name={{suggestion}}
           data-value={{index}}
           title={{suggestion}}
+          @action={{fn @onSelect suggestion}}
+          @translatedLabel={{suggestion}}
         />
       </dropdown.item>
     {{/each}}

@@ -17,33 +17,33 @@ export default class DataTableSelect extends ComboBoxField {
 
   <template>
     <ExpressionWrapper
-      @field={{@field}}
-      @schema={{@schema}}
-      @supportsExpression={{@supportsExpression}}
-      @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
+      @field={{@field}}
+      @placeholder={{@placeholder}}
+      @schema={{@schema}}
       @session={{@session}}
+      @supportsExpression={{@supportsExpression}}
     >
       <div class="workflows-property-engine__select-with-action">
         <DynamicOptionsComboBox
           @content={{this.options}}
           @loadOptions={{if this.usesRemoteOptions this.loadRemoteOptions}}
           @nameProperty="name"
-          @value={{@field.value}}
-          @valueProperty="id"
           @onChange={{this.handleChange}}
           @options={{hash
             filterable=this.filterable
             none=this.none
             castInteger=this.castInteger
           }}
+          @value={{@field.value}}
+          @valueProperty="id"
         />
         {{#unless @field.value}}
           <DButton
-            @action={{this.manageDataTables}}
-            @label="discourse_workflows.data_tables.manage_data_tables"
-            @icon="plus"
             class="btn-default"
+            @action={{this.manageDataTables}}
+            @icon="plus"
+            @label="discourse_workflows.data_tables.manage_data_tables"
           />
         {{/unless}}
       </div>

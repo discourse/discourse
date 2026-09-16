@@ -7,7 +7,9 @@ module Voice
 
     def self.ensure!
       return unless SiteSetting.voice_enabled?
-      return unless ActiveRecord::Base.connection.table_exists?(:voice_rooms)
+      return unless schema_ready?
+      return if Voice::Room.persistent.exists?
+
       # Runs at plugin activation, which can precede pending migrations (dev
       # DBs, rake db:migrate itself) — and Room queries the newest columns.
       # DatabaseTasks.migrations_paths is the set that includes plugin paths;
@@ -32,5 +34,16 @@ module Voice
         Voice::DirectoryBroadcaster.broadcast(action: :created, room: room)
       end
     end
+
+    def self.schema_ready?
+      @schema_ready ||= {}
+      site = RailsMultisite::ConnectionManagement.current_db
+      return true if @schema_ready[site]
+
+      connection = ActiveRecord::Base.connection
+      @schema_ready[site] = connection.table_exists?(:voice_rooms) &&
+        connection.column_exists?(:voice_rooms, :ephemeral)
+    end
+    private_class_method :schema_ready?
   end
 end

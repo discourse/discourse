@@ -1,6 +1,10 @@
 en:
   js:
     voice:
+      about:
+        participants:
+          one: "%{formatted_number} person joined voice chats"
+          other: "%{formatted_number} people joined voice chats"
       sidebar:
         title: "Voice rooms"
         create: "Create room"
@@ -290,11 +294,19 @@ en:
       memberships:
         add_user: "Add participant"
         remove_user: "Remove participant"
+      agent:
+        invite: "Invite LiveKit agent"
+        name: "Agent name"
+        type_name: "Type a name instead"
+        pick_name: "Choose from the list instead"
+        refresh: "Refresh the agent list"
+        invited: "Agent invited. It will appear when LiveKit connects it. This can take about a minute."
       admin:
         title: "Voice"
         dashboard_title: "Dashboard"
         recordings_title: "Recordings"
         recordings:
+          webhook_config_hint: "No LiveKit webhooks have been received recently. Configure a webhook in LiveKit pointing to %{webhook_url}. Use the same API key configured in the voice livekit api key site setting and include egress_ended events so recording statuses and download notifications update when recordings finish."
           description: "Call recordings produced by the LiveKit egress service. Files stay on the storage configured on the recording server; completed recordings link to that location when it is a URL."
           room: "Room"
           requested_by: "Requested by"

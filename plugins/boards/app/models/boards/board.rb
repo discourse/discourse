@@ -4,6 +4,8 @@ module Boards
   class Board < ActiveRecord::Base
     include ::AclTarget
 
+    ACL_PERMISSIONS = Acl::Permissions.new(:view, :edit, :manage)
+
     self.table_name = "discourse_kanban_boards"
     self.ignored_columns = %w[
       base_filter_query
@@ -22,8 +24,11 @@ module Boards
              -> { order(created_at: :asc) },
              class_name: "Boards::BoardHistory",
              inverse_of: :board
+    belongs_to :archived_by, class_name: "User", optional: true
     belongs_to :created_by, class_name: "User"
     belongs_to :updated_by, class_name: "User", optional: true
+
+    scope :open, -> { where(archived: false) }
 
     enum :card_style, { detailed: 0, simple: 1 }, default: :detailed
 
@@ -36,22 +41,45 @@ module Boards
     before_validation :normalize_slug
 
     def self.mandatory_acl
-      [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+      [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: ACL_PERMISSIONS.manage }]
     end
 
     def self.banned_acl
       [
-        { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "manage" },
-        { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
+        {
+          type: :group,
+          id: Group::AUTO_GROUPS[:anonymous_users],
+          permission: ACL_PERMISSIONS.manage,
+        },
+        {
+          type: :group,
+          id: Group::AUTO_GROUPS[:anonymous_users],
+          permission: ACL_PERMISSIONS.edit,
+        },
         # Essentially a legacy group ID, don't want anyone to use it.
-        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "manage" },
-        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "edit" },
-        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: "view" },
+        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: ACL_PERMISSIONS.manage },
+        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: ACL_PERMISSIONS.edit },
+        { type: :group, id: Group::AUTO_GROUPS[:everyone], permission: ACL_PERMISSIONS.view },
       ]
     end
 
     def self.loss_warning_permissions
-      ["manage"]
+      [ACL_PERMISSIONS.manage]
+    end
+
+    def archive_slug(date)
+      base = "#{slug}-archived-#{date.strftime("%Y%m%d")}"
+      candidate = base
+      suffix = 1
+      while self.class.where.not(id: id).exists?(slug: candidate)
+        suffix += 1
+        candidate = "#{base}-#{suffix}"
+      end
+      candidate
+    end
+
+    def old_slug_used?
+      archived? && self.class.where.not(id: id).exists?(slug: original_slug)
     end
 
     def url
@@ -59,13 +87,16 @@ module Boards
     end
 
     def anonymous_can_read?
-      permission_acl.group_has_permission?(Group::AUTO_GROUPS[:anonymous_users], "view")
+      permission_acl.group_has_permission?(
+        Group::AUTO_GROUPS[:anonymous_users],
+        ACL_PERMISSIONS.view,
+      )
     end
 
     def logged_in_user_can_read?
       permission_acl.group_has_any_permission?(
         Group::AUTO_GROUPS[:logged_in_users],
-        %w[view edit manage],
+        ACL_PERMISSIONS.values,
       )
     end
 
@@ -180,6 +211,8 @@ module Boards
     private
 
     def normalize_slug
+      return if archived? || (will_save_change_to_archived? && slug == original_slug_in_database)
+
       source = slug.presence || name
       self.slug = Slug.for(source) if source.present?
     end
@@ -222,9 +255,12 @@ end
 # Table name: discourse_kanban_boards
 #
 #  id                   :bigint           not null, primary key
+#  archived             :boolean          default(FALSE), not null
+#  archived_at          :datetime
 #  card_style           :integer          default("detailed"), not null
 #  category_ids         :integer          default([]), not null, is an Array
 #  name                 :string           not null
+#  original_slug        :string
 #  require_confirmation :boolean          default(TRUE), not null
 #  show_tags            :boolean          default(FALSE), not null
 #  show_topic_thumbnail :boolean          default(FALSE), not null
@@ -232,6 +268,7 @@ end
 #  tag_ids              :integer          default([]), not null, is an Array
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  archived_by_id       :bigint
 #  created_by_id        :bigint
 #  updated_by_id        :bigint
 #

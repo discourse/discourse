@@ -58,6 +58,30 @@ acceptance("User Profile - Summary", function (needs) {
   });
 });
 
+acceptance(
+  "User Profile - Summary - Anonymous search disabled",
+  function (needs) {
+    needs.site({ can_search: false });
+
+    test("shows category counts without search links", async function (assert) {
+      await visit("/u/eviltrout/summary");
+
+      assert
+        .dom(".top-categories-section tbody .reply-count a")
+        .doesNotExist("does not link reply counts to search");
+      assert
+        .dom(".top-categories-section tbody .topic-count a")
+        .doesNotExist("does not link topic counts to search");
+      assert
+        .dom(".top-categories-section tbody .reply-count")
+        .hasText("1", "keeps the reply count visible");
+      assert
+        .dom(".top-categories-section tbody .topic-count")
+        .hasText("1", "keeps the topic count visible");
+    });
+  }
+);
+
 acceptance("User Profile - Summary - User Status", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {

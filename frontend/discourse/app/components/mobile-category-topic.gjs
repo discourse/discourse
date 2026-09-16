@@ -13,7 +13,7 @@ export default class MobileCategoryTopic extends Component {
   <template>
     <td class="main-link">
       <div class="topic-inset">
-        <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
+        <TopicStatus @disableActions={{true}} @topic={{this.topic}} />
         {{dTopicLink this.topic}}
         {{#if this.topic.unseen}}
           <span class="badge-notification new-topic"></span>
@@ -24,7 +24,7 @@ export default class MobileCategoryTopic extends Component {
       </div>
     </td>
     <td class="num posts">
-      <PostCountOrBadges @topic={{this.topic}} @postBadgesEnabled={{true}} />
+      <PostCountOrBadges @postBadgesEnabled={{true}} @topic={{this.topic}} />
     </td>
   </template>
 }

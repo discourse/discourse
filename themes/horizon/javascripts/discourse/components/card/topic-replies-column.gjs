@@ -6,8 +6,8 @@ import { i18n } from "discourse-i18n";
 const TopicRepliesColumn = <template>
   {{#if @topic.replyCount}}
     <span
-      class="topic-replies"
       aria-label={{i18n (themePrefix "reply_count") count=@topic.replyCount}}
+      class="topic-replies"
     >{{dIcon "reply"}}{{dNumber @topic.replyCount}}</span>
   {{/if}}
 </template>;

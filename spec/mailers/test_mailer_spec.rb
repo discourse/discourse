@@ -2,7 +2,7 @@
 
 RSpec.describe TestMailer do
   describe "send_test" do
-    it "works" do
+    it "builds the test email" do
       test_mailer = TestMailer.send_test("marcheline@adventuretime.ooo")
 
       expect(test_mailer.from).to eq([SiteSetting.notification_email])

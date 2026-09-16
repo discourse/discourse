@@ -171,6 +171,14 @@ export class DeferredTrackedSet {
     this.#set = trackedSet(value);
   }
 
+  get size() {
+    return this.#set.size;
+  }
+
+  get [Symbol.toStringTag]() {
+    return this.#set[Symbol.toStringTag];
+  }
+
   has(value) {
     return this.#set.has(value);
   }
@@ -191,16 +199,8 @@ export class DeferredTrackedSet {
     return this.#set.forEach(fn);
   }
 
-  get size() {
-    return this.#set.size;
-  }
-
   [Symbol.iterator]() {
     return this.#set[Symbol.iterator]();
-  }
-
-  get [Symbol.toStringTag]() {
-    return this.#set[Symbol.toStringTag];
   }
 
   add(value) {
@@ -423,3 +423,16 @@ export function enumerateTrackedEntries(obj) {
   const keys = enumerateTrackedKeys(obj);
   return keys.map((key) => [key, obj[key]]);
 }
+
+/**
+ * A no-op function which is used to signal the intent of consuming a getter
+ * for autotracking purposes. The actual autotracking happens when you call
+ * the getter, but would trip the `no-unused-expressions` line rule without this
+ * wrapper.
+ *
+ * Consuming state you do not use is generally a violation of Ember's declarative
+ * patterns, so reach for this only when absolutely necessary.
+ *
+ * @type {(value: unknown) => void}
+ */
+export function manuallyTrack() {}

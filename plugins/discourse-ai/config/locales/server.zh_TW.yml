@@ -124,7 +124,6 @@ zh_TW:
     ai_helper_post_illustrator_agent: "用於 AI 助理「為貼文配圖」功能的代理程式。注意：你還必須建立圖像產生工具（管理 > 外掛 > Discourse AI > 工具），此功能才能運作。"
     ai_helper_chat_thread_title_agent: "用於產生聊天討論串標題的代理程式。"
     ai_embeddings_selected_model: "使用所選模型產生嵌入。"
-    ai_embeddings_generate_for_pms: "為私人訊息產生嵌入。"
     ai_embeddings_semantic_related_topics_enabled: "使用語意搜尋尋找相關主題。"
     ai_embeddings_semantic_related_topics: "相關主題區段中最多顯示的主題數量。"
     ai_embeddings_backfill_batch_size: "每 15 分鐘要回填的嵌入數量。"
@@ -414,13 +413,29 @@ zh_TW:
       configuration_missing: "缺少 AI 垃圾內容偵測設定。啟用前，請在「管理 > 外掛 > Discourse AI > 垃圾內容」中新增設定。"
       logging_subject: "垃圾內容偵測"
     ai_bot:
+      navigation:
+        settings:
+          title: "網站設定"
+        users:
+          title: "使用者"
+        groups:
+          title: "群組"
+        review:
+          title: "審核佇列"
+        categories:
+          title: "分類"
+        tags:
+          title: "標簽"
+        themes:
+          title: "佈景主題"
+        backups:
+          title: "備份"
       errors:
         invalid_agent_id: "指定的 AI 代理程式不存在，或你沒有存取權"
         cannot_send_pm_to_agent: "你無法向此 AI 代理程式傳送私人訊息"
       reply_error: "很抱歉，系統嘗試回覆時似乎遇到未預期的問題。\n\n[details='錯誤詳細資料']\n%{details}\n[/details]"
       default_pm_prefix: "[未命名的 AI 機器人私人訊息]"
       thinking: "思考中"
-      tool_pending_approval: "執行此動作前需要版主核准。"
       spawn_agent:
         description: "將獨立完整的提示詞委派給其中一個允許的代理程式，並傳回其回應"
         prompt_description: "傳送給所選代理程式並顯示於思考區塊中的完整獨立提示詞"

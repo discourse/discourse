@@ -19,9 +19,13 @@ end
 
 require_relative "lib/discourse_captcha/engine"
 require_relative "lib/discourse_captcha/captcha_provider"
+require_relative "lib/discourse_captcha/captcha_verification"
+require_relative "lib/discourse_captcha/create_users_controller_patch"
+require_relative "lib/discourse_captcha/session_controller_patch"
 
 after_initialize do
   reloadable_patch { UsersController.include(DiscourseCaptcha::CreateUsersControllerPatch) }
+  reloadable_patch { SessionController.prepend(DiscourseCaptcha::SessionControllerPatch) }
 
   require_relative "app/services/problem_check/hcaptcha_configuration"
   require_relative "app/services/problem_check/recaptcha_configuration"

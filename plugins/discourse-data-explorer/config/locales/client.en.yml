@@ -25,6 +25,7 @@ en:
       resize_editor: "Resize the query editor"
       default_query: "Default"
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
+      view_query: "View"
       queries: "Queries"
       query_created: "Query created!"
       mode:
@@ -33,6 +34,7 @@ en:
         ai: "Generate with AI"
       or: "or"
       admins_only: "The data explorer is only available to admins."
+      hidden_relation: "You do not have access to this content."
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
       create: "Create"

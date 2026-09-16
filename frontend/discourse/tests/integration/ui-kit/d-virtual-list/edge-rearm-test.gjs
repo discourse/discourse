@@ -82,9 +82,9 @@ module("Integration | ui-kit | DVirtualList | edge re-arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @onReachEnd={{onReachEnd}}
           @overscan={{0}}
           as |item|
@@ -123,9 +123,9 @@ module("Integration | ui-kit | DVirtualList | edge re-arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @onReachStart={{onReachStart}}
           @overscan={{0}}
           as |item|
@@ -166,9 +166,9 @@ module("Integration | ui-kit | DVirtualList | edge re-arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @onReachEnd={{onReachEnd}}
           @overscan={{0}}
           as |item|
@@ -214,8 +214,8 @@ module("Integration | ui-kit | DVirtualList | edge re-arm", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{state.items}}
           @estimateSize={{estimate}}
+          @items={{state.items}}
           @onReachEnd={{onReachEnd}}
           @onReachStart={{onReachStart}}
           @overscan={{0}}
@@ -258,8 +258,8 @@ module("Integration | ui-kit | DVirtualList | edge re-arm", function (hooks) {
           }
         </style>
         <DVirtualList
-          @items={{state.items}}
           @estimateSize={{estimate}}
+          @items={{state.items}}
           @onReachEnd={{onReachEnd}}
           @onReachStart={{onReachStart}}
           @overscan={{0}}
@@ -297,9 +297,9 @@ module("Integration | ui-kit | DVirtualList | edge re-arm", function (hooks) {
           }
         </style>
         <DVirtualList
+          @estimateSize={{estimate}}
           @items={{state.items}}
           @key="id"
-          @estimateSize={{estimate}}
           @onReachStart={{onReachStart}}
           @overscan={{0}}
           as |item|

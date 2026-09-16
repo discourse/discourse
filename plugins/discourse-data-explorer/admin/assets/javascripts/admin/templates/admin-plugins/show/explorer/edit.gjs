@@ -25,11 +25,11 @@ const PaneSeparator = <template>
   <DResizeSeparator
     class="grippie"
     @axis="vertical"
-    @side="start"
-    @max={{@controller.maxPaneHeight}}
     @label={{i18n "explorer.resize_editor"}}
+    @max={{@controller.maxPaneHeight}}
     @measure={{@controller.panesFor}}
     @onResize={{@controller.onPaneResize}}
+    @side="start"
   />
 </template>;
 
@@ -40,216 +40,86 @@ export default class QueriesEdit extends Component {
 
   <template>
     <div class="admin-detail">
-      {{#if @controller.disallow}}
-        <h1>{{i18n "explorer.admins_only"}}</h1>
-      {{else}}
-        <div class="query-edit__top-bar">
-          <BackButton
-            @route="adminPlugins.show.explorer.index"
-            @label="explorer.queries"
+      <div class="query-edit__top-bar">
+        <BackButton
+          @label="explorer.queries"
+          @route="adminPlugins.show.explorer.index"
+        />
+
+        {{#if @controller.aiQueriesEnabled}}
+          <QueryModeSwitch
+            @editDisabled={{@controller.editDisabled}}
+            @onChange={{@controller.setMode}}
+            @value={{@controller.mode}}
           />
+        {{/if}}
+      </div>
 
-          {{#if @controller.aiQueriesEnabled}}
-            <QueryModeSwitch
-              @value={{@controller.mode}}
-              @onChange={{@controller.setMode}}
-              @editDisabled={{@controller.editDisabled}}
+      <div class="query-edit {{if @controller.editingName 'editing'}}">
+        {{#if @controller.editingName}}
+          <div class="name">
+            <DButton
+              class="btn-default previous"
+              @action={{@controller.exitEdit}}
+              @icon="xmark"
             />
-          {{/if}}
-        </div>
+            <div class="name-text-field">
+              <DTextField
+                @onChange={{@controller.setDirty}}
+                @value={{@controller.model.name}}
+              />
+            </div>
+          </div>
 
-        <div class="query-edit {{if @controller.editingName 'editing'}}">
-          {{#if @controller.editingName}}
-            <div class="name">
+          <div class="desc">
+            <DTextarea
+              @input={{@controller.setDirty}}
+              @placeholder={{i18n "explorer.description_placeholder"}}
+              @value={{@controller.model.description}}
+            />
+          </div>
+        {{else}}
+          <div class="name">
+            <h1 class="query-name-display">
+              <span>{{@controller.model.name}}</span>
+            </h1>
+            {{#unless @controller.editDisabled}}
               <DButton
-                @action={{@controller.exitEdit}}
-                @icon="xmark"
-                class="btn-default previous"
+                class="edit-query-name btn-transparent"
+                @action={{@controller.editName}}
+                @icon="pencil"
               />
-              <div class="name-text-field">
-                <DTextField
-                  @value={{@controller.model.name}}
-                  @onChange={{@controller.setDirty}}
-                />
-              </div>
-            </div>
+            {{/unless}}
+          </div>
 
-            <div class="desc">
-              <DTextarea
-                @value={{@controller.model.description}}
-                @placeholder={{i18n "explorer.description_placeholder"}}
-                @input={{@controller.setDirty}}
-              />
-            </div>
-          {{else}}
-            <div class="name">
-              <h1 class="query-name-display">
-                <span>{{@controller.model.name}}</span>
-              </h1>
-              {{#unless @controller.editDisabled}}
-                <DButton
-                  @action={{@controller.editName}}
-                  @icon="pencil"
-                  class="edit-query-name btn-transparent"
-                />
-              {{/unless}}
-            </div>
-
-            <div class="desc">{{@controller.model.description}}</div>
-          {{/if}}
-
-          {{#unless @controller.model.destroyed}}
-            <div class="groups">
-              <span class="label">{{i18n "explorer.allow_groups"}}</span>
-              <span>
-                <GroupChooser
-                  @value={{@controller.model.group_ids}}
-                  @content={{@controller.groupOptions}}
-                  @onChange={{@controller.updateGroupIds}}
-                />
-              </span>
-            </div>
-          {{/unless}}
-
-          <div class="clear"></div>
-
-          {{#if (eq @controller.mode "ai")}}
-            <QueryAiPrompt
-              @value={{@controller.aiPrompt}}
-              @onChange={{@controller.updateAiPrompt}}
-              @onRegenerate={{@controller.regenerate}}
-              @regenerateDisabled={{@controller.regenerateDisabled}}
-              @generating={{@controller.aiGenerating}}
-              @disabled={{@controller.aiGenerating}}
-            />
-          {{else}}
-            <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
-              <div class="query-editor__header">
-                <h3 class="query-editor__label">{{i18n
-                    "explorer.sql_label"
-                  }}</h3>
-              </div>
-
-              {{#if @controller.editingQuery}}
-                <div class="panels-flex query-editor__panes">
-                  <div class="editor-panel">
-                    <AceEditor
-                      @content={{@controller.model.sql}}
-                      @onChange={{@controller.updateSql}}
-                      @mode="sql"
-                      @disabled={{@controller.editorDisabled}}
-                      @save={{@controller.save}}
-                      @submit={{@controller.run}}
-                    />
-                  </div>
-
-                  <div class="right-panel">
-                    <ExplorerSchema
-                      @schema={{@controller.schema}}
-                      @hideSchema={{@controller.hideSchema}}
-                      @updateHideSchema={{@controller.updateHideSchema}}
-                    />
-                  </div>
-                </div>
-
-                <PaneSeparator @controller={{@controller}} />
-
-                <div class="clear"></div>
-              {{else}}
-                <div class="sql">
-                  <CodeView
-                    @value={{@controller.model.sql}}
-                    @codeClass="sql"
-                    @setDirty={{@controller.setDirty}}
-                  />
-                </div>
-              {{/if}}
-            </div>
-          {{/if}}
-
-          {{#if @controller.model.is_default}}
-            <div class="default-query-notice alert alert-info">{{i18n
-                "explorer.default_query_notice"
-              }}</div>
-          {{/if}}
-        </div>
-
-        {{#if @controller.model.hasParams}}
-          <form class="query-params-block" {{on "submit" @controller.run}}>
-            <ParamInputForm
-              @initialValues={{@controller.parsedParams}}
-              @paramInfo={{@controller.model.param_info}}
-              @onRegisterApi={{@controller.onRegisterApi}}
-            />
-          </form>
+          <div class="desc">{{@controller.model.description}}</div>
         {{/if}}
 
-        <div class="query-action-bar">
-          <div class="query-action-bar__left">
-            <QueryRunSplitButton
-              @onRun={{@controller.run}}
-              @disabled={{@controller.runDisabled}}
-              @label={{@controller.runButtonLabel}}
-            />
-            {{#if @controller.editingQuery}}
-              <DButton
-                @action={{@controller.discard}}
-                @icon="arrow-rotate-left"
-                @label="explorer.undo"
-                @disabled={{@controller.saveDisabled}}
-                class="btn-discard-query"
+        {{#unless @controller.model.destroyed}}
+          <div class="groups">
+            <span class="label">{{i18n "explorer.allow_groups"}}</span>
+            <span>
+              <GroupChooser
+                @content={{@controller.groupOptions}}
+                @onChange={{@controller.updateGroupIds}}
+                @value={{@controller.model.group_ids}}
               />
-              <DButton
-                @action={{@controller.showHelpModal}}
-                @label="explorer.help.label"
-                @icon="circle-question"
-                @disabled={{@controller.actionsBusy}}
-                class="btn-transparent query-action-bar__help"
-              />
-            {{/if}}
+            </span>
           </div>
+        {{/unless}}
 
-          <div class="query-action-bar__right">
-            {{#if (or @controller.hasResults (eq @controller.mode "ai"))}}
-              <DSegmentedControl
-                @name="query-result-view"
-                @value={{@controller.view}}
-                @items={{@controller.viewItems}}
-                @onSelect={{@controller.setView}}
-                @translatedLabel={{i18n "explorer.view.label"}}
-                class="query-results-modes"
-              />
-            {{/if}}
-            <QueryResultDownloadButtons
-              @query={{@controller.model}}
-              @content={{@controller.results}}
-              @includeQueryExport={{true}}
-            />
+        <div class="clear"></div>
 
-            {{#if @controller.model.destroyed}}
-              <DButton
-                @action={{@controller.recover}}
-                @icon="arrow-rotate-left"
-                @label="explorer.recover"
-                @disabled={{@controller.actionsBusy}}
-              />
-            {{else if this.showDestroyQuery}}
-              <DButton
-                @action={{@controller.destroyQuery}}
-                @icon="trash-can"
-                @label="explorer.delete"
-                @disabled={{@controller.actionsBusy}}
-                class="btn-danger"
-              />
-            {{/if}}
-          </div>
-        </div>
-
-        <div hidden {{didInsert @controller.runOnLoad}}></div>
-
-        <DConditionalLoadingSpinner @condition={{@controller.loading}} />
-
-        {{#if (and (eq @controller.mode "ai") (eq @controller.view "sql"))}}
+        {{#if (eq @controller.mode "ai")}}
+          <QueryAiPrompt
+            @disabled={{@controller.aiGenerating}}
+            @generating={{@controller.aiGenerating}}
+            @onChange={{@controller.updateAiPrompt}}
+            @onRegenerate={{@controller.regenerate}}
+            @regenerateDisabled={{@controller.regenerateDisabled}}
+            @value={{@controller.aiPrompt}}
+          />
+        {{else}}
           <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
             <div class="query-editor__header">
               <h3 class="query-editor__label">{{i18n "explorer.sql_label"}}</h3>
@@ -260,9 +130,9 @@ export default class QueriesEdit extends Component {
                 <div class="editor-panel">
                   <AceEditor
                     @content={{@controller.model.sql}}
-                    @onChange={{@controller.updateSql}}
-                    @mode="sql"
                     @disabled={{@controller.editorDisabled}}
+                    @mode="sql"
+                    @onChange={{@controller.updateSql}}
                     @save={{@controller.save}}
                     @submit={{@controller.run}}
                   />
@@ -270,8 +140,8 @@ export default class QueriesEdit extends Component {
 
                 <div class="right-panel">
                   <ExplorerSchema
-                    @schema={{@controller.schema}}
                     @hideSchema={{@controller.hideSchema}}
+                    @schema={{@controller.schema}}
                     @updateHideSchema={{@controller.updateHideSchema}}
                   />
                 </div>
@@ -283,28 +153,151 @@ export default class QueriesEdit extends Component {
             {{else}}
               <div class="sql">
                 <CodeView
-                  @value={{@controller.model.sql}}
                   @codeClass="sql"
                   @setDirty={{@controller.setDirty}}
+                  @value={{@controller.model.sql}}
                 />
               </div>
             {{/if}}
           </div>
         {{/if}}
 
-        {{#if (notEq @controller.view "sql")}}
-          <QueryResultsWrapper
-            @results={{@controller.results}}
-            @showResults={{@controller.showResults}}
-            @query={{@controller.model}}
-            @content={{@controller.results}}
-            @cachedAt={{@controller.cachedAt}}
-            @view={{@controller.view}}
-            @onSetView={{@controller.setView}}
-            @hideHeaderActions={{true}}
-          />
+        {{#if @controller.model.is_default}}
+          <div class="default-query-notice alert alert-info">{{i18n
+              "explorer.default_query_notice"
+            }}</div>
         {{/if}}
+      </div>
 
+      {{#if @controller.model.hasParams}}
+        <form class="query-params-block" {{on "submit" @controller.run}}>
+          <ParamInputForm
+            @initialValues={{@controller.parsedParams}}
+            @onRegisterApi={{@controller.onRegisterApi}}
+            @paramInfo={{@controller.model.param_info}}
+          />
+        </form>
+      {{/if}}
+
+      <div class="query-action-bar">
+        <div class="query-action-bar__left">
+          <QueryRunSplitButton
+            @disabled={{@controller.runDisabled}}
+            @label={{@controller.runButtonLabel}}
+            @onRun={{@controller.run}}
+          />
+          {{#if @controller.editingQuery}}
+            <DButton
+              class="btn-discard-query"
+              @action={{@controller.discard}}
+              @disabled={{@controller.saveDisabled}}
+              @icon="arrow-rotate-left"
+              @label="explorer.undo"
+            />
+            <DButton
+              class="btn-transparent query-action-bar__help"
+              @action={{@controller.showHelpModal}}
+              @disabled={{@controller.actionsBusy}}
+              @icon="circle-question"
+              @label="explorer.help.label"
+            />
+          {{/if}}
+        </div>
+
+        <div class="query-action-bar__right">
+          {{#if (or @controller.hasResults (eq @controller.mode "ai"))}}
+            <DSegmentedControl
+              class="query-results-modes"
+              @items={{@controller.viewItems}}
+              @name="query-result-view"
+              @onSelect={{@controller.setView}}
+              @translatedLabel={{i18n "explorer.view.label"}}
+              @value={{@controller.view}}
+            />
+          {{/if}}
+          <QueryResultDownloadButtons
+            @content={{@controller.results}}
+            @includeQueryExport={{true}}
+            @query={{@controller.model}}
+          />
+
+          {{#if @controller.model.destroyed}}
+            <DButton
+              @action={{@controller.recover}}
+              @disabled={{@controller.actionsBusy}}
+              @icon="arrow-rotate-left"
+              @label="explorer.recover"
+            />
+          {{else if this.showDestroyQuery}}
+            <DButton
+              class="btn-danger"
+              @action={{@controller.destroyQuery}}
+              @disabled={{@controller.actionsBusy}}
+              @icon="trash-can"
+              @label="explorer.delete"
+            />
+          {{/if}}
+        </div>
+      </div>
+
+      <div hidden {{didInsert @controller.runOnLoad}}></div>
+
+      <DConditionalLoadingSpinner @condition={{@controller.loading}} />
+
+      {{#if (and (eq @controller.mode "ai") (eq @controller.view "sql"))}}
+        <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
+          <div class="query-editor__header">
+            <h3 class="query-editor__label">{{i18n "explorer.sql_label"}}</h3>
+          </div>
+
+          {{#if @controller.editingQuery}}
+            <div class="panels-flex query-editor__panes">
+              <div class="editor-panel">
+                <AceEditor
+                  @content={{@controller.model.sql}}
+                  @disabled={{@controller.editorDisabled}}
+                  @mode="sql"
+                  @onChange={{@controller.updateSql}}
+                  @save={{@controller.save}}
+                  @submit={{@controller.run}}
+                />
+              </div>
+
+              <div class="right-panel">
+                <ExplorerSchema
+                  @hideSchema={{@controller.hideSchema}}
+                  @schema={{@controller.schema}}
+                  @updateHideSchema={{@controller.updateHideSchema}}
+                />
+              </div>
+            </div>
+
+            <PaneSeparator @controller={{@controller}} />
+
+            <div class="clear"></div>
+          {{else}}
+            <div class="sql">
+              <CodeView
+                @codeClass="sql"
+                @setDirty={{@controller.setDirty}}
+                @value={{@controller.model.sql}}
+              />
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if (notEq @controller.view "sql")}}
+        <QueryResultsWrapper
+          @cachedAt={{@controller.cachedAt}}
+          @content={{@controller.results}}
+          @hideHeaderActions={{true}}
+          @onSetView={{@controller.setView}}
+          @query={{@controller.model}}
+          @results={{@controller.results}}
+          @showResults={{@controller.showResults}}
+          @view={{@controller.view}}
+        />
       {{/if}}
     </div>
   </template>

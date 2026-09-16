@@ -91,7 +91,7 @@ module DiscourseDataExplorer
       json = serialize_data(@query, QueryDetailsSerializer, root: nil)
 
       unless params[:export]
-        cached = QueryRunner.cached_result(@query, params[:params])
+        cached = QueryRunner.cached_result(@query, params[:params], current_user:)
         json[:cached_result] = cached if cached
       end
 

@@ -21,11 +21,11 @@ export default <template>
     {{/if}}
 
     <div
-      id="main-chat-outlet"
       class={{dConcatClass
         "main-chat-outlet"
         @controller.mainOutletModifierClasses
       }}
+      id="main-chat-outlet"
     >
       {{outlet}}
       {{#if @controller.shouldUseChatFooter}}

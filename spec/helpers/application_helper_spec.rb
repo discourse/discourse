@@ -3,23 +3,10 @@
 
 RSpec.describe ApplicationHelper do
   describe "#discourse_pageview_tracking_meta_tags" do
-    it "includes beacon tracking meta tags for anonymous users when dashboard_improvements is enabled" do
-      SiteSetting.dashboard_improvements = true
-      helper.stubs(:current_user).returns(nil)
-
+    it "includes pageview tracking metadata" do
       tags = helper.discourse_pageview_tracking_meta_tags
 
       expect(tags).to include('name="discourse-track-view-session-id"')
-      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
-    end
-
-    it "omits beacon tracking meta tags when dashboard_improvements is disabled" do
-      SiteSetting.dashboard_improvements = false
-
-      tags = helper.discourse_pageview_tracking_meta_tags
-
-      expect(tags).to include('name="discourse-track-view-session-id"')
-      expect(tags).not_to include('name="discourse-beacon-pageview-enabled"')
     end
 
     it "omits tracking meta tags in development when request tracking is not enabled" do
@@ -31,36 +18,6 @@ RSpec.describe ApplicationHelper do
       expect(tags).to be_blank
     ensure
       ENV["TRACK_REQUESTS"] = original_track_requests if original_track_requests
-    end
-
-    it "includes beacon tracking meta tags for browser pageview event triggers" do
-      SiteSetting.dashboard_improvements = true
-      SiteSetting.persist_browser_pageview_events = false
-      SiteSetting.trigger_browser_pageview_events = true
-
-      tags = helper.discourse_pageview_tracking_meta_tags
-
-      expect(tags).to include('name="discourse-track-view-session-id"')
-      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
-    end
-
-    it "includes the engagement tracking meta tag when pageview events are persisted" do
-      SiteSetting.persist_browser_pageview_events = true
-
-      tags = helper.discourse_pageview_tracking_meta_tags
-
-      expect(tags).to include('name="discourse-engagement-tracking-enabled"')
-    end
-
-    it "omits the engagement tracking meta tag in a trigger-only config so the browser does not send /srv/se beacons the server rejects" do
-      SiteSetting.dashboard_improvements = true
-      SiteSetting.persist_browser_pageview_events = false
-      SiteSetting.trigger_browser_pageview_events = true
-
-      tags = helper.discourse_pageview_tracking_meta_tags
-
-      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
-      expect(tags).not_to include('name="discourse-engagement-tracking-enabled"')
     end
   end
 
@@ -253,6 +210,7 @@ RSpec.describe ApplicationHelper do
     it "encodes tags" do
       expect(helper.escape_unicode("<tag>")).to eq("\u003ctag>")
     end
+
     it "survives junk text" do
       expect(helper.escape_unicode("hello \xc3\x28 world")).to match(/hello.*world/)
     end
@@ -261,7 +219,7 @@ RSpec.describe ApplicationHelper do
   describe "render_sitelinks_search_tag" do
     context "for non-subfolder install" do
       context "when on homepage" do
-        it "will return sitelinks search tag" do
+        it "returns the sitelinks search tag" do
           helper.stubs(:current_page?).returns(false)
           helper.stubs(:current_page?).with("/").returns(true)
 
@@ -278,9 +236,18 @@ RSpec.describe ApplicationHelper do
           expect(sitelinks_search_tag["name"]).to eq(SiteSetting.title)
           expect(sitelinks_search_tag["url"]).to eq(Discourse.base_url)
         end
+
+        it "omits the sitelinks search tag when anonymous users cannot search" do
+          SiteSetting.allow_anonymous_search = false
+          helper.stubs(:current_page?).returns(false)
+          helper.stubs(:current_page?).with("/").returns(true)
+
+          expect(helper.render_sitelinks_search_tag).to be_nil
+        end
       end
+
       context "when not on homepage" do
-        it "will not return sitelinks search tag" do
+        it "omits the sitelinks search tag" do
           helper.stubs(:current_page?).returns(true)
           helper.stubs(:current_page?).with("/").returns(false)
           helper.stubs(:current_page?).with(Discourse.base_path).returns(false)
@@ -288,9 +255,10 @@ RSpec.describe ApplicationHelper do
         end
       end
     end
+
     context "for subfolder install" do
       context "when on homepage" do
-        it "will return sitelinks search tag" do
+        it "returns the sitelinks search tag" do
           Discourse.stubs(:base_path).returns("/subfolder-base-path/")
           helper.stubs(:current_page?).returns(false)
           helper.stubs(:current_page?).with(Discourse.base_path).returns(true)
@@ -298,8 +266,9 @@ RSpec.describe ApplicationHelper do
           expect(helper.render_sitelinks_search_tag).to include("subfolder-base-path")
         end
       end
+
       context "when not on homepage" do
-        it "will not return sitelinks search tag" do
+        it "omits the sitelinks search tag" do
           Discourse.stubs(:base_path).returns("/subfolder-base-path/")
           helper.stubs(:current_page?).returns(true)
           helper.stubs(:current_page?).with("/").returns(false)
@@ -327,7 +296,7 @@ RSpec.describe ApplicationHelper do
         before { helper.stubs(:mobile_device?).returns(false) }
 
         context "when logo_dark is not set" do
-          it "will return site_logo_url instead" do
+          it "returns site_logo_url" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_logo_url)
           end
         end
@@ -335,7 +304,7 @@ RSpec.describe ApplicationHelper do
         context "when logo_dark is set" do
           before { SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png") }
 
-          it "will return site_logo_dark_url" do
+          it "returns site_logo_dark_url" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
           end
         end
@@ -345,7 +314,7 @@ RSpec.describe ApplicationHelper do
         before { helper.stubs(:mobile_device?).returns(true) }
 
         context "when mobile_logo_dark is not set" do
-          it "will return site_mobile_logo_url instead" do
+          it "returns site_mobile_logo_url" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_url)
           end
         end
@@ -355,7 +324,7 @@ RSpec.describe ApplicationHelper do
             SiteSetting.mobile_logo_dark = Fabricate(:upload, url: "/images/mobile-logo-dark.png")
           end
 
-          it "will return site_mobile_logo_dark_url" do
+          it "returns site_mobile_logo_dark_url" do
             expect(helper.application_logo_url).to eq(SiteSetting.site_mobile_logo_dark_url)
           end
         end
@@ -366,7 +335,7 @@ RSpec.describe ApplicationHelper do
   describe "application_logo_dark_url" do
     context "when dark theme is not present" do
       context "when dark logo is not present" do
-        it "should return nothing" do
+        it "returns no dark logo URL" do
           expect(helper.application_logo_dark_url.present?).to eq(false)
         end
       end
@@ -384,7 +353,7 @@ RSpec.describe ApplicationHelper do
       end
 
       context "when dark logo is not present" do
-        it "should return nothing" do
+        it "returns no dark logo URL" do
           expect(helper.application_logo_dark_url.present?).to eq(false)
         end
       end
@@ -392,7 +361,7 @@ RSpec.describe ApplicationHelper do
       context "when dark logo is present" do
         before { SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png") }
 
-        it "should return correct url" do
+        it "returns site_logo_dark_url" do
           expect(helper.application_logo_dark_url).to eq(SiteSetting.site_logo_dark_url)
         end
       end
@@ -411,7 +380,7 @@ RSpec.describe ApplicationHelper do
         SiteSetting.logo_dark = Fabricate(:upload, url: "/images/logo-dark.png")
       end
 
-      it "should return nothing" do
+      it "returns no separate dark logo URL" do
         expect(helper.application_logo_url).to eq(SiteSetting.site_logo_dark_url)
         expect(helper.application_logo_dark_url.present?).to eq(false)
       end

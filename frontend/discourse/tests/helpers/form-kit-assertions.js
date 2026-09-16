@@ -141,6 +141,11 @@ class FieldHelper {
     }
   }
 
+  get disabled() {
+    this.context.dom(this.element).exists();
+    return this.element.dataset.disabled === "";
+  }
+
   isEnabled(message) {
     this.context.notOk(this.disabled, message);
   }
@@ -155,11 +160,6 @@ class FieldHelper {
 
   isDisabled(message) {
     this.context.ok(this.disabled, message);
-  }
-
-  get disabled() {
-    this.context.dom(this.element).exists();
-    return this.element.dataset.disabled === "";
   }
 
   hasTitle(title, message) {

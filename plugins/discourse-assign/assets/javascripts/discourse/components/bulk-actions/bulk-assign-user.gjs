@@ -28,9 +28,9 @@ export default class BulkActionsAssignUser extends Component {
   <template>
     <span {{didInsert this.performRegistration}}></span>
     <AssignUserForm
+      @formApi={{this.formApi}}
       @model={{this.model}}
       @onSubmit={{this.submit}}
-      @formApi={{this.formApi}}
     />
   </template>
 }

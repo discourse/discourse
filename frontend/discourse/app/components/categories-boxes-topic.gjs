@@ -22,7 +22,7 @@ export default class CategoriesBoxesTopic extends Component {
     <li data-topic-id={{this.topic.id}} ...attributes>
       {{dIcon this.topicStatusIcon}}
 
-      <a href={{this.topic.lastUnreadUrl}} class="title">
+      <a class="title" href={{this.topic.lastUnreadUrl}}>
         {{trustHTML this.topic.fancyTitle}}
       </a>
     </li>

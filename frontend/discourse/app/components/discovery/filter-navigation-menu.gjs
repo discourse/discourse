@@ -91,16 +91,16 @@ export default class FilterNavigationMenu extends Component {
     this.trackedMenuListData.selectedIndex = value;
   }
 
-  clearSelection() {
-    this.selectedIndex = -1;
-  }
-
   get nothingSelected() {
     return this.selectedIndex === -1;
   }
 
   get placeholder() {
     return this.args.placeholder || i18n("filter.placeholder");
+  }
+
+  clearSelection() {
+    this.selectedIndex = -1;
   }
 
   @action
@@ -346,27 +346,27 @@ export default class FilterNavigationMenu extends Component {
       {{dIcon "filter" class="topic-query-filter__icon btn-flat"}}
 
       <input
+        autocapitalize="none"
+        autocomplete="off"
+        autocorrect="off"
         class="topic-query-filter__filter-term"
+        enterkeyhint="search"
+        id="topic-query-filter-input"
+        placeholder={{this.placeholder}}
+        type="text"
         value={{this.currentInputValue}}
         {{on "keydown" this.handleKeydown}}
         {{on "input" (withEventValue this.updateInput)}}
         {{on "focus" this.openFilterMenu}}
         {{didInsert this.storeInputElement}}
-        autocapitalize="none"
-        enterkeyhint="search"
-        autocorrect="off"
-        type="text"
-        id="topic-query-filter-input"
-        autocomplete="off"
-        placeholder={{this.placeholder}}
         {{didUpdate this.syncFromInitialValue @initialInputValue}}
       />
 
       {{#if this.currentInputValue}}
         <DButton
-          @icon="xmark"
-          @action={{this.clearInput}}
           class="topic-query-filter__clear-btn btn-flat"
+          @action={{this.clearInput}}
+          @icon="xmark"
         />
       {{/if}}
     </div>

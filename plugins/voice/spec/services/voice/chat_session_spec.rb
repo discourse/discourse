@@ -73,6 +73,34 @@ RSpec.describe Voice::ChatSession do
     end
   end
 
+  describe ".available_for_rooms" do
+    it "loads linked channels once and returns availability by room" do
+      other_channel = Fabricate(:chat_channel, threading_enabled: true)
+      other_room = Fabricate(:voice_room, public: true, chat_channel_id: other_channel.id)
+      unlinked_room = Fabricate(:voice_room, public: true)
+
+      availability = nil
+      queries =
+        track_sql_queries do
+          availability =
+            described_class.available_for_rooms([room, other_room, unlinked_room], user.guardian)
+        end
+
+      expect(availability).to eq(room.id => true, other_room.id => true, unlinked_room.id => false)
+      expect(queries.grep(/FROM "chat_channels"/).size).to eq(1)
+    end
+
+    it "denies a channel in a category the user cannot access" do
+      restricted_channel =
+        Fabricate(:private_category_channel, group: Fabricate(:group), threading_enabled: true)
+      restricted_room = Fabricate(:voice_room, public: true, chat_channel_id: restricted_channel.id)
+
+      availability = described_class.available_for_rooms([room, restricted_room], user.guardian)
+
+      expect(availability).to eq(room.id => true, restricted_room.id => false)
+    end
+  end
+
   describe ".state" do
     it "returns the channel with no thread before a session starts" do
       expect(described_class.state(room)).to eq({ channel_id: channel.id, thread_id: nil })

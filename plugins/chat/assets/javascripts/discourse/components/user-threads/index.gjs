@@ -89,8 +89,8 @@ export default class UserThreads extends Component {
 
   <template>
     <List
-      @collection={{this.threadsCollection}}
       class="c-user-threads"
+      @collection={{this.threadsCollection}}
       as |list|
     >
       <list.Item as |thread|>
@@ -102,8 +102,8 @@ export default class UserThreads extends Component {
           {{#if this.site.mobileView}}
             <LinkTo
               class="c-user-thread__link"
-              @route="chat.channel.thread"
               @models={{thread.routeModels}}
+              @route="chat.channel.thread"
             >
               <ChannelTitle @channel={{thread.channel}} />
               <ThreadTitle @thread={{thread}} />
@@ -115,10 +115,10 @@ export default class UserThreads extends Component {
             <ThreadTitle @thread={{thread}} />
 
             <ThreadIndicator
-              @message={{thread.originalMessage}}
-              @interactiveUser={{false}}
-              @interactiveThread={{false}}
               tabindex="-1"
+              @interactiveThread={{false}}
+              @interactiveUser={{false}}
+              @message={{thread.originalMessage}}
             />
           {{/if}}
         </div>

@@ -8,8 +8,8 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="sections">
     <PluginOutlet
-      @name="admin-dashboard-moderation-top"
       @connectorTagName="div"
+      @name="admin-dashboard-moderation-top"
     />
 
     {{#if @controller.isModeratorsActivityVisible}}
@@ -22,19 +22,19 @@ export default <template>
           </h2>
 
           <DashboardPeriodSelector
+            @endDate={{@controller.endDate}}
             @period={{@controller.period}}
+            @setCustomDateRange={{@controller.setCustomDateRange}}
             @setPeriod={{@controller.setPeriod}}
             @startDate={{@controller.startDate}}
-            @endDate={{@controller.endDate}}
-            @setCustomDateRange={{@controller.setCustomDateRange}}
           />
         </div>
 
         <div class="section-body">
           <AdminReport
+            @dataSourceName="moderators_activity"
             @filters={{@controller.filters}}
             @showHeader={{false}}
-            @dataSourceName="moderators_activity"
           />
         </div>
       </div>
@@ -43,8 +43,8 @@ export default <template>
     <div class="main-section">
       <AdminReport
         @dataSourceName="flags_status"
-        @reportOptions={{@controller.flagsStatusOptions}}
         @filters={{@controller.lastWeekFilters}}
+        @reportOptions={{@controller.flagsStatusOptions}}
       />
 
       <AdminReport
@@ -59,8 +59,8 @@ export default <template>
       />
 
       <PluginOutlet
-        @name="admin-dashboard-moderation-bottom"
         @connectorTagName="div"
+        @name="admin-dashboard-moderation-bottom"
         @outletArgs={{lazyHash filters=@controller.lastWeekFilters}}
       />
     </div>

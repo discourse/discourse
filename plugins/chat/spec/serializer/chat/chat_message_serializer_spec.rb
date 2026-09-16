@@ -10,7 +10,7 @@ describe Chat::MessageSerializer do
 
   let(:guardian) { Guardian.new(guardian_user) }
 
-  describe "#mentioned_users" do
+  describe "#mentioned_users with a configured mention limit" do
     it "is limited by max_mentions_per_chat_message setting" do
       Fabricate.times(2, :user_chat_mention, chat_message: message_1)
       SiteSetting.max_mentions_per_chat_message = 1
@@ -284,7 +284,7 @@ describe Chat::MessageSerializer do
     end
   end
 
-  describe "#mentioned_users" do
+  describe "#mentioned_users after a mentioned user is deleted" do
     it "doesn't fail if mentioned user was deleted" do
       mentioned_user = Fabricate(:user)
       message =

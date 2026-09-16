@@ -55,42 +55,8 @@ export default class DataTableViewer extends Component {
     return `/admin/plugins/discourse-workflows/data-tables/${this.args.dataTableId}`;
   }
 
-  async loadTable() {
-    try {
-      const [tableResult, rowsResult] = await Promise.all([
-        ajax(`${this.apiBasePath}.json`),
-        ajax(`${this.apiBasePath}/rows.json`),
-      ]);
-      this.dataTable = tableResult.data_table;
-      this.rows = rowsResult.rows;
-      this.totalCount = rowsResult.count;
-    } catch (e) {
-      popupAjaxError(e);
-    }
-  }
-
   get canLoadMore() {
     return this.rows && this.rows.length < this.totalCount;
-  }
-
-  @action
-  async loadMore() {
-    if (!this.canLoadMore || this.loadingMore) {
-      return;
-    }
-
-    this.loadingMore = true;
-    try {
-      const result = await ajax(`${this.apiBasePath}/rows.json`, {
-        data: { offset: this.rows.length },
-      });
-      this.rows = [...this.rows, ...result.rows];
-      this.totalCount = result.count;
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.loadingMore = false;
-    }
   }
 
   get isLoading() {
@@ -116,6 +82,40 @@ export default class DataTableViewer extends Component {
 
   get isIndeterminate() {
     return this.hasSelection && !this.allSelected;
+  }
+
+  async loadTable() {
+    try {
+      const [tableResult, rowsResult] = await Promise.all([
+        ajax(`${this.apiBasePath}.json`),
+        ajax(`${this.apiBasePath}/rows.json`),
+      ]);
+      this.dataTable = tableResult.data_table;
+      this.rows = rowsResult.rows;
+      this.totalCount = rowsResult.count;
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async loadMore() {
+    if (!this.canLoadMore || this.loadingMore) {
+      return;
+    }
+
+    this.loadingMore = true;
+    try {
+      const result = await ajax(`${this.apiBasePath}/rows.json`, {
+        data: { offset: this.rows.length },
+      });
+      this.rows = [...this.rows, ...result.rows];
+      this.totalCount = result.count;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingMore = false;
+    }
   }
 
   @action
@@ -295,33 +295,33 @@ export default class DataTableViewer extends Component {
       <div class="workflows-data-table-viewer__header">
         {{#if this.editingName}}
           <input
+            class="workflows-data-table-viewer__title-input"
             type="text"
             value={{this.dataTable.name}}
-            class="workflows-data-table-viewer__title-input"
             {{autofocus}}
             {{on "blur" this.saveName}}
             {{on "keydown" (fn this.handleEditKeydown this.dataTable.name)}}
           />
         {{else}}
           <button
-            type="button"
             class="workflows-data-table-viewer__title"
+            type="button"
             {{on "click" this.startEditingName}}
           >{{this.dataTable.name}}</button>
         {{/if}}
         <div class="workflows-data-table-viewer__actions">
           {{#if this.hasSelection}}
             <DButton
+              class="btn-danger btn-small"
               @action={{this.deleteSelectedRows}}
               @icon="trash-can"
               @label="discourse_workflows.data_tables.delete_selected"
-              class="btn-danger btn-small"
             />
             <DButton
+              class="btn-default btn-small"
               @action={{this.clearSelection}}
               @icon="xmark"
               @label="discourse_workflows.data_tables.clear_selection"
-              class="btn-default btn-small"
             />
           {{/if}}
         </div>
@@ -335,9 +335,9 @@ export default class DataTableViewer extends Component {
                 <tr>
                   <th class="workflows-data-table-viewer__th --id">
                     <input
-                      type="checkbox"
                       checked={{this.allSelected}}
                       class="workflows-data-table-viewer__checkbox"
+                      type="checkbox"
                       {{indeterminate this.isIndeterminate}}
                       {{on "change" this.toggleAllSelection}}
                     />
@@ -350,17 +350,17 @@ export default class DataTableViewer extends Component {
                       >{{col.type}}</span>
                       {{#if (eq this.editingColumnIndex index)}}
                         <input
+                          class="workflows-data-table-viewer__col-name-input"
                           type="text"
                           value={{col.name}}
-                          class="workflows-data-table-viewer__col-name-input"
                           {{autofocus}}
                           {{on "blur" (fn this.renameColumn index)}}
                           {{on "keydown" (fn this.handleEditKeydown col.name)}}
                         />
                       {{else}}
                         <button
-                          type="button"
                           class="workflows-data-table-viewer__col-name"
+                          type="button"
                           {{on "click" (fn this.startEditingColumn index)}}
                         >{{col.name}}</button>
                       {{/if}}
@@ -374,9 +374,9 @@ export default class DataTableViewer extends Component {
                   >updated_at</th>
                   <th class="workflows-data-table-viewer__th --add-column">
                     <DButton
+                      class="btn-transparent btn-small"
                       @action={{this.addColumn}}
                       @icon="plus"
-                      class="btn-transparent btn-small"
                     />
                   </th>
                 </tr>
@@ -386,9 +386,9 @@ export default class DataTableViewer extends Component {
                   <tr class="workflows-data-table-viewer__row">
                     <td class="workflows-data-table-viewer__cell --id">
                       <input
-                        type="checkbox"
                         checked={{this.isRowSelected row.id}}
                         class="workflows-data-table-viewer__checkbox"
+                        type="checkbox"
                         {{on "click" (fn this.toggleRowSelection row.id)}}
                       />
                       {{row.id}}
@@ -396,8 +396,8 @@ export default class DataTableViewer extends Component {
                     {{#each this.columns as |col|}}
                       <CellEditor
                         @column={{col}}
-                        @value={{get row col.name}}
                         @onSave={{fn this.saveCell row}}
+                        @value={{get row col.name}}
                       />
                     {{/each}}
                     <td
@@ -412,9 +412,9 @@ export default class DataTableViewer extends Component {
                 <tr class="workflows-data-table-viewer__add-row">
                   <td colspan="99">
                     <DButton
+                      class="btn-transparent btn-small"
                       @action={{this.addRow}}
                       @icon="plus"
-                      class="btn-transparent btn-small"
                     />
                   </td>
                 </tr>

@@ -93,9 +93,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -114,9 +114,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -164,9 +164,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -267,9 +267,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -309,9 +309,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -343,9 +343,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -410,9 +410,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -439,9 +439,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -514,9 +514,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -575,9 +575,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -648,9 +648,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -700,9 +700,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -763,9 +763,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -835,9 +835,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -895,9 +895,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -979,9 +979,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1047,9 +1047,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1110,9 +1110,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1211,9 +1211,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1304,9 +1304,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1381,9 +1381,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1409,9 +1409,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1450,9 +1450,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1531,9 +1531,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1557,9 +1557,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1623,9 +1623,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1650,9 +1650,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1684,9 +1684,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1715,9 +1715,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1744,9 +1744,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1787,9 +1787,9 @@ module(
           <DialogHolder />
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1824,9 +1824,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1874,9 +1874,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1914,9 +1914,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -1945,9 +1945,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.objects_schema}}
             @routeToRedirect="adminCustomizeThemes.show"
+            @schema={{setting.objects_schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2003,9 +2003,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2042,9 +2042,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2096,9 +2096,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2145,9 +2145,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2181,9 +2181,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2223,9 +2223,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2297,9 +2297,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2397,9 +2397,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2467,9 +2467,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2497,9 +2497,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2536,9 +2536,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );
@@ -2581,9 +2581,9 @@ module(
         <template>
           <AdminSchemaSettingEditor
             @id="1"
-            @setting={{setting}}
-            @schema={{setting.schema}}
             @routeToRedirect="adminPlugins.show.settings"
+            @schema={{setting.schema}}
+            @setting={{setting}}
           />
         </template>
       );

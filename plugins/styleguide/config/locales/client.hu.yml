@@ -32,6 +32,10 @@ hu:
           title: "Dátum/idő bemenetek"
         menus:
           title: "Menük"
+        context_menu:
+          actions:
+            duplicate: "Megkettőz"
+            delete: "Törlés"
         multi_select:
           title: "Több kijelölése"
         toasts:

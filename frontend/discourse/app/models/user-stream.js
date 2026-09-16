@@ -36,17 +36,6 @@ export default class UserStream extends RestModel {
     return this.filter;
   }
 
-  async filterBy(opts) {
-    this.setProperties({
-      itemsLoaded: 0,
-      content: [],
-      lastLoadedUrl: null,
-      ...opts,
-    });
-
-    return this.findItems();
-  }
-
   @computed("baseUrl", "filterParam", "actingUsername")
   get nextFindUrl() {
     let findUrl = this.baseUrl;
@@ -69,6 +58,17 @@ export default class UserStream extends RestModel {
   @computed("nextFindUrl", "lastLoadedUrl")
   get canLoadMore() {
     return this.nextFindUrl !== this.lastLoadedUrl;
+  }
+
+  async filterBy(opts) {
+    this.setProperties({
+      itemsLoaded: 0,
+      content: [],
+      lastLoadedUrl: null,
+      ...opts,
+    });
+
+    return this.findItems();
   }
 
   remove(userAction) {

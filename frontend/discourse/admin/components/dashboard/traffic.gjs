@@ -32,6 +32,7 @@ const PERIOD_COPY_KEYS = {
 
 export default class DashboardTraffic extends Component {
   @service currentUser;
+  @service siteSettings;
 
   hiddenLabels = ["page_view_crawler"];
 
@@ -107,10 +108,6 @@ export default class DashboardTraffic extends Component {
     return `${this.#kpiValue("direct_traffic") ?? 0}%`;
   }
 
-  #kpiValue(key) {
-    return this.args.traffic?.kpis?.[key]?.value;
-  }
-
   get showSessionMetrics() {
     return this.#kpiValue("bounce_rate") !== undefined;
   }
@@ -167,6 +164,10 @@ export default class DashboardTraffic extends Component {
     return { range: this.args.period };
   }
 
+  get showTrafficExplorerLink() {
+    return this.currentUser.admin && !this.siteSettings.use_legacy_pageviews;
+  }
+
   formatHeadlineCount(value) {
     if (value >= 1_000_000) {
       const formatted = I18n.toNumber(value / 1_000_000, { precision: 1 });
@@ -183,6 +184,10 @@ export default class DashboardTraffic extends Component {
   formatTrendPercent(value) {
     const precision = value < 1 ? 1 : 0;
     return `${I18n.toNumber(value, { precision })}%`;
+  }
+
+  #kpiValue(key) {
+    return this.args.traffic?.kpis?.[key]?.value;
   }
 
   #dateFrom(value) {
@@ -243,10 +248,10 @@ export default class DashboardTraffic extends Component {
 
   <template>
     <DashboardSection
-      @title={{i18n "admin.dashboard.sections.traffic.title"}}
-      @startDate={{@startDate}}
-      @endDate={{@endDate}}
       ...attributes
+      @endDate={{@endDate}}
+      @startDate={{@startDate}}
+      @title={{i18n "admin.dashboard.sections.traffic.title"}}
     >
       <div class="db-traffic {{if @loading 'is-loading'}}">
         <div class="db-section__subheader">
@@ -260,8 +265,8 @@ export default class DashboardTraffic extends Component {
                 </span>
                 <DTooltip
                   class="db-section__info"
-                  @identifier="site-traffic-comparison-tooltip"
                   @icon="far-circle-question"
+                  @identifier="site-traffic-comparison-tooltip"
                 >
                   <:content>{{this.comparisonTooltipText}}</:content>
                 </DTooltip>
@@ -282,8 +287,8 @@ export default class DashboardTraffic extends Component {
                     }}
                     <DTooltip
                       class="db-section__info"
-                      @identifier="site-traffic-logged-in-share-tooltip"
                       @icon="far-circle-question"
+                      @identifier="site-traffic-logged-in-share-tooltip"
                     >
                       <:content>
                         {{i18n
@@ -306,8 +311,8 @@ export default class DashboardTraffic extends Component {
                     }}
                     <DTooltip
                       class="db-section__info"
-                      @identifier="site-traffic-direct-traffic-tooltip"
                       @icon="far-circle-question"
+                      @identifier="site-traffic-direct-traffic-tooltip"
                     >
                       <:content>
                         {{i18n
@@ -330,8 +335,8 @@ export default class DashboardTraffic extends Component {
                     }}
                     <DTooltip
                       class="db-section__info"
-                      @identifier="site-traffic-bounce-rate-tooltip"
                       @icon="far-circle-question"
+                      @identifier="site-traffic-bounce-rate-tooltip"
                     >
                       <:content>
                         {{#if this.sessionMetricsEmpty}}
@@ -361,8 +366,8 @@ export default class DashboardTraffic extends Component {
                     }}
                     <DTooltip
                       class="db-section__info"
-                      @identifier="site-traffic-average-session-duration-tooltip"
                       @icon="far-circle-question"
+                      @identifier="site-traffic-average-session-duration-tooltip"
                     >
                       <:content>
                         {{#if this.sessionMetricsEmpty}}
@@ -392,16 +397,16 @@ export default class DashboardTraffic extends Component {
         {{else if @traffic}}
           <div class="db-section__traffic-chart">
             <AdminReportStackedChart
+              class="db-section__traffic-chart-canvas"
               @model={{this.chartModel}}
               @options={{this.chartOptions}}
-              class="db-section__traffic-chart-canvas"
             />
           </div>
-          {{#if this.currentUser.admin}}
+          {{#if this.showTrafficExplorerLink}}
             <LinkTo
               class="db-traffic__see-details"
-              @route="adminSiteTraffic"
               @query={{this.explorerQuery}}
+              @route="adminSiteTraffic"
             >
               {{i18n "admin.dashboard.site_traffic.see_details"}}
               {{dIcon "arrow-right"}}
@@ -409,12 +414,12 @@ export default class DashboardTraffic extends Component {
           {{else}}
             <LinkTo
               class="db-traffic__see-details"
-              @route="adminReports.show"
               @model="site_traffic"
               @query={{hash
                 start_date=this.reportQuery.start_date
                 end_date=this.reportQuery.end_date
               }}
+              @route="adminReports.show"
             >
               {{i18n "admin.dashboard.site_traffic.see_details"}}
               {{dIcon "arrow-right"}}
@@ -439,17 +444,17 @@ export default class DashboardTraffic extends Component {
                 <div class="db-section__row-block">
                   <h3 class="db-section__row-block-title">
                     <LinkTo
-                      @route="adminReports.show"
                       @model="top_referrers_by_browser_pageviews"
                       @query={{hash
                         start_date=this.reportQuery.start_date
                         end_date=this.reportQuery.end_date
                       }}
+                      @route="adminReports.show"
                     >
                       {{i18n
                         "admin.dashboard.site_traffic.top_referrers.title"
                       }}
-                      <span class="db-link-arrow" aria-hidden="true">
+                      <span aria-hidden="true" class="db-link-arrow">
                         {{dIcon "arrow-right"}}
                       </span>
                     </LinkTo>
@@ -499,17 +504,17 @@ export default class DashboardTraffic extends Component {
                   <div class="db-section__row-block">
                     <h3 class="db-section__row-block-title">
                       <LinkTo
-                        @route="adminReports.show"
                         @model="top_entry_urls"
                         @query={{hash
                           start_date=this.reportQuery.start_date
                           end_date=this.reportQuery.end_date
                         }}
+                        @route="adminReports.show"
                       >
                         {{i18n
                           "admin.dashboard.site_traffic.top_entry_urls.title"
                         }}
-                        <span class="db-link-arrow" aria-hidden="true">
+                        <span aria-hidden="true" class="db-link-arrow">
                           {{dIcon "arrow-right"}}
                         </span>
                       </LinkTo>
@@ -558,17 +563,17 @@ export default class DashboardTraffic extends Component {
                 <div class="db-section__row-block">
                   <h3 class="db-section__row-block-title">
                     <LinkTo
-                      @route="adminReports.show"
                       @model="top_countries_by_browser_pageviews"
                       @query={{hash
                         start_date=this.reportQuery.start_date
                         end_date=this.reportQuery.end_date
                       }}
+                      @route="adminReports.show"
                     >
                       {{i18n
                         "admin.dashboard.site_traffic.top_countries.title"
                       }}
-                      <span class="db-link-arrow" aria-hidden="true">
+                      <span aria-hidden="true" class="db-link-arrow">
                         {{dIcon "arrow-right"}}
                       </span>
                     </LinkTo>

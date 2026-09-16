@@ -9,14 +9,14 @@ export default class MessageField extends BaseField {
   <template>
     <section class="field message-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <div class="field-wrapper">
             <DTextarea
-              @value={{@field.metadata.value}}
-              @input={{this.updateValue}}
               @disabled={{@field.isDisabled}}
+              @input={{this.updateValue}}
+              @value={{@field.metadata.value}}
             />
 
             <DAFieldDescription @description={{@description}} />
@@ -24,8 +24,8 @@ export default class MessageField extends BaseField {
             {{#if this.displayPlaceholders}}
               <PlaceholdersList
                 @currentValue={{@field.metadata.value}}
-                @placeholders={{@placeholders}}
                 @onCopy={{this.mutValue}}
+                @placeholders={{@placeholders}}
               />
             {{/if}}
           </div>

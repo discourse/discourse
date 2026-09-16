@@ -14,9 +14,9 @@ export default <template>
       </p>
       <p>{{@controller.model.new_email}}</p>
       <DButton
-        @translatedLabel={{i18n "user.change_email.confirm"}}
         class="btn-primary"
         @action={{@controller.confirm}}
+        @translatedLabel={{i18n "user.change_email.confirm"}}
       />
     </div>
   </div>

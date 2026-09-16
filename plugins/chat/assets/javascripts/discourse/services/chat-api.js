@@ -13,6 +13,10 @@ import Collection from "../lib/collection";
 export default class ChatApi extends Service {
   @service chatChannelsManager;
 
+  get #basePath() {
+    return "/chat/api";
+  }
+
   channel(channelId) {
     return this.#getRequest(`/channels/${channelId}`);
   }
@@ -659,10 +663,6 @@ export default class ChatApi extends Service {
 
   markPinsAsRead(channelId) {
     return this.#putRequest(`/channels/${channelId}/pins/read`);
-  }
-
-  get #basePath() {
-    return "/chat/api";
   }
 
   #getRequest(endpoint, data = {}) {

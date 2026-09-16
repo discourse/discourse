@@ -177,9 +177,15 @@ uk:
     admin:
       reports:
         related_items:
+          solved_topics:
+            title: "Вирішені теми"
+            description: "Теми, позначені як вирішені між %{startDate} та %{endDate}, спочатку найновіші."
           labels:
             topic: "Тема"
+            solved_by: "Вирішено"
             category: "Категорія"
+          table_summary:
+            solved_topics_title: "Вирішені теми на %{date}"
       web_hooks:
         solved_event:
           group_name: "Подія Вирішення"

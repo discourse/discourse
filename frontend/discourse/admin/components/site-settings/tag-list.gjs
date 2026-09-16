@@ -20,11 +20,11 @@ export default class TagList extends Component {
   <template>
     <div ...attributes>
       <TagChooser
-        @tags={{this.selectedTags}}
-        @onChange={{this.changeSelectedTags}}
         @everyTag={{true}}
-        @unlimitedTagCount={{true}}
+        @onChange={{this.changeSelectedTags}}
         @options={{hash allowAny=false disabled=@disabled}}
+        @tags={{this.selectedTags}}
+        @unlimitedTagCount={{true}}
       />
     </div>
   </template>

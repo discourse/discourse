@@ -49,10 +49,13 @@ class ReviewableUser < Reviewable
     end
 
     if status == "pending" && target&.uploaded_avatar_id.present?
-      build_action(actions, :remove_avatar, icon: "user-xmark")
+      build_action(actions, :remove_avatar, icon: "user-xmark", secondary: true)
     end
 
-    if guardian.can_approve?(target)
+    # Reviewed items must not offer approval in the queue, but approving an
+    # unapproved user directly (e.g. from the admin user page) still goes
+    # through this action, so those callers opt in with `allow_reviewed`.
+    if (pending? || args[:allow_reviewed]) && guardian.can_approve?(target)
       actions.add(:approve_user, bundle: nil) do |a|
         a.icon = "user-plus"
         a.completed_message = "reviewables.actions.approve_user.complete"

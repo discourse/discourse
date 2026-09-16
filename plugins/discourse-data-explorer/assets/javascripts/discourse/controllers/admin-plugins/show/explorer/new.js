@@ -92,13 +92,13 @@ export default class AdminPluginsExplorerNew extends Controller {
     });
   }
 
+  get aiQueriesEnabled() {
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
+  }
+
   @action
   setView(value) {
     this.view = value;
-  }
-
-  get aiQueriesEnabled() {
-    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   @action
@@ -297,11 +297,6 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = event.target.value;
   }
 
-  _teardownAi() {
-    this._teardownAiGeneration?.();
-    this._teardownAiGeneration = null;
-  }
-
   resetState() {
     this._teardownAi();
     this.aiGenerating = false;
@@ -322,5 +317,10 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.previewResults = null;
     this.showPreview = false;
     this.view = "sql";
+  }
+
+  _teardownAi() {
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
   }
 }

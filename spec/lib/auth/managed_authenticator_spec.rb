@@ -206,7 +206,7 @@ RSpec.describe Auth::ManagedAuthenticator do
         expect(UserAssociatedAccount.last.info["nickname"]).to eq("IAmGroot")
       end
 
-      it "will ignore name when equal to email" do
+      it "ignores the name when it equals the email address" do
         result = authenticator.after_authenticate(hash.deep_merge(info: { name: hash.info.email }))
         expect(result.email).to eq(hash.info.email)
         expect(result.name).to eq(nil)

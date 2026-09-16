@@ -497,7 +497,7 @@ RSpec.describe DiscourseConnect do
     expect(user.username).to eq "testuser"
   end
 
-  it "should preserve username when several users login with the same username" do
+  it "preserves usernames when several users log in with the same username" do
     SiteSetting.auth_overrides_username = true
 
     # if several users have username "bill" on the external site,

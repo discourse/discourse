@@ -320,6 +320,9 @@ sk:
     group_timezones:
       search: "Hľadať"
       group_availability: "%{group} dostupnosť"
+    discourse_workflows:
+      post_event:
+        topic_id: "ID témy"
     discourse_post_event:
       notifications:
         before_event_reminder: "Udalosť sa čoskoro začne"
@@ -351,6 +354,11 @@ sk:
       edit_event: "Upraviť udalosť"
       export_event: "Exportovať udalosť"
       created_by: "Vytvoril"
+      other_hosts:
+        one: "a %{count} iné"
+        few: "a %{count} ďalšie"
+        many: "a %{count} ďalších"
+        other: "a %{count} ďalších"
       bulk_invite: "Hromadné pozvanie"
       close_event: "Zatvoriť udalosť"
       open_event: "Otvorená udalosť"
@@ -522,6 +530,8 @@ sk:
           placeholder: "Voliteľné, predvolene je názov témy"
         invitees:
           label: "Pozvané skupiny"
+        hosts:
+          label: "Hostitelia"
         event_type:
           public:
             title: "Verejné"

@@ -98,7 +98,7 @@ class AiArtifact < ActiveRecord::Base
   end
 
   def public?
-    !!metadata&.dig("public")
+    metadata&.dig("public") == true
   end
 end
 

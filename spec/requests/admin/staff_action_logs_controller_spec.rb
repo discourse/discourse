@@ -164,6 +164,7 @@ RSpec.describe Admin::StaffActionLogsController do
 
       context "when staff actions are extended" do
         let(:plugin_extended_action) { :confirmed_ham }
+
         before { UserHistory.stubs(:staff_actions).returns([plugin_extended_action]) }
         after { UserHistory.unstub(:staff_actions) }
 
@@ -361,7 +362,7 @@ RSpec.describe Admin::StaffActionLogsController do
         parsed = response.parsed_body
 
         name_diff = <<-HTML
-          <h3>name</h3><p></p><table class="markdown"><tr><td class="--previous diff-del"><del>#{tag_group1.name}</del></td><td class="--current diff-ins"><ins>#{tag_group2.name}</ins></td></tr></table>
+          <h3>name</h3><p></p><table class="markdown"><tr><td class="--previous"><del>#{tag_group1.name}</del></td><td class="--current"><ins>#{tag_group2.name}</ins></td></tr></table>
         HTML
         expect(parsed["side_by_side"]).to include(name_diff.strip)
         expect(parsed["side_by_side"]).to include("<del>#{tag1.name}</del>")

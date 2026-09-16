@@ -114,6 +114,7 @@ module Chat
         Discourse.system_user,
         silenced_till: auto_silence_duration.minutes.from_now,
         reason: I18n.t("chat.errors.auto_silence_from_flags"),
+        reviewable_id: reviewable.id,
       )
     end
 

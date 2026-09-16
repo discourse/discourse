@@ -15,7 +15,7 @@
     "tsconfig-plugin.json"
   ],
   "scripts": {
-    "compile-dts-generator": "tsc dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
+    "compile-dts-generator": "tsc --ignoreConfig --types node dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
     "generate-external-types": "node generate-external-types.js",
     "generate-external": "pnpm compile-dts-generator && pnpm generate-external-types"
   },
@@ -56,7 +56,7 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^25.3.3",
+    "@types/node": "^26.4.0",
     "compare-versions": "^6.1.1"
   },
   "engines": {

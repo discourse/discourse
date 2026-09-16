@@ -57,7 +57,8 @@ export type {
  *
  * - `"roving-tabindex"` (the default) — exactly one item is reachable with Tab
  *   (`tabindex="0"`) and the rest are set to `tabindex="-1"`; with `tabStop=false` every item is
- *   set to `-1`. Arrow keys move real DOM focus between items and update tabindex along with it.
+ *   set to `-1`. Arrow keys move real DOM focus between items and, unless `tabStopAnchor` pins the
+ *   stop to the marked item, update tabindex along with it.
  *   Use this when the active item should itself hold focus (a tile grid, a toolbar).
  * - `"active-descendant"` — DOM focus stays on a separate controller
  *   element (typically a text input); arrow keys move a *virtual* highlight through

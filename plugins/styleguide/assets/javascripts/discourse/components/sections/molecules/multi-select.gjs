@@ -4,7 +4,7 @@ import StyleguideComponent from "../../styleguide/component";
 import StyleguideExample from "../../styleguide-example";
 
 export default <template>
-  <StyleguideExample @title="<DMultiSelect />" @code={{multiSelectSource}}>
+  <StyleguideExample @code={{multiSelectSource}} @title="<DMultiSelect />">
     <StyleguideComponent @tag="d-multi-select component">
       <:sample>
         <MultiSelectExample />

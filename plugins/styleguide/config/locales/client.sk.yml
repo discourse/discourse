@@ -32,6 +32,10 @@ sk:
           title: "Pole pre dátum a čas"
         menus:
           title: "Menu"
+        context_menu:
+          actions:
+            duplicate: "Duplikát"
+            delete: "Odstrániť"
         multi_select:
           title: "Viacnásobný výber"
         toasts:

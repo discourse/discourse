@@ -12,9 +12,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value="/images/logo.png"
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );
@@ -44,9 +44,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value="/uploads/default/original/1X/abc123.txt"
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );
@@ -88,9 +88,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value=""
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );
@@ -108,9 +108,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value=""
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );
@@ -126,9 +126,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value=""
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );
@@ -150,9 +150,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.handleChange}}
           @setting={{setting}}
           @value="/images/logo.png"
-          @changeValueCallback={{this.handleChange}}
         />
       </template>
     );
@@ -172,9 +172,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value=""
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );
@@ -196,9 +196,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value=""
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );
@@ -214,9 +214,9 @@ module("Integration | Component | SiteSettings | Upload", function (hooks) {
     await render(
       <template>
         <SiteSettingUpload
+          @changeValueCallback={{this.noop}}
           @setting={{setting}}
           @value="/images/banner.png"
-          @changeValueCallback={{this.noop}}
         />
       </template>
     );

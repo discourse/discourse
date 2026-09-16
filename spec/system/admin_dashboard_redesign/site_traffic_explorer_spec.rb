@@ -8,9 +8,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
   before do
     SiteSetting.dashboard_improvements = true
     SiteSetting.improved_crawler_detection = true
-    SiteSetting.persist_browser_pageview_events = true
     SiteSetting.use_legacy_pageviews = false
-    BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(Date.new(2026, 1, 1))
     Discourse.stubs(:current_hostname).returns("test.localhost")
     DiscourseIpInfo
       .stubs(:get)
@@ -55,7 +53,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       url: "/crawler-shaped-traffic",
       session_id: "crawler-shaped-session",
       score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-10 10:00:00",
     )
 
@@ -72,7 +69,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       :browser_pageview_event,
       url: "/engaged-session",
       session_id: "engaged-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-14 10:00:00",
     )
     Fabricate(
@@ -84,7 +80,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       :browser_pageview_event,
       url: "/active-session",
       session_id: "active-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-14 11:50:00",
     )
     Fabricate(
@@ -107,20 +102,17 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       :browser_pageview_event,
       user_id: admin.id,
       session_id: "logged-in-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-10 10:00:00",
     )
     Fabricate(
       :browser_pageview_event,
       session_id: "anonymous-session",
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-11 10:00:00",
     )
     Fabricate(
       :browser_pageview_event,
       session_id: "crawler-session",
       score: CrawlerScorer::BOT_SCORE_THRESHOLD + 1,
-      source: BrowserPageviewEvent::SOURCE_BEACON,
       created_at: "2026-05-12 10:00:00",
     )
 
@@ -158,6 +150,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "search.example/results?q=discourse",
@@ -170,6 +163,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_496,
         ip_address: "192.0.2.1",
         user_agent: chrome,
+        language: "en-US",
         user_id: admin.id,
         session_id: "logged-in-session",
         normalized_referrer: "test.localhost/latest",
@@ -182,6 +176,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         asn: 64_497,
         ip_address: "198.51.100.2",
         user_agent: firefox,
+        language: "en-GB",
         session_id: "anonymous-session",
         created_at: "2026-05-11 10:00:00",
       },
@@ -196,9 +191,7 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         created_at: "2026-05-12 10:00:00",
       },
     ]
-    events.each do |attributes|
-      Fabricate(:browser_pageview_event, source: BrowserPageviewEvent::SOURCE_BEACON, **attributes)
-    end
+    events.each { |attributes| Fabricate(:browser_pageview_event, **attributes) }
 
     Fabricate(
       :browser_pageview_session_engagement,
@@ -273,7 +266,10 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
 
     expect(traffic).to have_card_tabs(card: "acquisition", tabs: %w[Referrers Countries Networks])
     expect(traffic).to have_card_tabs(card: "pages", tabs: ["Top URLs", "Entry URLs"])
-    expect(traffic).to have_card_tabs(card: "visitors", tabs: ["Browsers", "IP addresses"])
+    expect(traffic).to have_card_tabs(
+      card: "visitors",
+      tabs: ["Browsers", "Languages", "IP addresses"],
+    )
     expect(traffic).to have_row(card: "acquisition", label: "Direct / unknown", count: "2")
     expect(traffic).to have_row(
       card: "acquisition",
@@ -325,6 +321,23 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
       "/admin/dashboard/site-traffic-explorer?browser=chrome&end_date=2026-05-12&range=custom&start_date=2026-05-01",
     )
     traffic.remove_filter("browser")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    expect(traffic).to have_row(card: "visitors", label: "English", count: "3")
+    traffic.filter_row(card: "visitors", label: "English")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "English")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=en&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
+
+    traffic.select_tab(card: "visitors", tab: "Languages")
+    traffic.filter_row(card: "visitors", label: "Unknown")
+    expect(traffic).to have_filter_pill(dimension: "language", label: "Unknown")
+    expect(page).to have_current_path(
+      "/admin/dashboard/site-traffic-explorer?end_date=2026-05-12&language=&range=custom&start_date=2026-05-01",
+    )
+    traffic.remove_filter("language")
 
     traffic.select_tab(card: "acquisition", tab: "Countries")
     traffic.filter_row(card: "acquisition", label: "United States")
@@ -406,7 +419,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
           :browser_pageview_event,
           url: path,
           topic_id: topic.id,
-          source: BrowserPageviewEvent::SOURCE_BEACON,
           created_at: Time.zone.local(2026, 5, 10, 10, index, event_index),
         )
       end
@@ -461,7 +473,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         normalized_referrer: normalized_referrer,
         normalized_referrer_version: BrowserPageviewEventUrlNormalizer::REFERRER_VERSION,
         session_id: session_id,
-        source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: "2026-05-10 10:00:00",
       )
     end
@@ -566,7 +577,6 @@ RSpec.describe "Admin Dashboard Redesign | Site Traffic Explorer" do
         :browser_pageview_event,
         url: url,
         session_id: url.delete_prefix("/"),
-        source: BrowserPageviewEvent::SOURCE_BEACON,
         created_at: created_at,
       )
     end

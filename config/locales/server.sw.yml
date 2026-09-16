@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sw:
+  mcp:
+    errors:
+      topic_not_found: "Mada haijapatikana"
+    oauth:
+      approve: "Idhini"
   llms_txt:
     sections:
       optional: "Sio Muhimu"
@@ -414,6 +419,7 @@ sw:
   email_login:
     title: "Ingia kupitia barua pepe"
   admin_site_traffic_explorer:
+    unknown: "Haijulikani"
     traffic_types:
       anonymous: "Asiyejulikana"
   change_email:
@@ -501,7 +507,7 @@ sw:
     topic_description: "Kuendelea kupata taarifa za %{link}, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
     private_topic_description: "Kuendelea kupata taarifa, tumia kidhibiti cha taarifa kilichopo chini au kulia kwa mada."
   unsubscribe:
-    title: "Jiengua"
+    unsubscribe: "Jitoe"
     stop_watching_topic: "Acha kuangalia mada hii, %{link}"
     mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
     unwatch_category: "Acha kuangalia mada zote kwenye %{category}"

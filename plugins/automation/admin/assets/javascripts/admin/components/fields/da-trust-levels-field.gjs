@@ -21,13 +21,13 @@ export default class TrustLevelsField extends BaseField {
   <template>
     <section class="field category-field">
       <div class="control-group">
-        <DAFieldLabel @label={{@label}} @field={{@field}} />
+        <DAFieldLabel @field={{@field}} @label={{@label}} />
 
         <div class="controls">
           <MultiSelect
-            @value={{@field.metadata.value}}
             @content={{this.site.trustLevels}}
             @onChange={{this.onChangeTrustLevels}}
+            @value={{@field.metadata.value}}
           />
 
           <DAFieldDescription @description={{@description}} />

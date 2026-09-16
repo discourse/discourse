@@ -1463,7 +1463,6 @@ class BulkImport::Base
     user[:staged] = false if user[:staged].nil?
     user[:admin] ||= false
     user[:moderator] ||= false
-    user[:last_emailed_at] ||= NOW
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
 
@@ -1472,7 +1471,6 @@ class BulkImport::Base
       user[:approved_at] ||= user[:created_at]
       user[:approved_by_id] ||= Discourse::SYSTEM_USER_ID
     end
-    user[:suspended_at] ||= user[:suspended_at]
     user[:suspended_till] ||= user[:suspended_till] ||
       (200.years.from_now if user[:suspended_at].present?)
 
@@ -1747,17 +1745,24 @@ class BulkImport::Base
 
     if post[:raw].bytes.include?(0)
       log_import_issue("post skipped (raw contains null bytes)", "post #{post[:imported_id]}")
-      post[:skip] = true
+      skip_post(post)
     end
 
     post[:reply_to_post_number] = nil if post[:reply_to_post_number] == 1
 
     if post[:cooked].bytes.include?(0)
       log_import_issue("post skipped (cooked contains null bytes)", "post #{post[:imported_id]}")
-      post[:skip] = true
+      skip_post(post)
     end
 
     post
+  end
+
+  # A skipped post must not keep its pre-allocated id mapped, or the import_id
+  # custom field would point at a post that never gets inserted.
+  def skip_post(post)
+    post[:skip] = true
+    @posts.delete(post[:imported_id].to_i)
   end
 
   def process_post_action(post_action)
@@ -2317,8 +2322,11 @@ class BulkImport::Base
     id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
+      record_id = send(id_mapping_method_name, imported_id)
+      next if record_id.nil?
+
       value = @import_prefix ? "#{@import_prefix}:#{imported_id}" : imported_id
-      { record_id: send(id_mapping_method_name, imported_id), value: value }
+      { record_id: record_id, value: value }
     end
     true
   rescue => e

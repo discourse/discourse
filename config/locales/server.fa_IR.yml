@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  mcp:
+    errors:
+      draft_too_long: "پیش‌نویس خیلی طولانی است"
+      topic_not_found: "موضوع پیدا نشد"
+    oauth:
+      deny: "رد کردن"
+      approve: "اجازه دادن"
   llms_txt:
     sections:
       optional: "اختیاری"
@@ -911,6 +918,7 @@ fa_IR:
       windows: "مایکروسافت ویندوز"
       unknown: "سیستم‌عامل ناشناخته"
   admin_site_traffic_explorer:
+    unknown: "ناشناس"
     traffic_types:
       anonymous: "ناشناس"
   change_email:
@@ -1030,7 +1038,7 @@ fa_IR:
     topic_description: "برای اشتراک مجدد در %{link}، از مدیریت آگاه‌سازی در قسمت پایین یا راست موضوع استفاده کنید."
     private_topic_description: "برای اشتراک مجدد، از کنترل اعلان در پایین یا سمت راست موضوع استفاده کنید."
   unsubscribe:
-    title: "لغو اشتراک"
+    unsubscribe: "لغو اشتراک"
     stop_watching_topic: "این موضوع را مشاهده نکنید، %{link}"
     mute_topic: "نادیده گرفتن تمام اطلاعیه‌های این موضوع، %{link}"
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"
@@ -2925,11 +2933,6 @@ fa_IR:
         title: "بله"
       approve_and_unhide:
         title: "بله"
-      delete_post:
-        title: "حذف نوشته"
-        complete: "نوشته حذف شده"
-      restore_post:
-        title: "بازیابی نوشته"
       suspend_user:
         title: "کاربر تعلیق شده"
       delete_user:

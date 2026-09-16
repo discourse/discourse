@@ -16,6 +16,10 @@ ug:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          date: "چېسلا"
+          outcomes:
+            failed: "مەغلۇب بولدى"
         reports:
           filters:
             sort_by:

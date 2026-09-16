@@ -486,6 +486,9 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
     setPeerTimingForTesting(SAFE_PEER_TIMING);
     this.currentUser = logIn(this.owner);
     this.currentUser.id = 10;
+    this.keyValueStore = this.owner.lookup("service:key-value-store");
+    this.cameraPreferenceKey = `voice-camera-enabled-${this.currentUser.id}`;
+    this.keyValueStore.remove(this.cameraPreferenceKey);
     this.siteSettings = this.owner.lookup("service:site-settings");
     this.siteSettings.voice_auto_status_enabled = true;
     this.siteSettings.voice_video_enabled = true;
@@ -612,6 +615,7 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
 
   hooks.afterEach(function () {
     this.subject?.leave({ id: 1 }, { keepLocalStream: true });
+    this.keyValueStore.remove(this.cameraPreferenceKey);
 
     setPeerTimingForTesting(null);
     setLivekitSdkLoaderForTesting(null);
@@ -783,6 +787,234 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
         .map((track) => track.id),
       ["remote-mic-2"],
       "screen audio never clobbers the participant's voice stream"
+    );
+  });
+
+  test("agent audio waits for authorization and follows roster role changes", async function (assert) {
+    await this.subject.join(this.room);
+    await wait(50);
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    const track = {
+      kind: "audio",
+      mediaStreamTrack: createFakeTrack("agent-mic"),
+      mediaStream: null,
+    };
+    const publication = {
+      source: "microphone",
+      track,
+      setSubscribed(value) {
+        if (!value) {
+          this.track = null;
+          lkRoom.emit("trackUnsubscribed", track, this, { identity: "-1400" });
+        } else if (!this.track) {
+          Promise.resolve().then(() => {
+            this.track = track;
+            lkRoom.emit("trackSubscribed", track, this, { identity: "-1400" });
+          });
+        }
+      },
+    };
+    lkRoom.remoteParticipants.set("-1400", {
+      identity: "-1400",
+      trackPublications: new Map([["mic", publication]]),
+    });
+    lkRoom.emit("trackSubscribed", track, publication, { identity: "-1400" });
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "unknown agents cannot play audio"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "speaker", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "roster admission recovers an already subscribed track"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "participant", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "listener agents cannot play audio even in open rooms"
+    );
+    assert.strictEqual(
+      publication.track,
+      null,
+      "demotion unsubscribes the microphone"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "speaker", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "promotion restores the agent track"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [{ id: this.currentUser.id }],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "exclusion removes agent audio"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        { id: -1400, role: "speaker", external_agent: true },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "readmission subscribes to the retained microphone publication"
+    );
+  });
+
+  test("dashboard agent audio follows the server identity mapping and moderation", async function (assert) {
+    await this.subject.join(this.room);
+    await wait(50);
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    const track = {
+      kind: "audio",
+      mediaStreamTrack: createFakeTrack("agent-mic"),
+      mediaStream: null,
+    };
+    const publication = {
+      source: "microphone",
+      track,
+      setSubscribed(value) {
+        if (!value) {
+          this.track = null;
+          lkRoom.emit("trackUnsubscribed", track, this, {
+            identity: "agent-dashboard",
+          });
+        } else if (!this.track) {
+          Promise.resolve().then(() => {
+            this.track = track;
+            lkRoom.emit("trackSubscribed", track, this, {
+              identity: "agent-dashboard",
+            });
+          });
+        }
+      },
+    };
+    lkRoom.remoteParticipants.set("agent-dashboard", {
+      identity: "agent-dashboard",
+      trackPublications: new Map([["mic", publication]]),
+    });
+    lkRoom.emit("trackSubscribed", track, publication, {
+      identity: "agent-dashboard",
+    });
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "unknown agents cannot play audio"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "speaker",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "roster admission recovers an already subscribed track"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "participant",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "listener agents cannot play audio even in open rooms"
+    );
+    assert.strictEqual(
+      publication.track,
+      null,
+      "demotion unsubscribes the microphone"
+    );
+
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "speaker",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "promotion restores the agent track"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [{ id: this.currentUser.id }],
+    });
+    await wait(10);
+    assert.false(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "exclusion removes agent audio"
+    );
+    this.rooms.emit(1, {
+      type: "participants",
+      participants: [
+        { id: this.currentUser.id },
+        {
+          id: -1400,
+          role: "speaker",
+          external_agent: true,
+          livekit_identity: "agent-dashboard",
+        },
+      ],
+    });
+    await wait(10);
+    assert.true(
+      !!this.subject.remoteStreamFor(1, -1400),
+      "readmission subscribes to the retained microphone publication"
     );
   });
 
@@ -994,6 +1226,35 @@ module("Voice | Unit | Service | voice-webrtc-livekit", function (hooks) {
       this.toasts.errors.length,
       1,
       "tells the user the connection could not be recovered"
+    );
+  });
+
+  test("a remembered camera publishes after the LiveKit call becomes visible", async function (assert) {
+    this.keyValueStore.set({
+      key: this.cameraPreferenceKey,
+      value: "true",
+    });
+
+    await this.subject.join(this.room);
+    this.subject.setWatching(1, true);
+    await waitUntil(() =>
+      this.stateRequests.some(({ video }) => video === "true")
+    );
+
+    const lkRoom = this.FakeLivekitRoom.instances[0];
+    const publication = lkRoom.localParticipant.published.find(
+      ({ track }) => track.mediaStreamTrack === this.cameraTrack
+    );
+
+    assert.notStrictEqual(
+      publication,
+      undefined,
+      "publishes the remembered camera track"
+    );
+    assert.deepEqual(
+      this.stateRequests.at(-1),
+      { video: "true", screen: "false" },
+      "broadcasts the restored camera state"
     );
   });
 

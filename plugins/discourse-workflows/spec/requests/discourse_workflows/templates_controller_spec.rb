@@ -7,6 +7,7 @@ RSpec.describe DiscourseWorkflows::TemplatesController do
     DiscourseWorkflows::TemplateStore.reset_cache!
     sign_in(admin)
   end
+
   after { DiscourseWorkflows::TemplateStore.reset_cache! }
 
   context "when not logged in as admin" do

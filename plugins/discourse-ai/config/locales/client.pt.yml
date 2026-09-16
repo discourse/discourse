@@ -16,6 +16,10 @@ pt:
         categories:
           discourse_ai: "Discourse AI"
       dashboard:
+        ask_ai:
+          date: "Data"
+          outcomes:
+            failed: "Falhado"
         emotion:
           title: "Emoção"
         reports:
@@ -327,8 +331,6 @@ pt:
         usage:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
-        model_description:
-          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:

@@ -21,6 +21,34 @@ RSpec.describe GroupManager do
     end
   end
 
+  describe "user_count" do
+    fab!(:bot)
+
+    it "counts bots in automatic groups not created by core" do
+      automatic_group = Fabricate(:group, automatic: true)
+      automatic_manager = GroupManager.new(automatic_group)
+
+      expect { automatic_manager.add([user.id, bot.id]) }.to change {
+        automatic_group.reload.user_count
+      }.by(2)
+      expect { automatic_manager.remove([bot.id]) }.to change {
+        automatic_group.reload.user_count
+      }.by(-1)
+    end
+
+    it "does not count bots in hand-managed groups" do
+      expect { manager.add([user.id, bot.id]) }.to change { group.reload.user_count }.by(1)
+      expect { manager.remove([bot.id]) }.not_to change { group.reload.user_count }
+    end
+
+    it "does not count bots in core automatic groups" do
+      staff_manager = GroupManager.new(Group[:staff])
+
+      expect { staff_manager.add([user.id, bot.id]) }.to change { Group[:staff].user_count }.by(1)
+      expect { staff_manager.remove([bot.id]) }.not_to change { Group[:staff].user_count }
+    end
+  end
+
   describe "#remove" do
     before { manager.add([user.id, user2.id]) }
 

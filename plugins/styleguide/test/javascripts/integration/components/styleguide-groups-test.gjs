@@ -25,9 +25,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -46,9 +46,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -78,9 +78,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="nope"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="nope"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -98,9 +98,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -116,9 +116,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="data">data body</Group>
@@ -133,9 +133,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -154,9 +154,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="data">data body</Group>
@@ -181,9 +181,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -207,9 +207,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start" as |Example|>
@@ -265,10 +265,10 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
-          @groups={{GROUPS}}
-          @section={{SECTION}}
           @active="start"
           @ariaLabel="Select examples"
+          @groups={{GROUPS}}
+          @section={{SECTION}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -291,9 +291,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active={{state.active}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -330,9 +330,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active={{state.active}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -364,14 +364,14 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active={{state.active}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start"><button
-              type="button"
               id="inside"
+              type="button"
             >x</button></Group>
           <Group @id="data">data body</Group>
         </StyleguideGroups>
@@ -397,9 +397,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active={{state.active}}
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active={{state.active}}
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -425,9 +425,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="start"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="start"
           as |Group|
         >
           <Group @id="start">start body</Group>
@@ -450,9 +450,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="dat">typo body</Group>
@@ -478,9 +478,9 @@ module("Integration | Component | <StyleguideGroups />", function (hooks) {
     await render(
       <template>
         <StyleguideGroups
+          @active="data"
           @groups={{GROUPS}}
           @section={{SECTION}}
-          @active="data"
           as |Group|
         >
           <Group @id="start">start body</Group>

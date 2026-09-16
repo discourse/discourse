@@ -26,9 +26,9 @@ const GoingDropdown = <template>
     >
       <DButton
         class="btn-transparent"
+        @action={{@status.goingThisEvent}}
         @icon="check"
         @label="discourse_post_event.models.invitee.this_event"
-        @action={{@status.goingThisEvent}}
       />
     </dropdown.item>
     <dropdown.item
@@ -39,9 +39,9 @@ const GoingDropdown = <template>
     >
       <DButton
         class="btn-transparent"
+        @action={{@status.goingAllFollowing}}
         @icon="arrows-rotate"
         @label="discourse_post_event.models.invitee.this_and_following"
-        @action={{@status.goingAllFollowing}}
       />
     </dropdown.item>
     {{#if @status.isGoing}}
@@ -49,9 +49,9 @@ const GoingDropdown = <template>
       <dropdown.item class="going-leave">
         <DButton
           class="btn-transparent --danger"
+          @action={{@status.leaveFromGoingMenu}}
           @icon="xmark"
           @label="discourse_post_event.models.invitee.leave_event"
-          @action={{@status.leaveFromGoingMenu}}
         />
       </dropdown.item>
     {{/if}}
@@ -243,12 +243,12 @@ export default class DiscoursePostEventStatus extends Component {
                       "going-button"
                       (statusButtonClass this.isGoing)
                     }}
-                    @identifier="discourse-post-event-going-menu"
-                    @icon={{this.goingTriggerIcon}}
-                    @label={{this.goingTriggerLabel}}
                     @disabled={{this.goingButtonDisabled}}
-                    @onRegisterApi={{this.registerGoingMenu}}
+                    @icon={{this.goingTriggerIcon}}
+                    @identifier="discourse-post-event-going-menu"
+                    @label={{this.goingTriggerLabel}}
                     @modalForMobile={{true}}
+                    @onRegisterApi={{this.registerGoingMenu}}
                   >
                     <:content>
                       <GoingDropdown @status={{this}} />
@@ -256,12 +256,13 @@ export default class DiscoursePostEventStatus extends Component {
                   </DMenu>
                 {{else}}
                   <DComboButton
-                    @hasMenu={{true}}
-                    @btnTypeClass={{statusButtonClass this.isGoing}}
                     class="going-button"
+                    @btnTypeClass={{statusButtonClass this.isGoing}}
+                    @hasMenu={{true}}
                     as |combo|
                   >
                     <combo.Button
+                      @action={{fn this.changeWatchingInviteeStatus "going"}}
                       @ariaPressed={{this.isGoing}}
                       @disabled={{this.goingButtonDisabled}}
                       @icon={{this.goingTriggerIcon}}
@@ -270,11 +271,10 @@ export default class DiscoursePostEventStatus extends Component {
                         "discourse_post_event.models.event.full"
                         "discourse_post_event.models.invitee.status.going"
                       }}
-                      @action={{fn this.changeWatchingInviteeStatus "going"}}
                     />
                     <combo.Menu
-                      @identifier="discourse-post-event-going-menu"
                       @disabled={{this.goingButtonDisabled}}
+                      @identifier="discourse-post-event-going-menu"
                       @onRegisterApi={{this.registerGoingMenu}}
                     >
                       <GoingDropdown @status={{this}} />
@@ -287,6 +287,7 @@ export default class DiscoursePostEventStatus extends Component {
                     "going-button"
                     (statusButtonClass this.isGoing)
                   }}
+                  @action={{fn this.changeWatchingInviteeStatus "going"}}
                   @ariaPressed={{this.isGoing}}
                   @disabled={{this.goingButtonDisabled}}
                   @icon="check"
@@ -295,7 +296,6 @@ export default class DiscoursePostEventStatus extends Component {
                     "discourse_post_event.models.event.full"
                     "discourse_post_event.models.invitee.status.going"
                   }}
-                  @action={{fn this.changeWatchingInviteeStatus "going"}}
                 />
               {{/if}}
             </PluginOutlet>
@@ -317,10 +317,10 @@ export default class DiscoursePostEventStatus extends Component {
                 "interested-button"
                 (statusButtonClass this.isInterested)
               }}
+              @action={{fn this.changeWatchingInviteeStatus "interested"}}
               @ariaPressed={{this.isInterested}}
               @icon="star"
               @label="discourse_post_event.models.invitee.status.interested"
-              @action={{fn this.changeWatchingInviteeStatus "interested"}}
             />
           </PluginOutlet>
         {{/if}}
@@ -339,10 +339,10 @@ export default class DiscoursePostEventStatus extends Component {
                   "not-going-button"
                   (statusButtonClass this.isNotGoing)
                 }}
+                @action={{fn this.changeWatchingInviteeStatus "not_going"}}
                 @ariaPressed={{this.isNotGoing}}
                 @icon="xmark"
                 @label="discourse_post_event.models.invitee.status.not_going"
-                @action={{fn this.changeWatchingInviteeStatus "not_going"}}
               />
             </PluginOutlet>
           {{/unless}}

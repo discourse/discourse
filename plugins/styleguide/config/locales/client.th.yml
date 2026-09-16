@@ -8,6 +8,9 @@ th:
   js:
     styleguide:
       sections:
+        context_menu:
+          actions:
+            delete: "ลบ"
         colors:
           title: "สี"
         categories:

@@ -13,19 +13,6 @@ export default class TagSectionLink extends BaseTagSectionLink {
     this.refreshCounts();
   }
 
-  @bind
-  refreshCounts() {
-    this.totalUnread = this.topicTrackingState.countUnread({
-      tagId: this.tag.id,
-    });
-
-    if (this.totalUnread === 0 || this.#unifiedNewEnabled) {
-      this.totalNew = this.topicTrackingState.countNew({
-        tagId: this.tag.id,
-      });
-    }
-  }
-
   get showCount() {
     return this.currentUser?.sidebarShowCountOfNewItems;
   }
@@ -89,5 +76,18 @@ export default class TagSectionLink extends BaseTagSectionLink {
 
   get #unifiedNewEnabled() {
     return !!this.currentUser?.unified_new_enabled;
+  }
+
+  @bind
+  refreshCounts() {
+    this.totalUnread = this.topicTrackingState.countUnread({
+      tagId: this.tag.id,
+    });
+
+    if (this.totalUnread === 0 || this.#unifiedNewEnabled) {
+      this.totalNew = this.topicTrackingState.countNew({
+        tagId: this.tag.id,
+      });
+    }
   }
 }

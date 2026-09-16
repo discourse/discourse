@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  mcp:
+    errors:
+      topic_not_found: "未找到話題"
+    oauth:
+      resource: "MCP 服務器"
+      deny: "拒絕"
+      approve: "授權"
   llms_txt:
     sections:
       optional: "選填"
@@ -981,6 +988,7 @@ zh_TW:
       unknown: "未知操作系統"
   admin_site_traffic_explorer:
     direct_or_unknown: "直接／未知"
+    unknown: "未知"
     traffic_types:
       logged_in: "已登入"
       anonymous: "匿名"
@@ -1136,7 +1144,7 @@ zh_TW:
   uploads:
     marked_insecure_from_theme_component_reason: "佈景主題元件中使用的上傳項目"
   unsubscribe:
-    title: "退訂"
+    unsubscribe: "退訂"
     stop_watching_topic: "停止關注此主題，%{link}"
     mute_topic: "將此主題的所有通知設為免打擾，%{link}"
     unwatch_category: "停止關注%{category}中的所有主題"
@@ -1709,13 +1717,7 @@ zh_TW:
       sidekiq_check: 'Sidekiq 未執行。許多工作（例如傳送電子郵件）會由 Sidekiq 非同步執行。請確認至少有一個 Sidekiq 程序正在執行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此瞭解 Sidekiq</a>。'
       queue_size: "隊列中有 %{queue_size} 個作業，比較多。這可能表明 Sidekiq 進程存在問題，或者需要添加更多 Sidekiq 工作進程。"
       ram: "您的服務器運行的總內存不足 1 GB。建議使用至少 1 GB 的內存。"
-      google_oauth2_config: '伺服器已設定允許透過 Google OAuth2 註冊及登入（enable_google_oauth2_logins），但尚未設定用戶端 ID 與用戶端密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">請參閱此指南以瞭解詳情</a>。'
-      facebook_config: '伺服器已設定允許透過 Facebook 註冊及登入（enable_facebook_logins），但尚未設定應用程式 ID 與應用程式密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">請參閱此指南以瞭解詳情</a>。'
-      twitter_config: '伺服器已設定允許透過 Twitter 註冊及登入（enable_twitter_logins），但尚未設定金鑰與密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">請參閱此指南以瞭解詳情</a>。'
-      github_config: '伺服器已設定允許透過 GitHub 註冊及登入（enable_github_logins），但尚未設定用戶端 ID 與密鑰。請前往<a href="%{base_path}/admin/site_settings">網站設定</a>更新設定。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">請參閱此指南以瞭解詳情</a>。'
       github_onebox_backoff: "GitHub 正在對伺服器套用速率限制，因此在限制重設前，GitHub 連結可能無法顯示預覽。設定 {{setting:github_onebox_access_tokens}} 可大幅提高上限。"
-      s3_upload_config: '服務器被配置為將文件上傳到 S3，但未設置以下設置中的至少一個：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。前往<a href="%{base_path}/admin/site_settings">網站設置</a>并更新設置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請參閱“如何設置將圖片上傳到 S3？”以了解詳情</a>。'
-      s3_backup_config: '服務器被配置為將備份上傳到 S3，但未設置以下設置中的至少一個：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。前往<a href="%{base_path}/admin/site_settings">網站設置</a>并更新設置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請參閱“如何設置將圖片上傳到 S3？”以了解詳情</a>。'
       s3_cdn: '伺服器已設定將檔案上傳至 S3，但未設定 S3 CDN。這可能導致高昂的 S3 費用及較慢的網站效能。<a href="https://meta.discourse.org/t/-/148916" target="_blank">請參閱「使用物件儲存空間上傳」以瞭解詳情</a>。'
       image_magick: '服務器被配置為創建大圖片縮略圖，但是未安裝 ImageMagick。使用您喜愛的軟件包管理器安裝 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下載最新版</a>。'
       failing_emails: '%{num_failed_jobs} 個電子郵件作業失敗。請檢查您的 app.yml 并確保郵件服務器設置正確。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失敗的作業</a>。'
@@ -1950,7 +1952,7 @@ zh_TW:
     share_links: "確定分享對話框中顯示的條目以及顯示順序。"
     allow_username_in_share_links: "允許分享連結包含使用者名稱。這有助於依不重複訪客獎勵徽章。"
     site_contact_username: "用于發送所有自動消息的有效管理人員使用者名。如果留空，將使用默認系統帳號。"
-    site_contact_group_name: "會受邀加入所有自動傳送之私人訊息的有效群組名稱。"
+    site_contact_group_name: "受邀接收所有自動發送的私人訊息的群組。"
     send_welcome_message: "向所有新使用者發送帶有快速入門指南的歡迎消息。"
     send_tl1_welcome_message: "向新的信任級別 1 使用者發送歡迎消息。"
     send_tl2_promotion_message: "向新晉升信任等級 2 的使用者傳送晉升訊息。"
@@ -2023,7 +2025,6 @@ zh_TW:
     discourse_connect_allowed_redirect_domains: "將 DiscourseConnect 提供的 return_paths 限制在這些網域（預設回傳路徑必須位於目前網站）。使用 * 可允許任何網域作為回傳路徑。不允許子網域萬用字元（`*.foobar.com`）。"
     enable_local_logins: "啟用基于本地使用者名和密碼登錄的帳號。警告：如果禁用，并且您之前沒有配置至少一種備用登錄方法，您可能無法登錄。"
     enable_local_logins_via_email: "允許使用者請求通過電子郵件向他們發送一鍵登錄連結。"
-    enable_local_logins_via_code: "允許成員使用一次性電子郵件代碼（OTP）更快註冊及登入。"
     enable_random_usernames: '針對使用一次性電子郵件驗證碼建立的帳戶，系統會以「形容詞 + 名詞 + 兩個隨機數字」的格式（例如：QuietFalcon34）生成隨機使用者名稱。新會員可在註冊過程中變更其使用者名稱。'
     random_username_adjectives: '用於隨機產生使用者名稱前半部的詞彙。詞彙組合時，第一個字母會大寫。'
     random_username_nouns: '用於隨機產生使用者名稱後半部的詞彙。詞彙組合時，第一個字母會大寫。'
@@ -2687,7 +2688,6 @@ zh_TW:
       invalid_email: "無效的電子郵件地址。"
       invalid_username: "沒有使用該使用者名的使用者。"
       valid_username: "已有使用此使用者名稱的使用者。"
-      invalid_group: "沒有使用該名稱的群組。"
       invalid_svg: "SVG 圖片無效。必須包含 SVG 元素，且不得包含指令碼或事件處理常式。"
       invalid_upload: "上傳項目無效或不存在。"
       invalid_topic: "沒有使用該 ID 的主題。"
@@ -2753,7 +2753,6 @@ zh_TW:
       markdown_linkify_tlds: "不能包含「*」值。"
       google_oauth2_hd_groups: "啟用此設定前，必須先設定所有「google oauth2 hd」設定。"
       discourse_id_registration: "無法自動向 Discourse ID 註冊。可能是網路連線問題、防火牆限制，或無法連線至 Discourse ID 服務所致。請檢查伺服器記錄以瞭解詳情，或聯絡支援人員。"
-      linkedin_oidc_credentials: "啟用此設定前，必須先設定 LinkedIn OIDC 認證資訊（「linkedin_oidc_client_id」與「linkedin_oidc_client_secret」）。"
       search_tokenize_chinese_enabled: "啟用此設定前，必須先停用「search_tokenize_chinese」。"
       search_tokenize_japanese_enabled: "啟用此設定前，必須先停用「search_tokenize_japanese」。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "強制使用雙因素驗證時，無法啟用 DiscourseConnect。"
@@ -2848,8 +2847,6 @@ zh_TW:
       tags_any: "顯示具有指定標籤中任一標籤的主題（以逗號分隔）"
       tags_all: "顯示具有所有指定標籤的主題（以加號分隔）"
       exclude_tag: "排除具有特定標籤的主題"
-      exclude_tags_any: "排除具有指定標籤中任一標籤的主題（以逗號分隔）"
-      exclude_tags_all: "排除具有所有指定標籤的主題（以加號分隔）"
       tag_group: "顯示具有特定標籤群組之標籤的主題"
       exclude_tag_group: "排除具有特定標籤群組之標籤的主題"
       activity_before: "顯示最後活動早於某日期的主題（YYYY-MM-DD 或幾天前）"
@@ -2859,7 +2856,6 @@ zh_TW:
       created_before: "顯示某日期之前建立的主題（YYYY-MM-DD 或幾天前）"
       created_after: "顯示某日期之後建立的主題（YYYY-MM-DD 或幾天前）"
       created_by: "顯示由特定使用者或群組建立的主題"
-      created_by_user: "顯示由使用者名稱或群組建立的主題（不加 @）"
       created_by_multiple: "顯示由任一指定使用者或群組建立的主題（以逗號分隔）"
       latest_post_before: "顯示最後一篇貼文早於某日期的主題（YYYY-MM-DD 或幾天前）"
       latest_post_after: "顯示最後一篇貼文晚於某日期的主題（YYYY-MM-DD 或幾天前）"
@@ -5096,6 +5092,9 @@ zh_TW:
   performance_report:
     initial_post_raw: 此主題包括您網站的每日表現報告。
     initial_topic_title: 網站表現報告
+  watched_words:
+    upload_too_many_csv_entries:
+      other: "CSV 檔案中的項目太多。請提供項目不超過 %{count} 筆的 CSV 檔案。"
   tags:
     title: "標簽"
     groups:
@@ -5382,8 +5381,6 @@ zh_TW:
         complete: "貼文已隱藏，使用者已被通知。"
       agree_and_edit:
         title: "編輯貼文"
-        description: "同意檢舉并打開編輯器窗口以編輯貼文。"
-        complete: "檢舉已確認，您現在可以編輯該貼文。"
       delete:
         title: "刪除"
         complete: "貼文已刪除。"
@@ -5501,30 +5498,6 @@ zh_TW:
       approve_and_unhide:
         title: "是"
         complete: "貼文已獲批準并取消隱藏"
-      post_actions:
-        bundle_title: "您想如何處理該貼文？"
-      delete_post:
-        title: "刪除貼文"
-        description: "刪除此貼文"
-        complete: "貼文已刪除"
-      hide_post:
-        title: "隱藏貼文"
-        description: "隱藏此貼文，不讓公眾查看"
-        complete: "貼文已隱藏"
-      unhide_post:
-        title: "取消隱藏貼文"
-        description: "將此貼文設為對所有使用者可見"
-        complete: "貼文已取消隱藏"
-      restore_post:
-        title: "還原貼文"
-        description: "恢復已刪除的貼文"
-        complete: "貼文已恢復"
-      edit_post:
-        title: "編輯貼文"
-        description: "編輯此貼文內容"
-        complete: "貼文已編輯"
-      user_actions:
-        bundle_title: "您想如何處理該使用者？"
       silence_user:
         title: "禁言使用者"
         description: "禁止使用者發帖或發送消息"

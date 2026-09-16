@@ -142,3 +142,81 @@ acceptance("Personal Message - email invite", function (needs) {
       .doesNotExist("the invite modal closes instead of showing an empty body");
   });
 });
+
+acceptance("Personal Message - recipient updates", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    const user = {
+      id: 123,
+      username: "example",
+      name: "Example",
+      avatar_template: "/letter_avatar_proxy/v4/letter/e/999999/{size}.png",
+    };
+    server.get("/u/search/users", () => helper.response({ users: [user] }));
+    server.post("/t/12/invite", () => helper.response({ user }));
+    server.put("/t/12/remove-allowed-user", () =>
+      helper.response({ success: "OK" })
+    );
+  });
+
+  async function inviteExample() {
+    await click(".topic-map__private-message-map .add-participant-btn");
+    const input = selectKit(".invite-user-input");
+    await input.expand();
+    await input.fillInFilter("example");
+    await input.selectRowByValue("example");
+    await click(".send-invite");
+  }
+
+  const recipient =
+    '.topic-map__private-message-map [data-user-card="example"]';
+  const existingRecipient =
+    '.topic-map__private-message-map [data-user-card="someguy"]';
+  const retainedRecipient =
+    '.topic-map__private-message-map [data-user-card="test"]';
+
+  test("inviting a user updates the recipient list without reloading", async function (assert) {
+    await visit("/t/pm-for-testing/12");
+
+    assert.dom(recipient).doesNotExist("the invitee is not yet a recipient");
+    assert.dom(existingRecipient).exists("the existing recipient is present");
+    assert.dom(retainedRecipient).exists("the other recipient is present");
+
+    await inviteExample();
+
+    assert
+      .dom(".d-modal.add-pm-participants")
+      .doesNotExist("the invitation succeeds");
+    assert
+      .dom(recipient)
+      .exists("the invited user appears immediately in the recipient list");
+    assert.dom(existingRecipient).exists("the existing recipient is retained");
+    assert.dom(retainedRecipient).exists("the other recipient is retained");
+  });
+
+  test("inviting a user updates the recipient list after removing a recipient", async function (assert) {
+    await visit("/t/pm-for-testing/12");
+
+    assert.dom(existingRecipient).exists("the recipient is initially present");
+    await click(
+      '.topic-map__private-message-map [data-id="2"] .remove-invited'
+    );
+    assert
+      .dom(existingRecipient)
+      .doesNotExist("the previous recipient is removed");
+    assert.dom(recipient).doesNotExist("the invitee is not yet a recipient");
+
+    await inviteExample();
+
+    assert
+      .dom(".d-modal.add-pm-participants")
+      .doesNotExist("the invitation succeeds");
+    assert
+      .dom(recipient)
+      .exists("the invited user appears immediately in the recipient list");
+    assert
+      .dom(existingRecipient)
+      .doesNotExist("the removed recipient stays removed");
+    assert.dom(retainedRecipient).exists("the remaining recipient is retained");
+  });
+});

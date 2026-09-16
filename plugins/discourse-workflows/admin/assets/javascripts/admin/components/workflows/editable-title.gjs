@@ -65,39 +65,39 @@ export default class WorkflowEditableTitle extends Component {
     <div class="workflows-editable-title">
       {{#if this.isEditing}}
         <input
+          class="workflows-editable-title__input"
           type="text"
           value={{this.editValue}}
-          class="workflows-editable-title__input"
           {{autosize}}
           {{on "keydown" this.handleKeydown}}
           {{on "input" this.onInput}}
         />
         <div class="workflows-editable-title__actions">
           <DButton
+            class="btn-flat workflows-editable-title__save"
             @action={{this.save}}
             @icon="check"
             @title="discourse_workflows.save"
-            class="btn-flat workflows-editable-title__save"
           />
           <DButton
+            class="btn-flat workflows-editable-title__cancel"
             @action={{this.cancel}}
             @icon="xmark"
             @title="discourse_workflows.cancel"
-            class="btn-flat workflows-editable-title__cancel"
           />
         </div>
       {{else}}
         <div class="workflows-editable-title__display">
           <button
-            type="button"
             class="workflows-editable-title__text"
+            type="button"
             {{on "click" this.startEditing}}
           >{{@value}}</button>
           <DButton
+            class="btn-flat workflows-editable-title__edit"
             @action={{this.startEditing}}
             @icon="pencil"
             @title="discourse_workflows.edit"
-            class="btn-flat workflows-editable-title__edit"
           />
         </div>
       {{/if}}

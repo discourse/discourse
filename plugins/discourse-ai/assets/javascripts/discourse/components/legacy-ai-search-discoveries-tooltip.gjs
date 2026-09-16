@@ -10,7 +10,7 @@ export default class LegacyAiSearchDiscoveriesTooltip extends Component {
 
   <template>
     <span class="ai-search-discoveries-tooltip">
-      <DTooltip @placement="top-end" @interactive={{true}}>
+      <DTooltip @interactive={{true}} @placement="top-end">
         <:trigger>
           {{dIcon "circle-info"}}
         </:trigger>
@@ -32,13 +32,13 @@ export default class LegacyAiSearchDiscoveriesTooltip extends Component {
             <div class="ai-search-discoveries-tooltip__actions">
               <DButton
                 class="btn-transparent --primary"
-                @label="discourse_ai.discobot_discoveries.legacy.tooltip.actions.info"
                 @href="https://meta.discourse.org/t/conversational-ai-search-coming-to-discourse-ai/355939"
+                @label="discourse_ai.discobot_discoveries.legacy.tooltip.actions.info"
               />
               <DButton
                 class="btn-transparent btn-danger"
-                @label="discourse_ai.discobot_discoveries.legacy.tooltip.actions.disable"
                 @action={{this.legacyDiscoveries.disableDiscoveries}}
+                @label="discourse_ai.discobot_discoveries.legacy.tooltip.actions.disable"
               />
             </div>
           </div>

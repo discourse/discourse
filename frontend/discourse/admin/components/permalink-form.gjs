@@ -104,36 +104,36 @@ export default class PermalinkForm extends Component {
         <label>{{i18n "admin.permalink.form.label"}}</label>
 
         <DTextField
-          @value={{this.url}}
+          class="permalink-url"
+          @autocapitalize="off"
+          @autocorrect="off"
           @disabled={{this.formSubmitted}}
           @placeholderKey="admin.permalink.url"
-          @autocorrect="off"
-          @autocapitalize="off"
-          class="permalink-url"
+          @value={{this.url}}
         />
 
         <ComboBox
-          @content={{this.permalinkTypes}}
-          @value={{this.permalinkType}}
-          @onChange={{fn (mut this.permalinkType)}}
           class="permalink-type"
+          @content={{this.permalinkTypes}}
+          @onChange={{fn (mut this.permalinkType)}}
+          @value={{this.permalinkType}}
         />
 
         <DTextField
-          @value={{this.permalinkTypeValue}}
-          @disabled={{this.formSubmitted}}
-          @placeholderKey={{this.permalinkTypePlaceholder}}
-          @autocorrect="off"
-          @autocapitalize="off"
-          @keyDown={{this.submitFormOnEnter}}
           class="permalink-destination"
+          @autocapitalize="off"
+          @autocorrect="off"
+          @disabled={{this.formSubmitted}}
+          @keyDown={{this.submitFormOnEnter}}
+          @placeholderKey={{this.permalinkTypePlaceholder}}
+          @value={{this.permalinkTypeValue}}
         />
 
         <DButton
+          class="permalink-add"
           @action={{this.onSubmit}}
           @disabled={{this.formSubmitted}}
           @label="admin.permalink.form.add"
-          class="permalink-add"
         />
       </div>
     </div>

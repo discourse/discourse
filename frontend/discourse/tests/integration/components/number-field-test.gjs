@@ -13,7 +13,7 @@ module("Integration | Component | NumberField", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
       await render(
         <template>
-          <DNumberField @value={{this.value}} @classNames="number-field-test" />
+          <DNumberField @classNames="number-field-test" @value={{this.value}} />
         </template>
       );
     });
@@ -43,9 +43,9 @@ module("Integration | Component | NumberField", function (hooks) {
       await render(
         <template>
           <DNumberField
-            @value={{this.value}}
             @classNames="number-field-test"
             @min="1"
+            @value={{this.value}}
           />
         </template>
       );
@@ -64,9 +64,9 @@ module("Integration | Component | NumberField", function (hooks) {
       await render(
         <template>
           <DNumberField
-            @value={{this.value}}
             @classNames="number-field-test"
             @min="-10"
+            @value={{this.value}}
           />
         </template>
       );

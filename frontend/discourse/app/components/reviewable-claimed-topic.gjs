@@ -46,18 +46,18 @@ export default class ReviewableClaimedTopic extends Component {
       <div class="reviewable-claimed-topic">
         {{#if @claimedBy.user}}
           <DButton
-            @icon="xmark"
-            @action={{this.unclaim}}
-            @label="review.unclaim.help"
             class="btn-default unclaim"
+            @action={{this.unclaim}}
+            @icon="xmark"
+            @label="review.unclaim.help"
           />
         {{else}}
           <DButton
-            @icon="user-plus"
-            @title="review.claim_help.optional"
-            @label="review.claim.title"
-            @action={{this.claim}}
             class="btn-default claim"
+            @action={{this.claim}}
+            @icon="user-plus"
+            @label="review.claim.title"
+            @title="review.claim_help.optional"
           />
         {{/if}}
       </div>

@@ -15,11 +15,6 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
   };
 
   model(params, transition) {
-    if (!this.currentUser.admin) {
-      // display "Only available to admins" message
-      return { model: null, schema: null, disallow: true, groups: null };
-    }
-
     const groupPromise = ajax(
       "/admin/plugins/discourse-data-explorer/groups.json"
     );

@@ -23,10 +23,10 @@ export default class CategoryDropHeader extends ComboBoxSelectBoxHeaderComponent
         as |SelectedNameComponent|
       }}
         <SelectedNameComponent
-          @tabindex={{this.tabindex}}
           @item={{this.selectedContent}}
           @selectKit={{this.selectKit}}
           @shouldDisplayClearableButton={{this.shouldDisplayClearableButton}}
+          @tabindex={{this.tabindex}}
         />
       {{/let}}
 

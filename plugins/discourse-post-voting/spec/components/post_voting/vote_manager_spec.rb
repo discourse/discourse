@@ -70,7 +70,7 @@ describe PostVoting::VoteManager do
   end
 
   describe ".remove_vote" do
-    it "should remove a user's upvote" do
+    it "removes a user's upvote" do
       vote = PostVoting::VoteManager.vote(post, user, direction: up)
 
       message =
@@ -90,7 +90,7 @@ describe PostVoting::VoteManager do
       expect(message.data[:post_voting_has_votes]).to eq(false)
     end
 
-    it "should remove a user's downvote" do
+    it "removes a user's downvote" do
       vote = PostVoting::VoteManager.vote(post, Fabricate(:user), direction: up)
       vote_2 = PostVoting::VoteManager.vote(post, Fabricate(:user), direction: up)
       vote_3 = PostVoting::VoteManager.vote(post, user, direction: down)

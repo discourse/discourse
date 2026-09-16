@@ -79,21 +79,23 @@ module DiscourseAi
           context.view_image_invocations += 1
           vision_llm = DiscourseAi::Completions::Llm.proxy(target)
           analysis =
-            vision_llm.generate(
-              vision_prompt(question, encoded_uploads),
-              user: context.user || acting_user,
-              feature_name: context.feature_name,
-              feature_context:
-                context
-                  .feature_context
-                  .merge(
-                    vision_delegation: true,
-                    primary_llm_model_id: llm.llm_model.id,
-                    ai_agent_id: agent&.id,
-                  )
-                  .compact,
-              max_tokens: MAX_OUTPUT_TOKENS,
-              cancel_manager: context.cancel_manager,
+            DiscourseAi::Completions::Llm.text_from_response(
+              vision_llm.generate(
+                vision_prompt(question, encoded_uploads),
+                user: context.user || acting_user,
+                feature_name: context.feature_name,
+                feature_context:
+                  context
+                    .feature_context
+                    .merge(
+                      vision_delegation: true,
+                      primary_llm_model_id: llm.llm_model.id,
+                      ai_agent_id: agent&.id,
+                    )
+                    .compact,
+                max_tokens: MAX_OUTPUT_TOKENS,
+                cancel_manager: context.cancel_manager,
+              ),
             )
 
           return delegate_error if analysis.blank?
@@ -101,7 +103,7 @@ module DiscourseAi
           {
             status: "success",
             analysis:
-              "#{ANALYSIS_PREFIX}#{truncate(analysis.to_s, llm: vision_llm, max_length: MAX_OUTPUT_TOKENS)}",
+              "#{ANALYSIS_PREFIX}#{truncate(analysis, llm: vision_llm, max_length: MAX_OUTPUT_TOKENS)}",
             images: resolved.map { |result| result.except(:encoded_upload) },
           }
         rescue LlmQuotaUsage::QuotaExceededError,

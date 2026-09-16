@@ -26,20 +26,7 @@ module DiscourseAi
 
         RateLimiter.new(current_user, "ai_discover_#{current_user.id}", 8, 1.minute).performed!
 
-        binding =
-          DiscourseAi::Discoveries.bind_request(user_id: current_user.id, request_id:, query:)
-        if binding == :created
-          result_settings = DiscourseAi::Discoveries.result_settings
-          Jobs.enqueue(
-            :stream_discover_reply,
-            user_id: current_user.id,
-            query:,
-            request_id:,
-            queued_at: Time.now.to_f,
-            summary_detail: result_settings[:summary_detail].to_s,
-            related_count: result_settings[:related_count],
-          )
-        end
+        DiscourseAi::Discoveries.enqueue_reply(user: current_user, request_id:, query:)
 
         DiscourseAi::Discoveries.record_recent_ask(user_id: current_user.id, query:)
 

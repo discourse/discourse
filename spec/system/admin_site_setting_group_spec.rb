@@ -2,6 +2,7 @@
 
 describe "Admin site setting group" do
   let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+
   fab!(:admin)
   fab!(:group)
 

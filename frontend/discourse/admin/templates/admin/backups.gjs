@@ -8,15 +8,15 @@ import { i18n } from "discourse-i18n";
 export default <template>
   <div class="admin-backups admin-config-page">
     <DPageHeader
-      @titleLabel={{i18n "admin.config.backups.title"}}
       @descriptionLabel={{i18n "admin.config.backups.header_description"}}
       @learnMoreUrl="https://meta.discourse.org/t/create-download-and-restore-a-backup-of-your-discourse-database/122710"
+      @titleLabel={{i18n "admin.config.backups.title"}}
     >
       <:breadcrumbs>
-        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
         <DBreadcrumbsItem
-          @path="/admin/backups"
           @label={{i18n "admin.config.backups.title"}}
+          @path="/admin/backups"
         />
       </:breadcrumbs>
       <:actions as |actions|>
@@ -26,25 +26,25 @@ export default <template>
       </:actions>
       <:tabs>
         <DNavItem
-          @route="admin.backups.settings"
-          @label="settings"
           class="admin-backups-tabs__settings"
+          @label="settings"
+          @route="admin.backups.settings"
         />
         <DNavItem
-          @route="admin.backups.index"
-          @label="admin.backups.menu.backup_files"
           class="admin-backups-tabs__files"
+          @label="admin.backups.menu.backup_files"
+          @route="admin.backups.index"
         />
         <DNavItem
-          @route="admin.backups.logs"
-          @label="admin.backups.menu.logs"
           class="admin-backups-tabs__logs"
+          @label="admin.backups.menu.logs"
+          @route="admin.backups.logs"
         />
-        <PluginOutlet @name="downloader" @connectorTagName="div" />
+        <PluginOutlet @connectorTagName="div" @name="downloader" />
       </:tabs>
     </DPageHeader>
 
-    <PluginOutlet @name="before-backup-list" @connectorTagName="div" />
+    <PluginOutlet @connectorTagName="div" @name="before-backup-list" />
 
     <div class="admin-container admin-config-page__main-area">
       {{outlet}}

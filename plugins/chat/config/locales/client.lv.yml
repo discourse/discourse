@@ -118,6 +118,11 @@ lv:
         sort:
           relevance: "Nozīmīgums"
           latest: "Pēdējais"
+      channel_list:
+        options:
+          filter: "Filtrs"
+        filter:
+          mentions: "Pieminēšanas"
       incoming_webhooks:
         back: "Atpakaļ"
         description: "Apraksts"

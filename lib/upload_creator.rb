@@ -81,6 +81,12 @@ class UploadCreator
       rescue StandardError
         nil
       end
+
+    if @opts[:type] == "avatar" && @image_info&.type == :ico
+      @upload.errors.add(:base, I18n.t("upload.ico_as_avatar"))
+      return @upload
+    end
+
     is_image = FileHelper.is_supported_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
@@ -106,9 +112,7 @@ class UploadCreator
 
         if @image_info.type == :svg
           clean_svg!
-        elsif @image_info.type == :ico
-          convert_favicon_to_png!
-        elsif !Rails.env.test? || @opts[:force_optimize]
+        elsif @image_info.type != :ico && (!Rails.env.test? || @opts[:force_optimize])
           convert_heif! if %i[heic heif].include?(@image_info.type)
           convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
           fix_orientation! if should_fix_orientation?
@@ -190,24 +194,31 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           w, h = [0, 0]
 
-          # identify can behave differently depending on how it's compiled and
-          # what programs (e.g. inkscape) are installed on your system.
-          # 'MSVG:' forces ImageMagick to use internal routines and behave
-          # consistently whether it's running from our docker container or not
           begin
             w, h =
-              ImageMagick
-                .identify(
-                  "-ping",
-                  "-format",
-                  "%w %h",
-                  "MSVG:#{@file.path}",
-                  operation: :upload_svg_dimensions,
-                  read: [@file.path],
+              if GlobalSetting.enable_vips_image_processing
+                DiscourseVips.svg_dimensions(
+                  input_path: @file.path,
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
-                .split(" ")
-                .map(&:to_i)
+              else
+                # identify can behave differently depending on how it's compiled and
+                # what programs (e.g. inkscape) are installed on your system.
+                # 'MSVG:' forces ImageMagick to use internal routines and behave
+                # consistently whether it's running from our docker container or not
+                ImageMagick
+                  .identify(
+                    "-ping",
+                    "-format",
+                    "%w %h",
+                    "MSVG:#{@file.path}",
+                    operation: :upload_svg_dimensions,
+                    read: [@file.path],
+                    timeout: Upload::MAX_IDENTIFY_SECONDS,
+                  )
+                  .split(" ")
+                  .map(&:to_i)
+              end
           rescue StandardError
             # use default 0, 0
           end
@@ -336,36 +347,6 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
-  def convert_favicon_to_png!
-    png_tempfile = Tempfile.new(%w[image .png])
-
-    from = @file.path
-    to = png_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
-
-    opts = { flatten: false } # Preserve transparency
-
-    read = [@file.path]
-    write = [File.dirname(png_tempfile.path)]
-
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
-    end
-
-    @file.respond_to?(:close!) ? @file.close! : @file.close
-    @file = png_tempfile
-    extract_image_info!
-  end
-
   def convert_to_jpeg!
     return if @opts[:type] == "topic_og_image"
     return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
@@ -424,16 +405,26 @@ class UploadCreator
     read = [@file.path]
     write = [File.dirname(jpeg_tempfile.path)]
 
-    begin
-      execute_convert(from, to, {}, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, { debug: true }, read:, write:)
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.heif_to_jpeg(
+        input_path: from,
+        output_path: to,
+        timeout: MAX_CONVERT_FORMAT_SECONDS,
+      )
+    else
+      begin
+        execute_convert(from, to, {}, read:, write:)
+      rescue StandardError
+        # retry with debugging enabled
+        execute_convert(from, to, { debug: true }, read:, write:)
+      end
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
     @file = jpeg_tempfile
     extract_image_info!
+  ensure
+    jpeg_tempfile&.close! if jpeg_tempfile != @file
   end
 
   MAX_CONVERT_FORMAT_SECONDS = 20
@@ -696,8 +687,10 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          frames =
-            begin
+          begin
+            if GlobalSetting.enable_vips_image_processing
+              DiscourseVips.animated?(input_path: @file.path, timeout: Upload::MAX_IDENTIFY_SECONDS)
+            else
               ImageMagick.identify(
                 "-ping",
                 "-format",
@@ -706,12 +699,11 @@ class UploadCreator
                 operation: :upload_animation_probe,
                 read: [@file.path],
                 timeout: Upload::MAX_IDENTIFY_SECONDS,
-              ).to_i
-            rescue StandardError
-              1
+              ).to_i > 1
             end
-
-          frames > 1
+          rescue StandardError
+            false
+          end
         else
           false
         end

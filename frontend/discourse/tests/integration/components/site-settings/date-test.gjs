@@ -13,8 +13,8 @@ module("Integration | Component | SiteSettings | Date", function (hooks) {
     await render(
       <template>
         <DateSetting
-          @value={{this.value}}
           @changeValueCallback={{this.changeValue}}
+          @value={{this.value}}
         />
       </template>
     );

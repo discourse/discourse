@@ -24,6 +24,7 @@ RSpec.describe "AI Spam Configuration" do
       expect(toggle.unchecked?).to eq(true)
     end
   end
+
   context "when LLMs are configured" do
     fab!(:llm_model)
     it "can properly configure spam settings" do

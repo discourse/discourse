@@ -5,26 +5,26 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <DPageHeader
+    @descriptionLabel={{i18n "admin.config.search.header_description"}}
     @hideTabs={{true}}
     @titleLabel={{i18n "admin.config.search.title"}}
-    @descriptionLabel={{i18n "admin.config.search.header_description"}}
   >
     <:breadcrumbs>
-      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem @label={{i18n "admin_title"}} @path="/admin" />
       <DBreadcrumbsItem
-        @path="/admin/config/search"
         @label={{i18n "admin.config.search.title"}}
+        @path="/admin/config/search"
       />
     </:breadcrumbs>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
     <AdminAreaSettings
-      @showBreadcrumb={{false}}
-      @categories="search"
-      @path="/admin/config/search"
-      @filter={{@controller.filter}}
       @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+      @categories="search"
+      @filter={{@controller.filter}}
+      @path="/admin/config/search"
+      @showBreadcrumb={{false}}
     />
   </div>
 </template>

@@ -18,8 +18,8 @@ export default class SiteCustomizationChangeDetails extends Component {
         @name="admin.customize.css"
       />
       <SiteCustomizationChangeField
-        @icon="mobile"
         @field={{this.change.mobile_stylesheet}}
+        @icon="mobile"
         @name="admin.customize.css"
       />
 
@@ -28,8 +28,8 @@ export default class SiteCustomizationChangeDetails extends Component {
         @name="admin.customize.header"
       />
       <SiteCustomizationChangeField
-        @icon="mobile"
         @field={{this.change.mobile_header}}
+        @icon="mobile"
         @name="admin.customize.header"
       />
 
@@ -38,8 +38,8 @@ export default class SiteCustomizationChangeDetails extends Component {
         @name="admin.customize.top"
       />
       <SiteCustomizationChangeField
-        @icon="mobile"
         @field={{this.change.mobile_top}}
+        @icon="mobile"
         @name="admin.customize.top"
       />
 
@@ -48,19 +48,19 @@ export default class SiteCustomizationChangeDetails extends Component {
         @name="admin.customize.footer"
       />
       <SiteCustomizationChangeField
-        @icon="mobile"
         @field={{this.change.mobile_footer}}
+        @icon="mobile"
         @name="admin.customize.footer"
       />
 
       <SiteCustomizationChangeField
-        @icon="file-text-o"
         @field={{this.change.head_tag}}
+        @icon="file-text-o"
         @name="admin.customize.head_tag.text"
       />
       <SiteCustomizationChangeField
-        @icon="file-text-o"
         @field={{this.change.body_tag}}
+        @icon="file-text-o"
         @name="admin.customize.body_tag.text"
       />
     </div>

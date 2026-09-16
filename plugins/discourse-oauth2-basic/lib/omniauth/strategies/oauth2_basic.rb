@@ -25,7 +25,9 @@ class OmniAuth::Strategies::Oauth2Basic < ::OmniAuth::Strategies::OAuth2
   end
 
   def callback_phase
-    super
+    response = super
+    raise env["omniauth.error"] if env["omniauth.error"].is_a?(Faraday::Error)
+    response
   rescue Faraday::Error => e
     detail =
       if e.is_a?(Faraday::TimeoutError)

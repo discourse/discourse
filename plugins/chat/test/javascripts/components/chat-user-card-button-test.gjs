@@ -17,7 +17,7 @@ module("Component | <Chat::DirectMessageButton />", function (hooks) {
 
     await render(
       <template>
-        <DirectMessageButton @user={{this.user}} @modal={{true}} />
+        <DirectMessageButton @modal={{true}} @user={{this.user}} />
       </template>
     );
 
@@ -32,7 +32,7 @@ module("Component | <Chat::DirectMessageButton />", function (hooks) {
 
     await render(
       <template>
-        <DirectMessageButton @user={{this.user}} @modal={{true}} />
+        <DirectMessageButton @modal={{true}} @user={{this.user}} />
       </template>
     );
 

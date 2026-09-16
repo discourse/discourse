@@ -89,10 +89,10 @@ export default class CalendarSubscriptions extends Component {
           </div>
 
           <CalendarSubscriptionUrl
-            @label={{i18n "user.calendar_subscriptions.bookmarks"}}
             @description={{i18n
               "user.calendar_subscriptions.bookmarks_description"
             }}
+            @label={{i18n "user.calendar_subscriptions.bookmarks"}}
             @url={{this.urls.bookmarks}}
           />
 
@@ -103,9 +103,9 @@ export default class CalendarSubscriptions extends Component {
 
           <div class="calendar-subscriptions__actions">
             <DButton
+              class="btn-danger"
               @action={{this.revokeSubscription}}
               @label="user.calendar_subscriptions.revoke"
-              class="btn-danger"
             />
           </div>
         </div>
@@ -117,26 +117,26 @@ export default class CalendarSubscriptions extends Component {
           </p>
           <div class="calendar-subscriptions__actions">
             <DButton
+              class="btn-primary"
               @action={{this.regenerateUrls}}
               @icon="arrows-rotate"
-              @label="user.calendar_subscriptions.regenerate"
               @isLoading={{this.loading}}
-              class="btn-primary"
+              @label="user.calendar_subscriptions.regenerate"
             />
             <DButton
+              class="btn-danger"
               @action={{this.revokeSubscription}}
               @label="user.calendar_subscriptions.revoke"
-              class="btn-danger"
             />
           </div>
         </div>
       {{else if (eq this.hasSubscription false)}}
         <DButton
+          class="btn-primary"
           @action={{this.generateUrls}}
           @icon="calendar-days"
-          @label="user.calendar_subscriptions.generate"
           @isLoading={{this.loading}}
-          class="btn-primary"
+          @label="user.calendar_subscriptions.generate"
         />
       {{/if}}
     </div>

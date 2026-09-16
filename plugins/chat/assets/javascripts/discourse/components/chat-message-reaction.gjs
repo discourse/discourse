@@ -22,38 +22,13 @@ export default class ChatMessageReaction extends Component {
   @service currentUser;
   @service menu;
   @service site;
-  @service siteSettings;
-  @service tooltip;
 
-  registerTooltip = modifier((element) => {
-    if (
-      this.args.disableTooltip ||
-      this.useReactionsUsersPopup ||
-      !this.popoverContent?.length
-    ) {
-      return;
-    }
-
-    const instance = this.tooltip.register(element, {
-      content: this.description,
-      identifier: "chat-message-reaction-tooltip",
-      animated: false,
-      placement: "top",
-      fallbackPlacements: ["bottom"],
-      triggers: this.site.mobileView ? ["hold"] : ["hover"],
-    });
-
-    return () => {
-      instance.destroy();
-    };
-  });
-
-  // With the new reactions popup enabled, hovering (desktop) or long-pressing
-  // (mobile) a reaction opens a users popup centred on that reaction. Each
-  // reaction registers its own popup; the shared `groupIdentifier` ensures only
-  // one is open at a time, so moving to another reaction opens a fresh popup.
+  // Hovering (desktop) or long-pressing (mobile) a reaction opens a users popup
+  // centred on that reaction. Each reaction registers its own popup; the shared
+  // `groupIdentifier` ensures only one is open at a time, so moving to another
+  // reaction opens a fresh popup.
   registerReactionsUsersPopup = modifier((element) => {
-    if (!this.useReactionsUsersPopup) {
+    if (this.args.disableTooltip) {
       return;
     }
 
@@ -128,36 +103,6 @@ export default class ChatMessageReaction extends Component {
   #reactionsUsersPopupInstance = null;
   #closeReactionsUsersPopupTimer = null;
 
-  // Close on a short delay so moving the pointer across the gap between the
-  // reaction and the popup (or briefly off either) doesn't dismiss it.
-  @bind
-  scheduleCloseReactionsUsersPopup() {
-    cancel(this.#closeReactionsUsersPopupTimer);
-    this.#closeReactionsUsersPopupTimer = discourseLater(() => {
-      this.#reactionsUsersPopupInstance?.close({ focusTrigger: false });
-    }, 250);
-  }
-
-  @bind
-  openReactionsUsersPopup() {
-    this.cancelCloseReactionsUsersPopup();
-    this.#reactionsUsersPopupInstance?.show();
-  }
-
-  @bind
-  cancelCloseReactionsUsersPopup() {
-    cancel(this.#closeReactionsUsersPopupTimer);
-  }
-
-  // When the new reactions popup is enabled the reaction opens a users popup, so
-  // the names tooltip is suppressed here.
-  get useReactionsUsersPopup() {
-    return (
-      this.siteSettings.enable_new_chat_reactions_popup &&
-      !this.args.disableTooltip
-    );
-  }
-
   get showCount() {
     return this.args.showCount ?? true;
   }
@@ -191,6 +136,40 @@ export default class ChatMessageReaction extends Component {
     return i18n("chat.reactions.add", { emoji });
   }
 
+  @cached
+  get popoverContent() {
+    if (!this.args.reaction.count || !this.args.reaction.users?.length) {
+      return;
+    }
+
+    return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
+  }
+
+  get description() {
+    return this.popoverContent ? trustHTML(this.popoverContent) : undefined;
+  }
+
+  // Close on a short delay so moving the pointer across the gap between the
+  // reaction and the popup (or briefly off either) doesn't dismiss it.
+  @bind
+  scheduleCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
+    this.#closeReactionsUsersPopupTimer = discourseLater(() => {
+      this.#reactionsUsersPopupInstance?.close({ focusTrigger: false });
+    }, 250);
+  }
+
+  @bind
+  openReactionsUsersPopup() {
+    this.cancelCloseReactionsUsersPopup();
+    this.#reactionsUsersPopupInstance?.show();
+  }
+
+  @bind
+  cancelCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
+  }
+
   @action
   handleClick(event) {
     event.stopPropagation();
@@ -206,49 +185,35 @@ export default class ChatMessageReaction extends Component {
     );
   }
 
-  @cached
-  get popoverContent() {
-    if (!this.args.reaction.count || !this.args.reaction.users?.length) {
-      return;
-    }
-
-    return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
-  }
-
-  get description() {
-    return this.popoverContent ? trustHTML(this.popoverContent) : undefined;
-  }
-
   <template>
     {{#if (and @reaction this.emojiUrl)}}
       <button
-        {{on "click" this.handleClick passive=true}}
-        {{this.registerTooltip}}
-        {{this.registerReactionsUsersPopup}}
-        type="button"
-        title={{this.emojiString}}
+        aria-describedby={{if this.description this.descriptionId}}
         aria-label={{this.ariaLabel}}
         aria-pressed={{if
           this.isCountedReaction
           (if @reaction.reacted "true" "false")
         }}
-        data-emoji-name={{@reaction.emoji}}
-        {{! `interactive` is opt-out, as it is on the message itself: only an explicit
-        false makes a reaction display-only. }}
-        tabindex={{if (eq @interactive false) "-1" "0"}}
-        aria-describedby={{if this.description this.descriptionId}}
         class={{dConcatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")
         }}
+        data-emoji-name={{@reaction.emoji}}
+        {{! `interactive` is opt-out, as it is on the message itself: only an explicit
+        false makes a reaction display-only. }}
+        tabindex={{if (eq @interactive false) "-1" "0"}}
+        title={{this.emojiString}}
+        type="button"
+        {{on "click" this.handleClick passive=true}}
+        {{this.registerReactionsUsersPopup}}
       >
         <img
-          loading="lazy"
-          class="emoji"
-          width="20"
-          height="20"
           alt={{this.emojiString}}
+          class="emoji"
+          height="20"
+          loading="lazy"
           src={{this.emojiUrl}}
+          width="20"
         />
 
         {{#if (and this.showCount @reaction.count)}}
@@ -258,8 +223,8 @@ export default class ChatMessageReaction extends Component {
 
       {{#if this.description}}
         <span
-          id={{this.descriptionId}}
           class="sr-only"
+          id={{this.descriptionId}}
         >{{this.description}}</span>
       {{/if}}
     {{/if}}

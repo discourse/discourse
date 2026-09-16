@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 th:
+  mcp:
+    errors:
+      topic_not_found: "ไม่พบกระทู้"
+    oauth:
+      deny: "ปฏิเสธ"
   llms_txt:
     sections:
       optional: "ทางเลือก"
@@ -182,6 +187,7 @@ th:
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
   admin_site_traffic_explorer:
+    unknown: "ไม่ทราบ"
     traffic_types:
       anonymous: "ไม่ระบุชื่อ"
   reviewable_score_types:
@@ -639,8 +645,6 @@ th:
         title: "ใช่"
       approve_and_unhide:
         title: "ใช่"
-      delete_post:
-        complete: "โพสต์ถูกลบ"
       delete_user:
         complete: "ผู้ใช้ถูกลบ"
   fallback_username: "ผู้ใช้"

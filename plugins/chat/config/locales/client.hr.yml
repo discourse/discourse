@@ -95,8 +95,6 @@ hr:
       edited: "uredio"
       muted: "utišano"
       joined: "prijavljen"
-      empty_state:
-        direct_message: "Također možete započeti osobni razgovor s jednim ili više korisnika."
       email_frequency:
         never: "Nikad"
       header_indicator_preference:
@@ -263,6 +261,11 @@ hr:
         sort:
           relevance: "Relevantnost"
           latest: "Posljednje"
+      channel_list:
+        options:
+          filter: "Filter"
+        filter:
+          mentions: "Spominjanja"
       incoming_webhooks:
         back: "Natrag"
         description: "Opis"

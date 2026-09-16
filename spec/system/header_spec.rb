@@ -3,6 +3,7 @@
 RSpec.describe "Glimmer Header" do
   let(:header) { PageObjects::Pages::Header.new }
   let(:search) { PageObjects::Pages::Search.new }
+
   fab!(:current_user, :user)
   fab!(:topic)
 

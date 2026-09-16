@@ -388,6 +388,7 @@ RSpec.describe Jobs::UserEmail do
 
     context "with confirm_new_email" do
       let(:email_token) { Fabricate(:email_token, user: user) }
+
       before do
         EmailChangeRequest.create!(
           user: user,
@@ -400,6 +401,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when the change was requested by admin" do
         let(:requested_by) { Fabricate(:admin) }
+
         it "passes along true for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -413,6 +415,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when the change was requested by the user" do
         let(:requested_by) { user }
+
         it "passes along false for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -426,6 +429,7 @@ RSpec.describe Jobs::UserEmail do
 
       context "when requested_by record is not present" do
         let(:requested_by) { nil }
+
         it "passes along false for the requested_by_admin param which changes the wording in the email" do
           Jobs::UserEmail.new.execute(
             type: :confirm_new_email,
@@ -487,6 +491,7 @@ RSpec.describe Jobs::UserEmail do
               data: { original_post_id: post.id }.to_json,
             )
           end
+
           fab!(:moderator)
           fab!(:regular_user, :user)
 

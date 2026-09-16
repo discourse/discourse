@@ -166,6 +166,34 @@ export default class ChatPinnedMessagesList extends Component {
     this.a11y.announce(i18n("chat.pinned_messages.message_unpinned"), "polite");
   }
 
+  handlePinMessage(data) {
+    this.#inFlightUnpins.delete(data.chat_message_id);
+
+    const existingPin = this.pinnedMessages.find(
+      (pin) => pin.message.id === data.chat_message_id
+    );
+
+    if (existingPin) {
+      return;
+    }
+
+    this.#loadPins(this.args.channel).then(() => {
+      // If current user pinned this message, update timestamp so it doesn't show as unseen
+      if (
+        this.args.channel.currentUserMembership &&
+        data.pinned_by_id === this.currentUser.id
+      ) {
+        this.args.channel.currentUserMembership.lastViewedPinsAt = new Date();
+      }
+    });
+  }
+
+  handleUnpinMessage(data) {
+    this.pinnedMessages = this.pinnedMessages.filter(
+      (pin) => pin.message.id !== data.chat_message_id
+    );
+  }
+
   #restorePin(pin) {
     if (this.isDestroying || this.pinnedMessages.includes(pin)) {
       return;
@@ -215,40 +243,12 @@ export default class ChatPinnedMessagesList extends Component {
     }
   }
 
-  handlePinMessage(data) {
-    this.#inFlightUnpins.delete(data.chat_message_id);
-
-    const existingPin = this.pinnedMessages.find(
-      (pin) => pin.message.id === data.chat_message_id
-    );
-
-    if (existingPin) {
-      return;
-    }
-
-    this.#loadPins(this.args.channel).then(() => {
-      // If current user pinned this message, update timestamp so it doesn't show as unseen
-      if (
-        this.args.channel.currentUserMembership &&
-        data.pinned_by_id === this.currentUser.id
-      ) {
-        this.args.channel.currentUserMembership.lastViewedPinsAt = new Date();
-      }
-    });
-  }
-
   #markPinsAsRead(channel) {
     if (channel.currentUserMembership) {
       channel.currentUserMembership.lastViewedPinsAt = new Date();
       channel.currentUserMembership.hasUnseenPins = false;
       this.chatApi.markPinsAsRead(channel.id).catch(() => {});
     }
-  }
-
-  handleUnpinMessage(data) {
-    this.pinnedMessages = this.pinnedMessages.filter(
-      (pin) => pin.message.id !== data.chat_message_id
-    );
   }
 
   <template>
@@ -260,16 +260,16 @@ export default class ChatPinnedMessagesList extends Component {
         {{#each this.pinnedMessages as |pin|}}
           <div class="chat-pinned-message">
             <LinkTo
-              @route="chat.channel.near-message"
-              @models={{this.routeModels pin}}
               class="chat-pinned-message__link"
+              @models={{this.routeModels pin}}
+              @route="chat.channel.near-message"
               {{on "click" (fn this.visitPin pin)}}
             >
               <ChatMessage
-                @message={{this.decorateMessage pin}}
                 @context="pinned"
                 @includeSeparator={{false}}
                 @interactive={{false}}
+                @message={{this.decorateMessage pin}}
               >
                 <:top>
                   <div class="chat-pinned-message__pinned-by">
@@ -287,11 +287,11 @@ export default class ChatPinnedMessagesList extends Component {
 
             {{#if this.canManagePins}}
               <DButton
+                class="btn-transparent chat-pinned-message__unpin"
+                @action={{fn this.unpin pin}}
+                @ariaLabel="chat.unpin_message"
                 @icon="thumbtack-slash"
                 @title="chat.unpin_message"
-                @ariaLabel="chat.unpin_message"
-                @action={{fn this.unpin pin}}
-                class="btn-transparent chat-pinned-message__unpin"
               />
             {{/if}}
           </div>
@@ -306,15 +306,15 @@ export default class ChatPinnedMessagesList extends Component {
         <div class="chat-pinned-messages-list__footer">
           {{#if this.barDismissed}}
             <DButton
+              class="btn-flat chat-pinned-messages-list__show"
               @action={{this.showBar}}
               @label="chat.pinned_messages.show"
-              class="btn-flat chat-pinned-messages-list__show"
             />
           {{else}}
             <DButton
+              class="btn-flat chat-pinned-messages-list__dismiss"
               @action={{this.dismissBar}}
               @label="chat.pinned_messages.dismiss"
-              class="btn-flat chat-pinned-messages-list__dismiss"
             />
           {{/if}}
         </div>

@@ -13,25 +13,39 @@ describe DiscourseAi::Agents::AskAiQueryRewriter do
         { "key" => "original_query_locale", "type" => "string" },
       ],
     )
-    expect(agent.examples).to include(
+    expect(agent.examples).to eq(
       [
-        { query: "怎么删除具备管理员权限的幽灵机器人用户？", forum_default_locale: "en" }.to_json,
-        {
-          keyword_query: "delete admin bot user",
-          semantic_query: "how to remove a bot account that has administrator permissions",
-          original_query_locale: "zh_CN",
-        }.to_json,
-      ],
-      [
-        {
-          query: "What are the 3 most popular topics on the forum?",
-          forum_default_locale: "en",
-        }.to_json,
-        { keyword_query: "order:likes", semantic_query: "", original_query_locale: "en" }.to_json,
-      ],
-      [
-        { query: "@nat l logs", forum_default_locale: "en" }.to_json,
-        { keyword_query: "@nat l logs", semantic_query: "", original_query_locale: "en" }.to_json,
+        [
+          { query: "怎么删除具备管理员权限的幽灵机器人用户？", forum_default_locale: "en" }.to_json,
+          {
+            keyword_query: "delete admin bot user",
+            semantic_query: "how to remove a bot account that has administrator permissions",
+            original_query_locale: "zh_CN",
+          }.to_json,
+        ],
+        [
+          {
+            query: "What are the most popular topics since January 1, 2026?",
+            forum_default_locale: "en",
+          }.to_json,
+          {
+            keyword_query: "after:2026-01-01 order:likes",
+            semantic_query: "",
+            original_query_locale: "en",
+          }.to_json,
+        ],
+        [
+          { query: "@nat l logs", forum_default_locale: "en" }.to_json,
+          { keyword_query: "@nat l logs", semantic_query: "", original_query_locale: "en" }.to_json,
+        ],
+        [
+          { query: "Which of my PMs discuss anime?", forum_default_locale: "en" }.to_json,
+          {
+            keyword_query: "anime in:messages",
+            semantic_query: "private conversations about anime",
+            original_query_locale: "en",
+          }.to_json,
+        ],
       ],
     )
   end

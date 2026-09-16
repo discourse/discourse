@@ -48,10 +48,10 @@ function attachPolls(elem, helper) {
         newPollNode,
         <template>
           <Poll
+            @isDynamic={{if isDynamic true poll.dynamic}}
             @poll={{poll}}
             @post={{pollPost}}
             @titleHTML={{titleHTML}}
-            @isDynamic={{if isDynamic true poll.dynamic}}
           />
         </template>
       );

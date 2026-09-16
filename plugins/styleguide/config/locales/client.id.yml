@@ -21,6 +21,9 @@ id:
           title: "Masukan Tanggal/Waktu"
         menus:
           title: "Menu"
+        context_menu:
+          actions:
+            delete: "Hapus"
         toasts:
           title: "Toast"
         font_scale:

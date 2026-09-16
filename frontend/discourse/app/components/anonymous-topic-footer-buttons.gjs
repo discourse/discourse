@@ -26,29 +26,29 @@ export default class AnonymousTopicFooterButtons extends Component {
   }
 
   <template>
-    <div role="region" id="topic-footer-buttons" ...attributes>
+    <div id="topic-footer-buttons" role="region" ...attributes>
       <div class="topic-footer-main-buttons">
         {{#each this.buttons key="id" as |button|}}
           <DButton
-            @action={{button.action}}
-            @icon={{button.icon}}
-            @translatedLabel={{button.label}}
-            @translatedTitle={{button.title}}
-            @translatedAriaLabel={{button.ariaLabel}}
-            @disabled={{button.disabled}}
-            id={{concat "topic-footer-button-" button.id}}
             class={{dConcatClass
               "btn-default"
               "topic-footer-button"
               button.classNames
             }}
+            id={{concat "topic-footer-button-" button.id}}
+            @action={{button.action}}
+            @disabled={{button.disabled}}
+            @icon={{button.icon}}
+            @translatedAriaLabel={{button.ariaLabel}}
+            @translatedLabel={{button.label}}
+            @translatedTitle={{button.title}}
           />
         {{/each}}
         <DButton
-          @icon="reply"
-          @action={{routeAction "showLogin"}}
-          @label="topic.reply.title"
           class="btn-primary"
+          @action={{routeAction "showLogin"}}
+          @icon="reply"
+          @label="topic.reply.title"
         />
       </div>
     </div>

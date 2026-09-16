@@ -47,7 +47,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{state.topic}} />
         </template>
       );
 
@@ -72,7 +72,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -87,7 +87,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -105,7 +105,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{state.topic}} />
         </template>
       );
 
@@ -130,7 +130,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -152,7 +152,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -174,7 +174,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -196,7 +196,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -218,7 +218,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 
@@ -240,7 +240,7 @@ module(
 
       await render(
         <template>
-          <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
+          <TopicNotificationsButton @expanded={{true}} @topic={{topic}} />
         </template>
       );
 

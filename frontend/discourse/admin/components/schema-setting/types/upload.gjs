@@ -23,13 +23,13 @@ export default class SchemaSettingTypeUpload extends Component {
 
   <template>
     <UppyImageUploader
-      @imageUrl={{this.uploadUrl}}
-      @onUploadDone={{this.uploadDone}}
-      @onUploadDeleted={{this.uploadDeleted}}
       @additionalParams={{hash for_site_setting=true}}
-      @type="site_setting"
-      @id={{concat "schema-field-upload-" @setting.setting "-" @name}}
       @allowVideo={{true}}
+      @id={{concat "schema-field-upload-" @setting.setting "-" @name}}
+      @imageUrl={{this.uploadUrl}}
+      @onUploadDeleted={{this.uploadDeleted}}
+      @onUploadDone={{this.uploadDone}}
+      @type="site_setting"
     />
 
     {{#if @description}}

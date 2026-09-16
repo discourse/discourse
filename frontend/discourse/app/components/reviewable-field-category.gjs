@@ -14,6 +14,6 @@ export default class extends Component {
   }
 
   <template>
-    <CategoryChooser @value={{this.categoryId}} @onChange={{this.onChange}} />
+    <CategoryChooser @onChange={{this.onChange}} @value={{this.categoryId}} />
   </template>
 }

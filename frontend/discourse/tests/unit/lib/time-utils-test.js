@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import {
+  adjustedRangeEnd,
   laterThisWeek,
   laterToday,
   nextMonth,
@@ -13,6 +14,50 @@ const timezone = "Australia/Brisbane";
 
 module("Unit | lib | timeUtils", function (hooks) {
   setupTest(hooks);
+
+  test("adjustedRangeEnd leaves a missing boundary alone", function (assert) {
+    const from = moment("2026-07-01 10:00");
+
+    assert.strictEqual(adjustedRangeEnd(null, null), null);
+    assert.strictEqual(adjustedRangeEnd(from, null), null);
+  });
+
+  test("adjustedRangeEnd pushes an end at or before the start an hour past it", function (assert) {
+    const from = moment("2026-07-01 10:00");
+
+    assert.strictEqual(
+      adjustedRangeEnd(from, from.clone()).format("HH:mm"),
+      "11:00"
+    );
+    assert.strictEqual(
+      adjustedRangeEnd(from, moment("2026-07-01 08:00")).format("HH:mm"),
+      "11:00"
+    );
+  });
+
+  test("adjustedRangeEnd keeps a valid end", function (assert) {
+    const from = moment("2026-07-01 10:00");
+    const to = moment("2026-07-01 12:00");
+
+    assert.strictEqual(adjustedRangeEnd(from, to), to);
+  });
+
+  test("adjustedRangeEnd allows equal boundaries when dateOnly", function (assert) {
+    const from = moment("2026-07-01");
+    const to = moment("2026-07-01");
+
+    assert.strictEqual(adjustedRangeEnd(from, to, { dateOnly: true }), to);
+  });
+
+  test("adjustedRangeEnd snaps an earlier end to the start day when dateOnly", function (assert) {
+    const from = moment("2026-07-01");
+    const to = moment("2026-06-20");
+
+    assert.strictEqual(
+      adjustedRangeEnd(from, to, { dateOnly: true }).format("YYYY-MM-DD"),
+      "2026-07-01"
+    );
+  });
 
   test("nextMonth gets next month correctly", function (assert) {
     withFrozenTime("2019-12-11T08:00:00", timezone, () => {

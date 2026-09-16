@@ -30,6 +30,7 @@ module Voice
                     ensure_chat_session
                     chat_message
                     kick
+                    invite_agent
                     flag
                     heartbeat
                     toggle_mute
@@ -44,22 +45,35 @@ module Voice
     def index
       Voice::DefaultRoomSeeder.ensure!
 
+      # Capture before the room snapshot so a concurrent event is replayed rather than skipped.
+      index_message_bus_last_id = MessageBus.last_id(Voice.room_index_channel)
       rooms =
         Voice::Room
-          .persistent
+          .visible_to(guardian)
           .includes(:room_memberships)
-          .order(:created_at)
+          .order(:created_at, :id)
           .select { |room| guardian.can_see_voice_room?(room) }
+      directory_entries = Voice::RoomDirectoryPreloader.preload(rooms)
+      chat_rooms =
+        rooms.select do |room|
+          entry = directory_entries[room.id]
+          guardian.can_manage_voice_room?(room) ||
+            entry&.participant_users&.any? { |participant| participant.id == current_user&.id }
+        end
+      chat_availability = rooms.to_h { |room| [room.id, false] }
+      chat_availability.merge!(Voice::ChatSession.available_for_rooms(chat_rooms, guardian))
 
-      # Captured before serializing so clients subscribing from this position
-      # never miss a directory event published while the response was built.
-      index_message_bus_last_id = MessageBus.last_id(Voice.room_index_channel)
-
-      render json: {
-               rooms: serialize_data(rooms, Voice::RoomSerializer),
-               can_create_room: guardian.can_create_voice_room?,
-               index_message_bus_last_id: index_message_bus_last_id,
-             }
+      render_json_dump(
+        rooms:
+          serialize_data(
+            rooms,
+            Voice::RoomSerializer,
+            directory_entries: directory_entries,
+            chat_availability: chat_availability,
+          ),
+        can_create_room: guardian.can_create_voice_room?,
+        index_message_bus_last_id: index_message_bus_last_id,
+      )
     end
 
     def show
@@ -167,8 +181,8 @@ module Voice
           # empty — an occupied LiveKit room must never be split, and silent
           # degradation hides outages from ops.
           if SiteSetting.voice_livekit_mesh_fallback &&
-               Voice::ParticipantTracker.user_ids(@room.id).empty?
-            Voice::ParticipantTracker.clear_transport_pin(@room.id)
+               Voice::ParticipantTracker.human_user_ids(@room.id).empty?
+            Voice::AgentManager.evict_agents_in_room!(@room)
             transport = "mesh"
           else
             return(render_json_error(I18n.t("voice.errors.livekit_unavailable"), status: 503))
@@ -352,13 +366,12 @@ module Voice
       session = close_session_for(@room.id, current_user.id)
       Voice::ParticipantTracker.mark_left(@room.id, current_user.id)
       Voice::ParticipantTracker.remove(@room.id, current_user.id)
-      if Voice::ParticipantTracker.user_ids(@room.id).empty?
-        Voice::Livekit::RoomServiceClient.delete_room(@room)
-        Voice::ParticipantTracker.clear_transport_pin(@room.id)
+      if Voice::ParticipantTracker.human_user_ids(@room.id).empty?
+        Voice::AgentManager.evict_agents_in_room!(@room)
       end
       Voice::UserStatusManager.clear_voice_status(current_user)
       Voice::RoomBroadcaster.publish_participants(@room)
-      Voice::BadgeGranterHooks.on_leave(current_user, session, room: @room)
+      Voice::BadgeGranterHooks.on_leave(current_user, session)
       head :no_content
     end
 
@@ -472,6 +485,17 @@ module Voice
 
     alias toggle_mute state
 
+    def invite_agent
+      raise Discourse::InvalidAccess unless guardian.can_invite_voice_agent?(@room)
+      dispatch_id =
+        Voice::AgentDispatcher.dispatch!(room: @room, agent_name: params.require(:agent_name))
+      render json: { dispatch_id: }, status: :created
+    rescue Voice::AgentManager::AuthorizationError
+      render_json_error(I18n.t("voice.errors.agent_dispatch_forbidden"), status: 403)
+    rescue Voice::AgentDispatcher::DispatchError
+      render_json_error(I18n.t("voice.errors.agent_dispatch_failed"), status: 503)
+    end
+
     def kick
       guardian.ensure_can_manage_voice_room!(@room)
 
@@ -485,6 +509,8 @@ module Voice
         raise Discourse::InvalidParameters.new(I18n.t("voice.errors.cannot_kick_creator"))
       end
 
+      Voice::AgentManager.evict!(room: @room, user_id: user_id) if user_id.negative?
+
       session = close_session_for(@room.id, user_id)
       Voice::ParticipantTracker.mark_left(@room.id, user_id)
       Voice::ParticipantTracker.remove(@room.id, user_id)
@@ -492,13 +518,19 @@ module Voice
       kicked_user = User.find_by(id: user_id)
       Voice::UserStatusManager.clear_voice_status(kicked_user) if kicked_user
 
-      Voice::BadgeGranterHooks.on_leave(kicked_user, session, room: @room) if kicked_user
+      Voice::BadgeGranterHooks.on_leave(kicked_user, session) if kicked_user
       Voice::RoomBroadcaster.publish_kick(@room, user_id)
       Voice::RoomBroadcaster.publish_participants(@room)
 
       # The client-side kicked handler already forces a clean leave; this
       # additionally evicts the media session from the SFU.
-      Voice::Livekit::RoomServiceClient.remove_participant(@room, user_id)
+      Voice::Livekit::RoomServiceClient.remove_participant(@room, user_id) unless user_id.negative?
+
+      if Voice::ParticipantTracker.human_user_ids(@room.id).empty? &&
+           Voice::AgentManager.provider_room?(@room.id)
+        Voice::AgentManager.evict_agents_in_room!(@room)
+        Voice::RoomBroadcaster.publish_participants(@room)
+      end
 
       head :no_content
     end
@@ -721,9 +753,7 @@ module Voice
       token = Voice::Livekit.mint_token(user: current_user, room: @room, guardian: guardian)
       { url: SiteSetting.voice_livekit_url, token: token }
     rescue StandardError => e
-      Rails.logger.error(
-        "[voice-livekit] token mint failed for room #{@room.id}: #{e.class} #{e.message}",
-      )
+      Rails.logger.error("[voice-livekit] token mint failed for room #{@room.id}: #{e.class}")
       nil
     end
 

@@ -5,11 +5,11 @@ import { i18n } from "discourse-i18n";
 import SectionLinkPrefix from "./section-link-prefix";
 
 const MoreSectionTrigger = <template>
-  <button ...attributes type="button" class="sidebar-section-link sidebar-row">
+  <button ...attributes class="sidebar-section-link sidebar-row" type="button">
     <SectionLinkPrefix
+      @prefixCSSClass={{@prefixCSSClass}}
       @prefixType={{or @prefixType "icon"}}
       @prefixValue={{or @prefixValue "ellipsis-vertical"}}
-      @prefixCSSClass={{@prefixCSSClass}}
     />
 
     <span class="sidebar-section-link-content-text">

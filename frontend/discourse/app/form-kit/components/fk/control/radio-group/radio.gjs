@@ -16,15 +16,15 @@ const radioDescription = <template>
 const FKControlRadioGroupRadio = <template>
   {{#let (dUniqueId) as |uuid|}}
     <div class="form-kit__field form-kit__field-radio">
-      <FKLabel @fieldId={{uuid}} class="form-kit__control-radio-label">
+      <FKLabel class="form-kit__control-radio-label" @fieldId={{uuid}}>
         <input
+          checked={{eq @field.value @value}}
+          class="form-kit__control-radio"
+          disabled={{@field.disabled}}
+          id={{uuid}}
           name={{@field.name}}
           type="radio"
           value={{@value}}
-          checked={{eq @field.value @value}}
-          id={{uuid}}
-          class="form-kit__control-radio"
-          disabled={{@field.disabled}}
           ...attributes
           {{on "change" (withEventValue @field.set)}}
         />

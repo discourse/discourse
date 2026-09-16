@@ -11,11 +11,6 @@ import sectionTitle from "discourse/plugins/styleguide/discourse/helpers/section
 
 @tagName("")
 export default class StyleguideSection extends Component {
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    window.scrollTo(0, 0);
-  }
-
   @computed("section")
   get sectionClass() {
     if (this.section) {
@@ -32,6 +27,11 @@ export default class StyleguideSection extends Component {
     }
   }
 
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+    window.scrollTo(0, 0);
+  }
+
   <template>
     <section
       class={{dConcatClass "styleguide-section" this.sectionClass}}
@@ -40,14 +40,14 @@ export default class StyleguideSection extends Component {
       <DPageHeader @hideTabs={{true}}>
         <:breadcrumbs>
           <DBreadcrumbsItem
-            @path="/styleguide"
             @label={{i18n "styleguide.title"}}
+            @path="/styleguide"
           />
 
           {{#if this.section}}
             <DBreadcrumbsItem
-              @path={{this.sectionPath}}
               @label={{sectionTitle this.section.id}}
+              @path={{this.sectionPath}}
             />
           {{/if}}
 

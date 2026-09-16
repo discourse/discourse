@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  discourse_reactions:
+    errors:
+      reaction_unavailable: "Reakcja nie jest dostępna"
   site_settings:
     discourse_reactions_like_icon: "Definiuje ikonę używaną dla głównego przycisku reakcji. Powinna to być nazwa ikony <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> , a nie nazwa emoji."
     discourse_reactions_reaction_for_like: "Określa reakcję związaną z czynnością polubienia. Rekordy polubień nie zostaną zmienione, jeśli to ustawienie ulegnie zmianie, dlatego <strong>zdecydowanie</strong> zaleca się, aby nigdy nie zmieniać tego ustawienia."

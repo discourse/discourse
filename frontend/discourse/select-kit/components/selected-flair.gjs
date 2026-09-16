@@ -7,10 +7,10 @@ export default class SelectedFlair extends SelectedNameComponent {
   <template>
     {{#if this.item.url}}
       <DAvatarFlair
-        @flairName={{this.item.name}}
-        @flairUrl={{this.item.url}}
         @flairBgColor={{this.item.bgColor}}
         @flairColor={{this.item.color}}
+        @flairName={{this.item.name}}
+        @flairUrl={{this.item.url}}
       />
     {{/if}}
 

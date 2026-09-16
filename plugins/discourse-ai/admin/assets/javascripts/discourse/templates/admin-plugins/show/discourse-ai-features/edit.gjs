@@ -7,8 +7,8 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   <BackButton
-    @route="adminPlugins.show.discourse-ai-features"
     @label="discourse_ai.features.back"
+    @route="adminPlugins.show.discourse-ai-features"
   />
   <div class="admin-config-area">
     <div class="admin-config-area__primary-content admin-ai-features-edit">
@@ -19,10 +19,10 @@ export default <template>
         <AdminConfigAreaCard>
           <:content>
             <Form
-              @data={{@model.formData}}
-              @onSubmit={{@controller.save}}
-              @onRegisterApi={{@controller.onRegisterFormApi}}
               class="ai-feature-editor"
+              @data={{@model.formData}}
+              @onRegisterApi={{@controller.onRegisterFormApi}}
+              @onSubmit={{@controller.save}}
               as |form|
             >
               {{#if @model.settingGroups.length}}
@@ -36,8 +36,8 @@ export default <template>
                         {{#if setting}}
                           <SettingDefinitionField
                             @definition={{setting.definition}}
-                            @form={{form}}
                             @disabled={{setting.disabled}}
+                            @form={{form}}
                           />
                         {{/if}}
                       {{/let}}
@@ -48,8 +48,8 @@ export default <template>
                 {{#each @model.feature_settings as |setting|}}
                   <SettingDefinitionField
                     @definition={{setting.definition}}
-                    @form={{form}}
                     @disabled={{setting.disabled}}
+                    @form={{form}}
                   />
                 {{/each}}
               {{/if}}

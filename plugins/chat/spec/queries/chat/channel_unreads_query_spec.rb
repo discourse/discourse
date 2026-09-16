@@ -22,6 +22,10 @@ describe Chat::ChannelUnreadsQuery do
     channel_1.add(current_user)
   end
 
+  def counts_for(user)
+    described_class.call(channel_ids: channel_ids, user_id: user.id).first
+  end
+
   context "with unread message" do
     before { Fabricate(:chat_message, chat_channel: channel_1) }
 
@@ -71,17 +75,34 @@ describe Chat::ChannelUnreadsQuery do
         )
       end
 
-      it "does not include other thread messages in the unread count" do
+      it "does include thread replies in the unread count, as they render inline" do
         Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         expect(query.first).to eq(
           {
             mention_count: 0,
-            unread_count: 2,
+            unread_count: 4,
             watched_threads_unread_count: 0,
             channel_id: channel_1.id,
           },
         )
+      end
+
+      context "when threading is enabled" do
+        before { channel_1.update!(threading_enabled: true) }
+
+        it "does not include thread replies in the unread count" do
+          Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+          Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+          expect(query.first).to eq(
+            {
+              mention_count: 0,
+              unread_count: 2,
+              watched_threads_unread_count: 0,
+              channel_id: channel_1.id,
+            },
+          )
+        end
       end
     end
 
@@ -231,14 +252,54 @@ describe Chat::ChannelUnreadsQuery do
         create_mention(thread_message_1, channel_1)
         create_mention(thread_message_2, channel_1)
 
+        # Channel has threading disabled (default), so the thread replies render
+        # inline and count toward unread_count alongside the OM.
         expect(query.first).to eq(
           {
             mention_count: 2,
-            unread_count: 1,
+            unread_count: 3,
             watched_threads_unread_count: 0,
             channel_id: channel_1.id,
           },
         )
+      end
+    end
+
+    context "for unread mentions in a thread the user does not participate in" do
+      fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel_1) }
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }
+
+      it "counts a mention in a reply that renders inline" do
+        reply = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+        create_mention(reply, channel_1)
+
+        expect(thread.membership_for(current_user)).to be_nil
+        expect(query.first).to eq(
+          {
+            mention_count: 1,
+            unread_count: 2,
+            watched_threads_unread_count: 0,
+            channel_id: channel_1.id,
+          },
+        )
+      end
+
+      context "when threading is enabled" do
+        before { channel_1.update!(threading_enabled: true) }
+
+        it "does not count the mention at the channel level, as the reply lives in a thread" do
+          reply = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+          create_mention(reply, channel_1)
+
+          expect(query.first).to eq(
+            {
+              mention_count: 0,
+              unread_count: 1,
+              watched_threads_unread_count: 0,
+              channel_id: channel_1.id,
+            },
+          )
+        end
       end
     end
 
@@ -416,6 +477,112 @@ describe Chat::ChannelUnreadsQuery do
         watched_threads_unread_count: 0,
         channel_id: dm_channel.id,
       )
+    end
+
+    it "does not count SDK-forced thread replies at the channel level" do
+      first_message = Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
+      dm_channel.membership_for(current_user).mark_read!(first_message.id)
+
+      Chat::CreateMessage.call(
+        guardian: Guardian.new(other_user),
+        options: {
+          force_thread: true,
+        },
+        params: {
+          chat_channel_id: dm_channel.id,
+          message: "This is a forced thread reply",
+          in_reply_to_id: first_message.id,
+        },
+      )
+
+      expect(query.first).to eq(
+        mention_count: 0,
+        unread_count: 0,
+        watched_threads_unread_count: 0,
+        channel_id: dm_channel.id,
+      )
+    end
+  end
+
+  context "with category channel and reply messages (threading disabled)" do
+    fab!(:other_user, :user)
+    fab!(:bystander, :user)
+    fab!(:first_message) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+
+    before do
+      channel_1.add(other_user)
+      channel_1.add(bystander)
+      [current_user, other_user, bystander].each do |user|
+        channel_1.membership_for(user).mark_read!(first_message.id)
+      end
+    end
+
+    def reply(user: other_user, force_thread: false)
+      Chat::CreateMessage.call(
+        guardian: Guardian.new(user),
+        options: {
+          force_thread: force_thread,
+        },
+        params: {
+          chat_channel_id: channel_1.id,
+          message: "This is a reply",
+          in_reply_to_id: first_message.id,
+        },
+      ).message_instance
+    end
+
+    it "counts replies to the user's message as unread" do
+      reply
+
+      expect(query.first).to eq(
+        mention_count: 0,
+        unread_count: 1,
+        watched_threads_unread_count: 0,
+        channel_id: channel_1.id,
+      )
+    end
+
+    it "counts the reply for channel members who are not in the thread" do
+      reply
+      expect(counts_for(bystander).unread_count).to eq(1)
+    end
+
+    it "does not count the sender's own reply as unread" do
+      reply(user: current_user)
+
+      expect(query.first).to eq(
+        mention_count: 0,
+        unread_count: 0,
+        watched_threads_unread_count: 0,
+        channel_id: channel_1.id,
+      )
+    end
+
+    it "does not count SDK-forced thread replies at the channel level" do
+      reply(force_thread: true)
+
+      expect(query.first).to eq(
+        mention_count: 0,
+        unread_count: 0,
+        watched_threads_unread_count: 0,
+        channel_id: channel_1.id,
+      )
+    end
+
+    it "stops counting the reply once the channel has been read" do
+      reply_message = reply
+
+      expect(query.first[:unread_count]).to eq(1)
+
+      Chat::UpdateUserChannelLastRead.call(
+        guardian: Guardian.new(current_user),
+        params: {
+          channel_id: channel_1.id,
+          message_id: reply_message.id,
+        },
+      )
+
+      expect(counts_for(current_user).unread_count).to eq(0)
     end
   end
 end

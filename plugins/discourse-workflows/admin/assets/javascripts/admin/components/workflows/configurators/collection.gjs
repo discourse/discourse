@@ -145,7 +145,7 @@ export default class Collection extends Component {
   }
 
   <template>
-    <@form.Section @title={{this.label}} @subtitle={{this.description}}>
+    <@form.Section @subtitle={{this.description}} @title={{this.label}}>
       {{#if this.isArrayCollection}}
         <@form.Collection
           @name={{@fieldName}}
@@ -155,9 +155,9 @@ export default class Collection extends Component {
           <div class="workflows-property-engine__collection-row">
             <div class="workflows-property-engine__collection-delete">
               <DButton
+                class="btn-transparent btn-small btn-danger"
                 @action={{fn this.removeItem collection.remove index}}
                 @icon="trash-can"
-                class="btn-transparent btn-small btn-danger"
               />
             </div>
 
@@ -172,17 +172,17 @@ export default class Collection extends Component {
 
         {{#if this.showEmptyState}}
           <WorkflowsEmptyState
+            @buttonIcon="plus"
             @description={{@emptyStateDescription}}
             @onAction={{this.addItem}}
-            @buttonIcon="plus"
             @translatedButtonLabel={{this.addLabel}}
           />
         {{else}}
           <DButton
+            class="btn-default"
             @action={{this.addItem}}
             @icon="plus"
             @translatedLabel={{this.addLabel}}
-            class="btn-default"
           />
         {{/if}}
       {{else}}
@@ -191,9 +191,9 @@ export default class Collection extends Component {
             <div class={{this.collectionRowClass option}}>
 
               <DButton
+                class="workflows-property-engine__collection-delete"
                 @action={{fn this.removeOption option}}
                 @icon="xmark"
-                class="workflows-property-engine__collection-delete"
                 @translatedAriaLabel={{i18n
                   "discourse_workflows.property_engine.remove_assignment"
                   name=(this.optionLabel option)
@@ -206,18 +206,18 @@ export default class Collection extends Component {
 
               <div class="workflows-property-engine__collection-fields">
                 <Field
-                  @form={{object}}
-                  @formApi={{@formApi}}
                   @configuration={{item}}
                   @connections={{@connections}}
                   @credentials={{@credentials}}
                   @fieldName={{option.name}}
+                  @form={{object}}
+                  @formApi={{@formApi}}
                   @label={{this.optionLabel option}}
                   @node={{@node}}
                   @nodeDefinition={{this.nodeDefinition}}
                   @nodeParameters={{@nodeParameters}}
-                  @nodeType={{@nodeType}}
                   @nodes={{@nodes}}
+                  @nodeType={{@nodeType}}
                   @nodeTypes={{@nodeTypes}}
                   @schema={{option}}
                   @session={{@session}}
