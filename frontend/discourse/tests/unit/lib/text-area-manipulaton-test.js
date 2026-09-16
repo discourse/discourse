@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
@@ -149,4 +150,45 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     assert.true(prevented, "native paste is prevented for handled rich paste");
     assert.strictEqual(textarea.value, "plain fallback");
   });
+
+  for (const [name, fence] of [
+    ["backtick", "```"],
+    ["tilde", "~~~"],
+  ]) {
+    test(`paste - leaves rich text to the browser inside a ${name} fence`, async function (assert) {
+      const textarea = document.createElement("textarea");
+      document.body.appendChild(textarea);
+      textarea.value = `${fence}\nprefix \n${fence}`;
+      const cursorPosition =
+        textarea.value.indexOf("prefix ") + "prefix ".length;
+      textarea.setSelectionRange(cursorPosition, cursorPosition);
+
+      const manipulation = new TextareaTextManipulation(getOwner(this), {
+        eventPrefix: null,
+        textarea,
+      });
+      manipulation.siteSettings.enable_rich_text_paste = true;
+
+      let prevented = false;
+      await manipulation.paste({
+        target: textarea,
+        preventDefault() {
+          prevented = true;
+        },
+        clipboardData: {
+          files: [],
+          types: ["text/plain", "text/html"],
+          getData(type) {
+            return type === "text/html" ? "<strong>bold</strong>" : "bold";
+          },
+        },
+      });
+      await settled();
+
+      assert.false(
+        prevented,
+        "the browser handles the plain clipboard content"
+      );
+    });
+  }
 });
