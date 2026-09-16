@@ -450,8 +450,15 @@ RSpec.describe UploadCreator do
           SiteSetting.image_preview_jpg_quality = 10
         end
 
-        it "alters the image quality" do
-          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+        it "alters the JPEG image quality" do
+          jpeg_file = file_from_fixtures("logo.jpg")
+          File.truncate(
+            jpeg_file.path,
+            UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + jpeg_file.size,
+          )
+
+          upload =
+            UploadCreator.new(jpeg_file, "logo.jpg", force_optimize: true).create_for(user.id)
 
           expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
 
