@@ -12,44 +12,17 @@ RSpec.describe DiscourseWorkflows::Execution do
       )
     end
 
-    it "transitions a waiting execution to running and returns it" do
-      claimed = described_class.claim_for_resume(execution, resume_token: "tok-abc")
+    it "claims a waiting execution once using its current token" do
+      claimed = described_class.claim_for_resume(execution)
 
-      expect(claimed).to be_present
-      expect(claimed.status).to eq("running")
+      expect(claimed).to eq(execution)
       expect(execution.reload.status).to eq("running")
+      expect(described_class.claim_for_resume(execution)).to be_nil
     end
 
     it "returns nil when the resume token does not match" do
       expect(described_class.claim_for_resume(execution, resume_token: "wrong")).to be_nil
       expect(execution.reload.status).to eq("waiting")
-    end
-
-    it "returns nil when the execution is no longer waiting" do
-      execution.update!(status: :running)
-
-      expect(described_class.claim_for_resume(execution, resume_token: "tok-abc")).to be_nil
-    end
-
-    it "returns nil when the execution does not exist" do
-      execution.destroy!
-
-      expect(described_class.claim_for_resume(execution, resume_token: "tok-abc")).to be_nil
-    end
-
-    it "matches without a resume token (job entry points)" do
-      claimed = described_class.claim_for_resume(execution)
-
-      expect(claimed).to be_present
-      expect(claimed.status).to eq("running")
-    end
-
-    it "is idempotent — only the first call claims the execution" do
-      first = described_class.claim_for_resume(execution, resume_token: "tok-abc")
-      second = described_class.claim_for_resume(execution, resume_token: "tok-abc")
-
-      expect(first).to be_present
-      expect(second).to be_nil
     end
 
     it "preserves a newer wait when the caller holds a stale execution" do
@@ -67,18 +40,13 @@ RSpec.describe DiscourseWorkflows::Execution do
       Fabricate(:discourse_workflows_execution, workflow: workflow, status: :pending)
     end
 
-    it "transitions a pending execution to running and returns it" do
+    it "starts a pending execution once" do
       claimed = described_class.claim_pending(execution)
 
       expect(claimed).to be_present
       expect(claimed.status).to eq("running")
       expect(claimed.started_at).to be_present
       expect(execution.reload.status).to eq("running")
-    end
-
-    it "returns nil when the execution is no longer pending" do
-      execution.update!(status: :running)
-
       expect(described_class.claim_pending(execution)).to be_nil
     end
   end

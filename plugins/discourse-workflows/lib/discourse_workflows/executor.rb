@@ -57,12 +57,7 @@ module DiscourseWorkflows
           options: @options,
         )
       @steps = []
-      @queue = []
-      @queue_index = 0
-      @waiting_inputs = {}
-      @waiting_input_sources = {}
-      @waiting_input_targets = {}
-      @input_wait_requirements = {}
+      reset_queue!
       @sandbox = nil
       @waiting_node = nil
       @waiting_step = nil
@@ -246,7 +241,7 @@ module DiscourseWorkflows
       stack.last == workflow_id ? stack : stack + [workflow_id]
     end
 
-    def execute_flow(setup_method, *setup_args, &block)
+    def execute_flow(setup_method, *setup_args)
       begin
         return execution if send(setup_method, *setup_args) == false
         yield
@@ -666,11 +661,10 @@ module DiscourseWorkflows
     end
 
     def sole_input_pair(input_groups)
-      pairs =
-        input_groups.flat_map do |input_index, items|
-          items.each_index.map { |item_index| pair_for(input: input_index, item: item_index) }
-        end
-      pairs.one? ? pairs.first : nil
+      return unless input_groups.sum { |_input_index, items| items.size } == 1
+
+      input_index = input_groups.find { |_input_index, items| items.one? }.first
+      pair_for(input: input_index, item: 0)
     end
 
     def pair_for(input:, item:, include_input: false)
@@ -944,8 +938,6 @@ module DiscourseWorkflows
       else
         begin_timed_wait!(wait_request.waiting_until, timeout_action: wait_request.timeout_action)
       end
-    rescue => e
-      @store.fail!(error: e, steps: @steps)
     end
 
     def store_pending_wait_state!
@@ -1003,12 +995,7 @@ module DiscourseWorkflows
 
       @snapshot = @store.workflow_snapshot
       @steps = []
-      @queue = []
-      @queue_index = 0
-      @waiting_inputs = {}
-      @waiting_input_sources = {}
-      @waiting_input_targets = {}
-      @input_wait_requirements = {}
+      reset_queue!
     end
 
     def create_execution!
@@ -1032,14 +1019,18 @@ module DiscourseWorkflows
       @store.resume!(execution)
       @snapshot = @store.workflow_snapshot
       @steps = restore_steps_from(execution)
+      reset_queue!
+      restore_pending_queue!
+      restore_pending_input_groups!
+    end
+
+    def reset_queue!
       @queue = []
       @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
       @input_wait_requirements = {}
-      restore_pending_queue!
-      restore_pending_input_groups!
     end
 
     def clear_waiting!

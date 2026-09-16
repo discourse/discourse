@@ -37,7 +37,7 @@ module DiscourseWorkflows
           @workflow_snapshot.to_h["nodes"],
           workflow_name: @workflow_snapshot.workflow_name,
         )
-        @execution = create_execution!
+        persist_execution!(status: :running, trigger_data: trigger_data)
         return false if @duplicate_job
 
         reset_collaborators!
@@ -147,12 +147,8 @@ module DiscourseWorkflows
 
       private
 
-      def create_execution!
-        persist_execution!(status: :running, trigger_data: trigger_data)
-      end
-
       def persist_execution!(status:, trigger_data:, finished_at: nil)
-        @execution = @options.existing_execution || DiscourseWorkflows::Execution.new
+        @execution = @options.existing_execution || Execution.new
         created = @execution.new_record?
         @execution_context.execution = @execution if @options.existing_execution
         attributes = {
