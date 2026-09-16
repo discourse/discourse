@@ -41,7 +41,9 @@ class UserOption < ActiveRecord::Base
 
   scope :human_users, -> { where("user_id > 0") }
 
-  enum :default_calendar, { none_selected: 0, ics: 1, google: 2 }, scopes: false
+  enum :default_calendar,
+       { none_selected: 0, ics: 1, google: 2, outlook: 3, apple: 4 },
+       scopes: false
   enum :push_notification_level, { none: 0, all: 1, chat_only: 2 }, prefix: true, scopes: false
   enum :send_shortcut, { enter: 0, meta_enter: 1 }, prefix: true, scopes: false
 

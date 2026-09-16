@@ -12,8 +12,12 @@ Gem::Specification.new do |s|
   s.add_dependency "migrations-core"
   s.add_dependency "activesupport"
   s.add_dependency "colored2"
+  # Both unpinned to follow the host application's Gemfile, which is the
+  # authority on the V8 and emoji-data versions the engine context must match.
+  s.add_dependency "discourse-emojis"
   s.add_dependency "i18n"
   s.add_dependency "markbridge", ">= 0.4.0"
+  s.add_dependency "mini_racer"
   s.add_dependency "pg"
   s.add_dependency "zeitwerk"
 end

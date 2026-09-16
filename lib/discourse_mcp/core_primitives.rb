@@ -38,6 +38,25 @@ module DiscourseMcp
         identifier,
         implementation:,
         output_schema: implementation::OUTPUT_SCHEMA,
+        required_scopes: implementation::REQUIRED_SCOPES,
+        **attributes,
+      )
+    end
+
+    def register_resource_template(registry, identifier, implementation:, **attributes)
+      registry.register_resource_template(
+        identifier,
+        implementation:,
+        required_scopes: implementation::REQUIRED_SCOPES,
+        **attributes,
+      )
+    end
+
+    def register_prompt(registry, identifier, implementation:, **attributes)
+      registry.register_prompt(
+        identifier,
+        implementation:,
+        required_scopes: implementation::REQUIRED_SCOPES,
         **attributes,
       )
     end
@@ -58,7 +77,6 @@ module DiscourseMcp
         description:
           "Returns the authenticated Discourse user, granted scopes, and MCP server URI.",
         implementation: Tools::CurrentUser,
-        required_scopes: [DiscourseMcp::INITIAL_SCOPE],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -85,7 +103,6 @@ module DiscourseMcp
             },
             required: %w[query],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -126,7 +143,6 @@ module DiscourseMcp
               },
             },
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -155,7 +171,6 @@ module DiscourseMcp
             },
             required: %w[query],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -212,7 +227,6 @@ module DiscourseMcp
             },
             required: %w[topic_id selection_mode],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -243,7 +257,6 @@ module DiscourseMcp
             },
             required: %w[post_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -258,7 +271,6 @@ module DiscourseMcp
           object_schema(
             { before_post_id: { type: "integer", minimum: 1 }, replies_only: { type: "boolean" } },
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -287,7 +299,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -353,7 +364,6 @@ module DiscourseMcp
             },
             required: %w[period],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -382,7 +392,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -393,7 +402,6 @@ module DiscourseMcp
         implementation: Tools::GetPost,
         input_schema:
           object_schema({ post_id: { type: "integer", minimum: 1 } }, required: %w[post_id]),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -403,7 +411,6 @@ module DiscourseMcp
         description: "Lists recent topics visible to the authenticated user.",
         implementation: Tools::ListTopics,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 50 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -412,7 +419,6 @@ module DiscourseMcp
         title: "List categories",
         description: "Lists the visible category hierarchy.",
         implementation: Tools::ListCategories,
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -422,7 +428,6 @@ module DiscourseMcp
         description: "Lists visible tags ordered by usage.",
         implementation: Tools::ListTags,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 200 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -436,7 +441,6 @@ module DiscourseMcp
             { username: { type: "string", minLength: 1, maxLength: 60 } },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -465,7 +469,6 @@ module DiscourseMcp
             },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -479,7 +482,6 @@ module DiscourseMcp
             { username: { type: "string", minLength: 1, maxLength: 60 } },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -522,7 +524,6 @@ module DiscourseMcp
             },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -546,7 +547,6 @@ module DiscourseMcp
             },
             required: %w[draft_key],
           ),
-        required_scopes: %w[mcp:drafts:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -556,7 +556,6 @@ module DiscourseMcp
         description: "Lists the authenticated user's bookmarks.",
         implementation: Tools::ListBookmarks,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 100 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -566,7 +565,6 @@ module DiscourseMcp
         description: "Lists the authenticated user's notifications.",
         implementation: Tools::ListNotifications,
         input_schema: object_schema({ limit: { type: "integer", minimum: 1, maximum: 100 } }),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -606,7 +604,6 @@ module DiscourseMcp
               },
             },
           ),
-        required_scopes: %w[mcp:private-messages:read],
         annotations: READ_ONLY,
       )
       register_tool(
@@ -635,7 +632,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:private-messages:read],
         annotations: READ_ONLY,
       )
     end
@@ -678,7 +674,6 @@ module DiscourseMcp
             },
             required: %w[title raw],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -712,7 +707,6 @@ module DiscourseMcp
             },
             required: %w[topic_id raw],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -741,7 +735,6 @@ module DiscourseMcp
             },
             required: %w[post_id raw],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -796,7 +789,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -857,7 +849,6 @@ module DiscourseMcp
             },
             required: %w[username],
           ),
-        required_scopes: %w[mcp:profile:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -895,7 +886,6 @@ module DiscourseMcp
             },
             required: %w[upload_type],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
@@ -952,7 +942,6 @@ module DiscourseMcp
             },
             required: %w[title raw],
           ),
-        required_scopes: %w[mcp:private-messages:write],
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
@@ -986,7 +975,6 @@ module DiscourseMcp
             },
             required: %w[topic_id raw],
           ),
-        required_scopes: %w[mcp:private-messages:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -1034,7 +1022,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:private-messages:write],
         annotations: EXTERNAL_SIDE_EFFECT,
         risk: :external_side_effect,
       )
@@ -1049,7 +1036,6 @@ module DiscourseMcp
             { post_id: { type: "integer", minimum: 1 }, deleted: { type: "boolean" } },
             required: %w[post_id deleted],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: DESTRUCTIVE,
         risk: :destructive,
       )
@@ -1102,7 +1088,6 @@ module DiscourseMcp
             },
             required: %w[draft_key reply],
           ),
-        required_scopes: %w[mcp:drafts:write],
         annotations: WRITE,
         risk: :write,
       )
@@ -1127,7 +1112,6 @@ module DiscourseMcp
             },
             required: %w[draft_key sequence],
           ),
-        required_scopes: %w[mcp:drafts:write],
         annotations: DESTRUCTIVE,
         risk: :destructive,
       )
@@ -1162,7 +1146,6 @@ module DiscourseMcp
               { properties: { clear: { enum: [false] } }, required: %w[description emoji] },
             ],
           ),
-        required_scopes: %w[mcp:content:write],
         annotations: WRITE,
         risk: :write,
         availability: -> { SiteSetting.enable_user_status },
@@ -1170,7 +1153,8 @@ module DiscourseMcp
     end
 
     def register_resources(registry)
-      registry.register_resource_template(
+      register_resource_template(
+        registry,
         "discourse.topic",
         title: "Discourse topic",
         description: "A topic visible to the authenticated user.",
@@ -1180,10 +1164,10 @@ module DiscourseMcp
             { uri: { type: "string", pattern: "\\Adiscourse://topic/[0-9]+\\z" } },
             required: %w[uri],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_resource_template(
+      register_resource_template(
+        registry,
         "discourse.post",
         title: "Discourse post",
         description: "A post visible to the authenticated user.",
@@ -1193,13 +1177,13 @@ module DiscourseMcp
             { uri: { type: "string", pattern: "\\Adiscourse://post/[0-9]+\\z" } },
             required: %w[uri],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
     end
 
     def register_prompts(registry)
-      registry.register_prompt(
+      register_prompt(
+        registry,
         "discourse.research_topic",
         title: "Research discussions",
         description: "Builds a prompt for researching visible Discourse discussions.",
@@ -1209,10 +1193,10 @@ module DiscourseMcp
             { question: { type: "string", minLength: 1, maxLength: 1000 } },
             required: %w[question],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
-      registry.register_prompt(
+      register_prompt(
+        registry,
         "discourse.draft_reply",
         title: "Draft a reply",
         description: "Builds a prompt for drafting a grounded reply to a visible topic.",
@@ -1231,7 +1215,6 @@ module DiscourseMcp
             },
             required: %w[topic_id],
           ),
-        required_scopes: %w[mcp:content:read],
         annotations: READ_ONLY,
       )
     end
@@ -1239,6 +1222,8 @@ module DiscourseMcp
 
   module Resources
     class Topic
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://topic/").to_i
         topic = ::Topic.find_by(id: id)
@@ -1255,6 +1240,8 @@ module DiscourseMcp
     end
 
     class Post
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://post/").to_i
         post = ::Post.secured(request_context.guardian).find_by(id: id)
@@ -1269,6 +1256,8 @@ module DiscourseMcp
 
   module Prompts
     class ResearchTopic
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(arguments:, request_context:)
         {
           description: "Research visible Discourse discussions",
@@ -1287,6 +1276,8 @@ module DiscourseMcp
     end
 
     class DraftReply
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+
       def self.call(arguments:, request_context:)
         topic = ::Topic.find_by(id: arguments.fetch("topic_id").to_i)
         if topic.blank? || !request_context.guardian.can_see?(topic)

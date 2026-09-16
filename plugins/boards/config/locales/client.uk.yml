@@ -21,6 +21,9 @@ uk:
         slug: "Мітка"
         tag_names: "Теґи"
         category_ids: "Розділи"
+      card_moved:
+        board_id: "Дошка"
+        board_id_placeholder: "Усі дошки"
     boards:
       filter_boards: "Фільтрувальні дошки"
       filter_boards_no_results: "Немає дощок, що відповідають вашому пошуку"

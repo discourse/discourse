@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class GetDraft
+      REQUIRED_SCOPES = [Scopes::DRAFTS_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[sequence data],
@@ -58,6 +59,7 @@ module DiscourseMcp
     end
 
     class SaveDraft
+      REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           draft_key: OutputSchema::STRING,
@@ -105,6 +107,7 @@ module DiscourseMcp
     end
 
     class DeleteDraft
+      REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(draft_key: OutputSchema::STRING, deleted: OutputSchema::BOOLEAN)
 

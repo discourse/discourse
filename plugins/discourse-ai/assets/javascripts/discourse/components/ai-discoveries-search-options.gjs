@@ -375,6 +375,7 @@ export default class AiDiscoveriesSearchOptions extends Component {
             {{if option.active 'is-active'}}"
           data-search-menu-navigation-item
           @action={{option.action}}
+          @ariaPressed={{option.active}}
           @icon={{option.icon}}
           @label={{option.label}}
           @translatedLabel={{option.translatedLabel}}

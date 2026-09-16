@@ -179,6 +179,12 @@ export default class AiSearchDiscoveries extends Component {
     return this.siteSettings.ai_ask_ai_summary_detail !== "quiet";
   }
 
+  get answerLabel() {
+    return this.showAnswerTitle && this.discobotDiscoveries.discoveryTitle
+      ? this.discobotDiscoveries.discoveryTitle
+      : i18n("discourse_ai.discobot_discoveries.answer_label");
+  }
+
   get relatedCount() {
     return this.siteSettings.ai_ask_ai_related_count;
   }
@@ -250,10 +256,14 @@ export default class AiSearchDiscoveries extends Component {
     return this.discobotDiscoveries.suggestedFollowUp || "";
   }
 
+  // offered once an answer has settled, so it isn't what a screen reader meets
+  // while waiting for one
   get showAskAiDefaultToggle() {
     return (
       Boolean(this.currentUser) &&
       !this.hasNoContent &&
+      !this.discobotDiscoveries.loadingDiscoveries &&
+      !this.discobotDiscoveries.isStreaming &&
       !this.askAiDefaultDismissed
     );
   }
@@ -484,13 +494,18 @@ export default class AiSearchDiscoveries extends Component {
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
         {{else if this.noAnswer}}
-          <div class="ai-search-discoveries__no-answer">
+          {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
+          <div
+            class="ai-search-discoveries__no-answer"
+            {{on "keydown" this.search.handleArrowUpOrDown}}
+          >
             <p class="ai-search-discoveries__no-answer-message">
               {{i18n "discourse_ai.discobot_discoveries.no_answer"}}
             </p>
             {{#if this.currentUser.can_create_topic}}
               <DButton
                 class="btn-primary btn-small ai-search-discoveries__create-topic"
+                data-search-menu-navigation-item
                 @action={{this.createTopic}}
                 @label="discourse_ai.discobot_discoveries.create_topic"
               />
@@ -498,13 +513,21 @@ export default class AiSearchDiscoveries extends Component {
           </div>
         {{else}}
           {{! eslint-disable ember/template-no-invalid-interactive }}
+          {{! a stop in the search menu's arrow and tab order, rather than only
+              reachable by a screen reader's virtual cursor; on the full page it
+              is already in reading order }}
           <article
+            aria-busy={{if this.discobotDiscoveries.isStreaming "true"}}
+            aria-label={{this.answerLabel}}
             class={{dConcatClass
               "ai-search-discoveries__discovery"
               (if this.discobotDiscoveries.isStreaming "streaming")
               "streamable-content"
             }}
+            data-search-menu-navigation-item={{unless @fullPage true}}
+            tabindex={{unless @fullPage "0"}}
             {{on "click" this.handleDiscoveryClick}}
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           >
             <DCookText
               class="cooked"
@@ -547,10 +570,15 @@ export default class AiSearchDiscoveries extends Component {
             <ul
               class="ai-discovery-sources__list"
               {{on "click" this.handleDiscoveryClick}}
+              {{on "keydown" this.search.handleArrowUpOrDown}}
             >
               {{#each this.visibleSources as |source|}}
                 <li class="ai-discovery-sources__item">
-                  <a class="ai-discovery-source" href={{source.url}}>
+                  <a
+                    class="ai-discovery-source"
+                    data-search-menu-navigation-item
+                    href={{source.url}}
+                  >
                     {{#if (and this.showSourceAvatars source.avatar_template)}}
                       <span class="ai-discovery-source__avatar">
                         {{dAvatar source imageSize="medium"}}
@@ -599,6 +627,7 @@ export default class AiSearchDiscoveries extends Component {
               "discourse_ai.discobot_discoveries.follow_up.label"
             }}
             class="ai-search-discoveries__follow-up-input"
+            data-search-menu-navigation-item
             disabled={{this.loadingConversationTopic}}
             maxlength="1000"
             placeholder={{i18n
@@ -608,6 +637,7 @@ export default class AiSearchDiscoveries extends Component {
             value={{this.followUpValue}}
             {{on "focus" this.clearSuggestedFollowUp}}
             {{on "input" this.updateFollowUpQuestion}}
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           />
           <DButton
             class="btn-primary btn-small ai-search-discoveries__follow-up-submit"
@@ -627,15 +657,19 @@ export default class AiSearchDiscoveries extends Component {
         <div class="ai-search-discoveries__default-preference">
           <DToggleSwitch
             class="ai-search-discoveries__default-toggle"
+            data-search-menu-navigation-item
             @label="discourse_ai.discobot_discoveries.make_default"
             @state={{this.askAiIsDefault}}
             {{on "click" this.toggleAskAiDefault}}
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           />
           <DButton
             class="btn-transparent ai-search-discoveries__dismiss-default"
+            data-search-menu-navigation-item
             @action={{this.dismissAskAiDefaultToggle}}
             @icon="xmark"
             @title="discourse_ai.discobot_discoveries.dismiss_default_preference"
+            {{on "keydown" this.search.handleArrowUpOrDown}}
           />
         </div>
       {{/if}}
