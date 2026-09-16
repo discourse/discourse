@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import CodeEditor from "discourse/components/code-editor";
 import { escapeExpression } from "discourse/lib/utilities";
 import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview";
 import {
@@ -14,7 +17,6 @@ import {
   previousNodeForConnection,
   resolveDeclaredOutputSchemas,
 } from "../../../lib/workflows/schema-graph";
-import VariableInput from "../variable/input";
 
 const MODE_FIELD = "mode";
 const PER_ITEM_MODE = "runOnceForEachItem";
@@ -22,6 +24,8 @@ const PER_ITEM_MODE = "runOnceForEachItem";
 export default class LiquidControl extends Component {
   @service siteSettings;
   @service workflowsNodeTypes;
+
+  @tracked ready = false;
 
   get height() {
     return this.args.schema?.control_options?.height;
@@ -47,6 +51,14 @@ export default class LiquidControl extends Component {
       (this.args.nodeParameters || this.args.configuration)?.[MODE_FIELD];
 
     return mode === PER_ITEM_MODE;
+  }
+
+  @action
+  async loadVariables() {
+    await this.workflowsNodeTypes.loadWorkflowVars();
+    if (!this.isDestroying) {
+      this.ready = true;
+    }
   }
 
   @action
@@ -112,14 +124,23 @@ export default class LiquidControl extends Component {
   }
 
   <template>
-    <div class="workflows-liquid-control" style={{this.style}}>
-      <VariableInput
-        @class="--liquid"
-        @extensions={{this.buildExtensions}}
-        @lineNumbers={{true}}
-        @onChange={{this.handleChange}}
-        @value={{this.value}}
-      />
+    <div class="workflows-liquid-control" {{didInsert this.loadVariables}}>
+      {{#if this.ready}}
+        <CodeEditor
+          class="workflows-variable-input --liquid"
+          name={{@field.name}}
+          style={{this.style}}
+          @describedBy={{@field.describedBy}}
+          @disabled={{@field.disabled}}
+          @extensions={{this.buildExtensions}}
+          @inputId={{@field.id}}
+          @invalid={{@field.error}}
+          @lineWrapping={{true}}
+          @onChange={{this.handleChange}}
+          @resizable={{true}}
+          @value={{this.value}}
+        />
+      {{/if}}
     </div>
   </template>
 }

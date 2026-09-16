@@ -16,6 +16,9 @@ export function buildLiquidDragDrop({ cmView }, { perItem }) {
   }
 
   function handleDrop(view, event) {
+    if (view.state.readOnly) {
+      return;
+    }
     const data = event.dataTransfer.getData(WORKFLOW_VARIABLE_MIME);
     if (!data) {
       return;

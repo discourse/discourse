@@ -5,8 +5,7 @@
   // The height comes from the field's control options, so the editor fills it
   // and scrolls rather than growing the configurator.
   .workflows-variable-input.--liquid {
-    height: 100%;
-    overflow: hidden;
+    width: 100%;
 
     .cm-editor {
       height: 100%;

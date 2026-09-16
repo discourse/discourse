@@ -1,4 +1,11 @@
-import { find, render, triggerEvent, waitFor } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import {
+  find,
+  render,
+  settled,
+  triggerEvent,
+  waitFor,
+} from "@ember/test-helpers";
 import { startCompletion } from "@codemirror/autocomplete";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -29,6 +36,69 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
     pretender.get("/admin/plugins/discourse-workflows/variables.json", () =>
       response(200, { variables: [] })
     );
+  });
+
+  test("preserves field accessibility, resizing, and disabled state", async function (assert) {
+    const field = new (class {
+      @tracked disabled = true;
+@tracked error = "Invalid template";
+id = "template-input";
+      name = "template";
+      describedBy = "template-help";
+      value = "original";
+      
+      
+
+      set() {
+        assert.step("changed");
+      }
+    })();
+
+    await render(<template><LiquidControl @field={{field}} /></template>);
+    await waitFor(".cm-editor");
+    assert
+      .dom(".cm-content")
+      .hasAttribute("id", field.id, "the label targets the editable element");
+    assert
+      .dom(".cm-content")
+      .hasAttribute(
+        "aria-describedby",
+        field.describedBy,
+        "help text is associated"
+      );
+    assert
+      .dom(".cm-content")
+      .hasAttribute("aria-invalid", "true", "validation state is exposed");
+    assert
+      .dom(".cm-content")
+      .hasAttribute(
+        "contenteditable",
+        "false",
+        "disabled fields cannot be edited"
+      );
+    assert
+      .dom(".code-editor .grippie")
+      .exists("the resize handle remains available");
+
+    await triggerEvent(".cm-editor", "drop", {
+      dataTransfer: {
+        getData: () => JSON.stringify({ id: "$json.name" }),
+      },
+    });
+    assert
+      .dom(".cm-content")
+      .hasText("original", "drops cannot change a disabled field");
+    assert.verifySteps([], "no field update is emitted");
+
+    field.disabled = false;
+    field.error = null;
+    await settled();
+    assert
+      .dom(".cm-content")
+      .hasAttribute("contenteditable", "true", "editing can be enabled");
+    assert
+      .dom(".cm-content")
+      .doesNotHaveAttribute("aria-invalid", "validation state can clear");
   });
 
   test("completes a branch at its original input port after a connection is removed", async function (assert) {
