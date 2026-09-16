@@ -81,7 +81,7 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
       %w[invalid 2026-09-09],
       %w[2026-09-09 2026-09-01],
       %w[2020-01-01 2026-09-09],
-      %w[2026-09-01 2026-09-10],
+      %w[2026-09-10 2026-09-11],
       %w[2026-09-01 2026-09-09],
     ].each do |first, last|
       expect {

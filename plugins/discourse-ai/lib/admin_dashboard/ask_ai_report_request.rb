@@ -17,7 +17,7 @@ module DiscourseAi
         rescue Date::Error
           raise Discourse::InvalidParameters.new(:date_range)
         end
-        raise Discourse::InvalidParameters.new(:date_range) if first > last || last > Date.current
+        raise Discourse::InvalidParameters.new(:date_range) if first > last || first > Date.current
         agent = AiAgent.find_by(id: SiteSetting.ai_ask_ai_report_agent)
         model_id = agent&.default_llm_id.presence || SiteSetting.ai_default_llm_model
         unless agent && LlmModel.exists?(id: model_id)
