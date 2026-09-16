@@ -1,4 +1,4 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CodeLoginForm from "discourse/components/code-login-form";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -217,6 +217,92 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .dom(".code-login-form__error")
       .hasText(i18n("email_login_code.invalid_code"));
     assert.dom(".d-otp-input").hasValue("", "the code input is cleared");
+  });
+
+  test("collects valid account details before submitting for approval", async function (assert) {
+    stubCodeRequest();
+    this.site.setProperties({
+      full_name_required_for_signup: true,
+      full_name_visible_in_signup: true,
+    });
+
+    const verifyRequests = [];
+    let accountDetailAttempts = 0;
+    pretender.post("/session/login-code/verify", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      verifyRequests.push(params);
+
+      if (!params.get("signup_token")) {
+        return response({
+          signup_details_required: true,
+          signup_token: "signup-token",
+          username: "suggested-name",
+          expires_in: 600,
+        });
+      }
+
+      accountDetailAttempts++;
+      return accountDetailAttempts === 1
+        ? response({ error: "Please retry" })
+        : response({ pending_approval: true });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "123456");
+
+    assert
+      .dom(".login-title")
+      .hasText(i18n("code_login.account_details_title"));
+    assert.dom(".code-login-form__account-details-step").exists();
+    assert.strictEqual(
+      verifyRequests.length,
+      1,
+      "verifying the code does not create the account"
+    );
+
+    await fillIn("#code-login-username", "taken");
+    await waitFor(".code-login-form__submit-approval[disabled]");
+    assert
+      .dom(".code-login-form__username-field .code-login-form__error")
+      .includesText("nottaken");
+
+    await fillIn("#code-login-username", "chosen-name");
+    await waitFor(".code-login-form__submit-approval:not([disabled])");
+    await click(".code-login-form__submit-approval");
+
+    assert
+      .dom(".code-login-form__name-field .code-login-form__error")
+      .hasText(i18n("user.name.required"));
+    assert.strictEqual(
+      verifyRequests.length,
+      1,
+      "invalid details are not submitted"
+    );
+
+    await fillIn("#code-login-name", "  Chosen Name  ");
+    await click(".code-login-form__submit-approval");
+
+    assert
+      .dom(".code-login-form__account-details-step")
+      .exists("a server error keeps the details editable");
+    assert.strictEqual(accountDetailAttempts, 1, "the first attempt failed");
+
+    await click(".code-login-form__submit-approval");
+
+    assert.dom(".code-login-form__pending-approval-step").exists();
+    assert.strictEqual(verifyRequests[1].get("signup_token"), "signup-token");
+    assert.strictEqual(verifyRequests[1].get("username"), "chosen-name");
+    assert.strictEqual(verifyRequests[1].get("name"), "Chosen Name");
+    assert.strictEqual(
+      accountDetailAttempts,
+      2,
+      "the verified continuation can be retried"
+    );
   });
 
   test("shows the pending approval screen after a valid signup code", async function (assert) {

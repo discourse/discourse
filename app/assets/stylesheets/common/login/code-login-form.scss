@@ -49,6 +49,7 @@
 
   &__code-step,
   &__second-factor-step,
+  &__account-details-step,
   &__user-fields-step,
   &__complete-step,
   &__pending-approval-step {
@@ -63,6 +64,7 @@
     }
   }
 
+  &__account-details-step,
   &__user-fields-step {
     .user-fields {
       align-self: stretch;

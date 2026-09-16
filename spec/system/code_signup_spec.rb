@@ -196,12 +196,38 @@ describe "Sign up via email code" do
     expect(User.find_by_email("new.person@example.com")).to be_nil
   end
 
-  it "shows a pending-approval message when users must be approved" do
+  it "collects account details before approval and requires a fresh code afterward" do
     SiteSetting.must_approve_users = true
+    SiteSetting.full_name_requirement = "required_at_signup"
+    user_field = Fabricate(:user_field, name: "Occupation")
+    admin = Fabricate(:admin)
+    email = "approve.me@example.com"
 
     visit("/signup")
-    submit_email("approve.me@example.com")
-    fill_code(latest_emailed_code("approve.me@example.com"))
+    submit_email(email)
+    fill_code(latest_emailed_code(email))
+
+    expect(page).to have_css(".login-title", text: I18n.t("js.code_login.account_details_title"))
+    expect(page).to have_css(".code-login-form__account-details-step")
+    expect(User.find_by_email(email)).to be_nil
+
+    fill_in("code-login-username", with: "invalid username!")
+    expect(page).to have_css(".code-login-form__submit-approval[disabled]")
+    expect(User.find_by_email(email)).to be_nil
+
+    fill_in("code-login-username", with: "chosen-name")
+    expect(page).to have_no_css(".code-login-form__submit-approval[disabled]")
+    find(".code-login-form__submit-approval").click
+
+    expect(page).to have_css(
+      ".code-login-form__name-field .code-login-form__error",
+      text: I18n.t("js.user.name.required"),
+    )
+    expect(User.find_by_email(email)).to be_nil
+
+    fill_in("code-login-name", with: "Chosen Name")
+    find(".user-field-occupation input").fill_in(with: "Engineer")
+    find(".code-login-form__submit-approval").click
 
     expect(page).to have_css(".login-title", text: I18n.t("js.code_login.pending_approval_title"))
     expect(page).to have_css(
@@ -215,9 +241,41 @@ describe "Sign up via email code" do
     expect(page).to have_no_css(".d-otp-input")
     expect(page).to have_no_css(".header-dropdown-toggle.current-user")
 
-    user = User.find_by_email("approve.me@example.com")
+    user = User.find_by_email(email)
     expect(user).not_to be_approved
-    expect(ReviewableUser.pending.find_by(target: user)).to be_present
+    expect(user.username).to eq("chosen-name")
+    expect(user.name).to eq("Chosen Name")
+    expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Engineer")
+
+    reviewable = ReviewableUser.pending.find_by!(target: user)
+    expect(reviewable.payload.slice("username", "name")).to eq(
+      "username" => "chosen-name",
+      "name" => "Chosen Name",
+    )
+
+    sign_in(admin)
+    review_page = PageObjects::Pages::Review.new
+    review_page.visit_reviewable(reviewable)
+    expect(page).to have_content("chosen-name")
+    expect(page).to have_content("Chosen Name")
+    expect(page).to have_content("Occupation")
+    expect(page).to have_content("Engineer")
+    review_page.click_approve_user_button
+
+    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    expect(user.reload).to be_approved
+    approval_email = ActionMailer::Base.deliveries.last
+    expect(approval_email.to).to contain_exactly(email)
+    expect(approval_email.body.to_s).to include("/login?mode=code")
+
+    PageObjects::Components::UserMenu.new.sign_out
+    visit("/login?mode=code")
+    find(".code-login-form__email-step input[type='email']").fill_in(with: email)
+    find(".code-login-form__continue").click
+    fill_code(latest_emailed_code(email))
+
+    expect(page).to have_css(".header-dropdown-toggle.current-user")
+    expect(User.find_by_email(email).username).to eq("chosen-name")
   end
 
   context "with required user fields" do
