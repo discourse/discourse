@@ -41,13 +41,11 @@ module("Integration | Component | Workflows | Liquid editor", function (hooks) {
   test("preserves field accessibility, resizing, and disabled state", async function (assert) {
     const field = new (class {
       @tracked disabled = true;
-@tracked error = "Invalid template";
-id = "template-input";
+      @tracked error = "Invalid template";
+      id = "template-input";
       name = "template";
       describedBy = "template-help";
       value = "original";
-      
-      
 
       set() {
         assert.step("changed");
