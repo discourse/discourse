@@ -448,7 +448,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, test_quality)
+  def target_jpeg_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
         ImageMagick.identify(

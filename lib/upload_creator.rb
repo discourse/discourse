@@ -114,7 +114,7 @@ class UploadCreator
           clean_svg!
         elsif @image_info.type != :ico && (!Rails.env.test? || @opts[:force_optimize])
           convert_heif! if %i[heic heif].include?(@image_info.type)
-          convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
+          convert_to_jpeg! if convert_png_to_jpeg? || should_alter_jpeg_quality?
           fix_orientation! if should_fix_orientation?
           crop! if should_crop?
           optimize! if should_optimize?
@@ -369,7 +369,7 @@ class UploadCreator
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
 
-    target_quality = @upload.target_image_quality(@file.path, desired_quality)
+    target_quality = @upload.target_jpeg_image_quality(@file.path, desired_quality)
     opts = { quality: target_quality } if target_quality
 
     read = [@file.path]
@@ -445,19 +445,13 @@ class UploadCreator
     )
   end
 
-  def should_alter_quality?
-    return false if animated?
+  def should_alter_jpeg_quality?
+    return false if @image_info.type != :jpeg
 
-    desired_quality =
-      (
-        if @image_info.type == :png
-          SiteSetting.ImageQuality.png_to_jpg_quality
-        else
-          SiteSetting.ImageQuality.recompress_original_jpg_quality
-        end
-      )
-
-    @upload.target_image_quality(@file.path, desired_quality).present?
+    @upload.target_jpeg_image_quality(
+      @file.path,
+      SiteSetting.ImageQuality.recompress_original_jpg_quality,
+    ).present?
   end
 
   def should_downsize?
