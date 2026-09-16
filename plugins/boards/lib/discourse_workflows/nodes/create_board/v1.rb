@@ -24,6 +24,20 @@ if defined?(DiscourseWorkflows)
                 type: :string,
                 required: true,
               },
+              acl: {
+                type: :object,
+                required: true,
+                ui: {
+                  control: :access_control,
+                  expression: false,
+                },
+                control_options: {
+                  acl_target_type: "Boards::Board",
+                  acl_target_key: Boards::Board.acl_target_key,
+                  acl_target_name: "boards.manage.board",
+                  permissions: Boards::Board::ACL_PERMISSIONS.values,
+                },
+              },
               slug: {
                 type: :string,
               },
@@ -49,20 +63,6 @@ if defined?(DiscourseWorkflows)
                 },
                 control_options: {
                   allow_anonymous: false,
-                },
-              },
-              acl: {
-                type: :object,
-                required: true,
-                ui: {
-                  control: :access_control,
-                  expression: false,
-                },
-                control_options: {
-                  acl_target_type: "Boards::Board",
-                  acl_target_key: Boards::Board.acl_target_key,
-                  acl_target_name: "boards.manage.board",
-                  permissions: Boards::Board::ACL_PERMISSIONS.values,
                 },
               },
             },
