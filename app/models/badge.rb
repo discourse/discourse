@@ -135,6 +135,9 @@ class Badge < ActiveRecord::Base
     SvgSprite.expire_cache
     UserStat.update_distinct_badge_count if saved_change_to_enabled?
     UserBadge.ensure_consistency! if saved_change_to_enabled?
+    if saved_change_to_plugin_name? && !previously_new_record?
+      Jobs::SyncBadgeAvailability.enqueue(plugin_name)
+    end
   end
 
   # fields that can not be edited on system badges

@@ -201,10 +201,10 @@ class UserStat < ActiveRecord::Base
         FROM users
         LEFT JOIN user_badges ON user_badges.user_id = users.id
                               AND (user_badges.badge_id IN (#{Badge.available.select(:id).to_sql}))
+        #{"WHERE users.id IN (#{user_ids})" if !user_ids.empty?}
         GROUP BY users.id
       ) x
       WHERE user_stats.user_id = x.user_id AND user_stats.distinct_badge_count <> x.distinct_badge_count
-      #{"AND user_stats.user_id IN (#{user_ids})" if !user_ids.empty?}
     SQL
 
     DB.exec sql

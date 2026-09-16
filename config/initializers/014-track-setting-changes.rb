@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
+  plugin = Discourse.plugins_by_name[SiteSetting.plugins[name]]
+  if plugin && [plugin.enabled_site_setting, plugin.badge_enabled_setting].include?(name)
+    Jobs::SyncBadgeAvailability.enqueue(plugin.name)
+  end
+
   Category.clear_subcategory_ids if name === :max_category_nesting
 
   # Enabling `must_approve_users` on an existing site is odd, so we assume that the
