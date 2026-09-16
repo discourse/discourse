@@ -4,7 +4,6 @@ describe "Subscription products", allow_network: ["js.stripe.com"] do
   fab!(:admin)
   fab!(:product) { Fabricate(:product, external_id: "prod_OiK") }
   let(:dialog) { PageObjects::Components::Dialog.new }
-  let(:login_page) { PageObjects::Pages::Login.new }
   let(:product_subscriptions_page) { PageObjects::Pages::AdminSubscriptionProduct.new }
 
   before do
@@ -34,7 +33,7 @@ describe "Subscription products", allow_network: ["js.stripe.com"] do
 
     find("button.login-required.subscriptions").click
 
-    expect(login_page).to be_open
+    expect(page).to have_css("#login-form")
   end
 
   it "shows products on the products and allows deletion" do

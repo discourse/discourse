@@ -305,6 +305,78 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     );
   });
 
+  test("restores a verified signup continuation at the account details step", async function (assert) {
+    this.owner.lookup("service:session-store").setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "user@example.com",
+        expiresAt: Date.now() + 60_000,
+        signupToken: "signup-token",
+        username: "",
+      },
+    });
+
+    let verificationRequests = 0;
+    pretender.post("/session/login-code/verify", () => {
+      verificationRequests++;
+      return response({ pending_approval: true });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert
+      .dom(".code-login-form__account-details-step")
+      .exists("the account details step is restored");
+    assert
+      .dom(".code-login-form__hidden-email")
+      .hasValue("user@example.com", "the verified email is preserved");
+    assert.strictEqual(
+      verificationRequests,
+      0,
+      "restoring the continuation does not create an account"
+    );
+
+    await fillIn("#code-login-username", "chosen-name");
+    await waitFor(".code-login-form__submit-approval:not([disabled])");
+    await click(".code-login-form__submit-approval");
+
+    assert.strictEqual(verificationRequests, 1, "the proof remains usable");
+    assert
+      .dom(".code-login-form__pending-approval-step")
+      .exists("valid details submit for approval");
+  });
+
+  test("ignores missing and expired signup continuations", async function (assert) {
+    const sessionStore = this.owner.lookup("service:session-store");
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("a missing continuation starts a fresh signup");
+
+    sessionStore.setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "user@example.com",
+        expiresAt: Date.now() - 1,
+        signupToken: "expired-token",
+        username: "",
+      },
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("an expired continuation starts a fresh signup");
+    assert.strictEqual(
+      sessionStore.getObject("email-code-signup-continuation"),
+      null,
+      "the expired continuation is removed"
+    );
+  });
+
   test("shows the pending approval screen after a valid signup code", async function (assert) {
     stubCodeRequest();
     pretender.post("/session/login-code/verify", () =>

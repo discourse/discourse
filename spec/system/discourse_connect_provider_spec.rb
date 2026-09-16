@@ -27,7 +27,7 @@ describe "Discourse Connect Provider" do
     visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
     expect(page).to have_current_path("/login")
 
-    login_form.use_password.fill(username: "john", password: "supersecurepassword").click_login
+    login_form.fill(username: "john", password: "supersecurepassword").click_login
 
     expect(page).to have_current_path(
       /#{Regexp.escape(return_url)}\?sso=.*&sig=[0-9a-f]+/,
@@ -45,8 +45,9 @@ describe "Discourse Connect Provider" do
     visit "/"
     visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
     expect(page).to have_current_path("/login")
-    expect(page).to have_css(".code-login-form__email-step")
+    expect(page).to have_css("#login-account-name")
 
+    find("#one-time-code-link").click
     find(".code-login-form__email-step input[type='email']").fill_in(with: new_email)
     find(".code-login-form__continue").click
 
@@ -82,7 +83,7 @@ describe "Discourse Connect Provider" do
       visit "/session/sso_provider?sso=#{CGI.escape(sso)}&sig=#{sig}"
       expect(page).to have_current_path("/login")
 
-      login_form.use_password.fill(username: "john", password: "supersecurepassword").click_login
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
 
       expect(page).to have_css(".second-factor")
 

@@ -402,7 +402,7 @@ shared_examples "login scenarios" do
     it "can reset password with an email code and TOTP" do
       SiteSetting.enable_local_logins_via_code = true
 
-      login_form.open.use_password.fill_username("john").forgot_password
+      login_form.open.fill_username("john").forgot_password
       forgot_password_modal.request_reset
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }

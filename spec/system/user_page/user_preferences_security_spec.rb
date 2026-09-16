@@ -6,7 +6,6 @@ describe "User preferences | Security" do
   fab!(:admin)
   fab!(:user) { Fabricate(:user, email: email, password: password) }
   fab!(:staged_user) { Fabricate(:user, staged: true) }
-  let(:login_page) { PageObjects::Pages::Login.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
@@ -117,7 +116,6 @@ describe "User preferences | Security" do
         # this triggers the conditional UI for passkeys
         # which uses the virtual authenticator
         find(".d-header .login-button").click
-        login_page.use_password
 
         expect(page).to have_css(".header-dropdown-toggle.current-user")
 

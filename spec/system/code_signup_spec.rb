@@ -9,6 +9,14 @@ describe "Sign up via email code" do
     Jobs.run_immediately!
   end
 
+  def open_code_signup
+    visit("/signup")
+    expect(page).to have_css("#new-account-password")
+    expect(page).to have_no_css(".code-login-form")
+    find(".signup-page-cta__code-signup").click
+    expect(page).to have_css(".code-login-form__email-step")
+  end
+
   def fill_code(code)
     find(".d-otp-input").fill_in(with: code)
   end
@@ -32,7 +40,7 @@ describe "Sign up via email code" do
   end
 
   it "creates a passwordless account, picks a username, and logs in" do
-    visit("/signup")
+    open_code_signup
     expect(page).to have_css(".code-login-form__email-step")
     expect(page).to have_content(I18n.t("js.code_login.signup_title"))
     screenshot_marker(label: "code-signup-email-step")
@@ -67,7 +75,7 @@ describe "Sign up via email code" do
   end
 
   it "shows a single heading that is replaced as the flow advances" do
-    visit("/signup")
+    open_code_signup
 
     expect(page).to have_css(".code-login-form__email-step")
     expect(page).to have_css(".login-welcome-header", count: 1)
@@ -97,7 +105,7 @@ describe "Sign up via email code" do
   it "blocks continuing while the picked username is taken" do
     Fabricate(:user, username: "takenname")
 
-    visit("/signup")
+    open_code_signup
     submit_email("new.person@example.com")
     fill_code(latest_emailed_code("new.person@example.com"))
 
@@ -111,7 +119,7 @@ describe "Sign up via email code" do
   it "prefills the username when email-based suggestions are enabled" do
     SiteSetting.use_email_for_username_and_name_suggestions = true
 
-    visit("/signup")
+    open_code_signup
     submit_email("jane@example.com")
     fill_code(latest_emailed_code("jane@example.com"))
 
@@ -123,7 +131,7 @@ describe "Sign up via email code" do
     SiteSetting.use_email_for_username_and_name_suggestions = false
     SiteSetting.enable_random_usernames = false
 
-    visit("/signup")
+    open_code_signup
     submit_email("no.random@example.com")
     fill_code(latest_emailed_code("no.random@example.com"))
 
@@ -144,7 +152,7 @@ describe "Sign up via email code" do
   it "keeps the generated username when usernames can't be changed" do
     SiteSetting.username_change_period = 0
 
-    visit("/signup")
+    open_code_signup
     submit_email("locked.name@example.com")
     fill_code(latest_emailed_code("locked.name@example.com"))
 
@@ -157,7 +165,7 @@ describe "Sign up via email code" do
   end
 
   it "opens the avatar picker before continuing" do
-    visit("/signup")
+    open_code_signup
     submit_email("avatar.person@example.com")
     fill_code(latest_emailed_code("avatar.person@example.com"))
 
@@ -168,7 +176,7 @@ describe "Sign up via email code" do
   end
 
   it "shows an error for an incorrect code" do
-    visit("/signup")
+    open_code_signup
     submit_email("new.person@example.com")
 
     correct_code = latest_emailed_code("new.person@example.com")
@@ -185,7 +193,7 @@ describe "Sign up via email code" do
   it "does not create an account when registrations are disabled" do
     SiteSetting.allow_new_registrations = false
 
-    visit("/signup")
+    open_code_signup
     submit_email("new.person@example.com")
 
     # No code is sent when registrations are closed, so any code is rejected.
@@ -203,13 +211,28 @@ describe "Sign up via email code" do
     admin = Fabricate(:admin)
     email = "approve.me@example.com"
 
-    visit("/signup")
+    open_code_signup
     submit_email(email)
     fill_code(latest_emailed_code(email))
 
     expect(page).to have_css(".login-title", text: I18n.t("js.code_login.account_details_title"))
     expect(page).to have_css(".code-login-form__account-details-step")
     expect(User.find_by_email(email)).to be_nil
+
+    with_logs do |browser_logs|
+      page.refresh
+
+      expect(page).to have_current_path("/signup?mode=code")
+      expect(page).to have_css(".code-login-form__account-details-step")
+      expect(page).to have_field("code-login-username")
+      expect(User.find_by_email(email)).to be_nil
+
+      browser_errors =
+        browser_logs.logs.select do |log|
+          log[:level] == "error" && !log[:message].include?("Failed to load resource")
+        end
+      expect(browser_errors).to be_empty
+    end
 
     fill_in("code-login-username", with: "invalid username!")
     expect(page).to have_css(".code-login-form__submit-approval[disabled]")
@@ -282,7 +305,7 @@ describe "Sign up via email code" do
     fab!(:user_field) { Fabricate(:user_field, name: "Occupation") }
 
     it "collects the fields after the code is verified" do
-      visit("/signup")
+      open_code_signup
       submit_email("fields.person@example.com")
       fill_code(latest_emailed_code("fields.person@example.com"))
 
@@ -308,7 +331,7 @@ describe "Sign up via email code" do
     before { SiteSetting.full_name_requirement = "required_at_signup" }
 
     it "collects the name after the code is verified" do
-      visit("/signup")
+      open_code_signup
       submit_email("named.person@example.com")
       fill_code(latest_emailed_code("named.person@example.com"))
 

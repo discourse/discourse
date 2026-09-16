@@ -103,6 +103,9 @@ export default class extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 
+    controller.codeSignupSelected = false;
+    controller.codeSignupStep = "email";
+
     if (cookie("email")) {
       controller.accountEmail = cookie("email");
     }

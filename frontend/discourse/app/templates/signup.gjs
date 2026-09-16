@@ -81,6 +81,8 @@ export default <template>
             @context="signup"
             @initialEmail={{@controller.accountEmail}}
             @onStepChange={{@controller.updateCodeSignupStep}}
+            @onUsePassword={{@controller.usePasswordSignup}}
+            @usePasswordLabel="code_login.signup_with_password_instead"
           />
           {{#if
             (and @controller.codeSignupOnEmailStep @controller.disclaimerHtml)
@@ -339,6 +341,10 @@ export default <template>
             @formSubmitted={{@controller.formSubmitted}}
             @goToLogin={{@controller.goToLogin}}
             @hasAuthOptions={{@controller.hasAuthOptions}}
+            @onUseEmailCode={{if
+              @controller.canUseCodeSignup
+              @controller.showCodeSignup
+            }}
             @submitDisabled={{@controller.submitDisabled}}
           />
         {{/if}}

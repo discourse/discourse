@@ -17,7 +17,7 @@ describe "Staff writes only mode" do
     before { EmailToken.confirm(Fabricate(:email_token, user: moderator).token) }
 
     it "can login and post during staff writes only mode" do
-      login_form.open.use_password.fill(username: moderator.username, password:).click_login
+      login_form.open.fill(username: moderator.username, password:).click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
       expect(page).to have_content(I18n.t("js.staff_writes_only_mode.enabled"))
@@ -43,7 +43,7 @@ describe "Staff writes only mode" do
     before { EmailToken.confirm(Fabricate(:email_token, user:).token) }
 
     it "cannot login during staff writes only mode" do
-      login_form.open.use_password.fill(username: user.username, password:).click_login
+      login_form.open.fill(username: user.username, password:).click_login
 
       expect(page).not_to have_css(".header-dropdown-toggle.current-user")
       expect(page).to have_css("input#login-account-name")

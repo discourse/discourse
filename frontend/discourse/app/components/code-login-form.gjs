@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
@@ -31,6 +31,7 @@ import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-hel
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import User, { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DOtp from "discourse/ui-kit/d-otp";
 import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
@@ -84,16 +85,19 @@ export default class CodeLoginForm extends Component {
     showValidationOnInit: false,
   });
   #cooldownTimer;
+  #draftEmail;
   #postSignupRedirectUrl;
   #usernameCheckSeq = 0;
   @tracked _step = this.args.initialStep ?? "email";
 
   constructor() {
     super(...arguments);
+    if (this.isSignup && this.#restoreSignupContinuation()) {
+      return;
+    }
+
     if (this.isCodeStep) {
       this.startResendCooldown();
-    } else if (this.isSignup) {
-      this.#restoreSignupContinuation();
     }
   }
 
@@ -263,6 +267,18 @@ export default class CodeLoginForm extends Component {
   async submitEmail(data) {
     this.email = data.email.trim();
     await this.sendCode();
+  }
+
+  @action
+  captureEmail(event) {
+    this.#draftEmail = event.currentTarget
+      .closest(".code-login-form")
+      .querySelector('input[type="email"]')?.value;
+  }
+
+  @action
+  usePassword() {
+    this.args.onUsePassword?.(this.#draftEmail ?? this.email);
   }
 
   @action
@@ -808,19 +824,30 @@ export default class CodeLoginForm extends Component {
 
   #restoreSignupContinuation() {
     const continuation = this.sessionStore.getObject(SIGNUP_CONTINUATION_KEY);
-    if (!continuation || continuation.expiresAt <= Date.now()) {
+    if (
+      !continuation?.email ||
+      !continuation.signupToken ||
+      !continuation.expiresAt ||
+      continuation.expiresAt <= Date.now()
+    ) {
       this.#clearSignupContinuation();
-      return;
+      return false;
     }
 
     this.email = continuation.email;
     this.signupToken = continuation.signupToken;
     this.username = continuation.username || "";
     this.nameRequired = this.site.full_name_required_for_signup;
-    this.step = "account-details";
+    this._step = "account-details";
+    schedule("afterRender", () => {
+      if (!this.isDestroying) {
+        this.args.onStepChange?.(this.step);
+      }
+    });
     if (this.username) {
       this.checkUsernameAvailability();
     }
+    return true;
   }
 
   #clearSignupContinuation() {
@@ -976,8 +1003,12 @@ export default class CodeLoginForm extends Component {
               {{#if @onUsePassword}}
                 <DButton
                   class="btn-flat code-login-form__password-toggle"
-                  @action={{@onUsePassword}}
-                  @label="code_login.use_password_instead"
+                  @action={{this.usePassword}}
+                  @label={{or
+                    @usePasswordLabel
+                    "code_login.use_password_instead"
+                  }}
+                  {{on "click" this.captureEmail}}
                 />
               {{/if}}
             </div>

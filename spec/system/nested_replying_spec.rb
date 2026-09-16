@@ -66,7 +66,7 @@ RSpec.describe "Nested view replying" do
 
       nested_view.click_floating_reply_button
 
-      expect(page).to have_css(".code-login-form__email-step")
+      expect(page).to have_css("#login-account-name")
     end
 
     it "opens the composer for a top-level reply" do

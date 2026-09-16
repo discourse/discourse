@@ -17,7 +17,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       it "logs in" do
         visit("/")
-        login_form.open.use_password
+        login_form.open
         login_form.fill_username(active_user.username)
         login_form.fill_password("secure_password")
         login_form.click_login

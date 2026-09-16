@@ -33,6 +33,7 @@ export default class LoginPageController extends Controller {
   @tracked loggingIn = false;
 
   @tracked loggedIn = false;
+  @tracked codeLoginSelected = false;
   @tracked showLoginButtons = true;
   @tracked showLogin = true;
   @tracked showSecondFactor = false;
@@ -67,11 +68,10 @@ export default class LoginPageController extends Controller {
   }
 
   get showCodeLoginForm() {
-    if (!this.canUseCodeLogin) {
-      return false;
-    }
-
-    return this.loginMode !== "password";
+    return (
+      this.canUseCodeLogin &&
+      (this.codeLoginSelected || this.loginMode === "code")
+    );
   }
 
   @computed("siteSettings.enable_local_logins_via_email")
@@ -179,12 +179,18 @@ export default class LoginPageController extends Controller {
 
   @action
   showCodeLogin() {
-    this.loginMode = "code";
+    this.codeLoginSelected = true;
   }
 
   @action
-  usePassword() {
-    this.loginMode = "password";
+  usePassword(email) {
+    if (typeof email === "string") {
+      this.loginName = email;
+    }
+    this.codeLoginSelected = false;
+    if (this.loginMode === "code") {
+      this.loginMode = "password";
+    }
   }
 
   @action

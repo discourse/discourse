@@ -17,10 +17,7 @@ describe "Anonymous user liking a post" do
 
       expect(login_page).to be_open
 
-      login_page
-        .use_password
-        .fill(username: user.username, password: "supersecurepassword")
-        .click_login
+      login_page.fill(username: user.username, password: "supersecurepassword").click_login
 
       expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(topic_page).to have_post_action_button(post, :like_count)

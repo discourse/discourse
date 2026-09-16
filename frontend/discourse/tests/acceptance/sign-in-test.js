@@ -220,33 +220,46 @@ acceptance("Signing In", function (needs) {
 acceptance("Signing In with code", function (needs) {
   needs.settings({ enable_local_logins_via_code: true });
 
-  test("defaults to code login and keeps other methods available", async function (assert) {
+  test("defaults to password login and offers code login", async function (assert) {
     await visit("/login");
 
-    assert.dom("#login-form").doesNotExist("hides the password form");
-    assert.dom(".code-login-form").exists("shows the code login form");
+    assert.dom("#login-form").exists("shows the password form");
+    assert.dom(".code-login-form").doesNotExist("does not open code login");
+    assert.dom("#one-time-code-link").exists("offers code login");
+
+    await fillIn("#login-account-name", "person@example.com");
+    await click("#one-time-code-link");
+
+    assert.dom(".code-login-form").exists("opens code login explicitly");
+    assert
+      .dom(".code-login-form__email-step input")
+      .hasValue("person@example.com", "preserves the entered email");
     assert
       .dom("#login-buttons .btn-social")
       .isVisible("keeps external login methods accessible");
 
+    await fillIn(".code-login-form__email-step input", "updated@example.com");
     await click(".code-login-form__password-toggle");
 
-    assert.dom("#login-form").exists("keeps password login available");
-    assert.dom("#one-time-code-link").exists("keeps code login available");
-
-    await click("#one-time-code-link");
-
-    assert.dom(".code-login-form").exists("returns to the code login form");
-    assert.strictEqual(
-      sessionRequests().length,
-      0,
-      "does not try password login"
-    );
+    assert.dom("#login-form").exists("returns to password login");
+    assert
+      .dom("#login-account-name")
+      .hasValue("updated@example.com", "preserves the updated email");
+    assert.strictEqual(sessionRequests().length, 0, "does not submit a login");
   });
 
-  test("an explicit code mode opens code login", async function (assert) {
+  test("only an available explicit code mode opens code login", async function (assert) {
     await visit("/login?mode=code");
+    assert.dom(".code-login-form").exists("opens the available code login");
 
-    assert.dom(".code-login-form").exists("shows the code login form");
+    await visit("/login?mode=unknown");
+    assert.dom("#login-form").exists("ignores an unknown login mode");
+
+    this.siteSettings.enable_local_logins_via_code = false;
+    await visit("/login?mode=code");
+    assert.dom("#login-form").exists("ignores unavailable code login");
+    assert
+      .dom("#one-time-code-link")
+      .doesNotExist("hides the unavailable option");
   });
 });
