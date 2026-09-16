@@ -4093,6 +4093,9 @@ en:
       full_page_title: "Search"
       results: "results"
       no_results: "No results found."
+      results_announcement:
+        one: "%{count} result found."
+        other: "%{count} results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"
       results_page: "Search results for '%{term}'"

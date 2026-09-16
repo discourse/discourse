@@ -144,7 +144,18 @@ export default class Search extends Service {
             ) || navigationItems[0];
         firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
-        this.focusSearchInput();
+        // the menu's own input, since the one the search experience names
+        // isn't rendered everywhere (e.g. a scrolled topic swaps the header field
+        // for the topic title and search opens from the icon instead)
+        const input = focused
+          .closest(".search-menu")
+          .querySelector(".search-term__input");
+
+        if (input) {
+          input.focus();
+        } else {
+          this.focusSearchInput();
+        }
       } else if (index > -1) {
         // change focus to the next navigation item if present
         index += e.key === "ArrowDown" ? 1 : -1;

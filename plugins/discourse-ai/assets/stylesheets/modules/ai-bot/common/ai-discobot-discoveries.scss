@@ -56,6 +56,12 @@
     color: var(--token-color-text-default);
     line-height: var(--line-height-medium);
 
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: var(--space-1);
+      border-radius: var(--token-radius-normal);
+    }
+
     .cooked > :last-child {
       margin-bottom: 0;
     }
@@ -246,22 +252,23 @@
     .d-button-label {
       @include ellipsis;
     }
+  }
 
-    &.is-active {
+  & &__option.is-active {
+    border-color: var(--tertiary);
+    background: var(--d-selected);
+    color: var(--d-selected-text-color);
+
+    &:hover,
+    &:focus-visible {
       border-color: var(--tertiary);
       background: var(--d-selected);
       color: var(--d-selected-text-color);
+    }
 
-      &:hover,
-      &:focus-visible {
-        border-color: var(--tertiary);
-        background: var(--d-selected);
-        color: var(--d-selected-text-color);
-      }
-
-      &:focus-visible {
-        @include default-focus;
-      }
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: 2px;
     }
   }
 

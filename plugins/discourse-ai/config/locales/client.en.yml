@@ -1714,6 +1714,8 @@ en:
         request_failed: "Ask AI could not start this search. Try again or use Search."
         no_answer: "AI couldn’t find a clear answer. Ask the community."
         create_topic: "Create topic"
+        asking: "Asking AI…"
+        answer_label: "AI answer"
         answer_ready: "Ask AI answer ready."
         user_setting: "Enable AI search discoveries"
         legacy:

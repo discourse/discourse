@@ -257,6 +257,13 @@ export default apiInitializer((api) => {
       offersDiscoveries(context?.location) ? [...value, "--with-ask-ai"] : value
   );
 
+  // the options row always shows which scope is selected
+  api.registerValueTransformer(
+    "search-menu-search-context-enabled",
+    ({ value, context }) =>
+      offersDiscoveries(context?.location) ? false : value
+  );
+
   // advanced search is offered in the options row instead
   api.registerValueTransformer(
     "search-menu-advanced-button-enabled",
