@@ -140,6 +140,26 @@ RSpec.describe DiscourseWorkflows::Execution do
         waiting_until: eq_time(next_wait[:waiting_until]),
       )
     end
+
+    it "enqueues the configured error workflow when a wait times out" do
+      error_graph =
+        build_workflow_graph { |workflow_graph| workflow_graph.node "error-1", "trigger:error" }
+      error_workflow = Fabricate(:discourse_workflows_workflow, published: true, **error_graph)
+      workflow.update!(error_workflow_id: error_workflow.id)
+
+      expect(execution.fail_with_timeout!).to eq(true)
+
+      expect(
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map { |job| job["args"].first },
+      ).to contain_exactly(
+        include(
+          "workflow_id" => error_workflow.id,
+          "trigger_node_id" => "error-1",
+          "execution_mode" => "error_mode",
+          "trigger_data" => include("execution" => include("id" => execution.id.to_s)),
+        ),
+      )
+    end
   end
 
   describe ".compute_run_time_ms" do
