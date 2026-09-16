@@ -27,6 +27,20 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     expect(names.last).to eq("migrations/emoji-data")
   end
 
+  # The converter loads the bundle from the scheduler's threads. Ruby refuses a
+  # block-form `chdir` while another thread is inside one, so the loader must
+  # not switch the working directory at all.
+  it "loads while another thread holds a working-directory block" do
+    bundle
+    loaded = nil
+    Dir.mktmpdir do |dir|
+      Dir.chdir(dir) { loaded = Thread.new { described_class.load_or_build }.value }
+      # rubocop:enable Discourse/NoChdir
+    end
+
+    expect(loaded.entries.size).to eq(bundle.entries.size)
+  end
+
   it "caches the built bundle on disk and reuses it" do
     bundle
     cache_dir =

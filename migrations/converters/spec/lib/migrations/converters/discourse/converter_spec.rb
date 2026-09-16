@@ -151,6 +151,23 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
         expect(Migrations::Converters::MarkdownEngine::Bundle).to have_received(:load_or_build).once
       end
 
+      # The scheduler plans a step on one thread while its coordinator builds it
+      # on another, so both ask for the args at once.
+      it "loads the engine bundle once when two threads ask at the same time" do
+        converter = described_class.new({})
+        bundles =
+          Array
+            .new(2) do
+              Thread.new do
+                converter.step_args(Migrations::Converters::Discourse::Posts)[:markdown_bundle]
+              end
+            end
+            .map(&:value)
+
+        expect(bundles.uniq.size).to eq(1)
+        expect(Migrations::Converters::MarkdownEngine::Bundle).to have_received(:load_or_build).once
+      end
+
       it "maps each source host to its path prefix (base URL and former domains)" do
         args =
           posts_args(

@@ -6,6 +6,9 @@ module Migrations
   module Converters
     module Discourse
       class Converter < Conversion::Base
+        MARKDOWN_BUNDLE_LOCK = Mutex.new
+        private_constant :MARKDOWN_BUNDLE_LOCK
+
         # Steps run concurrently and a Postgres connection can't be shared, so each
         # step gets its own adapter; the step's source closes it in its `cleanup`.
         def step_args(step_class)
@@ -52,8 +55,13 @@ module Migrations
         # The compiled markdown JavaScript, built (or read back from its cache) once
         # for the whole run. It is plain data every worker inherits across the fork;
         # the V8 isolate that runs it is per-worker and is created in the step.
+        # The scheduler asks for a step's args from its planning thread and its
+        # coordinator thread at the same time, so the memo takes a lock rather
+        # than loading twice.
         def markdown_bundle
-          @markdown_bundle ||= MarkdownEngine::Bundle.load_or_build
+          MARKDOWN_BUNDLE_LOCK.synchronize do
+            @markdown_bundle ||= MarkdownEngine::Bundle.load_or_build
+          end
         end
 
         # The source's own hosts mapped to their path prefixes, so the Posts step can
