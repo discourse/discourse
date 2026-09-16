@@ -1176,7 +1176,7 @@ RSpec.describe Upload do
     it "returns nil when the target quality is higher than the source quality" do
       target_quality = upload.target_jpeg_image_quality(local_path, 100)
 
-      expect(target_quality).to be_nil
+      expect(target_quality).to eq(nil)
     end
 
     it "returns the target quality when it is lower than the source quality" do

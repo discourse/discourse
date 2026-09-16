@@ -372,36 +372,45 @@ RSpec.describe UploadCreator do
       let(:large_filename) { "large_and_unoptimized.png" }
       let(:large_file) { file_from_fixtures(large_filename) }
 
+      let(:animated_filename) { "animated.gif" }
+      let(:animated_file) { file_from_fixtures(animated_filename) }
+
+      let(:animated_webp_filename) { "animated.webp" }
+      let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
+
       let(:static_webp_filename) { "static-large.webp" }
       let(:static_webp_file) { file_from_fixtures(static_webp_filename) }
 
-      let(:jpeg_filename) { "high-quality-large.jpg" }
-      let(:jpeg_file) { file_from_fixtures(jpeg_filename) }
-
       before { SiteSetting.png_to_jpg_quality = 1 }
 
-      it "keeps PNG uploads below the minimum conversion size" do
-        # logo.png is 2,297 bytes. Converting it to JPEG saves 30%, but does not meet
-        # the required absolute savings of 75,000 bytes, so keep the PNG.
-        upload =
+      it "does not store a JPEG when the absolute byte savings are insufficient" do
+        # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
+        # the absolute savings required of 75_000 bytes, if you save less than that
+        # skip this
+
+        expect do
           UploadCreator.new(
             small_file,
             small_filename,
             pasted: true,
             force_optimize: true,
           ).create_for(user.id)
+        end.to change { Upload.count }.by(1)
 
-        expect(upload).to be_persisted
+        upload = Upload.last
+
         expect(upload.extension).to eq("png")
         expect(File.extname(upload.url)).to eq(".png")
         expect(upload.original_filename).to eq("logo.png")
       end
 
       it "stores the upload with the expected extension" do
-        upload =
+        expect do
           UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(user.id)
+        end.to change { Upload.count }.by(1)
 
-        expect(upload).to be_persisted
+        upload = Upload.last
+
         expect(upload.extension).to eq("jpeg")
         expect(File.extname(upload.url)).to eq(".jpeg")
         expect(upload.original_filename).to eq("should_be_jpeg.jpg")
@@ -437,83 +446,106 @@ RSpec.describe UploadCreator do
         expect(upload.original_filename).to eq("large_and_unoptimized.png")
       end
 
-      it "recompresses JPEG uploads above the target quality" do
-        SiteSetting.png_to_jpg_quality = 100
-        SiteSetting.recompress_original_jpg_quality = 40
+      context "with jpeg image quality settings" do
+        before do
+          SiteSetting.png_to_jpg_quality = 75
+          SiteSetting.recompress_original_jpg_quality = 40
+          SiteSetting.image_preview_jpg_quality = 10
+        end
 
-        upload =
-          UploadCreator.new(jpeg_file, jpeg_filename, force_optimize: true).create_for(user.id)
+        it "alters the image quality" do
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
 
-        expect(upload).to be_persisted
-        expect(upload.extension).to eq("jpeg")
-        expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
-      end
+          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
 
-      it "uses the configured quality for JPEG previews" do
-        SiteSetting.image_preview_jpg_quality = 10
+          upload.create_thumbnail!(100, 100)
+          upload.reload
 
-        upload =
-          UploadCreator.new(
-            file_from_fixtures("logo.jpg"),
-            "logo.jpg",
-            force_optimize: true,
-          ).create_for(user.id)
+          expect(image_quality(upload.optimized_images.first.url)).to eq(
+            SiteSetting.image_preview_jpg_quality,
+          )
+        end
 
-        upload.create_thumbnail!(100, 100)
-        upload.reload
+        it "does not convert animated images" do
+          expect do
+            UploadCreator.new(animated_file, animated_filename, force_optimize: true).create_for(
+              user.id,
+            )
+          end.to change { Upload.count }.by(1)
 
-        expect(image_quality(upload.optimized_images.first.url)).to eq(
-          SiteSetting.image_preview_jpg_quality,
-        )
-      end
+          upload = Upload.last
 
-      it "does not convert regular PNG uploads when PNG-to-JPEG quality is 100" do
-        SiteSetting.png_to_jpg_quality = 100
+          expect(upload.extension).to eq("gif")
+          expect(File.extname(upload.url)).to eq(".gif")
+          expect(upload.original_filename).to eq("animated.gif")
+        end
 
-        upload =
-          UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(user.id)
+        context "with png image quality settings" do
+          before do
+            SiteSetting.png_to_jpg_quality = 100
+            SiteSetting.recompress_original_jpg_quality = 90
+            SiteSetting.image_preview_jpg_quality = 10
+          end
 
-        expect(upload).to be_persisted
-        expect(upload.extension).to eq("png")
-        expect(File.extname(upload.url)).to eq(".png")
-        expect(upload.original_filename).to eq("large_and_unoptimized.png")
-      end
+          it "does not convert to JPEG when png_to_jpg_quality is 100" do
+            upload =
+              UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
+                user.id,
+              )
 
-      it "does not convert pasted PNG uploads when PNG-to-JPEG quality is 100" do
-        SiteSetting.png_to_jpg_quality = 100
+            expect(upload.extension).to eq("png")
+            expect(File.extname(upload.url)).to eq(".png")
+            expect(upload.original_filename).to eq("large_and_unoptimized.png")
+          end
 
-        upload =
-          UploadCreator.new(
-            large_file,
-            large_filename,
-            pasted: true,
-            force_optimize: true,
-          ).create_for(user.id)
+          it "does not convert pasted images when png_to_jpg_quality is 100" do
+            upload =
+              UploadCreator.new(
+                large_file,
+                large_filename,
+                pasted: true,
+                force_optimize: true,
+              ).create_for(user.id)
 
-        expect(upload).to be_persisted
-        expect(upload.extension).to eq("png")
-        expect(File.extname(upload.url)).to eq(".png")
-        expect(upload.original_filename).to eq("large_and_unoptimized.png")
-      end
+            expect(upload.extension).to eq("png")
+            expect(File.extname(upload.url)).to eq(".png")
+            expect(upload.original_filename).to eq("large_and_unoptimized.png")
+          end
+        end
 
-      it "does not convert static WebP images based on JPEG quality" do
-        SiteSetting.recompress_original_jpg_quality = 40
+        it "does not convert animated WebP images" do
+          expect do
+            UploadCreator.new(
+              animated_webp_file,
+              animated_webp_filename,
+              force_optimize: true,
+            ).create_for(user.id)
+          end.to change { Upload.count }.by(1)
 
-        upload =
-          UploadCreator.new(
-            static_webp_file,
-            static_webp_filename,
-            force_optimize: true,
-          ).create_for(user.id)
+          upload = Upload.last
 
-        stored_path = Discourse.store.path_for(upload)
+          expect(upload.extension).to eq("webp")
+          expect(File.extname(upload.url)).to eq(".webp")
+          expect(upload.original_filename).to eq("animated.webp")
+        end
 
-        expect(upload).to be_persisted
-        expect(upload).to have_attributes(
-          extension: "webp",
-          original_filename: static_webp_filename,
-        )
-        expect(FastImage.type(stored_path)).to eq(:webp)
+        it "does not convert static WebP images based on JPEG quality" do
+          upload =
+            UploadCreator.new(
+              static_webp_file,
+              static_webp_filename,
+              force_optimize: true,
+            ).create_for(user.id)
+
+          stored_path = Discourse.store.path_for(upload)
+
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(
+            extension: "webp",
+            original_filename: static_webp_filename,
+          )
+          expect(FastImage.type(stored_path)).to eq(:webp)
+        end
       end
     end
 
