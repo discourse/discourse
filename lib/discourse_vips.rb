@@ -40,7 +40,7 @@ module DiscourseVips
   def self.heif_to_jpeg(input_path:, output_path:, quality:, timeout:)
     Client.call(
       ["heif-to-jpeg", input_path, output_path, quality],
-      operation: :upload_format_conversion,
+      operation: :upload_heif_to_jpeg,
       timeout:,
     )
   end
@@ -48,7 +48,7 @@ module DiscourseVips
   def self.recompress_jpeg(input_path:, output_path:, quality:, timeout:)
     Client.call(
       ["recompress-jpeg", input_path, output_path, quality],
-      operation: :upload_format_conversion,
+      operation: :upload_jpeg_recompression,
       timeout:,
     )
   end
@@ -56,7 +56,7 @@ module DiscourseVips
   def self.png_to_jpeg(input_path:, output_path:, quality:, timeout:)
     Client.call(
       ["png-to-jpeg", input_path, output_path, quality],
-      operation: :upload_format_conversion,
+      operation: :upload_png_to_jpeg,
       timeout:,
     )
   end

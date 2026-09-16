@@ -1,6 +1,31 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseVips do
+  shared_examples "JPEG operation instrumentation" do |method, filename, operation|
+    it "records the specific image-processing operation" do
+      SiteSetting.instrument_image_processing = true
+      input_path = file_from_fixtures(filename).path
+
+      Dir.mktmpdir do |directory|
+        events =
+          DiscourseEvent.track_events(:image_processing_finished) do
+            described_class.public_send(
+              method,
+              input_path:,
+              output_path: File.join(directory, "output.jpg"),
+              quality: SiteSetting.image_quality,
+              timeout: 20,
+            )
+          end
+
+        expect(events.first[:params].first.except(:duration_seconds)).to eq(
+          operation:,
+          success: true,
+        )
+      end
+    end
+  end
+
   describe ".version" do
     it "returns the libvips version" do
       expect(described_class.version).to match(/\A\d+\.\d+\.\d+\z/)
@@ -83,6 +108,11 @@ RSpec.describe DiscourseVips do
   end
 
   describe ".heif_to_jpeg" do
+    include_examples "JPEG operation instrumentation",
+                     :heif_to_jpeg,
+                     "should_be_jpeg.heic",
+                     "upload_heif_to_jpeg"
+
     shared_examples "HEIF conversion" do |filename|
       it "converts #{filename} to JPEG without changing the source" do
         input_path = file_from_fixtures(filename).path
@@ -349,6 +379,11 @@ RSpec.describe DiscourseVips do
   end
 
   describe ".png_to_jpeg" do
+    include_examples "JPEG operation instrumentation",
+                     :png_to_jpeg,
+                     "logo.png",
+                     "upload_png_to_jpeg"
+
     it "flattens transparent PNG pixels onto white" do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.jpg")
@@ -383,6 +418,11 @@ RSpec.describe DiscourseVips do
   end
 
   describe ".recompress_jpeg" do
+    include_examples "JPEG operation instrumentation",
+                     :recompress_jpeg,
+                     "logo.jpg",
+                     "upload_jpeg_recompression"
+
     it "encodes JPEG inputs at the requested quality" do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.jpg")
