@@ -88,7 +88,7 @@ export default class CodeLoginForm extends Component {
   #draftEmail;
   #postSignupRedirectUrl;
   #usernameCheckSeq = 0;
-  @tracked _step = this.args.initialStep ?? "email";
+  @tracked _step;
 
   constructor() {
     super(...arguments);
@@ -96,6 +96,7 @@ export default class CodeLoginForm extends Component {
       return;
     }
 
+    this._step = this.args.initialStep ?? "email";
     if (this.isCodeStep) {
       this.startResendCooldown();
     }

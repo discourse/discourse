@@ -180,6 +180,32 @@ acceptance("Create Account with email code available", function (needs) {
     await click(".signup-page-cta__signup");
   });
 
+  test("restores a verified signup after a full page load", async function (assert) {
+    this.owner.lookup("service:session-store").setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "verified@example.com",
+        expiresAt: Date.now() + 60_000,
+        signupToken: "signup-token",
+        username: "",
+      },
+    });
+
+    await visit("/signup?mode=code");
+
+    assert.strictEqual(
+      currentURL(),
+      "/signup?mode=code",
+      "keeps the explicit signup mode"
+    );
+    assert
+      .dom(".code-login-form__account-details-step")
+      .exists("restores the account details step");
+    assert
+      .dom(".code-login-form__hidden-email")
+      .hasValue("verified@example.com", "preserves the verified email");
+  });
+
   test("opts into code signup and can return with the email preserved", async function (assert) {
     await visit("/signup");
     await fillIn("#new-account-email", "person@example.com");
