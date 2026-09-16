@@ -6,6 +6,11 @@
 
 tr_TR:
   mcp:
+    errors:
+      draft_too_long: "Taslak fazla uzun"
+      post_not_found: "Gönderi bulunamadı"
+      topic_not_found: "Konu bulunamadı."
+      user_not_found: "Kullanıcı bulunamadı"
     oauth:
       resource: "MCP sunucusu"
       deny: "Reddet"
@@ -1162,7 +1167,7 @@ tr_TR:
   uploads:
     marked_insecure_from_theme_component_reason: "tema bileşeninde kullanılan yükleme"
   unsubscribe:
-    title: "Abonelikten çık"
+    unsubscribe: "Abonelikten çık"
     stop_watching_topic: "Bu konuyu izlemeyi bırak, %{link}"
     mute_topic: "Bu konu için tüm bildirimleri sessize al, %{link}"
     unwatch_category: "%{category} kategorisindeki tüm konuları izlemeyi durdur"
@@ -1690,12 +1695,6 @@ tr_TR:
       host_names: "config/database.yml dosyanız varsayılan localhost sunucu adını kullanıyor. Sitenizin sunucu adını kullanmak için bunu güncelleyin."
       queue_size: "Sıraya alınan işlerin sayısı %{queue_size} ve bu, yüksek bir değer. Bu, Sidekiq işlem(ler)inde bir sorun olduğunu gösterebilir veya daha fazla Sidekiq çalışanı eklemeniz gerekebilir."
       ram: "Sunucunuz 1 GB'den az toplam bellekle çalışıyor. En az 1 GB bellek önerilir."
-      google_oauth2_config: 'Sunucu, Google OAuth2 (enable_google_oauth2_logins) ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış ancak istemci kimliği ve istemci gizli değerleri ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      facebook_config: 'Sunucu, Facebook ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_facebook_logins) ancak uygulama kimliği ve uygulama gizli değerleri ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      twitter_config: 'Sunucu, Twitter ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_twitter_logins) ancak anahtar ve gizli değerler ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      github_config: 'Sunucu, GitHub ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_github_logins) ancak istemci kimliği ve gizli değerler ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-      s3_upload_config: 'Sunucu, S3''e dosya yüklemek üzere yapılandırılmış ancak aşağıdaki ayarlardan en az biri yapılmamış: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile veya s3_upload_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi edinmek için "S3''e görüntü yüklemeleri nasıl ayarlanır?" bölümüne bakın</a>.'
-      s3_backup_config: 'Sunucu, yedekleri S3''e yüklemek üzere yapılandırılmış ancak aşağıdaki ayarlardan en az biri yapılmamış: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile veya s3_backup_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> bölümüne gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi edinmek için "S3''e görüntü yüklemeleri nasıl ayarlanır?" bölümüne bakın</a>.'
       s3_cdn: 'Sunucu, dosyaları S3''e yükleyecek şekilde yapılandırılmış ancak yapılandırılmış bir S3 İTA''sı yok. Bu, yüksek S3 maliyetlerine ve site performansının daha yavaş olmasına yol açabilir. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Daha fazla bilgi edinmek için "Yüklemeler için Nesne Depolamayı Kullanma" bölümüne bakın</a>.'
       image_magick: 'Sunucu büyük resimlerin küçük resimlerini oluşturacak şekilde yapılandırılmış ancak ImageMagick yüklü değil. ImageMagick''i favori paket yöneticinizi kullanarak yükleyin veya <a href="https://www.imagemagick.org/script/download.php" target="_blank">en son sürümü indirin</a>.'
       failing_emails: 'Başarısız olan %{num_failed_jobs} e-posta işi var. App.yml dosyanızı kontrol edin ve posta sunucusu ayarlarının doğru olduğundan emin olun. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq''teki başarısız işlere bakın</a>.'
@@ -2568,7 +2567,6 @@ tr_TR:
       markdown_linkify_tlds: "\"*\" değerini dahil edemezsiniz."
       google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce tüm \"google oauth2 hd\" ayarlarını yapılandırmanız gerekiyor."
       discourse_id_registration: "Discourse ID ile otomatik olarak kayıt yapılamadı. Bunun nedeni ağ bağlantısı sorunları, güvenlik duvarı kısıtlamaları veya Discourse ID hizmetine erişilememesi olabilir. Daha fazla bilgi için lütfen sunucu günlüklerini kontrol edin veya destek ekibiyle iletişime geçin."
-      linkedin_oidc_credentials: "Bu ayarı etkinleştirmeden önce LinkedIn OIDC giriş bilgilerini ('linkedin_oidc_client_id' ve 'linkedin_oidc_client_secret') yapılandırmanız gerekiyor."
       search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_chinese\" özelliğini devre dışı bırakmalısınız."
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce \"search_tokenize_japanese\" özelliğini devre dışı bırakmalısınız."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2 adımlı kimlik doğrulama zorunlu ise DiscourseConnect'i etkinleştiremezsiniz."
@@ -2616,8 +2614,6 @@ tr_TR:
       tags_any: "Belirtilen etiketlerden herhangi birine sahip konuları gösterin (virgülle ayrılmış)"
       tags_all: "Belirtilen tüm etiketlere sahip konuları gösterin (artı ile ayrılmış)"
       exclude_tag: "Belirli bir etikete sahip konuları hariç tutun"
-      exclude_tags_any: "Belirtilen etiketlerden herhangi birine sahip konuları hariç tutun (virgülle ayrılmış)"
-      exclude_tags_all: "Belirtilen etiketlerin tümüne sahip konuları hariç tutun (artı ile ayrılmış)"
       tag_group: "Belirli bir etiket grubundan etiketlere sahip konuları gösterin"
       exclude_tag_group: "Belirli bir etiket grubundan etiketli konuları hariç tutun"
       activity_before: "Belirli bir tarihten önceki son aktiviteye sahip konuları gösterin (YYYY-AA-GG veya günler önce)"
@@ -2627,7 +2623,6 @@ tr_TR:
       created_before: "Belirli bir tarihten önce (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_by: "Belirli bir kullanıcı veya grup tarafından oluşturulan konuları göster"
-      created_by_user: "Kullanıcı adı veya grup tarafından oluşturulan konuları göster (@ işareti olmadan)"
       created_by_multiple: "Belirtilen kullanıcılar veya gruplar (virgülle ayrılmış) tarafından oluşturulan konuları göster"
       latest_post_before: "Son gönderisi belirli bir tarihten önce (YYYY-AA-GG veya günler önce) olan konuları gösterin"
       latest_post_after: "Son gönderisi belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) olan konuları gösterin"

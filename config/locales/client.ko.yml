@@ -192,6 +192,7 @@ ko:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
       dismiss: "읽음으로 표시..."
     back_button: "뒤로"
+    confirm_button: "확인"
     welcome_banner:
       header:
         new_members: "%{preferred_display_name}에 오신 것을 환영합니다!"
@@ -3378,6 +3379,7 @@ ko:
       with_category: "%{filter} %{category} 주제"
       filter:
         title: "%{filter}에 대한 필터링된 결과"
+        reset: "리셋"
         button:
           label: "필터"
       latest:

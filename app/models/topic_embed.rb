@@ -120,7 +120,7 @@ class TopicEmbed < ActiveRecord::Base
 
       return post unless post&.topic
 
-      if post.user != user
+      if post.user_id != user.id
         PostOwnerChanger.new(
           post_ids: [post.id],
           topic_id: post.topic_id,
@@ -131,10 +131,11 @@ class TopicEmbed < ActiveRecord::Base
         post.reload
       end
 
-      existing_tag_names = post.topic.tags.pluck(:name).sort
       incoming_tag_names = Array(tags).map { |tag| tag.respond_to?(:name) ? tag.name : tag }.sort
 
-      tags_changed = !tags.nil? && existing_tag_names != incoming_tag_names
+      tags_changed =
+        SiteSetting.tagging_enabled && !tags.nil? &&
+          tags_changed?(post.topic, user, incoming_tag_names)
       content_changed = content_sha1 != embed.content_sha1
       title_changed = title.present? && title != post.topic.title
       cook_method_changed = !cook_method.nil? && cook_method != post.cook_method
@@ -144,7 +145,7 @@ class TopicEmbed < ActiveRecord::Base
       if content_changed || title_changed || tags_changed
         changes = { raw: absolutize_urls(url, contents) }
 
-        changes[:tags] = incoming_tag_names if SiteSetting.tagging_enabled && tags_changed
+        changes[:tags] = incoming_tag_names if tags_changed
         changes[:title] = title if title_changed
 
         post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
@@ -168,6 +169,18 @@ class TopicEmbed < ActiveRecord::Base
 
     post
   end
+
+  def self.tags_changed?(topic, user, incoming_tag_names)
+    existing_tag_names = topic.tags.pluck(:name)
+    return false if existing_tag_names.sort == incoming_tag_names
+
+    savable_tag_names =
+      Array(DiscourseTagging.tags_for_saving(incoming_tag_names, user.guardian, unlimited: true))
+    saved_count = [savable_tag_names.size, SiteSetting.max_tags_per_topic].min
+
+    existing_tag_names.size != saved_count || (existing_tag_names - savable_tag_names).present?
+  end
+  private_class_method :tags_changed?
 
   def self.find_remote(url)
     url = UrlHelper.normalized_encode(url)
@@ -350,8 +363,21 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.topic_embed_by_url(embed_url)
-    embed_url = normalize_url(embed_url).sub(%r{\Ahttps?\://}, "")
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").first
+    with_embed_urls([embed_url]).min_by(&:id)
+  end
+
+  def self.with_embed_urls(urls)
+    variants =
+      urls.flat_map do |url|
+        key = embed_url_key(url)
+        ["http://#{key}", "https://#{key}"]
+      end
+
+    where("lower(embed_url) IN (?)", variants)
+  end
+
+  def self.embed_url_key(url)
+    normalize_url(url).sub(%r{\Ahttps?\://}, "")
   end
 
   def self.topic_id_for_embed(embed_url)
@@ -441,5 +467,6 @@ end
 #
 # Indexes
 #
-#  index_topic_embeds_on_embed_url  (embed_url) UNIQUE
+#  index_topic_embeds_on_embed_url        (embed_url) UNIQUE
+#  index_topic_embeds_on_lower_embed_url  (lower((embed_url)::text))
 #

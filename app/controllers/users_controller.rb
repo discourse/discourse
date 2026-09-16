@@ -117,6 +117,13 @@ class UsersController < ApplicationController
   allow_in_readonly_mode :admin_login
   allow_in_staff_writes_only_mode :email_login, :password_reset_update
 
+  allow_when_archived :email_login,
+                      :password_reset_update,
+                      :admin_login,
+                      :confirm_email_token,
+                      :perform_account_activation,
+                      :send_activation_email
+
   MAX_RECENT_SEARCHES = 5
 
   def index
@@ -671,11 +678,7 @@ class UsersController < ApplicationController
   end
 
   def check_email
-    begin
-      RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
-    rescue RateLimiter::LimitExceeded
-      return render json: success_json
-    end
+    RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
 
     email = Email.downcase((params[:email] || "").strip)
 

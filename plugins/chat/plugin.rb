@@ -613,6 +613,7 @@ after_initialize do
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)
+  register_hashtag_content_store(Chat::MessageHashtagStore)
   register_hashtag_type_priority_for_context("channel", "chat-composer", 200)
   register_hashtag_type_priority_for_context("category", "chat-composer", 100)
   register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
@@ -656,7 +657,8 @@ after_initialize do
     description:
       "Lists chat channels followed by the authenticated user, including direct-message channels.",
     implementation: Chat::McpTools::ListChannels,
-    required_scopes: %w[chat:read],
+    output_schema: Chat::McpTools::ListChannels::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListChannels::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -664,8 +666,8 @@ after_initialize do
     availability: -> { SiteSetting.chat_enabled },
   )
   register_mcp_tool(
-    "chat_message_list",
-    title: "List chat messages",
+    "discourse_get_chat_messages",
+    title: "Get chat messages",
     description: "Reads a bounded page of messages from a visible chat channel.",
     implementation: Chat::McpTools::ListMessages,
     input_schema: {
@@ -675,16 +677,30 @@ after_initialize do
           type: "integer",
           minimum: 1,
         },
-        limit: {
+        page_size: {
           type: "integer",
           minimum: 1,
-          maximum: 100,
+          maximum: 50,
+          default: 50,
+        },
+        target_message_id: {
+          type: "integer",
+          minimum: 1,
+        },
+        direction: {
+          type: "string",
+          enum: %w[past future],
+        },
+        target_date: {
+          type: "string",
+          format: "date-time",
         },
       },
       required: ["channel_id"],
       additionalProperties: false,
     },
-    required_scopes: %w[chat:read],
+    output_schema: Chat::McpTools::ListMessages::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -717,7 +733,8 @@ after_initialize do
       required: %w[channel_id message],
       additionalProperties: false,
     },
-    required_scopes: %w[chat:write],
+    output_schema: Chat::McpTools::CreateMessage::OUTPUT_SCHEMA,
+    required_scopes: Chat::McpTools::CreateMessage::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

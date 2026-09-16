@@ -247,7 +247,6 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     if actions.first.present?
-      unassign_topic performed_by, post
       DiscourseEvent.trigger(:flag_reviewed, post)
       DiscourseEvent.trigger(:flag_deferred, actions.first)
     end
@@ -307,7 +306,6 @@ class ReviewableFlaggedPost < Reviewable
     Post.with_deleted.where(id: target_id).update_all(cached)
 
     if actions.first.present?
-      unassign_topic performed_by, post
       DiscourseEvent.trigger(:flag_reviewed, post)
       DiscourseEvent.trigger(:flag_disagreed, actions.first)
     end
@@ -376,47 +374,12 @@ class ReviewableFlaggedPost < Reviewable
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
 
     if actions.first.present?
-      unassign_topic performed_by, post
       DiscourseEvent.trigger(:flag_reviewed, post)
       DiscourseEvent.trigger(:flag_agreed, actions.first)
       yield(actions.first) if block_given?
     end
 
     create_result(:success, :approved, actions.map(&:user_id), false)
-  end
-
-  def unassign_topic(performed_by, post)
-    topic = post.topic
-    return unless topic && performed_by && SiteSetting.reviewable_claiming != "disabled"
-    claim = ReviewableClaimedTopic.find_by(topic_id: topic.id, automatic: false)
-    return if claim.nil?
-
-    claim.delete
-    claim.log_topic_history(:unclaimed, performed_by)
-
-    user_ids = User.staff.pluck(:id)
-
-    if SiteSetting.enable_category_group_moderation? && topic.category
-      user_ids.concat(
-        GroupUser
-          .joins(
-            "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
-          )
-          .where("category_moderation_groups.category_id": topic.category.id)
-          .distinct
-          .pluck(:user_id),
-      )
-      user_ids.uniq!
-    end
-
-    data = {
-      topic_id: topic.id,
-      user: BasicUserSerializer.new(performed_by, root: false).as_json,
-      automatic: false,
-      claimed: false,
-    }
-
-    MessageBus.publish("/reviewable_claimed", data, user_ids: user_ids)
   end
 
   private

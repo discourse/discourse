@@ -321,6 +321,7 @@ fi:
       message: "Olemme päivittäneet tämän sivuston, <span>päivitä</span> sivu, jotta asiat toimivat sujuvasti."
       dismiss: "Sulje"
     back_button: "Takaisin"
+    confirm_button: "Vahvista"
     welcome_banner:
       header:
         logged_in_members: "Tervetuloa takaisin, %{preferred_display_name}!"
@@ -4448,6 +4449,7 @@ fi:
       with_category: "%{filter} %{category} ketjut"
       filter:
         title: "Suodatetut tulokset suodattimella %{filter}"
+        reset: "palauta"
         button:
           label: "Suodatin"
       latest:

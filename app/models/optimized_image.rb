@@ -97,7 +97,7 @@ class OptimizedImage < ActiveRecord::Base
         temp_path = temp_file.path
 
         target_quality =
-          upload.target_image_quality(
+          upload.target_jpeg_image_quality(
             original_path,
             SiteSetting.ImageQuality.image_preview_jpg_quality,
           )
@@ -195,7 +195,7 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|svg)\z/i
+  IM_DECODERS = /\A(jpe?g|png|gif|webp|avif|svg)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}

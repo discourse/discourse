@@ -29,6 +29,18 @@ RSpec.describe FileHelper do
       end.to raise_error(OpenURI::HTTPError, "404 Error")
     end
 
+    it "exposes the response headers on the raised error" do
+      url = "http://toomany.com/429"
+      stub_request(:get, url).to_return(status: 429, headers: { "Retry-After" => "120" })
+
+      expect do
+        FileHelper.download(url, max_file_size: 10_000, tmp_file_name: "trouttmp")
+      rescue => e
+        expect(e.io.meta["retry-after"]).to eq("120")
+        raise
+      end.to raise_error(OpenURI::HTTPError, "429 Error")
+    end
+
     it "does not follow redirects if instructed not to" do
       url2 = "https://test.com/image.png"
       stub_request(:get, url).to_return(status: 302, body: "", headers: { location: url2 })

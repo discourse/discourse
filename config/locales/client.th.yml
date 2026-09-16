@@ -2364,6 +2364,8 @@ th:
     filters:
       with_topics: "%{filter} กระทู้"
       with_category: "%{filter} %{category} กระทู้"
+      filter:
+        reset: "ล้าง"
       latest:
         title: "ล่าสุด"
         title_with_count:

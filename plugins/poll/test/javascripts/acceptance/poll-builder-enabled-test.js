@@ -1,7 +1,9 @@
 import {
   click,
   fillIn,
+  find,
   findAll,
+  focus,
   settled,
   triggerKeyEvent,
   visit,
@@ -113,6 +115,35 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
         "Before\n\n[poll]\n* First\n* Second\n\n[/poll]\n\nBetween\n\n[poll type=regular results=on_vote public=false name=second chartType=pie dynamic=true status=closed order=asc]\n# **Question**\n\n* **Yes**\n* [No](https://example.com)\n\n[/poll]\n\nAfter",
         "preserves the other poll, the content and the surrounding text"
       );
+  });
+
+  test("opens poll settings without focusing the unfocused editor first", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "[poll]\n* First\n* Second\n[/poll]");
+    await click(".composer-toggle-switch");
+    await waitFor(".ProseMirror");
+    await settled();
+    await focus("#reply-title");
+
+    const editButton = find(".composer-poll-node__edit");
+    const mouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+    });
+    editButton.dispatchEvent(mouseDown);
+
+    assert.true(
+      mouseDown.defaultPrevented,
+      "pressing Edit poll prevents a focus change that would shift the composer"
+    );
+    assert.dom("#reply-title").isFocused("focus stays outside the editor");
+
+    await click(editButton);
+
+    assert
+      .dom(".poll-ui-builder .d-modal__title")
+      .hasText("Edit poll", "opens the editing builder on the first click");
   });
 
   test("cancelling poll edits leaves the document unchanged", async function (assert) {

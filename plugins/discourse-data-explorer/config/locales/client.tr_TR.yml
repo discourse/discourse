@@ -27,6 +27,7 @@ tr_TR:
     explorer:
       default_query: "Varsayılan"
       default_query_notice: "Bu varsayılan bir sorgudur, SQL düzenlenemez. SQL'yi düzenlemek için yeni bir sorgu oluşturun."
+      view_query: "Görüntüle"
       queries: "Sorgular"
       query_created: "Sorgu oluşturuldu!"
       mode:

@@ -6,6 +6,9 @@
 
 et:
   mcp:
+    errors:
+      draft_too_long: "Mustand on liiga pikk"
+      topic_not_found: "Teemat ei leitud"
     oauth:
       approve: "Autoriseeri"
   llms_txt:
@@ -523,7 +526,7 @@ et:
     banner:
       title: "Teema Bänneriks"
   unsubscribe:
-    title: "Tühista tellimus"
+    unsubscribe: "Tühista tellimus"
     mailing_list_mode: "Lülita postiloendi režiim välja"
     log_out: "Logi välja"
     digest_frequency:

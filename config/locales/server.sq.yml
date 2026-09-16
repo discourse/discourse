@@ -6,6 +6,9 @@
 
 sq:
   mcp:
+    errors:
+      draft_too_long: "Mesazhi shembull është shumë i gjatë"
+      topic_not_found: "Tema nuk u gjet"
     oauth:
       deny: "Mohoni"
       approve: "Autorizo"
@@ -432,7 +435,7 @@ sq:
   unsubscribed:
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
-    title: "Çregjistrohuni"
+    unsubscribe: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
     log_out: "Shkëputu"

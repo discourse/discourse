@@ -1828,6 +1828,7 @@ be:
     categories_list: "Спіс катэгорый"
     filters:
       filter:
+        reset: "скінуць"
         button:
           label: "Фільтр"
       latest:

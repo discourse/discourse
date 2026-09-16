@@ -53,6 +53,10 @@ module DiscourseAi
           true
         end
 
+        def self.mandatory_approval?
+          true
+        end
+
         def self.attribute_to_approver?
           true
         end

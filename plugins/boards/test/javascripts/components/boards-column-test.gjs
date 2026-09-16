@@ -18,7 +18,11 @@ module("Integration | Component | BoardsColumn", function (hooks) {
 
   hooks.beforeEach(function () {
     this.fabricators = new BoardsFabricators(getOwner(this));
-    this.board = this.fabricators.board({ id: 1, can_write: false });
+    this.board = this.fabricators.board({
+      id: 1,
+      can_write: false,
+      can_manage: false,
+    });
 
     this.oldCard = this.fabricators.card({
       id: 101,
@@ -43,8 +47,6 @@ module("Integration | Component | BoardsColumn", function (hooks) {
         <template>
           <BoardsColumn
             @board={{this.board}}
-            @canManage={{false}}
-            @canWrite={{false}}
             @column={{this.column}}
             @linkedCardId={{this.linkedCardId}}
             @linkHighlightCardId={{this.linkHighlightCardId}}

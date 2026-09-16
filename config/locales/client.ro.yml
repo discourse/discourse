@@ -3496,6 +3496,7 @@ ro:
       with_category: "%{filter} %{category} subiecte"
       filter:
         title: "Rezultate filtrate pentru %{filter}"
+        reset: "Resetează"
         button:
           label: "Filtru"
       latest:

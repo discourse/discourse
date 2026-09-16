@@ -607,14 +607,8 @@ basic:
     default: false
     hidden: true
     client: true
-  trigger_browser_pageview_events:
-    default: false
-    hidden: true
-  persist_browser_pageview_events:
-    default: true
-    hidden: true
   clean_up_browser_pageview_events:
-    default: false
+    default: true
     hidden: true
   browser_pageview_referrer_backfill_batch_size:
     default: 5000
@@ -757,6 +751,7 @@ login:
     hidden: true
   enable_google_oauth2_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   google_oauth2_client_id:
     default: ""
@@ -794,6 +789,7 @@ login:
     area: "authenticators"
   enable_twitter_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   twitter_consumer_key:
     default: ""
@@ -806,6 +802,7 @@ login:
     area: "authenticators"
   enable_facebook_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   facebook_app_id:
     client: true
@@ -819,6 +816,7 @@ login:
     area: "authenticators"
   enable_github_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   github_client_id:
     default: ""
@@ -831,6 +829,7 @@ login:
     area: "authenticators"
   enable_discord_logins:
     default: false
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   discord_client_id:
     default: ""
@@ -846,7 +845,7 @@ login:
     area: "authenticators"
   enable_linkedin_oidc_logins:
     default: false
-    validator: "LinkedinOidcCredentialsValidator"
+    validator: "AuthProviderCredentialsValidator"
     area: "authenticators"
   linkedin_oidc_client_id:
     default: ""
@@ -1432,7 +1431,7 @@ posting:
     client: true
     hidden: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "other,all_members"
       allow_enabled_for:
         - everyone
@@ -3729,6 +3728,9 @@ legal:
     area: "legal"
 
 backups:
+  site_archived:
+    default: false
+    client: true
   enable_backups:
     default: true
     client: true
@@ -4831,6 +4833,15 @@ experimental:
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
+  enable_category_hashtag_cards:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/412529"
   prioritize_recently_used_tags:
     default: false
     client: true

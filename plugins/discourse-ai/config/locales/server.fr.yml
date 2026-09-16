@@ -402,10 +402,28 @@ fr:
       configuration_missing: "La configuration de détection de contenu indésirable par IA est manquante. Ajoutez une configuration dans « Administration > Extensions > Discourse AI > Contenu indésirable » avant d'activer la fonctionnalité."
       logging_subject: "Détection des contenus indésirables"
     ai_bot:
+      navigation:
+        settings:
+          title: "Paramètres du site"
+        users:
+          title: "Utilisateurs"
+        groups:
+          title: "Groupes"
+        review:
+          title: "Examiner la file d'attente"
+        categories:
+          title: "Catégories"
+        tags:
+          title: "Étiquettes"
+        themes:
+          title: "Thèmes"
+        authentication:
+          title: "Connexion et authentification"
+        backups:
+          title: "Sauvegardes"
       reply_error: "Il semble que notre système ait rencontré un problème inattendu en essayant de répondre.\n\n[details='Détails de l'erreur']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de robot IA sans titre]"
       thinking: "Raisonnement"
-      tool_pending_approval: "Cette action doit être approuvée par un modérateur avant de pouvoir être exécutée."
       read_post:
         unknown_post: "publication"
       chat_tool_approval:

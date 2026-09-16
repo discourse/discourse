@@ -410,6 +410,7 @@ en:
       tooltip: "Notification level: %{level}"
 
     back_button: "Back"
+    confirm_button: "Confirm"
 
     welcome_banner:
       header:
@@ -514,6 +515,9 @@ en:
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
     multiple_errors: "Multiple errors occurred: %{errors}"
+    too_many_requests:
+      one: "You’ve performed this action too many times. Please wait %{count} second before trying again."
+      other: "You’ve performed this action too many times. Please wait %{count} seconds before trying again."
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -2944,6 +2948,10 @@ en:
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
       signup_disabled: "Signing up is disabled while the site is in read only mode."
+    site_archived:
+      enabled: "This site is in archive mode. Please continue to browse, but replying, likes, and other actions are disabled."
+      enabled_anonymous: "This site is in archive mode. Please continue to browse or log in, but replying, likes, and other actions are disabled."
+      signup_disabled: "Signing up is disabled while the site is in archive mode."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
       enabled_anonymous: "This site is in staff only mode. Please continue to browse, but signing up is unavailable and only staff members can log in."
@@ -3096,6 +3104,7 @@ en:
         login: "Log In"
 
     forgot_password:
+      code_instructions: "If a matching account exists, we sent a verification code to its email address. Enter the code to reset your password."
       title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
@@ -4084,6 +4093,9 @@ en:
       full_page_title: "Search"
       results: "results"
       no_results: "No results found."
+      results_announcement:
+        one: "%{count} result found."
+        other: "%{count} results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"
       results_page: "Search results for '%{term}'"
@@ -5554,6 +5566,7 @@ en:
       list: "List categories"
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
+      latest_topics: "Latest topics"
       description_updated: "Description updated"
       description_expand: "Show more"
       description_collapse: "Show less"
@@ -5871,6 +5884,8 @@ en:
       with_category: "%{filter} %{category} topics"
       filter:
         title: "Filtered results for %{filter}"
+        results_for: "Results for: %{query}"
+        reset: "reset"
         button:
           label: "Filter"
       latest:
@@ -6150,16 +6165,21 @@ en:
       favorite_count: "%{count}/%{max} badges marked as favorite"
 
     download_calendar:
-      title: "Download calendar"
+      title: "Add to calendar"
+      calendar: "Calendar"
       save_ics: "Download .ics file"
       save_google: "Add to Google calendar"
+      save_outlook: "Add to Microsoft Outlook"
+      save_apple: "Add to Apple Calendar"
       remember: "Don’t ask me again"
-      remember_explanation: "(you can change this preference in your user prefs)"
+      remember_explanation: "You can change this preference later in your profile preferences."
       download: "Download"
       default_calendar: "Default calendar"
       default_calendar_instruction: "Determine which calendar should be used when dates are saved"
       add_to_calendar: "Add to calendar"
       google: "Google Calendar"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Calendar"
       ics: "ICS"
       default_title: "Scheduled Event"
     tagging:
@@ -8938,6 +8958,14 @@ en:
           disable:
             title: "Disable read-only mode"
             label: "Disable read-only"
+        site_archived:
+          enable:
+            title: "Enable archive mode"
+            label: "Enable archive mode"
+            confirm: "Are you sure you want to enable archive mode? Users will still be able to log in and browse, but all write actions will be disabled. Operational read-only reasons (failover, maintenance) still take precedence when active."
+          disable:
+            title: "Disable archive mode"
+            label: "Disable archive mode"
         logs:
           none: "No logs yet…"
         columns:

@@ -178,6 +178,7 @@ gl:
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    confirm_button: "Confirmar"
     welcome_banner:
       header:
         anonymous_members: "Dámoslle a benvida a %{site_name}!"
@@ -3058,6 +3059,7 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
+        reset: "restabelecer"
         button:
           label: "Filtro"
       latest:

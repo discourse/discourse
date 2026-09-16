@@ -27,6 +27,9 @@ class DiscourseVipsWorker
     WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
     private_constant :WARM_OPERATIONS
 
+    SVG_DIMENSIONS_RLIMITS = { cpu_seconds: 1, memory_bytes: 1024 * 1024 * 1024 }.freeze
+    private_constant :SVG_DIMENSIONS_RLIMITS
+
     def self.warm
       WARM_OPERATIONS.each do |name|
         operation = Vips.vips_operation_new(name)
@@ -46,14 +49,25 @@ class DiscourseVipsWorker
         letter_avatar(*arguments)
       when "dominant-color"
         dominant_color(*arguments)
+      when "animated"
+        animated(*arguments)
+      when "svg-dimensions"
+        svg_dimensions(*arguments)
+      when "heif-to-jpeg"
+        heif_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "png-to-jpeg"
+        png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "recompress-jpeg"
+        recompress_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
     end
 
-    def initialize(read_paths: [], write_paths: [], &action)
+    def initialize(read_paths: [], write_paths: [], rlimits: {}, &action)
       @read_paths = read_paths
       @write_paths = write_paths
+      @rlimits = rlimits
       @action = action
     end
 
@@ -66,6 +80,10 @@ class DiscourseVipsWorker
         "read" => existing_paths([*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *@read_paths]),
         "write" => existing_paths([scratch, *@write_paths]),
       }
+    end
+
+    def sandbox_rlimits(defaults:)
+      defaults.merge(@rlimits)
     end
 
     def self.version
@@ -133,6 +151,98 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :dominant_color
+
+    def self.animated(input_path)
+      new(read_paths: [input_path]) do
+        block_loaders(allowed: %w[VipsForeignLoadNsgif VipsForeignLoadWebp VipsForeignLoadHeif])
+
+        begin
+          image = Vips::Image.new_from_file(input_path, access: :sequential)
+          image.get_typeof("n-pages") != 0 && image.get("n-pages") > 1
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :animated
+
+    def self.heif_to_jpeg(input_path:, output_path:, quality:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        block_loaders(allowed: %w[VipsForeignLoadHeif])
+
+        begin
+          save_jpeg(
+            Vips::Image.heifload(input_path, access: :sequential),
+            input_path:,
+            output_path:,
+            quality:,
+          )
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :heif_to_jpeg
+
+    def self.png_to_jpeg(input_path:, output_path:, quality:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        block_loaders(allowed: %w[VipsForeignLoadPng])
+
+        begin
+          save_jpeg(Vips::Image.pngload(input_path), input_path:, output_path:, quality:)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :png_to_jpeg
+
+    def self.recompress_jpeg(input_path:, output_path:, quality:)
+      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
+        block_loaders(allowed: %w[VipsForeignLoadJpeg])
+
+        begin
+          save_jpeg(Vips::Image.jpegload(input_path), input_path:, output_path:, quality:)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :recompress_jpeg
+
+    def self.save_jpeg(image, input_path:, output_path:, quality:)
+      if File.expand_path(input_path) == File.expand_path(output_path) ||
+           (File.exist?(output_path) && File.identical?(input_path, output_path))
+        raise ArgumentError, "JPEG conversion requires separate input and output files"
+      end
+
+      image.autorot.jpegsave(
+        output_path,
+        background: [255, 255, 255],
+        Q: Integer(quality),
+        interlace: false,
+        # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
+        optimize_coding: true,
+      )
+      nil
+    end
+    private_class_method :save_jpeg
+
+    def self.svg_dimensions(input_path)
+      new(read_paths: [input_path], rlimits: SVG_DIMENSIONS_RLIMITS) do
+        raise ArgumentError, "invalid SVG dimensions arguments" if !input_path
+
+        block_loaders(allowed: %w[VipsForeignLoadSvg])
+        begin
+          Vips.concurrency_set(1)
+          image = Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)
+          [image.width, image.height]
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :svg_dimensions
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
@@ -262,7 +372,7 @@ class DiscourseVipsWorker
           timeout: Float(request.fetch("timeout")),
           env: child_environment(scratch),
           unsetenv_others: true,
-          rlimits: RLIMITS,
+          rlimits: operation.sandbox_rlimits(defaults: RLIMITS),
           seccomp_deny_network: LINUX_PLATFORM,
           on_unsupported: :run_without_landlock,
         ) do |stdout, _stderr|

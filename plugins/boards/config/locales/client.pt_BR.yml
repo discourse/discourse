@@ -6,7 +6,23 @@
 
 pt_BR:
   js:
+    discourse_workflows:
+      create_board_column:
+        title: "Título"
+        icon: "Ícone"
+        color: "Cor"
+        tag_name: "Etiqueta"
+        default_sort_priority: "Prioridade"
+      create_board:
+        name: "Nome"
+        slug: "Slug"
+        tag_names: "Tags"
+        category_ids: "Categorias"
     boards:
+      status:
+        all: "Todas"
+        open: "Aberto (open)"
+        archived: "Arquivados"
       board:
         remove_card: "Remover"
         new_topic: "Novo tópico..."

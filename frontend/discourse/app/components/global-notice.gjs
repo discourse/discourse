@@ -127,6 +127,15 @@ export default class GlobalNotice extends Component {
           id: "alert-read-only",
         })
       );
+    } else if (this.siteSettings.site_archived) {
+      notices.push(
+        Notice.create({
+          text: this.currentUser
+            ? i18n("site_archived.enabled")
+            : i18n("site_archived.enabled_anonymous"),
+          id: "alert-site-archived",
+        })
+      );
     }
 
     const previewThemeId =

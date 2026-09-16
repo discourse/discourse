@@ -35,6 +35,14 @@ jobs:
         || 'ubuntu-latest'
       }}
     container: discourse/discourse_test:release
+    services:
+      minio:
+        image: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'bitnami/minio@sha256:50cec18ac4184af4671a78aedd5554942c8ae105d51a465fa82037949046da01' || '' }}
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+          MINIO_DEFAULT_BUCKETS: discoursetest
+          MINIO_DOMAIN: minio.local
     timeout-minutes: >-
       ${{
         matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
@@ -52,11 +60,13 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
-      MINIO_RUNNER_LOG_LEVEL: WARN
+      S3_SYSTEM_TEST_ENDPOINT: ${{ matrix.build_type == 'system' && matrix.target == 'core' && 'http://minio.local:9000' || '' }}
+      S3_SYSTEM_TEST_BUCKET: discoursetest
+      S3_SYSTEM_TEST_ACCESS_KEY_ID: minioadmin
+      S3_SYSTEM_TEST_SECRET_ACCESS_KEY: minioadmin
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
-      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
@@ -173,8 +183,9 @@ jobs:
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
-          echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+          minio_ip="$(getent ahostsv4 minio | awk 'NR == 1 { print $1 }')"
+          echo "$minio_ip minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+          curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://minio.local:9000/minio/health/ready
 
       - name: Create databases
         run: bin/rake db:create

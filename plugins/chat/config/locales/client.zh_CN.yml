@@ -151,6 +151,8 @@ zh_CN:
       muted: "已设为免打扰"
       joined: "已加入"
       empty_state:
+        direct_message_cta: "发起私信或群聊"
+        direct_message: "您还可以与一个或多个用户发起私信或群聊。"
         title: "找不到频道"
         my_threads: "您还没有任何消息串。您参与的消息串将在此处显示。"
       email_frequency:
@@ -572,20 +574,38 @@ zh_CN:
       direct_messages:
         title: "直接消息"
         aria_label: "切换到直接消息"
+        new: "新私信"
+        new_group: "新建群组聊天"
         create: "开始"
         leave: "离开频道"
         close: "关闭频道"
         cannot_create: "抱歉，您无法发送直接消息。"
       channel_list:
+        apply_filters: "对频道应用过滤器"
         title: "频道"
         aria_label: "切换到频道列表"
         options:
+          title: "频道列表选项"
           filter: "筛选"
+          sort: "排序"
+          current_filter: "筛选： %{filter}"
+          current_sort: "排序： %{sort}"
         filter:
+          title: "按以下方式筛选频道："
           all: "所有频道"
+          active: "仅活跃"
+          active_description: "最近 %{days} 天的新活动"
+          unread: "未读"
           mentions: "提及"
         sort:
+          title: "频道排序方式："
+          alphabetical: "按字母顺序"
+          recent_activity: "近期活动"
           priority: "优先级"
+          priority_description: "提及，然后是未读消息，然后是最近活动"
+        empty:
+          filtered: "没有频道符合此筛选条件。"
+          show_all: "显示所有频道"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "选择一个频道"
@@ -731,6 +751,11 @@ zh_CN:
           direct_html: '<span>%{username}</span> <span>在“%{channel}”中提及您</span>'
           other_plain: '在“%{channel}”中提及“%{identifier}”'
           other_html: '<span>%{username}</span> <span>在“%{channel}”中提及“%{identifier}”</span>'
+        direct_message_chat_mention:
+          direct: "我在私信里提到了你"
+          direct_html: "<span>%{username}</span> <span>在私信中提到了你</span>"
+          other_plain: "在私信中提到了 %{identifier}"
+          other_html: "<span>%{username}</span> <span>在私信中提及了 %{identifier}</span>"
         chat_message: "新的聊天消息"
         chat_quoted: "%{username} 引用了您的聊天消息"
       titles:
@@ -799,6 +824,9 @@ zh_CN:
         chat:
           title: 聊天
     sidebar:
+      start_new_dm:
+        text: 发起私信或群聊
+        title: 新的私信或群聊
       panels:
         chat:
           label: "聊天"

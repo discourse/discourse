@@ -2460,6 +2460,7 @@ et:
       with_topics: "%{filter} teemat"
       with_category: "%{filter} %{category} teemat"
       filter:
+        reset: "nulli"
         button:
           label: "Filter"
       latest:

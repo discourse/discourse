@@ -252,19 +252,19 @@ module DiscourseDataExplorer
           id: -42,
           name: "Crawler and Bot Traffic Overview",
           description:
-            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
+            "Buckets recent beacon pageviews by bot-likelihood score from Discourse's built-in crawler detection. Scoring lags live traffic, so the newest pageviews sit in the 'not scored' bucket alongside those that carried no bot signals at all, rather than counting as users. WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it, every pageview lands in 'not scored'. Accepts an 'hours' parameter, defaults to the last 24 hours.",
         },
         "crawler-traffic-detailed": {
           id: -43,
           name: "Crawler and Bot Traffic Detailed Report",
           description:
-            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires browser pageview event collection (hidden site setting persist_browser_pageview_events) and scoring (hidden site setting experimental_detect_crawler_pageviews); without both this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
         },
         "suspected-bot-networks": {
           id: -44,
           name: "Suspected Automated Traffic by IP and Network",
           description:
-            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. WARNING: requires browser pageview event collection to be enabled (hidden site setting persist_browser_pageview_events); without it no events are recorded and this report will be empty. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
+            "Networks (ASNs) and IPs generating high pageview volume with bot-like session patterns (near 1.0 views per session, rotating user agents, systematic topic harvesting), sorted so a scrape spread across many IPs on one network floats to the top. Accepts a 'days_ago' parameter, defaults to the last 3 days.",
         },
         "ask-ai-asks-over-time": {
           id: -45,
@@ -277,6 +277,12 @@ module DiscourseDataExplorer
           name: "Ask AI - Ask outcomes",
           description:
             "Ask AI outcome counts and percentages between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
+        },
+        "ask-ai-report-questions": {
+          id: -47,
+          name: "Ask AI - What users are asking",
+          description:
+            "Questions included in a particular Ask AI report, with their subjects and logged answers. Questions assigned to multiple subjects appear once per subject. Requires Discourse AI.",
         },
       }.with_indifferent_access
 
@@ -1528,7 +1534,6 @@ module DiscourseDataExplorer
           SELECT score
           FROM browser_pageview_events
           WHERE created_at >= NOW() - (:hours * INTERVAL '1 hour')
-            AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       )
       SELECT 'Not scored (pending or no signals)' AS bucket, COUNT(*) FILTER (WHERE score IS NULL) AS pageviews FROM events
       UNION ALL
@@ -1586,7 +1591,6 @@ module DiscourseDataExplorer
       FROM browser_pageview_events e
       JOIN browser_pageview_event_scores s ON s.event_id = e.id
       WHERE e.created_at >= NOW() - (:hours * INTERVAL '1 hour')
-          AND e.source = #{BrowserPageviewEvent::SOURCE_BEACON}
           AND e.score > :min_score
       GROUP BY e.ip_address, e.user_agent, e.asn, e.country_code, e.user_id, e.session_id
       ORDER BY max_score DESC, pageviews DESC
@@ -1613,7 +1617,6 @@ module DiscourseDataExplorer
           (array_agg(user_agent ORDER BY created_at DESC))[1] AS sample_user_agent
       FROM browser_pageview_events
       WHERE created_at >= CURRENT_DATE - CAST(:days_ago AS integer)
-          AND source = #{BrowserPageviewEvent::SOURCE_BEACON}
       GROUP BY ip_address, asn, country_code
       ORDER BY asn_total_pageviews DESC, pageviews DESC
       LIMIT 100
@@ -1657,6 +1660,32 @@ module DiscourseDataExplorer
         AND asked_at < :end_date::date + INTERVAL '1 day'
       GROUP BY ask_outcome
       ORDER BY ask_outcome NULLS LAST
+      SQL
+
+      queries["ask-ai-report-questions"]["sql"] = <<~SQL
+      -- [params]
+      -- int :report_id
+
+      SELECT
+        subjects.name AS subject,
+        logs.user_id,
+        TO_CHAR(logs.asked_at, 'Mon DD HH24:MI "UTC"') AS asked_at,
+        logs.query,
+        logs.answer_title,
+        logs.answer,
+        CASE logs.ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome
+      FROM ask_ai_reports reports
+      JOIN ask_ai_report_subjects subjects ON subjects.ask_ai_report_id = reports.id
+      JOIN ask_ai_report_subject_asks memberships ON memberships.ask_ai_report_subject_id = subjects.id
+      JOIN ask_ai_logs logs ON logs.id = memberships.ask_ai_log_id
+      WHERE reports.id = :report_id
+      ORDER BY subjects.position, subjects.id, logs.asked_at DESC, logs.id DESC
       SQL
 
       # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.

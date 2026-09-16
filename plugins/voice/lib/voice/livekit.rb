@@ -16,6 +16,13 @@ module Voice
         SiteSetting.voice_livekit_api_secret.present?
     end
 
+    def self.cloud?
+      uri = URI.parse(SiteSetting.voice_livekit_url)
+      uri.scheme == "wss" && uri.host&.end_with?(".livekit.cloud")
+    rescue URI::InvalidURIError
+      false
+    end
+
     def self.available_for?(room)
       return false unless configured?
 
@@ -71,9 +78,6 @@ module Voice
       sources
     end
 
-    # Least-privilege HS256 JWT: a leaked token can only join this one room,
-    # as this one user, for TOKEN_TTL. Guardian remains the sole authority —
-    # callers only mint for users who passed `ensure_can_join_voice_room!`.
     def self.mint_token(user:, room:, guardian:)
       raise MintError, "LiveKit is not fully configured" unless configured?
 

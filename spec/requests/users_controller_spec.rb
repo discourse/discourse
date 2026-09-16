@@ -979,7 +979,7 @@ RSpec.describe UsersController do
       context "with local logins disabled" do
         before do
           SiteSetting.enable_local_logins = false
-          SiteSetting.enable_google_oauth2_logins = true
+          enable_auth_provider(:google_oauth2)
         end
 
         it "blocks registration without authenticator information" do
@@ -1462,7 +1462,7 @@ RSpec.describe UsersController do
           )
 
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
-          SiteSetting.enable_twitter_logins = true
+          enable_auth_provider(:twitter)
           get "/auth/twitter/callback.json"
         end
 
@@ -1544,7 +1544,7 @@ RSpec.describe UsersController do
             info: OmniAuth::AuthHash::InfoHash.new(nickname: "testosama", name: "Osama Test"),
           )
           Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
-          SiteSetting.enable_twitter_logins = true
+          enable_auth_provider(:twitter)
           get "/auth/twitter/callback.json"
         end
 
@@ -2498,6 +2498,18 @@ RSpec.describe UsersController do
     it "return success if user email is taken by staged user" do
       get "/u/check_email.json", params: { email: Fabricate(:staged).email }
       expect(response.parsed_body["success"]).to be_present
+    end
+
+    it "rate limits requests per IP instead of failing open" do
+      RateLimiter.enable
+
+      10.times { get "/u/check_email.json", params: { email: "available@example.com" } }
+      get "/u/check_email.json", params: { email: user1.email }
+
+      expect(response.status).to eq(429)
+      expect(response.headers["Retry-After"]).to be_present
+      expect(response.parsed_body["success"]).to be_blank
+      expect(response.parsed_body["extras"]["wait_seconds"]).to be > 0
     end
   end
 
@@ -5466,7 +5478,7 @@ RSpec.describe UsersController do
         context "for an external provider" do
           before do
             sign_in(admin)
-            SiteSetting.enable_google_oauth2_logins = true
+            enable_auth_provider(:google_oauth2)
             UserAssociatedAccount.create!(
               user: user1,
               provider_uid: "myuid",

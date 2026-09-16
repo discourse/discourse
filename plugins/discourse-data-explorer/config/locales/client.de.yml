@@ -30,6 +30,7 @@ de:
     explorer:
       default_query: "Standard"
       default_query_notice: "Dies ist eine Standardabfrage, deren SQL-Code nicht bearbeitet werden kann. Erstelle eine neue Abfrage, um den SQL-Code zu bearbeiten."
+      view_query: "Ansehen"
       queries: "Anfragen"
       query_created: "Anfrage erstellt!"
       mode:

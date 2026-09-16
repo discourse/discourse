@@ -349,6 +349,7 @@ hr:
       message: "Ažurirali smo ovu stranicu, <span>molimo osvježite</span> kako bi sve nesmetano funkcioniralo."
       dismiss: "Odbaciti"
     back_button: "Natrag"
+    confirm_button: "Potvrdi"
     welcome_banner:
       header:
         logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
@@ -4677,6 +4678,7 @@ hr:
       with_category: "%{filter} %{category} teme"
       filter:
         title: "Filtrirani rezultati za %{filter}"
+        reset: "resetiraj"
         button:
           label: "Filter"
       latest:

@@ -18,6 +18,10 @@ module DiscourseAi
         # Stored in AiApiAuditLog#request_attempts for retried network failures,
         # which do not have an HTTP status code. 0 is intentionally outside the HTTP range.
         NETWORK_ERROR_RETRY_STATUS = 0
+
+        def self.schema_properties(response_format)
+          response_format&.dig(:json_schema, :schema, :properties)
+        end
         RETRIABLE_NETWORK_ERRORS = [
           Net::OpenTimeout,
           Net::ReadTimeout,
@@ -389,12 +393,10 @@ module DiscourseAi
         end
 
         def build_structured_output(model_params)
-          return if model_params[:response_format].blank?
+          properties = self.class.schema_properties(model_params[:response_format])
+          return if properties.blank?
 
-          schema_properties = model_params[:response_format].dig(:json_schema, :schema, :properties)
-          return if schema_properties.blank?
-
-          DiscourseAi::Completions::StructuredOutput.new(schema_properties)
+          DiscourseAi::Completions::StructuredOutput.new(properties)
         end
 
         def perform_completion_request_with_retries(

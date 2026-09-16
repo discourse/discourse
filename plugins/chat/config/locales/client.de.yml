@@ -597,6 +597,7 @@ de:
       direct_messages:
         title: "DN"
         aria_label: "Zu Direktnachrichten wechseln"
+        new_group: "Neuer Gruppenchat"
         create: "Los"
         leave: "Kanal verlassen"
         close: "Kanal schließen"

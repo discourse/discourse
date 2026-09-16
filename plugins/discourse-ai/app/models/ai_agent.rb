@@ -82,6 +82,7 @@ class AiAgent < ActiveRecord::Base
   before_validation :normalize_subagent_ids
 
   before_update :regenerate_rag_fragments
+  after_update :sync_spam_detection_model, if: :saved_change_to_default_llm_id?
   before_destroy :ensure_not_system
   after_destroy :remove_destroyed_agent_from_subagents
 
@@ -513,6 +514,15 @@ class AiAgent < ActiveRecord::Base
   end
 
   private
+
+  # Spam scans use an explicit model setting, so agent edits must update it too.
+  # Clearing the agent default preserves the model selected for spam detection.
+  def sync_spam_detection_model
+    return if default_llm_id.blank?
+
+    settings = AiModerationSetting.spam
+    settings.update!(llm_model_id: default_llm_id) if settings&.ai_agent_id == id
+  end
 
   def normalize_subagent_ids
     self[:subagent_ids] = Array(self[:subagent_ids])

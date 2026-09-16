@@ -45,16 +45,17 @@ module PageObjects
       page.evaluate_async_script("navigator.clipboard.readText().then(arguments[0])")
     end
 
-    def write_clipboard(content, html: false)
+    def write_clipboard(content, html: false, plain_text: content)
       if html
         page.evaluate_async_script(
           "navigator.clipboard.write([
         new ClipboardItem({
           'text/html': new Blob([arguments[0]], { type: 'text/html' }),
-          'text/plain': new Blob([arguments[0]], { type: 'text/plain' })
+          'text/plain': new Blob([arguments[1]], { type: 'text/plain' })
         })
-      ]).then(arguments[1])",
+      ]).then(arguments[2])",
           content,
+          plain_text,
         )
       else
         page.evaluate_async_script(
@@ -83,9 +84,9 @@ module PageObjects
       expect(clipboard_text).to strict ? eq(text) : include(text)
     end
 
-    def copy_paste(text, html: false, css_selector: nil)
+    def copy_paste(text, html: false, plain_text: text, css_selector: nil)
       allow_clipboard
-      write_clipboard(text, html: html)
+      write_clipboard(text, html: html, plain_text: plain_text)
       paste(css_selector:)
     end
 

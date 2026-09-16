@@ -351,6 +351,7 @@ zh_TW:
     notifications_tracking:
       tooltip: "通知層級：%{level}"
     back_button: "上一步"
+    confirm_button: "確認"
     welcome_banner:
       header:
         new_members: "歡迎你，%{preferred_display_name}！"
@@ -5148,6 +5149,7 @@ zh_TW:
       with_category: "%{filter} %{category} 話題"
       filter:
         title: "%{filter}的篩選結果"
+        reset: "重設"
         button:
           label: "過濾"
       latest:

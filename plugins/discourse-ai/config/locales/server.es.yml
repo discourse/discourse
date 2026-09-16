@@ -349,10 +349,28 @@ es:
       configuration_missing: "Falta la configuración de detección de spam de IA. Añade la configuración en «Administración > Plugins > Discourse AI > Spam» antes de activarla."
       logging_subject: "Detección de spam"
     ai_bot:
+      navigation:
+        settings:
+          title: "Ajustes del sitio"
+        users:
+          title: "Usuarios"
+        groups:
+          title: "Grupos"
+        review:
+          title: "Cola de revisión"
+        categories:
+          title: "Categorías"
+        tags:
+          title: "Etiquetas"
+        themes:
+          title: "Tema"
+        authentication:
+          title: "Inicio de sesión y autenticación"
+        backups:
+          title: "Copias de seguridad"
       reply_error: "Lo sentimos, parece que nuestro sistema ha encontrado un problema inesperado al intentar responder.\n\n[details='Detalles del error']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA sin título]"
       thinking: "Pensando"
-      tool_pending_approval: "Esta acción requiere la aprobación del moderador antes de poder ejecutarse."
       read_post:
         unknown_post: "publicación"
       chat_tool_approval:
