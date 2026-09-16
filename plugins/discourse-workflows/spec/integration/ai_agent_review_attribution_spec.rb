@@ -64,7 +64,10 @@ RSpec.describe "Agent attribution on workflow flags" do
     expect(execution.status).to eq("waiting")
 
     freeze_time(execution.waiting_until + 1.second) do
-      Jobs::DiscourseWorkflows::ResumeWaitingExecution.new.execute(execution_id: execution.id)
+      Jobs::DiscourseWorkflows::ResumeWaitingExecution.new.execute(
+        execution_id: execution.id,
+        resume_token: execution.resume_token,
+      )
     end
 
     expect(execution.reload.status).to eq("success")

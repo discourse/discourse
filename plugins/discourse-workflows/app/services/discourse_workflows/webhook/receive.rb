@@ -185,6 +185,7 @@ module DiscourseWorkflows
       Jobs.enqueue(
         Jobs::DiscourseWorkflows::ResumeWebhookWaiting,
         execution_id: waiting_execution.id,
+        resume_token: waiting_execution.resume_token,
         response_items: webhook_context.resume_items,
       )
     end
