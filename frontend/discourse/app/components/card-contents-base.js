@@ -167,7 +167,7 @@ export default class CardContentsBase extends Component {
     }
     // Using `next()` to optimise INP
     next(async () => {
-      if (this.isDestroying || this.isDestroyed || this.cardTarget !== target) {
+      if (this.isDestroying || this.cardTarget !== target) {
         return;
       }
 
@@ -181,8 +181,7 @@ export default class CardContentsBase extends Component {
         !this.showCardBeforeLoad &&
         this.visible &&
         this.cardTarget === target &&
-        !this.isDestroying &&
-        !this.isDestroyed
+        !this.isDestroying
       ) {
         this._positionCard(target, event);
       }

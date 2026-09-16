@@ -29,7 +29,7 @@ const LATEST_TOPICS_COUNT = 3;
 const LATEST_TOPICS_CACHE_MS = 5 * 60 * 1000;
 
 const CategoryNameLink = <template>
-  <a href={{@category.url}} class="category-card__link" ...attributes>
+  <a class="category-card__link" href={{@category.url}} ...attributes>
     <span
       class="category-card__style
         {{concat '--style-' (or @category.style_type 'square')}}"
@@ -66,16 +66,6 @@ export default class CategoryCardContents extends CardContentsBase {
   triggeringLinkSelector = CATEGORY_HASHTAG_SELECTOR;
 
   #latestTopicsCache = new Map();
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.appEvents.on("dom:clean", this, this._close);
-  }
-
-  willDestroyElement() {
-    this.appEvents.off("dom:clean", this, this._close);
-    super.willDestroyElement(...arguments);
-  }
 
   @computed("category.permission")
   get canCreateTopic() {
@@ -123,6 +113,16 @@ export default class CategoryCardContents extends CardContentsBase {
         currentUser: this.currentUser,
       }
     );
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.appEvents.on("dom:clean", this, this._close);
+  }
+
+  willDestroyElement() {
+    this.appEvents.off("dom:clean", this, this._close);
+    super.willDestroyElement(...arguments);
   }
 
   @action
@@ -243,10 +243,10 @@ export default class CategoryCardContents extends CardContentsBase {
         <div class="card-row first-row">
           {{#if this.category.uploaded_logo.url}}
             <a
-              href={{this.category.url}}
-              class="category-card__avatar"
-              tabindex="-1"
               aria-hidden="true"
+              class="category-card__avatar"
+              href={{this.category.url}}
+              tabindex="-1"
             >
               <CategoryLogo @category={{this.category}} />
             </a>
@@ -288,8 +288,8 @@ export default class CategoryCardContents extends CardContentsBase {
             {{/if}}
             {{#if this.canEditDescription}}
               <a
-                href={{this.category.topic_url}}
                 class="category-card__edit-description"
+                href={{this.category.topic_url}}
                 {{on "click" this.editDescription}}
               >
                 {{dIcon "pencil"}}
