@@ -1832,8 +1832,7 @@ describe PostRevisor do
     context "with drafts" do
       it "does not advance draft sequence if keep_existing_draft option is true" do
         post = Fabricate(:post, user: user)
-        topic = post.topic
-        draft_key = "topic_#{topic.id}"
+        draft_key = post.edit_draft_key
         data = { reply: "test 12222" }.to_json
         Draft.set(user, draft_key, 0, data)
         Draft.set(user, draft_key, 0, data)
@@ -2175,19 +2174,19 @@ describe PostRevisor do
   describe "draft cleanup" do
     fab!(:post)
 
-    it "deletes the draft after successful revision" do
-      draft_key = post.topic.draft_key
-      Draft.set(post.user, draft_key, 0, '{"reply":"test draft"}')
-
-      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_present
+    it "deletes the edit draft and keeps the topic reply draft after successful revision" do
+      Draft.set(post.user, post.edit_draft_key, 0, '{"reply":"test edit draft"}')
+      Draft.set(post.user, post.topic.draft_key, 0, '{"reply":"test reply draft"}')
 
       post.revise(post.user, raw: "updated content here for the test")
 
-      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_nil
+      expect(Draft.where(user_id: post.user.id).pluck(:draft_key)).to contain_exactly(
+        post.topic.draft_key,
+      )
     end
 
     it "deletes the draft even when draft sequence exceeds DraftSequence" do
-      draft_key = post.topic.draft_key
+      draft_key = post.edit_draft_key
 
       # Simulate edge case: draft sequence is higher than DraftSequence
       # When DraftSequence.next! runs, it increments to 6, but sequence < 6 doesn't catch sequence 6

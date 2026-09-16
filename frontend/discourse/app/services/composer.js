@@ -28,7 +28,7 @@ import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
-import getURL from "discourse/lib/get-url";
+import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
@@ -53,6 +53,7 @@ import Composer, {
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
+import Topic from "discourse/models/topic";
 import TopicLocalization from "discourse/models/topic-localization";
 import { i18n } from "discourse-i18n";
 
@@ -1659,6 +1660,36 @@ export default class ComposerService extends Service {
       this.skipAutoSave = false;
       this.appEvents.trigger("composer:open", { model: this.model });
     }
+  }
+
+  /**
+   Navigates to a post and reopens the user's saved edit draft for it.
+
+   @method openEditDraft
+   @param {String} draftKey
+   **/
+  async openEditDraft(draftKey) {
+    const { draft, draft_sequence: draftSequence } = await Draft.get(draftKey);
+    if (!draft) {
+      return;
+    }
+
+    const data = JSON.parse(draft);
+    const post = await this.store.find("post", data.postId);
+
+    await this.router.transitionTo(withoutPrefix(post.url)).followRedirects();
+
+    if (!post.topic) {
+      const topicData = await Topic.find(post.topic_id, {});
+      post.set("topic", this.store.createRecord("topic", topicData));
+    }
+
+    await this.open({
+      draft: data,
+      draftKey,
+      draftSequence,
+      topic: post.topic,
+    });
   }
 
   @action

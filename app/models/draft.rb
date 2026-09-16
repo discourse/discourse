@@ -4,6 +4,7 @@ class Draft < ActiveRecord::Base
   NEW_TOPIC = "new_topic"
   NEW_PRIVATE_MESSAGE = "new_private_message"
   EXISTING_TOPIC = "topic_"
+  EDIT_POST = "edit_post_"
 
   belongs_to :user
 
@@ -156,7 +157,11 @@ class Draft < ActiveRecord::Base
   end
 
   def topic_id
-    draft_key.gsub(EXISTING_TOPIC, "").to_i if draft_key.starts_with?(EXISTING_TOPIC)
+    if draft_key.starts_with?(EXISTING_TOPIC)
+      draft_key.delete_prefix(EXISTING_TOPIC).to_i
+    elsif draft_key.starts_with?(EDIT_POST)
+      post&.topic_id
+    end
   end
 
   def topic_preloaded?
@@ -190,16 +195,14 @@ class Draft < ActiveRecord::Base
   end
 
   def self.preload_data(drafts, user)
-    topic_ids = drafts.map(&:topic_id)
+    # posts first, as edit drafts derive their topic from the post
     post_ids = drafts.map(&:post_id)
+    posts = allowed_draft_posts_for_user(user).where(id: post_ids).to_a
+    drafts.each { |draft| draft.preload_post(posts.detect { |p| p.id == draft.post_id }) }
 
-    topics = allowed_draft_topics_for_user(user).where(id: topic_ids)
-    posts = allowed_draft_posts_for_user(user).where(id: post_ids)
-
-    drafts.each do |draft|
-      draft.preload_topic(topics.detect { |t| t.id == draft.topic_id })
-      draft.preload_post(posts.detect { |p| p.id == draft.post_id })
-    end
+    topic_ids = drafts.map(&:topic_id)
+    topics = allowed_draft_topics_for_user(user).where(id: topic_ids).to_a
+    drafts.each { |draft| draft.preload_topic(topics.detect { |t| t.id == draft.topic_id }) }
   end
 
   def self.allowed_draft_topics_for_user(user)

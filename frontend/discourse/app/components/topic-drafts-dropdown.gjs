@@ -7,6 +7,7 @@ import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import {
+  EDIT_POST_KEY,
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
@@ -53,6 +54,8 @@ export default class TopicDraftsDropdown extends Component {
       icon = "layer-group";
     } else if (item.draft_key.startsWith(NEW_PRIVATE_MESSAGE_KEY)) {
       icon = "envelope";
+    } else if (item.draft_key.startsWith(EDIT_POST_KEY)) {
+      icon = "pencil";
     } else {
       icon = "reply";
     }
@@ -91,7 +94,9 @@ export default class TopicDraftsDropdown extends Component {
   async resumeDraft(draft) {
     await this.dMenu.close();
 
-    if (draft.postUrl) {
+    if (draft.draft_key.startsWith(EDIT_POST_KEY)) {
+      await this.composer.openEditDraft(draft.draft_key);
+    } else if (draft.postUrl) {
       DiscourseURL.routeTo(draft.postUrl);
     } else {
       this.composer.open({

@@ -12,6 +12,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import DiscourseURL from "discourse/lib/url";
+import { EDIT_POST_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
@@ -98,7 +99,13 @@ export default class UserStreamComponent extends Component {
     if (this.composer.get("model.viewOpen")) {
       this.composer.close();
     }
-    if (item.get("postUrl")) {
+    if (item.draft_key.startsWith(EDIT_POST_KEY)) {
+      try {
+        await this.composer.openEditDraft(item.draft_key);
+      } catch (error) {
+        popupAjaxError(error);
+      }
+    } else if (item.get("postUrl")) {
       DiscourseURL.routeTo(item.get("postUrl"));
     } else {
       try {
