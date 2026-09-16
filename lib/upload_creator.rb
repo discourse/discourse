@@ -620,14 +620,16 @@ class UploadCreator
   end
 
   def convert_png_to_jpeg!
-    replace_with_smaller_jpeg!(quality: SiteSetting.ImageQuality.png_to_jpg_quality)
+    replace_with_jpeg_if_sufficiently_smaller!(quality: SiteSetting.ImageQuality.png_to_jpg_quality)
   end
 
   def recompress_jpeg!
-    replace_with_smaller_jpeg!(quality: SiteSetting.ImageQuality.recompress_original_jpg_quality)
+    replace_with_jpeg_if_sufficiently_smaller!(
+      quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+    )
   end
 
-  def replace_with_smaller_jpeg!(quality:)
+  def replace_with_jpeg_if_sufficiently_smaller!(quality:)
     return if @opts[:type] == "topic_og_image"
     return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
