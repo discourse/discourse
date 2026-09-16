@@ -86,7 +86,11 @@ module DiscourseAi
             type_desc = { type: format["type"] }
 
             if format["type"] == "array"
-              type_desc[:items] = { type: format["array_type"] || "string" }
+              type_desc[:items] = if format["items"].is_a?(Hash)
+                format["items"].deep_symbolize_keys
+              else
+                { type: format["array_type"] || "string" }
+              end
               max_items = format["max_items"]
               type_desc[:maxItems] = max_items if max_items.is_a?(Integer) && max_items >= 0
             end

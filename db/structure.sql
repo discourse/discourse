@@ -1389,6 +1389,109 @@ ALTER SEQUENCE public.ask_ai_logs_id_seq OWNED BY public.ask_ai_logs.id;
 
 
 --
+-- Name: ask_ai_report_subject_asks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_report_subject_asks (
+    id bigint NOT NULL,
+    ask_ai_report_subject_id bigint NOT NULL,
+    ask_ai_log_id bigint NOT NULL
+);
+
+
+--
+-- Name: ask_ai_report_subject_asks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_report_subject_asks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_report_subject_asks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_report_subject_asks_id_seq OWNED BY public.ask_ai_report_subject_asks.id;
+
+
+--
+-- Name: ask_ai_report_subjects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_report_subjects (
+    id bigint NOT NULL,
+    ask_ai_report_id bigint NOT NULL,
+    name character varying NOT NULL,
+    description text NOT NULL,
+    "position" integer NOT NULL,
+    ask_count integer NOT NULL
+);
+
+
+--
+-- Name: ask_ai_report_subjects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_report_subjects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_report_subjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_report_subjects_id_seq OWNED BY public.ask_ai_report_subjects.id;
+
+
+--
+-- Name: ask_ai_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ask_ai_reports (
+    id bigint NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    requested_by_id bigint NOT NULL,
+    report_status integer DEFAULT 0 NOT NULL,
+    send_to_groups boolean DEFAULT false NOT NULL,
+    total_ask_count integer NOT NULL,
+    reported_ask_count integer NOT NULL,
+    topic_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    selected_ask_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    summary text DEFAULT ''::text NOT NULL
+);
+
+
+--
+-- Name: ask_ai_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ask_ai_reports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ask_ai_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ask_ai_reports_id_seq OWNED BY public.ask_ai_reports.id;
+
+
+--
 -- Name: assignments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -13778,6 +13881,27 @@ ALTER TABLE ONLY public.ask_ai_logs ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: ask_ai_report_subject_asks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_report_subject_asks_id_seq'::regclass);
+
+
+--
+-- Name: ask_ai_report_subjects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subjects ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_report_subjects_id_seq'::regclass);
+
+
+--
+-- Name: ask_ai_reports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_reports ALTER COLUMN id SET DEFAULT nextval('public.ask_ai_reports_id_seq'::regclass);
+
+
+--
 -- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16241,6 +16365,30 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.ask_ai_logs
     ADD CONSTRAINT ask_ai_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_report_subject_asks ask_ai_report_subject_asks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT ask_ai_report_subject_asks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_report_subjects ask_ai_report_subjects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subjects
+    ADD CONSTRAINT ask_ai_report_subjects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ask_ai_reports ask_ai_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_reports
+    ADD CONSTRAINT ask_ai_reports_pkey PRIMARY KEY (id);
 
 
 --
@@ -20427,6 +20575,41 @@ CREATE INDEX index_ask_ai_logs_on_asked_at ON public.ask_ai_logs USING btree (as
 --
 
 CREATE INDEX index_ask_ai_logs_on_user_id_and_asked_at ON public.ask_ai_logs USING btree (user_id, asked_at);
+
+
+--
+-- Name: index_ask_ai_report_subject_asks_on_ask_ai_log_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_report_subject_asks_on_ask_ai_log_id ON public.ask_ai_report_subject_asks USING btree (ask_ai_log_id);
+
+
+--
+-- Name: index_ask_ai_report_subject_asks_on_subject_and_log; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ask_ai_report_subject_asks_on_subject_and_log ON public.ask_ai_report_subject_asks USING btree (ask_ai_report_subject_id, ask_ai_log_id);
+
+
+--
+-- Name: index_ask_ai_report_subjects_on_ask_ai_report_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ask_ai_report_subjects_on_ask_ai_report_id_and_position ON public.ask_ai_report_subjects USING btree (ask_ai_report_id, "position");
+
+
+--
+-- Name: index_ask_ai_reports_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_reports_on_created_at ON public.ask_ai_reports USING btree (created_at);
+
+
+--
+-- Name: index_ask_ai_reports_on_start_date_and_end_date_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ask_ai_reports_on_start_date_and_end_date_and_created_at ON public.ask_ai_reports USING btree (start_date, end_date, created_at);
 
 
 --
@@ -25049,6 +25232,14 @@ ALTER TABLE ONLY public.user_security_keys
 
 
 --
+-- Name: ask_ai_report_subject_asks fk_rails_969b09bee9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT fk_rails_969b09bee9 FOREIGN KEY (ask_ai_report_subject_id) REFERENCES public.ask_ai_report_subjects(id) ON DELETE CASCADE;
+
+
+--
 -- Name: reviewable_notes fk_rails_9ea278a8aa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -25137,6 +25328,14 @@ ALTER TABLE ONLY public.user_profiles
 
 
 --
+-- Name: ask_ai_report_subject_asks fk_rails_e54eb07de5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ask_ai_report_subject_asks
+    ADD CONSTRAINT fk_rails_e54eb07de5 FOREIGN KEY (ask_ai_log_id) REFERENCES public.ask_ai_logs(id) ON DELETE CASCADE;
+
+
+--
 -- Name: ad_plugin_house_ads_categories fk_rails_ea323de4ce; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -25189,11 +25388,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914172801'),
 ('20260914172757'),
 ('20260914140746'),
+('20260910110851'),
 ('20260910033302'),
 ('20260910030427'),
 ('20260910030404'),
 ('20260910030345'),
 ('20260909181443'),
+('20260909132955'),
 ('20260908160656'),
 ('20260908153158'),
 ('20260908112615'),

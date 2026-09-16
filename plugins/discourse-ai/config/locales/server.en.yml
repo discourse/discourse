@@ -64,6 +64,10 @@ en:
         title: Tag topics using AI
         description: "Automatically tag topics using AI"
   site_settings:
+    ai_ask_ai_report_weekly_enabled: "Automatically generate an Ask AI report each week for the previous seven complete days. Reports appear on the dashboard. If groups are selected in {{setting:ai_ask_ai_report_recipient_groups}}, they also receive a PM. Requires Ask AI to be enabled and a configured report language model. Manual reports remain available."
+    ai_ask_ai_report_agent: "Agent used to group users’ questions into Ask AI dashboard reports."
+    ai_ask_ai_report_max_asks: "Maximum number of asks analysed per report. Uses all asks in the selected period or the latest asks up to this limit, whichever is fewer. Larger reports need more model context and may cost more."
+    ai_ask_ai_report_recipient_groups: "Groups that receive automatic weekly report PMs and can be included in manual report PMs. Reports include users’ questions. Leave empty to keep automatic reports on the dashboard only."
     discourse_ai_enabled: "Enable the discourse AI plugin."
     enable_ai_bot_starred_conversations: "Allow users to star AI bot conversations and show them in a Starred sidebar section."
     ai_default_llm_model: "The default LLM model to use for all AI features"
@@ -291,6 +295,17 @@ en:
       description: "Posts classified with the emotion surprise via AI, using the model 'SamLowe/roberta-base-go_emotions'."
 
   discourse_ai:
+    ask_ai_reports:
+      no_model: "Configure a default AI language model before generating reports."
+      no_asks: "There are no asks in this period."
+      title: "What users are asking: %{start} – %{end}"
+      coverage: "Analysed the latest %{count} of %{total} asks in this period. Questions can appear in multiple subjects."
+      ungrouped_name: "Ungrouped questions"
+      ungrouped_description: "The report did not assign these questions to a subject."
+      no_insights: "These questions did not provide enough evidence for a specific follow-up recommendation."
+      suggested_action: "Suggested follow-up: %{action}"
+      view_dashboard: "Explore all subjects and questions on the dashboard"
+      disclaimer: "AI-generated observations describe the questions asked, not the quality or helpfulness of their answers. Suggested follow-ups are possibilities to investigate, not confirmed gaps. Questions can appear in multiple subjects."
     ai_artifact:
       errors:
         max_keys_exceeded:
@@ -652,6 +667,9 @@ en:
         discover:
           name: "Discover"
           description: "Default agent used in the discoveries feature (complimentary search)"
+        ask_ai_reporter:
+          name: "Ask AI reporter"
+          description: "Groups users’ questions into subjects for Ask AI dashboard reports."
         ask_ai_synthesis:
           name: "Ask AI Synthesis"
           description: "Selects sources and prepares the answer shown by Ask AI"
