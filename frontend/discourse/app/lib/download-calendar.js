@@ -10,16 +10,27 @@ export function downloadCalendar(title, dates, options = {}) {
   const formattedDates = formatDates(dates);
   title = (title || i18n("download_calendar.default_title")).trim();
 
-  switch (currentUser?.user_option.default_calendar) {
-    case "ics":
-      downloadIcs(title, formattedDates, options);
-      break;
+  const defaultCalendar = currentUser?.user_option.default_calendar;
+
+  if (["ics", "google", "outlook", "apple"].includes(defaultCalendar)) {
+    addToCalendar(defaultCalendar, title, formattedDates, options);
+  } else {
+    _displayModal(title, formattedDates, options);
+  }
+}
+
+export function addToCalendar(calendar, title, dates, options = {}) {
+  switch (calendar) {
     case "google":
-      downloadGoogle(title, formattedDates, options);
+      downloadGoogle(title, dates, options);
       break;
-    case "none_selected":
-    default:
-      _displayModal(title, formattedDates, options);
+    case "outlook":
+      downloadOutlook(title, dates, options);
+      break;
+    case "apple":
+    case "ics":
+      downloadIcs(title, dates, options);
+      break;
   }
 }
 
@@ -69,6 +80,51 @@ export function downloadGoogle(title, dates, options = {}) {
 
     if (options.details) {
       link.searchParams.append("details", options.details);
+    }
+
+    window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
+  });
+}
+
+export function downloadOutlook(title, dates, options = {}) {
+  const parsedRrule = _parseRRule(options.rrule);
+
+  if (parsedRrule && _hasFreq(parsedRrule)) {
+    downloadIcs(title, dates, options);
+    return;
+  }
+
+  dates.forEach((date) => {
+    const link = new URL(
+      "https://outlook.live.com/calendar/0/deeplink/compose"
+    );
+    link.searchParams.append("path", "/calendar/action/compose");
+    link.searchParams.append("rru", "addevent");
+    link.searchParams.append("subject", title);
+
+    if (date.allDay) {
+      const { startDate, endDate } = _allDayMoments(date);
+      link.searchParams.append("startdt", startDate.format("YYYY-MM-DD"));
+      link.searchParams.append("enddt", endDate.format("YYYY-MM-DD"));
+      link.searchParams.append("allday", "true");
+    } else {
+      link.searchParams.append(
+        "startdt",
+        _formatDateForOutlookApi(date.startsAt, date.timezone)
+      );
+      link.searchParams.append(
+        "enddt",
+        _formatDateForOutlookApi(date.endsAt, date.timezone)
+      );
+      link.searchParams.append("allday", "false");
+    }
+
+    if (options.location) {
+      link.searchParams.append("location", options.location);
+    }
+
+    if (options.details) {
+      link.searchParams.append("body", options.details);
     }
 
     window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
@@ -466,4 +522,9 @@ function _displayModal(title, dates, options = {}) {
 function _formatDateForGoogleApi(date, timezone) {
   const momentDate = timezone ? moment.tz(date, timezone) : moment(date);
   return momentDate.utc().format("YYYYMMDD[T]HHmmss[Z]");
+}
+
+function _formatDateForOutlookApi(date, timezone) {
+  const momentDate = timezone ? moment.tz(date, timezone) : moment(date);
+  return momentDate.toISOString();
 }

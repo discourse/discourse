@@ -6161,16 +6161,21 @@ en:
       favorite_count: "%{count}/%{max} badges marked as favorite"
 
     download_calendar:
-      title: "Download calendar"
+      title: "Add to calendar"
+      calendar: "Calendar"
       save_ics: "Download .ics file"
       save_google: "Add to Google calendar"
+      save_outlook: "Add to Microsoft Outlook"
+      save_apple: "Add to Apple Calendar"
       remember: "Don’t ask me again"
-      remember_explanation: "(you can change this preference in your user prefs)"
+      remember_explanation: "You can change this preference later in your profile preferences."
       download: "Download"
       default_calendar: "Default calendar"
       default_calendar_instruction: "Determine which calendar should be used when dates are saved"
       add_to_calendar: "Add to calendar"
       google: "Google Calendar"
+      outlook: "Microsoft Outlook"
+      apple: "Apple Calendar"
       ics: "ICS"
       default_title: "Scheduled Event"
     tagging:

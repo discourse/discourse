@@ -3,6 +3,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import {
   downloadGoogle,
+  downloadOutlook,
   formatDates,
   generateIcsData,
 } from "discourse/lib/download-calendar";
@@ -426,6 +427,71 @@ module("Unit | Utility | download-calendar", function (hooks) {
         "noreferrer"
       )
     );
+  });
+
+  test("correct url for Outlook", function (assert) {
+    downloadOutlook(
+      "event & lunch",
+      [
+        {
+          startsAt: "2021-10-12T18:30:00",
+          endsAt: "2021-10-12T21:00:00",
+          timezone: "America/New_York",
+        },
+      ],
+      { details: "Cool", location: "New York" }
+    );
+
+    const [url, target, ...features] = window.open.getCall(0).args;
+    const link = new URL(url);
+
+    assert.strictEqual(
+      link.origin + link.pathname,
+      "https://outlook.live.com/calendar/0/deeplink/compose"
+    );
+    assert.deepEqual(Object.fromEntries(link.searchParams), {
+      path: "/calendar/action/compose",
+      rru: "addevent",
+      subject: "event & lunch",
+      startdt: "2021-10-12T22:30:00.000Z",
+      enddt: "2021-10-13T01:00:00.000Z",
+      allday: "false",
+      location: "New York",
+      body: "Cool",
+    });
+    assert.strictEqual(target, "_blank");
+    assert.deepEqual(features, ["noopener", "noreferrer"]);
+  });
+
+  test("all-day Outlook url uses an exclusive date-only range", function (assert) {
+    downloadOutlook("all day event", [
+      { startsAt: "2026-03-12", endsAt: "2026-03-14", allDay: true },
+    ]);
+
+    const link = new URL(window.open.getCall(0).args[0]);
+
+    assert.strictEqual(link.searchParams.get("startdt"), "2026-03-12");
+    assert.strictEqual(link.searchParams.get("enddt"), "2026-03-15");
+    assert.strictEqual(link.searchParams.get("allday"), "true");
+  });
+
+  test("recurring Outlook events fall back to ICS", function (assert) {
+    sinon.stub(URL, "createObjectURL").returns("blob:calendar");
+    sinon.stub(HTMLAnchorElement.prototype, "click");
+
+    downloadOutlook(
+      "event",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
+      { rrule: "FREQ=WEEKLY;BYDAY=TU" }
+    );
+
+    assert.true(HTMLAnchorElement.prototype.click.calledOnce);
+    assert.false(window.open.called);
   });
 
   test("calculates end date when none given", function (assert) {
