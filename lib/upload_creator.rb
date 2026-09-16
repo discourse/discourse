@@ -448,12 +448,10 @@ class UploadCreator
   def should_alter_jpeg_quality?
     return false if @image_info.type != :jpeg
 
-    @upload
-      .target_jpeg_image_quality(
-        @file.path,
-        SiteSetting.ImageQuality.recompress_original_jpg_quality,
-      )
-      .present?
+    @upload.target_jpeg_image_quality(
+      @file.path,
+      SiteSetting.ImageQuality.recompress_original_jpg_quality,
+    ).present?
   end
 
   def should_downsize?
