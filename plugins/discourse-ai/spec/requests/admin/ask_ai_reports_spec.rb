@@ -11,6 +11,32 @@ describe DiscourseAi::Admin::AskAiReportsController do
     allow(SiteSetting).to receive(:ai_default_llm_model).and_return(llm_model.id)
   end
 
+  it "accepts the dashboard date range when the browser is ahead of UTC" do
+    freeze_time Time.utc(2026, 9, 16, 17)
+    sign_in(admin)
+    ask = AskAiLog.create!(user: admin, query: "猫", asked_at: Time.current)
+    AskAiLog.create!(user: admin, query: "Future", asked_at: 1.hour.from_now)
+    dashboard =
+      DiscourseAi::AdminDashboard::AskAi.build(
+        start_date: "2026-08-19",
+        end_date: "2026-09-17",
+        current_user: admin,
+      )
+
+    post "/admin/plugins/discourse-ai/ask-ai-reports.json",
+         params: {
+           start_date: dashboard[:start_date].iso8601,
+           end_date: dashboard[:end_date].iso8601,
+         }
+
+    expect(response.status).to eq(202)
+    report = AskAiReport.find(response.parsed_body["report"]["id"])
+    expect(report.start_date).to eq(Date.new(2026, 8, 19))
+    expect(report.end_date).to eq(Date.new(2026, 9, 17))
+    expect(report.selected_ask_ids).to eq([ask.id])
+    expect(report.total_ask_count).to eq(1)
+  end
+
   it "expires abandoned reports when loading the dashboard and returns saved summaries" do
     sign_in(admin)
     report =

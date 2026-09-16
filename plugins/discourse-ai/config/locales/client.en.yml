@@ -421,6 +421,7 @@ en:
             settings: "Basic Settings"
             agents: "Agents"
             access_control: "Access Control"
+            ask_ai_reports: "Ask AI reports"
         embeddings:
           name: "Embeddings"
           description: "Powers features like Related Topics and AI Search by generating semantic representations of text"
