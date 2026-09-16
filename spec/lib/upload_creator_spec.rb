@@ -21,13 +21,13 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context "with libvips disabled" do
+    context "when animation detection uses ImageMagick" do
       before { global_setting :enable_vips_image_processing, false }
 
       include_examples "animated upload preservation"
     end
 
-    context "with libvips enabled" do
+    context "when animation detection uses libvips" do
       before { global_setting :enable_vips_image_processing, true }
 
       include_examples "animated upload preservation"
@@ -357,7 +357,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    describe "converting to jpeg" do
+    shared_examples "JPEG upload conversion" do |enable_vips|
       def image_quality(path)
         local_path = File.join(Rails.root, "public", path)
         Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
@@ -460,14 +460,47 @@ RSpec.describe UploadCreator do
           upload =
             UploadCreator.new(jpeg_file, "logo.jpg", force_optimize: true).create_for(user.id)
 
-          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          output_path = Discourse.store.path_for(upload)
+          expect(FastImage.type(output_path)).to eq(:jpeg)
+          expect(FastImage.size(output_path)).to eq(FastImage.size(jpeg_file.path))
+
+          if enable_vips
+            SiteSetting.recompress_original_jpg_quality = 70
+            higher_quality_file = file_from_fixtures("logo.jpg")
+            File.truncate(
+              higher_quality_file.path,
+              UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + higher_quality_file.size,
+            )
+            higher_quality_upload =
+              UploadCreator.new(higher_quality_file, "logo.jpg", force_optimize: true).create_for(
+                user.id,
+              )
+
+            expect(higher_quality_upload).to be_persisted
+            expect(FastImage.type(Discourse.store.path_for(higher_quality_upload))).to eq(:jpeg)
+            expect(upload.filesize).to be < higher_quality_upload.filesize
+          else
+            expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          end
 
           upload.create_thumbnail!(100, 100)
           upload.reload
 
-          expect(image_quality(upload.optimized_images.first.url)).to eq(
-            SiteSetting.image_preview_jpg_quality,
-          )
+          if enable_vips
+            preview = upload.optimized_images.first
+            lower_quality_filesize = preview.filesize
+            preview.destroy!
+            SiteSetting.image_preview_jpg_quality = 90
+
+            upload.create_thumbnail!(100, 100)
+            upload.reload
+
+            expect(upload.optimized_images.first.filesize).to be > lower_quality_filesize
+          else
+            expect(image_quality(upload.optimized_images.first.url)).to eq(
+              SiteSetting.image_preview_jpg_quality,
+            )
+          end
         end
 
         it "does not convert animated images" do
@@ -545,6 +578,18 @@ RSpec.describe UploadCreator do
           expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:gif)
         end
       end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "JPEG upload conversion", false
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "JPEG upload conversion", true
     end
 
     describe "converting HEIF to jpeg" do
