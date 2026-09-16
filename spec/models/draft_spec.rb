@@ -211,6 +211,12 @@ RSpec.describe Draft do
       expect(draft_row.user.username).to eq(user.username)
     end
 
+    it "includes the topic of the edited post for an edit draft in the stream" do
+      Draft.set(user, public_post.edit_draft_key, 0, { postId: public_post.id }.to_json)
+
+      expect(stream.first.topic_id).to eq(public_topic.id)
+    end
+
     it "does not return drafts with stale sequences" do
       draft_key = "topic_#{public_topic.id}"
 
@@ -286,11 +292,15 @@ RSpec.describe Draft do
       ).to eq nil
     end
 
-    it "nukes the post draft when a post is revised" do
-      Draft.set(post.user, post.topic.draft_key, 0, "hello")
+    it "nukes only the edit draft for that post when a post is revised" do
+      Draft.set(post.user, post.edit_draft_key, 0, "edit")
+      Draft.set(post.user, post.topic.draft_key, 0, "reply")
+
       post.revise(post.user, raw: "another test")
-      s = DraftSequence.current(post.user, post.topic.draft_key)
-      expect(Draft.get(post.user, post.topic.draft_key, s)).to eq nil
+
+      expect(Draft.where(user: post.user).pluck(:draft_key)).to contain_exactly(
+        post.topic.draft_key,
+      )
     end
 
     it "increases revision each time you set" do
@@ -329,6 +339,16 @@ RSpec.describe Draft do
 
       expect(drafts[0].post_preloaded?).to eq(true)
       expect(drafts[0].post.id).to eq(post.id)
+    end
+
+    it "preloads the topic of the edited post for edit drafts" do
+      Draft.set(user, post.edit_draft_key, 0, { reply: "hello", postId: post.id }.to_json)
+      drafts = Draft.where(user_id: user.id).to_a
+
+      Draft.preload_data(drafts, user)
+
+      expect(drafts[0].topic_preloaded?).to eq(true)
+      expect(drafts[0].topic.id).to eq(post.topic_id)
     end
   end
 

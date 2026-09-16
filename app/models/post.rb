@@ -950,9 +950,12 @@ class Post < ActiveRecord::Base
     self.locale = nil if locale.blank?
   end
 
+  def edit_draft_key
+    "#{Draft::EDIT_POST}#{id}"
+  end
+
   def advance_draft_sequence
-    return if topic.blank? # could be deleted
-    DraftSequence.next!(last_editor_id, topic.draft_key) if last_editor_id
+    DraftSequence.next!(last_editor_id, edit_draft_key) if last_editor_id
   end
 
   # TODO: move to post-analyzer?

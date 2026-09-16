@@ -36,6 +36,7 @@ import { manuallyTrack } from "discourse/lib/tracked-tools";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import { PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
@@ -347,11 +348,16 @@ export default class ReviewableItem extends Component {
     const topic = Topic.create(await Topic.find(post.topic_id, {}));
     post.set("topic", topic);
 
+    const draftKey = Composer.editDraftKey(post);
+    const { draft, draft_sequence: draftSequence } = await Draft.get(draftKey);
+
     return this.composer.open({
       post,
+      topic,
+      draft: draft && JSON.parse(draft),
       action: Composer.EDIT,
-      draftKey: topic.draft_key,
-      draftSequence: topic.draft_sequence,
+      draftKey,
+      draftSequence,
       skipJumpOnSave: true,
       onSaved: () => performAction().catch(popupAjaxError),
     });
