@@ -7,6 +7,12 @@ gem "migrations-core", path: "../core"
 gemspec
 
 group :test do
+  # The extraction round-trip spec runs the converters' extractor and the
+  # importer's resolver against each other; no gem depends on both, and this is
+  # the gem that runs both sides of a migration.
+  gem "migrations-converters", path: "../converters"
+  gem "migrations-importer", path: "../importer"
+
   gem "rspec"
   gem "rspec-multi-mock"
   gem "mocha"
