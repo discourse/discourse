@@ -1,0 +1,40 @@
+.d-block-featured-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 1rem;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__all-link {
+    color: var(--tertiary);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: var(--font-down-1);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--tertiary-hover);
+      text-decoration: underline;
+    }
+  }
+
+  &__card {
+    &--has-description {
+      flex-direction: column;
+      align-items: flex-start;
+      row-gap: 0.75rem;
+      padding: 1.5rem;
+      min-height: 8rem;
+    }
+  }
+}

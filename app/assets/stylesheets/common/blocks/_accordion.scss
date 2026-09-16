@@ -1,0 +1,21 @@
+/* Accordion block — a stack of native <details> collapsible sections. */
+.d-block-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.d-block-accordion-item {
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius, 0.25rem);
+}
+
+.d-block-accordion-item__summary {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.d-block-accordion-item__panel {
+  padding: 0 1rem 1rem;
+}

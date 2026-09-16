@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    wireframe_enabled: "Enable the wireframe plugin. The editor lets permitted users compose Block Outlet layouts via drag-and-drop."
+    wireframe_allowed_groups: "Groups whose members can open the wireframe. Admins always have access."
+    wireframe_custom_homepage: "Use the published Block Outlet layout as this theme's homepage. Without a published layout the homepage will be empty for visitors."

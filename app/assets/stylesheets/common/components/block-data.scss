@@ -1,0 +1,5 @@
+.block-data {
+  // Layout-neutral: the boundary only exists to carry `aria-busy`, so it must
+  // not introduce a box that disturbs the block's own layout.
+  display: contents;
+}

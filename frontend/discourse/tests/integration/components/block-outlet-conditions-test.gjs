@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import BlockOutlet from "discourse/blocks/block-outlet";
@@ -28,6 +29,20 @@ class BlockAlwaysFalseCondition extends BlockCondition {
   }
 }
 
+/* A condition backed by tracked state, so flipping it re-evaluates the layout
+ * the same way a real route/discovery change does — without any editor. */
+class ToggleState {
+  @tracked visible = true;
+}
+const toggleState = new ToggleState();
+
+@blockCondition({ type: "toggle-visible", args: {} })
+class BlockToggleVisibleCondition extends BlockCondition {
+  evaluate() {
+    return toggleState.visible;
+  }
+}
+
 module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -36,7 +51,10 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     withTestConditionRegistration(() => {
       registerConditionType(BlockAlwaysTrueCondition);
       registerConditionType(BlockAlwaysFalseCondition);
+      registerConditionType(BlockToggleVisibleCondition);
     });
+    // Module-scoped, so reset between tests.
+    toggleState.visible = true;
   });
 
   test("renders block when no conditions specified", async function (assert) {
@@ -641,5 +659,65 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     // Container should not render because its own condition fails
     assert.dom(".failing-container").doesNotExist();
     assert.dom(".child-would-be-visible").doesNotExist();
+  });
+
+  test("a stable sibling survives a condition-driven visibility change (no editor)", async function (assert) {
+    // Production-parity guard: outside the editor, navigating (a condition
+    // input changing) must re-evaluate visibility WITHOUT tearing down the
+    // siblings that stay visible. This is the common production path —
+    // condition-gated blocks on a static layout — and must not regress.
+    @block("stable-sibling")
+    class StableSibling extends Component {
+      <template>
+        <div class="stable-sibling">Stable</div>
+      </template>
+    }
+
+    @block("toggling-child")
+    class TogglingChild extends Component {
+      <template>
+        <div class="toggling-child">Toggle</div>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("homepage-blocks", [
+        {
+          block: BlockGroup,
+          children: [
+            { block: StableSibling },
+            { block: TogglingChild, conditions: { type: "toggle-visible" } },
+          ],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="homepage-blocks" /></template>);
+    assert.dom(".stable-sibling").exists();
+    assert.dom(".toggling-child").exists("visible while its condition passes");
+    const before = find(".stable-sibling");
+
+    // Simulate a navigation-driven condition change.
+    toggleState.visible = false;
+    await settled();
+    assert
+      .dom(".toggling-child")
+      .doesNotExist("hidden once its condition fails");
+    assert.strictEqual(
+      find(".stable-sibling"),
+      before,
+      "the stable sibling keeps its DOM node across the condition change"
+    );
+
+    toggleState.visible = true;
+    await settled();
+    assert
+      .dom(".toggling-child")
+      .exists("re-appears when its condition passes again");
+    assert.strictEqual(
+      find(".stable-sibling"),
+      before,
+      "the stable sibling is still the same DOM node"
+    );
   });
 });

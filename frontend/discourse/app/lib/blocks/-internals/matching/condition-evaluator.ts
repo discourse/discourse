@@ -1,4 +1,7 @@
-import type { BlockCondition } from "discourse/blocks/conditions";
+import type {
+  BlockCondition,
+  ConditionSimulation,
+} from "discourse/blocks/conditions";
 import {
   DEBUG_CALLBACK,
   type DebugCallback,
@@ -17,6 +20,9 @@ export interface ConditionEvaluationContext {
   _depth?: number;
   /** Outlet arguments passed to conditions. */
   outletArgs?: Record<string, unknown>;
+  /** Optional simulated identity/viewport forwarded to the `user` and
+   *  `viewport` conditions for preview/simulation contexts. */
+  simulation?: ConditionSimulation;
 }
 
 /**
@@ -25,7 +31,12 @@ export interface ConditionEvaluationContext {
  *
  * @param conditionSpec - Condition spec(s) to evaluate.
  * @param conditionTypes - Map of registered condition types.
- * @param context - Evaluation context.
+ * @param context - Evaluation context. When `context.simulation` is set (a
+ *   preview/simulation context), the `user` and `viewport` conditions read the
+ *   simulated identity/viewport instead of their real-time service reads, so
+ *   condition-gated blocks can be shown under a hypothetical user or screen
+ *   size. Block bodies still render with the real user's data — simulation only
+ *   affects condition evaluation.
  * @returns True if conditions pass, false otherwise.
  */
 export function evaluateConditions(
@@ -146,6 +157,7 @@ function evaluateAndCombinator(
       debug: isLoggingEnabled,
       _depth: depth + 1,
       outletArgs: context.outletArgs,
+      simulation: context.simulation,
     });
     if (!result) {
       andResult = false;
@@ -202,6 +214,7 @@ function evaluateOrCombinator(
       debug: isLoggingEnabled,
       _depth: depth + 1,
       outletArgs: context.outletArgs,
+      simulation: context.simulation,
     });
     if (result) {
       orResult = true;
@@ -251,6 +264,7 @@ function evaluateNotCombinator(
     debug: isLoggingEnabled,
     _depth: depth + 1,
     outletArgs: context.outletArgs,
+    simulation: context.simulation,
   });
   const notResult = !innerResult;
 
@@ -316,6 +330,7 @@ function evaluateSingleCondition(
     debug: isLoggingEnabled,
     _depth: depth,
     outletArgs: context.outletArgs,
+    simulation: context.simulation,
     logger,
   };
   const result = conditionInstance.evaluate(args, evalContext);

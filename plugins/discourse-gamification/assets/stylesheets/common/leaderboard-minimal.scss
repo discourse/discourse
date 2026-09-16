@@ -56,4 +56,18 @@
       color: var(--primary);
     }
   }
+
+  .leaderboard__footer {
+    padding: 0.75em 0.5em 0.25em;
+    text-align: right;
+  }
+
+  .leaderboard__footer-link {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

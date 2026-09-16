@@ -37,14 +37,27 @@ module("Unit | Lib | blocks/validation/layout", function () {
       assert.true(VALID_ENTRY_KEYS.includes("conditions"));
       assert.true(VALID_ENTRY_KEYS.includes("classNames"));
       assert.true(VALID_ENTRY_KEYS.includes("id"));
+      assert.true(VALID_ENTRY_KEYS.includes("overrides"));
     });
 
     test("is frozen", function (assert) {
       assert.true(Object.isFrozen(VALID_ENTRY_KEYS));
     });
 
-    test("has exactly 7 keys", function (assert) {
-      assert.strictEqual(VALID_ENTRY_KEYS.length, 7);
+    test("has exactly 8 keys", function (assert) {
+      assert.strictEqual(VALID_ENTRY_KEYS.length, 8);
+    });
+  });
+
+  module("validateEntry", function () {
+    test("primitive block reference raises the decorator validation error", async function (assert) {
+      await assert.rejects(
+        validateEntry({ block: 42 }, "hero-blocks", undefined, "layout[0]"),
+        (error) =>
+          error.message.includes("is not a valid @block-decorated component") &&
+          error.message.includes("layout[0]"),
+        "an entry whose block is a truthy primitive gets the actionable validation error, not a raw TypeError"
+      );
     });
   });
 

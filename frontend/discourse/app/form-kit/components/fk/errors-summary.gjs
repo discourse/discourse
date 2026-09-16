@@ -11,14 +11,28 @@ export default class FKErrorsSummary extends Component {
     }
 
     const container = document.getElementById(href.slice(1));
-    const focusable = container?.querySelector(
-      "input, select, textarea, button, [tabindex]:not([tabindex='-1'])"
-    );
+    const focusable =
+      container?.querySelector(
+        '[contenteditable="true"], [contenteditable="plaintext-only"]'
+      ) ??
+      container?.querySelector(
+        "input, select, textarea, button, [tabindex]:not([tabindex='-1'])"
+      );
 
     if (focusable) {
       event.preventDefault();
+      let disclosure = focusable.closest("details");
+      while (disclosure) {
+        disclosure.open = true;
+        disclosure = disclosure.parentElement?.closest("details");
+      }
       focusable.focus({ preventScroll: true, focusVisible: true });
-      focusable.scrollIntoView({ block: "center", behavior: "smooth" });
+      focusable.scrollIntoView({
+        block: "center",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
     }
   };
 
@@ -49,12 +63,20 @@ export default class FKErrorsSummary extends Component {
         <ul class="form-kit__errors-summary-list">
           {{#each-in @errors as |name error|}}
             <li>
-              <a
-                href="#control-{{this.normalizeName name}}"
-                rel="noopener noreferrer"
-                {{on "click" this.focusField}}
-              >{{error.title}}</a>:
-              {{this.concatErrors error.messages}}
+              {{! Errors with a title point at a specific control: render the
+                  title as a focus-the-field link. Errors without a title are
+                  form-level (not tied to a single input) — render the message
+                  on its own, with no anchor or label prefix. }}
+              {{#if error.title}}
+                <a
+                  href="#control-{{this.normalizeName name}}"
+                  rel="noopener noreferrer"
+                  {{on "click" this.focusField}}
+                >{{error.title}}</a>:
+                {{this.concatErrors error.messages}}
+              {{else}}
+                {{this.concatErrors error.messages}}
+              {{/if}}
             </li>
           {{/each-in}}
         </ul>

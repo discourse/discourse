@@ -29,23 +29,24 @@ export type ExternalDropTargetEvent =
  * `dDragAndDropExternalTarget` modifier and
  * {@link registerDragAndDropExternalTarget}.
  */
-export interface DragAndDropExternalTargetArgs extends DropTargetKernelArgs<ExternalDragPayload> {
-  /**
-   * Filters which external drag kinds engage the target. Omit to accept any
-   * external drag.
-   */
-  accepts?: ExternalDragKind | ExternalDragKind[];
+export type DragAndDropExternalTargetArgs =
+  DropTargetKernelArgs<ExternalDragPayload> & {
+    /**
+     * Filters which external drag kinds engage the target. Omit to accept any
+     * external drag.
+     */
+    accepts?: ExternalDragKind | ExternalDragKind[];
 
-  /** Setting this or `axis` opts the target into resolving a position at all. */
-  position?: DropPosition;
+    /** Setting this or `axis` opts the target into resolving a position at all. */
+    position?: DropPosition;
 
-  /**
-   * Without this or `position` the target is one destination, not a slot:
-   * callbacks get `position: null` and the indicator is the single
-   * `--drag-over-external` class.
-   */
-  axis?: Axis;
-}
+    /**
+     * Without this or `position` the target is one destination, not a slot:
+     * callbacks get `position: null` and the indicator is the single
+     * `--drag-over-external` class.
+     */
+    axis?: Axis;
+  };
 
 interface DDragAndDropExternalTargetSignature {
   /** The element to register as a drop target. */

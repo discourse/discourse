@@ -320,7 +320,10 @@ function validateSingleCondition(
       // Point to the condition's `type` property so the error location isn't empty.
       // This tells users which condition has the constraint violation.
       const typePath = path ? `${path}.type` : "type";
-      throw new BlockError(constraintError, { path: typePath });
+      throw new BlockError(constraintError.message, {
+        path: typePath,
+        details: constraintError.details,
+      });
     }
   }
 
@@ -336,7 +339,10 @@ function validateSingleCondition(
   if (validateFn) {
     const customErrors = runCustomValidation(validateFn, args);
     if (customErrors && customErrors.length > 0) {
-      throw new BlockError(`Condition "${type}": ${customErrors.join("; ")}`, {
+      const messages = customErrors.map((issue) =>
+        typeof issue === "string" ? issue : issue.message
+      );
+      throw new BlockError(`Condition "${type}": ${messages.join("; ")}`, {
         path,
       });
     }

@@ -1,0 +1,74 @@
+/* Small media / content leaf blocks: icon, quote, video, embed. */
+.d-block-icon {
+  display: inline-flex;
+  color: var(--d-block-icon-color, inherit);
+
+  &--sm {
+    font-size: var(--font-up-1);
+  }
+
+  &--md {
+    font-size: var(--font-up-3);
+  }
+
+  &--lg {
+    font-size: var(--font-up-5);
+  }
+
+  &--xl {
+    font-size: var(--font-up-6);
+  }
+}
+
+.d-block-quote {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border-inline-start: 3px solid var(--tertiary);
+}
+
+.d-block-quote__content {
+  margin: 0;
+  font-size: var(--font-up-1);
+}
+
+.d-block-quote__cite {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.d-block-quote__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.d-block-quote__identity {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-block-quote__attribution {
+  font-weight: 600;
+}
+
+.d-block-quote__role {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.d-block-video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.d-block-embed {
+  width: 100%;
+
+  iframe {
+    max-width: 100%;
+  }
+}

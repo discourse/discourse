@@ -158,6 +158,41 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     });
   });
 
+  test("@validate - form-level error without a title", async function (assert) {
+    const validate = async (data, { addError }) => {
+      // A titled error is tied to a control and renders as a focus link.
+      addError("foo", { title: "Foo", message: "incorrect type" });
+      // A titleless error is form-level and renders as a bare message.
+      addError("_form:0", { message: "Pick at least one option." });
+    };
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} @validate={{validate}} as |form|>
+          <form.Field @name="foo" @title="Foo" @type="input" />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    const items = [
+      ...query(".form-kit__errors-summary-list").querySelectorAll("li"),
+    ];
+    assert.strictEqual(items.length, 2, "both errors are listed");
+
+    const titled = items.find((li) => li.querySelector("a"));
+    assert.dom(titled).hasText("Foo: incorrect type");
+
+    const formLevel = items.find((li) => !li.querySelector("a"));
+    assert
+      .dom(formLevel)
+      .hasText(
+        "Pick at least one option.",
+        "form-level error shows the message with no anchor or prefix"
+      );
+  });
+
   test("@validateOn", async function (assert) {
     const data = { foo: "test" };
 
@@ -594,6 +629,84 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await click(".form-kit__errors-summary-list a");
 
     assert.dom(document.activeElement).hasClass("form-kit__control-input");
+  });
+
+  test("error links reveal nested disclosures before focusing and respect reduced motion", async function (assert) {
+    const validate = (_data, { addError }) =>
+      addError("foo", { title: "Foo", message: "Required" });
+    const matchMedia = sinon.stub(window, "matchMedia");
+    matchMedia.callThrough();
+    matchMedia
+      .withArgs("(prefers-reduced-motion: reduce)")
+      .returns({ matches: true });
+    try {
+      await render(
+        <template>
+          <Form @validate={{validate}} as |form|>
+            <details class="outer-disclosure">
+              <summary>Options</summary>
+              <details class="inner-disclosure">
+                <summary>Identity</summary>
+                <form.Field @name="foo" @title="Foo" @type="input" as |field|>
+                  <field.Control />
+                </form.Field>
+              </details>
+            </details>
+            <form.Submit />
+          </Form>
+        </template>
+      );
+      await formKit().submit();
+      const input = query('input[name="foo"]');
+      const scroll = sinon.stub(input, "scrollIntoView");
+      await click(".form-kit__errors-summary-list a");
+      assert.dom(".outer-disclosure").hasAttribute("open");
+      assert.dom(".inner-disclosure").hasAttribute("open");
+      assert.strictEqual(
+        document.activeElement,
+        input,
+        "the actual control receives focus"
+      );
+      assert.deepEqual(scroll.firstCall.args, [
+        { block: "center", behavior: "instant" },
+      ]);
+    } finally {
+      matchMedia.restore();
+    }
+  });
+
+  test("error links focus rich text instead of its formatting toolbar", async function (assert) {
+    const validate = (_data, { addError }) =>
+      addError("name", { title: "Name", message: "Enter a name." });
+    await render(
+      <template>
+        <Form @validate={{validate}} as |form|>
+          <details class="identity-disclosure">
+            <summary>Identity</summary>
+            <form.Field @name="name" @title="Name" @type="custom" as |field|>
+              <field.Control>
+                <button type="button">Bold</button>
+                <div
+                  aria-label="Name"
+                  class="rich-input"
+                  contenteditable="true"
+                  role="textbox"
+                ></div>
+              </field.Control>
+            </form.Field>
+          </details>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+    await formKit().submit();
+    await click(".form-kit__errors-summary-list a");
+    assert
+      .dom(".identity-disclosure")
+      .hasAttribute("open", "", "the rich field is revealed");
+    assert
+      .dom(document.activeElement)
+      .hasClass("rich-input", "typing can immediately correct the content");
   });
 
   test("error link has anchor href for fields without focusable elements", async function (assert) {

@@ -1,0 +1,44 @@
+/* Stats block — a row of value + label items reflowed into equal columns. */
+.d-block-stats {
+  display: grid;
+
+  /* Author-chosen column count, but never wider than the container: the
+     `auto-fit` + `minmax` keeps it from overflowing on narrow widths by
+     dropping to as many columns as fit. The column count is the upper bound. */
+  grid-template-columns: repeat(
+    var(--d-block-stats-columns, 4),
+    minmax(0, 1fr)
+  );
+  gap: var(--d-block-stats-gap, 1rem);
+}
+
+@container (max-width: 30rem) {
+  .d-block-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.d-block-stats__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+  gap: 0.25rem;
+}
+
+.d-block-stats__value {
+  font-size: var(--font-up-3);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.d-block-stats__label {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.d-block-stats__icon {
+  color: var(--tertiary);
+  font-size: var(--font-up-2);
+}

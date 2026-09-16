@@ -34,6 +34,7 @@ interface DFilterInputSignature {
     containerClass?: string;
   };
 
+  // Root element type (enables ...attributes type checking)
   Element: HTMLInputElement;
 
   Blocks: {

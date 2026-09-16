@@ -15,6 +15,7 @@ interface DFlashMessageSignature {
     type?: FlashType;
   };
 
+  // Root element type (enables ...attributes type checking)
   Element: HTMLDivElement;
 }
 

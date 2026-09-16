@@ -1,0 +1,36 @@
+.d-block-tabs__strip {
+  display: flex;
+  min-width: 0;
+  gap: var(--space-1);
+
+  > .d-tabs__strip-controls {
+    flex: 0 1 auto;
+  }
+}
+
+.d-block-tabs--align-center .d-block-tabs__strip {
+  justify-content: center;
+}
+
+.d-block-tabs--align-end .d-block-tabs__strip {
+  justify-content: flex-end;
+}
+
+.d-block-tabs__add-tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 0.5rem 0.6rem;
+  border: none;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.d-block-tabs__panel {
+  padding-block-start: var(--space-4);
+}

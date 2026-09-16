@@ -92,6 +92,13 @@ export { VALID_ARG_TYPES } from "discourse/lib/blocks/-internals/validation/args
  */
 export { VALID_ITEM_TYPES } from "discourse/lib/blocks/-internals/validation/args";
 
+/**
+ * Valid `ui.control` values for arg schema UI hints. These advise how each
+ * arg should be presented for editing. Block authors override the default
+ * control choice via `ui: { control: "..." }` in the arg schema.
+ */
+export { VALID_UI_CONTROLS } from "discourse/lib/blocks/-internals/validation/block-args";
+
 /* Constraint Types */
 
 /**
@@ -149,3 +156,42 @@ export { getByPath } from "discourse/lib/blocks/-internals/utils";
  * ```
  */
 export { matchValue } from "discourse/lib/blocks/-internals/matching/value-matcher";
+
+/* Arg Value Patterns */
+
+/**
+ * Regex patterns for validating common string arg values, applied via a
+ * schema arg's `pattern:` key.
+ *
+ * - `URL_PATTERN` — relative path, absolute http(s) URL, `#anchor`, or `mailto:`.
+ * - `HEX_COLOR_PATTERN` — `#rgb`, `#rrggbb`, or `#rrggbbaa`.
+ * - `ICON_NAME_PATTERN` — kebab-case lowercase icon ID.
+ */
+export {
+  URL_PATTERN,
+  HEX_COLOR_PATTERN,
+  ICON_NAME_PATTERN,
+} from "discourse/lib/blocks/-internals/arg-patterns";
+
+/* Grid Placement */
+
+/**
+ * Reads CSS Grid placement out of a child entry's container args.
+ *
+ * - `parsePlacement(containerArgs)` — returns `{column, row}` tracks from
+ *   `containerArgs.grid`.
+ * - `parseSlotPlacement(args)` — returns `{column, row}` tracks from a raw
+ *   `{column, row}` arg pair.
+ *
+ * Each track is `{start: number|null, end: number|null}`; null tracks mean
+ * auto-placement.
+ */
+export {
+  DEFAULT_GRID_COLUMNS,
+  DEFAULT_GRID_ROWS,
+  gridDimensions,
+  LAYOUT_MERGED_CELL_BLOCK,
+  normalizeFractions,
+  parsePlacement,
+  parseSlotPlacement,
+} from "discourse/lib/blocks/-internals/grid-placement";

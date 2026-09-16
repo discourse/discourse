@@ -1,0 +1,13 @@
+{
+  "name": "Wireframe static Card study",
+  "component": true,
+  "modifiers": {
+    "svg_icons": ["headphones"]
+  },
+  "assets": {
+    "prism": "assets/prism.svg",
+    "curator": "assets/curator.svg",
+    "cells": "assets/cells.svg",
+    "space": "assets/space.svg"
+  }
+}

@@ -1,0 +1,93 @@
+.wireframe-image-position-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  width: min(
+    100%,
+    calc(
+      var(--wireframe-image-axis-gutter) + var(--wireframe-image-number-width) +
+        var(--wireframe-position-pad-size) + var(--space-2)
+    )
+  );
+  min-width: 0;
+
+  &__coordinates {
+    display: grid;
+    gap: var(--space-2);
+    width: calc(
+      var(--wireframe-image-axis-gutter) + var(--wireframe-image-number-width)
+    );
+    min-width: 0;
+
+    label {
+      display: grid;
+      grid-template-columns: var(--wireframe-image-axis-width) minmax(0, 1fr);
+      align-items: center;
+      gap: var(--space-1);
+      margin: 0;
+      font-weight: 400;
+    }
+  }
+
+  &__axis {
+    color: var(--primary-high);
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__pad {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    /*! rtl:ignore */
+    direction: ltr;
+    flex: 0 0 var(--wireframe-position-pad-size, 4.125rem);
+    aspect-ratio: 1;
+    box-sizing: border-box;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    cursor: crosshair;
+  }
+
+  &__preset {
+    border: 0;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    padding: 0;
+
+    &::before {
+      content: "";
+      width: 0.1875rem;
+      height: 0.1875rem;
+      border-radius: 50%;
+      background: var(--primary-high);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+  }
+
+  &__thumb {
+    position: absolute;
+
+    /*! rtl:ignore */
+    left: clamp(0.625rem, var(--position-x), calc(100% - 0.625rem));
+    top: clamp(0.625rem, var(--position-y), calc(100% - 0.625rem));
+    width: 0.75rem;
+    height: 0.75rem;
+    box-sizing: border-box;
+
+    /*! rtl:ignore */
+    transform: translate(-50%, -50%);
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    background: var(--tertiary);
+    pointer-events: none;
+  }
+}

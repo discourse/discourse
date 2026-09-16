@@ -1,0 +1,853 @@
+<div id="wf-card-study">
+  <style>
+    #wf-card-study {
+      --study-text: light-dark(#262730, #efeff3);
+      --study-muted: light-dark(#61626d, #bcbec9);
+      --study-surface: light-dark(#fff, #2e303e);
+      --study-raised: light-dark(#f3f3f6, #383a48);
+      --study-line: light-dark(#d9dae1, #4b4e5c);
+      --study-accent: light-dark(#7650b7, #b79bf2);
+      --museum-paper: light-dark(#fff, #222a30);
+      --museum-ink: light-dark(#17232e, #edf2f4);
+      --museum-muted: light-dark(#505f6b, #bfcbd1);
+      --museum-tint: light-dark(#f6f1e9, #18272c);
+      --museum-border: light-dark(#e3e4e3, #435058);
+      --museum-link: light-dark(#006c87, #78d6ed);
+      --art-ink: #081823;
+      --art-light: #f2f5f6;
+      --speaker-paper: #fff2e7;
+      --speaker-ink: #b82d2b;
+      --speaker-accent: #eb4643;
+      color: var(--study-text);
+      font: 14px/1.45 system-ui, sans-serif;
+      color-scheme: light dark;
+    }
+    #wf-card-study * { box-sizing: border-box; }
+    #wf-card-study [hidden] { display: none; }
+    #wf-card-study h2, #wf-card-study h3, #wf-card-study p { margin: 0; }
+    #wf-card-study button, #wf-card-study select, #wf-card-study input, #wf-card-study textarea { font: inherit; color: inherit; }
+    #wf-card-study button, #wf-card-study select { cursor: pointer; }
+    #wf-card-study .study-controls { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: end; padding: 14px; background: var(--study-surface); border: 1px solid var(--study-line); border-radius: 6px; }
+    #wf-card-study .study-controls label { display: grid; gap: 5px; font-size: 12px; min-inline-size: 0; }
+    #wf-card-study select, #wf-card-study input:not([type="checkbox"]):not([type="range"]), #wf-card-study textarea { min-inline-size: 0; max-inline-size: 100%; border: 1px solid var(--study-line); border-radius: 4px; background: var(--study-surface); padding: 6px 8px; }
+    #wf-card-study .study-controls select { inline-size: 100%; }
+    #wf-card-study .study-reference { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; margin-block-end: 12px; background: var(--study-surface); border: 1px solid var(--study-line); border-radius: 6px; }
+    #wf-card-study .study-reference label { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-weight: 600; }
+    #wf-card-study .study-reference select { font-weight: 400; }
+    #wf-card-study .study-reference__scope { font-size: 12px; color: var(--study-muted); }
+    #wf-card-study .study-controls__width { flex: 1 1 150px; }
+    #wf-card-study input[type="range"] { inline-size: 100%; margin: 7px 0; accent-color: var(--study-accent); }
+    #wf-card-study .study-edit { margin-block: 12px 20px; background: var(--study-surface); border: 1px solid var(--study-line); border-radius: 6px; }
+    #wf-card-study summary { padding: 11px 14px; cursor: pointer; font-weight: 600; }
+    #wf-card-study .study-edit__fields { display: grid; gap: 14px; padding: 4px 16px 16px; }
+    #wf-card-study .study-edit__fields label { display: grid; align-content: start; gap: 5px; font-size: 12px; }
+    #wf-card-study .study-edit__fields textarea { resize: vertical; min-block-size: 82px; }
+    #wf-card-study .study-edit__note { color: var(--study-muted); font-size: 12px; font-weight: 400; }
+    #wf-card-study .study-edit__tests { border-block-start: 1px solid var(--study-line); display: flex; flex-wrap: wrap; gap: 10px 18px; padding: 12px 14px; }
+    #wf-card-study .study-edit__tests label { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+    #wf-card-study .study-stage { inline-size: min(100%, var(--preview-width, 1080px)); margin-inline: auto; }
+    #wf-card-study .study-scaffold { display: grid; gap: 14px; margin-block: 20px; }
+    #wf-card-study .study-placeholder { min-inline-size: 0; display: grid; align-content: center; justify-items: center; gap: 6px; min-block-size: var(--placeholder-height, 110px); padding: 18px; border: 1px dashed var(--museum-border); border-radius: 6px; background: var(--museum-paper); color: var(--museum-muted); font: 12px/1.4 system-ui, sans-serif; text-align: center; overflow-wrap: anywhere; }
+    #wf-card-study .study-placeholder__type { font-size: 11px; opacity: .8; }
+    #wf-card-study .study-placeholder.--wide { grid-column: 1 / -1; }
+    #wf-card-study .study-layout[data-layout="spotlight"] > :first-child { grid-column: 1; grid-row: 1; }
+    #wf-card-study .study-layout[data-layout="spotlight"] > :nth-child(2) { grid-column: 1; grid-row: 2; }
+    #wf-card-study .study-layout[data-layout="spotlight"] > :nth-child(3) { grid-column: 2 / span 2; grid-row: 1; }
+    #wf-card-study .study-layout[data-layout="spotlight"] > :nth-child(4) { grid-column: 2; grid-row: 2; }
+    #wf-card-study .study-layout[data-layout="spotlight"] > :nth-child(5) { grid-column: 3; grid-row: 2; }
+    #wf-card-study .study-layout[data-layout="promotions"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #wf-card-study .study-layout[data-layout="media"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+    #wf-card-study .study-layout[data-layout="promotions"] > :first-child { grid-column: 1 / -1; }
+    #wf-card-study .study-card[data-presentation="below"] .study-card__media,
+    #wf-card-study .study-card[data-presentation="beside"][data-image-side="end"] .study-card__media { order: 1; }
+    #wf-card-study .study-tail { margin-block-start: 20px; }
+    #wf-card-study .study-direct__placeholder { min-block-size: 270px; }
+    #wf-card-study[data-reference^="hubspot"] { --museum-paper: light-dark(#fff, #0c1e22); --museum-ink: light-dark(#263638, #e8eeeb); --museum-muted: light-dark(#526061, #c0cbca); --museum-tint: light-dark(#f8f3ec, #193338); --museum-border: light-dark(#e6e3df, #294349); --museum-link: light-dark(#b94717, #ff9c66); }
+    #wf-card-study[data-reference^="hubspot"] .study-card__title { font-family: system-ui, sans-serif; font-weight: 650; }
+    #wf-card-study[data-reference="populii"] { --museum-link: light-dark(#b52b36, #ff9ba3); --museum-tint: light-dark(#f3f5f8, #262c36); }
+    #wf-card-study[data-reference="populii"] .study-card__title { font-family: system-ui, sans-serif; font-weight: 650; }
+    #wf-card-study[data-reference="meta"] { --museum-paper: light-dark(#fff, #202022); --museum-tint: light-dark(#f2edfc, #211b35); --museum-link: light-dark(#6841bd, #b99aff); --museum-border: light-dark(#dcd5eb, #514368); }
+    #wf-card-study[data-reference="meta"] .study-card__title { font-family: system-ui, sans-serif; font-weight: 650; }
+    #wf-card-study[data-reference="meta"] .study-card { border-radius: 12px; }
+    #wf-card-study .study-stage__label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; padding: 8px 12px; font-size: 12px; color: var(--study-muted); background: var(--study-surface); }
+    #wf-card-study .study-section { padding: clamp(16px, 4%, 36px); color: var(--museum-ink); background: var(--museum-paper); container: study-section / inline-size; }
+    #wf-card-study .study-section[data-surface="tinted"] { background: var(--museum-tint); }
+    #wf-card-study .study-section[data-surface="image"] { background: linear-gradient(100deg, #0b252ed9, #183746a6), repeating-linear-gradient(130deg, #728d99 0 1px, #234554 1px 45px); color: var(--art-light); }
+    #wf-card-study .study-section__heading { font: 500 30px/1.2 Georgia, serif; margin-block-end: 20px; }
+    #wf-card-study .study-layout { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    #wf-card-study .study-layout[data-layout="museum"] > :first-child { grid-row: span 2; }
+    #wf-card-study .study-layout[data-layout="museum"] > :nth-child(2) { grid-column: span 2; }
+    #wf-card-study .study-layout[data-layout="equal"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+    #wf-card-study .study-layout[data-layout="row"] { display: flex; flex-wrap: wrap; }
+    #wf-card-study .study-layout[data-layout="row"] > * { flex: 1 1 260px; }
+    #wf-card-study .study-layout[data-layout="stack"] { grid-template-columns: minmax(0, 1fr); }
+    #wf-card-study .study-card-host { container: study-card / inline-size; min-inline-size: 0; display: grid; }
+    #wf-card-study .study-card { display: flex; flex-direction: column; min-inline-size: 0; background: var(--museum-paper); color: var(--museum-ink); border: 1px solid var(--museum-border); border-radius: 7px; position: relative; isolation: isolate; overflow: clip; }
+    #wf-card-study .study-card[data-surface="subtle"] { background: var(--museum-tint); }
+    #wf-card-study .study-card[data-surface="integrated"] { background: transparent; color: inherit; border-color: transparent; }
+    #wf-card-study .study-card__media { flex: 1 0 clamp(10rem, 56.25cqi, 20rem); overflow: hidden; background: var(--art-ink); position: relative; }
+    #wf-card-study .study-card__media > svg, #wf-card-study .study-card__media > img { display: block; position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+    #wf-card-study .study-card__body { display: flex; flex: none; flex-direction: column; gap: 10px; padding: 20px; min-inline-size: 0; overflow-wrap: anywhere; }
+    #wf-card-study .study-card__text { display: grid; align-content: start; gap: 10px; min-inline-size: 0; }
+    #wf-card-study .study-card__eyebrow { color: var(--museum-link); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    #wf-card-study .study-card__title { font: 500 var(--card-title-size, 23px)/1.2 Georgia, serif; }
+    #wf-card-study .study-card[data-scale="compact"] { --card-title-size: 18px; }
+    #wf-card-study .study-card[data-scale="featured"] { --card-title-size: clamp(26px, 4cqi, 32px); }
+    #wf-card-study .study-card[data-scale="featured"] .study-card__body { padding: clamp(20px, 4cqi, 28px); }
+    #wf-card-study .study-card[data-surface="accent"], #wf-card-study .study-card[data-surface="contrast"] { background: var(--museum-ink); color: var(--museum-paper); border-color: transparent; }
+    #wf-card-study .study-card[data-surface="accent"] { background: var(--museum-link); color: light-dark(#fff, #142025); }
+    #wf-card-study .study-card:is([data-surface="accent"], [data-surface="contrast"]) :is(.study-card__copy, .study-card__meta, .study-card__identity, .study-card__eyebrow, .study-card__title-icon, .study-card__action) { color: inherit; }
+    #wf-card-study .study-card__meta { color: var(--museum-muted); font: 12px/1.4 system-ui, sans-serif; }
+    #wf-card-study .study-card__identity { display: flex; align-items: center; gap: 10px; font: 13px/1.4 system-ui, sans-serif; min-inline-size: 0; }
+    #wf-card-study .study-card__person { display: grid; gap: 2px; min-inline-size: 0; }
+    #wf-card-study .study-card__role { font-size: 12px; }
+    #wf-card-study .study-card__avatar { inline-size: 40px; block-size: 40px; flex: 0 0 40px; border-radius: 50%; display: grid; place-items: center; overflow: hidden; background: var(--museum-tint); color: var(--museum-ink); }
+    #wf-card-study .study-card__avatar img { inline-size: 100%; block-size: 100%; object-fit: cover; object-position: 50% 20%; }
+    #wf-card-study .study-card__media.--identity { display: flex; flex-direction: column; justify-content: center; min-block-size: min-content; padding: 24px; }
+    #wf-card-study .study-card__media.--identity::after { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--speaker-paper) 85%, transparent); }
+    #wf-card-study .study-card__media.--identity[data-treatment="theme"]::after { background: color-mix(in srgb, var(--museum-tint) 85%, transparent); }
+    #wf-card-study .study-card__media.--identity[data-treatment="photo"]::after { background: color-mix(in srgb, var(--art-ink) 78%, transparent); }
+    #wf-card-study .study-card .study-card__media .study-card__identity { position: relative; z-index: 1; color: var(--speaker-ink); overflow-wrap: anywhere; }
+    #wf-card-study .study-card .study-card__media[data-treatment="theme"] .study-card__identity { color: var(--museum-link); }
+    #wf-card-study .study-card .study-card__media[data-treatment="photo"] .study-card__identity { color: var(--art-light); }
+    #wf-card-study .study-card__identity[data-format="feature"], #wf-card-study .study-card__identity[data-format="stacked"] { gap: 14px; font-size: 20px; line-height: 1.2; }
+    #wf-card-study .study-card__identity:is([data-format="feature"], [data-format="stacked"]) .study-card__avatar { inline-size: 64px; block-size: 64px; flex-basis: 64px; background: var(--museum-link); color: var(--museum-paper); }
+    #wf-card-study .study-card__media[data-treatment="graphic"] .study-card__avatar { background: var(--speaker-accent); color: var(--speaker-paper); }
+    #wf-card-study .study-card__identity:is([data-format="feature"], [data-format="stacked"]) .study-card__person { gap: 5px; }
+    #wf-card-study .study-card__identity[data-format="stacked"] { flex-direction: column; text-align: center; }
+    #wf-card-study .study-card__identity[data-shape="rounded"] .study-card__avatar { border-radius: 8px; }
+    #wf-card-study .study-card__role { line-height: 1.4; }
+    #wf-card-study .study-identity-options { margin-block: 20px; }
+    #wf-card-study .study-identity-options__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+    #wf-card-study .study-identity-options figure { margin: 0; display: grid; grid-template-rows: auto 1fr; gap: 8px; min-inline-size: 0; }
+    #wf-card-study .study-identity-options figcaption { font-size: 12px; }
+    #wf-card-study .study-card__copy { font-size: 13px; line-height: 1.5; color: var(--museum-muted); max-inline-size: 65ch; }
+    #wf-card-study .study-card__action { display: flex; align-items: baseline; gap: 8px; padding-block-start: 12px; color: var(--museum-link); font-size: 12px; font-weight: 600; }
+    #wf-card-study .study-card[data-row-aligned] .study-card__body { min-block-size: var(--aligned-body-size); }
+    #wf-card-study .study-card__actions { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; padding-block-start: 12px; min-inline-size: 0; }
+    #wf-card-study .study-card[data-row-aligned] .study-card__actions { margin-block-start: auto; }
+    #wf-card-study .study-comparison { margin-block: 24px; }
+    #wf-card-study .study-comparison__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 324px), 1fr)); max-inline-size: 664px; gap: 20px 16px; }
+    #wf-card-study .study-comparison__example { display: flex; flex-direction: column; gap: 8px; margin: 0; inline-size: 324px; max-inline-size: 100%; }
+    #wf-card-study .study-comparison__label { font-size: 12px; }
+    #wf-card-study .study-comparison .study-card-host { flex: 1; }
+    #wf-card-study .study-comparison .study-card { min-block-size: 350px; }
+    #wf-card-study .study-comparison .study-card:is([data-presentation="above"], [data-presentation="below"]) .study-card__media { flex: 1 0 170px; }
+    #wf-card-study .study-card[data-surface="integrated"] .study-card__eyebrow, #wf-card-study .study-card[data-surface="integrated"] .study-card__copy, #wf-card-study .study-card[data-surface="integrated"] .study-card__action { color: inherit; }
+    #wf-card-study .study-card[data-presentation="behind"] .study-card__media { position: absolute; inset: 0; block-size: 100%; inline-size: 100%; z-index: -2; }
+    #wf-card-study .study-card[data-presentation="behind"]::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #07131d08 5%, #07131da8 50%, #07131df5 100%); }
+    #wf-card-study .study-card[data-presentation="behind"] { background: var(--art-ink); color: var(--art-light); border-color: transparent; }
+    #wf-card-study .study-card[data-presentation="behind"] .study-card__body { flex: 1; min-block-size: clamp(17.5rem, calc(40cqi + 8.75rem), 27.5rem); justify-content: end; padding-block-start: 100px; }
+    #wf-card-study .study-card[data-presentation="behind"] .study-card__eyebrow { color: #9ee6f2; }
+    #wf-card-study .study-card[data-presentation="behind"] .study-card__copy, #wf-card-study .study-card[data-presentation="behind"] .study-card__action { color: var(--art-light); }
+    #wf-card-study .study-card[data-presentation="behind"] :is(.study-card__meta, .study-card__identity) { color: var(--art-light); }
+    #wf-card-study .study-card[data-presentation="behind"] .study-card__action { margin-block-start: 0; }
+    #wf-card-study .study-card[data-presentation="behind"][data-side-density="compact"]::before { background: none; }
+    #wf-card-study .study-card[data-presentation="behind"][data-side-density="compact"] .study-card__body { position: relative; padding-block-start: 170px; }
+    #wf-card-study .study-card[data-presentation="behind"][data-side-density="compact"] .study-card__body::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #07131d00, #07131d35 22%, #07131ded 48%, #07131dfa); }
+    #wf-card-study[data-reference="meta"] .study-card[data-presentation="behind"] .study-card__eyebrow,
+    #wf-card-study[data-reference="meta"] .study-card[data-presentation="behind"] .study-card__action { color: #d0baff; }
+    #wf-card-study .study-card[data-presentation="beside"] { flex-direction: row; }
+    #wf-card-study .study-card[data-presentation="beside"] .study-card__media { flex: 0 0 var(--side-image-width, 36%); inline-size: var(--side-image-width, 36%); aspect-ratio: auto; }
+    #wf-card-study .study-card[data-presentation="beside"] .study-card__body { flex: 1; justify-content: center; }
+    #wf-card-study .study-direct { margin-block-start: 24px; }
+    #wf-card-study .study-direct .study-section { padding-block: 28px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+    #wf-card-study .study-direct__content { min-inline-size: 0; display: grid; gap: 16px; }
+    #wf-card-study .study-direct { container: study-direct / inline-size; }
+    #wf-card-study .study-card__title { display: flex; align-items: start; gap: 10px; }
+    #wf-card-study .study-card__title-icon { display: inline-grid; place-items: center; flex: 0 0 24px; color: var(--museum-link); }
+    #wf-card-study .study-card__title-icon svg, #wf-card-study .study-card__badge-icon svg { inline-size: 20px; block-size: 20px; }
+    #wf-card-study .study-card[data-icon-style="tile"] .study-card__title-icon { flex-basis: 38px; min-block-size: 38px; background: var(--museum-tint); border-radius: 6px; }
+    #wf-card-study .study-card[data-dividers="true"] .study-card__copy { padding-block: 14px; border-block: 1px solid var(--museum-border); max-inline-size: none; }
+    #wf-card-study .study-card[data-badge-style="badge"] .study-card__eyebrow { display: inline-flex; align-items: center; gap: 6px; justify-self: start; padding: 4px 8px; border: 1px solid currentColor; border-radius: 999px; letter-spacing: 0; text-transform: none; font-size: 11px; }
+    #wf-card-study .study-card__badge-icon { display: inline-flex; }
+    #wf-card-study .study-card[data-badge-position="image"] > .study-card__eyebrow { position: absolute; inset-block-start: 16px; inset-inline-start: 16px; max-inline-size: calc(100% - 32px); background: var(--art-ink); color: var(--art-light); z-index: 1; }
+    #wf-card-study .study-card__action { align-self: start; max-inline-size: 100%; text-decoration: none; padding-block-start: 0; }
+    #wf-card-study .study-card__action.--whole-card::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+    #wf-card-study .study-card__action.--whole-card:focus-visible::after { outline: 2px solid var(--museum-link); outline-offset: -3px; }
+    #wf-card-study .study-card__action.--secondary { position: relative; z-index: 2; }
+    #wf-card-study .study-card[data-action-style="button"] .study-card__action.--secondary { background: transparent; color: inherit; border: 1px solid currentColor; padding: 9px 13px; }
+    #wf-card-study .study-card .study-card__action.--concealed { padding: 0; margin: 0; border: 0; background: transparent; }
+    #wf-card-study .study-card:is([data-surface="accent"], [data-surface="contrast"])[data-action-style="button"] .study-card__action:not(.--secondary):not(.--concealed) { background: var(--museum-paper); color: var(--museum-ink); }
+    #wf-card-study .study-inspector :is([data-action-options], [data-identity-options], [data-secondary-options]) { padding: 0; }
+    #wf-card-study .study-card[data-action-style="button"] .study-card__action { background: var(--museum-link); color: var(--museum-paper); padding: 10px 14px; border-radius: 5px; }
+    #wf-card-study .study-card[data-presentation="behind"][data-action-style="button"] .study-card__action { background: var(--art-light); color: var(--art-ink); }
+    @container study-card (min-width: 560px) {
+      #wf-card-study .study-card[data-presentation="none"][data-action-layout="inline"] .study-card__body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .38fr); align-items: center; gap: 24px; }
+      #wf-card-study .study-card[data-presentation="none"][data-action-layout="inline"] .study-card__actions { justify-self: end; align-self: center; padding-block-start: 0; }
+      #wf-card-study .study-card[data-presentation="none"][data-action-layout="inline"][data-action-style="button"] .study-card__action { padding-block: 10px; }
+    }
+    #wf-card-study .study-editor { display: flex; flex-wrap: wrap; align-items: start; gap: 20px; padding: 16px; }
+    #wf-card-study .study-editor__canvas { flex: 1 1 360px; min-inline-size: 0; }
+    #wf-card-study .study-editor__path { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-block-end: 14px; font-size: 12px; color: var(--study-muted); }
+    #wf-card-study .study-editor__leaf { padding: 4px 10px; color: var(--study-text); background: var(--study-raised); border-radius: 4px; }
+    #wf-card-study .study-editor__preview { max-inline-size: min(100%, var(--preview-width, 1080px)); margin-inline: auto; }
+    #wf-card-study .study-editor__preview .study-section { padding: 24px; min-block-size: 240px; }
+    #wf-card-study .study-inspector { flex: 0 1 var(--inspector-width, 320px); inline-size: var(--inspector-width, 320px); max-inline-size: 100%; min-inline-size: 0; border: 1px solid var(--study-line); border-radius: 6px; background: var(--study-surface); }
+    #wf-card-study .study-inspector__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border-block-end: 1px solid var(--study-line); }
+    #wf-card-study .study-inspector__header span { font-size: 12px; color: var(--study-muted); }
+    #wf-card-study .study-inspector h3 { font: 600 16px/1.4 system-ui, sans-serif; padding: 16px 16px 12px; }
+    #wf-card-study .study-inspector details { border-block-start: 1px solid var(--study-line); }
+    #wf-card-study .study-inspector summary { padding: 16px; font-size: 15px; }
+    #wf-card-study .study-inspector input:not([type="checkbox"]), #wf-card-study .study-inspector select, #wf-card-study .study-inspector textarea { inline-size: 100%; min-block-size: 36px; }
+    #wf-card-study .study-inspector .study-edit__fields label { font-size: 13px; }
+    #wf-card-study .study-inspector .study-inspector__check { display: flex; align-items: center; gap: 8px; }
+    #wf-card-study .study-inspector__pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 125px), 1fr)); gap: 12px; }
+    #wf-card-study .study-examples { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 16px; }
+    #wf-card-study .study-examples button { border: 1px solid var(--study-line); border-radius: 4px; padding: 7px 10px; background: var(--study-surface); }
+    #wf-card-study .study-examples button[aria-pressed="true"] { color: var(--study-accent); border-color: currentColor; background: var(--study-raised); }
+    #wf-card-study .study-inspector__help { font-size: 12px; color: var(--study-muted); }
+    #wf-card-study .study-inspector .study-edit__fields [hidden] { display: none; }
+    #wf-card-study .study-editor__caption { margin-block-start: 12px; color: var(--study-muted); font-size: 12px; }
+    #wf-card-study .study-art-defs { position: absolute; inline-size: 0; block-size: 0; overflow: hidden; }
+    @container study-section (max-width: 640px) {
+      #wf-card-study .study-layout[data-layout="museum"] { grid-template-columns: minmax(0, 1fr); }
+      #wf-card-study .study-layout[data-layout="museum"] > :first-child { grid-row: auto; }
+      #wf-card-study .study-layout[data-layout="museum"] > :nth-child(2) { grid-column: auto; }
+      #wf-card-study .study-layout[data-layout="spotlight"], #wf-card-study .study-layout[data-layout="promotions"] { grid-template-columns: minmax(0, 1fr); }
+      #wf-card-study .study-layout[data-layout="spotlight"] > :nth-child(n) { grid-column: auto; grid-row: auto; }
+    }
+    @container study-direct (max-width: 640px) { #wf-card-study .study-direct .study-section { grid-template-columns: minmax(0, 1fr); } }
+    @container study-card (max-width: 360px) {
+      #wf-card-study .study-card[data-presentation="beside"] { flex-direction: column; }
+      #wf-card-study .study-card[data-presentation="beside"] .study-card__media { flex: 1 0 clamp(10rem, 56.25cqi, 20rem); inline-size: 100%; }
+      #wf-card-study .study-card[data-presentation="beside"] .study-card__body { flex: none; }
+      #wf-card-study .study-card[data-presentation="beside"] .study-card__media { order: 0; }
+      #wf-card-study .study-card__body { padding: 16px; }
+    }
+    @container study-card (min-width: 300px) and (max-width: 360px) {
+      #wf-card-study .study-card[data-presentation="beside"][data-side-density="compact"] { flex-direction: row; }
+      #wf-card-study .study-card[data-presentation="beside"][data-side-density="compact"] .study-card__media { flex: 0 0 var(--side-image-width, 28%); inline-size: var(--side-image-width, 28%); }
+      #wf-card-study .study-card[data-presentation="beside"][data-side-density="compact"][data-image-side="end"] .study-card__media { order: 1; }
+      #wf-card-study .study-card[data-presentation="beside"][data-side-density="compact"] .study-card__body { flex: 1; padding: 16px 12px; }
+    }
+  </style>
+
+  <div class="study-reference"><label>Reference<select data-control="reference"><option value="museum">1 · Museum</option><option value="hubspot-dark">2 · HubSpot · Dark</option><option value="andela">3 · Andela</option><option value="populii">4 · Populii</option><option value="hubspot-light">5 · HubSpot · Light</option><option value="meta">6 · Discourse Meta</option><option value="stress">Stress test · Everything filled</option></select></label><span class="study-reference__scope">Static cards in detail · Other blocks are placeholders</span></div>
+  <div class="study-controls" aria-label="Preview settings">
+    <label>Layout<select data-control="layout"><option value="museum">Reference layout</option><option value="equal">Equal grid</option><option value="row">Row · Wrap</option><option value="stack">Stack</option></select></label>
+    <label>Section surface<select data-control="section"><option value="tinted">Tinted</option><option value="plain">Plain</option><option value="image">Image-backed</option></select></label>
+    <label>Appearance<select data-control="theme"><option value="light dark">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <label><span>Matching above / below cards</span><span><input type="checkbox" data-control="align" checked> Align content</span></label>
+    <label><span>Selected card</span><span><input type="checkbox" data-control="compare"> Compare presentations</span></label>
+    <label class="study-controls__width"><span>Preview width <output data-width></output></span><input type="range" data-control="width" min="280" max="1080" value="1080" step="10" aria-label="Preview width"></label>
+  </div>
+  <details class="study-edit" open>
+    <summary>Card · Leaf inspector study</summary>
+    <div class="study-examples" aria-label="Card editing examples">
+      <button type="button" data-example="museum:newsletter">Newsletter</button>
+      <button type="button" data-example="hubspot-light:champion">Champion</button>
+      <button type="button" data-example="hubspot-light:programme">Programme</button>
+      <button type="button" data-example="meta:podcast-sam">Speaker</button>
+      <button type="button" data-example="museum:invitation">Two actions</button>
+      <button type="button" data-example="populii:atlas-promo">Linked card</button>
+      <button type="button" data-example="meta:guide">CTA strip</button>
+      <button type="button" data-example="stress:everything-filled">Everything filled</button>
+    </div>
+    <div class="study-controls">
+      <label>Editing<select data-control="selected"><option value="curator">Curator</option><option value="exhibition" selected>Exhibition</option><option value="neutrino">Collection story</option><option value="ethics">Member spotlight</option><option value="newsletter">Newsletter</option></select></label>
+      <label>Inspector width<select data-control="inspectorWidth"><option value="220">Narrow · 220 px</option><option value="320" selected>Default · 320 px</option><option value="480">Wide · 480 px</option></select></label>
+    </div>
+    <div class="study-editor">
+      <div class="study-editor__canvas">
+        <div class="study-editor__path" aria-label="Block path"><span>Section</span><span aria-hidden="true">›</span><span>Layout</span><span aria-hidden="true">›</span><span class="study-editor__leaf">Card</span></div>
+        <div class="study-editor__preview"><section class="study-section" data-surface="tinted" aria-label="Selected card preview"><div data-leaf-preview></div></section></div>
+        <div class="study-editor__caption">Selected card · Same content and settings as the reference below</div>
+      </div>
+      <aside class="study-inspector" aria-label="Card inspector mockup">
+        <div class="study-inspector__header"><strong>Card</strong><span>Settings</span></div>
+        <h3>Content</h3>
+        <div class="study-edit__fields">
+          <label>Title<textarea data-control="title" rows="2"></textarea></label>
+          <label>Metadata<input data-control="meta" type="text" placeholder="Optional · Below the title"></label>
+          <label>Body<textarea data-control="copy"></textarea></label>
+        </div>
+        <details data-group="identity"><summary>Identity</summary><div class="study-edit__fields">
+          <label class="study-inspector__check"><input data-control="identityEnabled" type="checkbox">Show identity</label>
+          <div class="study-edit__fields" data-identity-options>
+            <label>Name<input data-control="personName" type="text"></label>
+            <label>Role<input data-control="personRole" type="text"></label>
+            <label>Avatar<select data-control="avatar"><option value="none">None</option><option value="initials">Initials</option><option value="silhouette">Portrait placeholder</option><option value="portrait">Illustrative portrait</option></select></label>
+            <label>Format<select data-control="identityFormat"><option value="compact">Compact byline</option><option value="feature">Portrait beside name</option><option value="stacked">Stacked portrait</option></select></label>
+            <label data-avatar-shape>Portrait shape<select data-control="identityShape"><option value="circle">Circle</option><option value="rounded">Rounded square</option></select></label>
+            <label>Placement<select data-control="identityPlacement"><option value="content">With content</option><option value="media">On image</option></select><span class="study-inspector__help">On image works with Image above and Image below. Other placements keep identity with the content.</span></label>
+            <label data-identity-treatment>Media treatment<select data-control="identityTreatment"><option value="graphic">Warm graphic</option><option value="theme">Theme graphic</option><option value="photo">Photo · Light text</option></select><span class="study-inspector__help">Paired background and text across the whole media area. These are mockup palette presets.</span></label>
+          </div>
+        </div></details>
+        <details data-group="label"><summary>Label &amp; icon</summary><div class="study-edit__fields">
+          <label>Label<input data-control="eyebrow" type="text" placeholder="Optional"></label>
+          <div class="study-inspector__pair" data-label-options>
+            <label>Treatment<select data-control="badgeStyle"><option value="plain">Plain text</option><option value="badge">Badge</option></select></label>
+            <label data-badge-position>Position<select data-control="badgePosition"><option value="content">With content</option><option value="image">Over image</option></select></label>
+          </div>
+          <label>Icon<select data-control="icon"><option value="">None</option><option value="mail">Envelope</option><option value="award">Award</option><option value="play">Play</option><option value="headphones">Headphones</option></select></label>
+          <div class="study-inspector__pair" data-icon-options>
+            <label>Attach to<select data-control="iconTarget"><option value="title">Title</option><option value="label">Label</option></select></label>
+            <label data-icon-style>Icon treatment<select data-control="iconStyle"><option value="plain">Plain</option><option value="tile">Tile</option></select></label>
+          </div>
+        </div></details>
+        <details data-group="image"><summary>Image</summary><div class="study-edit__fields">
+      <label>Placement<select data-control="presentation" aria-describedby="wf-card-presentation-note"><option value="none">Content only</option><option value="above">Image above</option><option value="below">Image below</option><option value="beside">Image beside</option><option value="behind">Image behind</option></select><span id="wf-card-presentation-note" class="study-edit__note" data-presentation-note hidden>Stacked at this width. The image appears beside the content when there is enough room.</span></label>
+      <label data-image-options>Study image<select data-control="image"><option value="prism">Prism</option><option value="curator">Curator portrait</option><option value="cells">Collection detail</option><option value="space">Space</option><option value="waves">Soft waves</option></select></label>
+      <label data-fit-options>Fit<select data-control="imageFit"><option value="cover">Fill frame</option><option value="contain">Show full image</option></select></label>
+      <div class="study-inspector__pair" data-side-options>
+      <label>Beside · Image width<select data-control="imageWidth"><option value="auto">Adaptive narrow image</option><option value="50">50% · Even split</option></select></label>
+      <label>Beside · Image side<select data-control="imageSide"><option value="start">Start</option><option value="end">End</option></select></label>
+      </div>
+        </div></details>
+        <details data-group="action"><summary>Actions &amp; link</summary><div class="study-edit__fields">
+          <label>Label<input data-control="action" type="text" placeholder="Optional"></label>
+            <label>Destination<input data-control="href" type="text" placeholder="/your-page"></label>
+          <details data-group="navigation"><summary>Link behavior</summary><div class="study-edit__fields">
+          <label class="study-inspector__check"><input data-control="wholeCard" type="checkbox">Make the whole card clickable</label>
+          <label class="study-inspector__check"><input data-control="external" type="checkbox">Open primary link in a new tab</label>
+          <label data-link-name>Link name<input data-control="linkName" type="text" placeholder="Uses the card title"></label>
+          <span class="study-inspector__help" data-link-status role="status"></span>
+          </div></details>
+          <div data-action-options class="study-edit__fields">
+            <label>Style<select data-control="actionStyle"><option value="link">Text link</option><option value="button">Button</option></select></label>
+            <label data-action-layout>Position<select data-control="actionLayout"><option value="below">Below text</option><option value="inline">Beside text</option></select><span class="study-inspector__help">Stacks below at narrow widths.</span></label>
+          </div>
+          <label class="study-inspector__check"><input data-control="secondaryEnabled" type="checkbox">Add a secondary action</label>
+          <div class="study-edit__fields" data-secondary-options>
+            <label>Secondary label<input data-control="secondaryLabel" type="text"></label>
+            <label>Secondary destination<input data-control="secondaryHref" type="text"></label>
+            <label class="study-inspector__check"><input data-control="secondaryExternal" type="checkbox">Open secondary link in a new tab</label>
+          </div>
+          <span class="study-inspector__help">Preview clicks report their destination without navigating.</span>
+        </div></details>
+        <details data-group="appearance"><summary>Appearance</summary><div class="study-edit__fields">
+      <label>Card surface<select data-control="surface"><option value="default">Default</option><option value="subtle">Subtle</option><option value="accent">Accent</option><option value="contrast">Contrast</option><option value="integrated">Integrated with Section</option></select></label>
+          <label>Emphasis<select data-control="scale"><option value="compact">Compact</option><option value="standard">Standard</option><option value="featured">Featured</option></select></label>
+          <label class="study-inspector__check"><input data-control="dividers" type="checkbox">Separate body with dividers</label>
+        </div></details>
+      </aside>
+    </div>
+    <div class="study-editor__caption" data-navigation-status role="status"></div>
+    <div class="study-edit__tests" aria-label="Content stress tests">
+      <label><input type="checkbox" data-control="long">Long copy</label>
+      <label><input type="checkbox" data-control="images">Hide images</label>
+      <label><input type="checkbox" data-control="optional">Hide optional content</label>
+      <label><input type="checkbox" data-control="rtl">Right to left</label>
+    </div>
+  </details>
+
+  <div class="study-stage">
+    <div class="study-identity-options" hidden>
+      <div class="study-stage__label"><span>Identity formats · Selected card</span><span>Illustrative portrait · Not reference photography</span></div>
+      <section class="study-section" data-surface="tinted" aria-label="Identity format comparison"><div class="study-identity-options__cards"></div></section>
+    </div>
+    <div class="study-scaffold" data-scaffold-top></div>
+    <div class="study-direct">
+      <div class="study-stage__label"><span>Section → Layout → Newsletter card</span><span>Live content is a placeholder</span></div>
+      <section class="study-section" data-surface="tinted" aria-label="Newsletter section"><div class="study-placeholder study-direct__placeholder">Latest discussions · Live-data placeholder</div><div class="study-direct__content"></div></section>
+    </div>
+    <div data-feature-region>
+    <div class="study-stage__label"><span data-context>Section → Grid → Card</span><span>Static card study · Illustrative artwork</span></div>
+    <section class="study-section" data-surface="tinted" aria-label="Museum stories">
+      <h2 class="study-section__heading">From the museum</h2>
+      <div class="study-layout" data-layout="museum"></div>
+    </section>
+    </div>
+    <div class="study-comparison" hidden>
+      <div class="study-stage__label"><span>Selected card → Four placements</span><span>Same content · Up to 324 px per card</span></div>
+      <section class="study-section" data-surface="tinted" aria-label="Card presentation comparison">
+        <h2 class="study-section__heading" data-comparison-title></h2>
+        <div class="study-comparison__cards"></div>
+      </section>
+    </div>
+    <div class="study-tail" data-tail></div>
+    <div class="study-scaffold" data-scaffold-bottom></div>
+  </div>
+
+  <svg class="study-art-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="wf-prism-bg" x2="1" y2="1"><stop stop-color="#071825"/><stop offset="1" stop-color="#294653"/></linearGradient>
+      <linearGradient id="wf-spectrum" x2="0" y2="1"><stop stop-color="#fd9170"/><stop offset=".25" stop-color="#f4d86b"/><stop offset=".5" stop-color="#8ac3a8"/><stop offset=".75" stop-color="#6eabcf"/><stop offset="1" stop-color="#a08ddd"/></linearGradient>
+      <linearGradient id="wf-glass" x2="1" y2="1"><stop stop-color="#dce9e8" stop-opacity=".85"/><stop offset=".5" stop-color="#577885" stop-opacity=".15"/><stop offset="1" stop-color="#c0d5dc" stop-opacity=".7"/></linearGradient>
+      <radialGradient id="wf-planet"><stop stop-color="#b99672"/><stop offset=".65" stop-color="#604e50"/><stop offset="1" stop-color="#142431"/></radialGradient>
+      <pattern id="wf-cells" width="64" height="56" patternUnits="userSpaceOnUse"><rect width="64" height="56" fill="#7297a5"/><ellipse cx="30" cy="27" rx="25" ry="21" fill="#acc4c6" stroke="#264956" stroke-width="4"/><ellipse cx="34" cy="27" rx="8" ry="13" fill="#507b8a"/><path d="M9 15L18 20M10 38L18 33M45 14L43 21" stroke="#e1e7db" stroke-width="2"/></pattern>
+      <symbol id="wf-art-prism" viewBox="0 0 600 400"><rect width="600" height="400" fill="url(#wf-prism-bg)"/><g stroke="#8da4a8" opacity=".18"><path d="M0 80H600M0 160H600M0 240H600M0 320H600M100 0V400M200 0V400M300 0V400M400 0V400M500 0V400"/></g><path d="M270 205L600 55V200Z" fill="url(#wf-spectrum)" opacity=".8"/><path d="M0 245L273 199" stroke="#f4f1d9" stroke-width="5"/><path d="M260 78L360 300L170 300Z" fill="url(#wf-glass)" stroke="#dce7e7" stroke-width="2"/><path d="M260 78L270 255L360 300M170 300L270 255" fill="none" stroke="#9faeb6" stroke-width="2"/><circle cx="472" cy="80" r="6" fill="#f3d79a"/></symbol>
+      <symbol id="wf-art-curator" viewBox="0 0 400 650"><rect width="400" height="650" fill="#8d9180"/><path d="M20 0V650M140 0V650M280 0V650M380 0V650" stroke="#c0bdab" stroke-width="10"/><g fill="none" stroke="#3f514b" stroke-width="9" opacity=".5"><path d="M15 190Q90 40 158 175T280 130T405 180M10 300Q100 195 200 310T405 270"/></g><path d="M82 650V390Q88 300 200 295Q317 300 327 400V650" fill="#172e3b"/><ellipse cx="199" cy="200" rx="88" ry="119" fill="#242c2d"/><path d="M145 184Q160 135 210 140Q244 155 255 200L244 263Q210 308 164 263Z" fill="#cfa98e"/><path d="M145 195Q134 129 186 107Q261 95 278 199Q230 192 214 138Q194 181 145 195" fill="#222c30"/><path d="M176 228Q199 245 222 224" fill="none" stroke="#895e51" stroke-width="3"/><path d="M163 206H179M215 206H231" stroke="#38413e" stroke-width="3"/><path d="M96 405L295 509M310 405L113 509" stroke="#294754" stroke-width="50" stroke-linecap="round"/></symbol>
+      <symbol id="wf-art-cells" viewBox="0 0 600 400"><rect width="600" height="400" fill="url(#wf-cells)"/><circle cx="380" cy="148" r="105" fill="#c0d9d3" fill-opacity=".2" stroke="#273e47" stroke-width="10"/><path d="M453 222L540 330" stroke="#273e47" stroke-width="22" stroke-linecap="round"/></symbol>
+      <symbol id="wf-art-space" viewBox="0 0 600 400"><rect width="600" height="400" fill="#0b1a28"/><g fill="#d2d3bf"><circle cx="34" cy="55" r="2"/><circle cx="160" cy="65" r="2"/><circle cx="515" cy="117" r="3"/><circle cx="481" cy="35" r="2"/><circle cx="560" cy="250" r="2"/><circle cx="285" cy="40" r="2"/><circle cx="320" cy="330" r="2"/></g><circle cx="354" cy="210" r="115" fill="url(#wf-planet)"/><ellipse cx="354" cy="210" rx="204" ry="37" transform="rotate(-28 354 210)" fill="none" stroke="#c7b196" stroke-width="12" opacity=".65"/><circle cx="90" cy="300" r="65" fill="#456474"/></symbol>
+    </defs>
+  </svg>
+  <svg aria-hidden="true" width="0" height="0" style="position:absolute"><defs><symbol id="wf-art-waves" viewBox="0 0 600 400"><rect width="600" height="400" fill="var(--speaker-paper)"/><g fill="none" stroke="var(--speaker-accent)" stroke-width="44" opacity=".65"><path d="M-140 410C-150 35 320 120 95 440M365-80C110 170 620 350 680 15M490-50C335 110 695 240 670 350"/></g></symbol></defs></svg>
+  <script>
+    (() => {
+      const root = document.getElementById("wf-card-study");
+      const controls = Object.fromEntries([...root.querySelectorAll("[data-control]")].map(el => [el.dataset.control, el]));
+      let cards = [
+        { id: "curator", title: "Meet our curator: Dr. Maya Chen", copy: "Learn about her journey, research, and the stories behind Beyond the Visible.", action: "Read the interview", eyebrow: "", image: "curator", presentation: "behind", surface: "default" },
+        { id: "exhibition", title: "Beyond the Visible opens this month", copy: "Discover the science of the unseen through hands-on exhibits and immersive experiences.", action: "Plan your visit", eyebrow: "Exhibition highlight", image: "prism", presentation: "behind", surface: "default" },
+        { id: "neutrino", title: "The Neutrino Mystery", copy: "Latest findings from IceCube Observatory.", action: "Read more", eyebrow: "Collection story", image: "cells", presentation: "above", surface: "default" },
+        { id: "ethics", title: "CRISPR Ethics", copy: "Where do we draw the line?", action: "Read more", eyebrow: "Member spotlight", image: "space", presentation: "above", surface: "default" },
+        { id: "newsletter", title: "Community newsletter", copy: "Curated museum stories, upcoming events, and discussions delivered weekly.", action: "Sign up", eyebrow: "", image: "prism", presentation: "none", surface: "default" }
+      ];
+      const museumCards = cards;
+      function staticCard(id, title, copy, action, image = "prism", presentation = "none", eyebrow = "") {
+        return { id, title, copy, action, image, presentation, eyebrow, surface: "default" };
+      }
+      function hubspotCards(name) {
+        return [
+          staticCard("champion", name, "Making waves with innovative solutions and exceptional community leadership.", "Read the full story", "space", "behind", "Champion of the month"),
+          staticCard("programme", "Join the Champions Program", "Share your expertise, help others, and get exclusive benefits.", "Become a champion"),
+          staticCard("newsletter", "Community newsletter", "A weekly newsletter designed to help you discover content in the Community.", "Sign up")
+        ];
+      }
+      const references = {
+        museum: { title: "From the museum", layout: "museum", theme: "light dark", cards: museumCards,
+          items: ["curator", "exhibition", "neutrino", "ethics"],
+          before: [["Site header", "Site chrome", 44], ["Exhibition hero", "Section / heading / image / actions", 100]],
+          after: [["Explore the museum", "Category navigation placeholder", 100]] },
+        "hubspot-dark": { title: "Community Highlight", layout: "spotlight", theme: "dark", cards: hubspotCards("Gabriel Marguglio"),
+          items: ["champion", "programme", ["What does UNBOUND mean to you?", "Topic feature placeholder", 280], ["How context is reshaping competitive advantage", "Webinar / topic placeholder", 200], ["AI agents on your GTM team", "Webinar / topic placeholder", 200]],
+          before: [["Header / sidebar / announcement", "Site chrome", 44], ["Learn from expert peers", "Hero section placeholder", 100]],
+          after: [["Explore by Hub", "Category navigation placeholder", 100], ["Footer", "Site chrome", 60]] },
+        andela: { title: "", layout: "equal", theme: "light", cards: [], items: [],
+          before: [["Header / community survey", "Site chrome", 44], ["Welcome back to the conversation", "Hero section placeholder", 110], ["Save the dates · Three event cards", "Live events placeholder", 150], ["Latest topics", "Live topic list placeholder", 150], ["Grow, together", "Member celebration placeholder", 130], ["Come chat with us · Channel grid", "Live chat placeholder", 150]],
+          after: [] },
+        populii: { title: "", layout: "promotions", theme: "light", cards: [
+          staticCard("atlas-hero", "Earn Money by Fixing Maps on Your Phone", "Join the Atlas Project and make fast, easy map improvements anytime, anywhere.", "Sign up for Atlas Project", "curator", "beside"),
+          staticCard("atlas-promo", "Atlas Project", "Check out the conversations happening in this gig you are involved in right now.", "", "prism", "none", "My current gig"),
+          staticCard("course-promo", "Chatbot Evaluation Course", "Explore a collection of videos about building chatbots from A to Z.", "", "space", "none", "Hot learning resource")],
+          items: ["atlas-hero", ["Categories · Illustrated two-column grid", "Live category navigation placeholder", 200], "atlas-promo", "course-promo"],
+          before: [["Header / sidebar", "Site chrome", 44], ["Welcome to Populii Community! / Search", "Section / search placeholder", 80]],
+          after: [["Community Discussions", "Live topic list placeholder", 160], ["Powered by Discourse", "Site chrome", 44]] },
+        "hubspot-light": { title: "Community Spotlight", layout: "spotlight", theme: "light", cards: hubspotCards("Cory Mitchell"),
+          items: ["champion", "programme", ["Ready to Lead Your Local HubSpot Community?", "Topic feature placeholder", 280], ["Introducing HubSpot AEO", "Topic card placeholder", 200], ["The Marketing Shift Roundtable", "Topic card placeholder", 200]],
+          before: [["Header", "Site chrome", 44], ["Connect with peers and grow together", "Hero section placeholder", 100]],
+          after: [["Explore by Hub", "Category navigation placeholder", 100]] },
+        meta: { title: "Watch & Listen", layout: "media", theme: "dark", cards: [
+          staticCard("podcast-sam", "What a Decade of Running Discourse Taught Sam Saffron About AI in Communities", "", "Watch now", "prism", "above", "Podcast"),
+          staticCard("video-hawk", "The complete guide to building your Online Community", "", "Watch now", "space", "above", "Video"),
+          staticCard("podcast-community", "Why Online Communities Keep Falling Apart (And How to Fix Them)", "", "Watch now", "cells", "above", "Podcast"),
+          staticCard("guide", "Secure by Design: Our free guide to building privacy-focused communities", "Discover how to design for data protection from day one — and build trust that lasts.", "Download your copy")],
+          items: ["podcast-sam", "video-hawk", "podcast-community"], tail: "guide",
+          before: [["Header / sidebar", "Site chrome", 44], ["Welcome / search / category shortcuts", "Section and navigation placeholders", 100], ["Latest discussions / events / hot topics / contributors", "Live-data columns placeholder", 220]],
+          after: [["Footer / site navigation", "Site chrome", 80]] }
+      };
+      const reference = () => references[controls.reference.value];
+      references.museum.cards.push(staticCard("invitation", "Discover the museum", "Plan a visit or explore the collection from home.", "Plan your visit", "prism", "none", "Your next discovery"));
+      references.museum.tail = "invitation";
+      for (const scene of Object.values(references)) {
+        for (const card of scene.cards) {
+          Object.assign(card, { badgeStyle: "plain", badgePosition: "content", icon: "", iconTarget: "title", iconStyle: "plain", actionStyle: "link", actionLayout: "below", href: "/learn-more", dividers: false });
+          Object.assign(card, { meta: "", identityEnabled: false, identityPlacement: "content", identityFormat: "compact", identityShape: "circle", identityTreatment: "photo", personName: "", personRole: "", avatar: "initials", secondaryEnabled: false, secondaryLabel: "", secondaryHref: "", secondaryExternal: false, wholeCard: false, external: false, linkName: "", scale: "standard", imageFit: "cover" });
+          if (card.id === "newsletter") { Object.assign(card, { icon: "mail", dividers: true, surface: "subtle" }); }
+          if (card.id === "champion") { Object.assign(card, { icon: "award", iconTarget: "label", badgeStyle: "badge", badgePosition: "image", scale: "featured" }); }
+          if (card.id === "programme") { Object.assign(card, { icon: "award", iconStyle: "tile", scale: "compact" }); }
+          if (card.id.startsWith("podcast-") || card.id === "video-hawk") { Object.assign(card, { icon: card.id === "video-hawk" ? "play" : "headphones", iconTarget: "label", badgeStyle: "badge", scale: "compact" }); }
+          if (card.id === "podcast-sam") { Object.assign(card, { identityEnabled: true, identityPlacement: "media", identityFormat: "feature", identityTreatment: "graphic", avatar: "silhouette", image: "waves", personName: "Sam Saffron", personRole: "Co-founder & CEO, Discourse", meta: "42 min", wholeCard: true }); }
+          if (card.id === "guide") { Object.assign(card, { actionStyle: "button", actionLayout: "inline", surface: "subtle", scale: "compact" }); }
+          if (card.id === "atlas-hero") { Object.assign(card, { actionStyle: "button", scale: "featured", imageSide: "end" }); }
+          if (card.id === "atlas-promo") { Object.assign(card, { surface: "accent", wholeCard: true, href: "/atlas" }); }
+          if (card.id === "course-promo") { Object.assign(card, { surface: "contrast", wholeCard: true, href: "/course" }); }
+          if (card.id === "invitation") { Object.assign(card, { actionStyle: "button", secondaryEnabled: true, secondaryLabel: "Explore online", secondaryHref: "/collection", href: "/visit", wholeCard: true }); }
+        }
+      }
+      const fullCard = {
+        id: "everything-filled", title: "Beyond the visible: the discoveries, difficult questions and people changing how we understand our world",
+        copy: "Join our researchers for a conversation about the unexpected connections between science, art and everyday life. Explore the collection, hear the stories behind the objects and bring your own questions. This extended session includes a guided demonstration, a community discussion and practical ideas to try at home with friends and family.",
+        meta: "September 24, 2026 · 6:30–8:00 PM · 90 min · English with captions",
+        eyebrow: "Member-exclusive conversation and live demonstration", badgeStyle: "badge", badgePosition: "image", icon: "headphones", iconTarget: "label", iconStyle: "tile",
+        identityEnabled: true, identityPlacement: "media", identityFormat: "feature", identityShape: "circle", identityTreatment: "photo", avatar: "portrait", personName: "Dr. Alexandra Montgomery-Chen", personRole: "Senior research fellow, community educator and director of interdisciplinary programmes",
+        image: "prism", presentation: "above", imageFit: "cover", imageWidth: "50", imageSide: "end",
+        action: "Reserve your place and join the conversation", href: "/events/beyond-the-visible", actionStyle: "button", actionLayout: "inline",
+        secondaryEnabled: true, secondaryLabel: "Explore the full programme and accessibility details", secondaryHref: "/programme/accessibility", secondaryExternal: true,
+        wholeCard: true, external: true, linkName: "Reserve a place at Beyond the visible with Dr. Alexandra Montgomery-Chen", dividers: true, surface: "subtle", scale: "featured"
+      };
+      references.stress = {
+        title: "Everything filled", theme: "light dark", layout: "media", before: [], after: [],
+        cards: [{ ...fullCard, editorLabel: "Everything filled · Image above" }, { ...fullCard, id: "everything-beside", editorLabel: "Everything filled · Image beside", presentation: "beside" }, { ...fullCard, id: "everything-behind", editorLabel: "Everything filled · Image behind", presentation: "behind" }],
+        items: ["everything-filled", "everything-beside", "everything-behind"]
+      };
+      const editableKeys = ["presentation", "surface", "title", "copy", "action", "imageWidth", "imageSide", "image", "eyebrow", "badgeStyle", "badgePosition", "icon", "iconTarget", "iconStyle", "actionStyle", "actionLayout", "href", "meta", "personName", "personRole", "avatar", "identityPlacement", "identityFormat", "identityShape", "identityTreatment", "secondaryLabel", "secondaryHref", "linkName", "scale", "imageFit"];
+      const booleanKeys = ["dividers", "identityEnabled", "secondaryEnabled", "wholeCard", "external", "secondaryExternal"];
+      const longCopy = " Explore how researchers turn careful observations into new questions about our world. Meet the people behind the discoveries and find activities for every age, whether you have a few minutes or a whole afternoon.";
+      const selected = () => cards.find(card => card.id === controls.selected.value);
+      const cardObserver = new ResizeObserver(() => { updatePresentationNote(); alignRows(); });
+      const silhouetteSource = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="38" r="20" fill="#dce1e6"/><path d="M12 100V88a38 38 0 0 1 76 0v12" fill="#dce1e6"/></svg>')}`;
+      const portraitSource = (() => {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 400 650");
+        svg.setAttribute("width", "400");
+        svg.setAttribute("height", "650");
+        svg.append(...[...root.querySelector("#wf-art-curator").children].map(child => child.cloneNode(true)));
+        return `data:image/svg+xml,${encodeURIComponent(new XMLSerializer().serializeToString(svg))}`;
+      })();
+      function updatePresentationNote() {
+        updateLeafWidth();
+        const card = root.querySelector(`[data-id="${controls.selected.value}"]`);
+        const note = root.querySelector("[data-presentation-note]");
+        const stacked = card && card.dataset.presentation === "beside" && getComputedStyle(card).flexDirection === "column";
+        const image = card?.querySelector("img");
+        const fitted = image && getComputedStyle(image).objectFit === "contain";
+        note.hidden = !(stacked || fitted);
+        note.textContent = stacked ? "Stacked at this width. The image appears beside the content when there is enough room." : "Show full image preserves the image's proportions inside the frame.";
+        root.querySelectorAll(".study-comparison__example").forEach(example => {
+          const article = example.querySelector("article");
+          if (article.dataset.comparison !== "beside") { return; }
+          const label = article.style.getPropertyValue("--side-image-width") === "50%" ? "Image beside · 50/50" : "Image beside";
+          example.querySelector("figcaption").textContent = article.dataset.presentation === "none" ? "Image beside · image hidden" : getComputedStyle(article).flexDirection === "column" ? "Image beside · stacked at this width" : label;
+        });
+      }
+      function element(tag, className, text) {
+        const node = document.createElement(tag);
+        node.className = className;
+        if (text) { node.textContent = text; }
+        return node;
+      }
+      function renderIcon(name, className) {
+        const paths = {
+          mail: "M3 5h18v14H3z M3 6l9 7 9-7",
+          award: "M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M9 12l-2 9 5-3 5 3-2-9",
+          play: "M7 4l14 8-14 8z",
+          headphones: "M4 15v-3a8 8 0 0 1 16 0v3 M4 12h3v8H4z M17 12h3v8h-3z"
+        };
+        const wrapper = element("span", className);
+        wrapper.setAttribute("aria-hidden", "true");
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "none");
+        svg.setAttribute("stroke", "currentColor");
+        svg.setAttribute("stroke-width", "1.6");
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", paths[name] || paths.mail);
+        svg.append(path);
+        wrapper.append(svg);
+        return wrapper;
+      }
+      function renderCard(card) {
+        const host = element("div", "study-card-host");
+        const article = element("article", "study-card");
+        const presentation = controls.images.checked ? "none" : card.presentation;
+        article.dataset.id = card.id;
+        article.dataset.sourceId = card.id;
+        article.dataset.image = card.image;
+        article.dataset.presentation = presentation;
+        article.dataset.surface = card.surface;
+        for (const key of ["badgeStyle", "iconStyle", "actionStyle", "actionLayout", "dividers", "scale"]) { article.dataset[key] = String(card[key]); }
+        const primaryVisible = !!card.action && validDestination(card.href) && !controls.optional.checked;
+        const secondaryVisible = card.secondaryEnabled && !!card.secondaryLabel && validDestination(card.secondaryHref) && !controls.optional.checked;
+        const linked = card.wholeCard && validDestination(card.href) && !!(card.linkName || card.title);
+        if (!primaryVisible && !secondaryVisible) { article.dataset.actionLayout = "below"; }
+        article.dataset.badgePosition = presentation === "behind" && card.badgeStyle === "badge" ? card.badgePosition : "content";
+        article.dataset.sideDensity = !card.copy || controls.optional.checked ? "compact" : "full";
+        article.dataset.imageSide = card.imageSide || "start";
+        if (card.imageWidth === "50") { article.style.setProperty("--side-image-width", "50%"); }
+        if (presentation !== "none") {
+          const media = element("div", "study-card__media");
+          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute("aria-hidden", "true");
+          svg.setAttribute("viewBox", card.image === "curator" ? "0 0 400 650" : "0 0 600 400");
+          svg.setAttribute("preserveAspectRatio", card.imageFit === "contain" ? "xMidYMid meet" : "xMidYMid slice");
+          const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+          use.setAttribute("href", `#wf-art-${card.image}`);
+          svg.append(use);
+          if (card.image === "curator") {
+            const portrait = document.createElement("img");
+            portrait.src = portraitSource;
+            portrait.alt = "";
+            portrait.style.objectFit = card.imageFit;
+            media.append(portrait);
+          } else {
+            media.append(svg);
+          }
+          article.append(media);
+        }
+        const body = element("div", "study-card__body");
+        const text = element("div", "study-card__text");
+        if (card.identityEnabled && (card.personName || card.personRole) && !controls.optional.checked) {
+          const identity = element("div", "study-card__identity");
+          if (card.avatar !== "none") {
+            const avatar = element("span", "study-card__avatar");
+            avatar.setAttribute("aria-hidden", "true");
+            if (["portrait", "silhouette"].includes(card.avatar)) {
+              const image = document.createElement("img");
+              image.src = card.avatar === "portrait" ? portraitSource : silhouetteSource;
+              image.alt = "";
+              avatar.append(image);
+            } else { avatar.textContent = card.personName.split(/\s+/).filter(Boolean).slice(0, 2).map(word => word[0]).join(""); }
+            identity.append(avatar);
+          }
+          const person = element("div", "study-card__person");
+          if (card.personName) { person.append(element("strong", "study-card__name", card.personName)); }
+          if (card.personRole) { person.append(element("span", "study-card__role", card.personRole)); }
+          identity.append(person);
+          identity.dataset.format = card.identityFormat;
+          identity.dataset.shape = card.identityShape;
+          const onImage = card.identityPlacement === "media" && ["above", "below"].includes(presentation);
+          if (onImage) {
+            const media = article.querySelector(".study-card__media");
+            media.classList.add("--identity");
+            media.dataset.treatment = card.identityTreatment;
+          }
+          (onImage ? article.querySelector(".study-card__media") : text).append(identity);
+        }
+        if (card.eyebrow && !controls.optional.checked) {
+          const label = element("p", "study-card__eyebrow");
+          if (card.icon && card.iconTarget === "label") { label.append(renderIcon(card.icon, "study-card__badge-icon")); }
+          label.append(element("span", "study-card__label-text", card.eyebrow));
+          (article.dataset.badgePosition === "image" ? article : text).append(label);
+        }
+        if (card.title) {
+          const title = element("h3", "study-card__title");
+          if (card.icon && card.iconTarget === "title" && !controls.optional.checked) { title.append(renderIcon(card.icon, "study-card__title-icon")); }
+          title.append(element("span", "study-card__title-text", card.title));
+          text.append(title);
+        }
+        if (card.meta && !controls.optional.checked) { text.append(element("p", "study-card__meta", card.meta)); }
+        if (card.copy && !controls.optional.checked) { text.append(element("p", "study-card__copy", card.copy + (controls.long.checked ? longCopy : ""))); }
+        if (text.childElementCount) { body.append(text); }
+        if (primaryVisible || secondaryVisible) {
+          const actions = element("div", "study-card__actions");
+          if (primaryVisible) { actions.append(renderAction(card.action, card.href, card.external, linked, card.linkName || card.title)); }
+          if (secondaryVisible) {
+            const secondary = renderAction(card.secondaryLabel, card.secondaryHref, card.secondaryExternal, false);
+            secondary.classList.add("--secondary");
+            actions.append(secondary);
+          }
+          body.append(actions);
+        }
+        if (linked && !primaryVisible) {
+          const link = renderAction("", card.href, card.external, true, card.linkName || card.title);
+          link.classList.add("--concealed");
+          article.append(link);
+        }
+        article.append(body);
+        host.append(article);
+        return host;
+      }
+      function validDestination(value) {
+        return /^(https?:\/\/|\/(?!\/)|#)\S*/.test(value || "");
+      }
+      function renderAction(label, destination, external, wholeCard, name) {
+        const action = element("a", "study-card__action", label);
+        action.href = "#";
+        action.dataset.destination = destination;
+        action.dataset.external = String(external);
+        if (wholeCard) { action.classList.add("--whole-card"); }
+        action.setAttribute("aria-label", `${name || label}${external ? " (opens in a new tab)" : ""}`);
+        action.addEventListener("click", event => {
+          event.preventDefault();
+          root.querySelector("[data-navigation-status]").textContent = `Preview: ${destination}${external ? " · New tab" : " · Same tab"}`;
+        });
+        if (label) {
+          const arrow = element("span", "study-card__arrow", external ? "↗" : controls.rtl.checked ? "←" : "→");
+          arrow.setAttribute("aria-hidden", "true");
+          action.append(arrow);
+        }
+        return action;
+      }
+      function renderPlaceholder([title, kind, height]) {
+        const placeholder = element("div", "study-placeholder");
+        placeholder.style.setProperty("--placeholder-height", `${height}px`);
+        placeholder.append(element("span", "study-placeholder__title", title), element("span", "study-placeholder__type", kind));
+        return placeholder;
+      }
+      function updateLayout() {
+        const layout = controls.layout.value === "museum" ? reference().layout : controls.layout.value;
+        root.querySelector(".study-layout").dataset.layout = layout;
+        const name = { museum: "Grid", spotlight: "Grid", promotions: "Grid", media: "Row", equal: "Grid", row: "Row", stack: "Stack" }[layout];
+        root.querySelector("[data-context]").textContent = `Section → ${name} → Card`;
+        updatePresentationNote();
+        alignRows();
+      }
+      function alignRows() {
+        const layout = root.querySelector(".study-layout");
+        const articles = [...layout.querySelectorAll(".study-card")];
+        articles.forEach(article => {
+          delete article.dataset.rowAligned;
+          article.style.removeProperty("--aligned-body-size");
+        });
+        if (!controls.align.checked || !["media", "equal", "row"].includes(layout.dataset.layout)) { return; }
+        const rows = new Map();
+        for (const article of articles) {
+          const top = Math.round(article.getBoundingClientRect().top);
+          if (!rows.has(top)) { rows.set(top, []); }
+          rows.get(top).push(article);
+        }
+        for (const row of rows.values()) {
+          const placement = row[0].dataset.presentation;
+          if (row.length < 2 || !["above", "below"].includes(placement) || !row.every(article => article.dataset.presentation === placement)) { continue; }
+          const height = Math.max(...row.map(article => article.querySelector(".study-card__body").getBoundingClientRect().height));
+          row.forEach(article => {
+            article.dataset.rowAligned = "true";
+            article.style.setProperty("--aligned-body-size", `${height}px`);
+          });
+        }
+      }
+      function renderComparison() {
+        const region = root.querySelector(".study-comparison");
+        const card = selected();
+        region.hidden = !controls.compare.checked || !card;
+        const container = root.querySelector(".study-comparison__cards");
+        container.replaceChildren();
+        if (region.hidden) { return; }
+        root.querySelector("[data-comparison-title]").textContent = reference().title || "Card presentations";
+        for (const [presentation, label] of [["above", "Image above"], ["below", "Image below"], ["beside", "Image beside"], ["behind", "Image behind"]]) {
+          const example = element("figure", "study-comparison__example");
+          const host = renderCard({ ...card, presentation });
+          const article = host.querySelector("article");
+          article.dataset.comparison = presentation;
+          article.dataset.id = `comparison-${presentation}-${card.id}`;
+          example.append(element("figcaption", "study-comparison__label", label), host);
+          container.append(example);
+        }
+        updatePresentationNote();
+      }
+      function render() {
+        cardObserver.disconnect();
+        const scene = reference();
+        root.querySelector(".study-layout").replaceChildren(...scene.items.map(item => {
+          if (typeof item === "string") { return renderCard(cards.find(card => card.id === item)); }
+          const placeholder = renderPlaceholder(item);
+          if (scene.layout === "promotions") { placeholder.classList.add("--wide"); }
+          return placeholder;
+        }));
+        root.querySelector("[data-feature-region]").hidden = !scene.items.length;
+        const heading = root.querySelector(".study-section__heading");
+        heading.textContent = scene.title;
+        heading.hidden = !scene.title;
+        root.querySelector("[data-scaffold-top]").replaceChildren(...scene.before.map(renderPlaceholder));
+        root.querySelector("[data-scaffold-bottom]").replaceChildren(...scene.after.map(renderPlaceholder));
+        const newsletter = cards.find(card => card.id === "newsletter");
+        root.querySelector(".study-direct").hidden = !newsletter;
+        root.querySelector(".study-direct__content").replaceChildren(...(newsletter ? [renderCard(newsletter), renderPlaceholder(["Contributors", "Live member list placeholder", 100])] : []));
+        const tail = root.querySelector("[data-tail]");
+        tail.replaceChildren(...(scene.tail ? [renderCard(cards.find(card => card.id === scene.tail))] : []));
+        tail.hidden = !scene.tail;
+        root.querySelector(".study-stage").dir = controls.rtl.checked ? "rtl" : "ltr";
+        renderLeafPreview();
+        renderComparison();
+        root.querySelectorAll(".study-card-host").forEach(host => cardObserver.observe(host));
+        updateLayout();
+      }
+      function renderLeafPreview() {
+        const preview = root.querySelector("[data-leaf-preview]");
+        preview.replaceChildren(...(selected() ? [renderCard(selected())] : []));
+        const article = preview.querySelector("article");
+        if (article) { article.dataset.id = `leaf-${selected().id}`; }
+        updateLeafWidth();
+        preview.dir = controls.rtl.checked ? "rtl" : "ltr";
+        root.querySelectorAll("[data-example]").forEach(button => {
+          button.setAttribute("aria-pressed", String(button.dataset.example === `${controls.reference.value}:${controls.selected.value}`));
+        });
+        renderIdentityOptions();
+      }
+      function renderIdentityOptions() {
+        const region = root.querySelector(".study-identity-options");
+        const card = selected();
+        region.hidden = !card?.identityEnabled || controls.optional.checked;
+        const container = region.querySelector(".study-identity-options__cards");
+        container.replaceChildren();
+        if (region.hidden) { return; }
+        for (const [format, placement, label] of [["compact", "content", "Compact byline · With content"], ["feature", "media", "Portrait beside name · On media"], ["stacked", "media", "Stacked portrait · On media"]]) {
+          const figure = element("figure", "study-identity-options__example");
+          const host = renderCard({ ...card, id: `identity-${format}-${card.id}`, identityFormat: format, identityPlacement: placement });
+          figure.append(element("figcaption", "study-identity-options__label", label), host);
+          container.append(figure);
+        }
+        region.dir = controls.rtl.checked ? "rtl" : "ltr";
+      }
+      function updateLeafWidth() {
+        const referenceCard = root.querySelector(`.study-stage [data-id="${controls.selected.value}"]`);
+        root.querySelector(".study-editor__preview").style.inlineSize = referenceCard ? `${referenceCard.getBoundingClientRect().width + 48}px` : "100%";
+      }
+      function syncEditor() {
+        const card = selected();
+        root.querySelector(".study-edit").hidden = !card;
+        if (!card) { return; }
+        for (const key of editableKeys) { controls[key].value = card[key] ?? ""; }
+        for (const key of booleanKeys) { controls[key].checked = card[key]; }
+        controls.imageWidth.value = card.imageWidth || "auto";
+        controls.imageSide.value = card.imageSide || "start";
+        syncSideControls();
+        controls.surface.disabled = card.presentation === "behind" && !controls.images.checked;
+        updatePresentationNote();
+        renderComparison();
+        renderLeafPreview();
+        syncOptionalControls();
+      }
+      controls.selected.addEventListener("change", syncEditor);
+      function syncSideControls() {
+        const disabled = controls.images.checked || (!controls.compare.checked && selected()?.presentation !== "beside");
+        controls.imageWidth.disabled = disabled;
+        controls.imageSide.disabled = disabled;
+        root.querySelector("[data-side-options]").hidden = disabled;
+      }
+      function syncOptionalControls() {
+        const card = selected();
+        const inspector = root.querySelector(".study-inspector");
+        inspector.querySelector("[data-label-options]").hidden = !card.eyebrow;
+        inspector.querySelector("[data-badge-position]").hidden = card.badgeStyle !== "badge" || card.presentation !== "behind";
+        inspector.querySelector("[data-icon-options]").hidden = !card.icon;
+        inspector.querySelector("[data-icon-style]").hidden = card.iconTarget !== "title";
+        inspector.querySelector("[data-action-options]").hidden = !card.action && !(card.secondaryEnabled && card.secondaryLabel);
+        inspector.querySelector("[data-action-layout]").hidden = card.presentation !== "none";
+        inspector.querySelector("[data-image-options]").hidden = card.presentation === "none";
+        inspector.querySelector("[data-fit-options]").hidden = card.presentation === "none";
+        inspector.querySelector("[data-identity-options]").hidden = !card.identityEnabled;
+        inspector.querySelector("[data-avatar-shape]").hidden = card.avatar === "none";
+        inspector.querySelector("[data-identity-treatment]").hidden = card.identityPlacement !== "media" || !["above", "below"].includes(card.presentation) || controls.images.checked;
+        inspector.querySelector("[data-secondary-options]").hidden = !card.secondaryEnabled;
+        inspector.querySelector("[data-link-name]").hidden = !card.wholeCard;
+        const invalidPrimary = (card.wholeCard || card.action) && !validDestination(card.href);
+        const invalidSecondary = card.secondaryEnabled && card.secondaryLabel && !validDestination(card.secondaryHref);
+        inspector.querySelector("[data-link-status]").textContent = invalidPrimary || invalidSecondary ? "Enter a relative path or an http(s) URL to enable the link." : card.wholeCard && !(card.title || card.linkName) ? "Add a title or link name to enable whole-card navigation." : "";
+      }
+      for (const key of editableKeys) {
+        controls[key].addEventListener("input", () => {
+          selected()[key] = controls[key].value;
+          controls.surface.disabled = selected().presentation === "behind" && !controls.images.checked;
+          syncSideControls();
+          syncOptionalControls();
+          render();
+        });
+      }
+      for (const key of booleanKeys) { controls[key].addEventListener("change", () => { selected()[key] = controls[key].checked; syncOptionalControls(); render(); }); }
+      controls.inspectorWidth.addEventListener("change", () => { root.style.setProperty("--inspector-width", `${controls.inspectorWidth.value}px`); });
+      root.querySelectorAll("[data-example]").forEach(button => button.addEventListener("click", () => {
+        const [scene, id] = button.dataset.example.split(":");
+        controls.reference.value = scene;
+        controls.reference.dispatchEvent(new Event("change"));
+        controls.selected.value = id;
+        syncEditor();
+        const groups = id === "atlas-promo" ? ["action", "navigation"] : ["guide", "invitation"].includes(id) ? ["action"] : id === "podcast-sam" ? ["identity"] : id === "newsletter" ? ["label", "appearance"] : ["label"];
+        root.querySelectorAll("[data-group]").forEach(group => { group.open = scene === "stress" || groups.includes(group.dataset.group); });
+      }));
+      for (const key of ["long", "images", "optional", "rtl"]) { controls[key].addEventListener("change", () => { render(); syncEditor(); }); }
+      controls.layout.addEventListener("change", updateLayout);
+      controls.align.addEventListener("change", alignRows);
+      controls.compare.addEventListener("change", () => { renderComparison(); syncSideControls(); });
+      controls.reference.addEventListener("change", () => {
+        cards = reference().cards;
+        root.dataset.reference = controls.reference.value;
+        controls.selected.replaceChildren(...cards.map(card => {
+          const option = document.createElement("option");
+          option.value = card.id;
+          option.textContent = card.editorLabel || card.title;
+          return option;
+        }));
+        controls.layout.value = "museum";
+        controls.layout.disabled = !cards.length;
+        controls.theme.value = reference().theme;
+        root.style.colorScheme = reference().theme;
+        render();
+        syncEditor();
+      });
+      controls.section.addEventListener("change", () => { root.querySelectorAll(".study-section").forEach(section => { section.dataset.surface = controls.section.value; }); });
+      controls.theme.addEventListener("change", () => { root.style.colorScheme = controls.theme.value; });
+      controls.width.addEventListener("input", () => { root.style.setProperty("--preview-width", `${controls.width.value}px`); });
+      new ResizeObserver(entries => { root.querySelector("[data-width]").textContent = `${Math.round(entries[0].contentRect.width)} px`; }).observe(root.querySelector(".study-stage"));
+      controls.reference.value = "meta";
+      controls.compare.checked = true;
+      references.meta.cards[0].imageWidth = "50";
+      controls.reference.dispatchEvent(new Event("change"));
+      controls.compare.checked = false;
+      root.querySelector('[data-example="meta:podcast-sam"]').click();
+    })();
+  </script>
+</div>
