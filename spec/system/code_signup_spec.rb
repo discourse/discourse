@@ -205,6 +205,7 @@ describe "Sign up via email code" do
   end
 
   it "collects account details before approval and requires a fresh code afterward" do
+    SiteSetting.login_required = true
     SiteSetting.must_approve_users = true
     SiteSetting.full_name_requirement = "required_at_signup"
     user_field = Fabricate(:user_field, name: "Occupation")
@@ -218,6 +219,14 @@ describe "Sign up via email code" do
     expect(page).to have_css(".login-title", text: I18n.t("js.code_login.account_details_title"))
     expect(page).to have_css(".code-login-form__account-details-step")
     expect(User.find_by_email(email)).to be_nil
+
+    generated_username = find("#code-login-username").value
+    find(".code-login-form__username-regen").click
+    expect(page).to have_no_field("code-login-username", with: generated_username)
+    expect(page).to have_no_css(".dialog-container")
+    expect(User.find_by_email(email)).to be_nil
+    rolled_username = find("#code-login-username").value
+    expect(page).to have_no_css(".code-login-form__submit-approval[disabled]")
 
     with_logs do |browser_logs|
       page.refresh
@@ -238,8 +247,7 @@ describe "Sign up via email code" do
     expect(page).to have_css(".code-login-form__submit-approval[disabled]")
     expect(User.find_by_email(email)).to be_nil
 
-    fill_in("code-login-username", with: "chosen-name")
-    expect(page).to have_no_css(".code-login-form__submit-approval[disabled]")
+    pick_username(rolled_username)
     find(".code-login-form__submit-approval").click
 
     expect(page).to have_css(
@@ -266,20 +274,20 @@ describe "Sign up via email code" do
 
     user = User.find_by_email(email)
     expect(user).not_to be_approved
-    expect(user.username).to eq("chosen-name")
+    expect(user.username).to eq(rolled_username)
     expect(user.name).to eq("Chosen Name")
     expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Engineer")
 
     reviewable = ReviewableUser.pending.find_by!(target: user)
     expect(reviewable.payload.slice("username", "name")).to eq(
-      "username" => "chosen-name",
+      "username" => rolled_username,
       "name" => "Chosen Name",
     )
 
     sign_in(admin)
     review_page = PageObjects::Pages::Review.new
     review_page.visit_reviewable(reviewable)
-    expect(page).to have_content("chosen-name")
+    expect(page).to have_content(rolled_username)
     expect(page).to have_content("Chosen Name")
     expect(page).to have_content("Occupation")
     expect(page).to have_content("Engineer")
@@ -291,14 +299,17 @@ describe "Sign up via email code" do
     expect(approval_email.to).to contain_exactly(email)
     expect(approval_email.body.to_s).to include("/login?mode=code")
 
-    PageObjects::Components::UserMenu.new.sign_out
+    user_menu = PageObjects::Components::UserMenu.new
+    user_menu.open.click_profile_tab
+    find("#quick-access-profile .logout .btn").click
+    expect(page).to have_current_path("/")
     visit("/login?mode=code")
     find(".code-login-form__email-step input[type='email']").fill_in(with: email)
     find(".code-login-form__continue").click
     fill_code(latest_emailed_code(email))
 
     expect(page).to have_css(".header-dropdown-toggle.current-user")
-    expect(User.find_by_email(email).username).to eq("chosen-name")
+    expect(User.find_by_email(email).username).to eq(rolled_username)
   end
 
   context "with required user fields" do

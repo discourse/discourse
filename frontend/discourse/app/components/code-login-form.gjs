@@ -507,7 +507,9 @@ export default class CodeLoginForm extends Component {
       // Hold the rolling state for at least one animation cycle so a fast
       // response doesn't cut the dice spin (and the text fade) short.
       const [result] = await Promise.all([
-        ajax("/u/random-username.json"),
+        ajax("/u/random-username.json", {
+          headers: { "X-Discourse-Signup-Token": this.signupToken },
+        }),
         new Promise((resolve) => discourseLater(resolve, 400)),
       ]);
 
