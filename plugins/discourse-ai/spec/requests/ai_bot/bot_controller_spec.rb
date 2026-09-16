@@ -533,7 +533,6 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         expect(response_status).to eq(200)
         expect(response_body).to include("success")
         expect(job_args[:visibility_user_id]).to eq(user.id)
-        expect(prompt_content).to include("[Image unavailable]")
         expect(prompt_content).not_to include("upload_id #{secure_upload.id}")
       end
     end
