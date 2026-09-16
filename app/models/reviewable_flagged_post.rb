@@ -14,6 +14,7 @@ class ReviewableFlaggedPost < Reviewable
       agree_and_suspend: :agree_and_keep,
       agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
+      disagree_and_keep_deleted: :disagree,
       ignore_and_do_nothing: :ignore,
       delete_user_block: :delete_and_block_user, # legacy name mapped to concern method
     }
@@ -55,29 +56,25 @@ class ReviewableFlaggedPost < Reviewable
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
-    if post.user_deleted?
+    if post.user_deleted? || post.trashed?
       build_action(actions, :agree_and_keep_deleted, icon: "far-eye-slash", bundle: agree_bundle)
+    elsif post.hidden?
+      build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree_bundle)
     else
-      if !post.hidden?
-        build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree_bundle)
-      end
-
-      if post.hidden?
-        build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree_bundle)
-      else
-        build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree_bundle)
-        build_action(
-          actions,
-          :agree_and_edit,
-          icon: "pencil",
-          bundle: agree_bundle,
-          client_action: "edit",
-        )
-      end
+      build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree_bundle)
+      build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree_bundle)
+      build_action(
+        actions,
+        :agree_and_edit,
+        icon: "pencil",
+        bundle: agree_bundle,
+        client_action: "edit",
+      )
     end
 
     can_delete_post_or_topic = guardian.can_delete_post_or_topic?(post)
-    can_delete_existing_post_or_topic = can_delete_post_or_topic && !post.user_deleted?
+    can_delete_existing_post_or_topic =
+      can_delete_post_or_topic && !post.user_deleted? && !post.trashed?
 
     if can_delete_existing_post_or_topic
       build_action(actions, :delete_and_agree, icon: "trash-can", bundle: agree_bundle)
@@ -104,27 +101,19 @@ class ReviewableFlaggedPost < Reviewable
       delete_user_actions(actions, agree_bundle)
     end
 
-    if post.user_deleted? && !user_penalized_for_deleted_post?
+    if post.user_deleted? && !post.trashed? && !user_penalized_for_deleted_post?
       build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree_bundle)
     end
 
-    post_visible_or_system_user = !post.hidden? || guardian.user.is_system_user?
-    if can_delete_post_or_topic || post_visible_or_system_user || !post.hidden?
-      build_disagree_bundle(
-        actions,
-        can_delete_existing_post_or_topic:,
-        post_visible_or_system_user:,
-      )
+    can_ignore = post.trashed? || !post.hidden? || guardian.user.is_system_user?
+    if can_delete_post_or_topic || can_ignore
+      build_disagree_bundle(actions, can_delete_existing_post_or_topic:, can_ignore:)
     end
 
     build_unsilence_action(actions, guardian)
   end
 
-  def build_disagree_bundle(
-    actions,
-    can_delete_existing_post_or_topic:,
-    post_visible_or_system_user:
-  )
+  def build_disagree_bundle(actions, can_delete_existing_post_or_topic:, can_ignore:)
     disagree_bundle =
       actions.add_bundle(
         "#{id}-disagree",
@@ -140,14 +129,21 @@ class ReviewableFlaggedPost < Reviewable
         bundle: disagree_bundle,
       )
     elsif !user_penalized_for_deleted_post?
-      if post.hidden?
+      if post.trashed?
+        build_action(
+          actions,
+          :disagree_and_keep_deleted,
+          icon: "far-eye-slash",
+          bundle: disagree_bundle,
+        )
+      elsif post.hidden?
         build_action(actions, :disagree_and_restore, icon: "far-eye", bundle: disagree_bundle)
       else
         build_action(actions, :disagree, icon: "far-eye", bundle: disagree_bundle)
       end
     end
 
-    if post_visible_or_system_user || user_penalized_for_deleted_post?
+    if can_ignore || user_penalized_for_deleted_post?
       build_action(actions, :ignore_and_do_nothing, icon: "xmark", bundle: disagree_bundle)
     end
     if can_delete_existing_post_or_topic
@@ -208,7 +204,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def disagree_lifts_silence?
-    post&.hidden? && author_silenced? && UserSilencer.was_silenced_for?(post)
+    post&.hidden? && !post.trashed? && author_silenced? && UserSilencer.was_silenced_for?(post)
   end
 
   def penalty_effect_for(action_id)
@@ -311,7 +307,7 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     # Undo hide/silence if applicable
-    if post&.hidden?
+    if post&.hidden? && !post.trashed?
       notify_poster(performed_by)
       post.acting_user = performed_by
       post.unhide!
