@@ -378,9 +378,6 @@ RSpec.describe UploadCreator do
       let(:animated_webp_filename) { "animated.webp" }
       let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
 
-      let(:static_webp_filename) { "static-large.webp" }
-      let(:static_webp_file) { file_from_fixtures(static_webp_filename) }
-
       before { SiteSetting.png_to_jpg_quality = 1 }
 
       it "does not store a JPEG when the absolute byte savings are insufficient" do
@@ -529,22 +526,16 @@ RSpec.describe UploadCreator do
           expect(upload.original_filename).to eq("animated.webp")
         end
 
-        it "does not convert static WebP images based on JPEG quality" do
-          upload =
-            UploadCreator.new(
-              static_webp_file,
-              static_webp_filename,
-              force_optimize: true,
-            ).create_for(user.id)
+        it "does not convert non-JPEG images to JPEG based on JPEG quality" do
+          filename = "static.gif"
+          file = file_from_fixtures(filename)
+          File.truncate(file.path, UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + 1_000)
 
-          stored_path = Discourse.store.path_for(upload)
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
 
           expect(upload).to be_persisted
-          expect(upload).to have_attributes(
-            extension: "webp",
-            original_filename: static_webp_filename,
-          )
-          expect(FastImage.type(stored_path)).to eq(:webp)
+          expect(upload).to have_attributes(extension: "gif", original_filename: filename)
+          expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:gif)
         end
       end
     end
