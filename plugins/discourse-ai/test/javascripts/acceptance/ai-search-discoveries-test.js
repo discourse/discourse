@@ -825,7 +825,9 @@ acceptance("AI Discoveries - header search", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#icon-search-input", "dev");
-    await click(".ai-discoveries-search-options__option.--ask");
+    find(".ai-discoveries-search-options__option.--ask").dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
     await waitFor(".ai-discobot-discoveries");
     await waitUntil(() => submittedRequestId);
     await publishToMessageBus("/discourse-ai/discoveries", {
