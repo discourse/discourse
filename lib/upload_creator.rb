@@ -470,9 +470,10 @@ class UploadCreator
   end
 
   def should_fix_orientation?
+    # Keep standalone orientation correction limited to JPEG during the backend migration.
     # orientation is between 1 and 8, 1 being the default
     # cf. http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
-    @image_info.orientation.to_i > 1
+    @image_info.type == :jpeg && @image_info.orientation.to_i > 1
   end
 
   MAX_FIX_ORIENTATION_TIME = 5
@@ -482,15 +483,23 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    ImageMagick.magick(
-      path,
-      "-auto-orient",
-      path,
-      operation: :upload_auto_orient,
-      read: [@file.path],
-      write: [@file.path, File.dirname(@file.path)],
-      timeout: MAX_FIX_ORIENTATION_TIME,
-    )
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.auto_orient(
+        input_path: @file.path,
+        quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+        timeout: MAX_FIX_ORIENTATION_TIME,
+      )
+    else
+      ImageMagick.magick(
+        path,
+        "-auto-orient",
+        path,
+        operation: :upload_auto_orient,
+        read: [@file.path],
+        write: [@file.path, File.dirname(@file.path)],
+        timeout: MAX_FIX_ORIENTATION_TIME,
+      )
+    end
 
     extract_image_info!
   end

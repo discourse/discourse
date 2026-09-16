@@ -287,33 +287,75 @@ RSpec.describe UploadCreator do
         }
       end
 
-      it "honors every EXIF orientation when storing JPEG uploads" do
-        expected_color_grids.each do |orientation, expected_color_grid|
-          with_jpeg_orientation(
-            source_path: source_path,
-            orientation: orientation,
-          ) do |oriented_file|
-            upload =
-              described_class.new(
-                oriented_file,
-                "oriented-#{orientation}.jpg",
-                force_optimize: true,
-              ).create_for(user.id)
-            actual_color_grid =
-              stored_color_grid(
-                upload: upload,
-                rows: expected_color_grid.length,
-                columns: expected_color_grid.first.length,
-                palette: palette,
-              )
+      shared_examples "EXIF orientation normalization" do
+        it "honors every EXIF orientation" do
+          expected_color_grids.each do |orientation, expected_color_grid|
+            with_jpeg_orientation(
+              source_path: source_path,
+              orientation: orientation,
+            ) do |oriented_file|
+              upload =
+                described_class.new(
+                  oriented_file,
+                  "oriented-#{orientation}.jpg",
+                  force_optimize: true,
+                ).create_for(user.id)
+              actual_color_grid =
+                stored_color_grid(
+                  upload: upload,
+                  rows: expected_color_grid.length,
+                  columns: expected_color_grid.first.length,
+                  palette: palette,
+                )
 
-            expect(upload).to be_persisted
-            expect(upload).to have_attributes(
-              width: expected_color_grid.first.length * 20,
-              height: expected_color_grid.length * 20,
-            )
-            expect(actual_color_grid).to eq(expected_color_grid)
+              expect(upload).to be_persisted
+              expect(upload).to have_attributes(
+                width: expected_color_grid.first.length * 20,
+                height: expected_color_grid.length * 20,
+              )
+              expect(actual_color_grid).to eq(expected_color_grid)
+            end
           end
+        end
+      end
+
+      context "with libvips disabled" do
+        before { global_setting :enable_vips_image_processing, false }
+
+        include_examples "EXIF orientation normalization"
+      end
+
+      context "with libvips enabled" do
+        before { global_setting :enable_vips_image_processing, true }
+
+        include_examples "EXIF orientation normalization"
+
+        it "normalizes orientation at the configured quality without a quality probe" do
+          SiteSetting.instrument_image_processing = true
+          uploads = []
+
+          events =
+            DiscourseEvent.track_events(:image_processing_finished) do
+              [50, 95].each do |quality|
+                SiteSetting.recompress_original_jpg_quality = quality
+                with_jpeg_orientation(source_path: source_path, orientation: 6) do |oriented_file|
+                  uploads << described_class.new(
+                    oriented_file,
+                    "oriented.jpg",
+                    force_optimize: true,
+                  ).create_for(user.id)
+                end
+              end
+            end
+
+          uploads.each do |upload|
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(width: 40, height: 60)
+          end
+          expect(uploads.first.filesize).to be < uploads.last.filesize
+          operations = events.map { |event| event[:params].first[:operation] }
+          expect(operations).to include("upload_auto_orient")
+          expect(operations).not_to include("upload_quality_probe")
         end
       end
     end
