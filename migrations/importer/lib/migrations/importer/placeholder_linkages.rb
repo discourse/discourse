@@ -6,6 +6,8 @@ module Migrations
     # IntermediateDB original ids. Rendering is deliberately separate: this is
     # the only component in placeholder substitution that queries the database.
     class PlaceholderLinkages
+      include TagLinkPath
+
       # SQLite builds may accept more variables, but 999 is the historical
       # guaranteed ceiling. Keeping the limit here makes every dynamic IN query
       # safe independently of the caller's owner batch size.
@@ -160,29 +162,6 @@ module Migrations
           ids = tag_path_tags(row).map { |name| @names.tag_id(name) }
           row[:resolved_tag_ids] = ids.any? && ids.all? ? ids : nil
         end
-      end
-
-      def multi_tag_link?(row)
-        row[:target_type] == Enums::LinkTarget::CATEGORY_TAG ||
-          row[:target_type] == Enums::LinkTarget::TAG_INTERSECTION
-      end
-
-      TAG_SUBCATEGORY_FILTERS = %w[none all]
-      private_constant :TAG_SUBCATEGORY_FILTERS
-
-      def tag_path_filter(row)
-        return nil unless row[:target_type] == Enums::LinkTarget::CATEGORY_TAG
-
-        segments = row[:target_tag_path].to_s.split("/")
-        return nil unless segments.size > 1
-
-        TAG_SUBCATEGORY_FILTERS.include?(segments.first) ? segments.first : nil
-      end
-
-      def tag_path_tags(row)
-        segments = row[:target_tag_path].to_s.split("/")
-        segments.shift if tag_path_filter(row)
-        segments
       end
 
       def resolve_link_names(link_rows)

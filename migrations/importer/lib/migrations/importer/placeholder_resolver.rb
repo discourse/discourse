@@ -39,6 +39,8 @@ module Migrations
     #     may have renamed the emoji
     #   * `base_url` and `here_mention`, the destination's own values
     class PlaceholderResolver
+      include TagLinkPath
+
       # An embed whose entity the maps couldn't resolve. A poll's or event's
       # token becomes an empty string, so this record is its only trace.
       UnresolvedEmbed = Data.define(:kind, :entity_id, :owner_id, :owner_url)
@@ -50,9 +52,6 @@ module Migrations
 
       Enums = Migrations::Database::IntermediateDB::Enums
       private_constant :Enums
-
-      TAG_SUBCATEGORY_FILTERS = %w[none all]
-      private_constant :TAG_SUBCATEGORY_FILTERS
 
       # Anything that responds to `<<`. For a large run, pass an object that
       # writes straight to disk, so a systemic failure does not keep one record
@@ -283,20 +282,6 @@ module Migrations
 
       def render_site_link(row)
         render_link_markup(row, "#{@maps.base_url}#{row[:target_suffix]}")
-      end
-
-      def multi_tag_link?(row)
-        row[:target_type] == Enums::LinkTarget::CATEGORY_TAG ||
-          row[:target_type] == Enums::LinkTarget::TAG_INTERSECTION
-      end
-
-      def tag_path_filter(row)
-        return nil unless row[:target_type] == Enums::LinkTarget::CATEGORY_TAG
-
-        segments = row[:target_tag_path].to_s.split("/")
-        return nil unless segments.size > 1
-
-        TAG_SUBCATEGORY_FILTERS.include?(segments.first) ? segments.first : nil
       end
 
       # Rewrites only the destination inside the verbatim source construct, so

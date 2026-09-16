@@ -639,6 +639,27 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(extractor.engine_refusals).to be_empty
     end
 
+    it "defers short-URL definition continuations while preserving code copies" do
+      url = "upload://wfnzm0tBLXg6BRQWnIoNfnl8HNs.jpg"
+
+      ["\n", "\r\n", "\r"].each do |newline|
+        [url, "<#{url}>"].each do |destination|
+          buffer.clear
+          prefix = "![a|1x1][1]#{newline}#{newline}[1]:#{newline}  "
+          suffix = "#{newline}#{newline}`#{url}`"
+
+          result = extract("#{prefix}#{destination}#{suffix}")
+
+          expect(buffer.uploads).to contain_exactly(
+            include(upload_id: "wfnzm0tBLXg6BRQWnIoNfnl8HNs", original_markdown: url),
+          )
+          placeholder = buffer.uploads.first[:placeholder]
+          expect(result).to eq("#{prefix}#{destination.sub(url, placeholder)}#{suffix}")
+          expect(extractor.engine_refusals).to be_empty
+        end
+      end
+    end
+
     it "defers the destination of a full-URL definition" do
       url = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
       result = extract("![a][1]\n\n[1]: #{url}")
