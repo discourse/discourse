@@ -94,7 +94,7 @@ class PostRevisor
   ]
 
   # Extensions can inspect revision options via the `:post_edited` event payload.
-  attr_reader :category_changed, :post_revision, :opts
+  attr_reader :category_changed, :post_revision, :opts, :editor
 
   def initialize(post, topic = post.topic)
     @post = post
