@@ -375,6 +375,12 @@ RSpec.describe TopicGuardian do
   # `TopicGuardianCanSeeConsistencyCheck` which we run to ensure that the implementation between `TopicGuardian#can_see_topic_ids`
   # and `TopicGuardian#can_see_topic?` is consistent.
   describe "#can_see_topic_ids" do
+    it "excludes flagged regular topics in inaccessible categories" do
+      Fabricate(:reviewable_flagged_post, topic: private_topic, category: private_category)
+
+      expect(moderator.guardian.can_see_topic_ids(topic_ids: [private_topic.id])).to be_empty
+    end
+
     it "returns the topic ids for the topics which a user is allowed to see" do
       expect(
         Guardian.new.can_see_topic_ids(topic_ids: [topic.id, private_message_topic.id]),
