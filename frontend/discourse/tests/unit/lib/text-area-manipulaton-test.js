@@ -5,6 +5,38 @@ import { module, test } from "qunit";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 import { i18n } from "discourse-i18n";
 
+async function pasteRichTextInsideFence({ owner, fence }) {
+  const textarea = document.createElement("textarea");
+  document.body.appendChild(textarea);
+  textarea.value = `${fence}\nprefix \n${fence}`;
+  const cursorPosition = textarea.value.indexOf("prefix ") + "prefix ".length;
+  textarea.setSelectionRange(cursorPosition, cursorPosition);
+
+  const manipulation = new TextareaTextManipulation(owner, {
+    eventPrefix: null,
+    textarea,
+  });
+  manipulation.siteSettings.enable_rich_text_paste = true;
+
+  let prevented = false;
+  await manipulation.paste({
+    target: textarea,
+    preventDefault() {
+      prevented = true;
+    },
+    clipboardData: {
+      files: [],
+      types: ["text/plain", "text/html"],
+      getData(type) {
+        return type === "text/html" ? "<strong>bold</strong>" : "bold";
+      },
+    },
+  });
+  await settled();
+
+  return prevented;
+}
+
 module("Unit | Utility | text-area-manipulation", function (hooks) {
   setupTest(hooks);
 
@@ -151,44 +183,21 @@ module("Unit | Utility | text-area-manipulation", function (hooks) {
     assert.strictEqual(textarea.value, "plain fallback");
   });
 
-  for (const [name, fence] of [
-    ["backtick", "```"],
-    ["tilde", "~~~"],
-  ]) {
-    test(`paste - leaves rich text to the browser inside a ${name} fence`, async function (assert) {
-      const textarea = document.createElement("textarea");
-      document.body.appendChild(textarea);
-      textarea.value = `${fence}\nprefix \n${fence}`;
-      const cursorPosition =
-        textarea.value.indexOf("prefix ") + "prefix ".length;
-      textarea.setSelectionRange(cursorPosition, cursorPosition);
-
-      const manipulation = new TextareaTextManipulation(getOwner(this), {
-        eventPrefix: null,
-        textarea,
-      });
-      manipulation.siteSettings.enable_rich_text_paste = true;
-
-      let prevented = false;
-      await manipulation.paste({
-        target: textarea,
-        preventDefault() {
-          prevented = true;
-        },
-        clipboardData: {
-          files: [],
-          types: ["text/plain", "text/html"],
-          getData(type) {
-            return type === "text/html" ? "<strong>bold</strong>" : "bold";
-          },
-        },
-      });
-      await settled();
-
-      assert.false(
-        prevented,
-        "the browser handles the plain clipboard content"
-      );
+  test("paste - leaves rich text to the browser inside a backtick fence", async function (assert) {
+    const prevented = await pasteRichTextInsideFence({
+      owner: getOwner(this),
+      fence: "```",
     });
-  }
+
+    assert.false(prevented, "the browser handles the plain clipboard content");
+  });
+
+  test("paste - leaves rich text to the browser inside a tilde fence", async function (assert) {
+    const prevented = await pasteRichTextInsideFence({
+      owner: getOwner(this),
+      fence: "~~~",
+    });
+
+    assert.false(prevented, "the browser handles the plain clipboard content");
+  });
 });
