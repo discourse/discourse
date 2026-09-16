@@ -67,6 +67,26 @@ describe "Composer - ProseMirror - Pasting content" do
     expect(composer).to have_value("not selected **[bold](www.example.com)** not selected")
   end
 
+  it "pastes plain text inside tilde-fenced code blocks and formatted text outside them" do
+    open_composer
+    composer.toggle_rich_editor
+    composer.fill_content("~~~console\n\n~~~")
+    composer.move_cursor_after("~~~console\n")
+    html = "<p>PID: <strong>19088</strong></p><p>Executable: <strong>/usr/bin/example</strong></p>"
+    plain_text = "PID: 19088\nExecutable: /usr/bin/example"
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("~~~console\nPID: 19088\nExecutable: /usr/bin/example\n~~~")
+    composer.fill_content("")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value("PID: **19088**\n\nExecutable: **/usr/bin/example**")
+
+    composer.fill_content("```\n~~~\n```\n")
+    cdp.copy_paste(html, html: true, plain_text: plain_text)
+    expect(composer).to have_value(
+      "```\n~~~\n```\nPID: **19088**\n\nExecutable: **/usr/bin/example**",
+    )
+  end
+
   it "removes newlines from alt/title in pasted image" do
     cdp.allow_clipboard
     open_composer
