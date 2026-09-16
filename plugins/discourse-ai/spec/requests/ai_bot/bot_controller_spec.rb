@@ -485,8 +485,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
     it "does not expose a moderator's secure upload when a regular user retries the reply" do
       moderator = Fabricate(:moderator, refresh_auto_groups: true)
-      native_vision_model = Fabricate(:llm_model, vision_enabled: true)
-      llm_model.update!(vision_llm_model: native_vision_model)
+      llm_model.update!(vision_enabled: true)
       ai_agent.update!(vision_enabled: true)
       AiAgent.agent_cache.flush!
 
