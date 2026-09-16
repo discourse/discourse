@@ -55,6 +55,12 @@ module PageObjects
         find(selector).fill_in(with: text)
       end
 
+      def use_password
+        expect(page).to have_css(".code-login-form__password-toggle, #login-form")
+        click(".code-login-form__password-toggle") unless page.has_css?("#login-form", wait: 0)
+        self
+      end
+
       def fill_username(username)
         fill_input("#login-account-name", username)
         self

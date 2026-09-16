@@ -203,7 +203,16 @@ describe "Sign up via email code" do
     submit_email("approve.me@example.com")
     fill_code(latest_emailed_code("approve.me@example.com"))
 
-    expect(page).to have_css(".code-login-form__error", text: I18n.t("login.not_approved"))
+    expect(page).to have_css(".login-title", text: I18n.t("js.code_login.pending_approval_title"))
+    expect(page).to have_css(
+      ".login-subheader",
+      text: I18n.t("js.code_login.pending_approval_instructions"),
+    )
+    expect(page).to have_css(
+      ".code-login-form__pending-approval-step",
+      text: I18n.t("js.code_login.pending_approval_next_step"),
+    )
+    expect(page).to have_no_css(".d-otp-input")
     expect(page).to have_no_css(".header-dropdown-toggle.current-user")
 
     user = User.find_by_email("approve.me@example.com")

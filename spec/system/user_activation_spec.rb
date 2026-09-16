@@ -4,14 +4,14 @@ describe "Account activation" do
   fab!(:password) { "myverysecurepassword" }
   fab!(:user) { Fabricate(:user, password: password, active: false) }
 
+  let(:login_page) { PageObjects::Pages::Login.new }
+
   it "can resend activation email and activate account" do
     Jobs.run_immediately!
 
     visit "/"
     find(".login-button").click
-    find("#login-account-name").fill_in with: user.email
-    find("#login-account-password").fill_in with: password
-    find("#login-button").click
+    login_page.use_password.fill(username: user.email, password:).click_login
 
     not_activated_modal = find(".not-activated-modal")
 

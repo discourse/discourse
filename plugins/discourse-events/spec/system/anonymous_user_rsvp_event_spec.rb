@@ -29,7 +29,10 @@ describe "Anonymous user RSVPing to an event" do
 
     expect(login_page).to be_open
 
-    login_page.fill(username: user.username, password: "supersecurepassword").click_login
+    login_page
+      .use_password
+      .fill(username: user.username, password: "supersecurepassword")
+      .click_login
 
     expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
     expect(post_event_page).to have_going_status
@@ -43,7 +46,10 @@ describe "Anonymous user RSVPing to an event" do
     post_event_page.going
 
     expect(login_page).to be_open
-    login_page.fill(username: user.username, password: "supersecurepassword").click_login
+    login_page
+      .use_password
+      .fill(username: user.username, password: "supersecurepassword")
+      .click_login
 
     expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
     expect(post_event_page).to have_going_status

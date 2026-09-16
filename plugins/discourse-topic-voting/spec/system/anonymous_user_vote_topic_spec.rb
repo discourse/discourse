@@ -23,7 +23,10 @@ RSpec.describe "Anonymous user voting on a topic" do
 
     expect(login_page).to be_open
 
-    login_page.fill(username: user.username, password: "supersecurepassword").click_login
+    login_page
+      .use_password
+      .fill(username: user.username, password: "supersecurepassword")
+      .click_login
 
     expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
     expect(DiscourseTopicVoting::Vote.exists?(user: user, topic: topic)).to eq(true)
