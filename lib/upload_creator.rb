@@ -42,26 +42,6 @@ class UploadCreator
     use
   ].each(&:freeze)
 
-  def self.target_jpeg_image_quality(local_path:, target_quality:)
-    format, source_quality =
-      ImageMagick.identify(
-        "-ping",
-        "-format",
-        "%m:%Q",
-        local_path,
-        operation: :upload_quality_probe,
-        read: [local_path],
-        timeout: Upload::MAX_IDENTIFY_SECONDS,
-      ).split(":", 2)
-
-    return if format != "JPEG"
-
-    source_quality = source_quality.to_i
-    target_quality if source_quality == 0 || source_quality > target_quality
-  rescue StandardError
-    nil
-  end
-
   # Available options
   #  - type (string)
   #  - origin (string)
@@ -389,15 +369,7 @@ class UploadCreator
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
 
-    target_quality =
-      if @image_info.type == :jpeg
-        self.class.target_jpeg_image_quality(
-          local_path: @file.path,
-          target_quality: desired_quality,
-        )
-      else
-        desired_quality
-      end
+    target_quality = @upload.target_jpeg_image_quality(@file.path, desired_quality)
     opts = { quality: target_quality } if target_quality
 
     read = [@file.path]
@@ -476,10 +448,10 @@ class UploadCreator
   def should_alter_jpeg_quality?
     return false if @image_info.type != :jpeg
 
-    self.class
+    @upload
       .target_jpeg_image_quality(
-        local_path: @file.path,
-        target_quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+        @file.path,
+        SiteSetting.ImageQuality.recompress_original_jpg_quality,
       )
       .present?
   end

@@ -6,38 +6,6 @@ RSpec.describe UploadCreator do
   fab!(:user)
   fab!(:admin)
 
-  describe ".target_jpeg_image_quality" do
-    it "returns nil when the target quality is higher than the JPEG source quality" do
-      target_quality =
-        described_class.target_jpeg_image_quality(
-          local_path: Rails.root.join("spec/fixtures/images/logo.jpg").to_s,
-          target_quality: 100,
-        )
-
-      expect(target_quality).to be_nil
-    end
-
-    it "returns the target quality when it is lower than the JPEG source quality" do
-      target_quality =
-        described_class.target_jpeg_image_quality(
-          local_path: Rails.root.join("spec/fixtures/images/logo.jpg").to_s,
-          target_quality: 10,
-        )
-
-      expect(target_quality).to eq(10)
-    end
-
-    it "returns nil for non-JPEG images" do
-      target_quality =
-        described_class.target_jpeg_image_quality(
-          local_path: Rails.root.join("spec/fixtures/images/static.webp").to_s,
-          target_quality: 10,
-        )
-
-      expect(target_quality).to be_nil
-    end
-  end
-
   describe "#create_for" do
     shared_examples "animated upload preservation" do
       it "preserves animated GIF uploads" do
