@@ -35,6 +35,7 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
     elsif [
           DiscourseAi::Agents::AdminDashboardHighlights,
+          DiscourseAi::Agents::AskAiReporter,
           DiscourseAi::Agents::DiscourseAdminAssistant,
         ].include?(agent_class)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]

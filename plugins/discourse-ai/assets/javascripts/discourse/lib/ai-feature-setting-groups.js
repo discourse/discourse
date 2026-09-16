@@ -180,6 +180,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "ai_discover_agent",
         "ai_ask_ai_agent",
         "ai_ask_ai_query_rewriter_agent",
+        "ai_ask_ai_report_agent",
         "ai_ask_ai_follow_up_agent",
       ],
     },

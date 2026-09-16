@@ -278,6 +278,12 @@ module DiscourseDataExplorer
           description:
             "Ask AI outcome counts and percentages between start_date and end_date, inclusive (UTC). Requires Discourse AI.",
         },
+        "ask-ai-report-questions": {
+          id: -47,
+          name: "Ask AI - What users are asking",
+          description:
+            "Questions included in a particular Ask AI report, with their subjects and logged answers. Questions assigned to multiple subjects appear once per subject. Requires Discourse AI.",
+        },
       }.with_indifferent_access
 
       queries["most-common-likers"]["sql"] = <<~SQL
@@ -1654,6 +1660,32 @@ module DiscourseDataExplorer
         AND asked_at < :end_date::date + INTERVAL '1 day'
       GROUP BY ask_outcome
       ORDER BY ask_outcome NULLS LAST
+      SQL
+
+      queries["ask-ai-report-questions"]["sql"] = <<~SQL
+      -- [params]
+      -- int :report_id
+
+      SELECT
+        subjects.name AS subject,
+        logs.user_id,
+        TO_CHAR(logs.asked_at, 'Mon DD HH24:MI "UTC"') AS asked_at,
+        logs.query,
+        logs.answer_title,
+        logs.answer,
+        CASE logs.ask_outcome
+          WHEN 0 THEN 'answered'
+          WHEN 1 THEN 'no_answer'
+          WHEN 2 THEN 'failed'
+          WHEN 3 THEN 'cancelled'
+          ELSE 'pending'
+        END AS outcome
+      FROM ask_ai_reports reports
+      JOIN ask_ai_report_subjects subjects ON subjects.ask_ai_report_id = reports.id
+      JOIN ask_ai_report_subject_asks memberships ON memberships.ask_ai_report_subject_id = subjects.id
+      JOIN ask_ai_logs logs ON logs.id = memberships.ask_ai_log_id
+      WHERE reports.id = :report_id
+      ORDER BY subjects.position, subjects.id, logs.asked_at DESC, logs.id DESC
       SQL
 
       # convert query ids from "mostcommonlikers" to "-1", "mostmessages" to "-2" etc.

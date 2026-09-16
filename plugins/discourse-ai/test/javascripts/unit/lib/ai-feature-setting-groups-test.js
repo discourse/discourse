@@ -85,6 +85,7 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
       "ai_discover_agent",
       "ai_ask_ai_agent",
       "ai_ask_ai_query_rewriter_agent",
+      "ai_ask_ai_report_agent",
       "ai_ask_ai_follow_up_agent",
     ]);
     assert.deepEqual(groups[2].settings, ["ai_ask_ai_allowed_groups"]);

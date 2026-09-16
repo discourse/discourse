@@ -286,6 +286,7 @@ module DiscourseAi
             DiscourseAdminAssistant => -39,
             AskAiQueryRewriter => -40,
             AskAiSynthesis => -41,
+            AskAiReporter => -42,
           }.freeze
         end
       end
