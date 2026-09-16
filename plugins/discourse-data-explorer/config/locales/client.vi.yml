@@ -11,6 +11,7 @@ vi:
         no_results: "Không có kết quả"
     explorer:
       default_query: "Mặc định"
+      view_query: "Xem"
       or: "hoặc"
       create: "Tạo"
       ai:
