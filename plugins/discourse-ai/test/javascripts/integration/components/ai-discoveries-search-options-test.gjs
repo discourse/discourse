@@ -314,6 +314,18 @@ module(
           "the indexed search is what the menu is showing"
         );
       assert
+        .dom(".ai-discoveries-search-options__option.--search")
+        .hasAttribute("aria-pressed", "true", "and reads as pressed");
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .hasAttribute("aria-pressed", "false", "while the others do not");
+      assert
+        .dom(".ai-discoveries-search-options__option.--advanced")
+        .doesNotHaveAttribute(
+          "aria-pressed",
+          "advanced search is an action rather than a choice"
+        );
+      assert
         .dom(".ai-discoveries-search-options__option.--advanced")
         .exists("advanced search is available for all topics");
 
@@ -336,6 +348,9 @@ module(
       assert
         .dom(".ai-discoveries-search-options__option.--ask")
         .hasClass("is-active", "asking takes over once it owns the term");
+      assert
+        .dom(".ai-discoveries-search-options__option.--ask")
+        .hasAttribute("aria-pressed", "true", "and is the one pressed");
       assert
         .dom(".ai-discoveries-search-options__option.--search")
         .doesNotHaveClass("is-active", "and the other option steps back");
