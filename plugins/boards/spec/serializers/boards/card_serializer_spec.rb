@@ -26,14 +26,21 @@ RSpec.describe Boards::CardSerializer do
 
     expect(payload).to include(topic_id: private_topic.id)
     expect(payload).not_to have_key(:topic)
+    expect(payload[:unicode_title]).to be_nil
   end
 
   it "includes topic details when the scoped user can see the topic" do
     allowed_group.add(viewer)
+    private_topic.update!(title: "Launch :rocket:")
 
     payload = described_class.new(card, root: false, scope: Guardian.new(viewer)).as_json
 
-    expect(payload[:topic]).to include(title: private_topic.title, slug: private_topic.slug)
+    expect(payload).to include(unicode_title: "Launch 🚀")
+    expect(payload[:topic]).to include(
+      title: private_topic.title,
+      unicode_title: "Launch 🚀",
+      slug: private_topic.slug,
+    )
   end
 
   it "serializes Unicode titles for floater cards" do

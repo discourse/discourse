@@ -11,6 +11,7 @@ cs:
         no_results: "Žádné výsledky"
     explorer:
       default_query: "Výchozí"
+      view_query: "Zobrazit"
       or: "nebo"
       create: "Vytvořit"
       ai:

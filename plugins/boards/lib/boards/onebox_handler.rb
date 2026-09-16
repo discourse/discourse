@@ -43,7 +43,7 @@ module Boards
         board_archived: card.board.archived?,
         archived_label: I18n.t("boards.onebox.archived"),
         card_url: url,
-        card_name: card.unicode_resolved_title,
+        card_name: card.unicode_title,
         card_tags: tag_html,
         card_column_title: card.column.unicode_title,
         card_column_icon: card.column.icon,

@@ -19,6 +19,7 @@ he:
         no_results: "אין תוצאות"
     explorer:
       default_query: "ברירת מחדל"
+      view_query: "תצוגה"
       or: "או"
       admins_only: "דפדפן הנתונים זמין למנהלים בלבד."
       allow_groups: "לאפשר לקבוצות לגשת לשאילתה הזאת"

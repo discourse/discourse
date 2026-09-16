@@ -382,7 +382,7 @@ RSpec.describe UploadCreator do
 
       it "does not store a JPEG when the absolute byte savings are insufficient" do
         # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
-        # the absolute savings required of 25_000 bytes, if you save less than that
+        # the absolute savings required of 75_000 bytes, if you save less than that
         # skip this
 
         expect do
@@ -450,8 +450,15 @@ RSpec.describe UploadCreator do
           SiteSetting.image_preview_jpg_quality = 10
         end
 
-        it "alters the image quality" do
-          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+        it "alters the JPEG image quality" do
+          jpeg_file = file_from_fixtures("logo.jpg")
+          File.truncate(
+            jpeg_file.path,
+            UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + jpeg_file.size,
+          )
+
+          upload =
+            UploadCreator.new(jpeg_file, "logo.jpg", force_optimize: true).create_for(user.id)
 
           expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
 
@@ -524,6 +531,18 @@ RSpec.describe UploadCreator do
           expect(upload.extension).to eq("webp")
           expect(File.extname(upload.url)).to eq(".webp")
           expect(upload.original_filename).to eq("animated.webp")
+        end
+
+        it "does not convert non-JPEG images to JPEG based on JPEG quality" do
+          filename = "static.gif"
+          file = file_from_fixtures(filename)
+          File.truncate(file.path, UploadCreator::MIN_CONVERT_TO_JPEG_BYTES_SAVED + 1_000)
+
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+
+          expect(upload).to be_persisted
+          expect(upload).to have_attributes(extension: "gif", original_filename: filename)
+          expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:gif)
         end
       end
     end

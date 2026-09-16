@@ -1170,17 +1170,17 @@ RSpec.describe Upload do
     end
   end
 
-  describe "#target_image_quality" do
+  describe "#target_jpeg_image_quality" do
     let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
 
     it "returns nil when the target quality is higher than the source quality" do
-      target_quality = upload.target_image_quality(local_path, 100)
+      target_quality = upload.target_jpeg_image_quality(local_path, 100)
 
       expect(target_quality).to eq(nil)
     end
 
     it "returns the target quality when it is lower than the source quality" do
-      target_quality = upload.target_image_quality(local_path, 10)
+      target_quality = upload.target_jpeg_image_quality(local_path, 10)
 
       expect(target_quality).to eq(10)
     end

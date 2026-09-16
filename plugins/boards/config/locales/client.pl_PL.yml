@@ -36,6 +36,9 @@ pl_PL:
         actor_username: "Wykonane przez użytkownika"
         acl: "Dostęp do tablicy"
         acl_description: "Wybierz, kto może przeglądać, edytować i zarządzać tablicą."
+      card_moved:
+        board_id: "Tablica"
+        board_id_placeholder: "Wszystkie tablice"
     boards:
       filter_boards: "Filtruj tablice"
       filter_boards_no_results: "Brak tablic odpowiadających wyszukiwaniu"

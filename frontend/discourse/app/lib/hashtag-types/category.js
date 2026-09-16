@@ -61,21 +61,17 @@ export default class CategoryHashtagType extends HashtagTypeBase {
 
   generateIconHTML(hashtag) {
     hashtag.preloaded ? this.onLoad(hashtag) : this.load(hashtag.id);
-    const styleType = ["square", "icon", "emoji"].includes(hashtag.style_type)
-      ? hashtag.style_type
-      : "square";
-    const hashtagId = Number.parseInt(hashtag.id, 10);
     let style = "";
 
-    if (styleType === "icon" && hashtag.icon) {
+    if (hashtag.style_type === "icon" && hashtag.icon) {
       style = iconHTML(hashtag.icon);
     }
-    if (styleType === "emoji" && hashtag.emoji) {
+    if (hashtag.style_type === "emoji" && hashtag.emoji) {
       style = dReplaceEmoji(`:${hashtag.emoji}:`);
     }
 
-    const colorCssClass = `hashtag-color--${this.type}-${hashtagId}`;
-    return `<span class="hashtag-category-${styleType} ${colorCssClass}">${style}</span>`;
+    const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
+    return `<span class="hashtag-category-${hashtag.style_type} ${colorCssClass}">${style}</span>`;
   }
 
   isLoaded(id) {

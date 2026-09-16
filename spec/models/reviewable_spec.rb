@@ -662,6 +662,40 @@ RSpec.describe Reviewable, type: :model do
     end
   end
 
+  describe "#transition_to" do
+    fab!(:moderator)
+    fab!(:topic)
+    let(:reviewable) { Fabricate(:reviewable_queued_post, topic:) }
+
+    it "releases a manual claim on the topic when the reviewable is resolved" do
+      SiteSetting.reviewable_claiming = "optional"
+      Fabricate(:reviewable_claimed_topic, topic:, user: moderator)
+
+      reviewable.transition_to(:approved, moderator)
+
+      expect(ReviewableClaimedTopic.exists?(topic_id: topic.id)).to eq(false)
+      expect(reviewable.history.unclaimed.size).to eq(1)
+    end
+
+    it "silently releases a manual claim when claiming is disabled so it cannot resurface when re-enabled" do
+      SiteSetting.reviewable_claiming = "disabled"
+      Fabricate(:reviewable_claimed_topic, topic:, user: moderator)
+
+      reviewable.transition_to(:ignored, moderator)
+
+      expect(ReviewableClaimedTopic.exists?(topic_id: topic.id)).to eq(false)
+      expect(reviewable.history.unclaimed).to be_empty
+    end
+
+    it "leaves an automatic claim for the acting moderator to release" do
+      claim = Fabricate(:reviewable_claimed_topic, topic:, user: moderator, automatic: true)
+
+      reviewable.transition_to(:approved, moderator)
+
+      expect(ReviewableClaimedTopic.exists?(claim.id)).to eq(true)
+    end
+  end
+
   describe "flag_stats" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:post)
