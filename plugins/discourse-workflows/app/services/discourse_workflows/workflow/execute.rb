@@ -11,6 +11,7 @@ module DiscourseWorkflows
       attribute :trigger_data, default: -> { {} }
       attribute :execution_mode, :string, default: "normal"
       attribute :user_id, :integer
+      attribute :job_id, :string
 
       validates :trigger_node_id, presence: true
     end
@@ -63,6 +64,7 @@ module DiscourseWorkflows
           user: user,
           execution_mode: params.execution_mode.to_sym,
           workflow_version: workflow_version,
+          job_id: params.job_id,
         )
       executor =
         DiscourseWorkflows::Executor.new(workflow, trigger_node["id"], params.trigger_data, options)
