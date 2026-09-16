@@ -76,7 +76,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
       let(:signature) do
         DiscourseWorkflows::WaitingExecution.resume_signature(
           execution_id: waiting_execution.id,
-          resume_token: resume_token,
+          resume_token:,
         )
       end
 
@@ -84,7 +84,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         {
           execution_id: waiting_execution.id,
           token: signature,
-          webhook_suffix: webhook_suffix,
+          webhook_suffix:,
           http_method: "POST",
           body: {
             "foo" => "bar",
@@ -120,7 +120,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
             "webhook_url" =>
               DiscourseWorkflows::WaitingExecution.webhook_url(
                 execution_id: waiting_execution.id,
-                resume_token: resume_token,
+                resume_token:,
               ),
           )
         end
@@ -152,8 +152,8 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
           expect(result).to run_successfully
           expect(result[:sync_result]).to include(
             execution: waiting_execution,
-            response_mode: response_mode,
-            response_code: response_code,
+            response_mode:,
+            response_code:,
           )
           expect(waiting_execution.reload).to be_success
         end
@@ -329,10 +329,7 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
         it "returns a synchronous result without enqueuing a job" do
           expect(result).to run_successfully
           expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs).to be_empty
-          expect(result[:sync_result]).to include(
-            response_mode: "last_node",
-            response_code: response_code,
-          )
+          expect(result[:sync_result]).to include(response_mode: "last_node", response_code:)
           expect(result[:sync_result][:execution]).to have_attributes(
             workflow_id: workflow.id,
             status: "success",
@@ -343,10 +340,10 @@ RSpec.describe DiscourseWorkflows::Webhook::Receive do
 
     context "when triggering a test webhook" do
       let(:test_listener_id) { nil }
-      let(:params) { super().merge(test_webhook: true, test_listener_id: test_listener_id) }
+      let(:params) { super().merge(test_webhook: true, test_listener_id:) }
       let(:listener) do
         DiscourseWorkflows::WebhookTestListener.create!(
-          workflow: workflow,
+          workflow:,
           user: admin,
           trigger_node: workflow.find_node("webhook-1"),
         )

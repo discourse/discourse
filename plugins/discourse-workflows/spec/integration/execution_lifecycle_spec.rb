@@ -46,7 +46,7 @@ RSpec.describe "Workflow execution lifecycle" do
       stub_request(:get, checkpoint_url).to_raise(Sidekiq::Shutdown).then.to_return(http_success)
       execution =
         DiscourseWorkflows::Execution.create_pending_manual!(
-          workflow: workflow,
+          workflow:,
           trigger_node_id: "trigger-1",
           trigger_data: {
           },

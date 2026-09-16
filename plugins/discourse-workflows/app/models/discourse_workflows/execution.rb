@@ -22,7 +22,7 @@ module DiscourseWorkflows
 
     after_create { ExecutionStat.log(workflow_id) unless rate_limited? }
 
-    scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id: workflow_id) : all }
+    scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id:) : all }
     scope :recent, ->(period = 7.days) { where("created_at >= ?", period.ago) }
     scope :successful, -> { where(status: :success) }
     scope :with_duration,
@@ -41,15 +41,15 @@ module DiscourseWorkflows
     def self.create_pending_manual!(workflow:, trigger_node_id:, trigger_data:)
       transaction do
         create!(
-          workflow: workflow,
+          workflow:,
           workflow_version_id: workflow.version_id,
-          trigger_node_id: trigger_node_id,
-          trigger_data: trigger_data,
+          trigger_node_id:,
+          trigger_data:,
           status: :pending,
           execution_mode: :manual,
         ).tap do |execution|
           ExecutionData.create!(
-            execution: execution,
+            execution:,
             workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
           )
         end
@@ -61,15 +61,15 @@ module DiscourseWorkflows
     def self.create_pending_step!(workflow:, node_id:, trigger_data: {}, run_data: {})
       transaction do
         create!(
-          workflow: workflow,
+          workflow:,
           workflow_version_id: workflow.version_id,
           trigger_node_id: node_id,
-          trigger_data: trigger_data,
+          trigger_data:,
           status: :pending,
           execution_mode: :manual,
         ).tap do |execution|
           ExecutionData.create!(
-            execution: execution,
+            execution:,
             workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
             data: {
               "entries" => {
@@ -109,7 +109,7 @@ module DiscourseWorkflows
     end
 
     def self.claim_for_resume(execution, resume_token: execution.resume_token)
-      scope = where(id: execution.id, status: :waiting, resume_token: resume_token)
+      scope = where(id: execution.id, status: :waiting, resume_token:)
 
       now = Time.current
       affected = scope.update_all(status: statuses[:running], updated_at: now)
@@ -168,18 +168,12 @@ module DiscourseWorkflows
           affected =
             self
               .class
-              .where(
-                id: id,
-                status: :waiting,
-                resume_token: resume_token,
-                waiting_until: waiting_until,
-                timeout_action: timeout_action,
-              )
+              .where(id:, status: :waiting, resume_token:, waiting_until:, timeout_action:)
               .update_all(
                 status: self.class.statuses[:error],
                 error: message,
                 finished_at: Time.current,
-                run_time_ms: run_time_ms,
+                run_time_ms:,
                 waiting_node_id: nil,
                 waiting_until: nil,
                 resume_token: nil,

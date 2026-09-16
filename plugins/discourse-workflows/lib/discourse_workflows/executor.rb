@@ -45,7 +45,7 @@ module DiscourseWorkflows
           workflow: @workflow,
           trigger_data: @trigger_data,
           user: @options.user,
-          workflow_nodes: workflow_nodes,
+          workflow_nodes:,
           workflow_name: workflow_version&.name,
           workflow_call_caller: @options.workflow_call_caller,
         )
@@ -66,27 +66,27 @@ module DiscourseWorkflows
     end
 
     def self.resume(execution, response_items, user: nil, webhook_context: nil)
-      build_resume_executor(execution, user: user, webhook_context: webhook_context).resume_from(
+      build_resume_executor(execution, user:, webhook_context:).resume_from(
         execution,
         response_items,
       )
     end
 
     def self.resume_with_error(execution, error, user: nil)
-      build_resume_executor(execution, user: user).resume_from_error(execution, error)
+      build_resume_executor(execution, user:).resume_from_error(execution, error)
     end
 
     def self.build_resume_executor(execution, user:, webhook_context: nil)
       workflow_call_caller = WorkflowCallContinuation.caller_metadata_for(execution)
       options =
         ExecutionOptions.new(
-          user: user,
+          user:,
           execution_mode: execution.execution_mode.to_sym,
           workflow_snapshot: build_resume_snapshot!(execution),
-          webhook_context: webhook_context,
+          webhook_context:,
           workflow_call_stack: WorkflowCallContinuation.workflow_call_stack_for(execution),
           workflow_call_child: workflow_call_caller.present?,
-          workflow_call_caller: workflow_call_caller,
+          workflow_call_caller:,
         )
       new(execution.workflow, execution.trigger_node_id, execution.trigger_data, options)
     end
@@ -164,7 +164,7 @@ module DiscourseWorkflows
           step&.add_metadata("handled_error", error_metadata(error))
           step&.succeed!(output: all_items)
           step&.apply_updates!("error" => nil)
-          @store.publish_progress(step: step) if step
+          @store.publish_progress(step:) if step
           @context.store_node_output(waiting_node, all_items)
           @context.store_node_run(
             waiting_node,
@@ -176,7 +176,7 @@ module DiscourseWorkflows
           route_downstream(waiting_node, handled_outputs)
         else
           step&.fail!(error.message)
-          @store.publish_progress(step: step) if step
+          @store.publish_progress(step:) if step
           raise error
         end
       end
@@ -214,7 +214,7 @@ module DiscourseWorkflows
       step = record_step(node, [])
       step.succeed!(output: output_groups.flatten(1))
       step.add_metadata("cached", true)
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
       route_downstream(node, output_groups)
     end
 
@@ -435,7 +435,7 @@ module DiscourseWorkflows
         js_elapsed = (sandbox_budget_tracker.current_elapsed_ms - js_elapsed_before).round(1)
         step.add_metadata("js_elapsed_ms", js_elapsed) if js_elapsed > 0
         runtime_state.step_metadata.each { |key, value| step.add_metadata(key, value) }
-        @store.publish_progress(step: step)
+        @store.publish_progress(step:)
       end
     end
 
@@ -459,7 +459,7 @@ module DiscourseWorkflows
 
       step.add_metadata(
         DiscourseWorkflows::FormCompletion::METADATA_KEY,
-        DiscourseWorkflows::FormCompletion.for_node(node, resolver: resolver),
+        DiscourseWorkflows::FormCompletion.for_node(node, resolver:),
       )
     end
 
@@ -478,8 +478,8 @@ module DiscourseWorkflows
           "in workflow #{@context.workflow.id}, passing through node '#{node.name}'",
       )
       step = record_step(node, input_items)
-      step.skip!(output: input_items, reason: reason)
-      @store.publish_progress(step: step)
+      step.skip!(output: input_items, reason:)
+      @store.publish_progress(step:)
       @context.store_node_output(node, input_items)
       @context.store_node_run(node, inputs: [input_items], outputs: [input_items])
       enqueue_downstream(node, 0, input_items)
@@ -488,8 +488,8 @@ module DiscourseWorkflows
     def handle_node_issues(node, input_items, issues)
       reason = issues.map { |i| "#{i[:path]}: #{i[:message]}" }.join(", ")
       step = record_step(node, input_items)
-      step.skip!(output: input_items, reason: reason)
-      @store.publish_progress(step: step)
+      step.skip!(output: input_items, reason:)
+      @store.publish_progress(step:)
       @context.store_node_output(node, input_items)
       @context.store_node_run(node, inputs: [input_items], outputs: [input_items])
       enqueue_downstream(node, 0, input_items)
@@ -499,7 +499,7 @@ module DiscourseWorkflows
       step = record_step(node, input_items)
       step.succeed!(output: pinned_items)
       step.add_metadata("pinned", true)
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
       @context.store_node_output(node, pinned_items)
       @context.store_node_run(
         node,
@@ -556,16 +556,16 @@ module DiscourseWorkflows
     )
       NodeExecutionContext.new(
         input_items: primary_input_items(input_groups),
-        input_groups: input_groups,
+        input_groups:,
         parameters: node.parameters,
         credentials: node.credentials,
         node_settings: DiscourseWorkflows::NodeData.direct_settings(node),
         webhook_id: node.webhook_id,
         property_schema: node_type_class.property_schema,
         credential_schema: node_type_class.credentials,
-        node_context: node_context,
+        node_context:,
         user: @options.user,
-        resolver: resolver,
+        resolver:,
         vars: preloaded_vars,
         workflow: @workflow,
         workflow_version: @options.workflow_version,
@@ -581,17 +581,17 @@ module DiscourseWorkflows
         workflow_snapshot: @snapshot,
         webhook_context: @options.webhook_context,
         workflow_call_stack: @workflow_call_stack,
-        runtime_state: runtime_state,
+        runtime_state:,
         static_data_state: @context.static_data_state,
       )
     end
 
     def normalize_result(result, node, ports, input_groups)
       source = "#{node.name} (#{node.type})"
-      ItemContract.validate_output_arrays!(result, source: source, ports: ports)
+      ItemContract.validate_output_arrays!(result, source:, ports:)
 
       apply_item_linking_defaults!(result, input_groups:)
-      ItemContract.validate_output_arrays!(result, source: source, ports: ports)
+      ItemContract.validate_output_arrays!(result, source:, ports:)
       result
     end
 
@@ -856,20 +856,14 @@ module DiscourseWorkflows
 
         if explicit_required_inputs.is_a?(Integer)
           {
-            connected_inputs: connected_inputs,
+            connected_inputs:,
             inputs_to_wait_for: [],
             minimum_input_count: explicit_required_inputs,
           }
         elsif explicit_required_inputs.present?
-          {
-            connected_inputs: connected_inputs,
-            inputs_to_wait_for: Array(explicit_required_inputs).map(&:to_i),
-          }
+          { connected_inputs:, inputs_to_wait_for: Array(explicit_required_inputs).map(&:to_i) }
         else
-          {
-            connected_inputs: connected_inputs,
-            inputs_to_wait_for: (required_inputs + connected_inputs).uniq,
-          }
+          { connected_inputs:, inputs_to_wait_for: (required_inputs + connected_inputs).uniq }
         end
       end
     end
@@ -899,17 +893,9 @@ module DiscourseWorkflows
     end
 
     def record_step(node, input_items, output: [], status: Step::RUNNING, error: nil)
-      step =
-        Step.build(
-          node: node,
-          position: @steps.size,
-          input: input_items,
-          output: output,
-          status: status,
-          error: error,
-        )
+      step = Step.build(node:, position: @steps.size, input: input_items, output:, status:, error:)
       @steps << step
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
       step
     end
 
@@ -927,7 +913,7 @@ module DiscourseWorkflows
         "output" => response_items,
         "finished_at" => Time.current.iso8601,
       )
-      @store.publish_progress(step: step)
+      @store.publish_progress(step:)
     end
 
     def begin_wait!(wait_request)
@@ -958,7 +944,7 @@ module DiscourseWorkflows
         @store.pause_waiting_execution!(
           node: @waiting_node,
           waiting_until: resolved,
-          timeout_action: timeout_action,
+          timeout_action:,
           steps: @steps,
         )
 
@@ -975,7 +961,7 @@ module DiscourseWorkflows
       execution = @store.pause_waiting_execution!(node: @waiting_node, steps: @steps)
 
       DiscourseWorkflows::WorkflowCallContinuation.begin_child_call!(
-        execution: execution,
+        execution:,
         node: @waiting_node,
         request: wait_request,
       )
@@ -1140,11 +1126,7 @@ module DiscourseWorkflows
     def node_dependencies(node)
       parameters = NodeData.parameters(node)
       credentials =
-        NodeData.split(
-          parameters: parameters,
-          credentials: NodeData.credentials(node),
-          node_type: node.type,
-        )[
+        NodeData.split(parameters:, credentials: NodeData.credentials(node), node_type: node.type)[
           "credentials"
         ]
       dependencies = []

@@ -61,9 +61,9 @@ module DiscourseWorkflows
     def run_workflow(trigger_node:, workflow:, workflow_version:, params:, user:)
       options =
         Executor::ExecutionOptions.new(
-          user: user,
+          user:,
           execution_mode: params.execution_mode.to_sym,
-          workflow_version: workflow_version,
+          workflow_version:,
           job_id: params.job_id,
         )
       Executor.new(workflow, trigger_node["id"], params.trigger_data, options).run
