@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class ListBookmarks
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(bookmarks: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)

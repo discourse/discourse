@@ -5,6 +5,7 @@ require "directory_items_query"
 module DiscourseMcp
   module Tools
     class CurrentUser
+      REQUIRED_SCOPES = [DiscourseMcp::INITIAL_SCOPE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -33,6 +34,7 @@ module DiscourseMcp
     end
 
     class ListDirectoryItems
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       PAGE_SIZE = ::DirectoryItemsQuery::PAGE_SIZE
       PAGE_LIMIT = ::DirectoryItemsQuery::PAGE_LIMIT
       OUTPUT_SCHEMA =
@@ -118,6 +120,7 @@ module DiscourseMcp
     end
 
     class GetUser
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -148,6 +151,7 @@ module DiscourseMcp
     end
 
     class ListUserPosts
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -178,6 +182,7 @@ module DiscourseMcp
     end
 
     class GetUserSummary
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       METRICS = %i[
         likes_given
         likes_received
@@ -238,6 +243,7 @@ module DiscourseMcp
     end
 
     class ListUserActions
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       ACTION_TYPES = {
         "likes" => 1,
         "was_liked" => 2,
@@ -286,7 +292,7 @@ module DiscourseMcp
             guardian:,
             ignore_private_messages:
               arguments["action_types"].blank? ||
-                !request_context.has_scopes?("mcp:private-messages:read"),
+                !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
             acting_username: arguments["acting_username"],
           ).to_a
         has_more = actions.length > limit
@@ -339,6 +345,7 @@ module DiscourseMcp
     end
 
     class UpdateUser
+      REQUIRED_SCOPES = [Scopes::PROFILE_WRITE].freeze
       PROFILE_FIELDS = %w[
         name
         bio_raw
@@ -431,6 +438,7 @@ module DiscourseMcp
     end
 
     class SetUserStatus
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA = OutputSchema.object(success: OutputSchema::BOOLEAN)
 
       def self.call(arguments:, request_context:)

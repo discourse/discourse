@@ -240,7 +240,9 @@ describe DiscourseMcp::Tools do
         Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       hidden_notification = Fabricate(:notification, user:, topic: private_topic)
       context = request_context(user)
-      allow(context).to receive(:has_scopes?).with("mcp:private-messages:read").and_return(true)
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ,
+      ).and_return(true)
 
       result =
         described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
@@ -762,6 +764,16 @@ describe DiscourseMcp::CorePrimitives do
       DiscourseMcp.registry.all(:tool).reject(&:output_schema).map(&:identifier)
 
     expect(tools_without_output_schema).to be_empty
+  end
+
+  it "registers every primitive with the scopes declared by its implementation" do
+    primitives_with_different_scopes =
+      DiscourseMcp.registry.all.reject do |primitive|
+        primitive.implementation.const_defined?(:REQUIRED_SCOPES, false) &&
+          primitive.required_scopes == primitive.implementation::REQUIRED_SCOPES
+      end
+
+    expect(primitives_with_different_scopes.map(&:identifier)).to be_empty
   end
 
   it "registers the compatible regular-user tool names" do

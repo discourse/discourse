@@ -506,7 +506,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: DiscourseSolved::McpTools::SetSolution::OUTPUT_SCHEMA,
-    required_scopes: %w[discourse-solved:write],
+    required_scopes: DiscourseSolved::McpTools::SetSolution::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,
