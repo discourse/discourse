@@ -2,11 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import Category from "discourse/models/category";
 import { eq, not } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
+import { loadCategories } from "../../lib/boards-categories";
 
 function includes(arr, item) {
   return arr.includes(item);
@@ -27,17 +28,6 @@ export default class BoardsConstraintFix extends Component {
     if (!mismatches.needsCategory) {
       this.selectedCategoryId = topic.category_id;
     }
-  }
-
-  get categoryOptions() {
-    const { mismatches } = this.args.model;
-    if (!mismatches.needsCategory) {
-      return [];
-    }
-    return mismatches.boardCategoryIds.map((id) => {
-      const cat = Category.findById(id);
-      return { id, name: cat?.name || `Category ${id}` };
-    });
   }
 
   get tagOptions() {
@@ -112,18 +102,25 @@ export default class BoardsConstraintFix extends Component {
           <div class="discourse-boards-constraint-fix__field">
             <label>{{i18n "boards.board.constraint_fix_category"}}</label>
             <div class="discourse-boards-constraint-fix__options">
-              {{#each this.categoryOptions as |cat|}}
-                <DButton
-                  class={{if
-                    (eq this.selectedCategoryId cat.id)
-                    "btn-primary discourse-boards-constraint-fix__option--selected"
-                    "btn-default"
-                  }}
-                  data-category-id={{cat.id}}
-                  @action={{fn this.selectCategory cat.id}}
-                  @translatedLabel={{cat.name}}
-                />
-              {{/each}}
+              <DAsyncContent
+                @asyncData={{loadCategories}}
+                @context={{@model.mismatches.boardCategoryIds}}
+              >
+                <:content as |categories|>
+                  {{#each categories as |cat|}}
+                    <DButton
+                      class={{if
+                        (eq this.selectedCategoryId cat.id)
+                        "btn-primary discourse-boards-constraint-fix__option--selected"
+                        "btn-default"
+                      }}
+                      data-category-id={{cat.id}}
+                      @action={{fn this.selectCategory cat.id}}
+                      @translatedLabel={{cat.name}}
+                    />
+                  {{/each}}
+                </:content>
+              </DAsyncContent>
             </div>
           </div>
         {{/if}}
