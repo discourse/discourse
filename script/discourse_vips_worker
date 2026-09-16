@@ -216,12 +216,12 @@ class DiscourseVipsWorker
         raise ArgumentError, "JPEG conversion requires separate input and output files"
       end
 
-      # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
       image.autorot.jpegsave(
         output_path,
         background: [255, 255, 255],
         Q: Integer(quality),
         interlace: false,
+        # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
         optimize_coding: true,
       )
       nil
