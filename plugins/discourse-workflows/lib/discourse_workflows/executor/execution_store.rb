@@ -19,6 +19,7 @@ module DiscourseWorkflows
         @execution_mode = execution_mode
         @options = options
         @workflow_snapshot = nil
+        @duplicate_job = false
         @existing_run_data = {}
         @last_execution_run_data = {}
       end
@@ -37,9 +38,23 @@ module DiscourseWorkflows
           workflow_name: @workflow_snapshot.workflow_name,
         )
         @execution = create_execution!
+        return false if @duplicate_job
+
         reset_collaborators!
         restore_seeded_run_data!
         @execution
+      end
+
+      def find_job_execution
+        return if @options.job_id.blank?
+
+        @execution = Execution.find_by(job_id: @options.job_id)
+        @duplicate_job = @execution.present?
+        @execution
+      end
+
+      def owns_execution?
+        execution&.persisted? && !@duplicate_job
       end
 
       def resume!(execution)
@@ -140,7 +155,7 @@ module DiscourseWorkflows
         @execution = @options.existing_execution || DiscourseWorkflows::Execution.new
         created = @execution.new_record?
         @execution_context.execution = @execution if @options.existing_execution
-        @execution.update!(
+        attributes = {
           workflow_id: workflow.id,
           workflow_version_id: execution_workflow_version_id,
           trigger_node_id: @trigger_node_id,
@@ -149,7 +164,19 @@ module DiscourseWorkflows
           execution_mode: @execution_mode,
           started_at: @execution.started_at || Time.current,
           finished_at: finished_at,
-        )
+        }
+
+        if @options.job_id.present?
+          @execution =
+            Execution.create_or_find_by!(job_id: @options.job_id) do |execution|
+              execution.assign_attributes(attributes)
+            end
+          @duplicate_job = !@execution.previously_new_record?
+          return @execution if @duplicate_job
+        else
+          @execution.update!(attributes)
+        end
+
         attach_workflow_call_run!
         if created
           ExecutionProgressPublisher.publish_created(@execution, workflow_name: workflow.name)
