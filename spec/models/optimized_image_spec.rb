@@ -313,6 +313,27 @@ RSpec.describe OptimizedImage do
       )
     end
 
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      it "creates JPEG previews at the configured quality" do
+        jpeg_upload =
+          UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(
+            Discourse.system_user.id,
+          )
+
+        SiteSetting.image_preview_jpg_quality = 50
+        low_quality_preview = described_class.create_for(jpeg_upload, 100, 100)
+        low_quality_filesize = low_quality_preview.filesize
+        low_quality_preview.destroy
+
+        SiteSetting.image_preview_jpg_quality = 90
+        high_quality_preview = described_class.create_for(jpeg_upload, 100, 100)
+
+        expect(low_quality_filesize).to be < high_quality_preview.filesize
+      end
+    end
+
     context "when using an internal store" do
       let(:store) { FakeInternalStore.new }
 

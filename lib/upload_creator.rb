@@ -613,6 +613,8 @@ class UploadCreator
   end
 
   def should_alter_jpeg_quality?
+    return false if GlobalSetting.enable_vips_image_processing
+
     @upload.target_jpeg_image_quality(
       @file.path,
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
