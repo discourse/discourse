@@ -17,8 +17,8 @@ import {
   indentWithTab,
 } from "@codemirror/commands";
 import { setDiagnostics } from "@codemirror/lint";
-import { search, searchKeymap } from "@codemirror/search";
-import { Compartment, EditorState, Transaction } from "@codemirror/state";
+import { closeSearchPanel, search, searchKeymap } from "@codemirror/search";
+import { Compartment, EditorState, Prec, Transaction } from "@codemirror/state";
 import {
   EditorView,
   highlightActiveLine,
@@ -26,10 +26,10 @@ import {
   keymap,
   lineNumbers,
   placeholder,
-  ViewPlugin,
 } from "@codemirror/view";
 import { loadCodemirrorLanguage } from "discourse/lib/codemirror-languages";
 import { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import { buildCmParams } from "../build-extensions";
 import { defaultHighlighting } from "../highlight-style";
 
@@ -154,11 +154,41 @@ export default class CodemirrorEditor extends Component {
     ];
 
     if (this.args.codeEditing) {
-      extensions.push(search(), keymap.of([...searchKeymap, indentWithTab]));
+      extensions.push(
+        search(),
+        keymap.of([...searchKeymap, indentWithTab]),
+        EditorState.phrases.of({
+          Find: i18n("code_editor.search.find"),
+          Replace: i18n("code_editor.search.replace"),
+          next: i18n("code_editor.search.next"),
+          previous: i18n("code_editor.search.previous"),
+          all: i18n("code_editor.search.all"),
+          "match case": i18n("code_editor.search.match_case"),
+          regexp: i18n("code_editor.search.regexp"),
+          "by word": i18n("code_editor.search.by_word"),
+          replace: i18n("code_editor.search.replace"),
+          "replace all": i18n("code_editor.search.replace_all"),
+          close: i18n("code_editor.search.close"),
+          "Go to line": i18n("code_editor.search.go_to_line"),
+          go: i18n("code_editor.search.go"),
+          "current match": i18n("code_editor.search.current_match"),
+          "on line": i18n("code_editor.search.on_line"),
+          "replaced match on line $": i18n(
+            "code_editor.search.replaced_match",
+            { line: "$" }
+          ),
+          "replaced $ matches": i18n("code_editor.search.replaced_all", {
+            count: "$",
+          }),
+        })
+      );
     }
 
     extensions.push(
       EditorView.contentAttributes.of(() => ({
+        ...(this.args.codeEditing
+          ? { "aria-description": i18n("code_editor.tab_hint") }
+          : {}),
         ...(this.args.inputId ? { id: this.args.inputId } : {}),
         ...(this.args.describedBy
           ? { "aria-describedby": this.args.describedBy }
@@ -191,30 +221,25 @@ export default class CodemirrorEditor extends Component {
     }
 
     extensions.push(
-      ViewPlugin.fromClass(
-        class {
-          constructor(view) {
-            this.view = view;
-            this.handler = (event) => {
-              if (event.key !== "Escape" || !this.view.hasFocus) {
-                return;
+      Prec.highest(
+        keymap.of([
+          {
+            key: "Escape",
+            run: (view) => {
+              if (completionStatus(view.state)) {
+                return closeCompletion(view);
               }
-              if (completionStatus(this.view.state)) {
-                closeCompletion(this.view);
-              } else {
-                this.view.contentDOM.blur();
+              if (closeSearchPanel(view)) {
+                return true;
               }
-              event.preventDefault();
-            };
-            window.addEventListener("keydown", this.handler, { capture: true });
-          }
-
-          destroy() {
-            window.removeEventListener("keydown", this.handler, {
-              capture: true,
-            });
-          }
-        }
+              if (this.args.codeEditing) {
+                return false;
+              }
+              view.contentDOM.blur();
+              return true;
+            },
+          },
+        ])
       )
     );
 

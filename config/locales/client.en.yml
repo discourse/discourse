@@ -8,6 +8,24 @@ en:
       resize: "Resize code editor"
     code_editor:
       resize: "Resize code editor"
+      tab_hint: "Press Escape, then Tab to move focus out of the editor."
+      search:
+        find: "Find"
+        replace: "Replace"
+        next: "Next"
+        previous: "Previous"
+        all: "Select all matches"
+        match_case: "Match case"
+        regexp: "Regular expression"
+        by_word: "Whole words"
+        replace_all: "Replace all"
+        close: "Close"
+        go_to_line: "Go to line"
+        go: "Go"
+        current_match: "Current match"
+        on_line: "On line"
+        replaced_match: "Replaced match on line %{line}"
+        replaced_all: "Replaced matches: %{count}"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"
