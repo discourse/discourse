@@ -20,6 +20,7 @@ pt_BR:
     explorer:
       default_query: "Padrão"
       default_query_notice: "Esta é uma consulta padrão; o SQL não pode ser editado. Para editar o SQL, crie uma nova consulta."
+      view_query: "Visualizar"
       queries: "Consultas"
       query_created: "Consulta criada!"
       or: "ou"

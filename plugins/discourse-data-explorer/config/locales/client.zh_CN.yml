@@ -31,6 +31,7 @@ zh_CN:
       resize_editor: "调整查询编辑器大小"
       default_query: "默认"
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
+      view_query: "查看"
       queries: "查询"
       query_created: "查询已创建！"
       mode:

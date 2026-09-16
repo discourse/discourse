@@ -20,6 +20,7 @@ hu:
     explorer:
       default_query: "Alapértelmezett"
       default_query_notice: "Ez egy alapértelmezett lekérdezés, az SQL nem szerkeszthető. Az SQL szerkesztéséhez hozzon létre egy új lekérdezést."
+      view_query: "Megtekintés"
       queries: "Lekérdezések"
       query_created: "Lekérdezés létrehozva!"
       or: "vagy"

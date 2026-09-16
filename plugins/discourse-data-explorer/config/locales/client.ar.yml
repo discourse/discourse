@@ -30,6 +30,7 @@ ar:
     explorer:
       default_query: "افتراضي"
       default_query_notice: "هذا استعلام افتراضي، ولا يمكن تعديل SQL. لتعديل SQL، أنشئ استعلامًا جديدًا."
+      view_query: "اعرض"
       queries: "الاستعلامات"
       query_created: "تم إنشاء الاستعلام!"
       mode:
