@@ -481,6 +481,8 @@ module DiscourseAi
       end
 
       def tool_requires_approval?(tool)
+        return true if tool.class.mandatory_approval?
+
         tool.class.requires_approval? && @agent.class.require_approval
       end
 
