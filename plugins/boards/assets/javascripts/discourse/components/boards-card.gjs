@@ -91,9 +91,10 @@ export default class BoardsCard extends Component {
       return [];
     }
 
+    const columnTagNames = this.columnTagNames;
     return tags.filter((tag) => {
       const name = typeof tag === "string" ? tag : tag.name;
-      return !this.columnTagNames.has(name?.toLowerCase());
+      return !columnTagNames.has(name?.toLowerCase());
     });
   }
 
@@ -103,8 +104,9 @@ export default class BoardsCard extends Component {
         return null;
       }
 
+      const columnTagNames = this.columnTagNames;
       const filtered = this.topic.tags.filter(
-        (tag) => !this.columnTagNames.has(tag.toLowerCase())
+        (tag) => !columnTagNames.has(tag.toLowerCase())
       );
 
       return filtered.length ? renderTags(null, { tags: filtered }) : null;
@@ -142,10 +144,6 @@ export default class BoardsCard extends Component {
       return [floaterAssignment];
     }
     return [];
-  }
-
-  get assignedUser() {
-    return this.allAssignedUsers[0] ?? null;
   }
 
   get assignedGroup() {
@@ -241,14 +239,6 @@ export default class BoardsCard extends Component {
             group_name: a.group_name,
           }),
     }));
-  }
-
-  get floaterTagsHtml() {
-    const tags = this.args.card.tags;
-    if (this.isTopicCard || !tags?.length) {
-      return null;
-    }
-    return renderTags(null, { tags });
   }
 
   @action

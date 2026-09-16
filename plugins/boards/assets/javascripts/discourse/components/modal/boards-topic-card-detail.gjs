@@ -214,7 +214,6 @@ export default class BoardsTopicCardDetail extends Component {
       <:footer>
         <DButton
           class="btn-primary"
-          @action={{this.viewTopic}}
           @href={{this.topicUrl}}
           @icon="up-right-from-square"
           @label="boards.board.view_topic"
