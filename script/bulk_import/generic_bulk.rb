@@ -33,6 +33,13 @@ class BulkImport::Generic < BulkImport::Base
       "Intermediate database" => db_path,
       "Uploads database" => uploads_db_path,
     }.each { |label, path| raise "#{label} not found: #{path}" if path && !File.file?(path) }
+    if (@content_cache_path = ENV["CONTENT_CACHE"].presence)
+      raise "Content cache not found: #{@content_cache_path}" unless File.file?(@content_cache_path)
+      require "migrations-core"
+      require "migrations-importer"
+      Migrations::ContentCache::Store.new(@content_cache_path).close
+      @content_cache = Migrations::Importer::ContentCache.new
+    end
     super()
     @source_db = create_connection(db_path)
     @uploads_db = create_connection(uploads_db_path) if uploads_db_path
@@ -61,6 +68,7 @@ class BulkImport::Generic < BulkImport::Base
 
   def preflight
     configure_unicode_usernames!
+    @content_cache&.capture_existing_sources
 
     return unless delta_import?
 
@@ -720,6 +728,10 @@ class BulkImport::Generic < BulkImport::Base
   def execute_after
     import_category_about_topics
     report_delta_stats if delta_import?
+    if @content_cache
+      @content_cache.invalidate_changed_sources
+      puts "Content cache: #{@content_cache.restore(@content_cache_path).inspect}"
+    end
 
     @source_db.close
     @uploads_db.close if @uploads_db

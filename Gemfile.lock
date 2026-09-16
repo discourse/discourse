@@ -37,6 +37,7 @@ PATH
       colored2
       i18n
       migrations-core
+      nokogiri
       pg
       zeitwerk
 
