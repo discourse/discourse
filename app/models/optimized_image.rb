@@ -97,10 +97,16 @@ class OptimizedImage < ActiveRecord::Base
         temp_path = temp_file.path
 
         target_quality =
-          upload.target_image_quality(
-            original_path,
-            SiteSetting.ImageQuality.image_preview_jpg_quality,
-          )
+          if %w[.jpg .jpeg].include?(extension)
+            if %w[jpg jpeg].include?(upload.extension)
+              UploadCreator.target_jpeg_image_quality(
+                local_path: original_path,
+                target_quality: SiteSetting.ImageQuality.image_preview_jpg_quality,
+              )
+            else
+              SiteSetting.ImageQuality.image_preview_jpg_quality
+            end
+          end
         opts = opts.merge(quality: target_quality) if target_quality
         opts = opts.merge(upload_id: upload.id)
 

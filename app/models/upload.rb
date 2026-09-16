@@ -448,25 +448,6 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def target_image_quality(local_path, test_quality)
-    @file_quality ||=
-      begin
-        ImageMagick.identify(
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          operation: :upload_quality_probe,
-          read: [local_path],
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
-      rescue StandardError
-        0
-      end
-
-    test_quality if @file_quality == 0 || @file_quality > test_quality
-  end
-
   def self.sha1_from_short_path(path)
     sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
   end
