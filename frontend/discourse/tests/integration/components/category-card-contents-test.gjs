@@ -1,4 +1,10 @@
-import { click, render, triggerEvent, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  findAll,
+  render,
+  triggerEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import CategoryCardContents from "discourse/components/category-card-contents";
@@ -89,6 +95,70 @@ module("Integration | Component | CategoryCardContents", function (hooks) {
 
     assert.dom(".category-card .card-content").exists("the card reopens");
     assert.strictEqual(requestedIds.length, 1, "the loaded category is reused");
+  });
+
+  test("shows category ancestors from the root down", async function (assert) {
+    this.site.set("lazy_load_categories", true);
+    const requestedLookups = [];
+    const categories = {
+      54: { id: 54, name: "Fiction", slug: "fiction" },
+      55: {
+        id: 55,
+        name: "Crime",
+        parent_category_id: 54,
+        slug: "crime",
+      },
+      56: {
+        id: 56,
+        name: "Noir",
+        parent_category_id: 55,
+        slug: "noir",
+      },
+    };
+
+    pretender.get("/categories/find", (request) => {
+      if (request.queryParams.ids) {
+        requestedLookups.push({ ids: request.queryParams.ids });
+        return response({ categories: [categories[56]] });
+      }
+
+      requestedLookups.push({
+        slugPathWithId: request.queryParams.slug_path_with_id,
+      });
+      return response({ categories: Object.values(categories) });
+    });
+
+    await render(
+      <template>
+        <div id="main-outlet">
+          <a
+            class="hashtag-cooked"
+            data-id="56"
+            data-type="category"
+            href="/c/fiction/crime/noir/56"
+          >#noir</a>
+        </div>
+        <CategoryCardContents />
+      </template>
+    );
+
+    await click('a.hashtag-cooked[data-type="category"]');
+
+    assert.deepEqual(
+      requestedLookups,
+      [{ ids: ["56"] }, { slugPathWithId: "56" }],
+      "loads the category and its ancestors"
+    );
+    assert.deepEqual(
+      findAll(".category-card__ancestors .category-card__name").map((element) =>
+        element.textContent.trim()
+      ),
+      ["Fiction", "Crime"],
+      "shows ancestors from the root down"
+    );
+    assert
+      .dom(".names__primary .category-card__name")
+      .hasText("Noir", "shows the selected category last");
   });
 
   test("offers a new topic button only where the user can create topics", async function (assert) {

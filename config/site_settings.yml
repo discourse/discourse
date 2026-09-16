@@ -4841,7 +4841,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      learn_more_url: ""
+      learn_more_url: "https://meta.discourse.org/t/-/412529"
   prioritize_recently_used_tags:
     default: false
     client: true

@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import CardContentsBase from "discourse/components/card-contents-base";
 import CategoryLogo from "discourse/components/category-logo";
@@ -26,7 +27,7 @@ import { i18n } from "discourse-i18n";
 const CATEGORY_HASHTAG_SELECTOR =
   'a.hashtag-cooked[data-type="category"][data-id]';
 const LATEST_TOPICS_COUNT = 3;
-const LATEST_TOPICS_CACHE_MS = 5 * 60 * 1000;
+const LATEST_TOPICS_CACHE_MS = 5 * 60 * 1000; // 5 minutes
 
 const CategoryNameLink = <template>
   <a class="category-card__link" href={{@category.url}} ...attributes>
@@ -52,6 +53,7 @@ export default class CategoryCardContents extends CardContentsBase {
   @service composer;
   @service store;
 
+  ancestorCategories = [];
   avatarDataAttrKey = "id";
   avatarSelector = CATEGORY_HASHTAG_SELECTOR;
   canShowWhenUserProfilesHidden = true;
@@ -69,8 +71,12 @@ export default class CategoryCardContents extends CardContentsBase {
 
   @computed("category.permission")
   get canCreateTopic() {
+    if (!this.currentUser || !this.category) {
+      return false;
+    }
+
     const canCreateTopic =
-      !!this.currentUser?.can_create_topic && !!this.category?.canCreateTopic;
+      this.currentUser.can_create_topic && this.category.canCreateTopic;
 
     return applyValueTransformer("can-create-topic-button", canCreateTopic, {
       category: this.category,
@@ -81,7 +87,11 @@ export default class CategoryCardContents extends CardContentsBase {
 
   @computed("category.topic_url", "currentUser.admin")
   get canEditDescription() {
-    return !!this.currentUser?.admin && !!this.category?.topic_url;
+    if (!this.currentUser || !this.category) {
+      return false;
+    }
+
+    return this.currentUser.admin && !isEmpty(this.category.topic_url);
   }
 
   @computed("category")
@@ -100,7 +110,7 @@ export default class CategoryCardContents extends CardContentsBase {
   get createTopicLabel() {
     const defaultKey = "topic.create";
     const isSharedDraftsCategory =
-      !!this.site.shared_drafts_category_id &&
+      !isEmpty(this.site.shared_drafts_category_id) &&
       this.category?.id === this.site.shared_drafts_category_id;
 
     return applyValueTransformer(
@@ -160,6 +170,17 @@ export default class CategoryCardContents extends CardContentsBase {
     }
   }
 
+  async #loadAncestorCategories(category) {
+    let result = this.#resolveAncestorCategories(category);
+
+    if (!result.complete) {
+      await Category.asyncFindBySlugPathWithID(category.id.toString());
+      result = this.#resolveAncestorCategories(category);
+    }
+
+    return result.categories;
+  }
+
   async #loadLatestTopics(category) {
     const cached = this.#latestTopicsCache.get(category.id);
     let topics = cached?.topics;
@@ -185,13 +206,32 @@ export default class CategoryCardContents extends CardContentsBase {
       }
     }
 
-    if (!this.isDestroying && !this.isDestroyed && this.category === category) {
+    if (!this.isDestroyed && this.category === category) {
       this.set("latestTopics", topics);
     }
   }
 
+  #resolveAncestorCategories(category) {
+    const categories = [];
+    let parentCategoryId = category.parent_category_id;
+
+    while (parentCategoryId) {
+      const parent = Category.findById(parentCategoryId);
+
+      if (!parent) {
+        return { categories, complete: false };
+      }
+
+      categories.unshift(parent);
+      parentCategoryId = parent.parent_category_id;
+    }
+
+    return { categories, complete: true };
+  }
+
   _close() {
     this.setProperties({
+      ancestorCategories: [],
       category: null,
       categoryId: null,
       latestTopics: null,
@@ -205,9 +245,11 @@ export default class CategoryCardContents extends CardContentsBase {
 
     try {
       const category = await Category.asyncFindById(categoryId);
+      const ancestorCategories = category
+        ? await this.#loadAncestorCategories(category)
+        : [];
 
       if (
-        this.isDestroying ||
         this.isDestroyed ||
         this.categoryId !== categoryId ||
         this.cardTarget !== target
@@ -221,12 +263,16 @@ export default class CategoryCardContents extends CardContentsBase {
         return;
       }
 
-      this.setProperties({ category, loading: null, visible: true });
+      this.setProperties({
+        ancestorCategories,
+        category,
+        loading: null,
+        visible: true,
+      });
       this.#loadLatestTopics(category);
       return category;
     } catch {
       if (
-        !this.isDestroying &&
         !this.isDestroyed &&
         this.categoryId === categoryId &&
         this.cardTarget === target
@@ -252,9 +298,11 @@ export default class CategoryCardContents extends CardContentsBase {
             </a>
           {{/if}}
           <div class="names">
-            {{#if this.category.parentCategory}}
-              <div class="category-card__parent">
-                <CategoryNameLink @category={{this.category.parentCategory}} />
+            {{#if this.ancestorCategories.length}}
+              <div class="category-card__ancestors">
+                {{#each this.ancestorCategories as |ancestor|}}
+                  <CategoryNameLink @category={{ancestor}} />
+                {{/each}}
               </div>
             {{/if}}
             <div class="names__primary">
