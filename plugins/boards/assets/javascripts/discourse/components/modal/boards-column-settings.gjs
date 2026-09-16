@@ -264,7 +264,7 @@ export default class BoardsColumnSettings extends Component {
                       <CategoryChooser
                         @onChange={{fn this.onCategoryChange field}}
                         @options={{hash clearable=true}}
-                        @value={{data.move_to_category_id}}
+                        @value={{readonly data.move_to_category_id}}
                       />
                     </field.Control>
                   </form.Field>
