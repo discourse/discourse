@@ -621,6 +621,10 @@ Displays date picker expanded on desktop. Defaults to true.
 
 Renders a `<CodeEditor />` component.
 
+Tab indents and Shift-Tab outdents. To move keyboard focus out of the editor,
+press Escape and then Tab (or Shift-Tab). If a completion or search panel is
+open, close it with Escape first.
+
 ### @height
 
 Sets the height of the editor in pixels.

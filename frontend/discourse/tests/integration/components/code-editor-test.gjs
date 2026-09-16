@@ -16,6 +16,7 @@ import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { I18n } from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
 function pressWithModifier(element, key) {
@@ -47,6 +48,58 @@ function highlightedTokens(element) {
 
 module("Integration | Component | code-editor", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("uses translated search labels and announcements", async function (assert) {
+    const translations = I18n.translations[I18n.locale].js.code_editor.search;
+    const original = translations.find;
+    translations.find = "Buscar";
+    try {
+      await render(<template><CodeEditor @value="one" /></template>);
+      pressWithModifier(find(".cm-content"), "f");
+      await waitFor(".cm-search");
+      assert
+        .dom('.cm-search input[name="search"]')
+        .hasAttribute(
+          "aria-label",
+          "Buscar",
+          "the search field uses Discourse translations"
+        );
+      const view = find(".codemirror-editor").codemirrorView;
+      assert.strictEqual(
+        view.state.phrase("replaced $ matches", 3),
+        "Replaced matches: 3",
+        "CodeMirror substitutes announcement arguments"
+      );
+    } finally {
+      translations.find = original;
+    }
+  });
+
+  test("Escape closes search before allowing Tab to leave the editor", async function (assert) {
+    await render(<template><CodeEditor @value="one" /></template>);
+    pressWithModifier(find(".cm-content"), "f");
+    await waitFor(".cm-search");
+    const view = find(".codemirror-editor").codemirrorView;
+    view.focus();
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    assert.dom(".cm-search").doesNotExist("Escape closes the search panel");
+    assert.true(view.hasFocus, "closing search keeps editor focus");
+
+    await triggerKeyEvent(".cm-content", "keydown", "Escape");
+    const tab = new KeyboardEvent("keydown", {
+      key: "Tab",
+      keyCode: 9,
+      bubbles: true,
+      cancelable: true,
+    });
+    view.contentDOM.dispatchEvent(tab);
+    assert.false(tab.defaultPrevented, "the browser can move focus on Tab");
+    assert.strictEqual(
+      view.state.doc.toString(),
+      "one",
+      "the escape sequence does not indent"
+    );
+  });
 
   test("finds and replaces text inside the editor", async function (assert) {
     await render(<template><CodeEditor @value="one two one" /></template>);
