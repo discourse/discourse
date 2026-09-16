@@ -283,7 +283,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
   end
 
   describe "available agents" do
-    it "includes all agents by default" do
+    it "includes enabled agents by default" do
       Group.refresh_automatic_groups!
 
       SiteSetting.ai_google_custom_search_api_key = "abc"
@@ -305,12 +305,16 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
         DiscourseAi::Agents::SettingsExplorer,
         DiscourseAi::Agents::SqlHelper,
+      )
+
+      expect(agents).not_to include(
+        DiscourseAi::Agents::AskAiQueryRewriter,
+        DiscourseAi::Agents::AskAiSynthesis,
+        DiscourseAi::Agents::AskAiReporter,
       )
 
       # it should allow staff access to WebArtifactCreator
@@ -325,13 +329,17 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
         DiscourseAi::Agents::Researcher,
         DiscourseAi::Agents::SettingsExplorer,
         DiscourseAi::Agents::SqlHelper,
         DiscourseAi::Agents::WebArtifactCreator,
+      )
+
+      expect(admin_agents).not_to include(
+        DiscourseAi::Agents::AskAiQueryRewriter,
+        DiscourseAi::Agents::AskAiSynthesis,
+        DiscourseAi::Agents::AskAiReporter,
       )
 
       # omits agents if key is missing
@@ -354,8 +362,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
       )
 
@@ -376,8 +382,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
         DiscourseAi::Agents::Creative,
         DiscourseAi::Agents::DiscourseHelper,
         DiscourseAi::Agents::Discover,
-        DiscourseAi::Agents::AskAiQueryRewriter,
-        DiscourseAi::Agents::AskAiSynthesis,
         DiscourseAi::Agents::GithubHelper,
       )
     end

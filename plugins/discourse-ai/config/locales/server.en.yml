@@ -64,7 +64,7 @@ en:
         title: Tag topics using AI
         description: "Automatically tag topics using AI"
   site_settings:
-    ai_ask_ai_report_weekly_enabled: "Automatically generate an Ask AI report each week for the previous seven complete days. Reports appear on the dashboard and are sent by PM to {{setting:ai_ask_ai_report_recipient_groups}}. Requires Ask AI to be enabled and a configured report language model. Manual reports remain available."
+    ai_ask_ai_report_weekly_enabled: "Automatically generate an Ask AI report each week for the previous seven complete days. Reports appear on the dashboard. If groups are selected in {{setting:ai_ask_ai_report_recipient_groups}}, they also receive a PM. Requires Ask AI to be enabled and a configured report language model. Manual reports remain available."
     ai_ask_ai_report_agent: "Agent used to group users’ questions into Ask AI dashboard reports."
     ai_ask_ai_report_max_asks: "Maximum number of asks analysed per report. Uses all asks in the selected period or the latest asks up to this limit, whichever is fewer. Larger reports need more model context and may cost more."
     ai_ask_ai_report_recipient_groups: "Groups that receive automatic weekly report PMs and can be included in manual report PMs. Reports include users’ questions. Leave empty to keep automatic reports on the dashboard only."
