@@ -23,7 +23,7 @@ RSpec.describe JsonApiKit::RelationshipPaths::Position do
     described_class.new(resource: JsonApiKitSpec::PathTopicsResource, glossary:)
   end
 
-  let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+  let(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
   let(:version_change) do
     Class
       .new(JsonApiKit::VersionChange) do
@@ -117,7 +117,7 @@ end
 RSpec.describe JsonApiKit::RelationshipPaths do
   subject(:paths) { described_class.new(resource: JsonApiKitSpec::PathTopicsResource, glossary:) }
 
-  let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+  let(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
   let(:version_change) do
     Class
       .new(JsonApiKit::VersionChange) do

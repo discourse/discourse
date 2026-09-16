@@ -16,7 +16,9 @@ module JsonApiKit
         verify_readable_block
       end
 
-      def listing(params, guardian:, scoped_to:) = resource.all(params, guardian:, scoped_to:)
+      def listing(params, guardian:, scoped_to:, default_sorts:)
+        resource.all(params, guardian:, scoped_to:, default_sorts:)
+      end
 
       def resolves?(path) = resource.resolves?(path)
 

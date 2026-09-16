@@ -3,7 +3,7 @@
 RSpec.describe JsonApiKit::RelationshipPaths::UnscopedPosition do
   subject(:position) { described_class.new(glossary:) }
 
-  let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+  let(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
   let(:version_change) do
     Class
       .new(JsonApiKit::VersionChange) do

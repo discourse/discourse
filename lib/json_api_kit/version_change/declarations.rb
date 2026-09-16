@@ -6,7 +6,12 @@ module JsonApiKit
       def initialize(type)
         @type = type
         @transformations = []
+        @default_sorts = []
       end
+
+      attr_reader :transformations, :default_sorts
+
+      def changed_default_sort(from:) = default_sorts << DefaultSort.new(type, from)
 
       def renamed_attribute(**) = declare(Declaration::RenamedAttribute.new(type, **))
 
@@ -26,11 +31,9 @@ module JsonApiKit
         declare(Declaration::RenamedName.new(type, [Name::Relationship, Name::Field], from:, to:))
       end
 
-      def to_a = transformations
-
       private
 
-      attr_reader :type, :transformations
+      attr_reader :type
 
       def declare(declaration) = transformations.concat(declaration.transformations)
     end

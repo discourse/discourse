@@ -31,8 +31,13 @@ module JsonApiKit
         end
 
         def default_sort(ordering)
+          self.declared_default_sort = default_ordering(ordering)
+        end
+
+        def default_ordering(ordering = declared_default_sort)
           verify_sorts(ordering.keys)
-          self.declared_default_sort = ordering
+          ordering.each_value { Pagination::Direction.for(it) }
+          ordering.transform_keys(&:to_s).freeze
         end
 
         def unique_by(*columns)
@@ -41,19 +46,14 @@ module JsonApiKit
 
         def sort_names = declared_sorts.map(&:name)
 
-        def order(ordering = {}) = Pagination::Order.new(sorts.keyset(ordering), type:)
+        def order(ordering) = Pagination::Order.new(sorts.keyset(ordering), type:)
 
         def sortable_by?(ordering:) = (ordering.keys - sort_names).empty?
 
         private
 
         def sorts
-          Declarations::Sorts.new(
-            declared_sorts,
-            schema:,
-            default: declared_default_sort,
-            unique_by: declared_unique_by,
-          )
+          Declarations::Sorts.new(declared_sorts, schema:, unique_by: declared_unique_by)
         end
 
         def verify_sorts(names)

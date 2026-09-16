@@ -4,8 +4,8 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
   subject(:resource_object) { described_class.new(record, client:, fieldsets:, meta:) }
 
   fab!(:topic) { Fabricate(:topic, title: "A row a document renders") }
-  let(:glossary) { JsonApiKit::Glossary.kit }
-  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:guardian) { Guardian.new }
   let(:resource) do
@@ -103,7 +103,7 @@ RSpec.describe JsonApiKit::Document::ResourceObject do
       before { allow(JsonApiKit::Document::RelationshipObject).to receive(:new).and_call_original }
 
       context "when the relationship has a historical name" do
-        let(:glossary) { JsonApiKit::Glossary.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+        let(:edition) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE) }
         let(:version_change) do
           Class
             .new(JsonApiKit::VersionChange) do

@@ -25,7 +25,7 @@ module JsonApiKit
 
         def max_page_size = page_limits.max
 
-        def paged_from?(cursor, ordering: {}) = order(ordering).compatible_with?(cursor:)
+        def paged_from?(cursor, ordering:) = order(ordering).compatible_with?(cursor:)
       end
     end
   end
