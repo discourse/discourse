@@ -317,11 +317,12 @@ describe Jobs::DiscoursePostEventSendReminder do
         }.by(1)
 
         message = reminder_message_for(recipient)
-        expect(message.topic.title).to eq("Community breakfast is about to start")
+        expect(message.topic.title).to eq(":date: Community breakfast is about to start")
         expect(message.raw).to include(
-          "### Community breakfast",
-          "**Location**",
+          "Breakfast before the conference.",
+          "#### Location",
           "Riverside Café",
+          "#### Guests",
           event_post.full_url,
         )
         expect(message.topic.subtype).to eq(TopicSubtype.system_message)
@@ -334,8 +335,8 @@ describe Jobs::DiscoursePostEventSendReminder do
 
         raw = reminder_message_for(recipient).raw
         expect(raw).to include(
-          "- #{organizer.username} - *organizer*",
-          "- #{host.username} - *host*",
+          "- #{organizer.username} (*Organizer*)",
+          "- #{host.username} (*Host*)",
           "- #{recipient.username}",
         )
         expect(raw).not_to include(organizer.name, host.name, recipient.name)
@@ -361,7 +362,7 @@ describe Jobs::DiscoursePostEventSendReminder do
         raw = reminder_message_for(recipient).raw
         guest_lines = raw.lines.grep(/^-/).map(&:strip)
         expect(guest_lines.first(3)).to eq(
-          ["- #{organizer.name} - *organizer*", "- #{host.name} - *host*", "- #{recipient.name}"],
+          ["- #{organizer.name} (*Organizer*)", "- #{host.name} (*Host*)", "- #{recipient.name}"],
         )
         expect(guest_lines.length).to eq(5)
         expect(raw).to include("and 3 others")
@@ -395,7 +396,7 @@ describe Jobs::DiscoursePostEventSendReminder do
 
         raw = reminder_message_for(recipient).raw
         expect(raw).to include("[Join event](#{event.post.topic.url}/zoom)")
-        expect(raw).not_to include("**Location**")
+        expect(raw).not_to include("#### Location")
       end
 
       it "links virtual events directly to their URL location" do
@@ -405,7 +406,7 @@ describe Jobs::DiscoursePostEventSendReminder do
 
         raw = reminder_message_for(recipient).raw
         expect(raw).to include("[Join event](https://meet.example.com/room)")
-        expect(raw).not_to include("**Location**")
+        expect(raw).not_to include("#### Location")
       end
 
       it "keeps legacy notifications while the upcoming change is disabled" do

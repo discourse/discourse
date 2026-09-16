@@ -43,7 +43,8 @@ en:
         title: "Add this event to your calendar?"
         subscribed: 'This event will be added to your <a href="%{calendarUrl}">subscribed calendar</a>.'
         dismiss: "Dismiss calendar prompt"
-        subscribe: "Subscribe to events or change notification preferences"
+        subscribe: "Subscribe to your events"
+        subscribe_with_preferences: "Subscribe to events or change notification preferences"
       preferences:
         reminders:
           title: "Event reminders"

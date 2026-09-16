@@ -11,6 +11,7 @@ module("Integration | Component | EventCalendarPrompt", function (hooks) {
   hooks.beforeEach(function () {
     this.siteSettings.event_participation_buttons =
       "going|interested|not going";
+    this.siteSettings.enable_improved_event_reminders = true;
     this.event = Event.create({
       id: 99,
       status: "public",
@@ -56,6 +57,20 @@ module("Integration | Component | EventCalendarPrompt", function (hooks) {
     pretender.get("/calendar-subscriptions.json", () =>
       response({ has_subscription: false, generated_feeds: [] })
     );
+  });
+
+  test("does not mention notification preferences when improved reminders are disabled", async function (assert) {
+    this.siteSettings.enable_improved_event_reminders = false;
+
+    await render(<template><Status @event={{this.event}} /></template>);
+    await click(".going-button");
+
+    assert
+      .dom(".event-calendar-prompt")
+      .exists("still prompts after a successful Going RSVP");
+    assert
+      .dom(".event-calendar-prompt__settings")
+      .hasText("Subscribe to your events");
   });
 
   test("appears again after leaving and rejoining, even after dismissal", async function (assert) {

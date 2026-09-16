@@ -40,17 +40,15 @@ en:
         ```
     discourse_post_event_reminder:
       title: "Event reminder"
-      subject_template: "%{subject}"
+      subject_template: ":date: %{subject}"
       text_body_template: |
-        ### %{event_name}
-
         **%{date_range} (%{timezone})**
 
         %{description}
 
         %{location_section}
 
-        **Guests**
+        #### Guests
 
         %{guests}
 
@@ -110,14 +108,14 @@ en:
         ongoing: "%{title} is ongoing"
         after: "%{title} has ended"
       location: |-
-        **Location**
+        #### Location
 
         %{location}
       guest: "- %{name}"
-      guest_with_role: "- %{name} - *%{role}*"
+      guest_with_role: "- %{name} (*%{role}*)"
       roles:
-        organizer: "organizer"
-        host: "host"
+        organizer: "Organizer"
+        host: "Host"
       additional_guests:
         one: "  and %{count} other"
         other: "  and %{count} others"

@@ -12,6 +12,7 @@ import addEventToCalendar from "../../lib/add-event-to-calendar";
 export default class CalendarPrompt extends Component {
   @service currentUser;
   @service router;
+  @service siteSettings;
 
   @tracked dismissed = false;
 
@@ -26,6 +27,12 @@ export default class CalendarPrompt extends Component {
         calendarUrl: escapeExpression(calendarUrl),
       })
     );
+  }
+
+  get subscriptionLabel() {
+    return this.siteSettings.enable_improved_event_reminders
+      ? "discourse_events.calendar_prompt.subscribe_with_preferences"
+      : "discourse_events.calendar_prompt.subscribe";
   }
 
   @action
@@ -76,7 +83,7 @@ export default class CalendarPrompt extends Component {
             <DButton
               class="btn-link event-calendar-prompt__settings"
               @action={{this.preferences}}
-              @label="discourse_events.calendar_prompt.subscribe"
+              @label={{this.subscriptionLabel}}
             />
           </div>
         {{/unless}}
