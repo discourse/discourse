@@ -26,6 +26,7 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
 
       before do
         allow(Migrations::Converters::Adapter::Postgres).to receive(:new).and_return(source_db)
+        allow(source_db).to receive(:close)
         allow(source_db).to receive(:query).with("SELECT username FROM users").and_return([])
         allow(source_db).to receive(:query).with("SELECT name FROM groups").and_return([])
         allow(source_db).to receive(:query).with("SELECT name FROM custom_emojis").and_return([])
@@ -141,19 +142,21 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
         expect(posts_args[:custom_emoji_names]).to eq(%w[parrot +1])
       end
 
-      it "loads the engine bundle once for the whole run" do
+      it "loads the metadata once for the whole run" do
         converter = described_class.new({})
 
-        first = converter.step_args(Migrations::Converters::Discourse::Posts)[:markdown_bundle]
-        second = converter.step_args(Migrations::Converters::Discourse::Posts)[:markdown_bundle]
+        first = converter.step_args(Migrations::Converters::Discourse::Posts)
+        second = converter.step_args(Migrations::Converters::Discourse::Posts)
 
-        expect(first).to be(second)
+        expect(first[:markdown_bundle]).to be(second[:markdown_bundle])
+        expect(first[:mention_names]).to be(second[:mention_names])
+        expect(source_db).to have_received(:query).with("SELECT username FROM users").once
         expect(Migrations::Converters::MarkdownEngine::Bundle).to have_received(:load_or_build).once
       end
 
       # The scheduler plans a step on one thread while its coordinator builds it
       # on another, so both ask for the args at once.
-      it "loads the engine bundle once when two threads ask at the same time" do
+      it "loads the metadata once when two threads ask at the same time" do
         converter = described_class.new({})
         bundles =
           Array
@@ -165,7 +168,23 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
             .map(&:value)
 
         expect(bundles.uniq.size).to eq(1)
-        expect(Migrations::Converters::MarkdownEngine::Bundle).to have_received(:load_or_build).once
+        expect(source_db).to have_received(:query).with("SELECT username FROM users").once
+      end
+
+      it "closes the connection it opened for the metadata and hands the step a fresh one" do
+        metadata_db = instance_double(Migrations::Converters::Adapter::Postgres)
+        step_db = instance_double(Migrations::Converters::Adapter::Postgres)
+        allow(Migrations::Converters::Adapter::Postgres).to receive(:new).and_return(
+          step_db,
+          metadata_db,
+        )
+        allow(metadata_db).to receive(:close)
+        allow(metadata_db).to receive(:query).and_return([])
+
+        args = posts_args
+
+        expect(args[:source_db]).to be(step_db)
+        expect(metadata_db).to have_received(:close)
       end
 
       it "maps each source host to its path prefix (base URL and former domains)" do

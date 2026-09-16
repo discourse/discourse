@@ -6,18 +6,35 @@ module Migrations
   module Converters
     module Discourse
       class Converter < Conversion::Base
-        MARKDOWN_BUNDLE_LOCK = Mutex.new
-        private_constant :MARKDOWN_BUNDLE_LOCK
+        POSTS_ARGS_LOCK = Mutex.new
+        private_constant :POSTS_ARGS_LOCK
 
         # Steps run concurrently and a Postgres connection can't be shared, so each
         # step gets its own adapter; the step's source closes it in its `cleanup`.
         def step_args(step_class)
           source_db = Adapter::Postgres.new(settings[:source_db])
-
-          # Only the Posts step extracts embeds, so only it pays for the metadata
-          # queries below. They reuse the step's own adapter and hand back plain
-          # values, so no connection is shared across the steps.
           return { source_db: } unless step_class == Posts
+
+          { source_db:, **posts_args }
+        end
+
+        private
+
+        # What the Posts step needs beyond its source connection: the name gates,
+        # the engine bundle and config, and the source site's hosts. Built once
+        # per run. The scheduler asks for a step's args from its planning thread
+        # and its coordinator thread at the same time, and every worker builds
+        # its own step after the fork, so without the memo each of them would
+        # stream every username again; with it, the workers inherit one copy.
+        def posts_args
+          POSTS_ARGS_LOCK.synchronize { @posts_args ||= load_posts_args }
+        end
+
+        # The queries run on a connection of their own, opened and closed here,
+        # so no long-lived connection sits idle in the parent for the workers to
+        # inherit. Only plain values leave this method.
+        def load_posts_args
+          source_db = Adapter::Postgres.new(settings[:source_db])
 
           source_settings = source_settings(source_db)
           group_names = group_names(source_db)
@@ -33,35 +50,24 @@ module Migrations
             )
 
           {
-            source_db:,
             group_names:,
             here_mention:,
             mention_names: mention_names(source_db, group_names, here_mention),
             # The markdown engine and the extractor both decide whether a `#name`
             # addresses anything, so the gate is the very set the engine config
-            # derives from the category and tag lists. Building it here, before the
-            # step forks, is also what keeps it shared across the workers.
+            # derives from the category and tag lists.
             hashtag_names: markdown_config.hashtag_names,
             custom_emoji_names:,
-            markdown_bundle:,
+            # The compiled markdown JavaScript is plain data every worker inherits
+            # across the fork; the V8 isolate that runs it is per-worker and is
+            # created in the step.
+            markdown_bundle: MarkdownEngine::Bundle.load_or_build,
             markdown_config:,
             internal_link_hosts:,
             internal_link_base_prefix:,
           }
-        end
-
-        private
-
-        # The compiled markdown JavaScript, built (or read back from its cache) once
-        # for the whole run. It is plain data every worker inherits across the fork;
-        # the V8 isolate that runs it is per-worker and is created in the step.
-        # The scheduler asks for a step's args from its planning thread and its
-        # coordinator thread at the same time, so the memo takes a lock rather
-        # than loading twice.
-        def markdown_bundle
-          MARKDOWN_BUNDLE_LOCK.synchronize do
-            @markdown_bundle ||= MarkdownEngine::Bundle.load_or_build
-          end
+        ensure
+          source_db&.close
         end
 
         # The source's own hosts mapped to their path prefixes, so the Posts step can
