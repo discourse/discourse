@@ -113,8 +113,14 @@ class UploadCreator
         if @image_info.type == :svg
           clean_svg!
         elsif @image_info.type != :ico && (!Rails.env.test? || @opts[:force_optimize])
-          convert_heif! if %i[heic heif].include?(@image_info.type)
-          convert_to_jpeg! if convert_png_to_jpeg? || should_alter_jpeg_quality?
+          case @image_info.type
+          when :heic, :heif
+            convert_heif!
+          when :png
+            convert_png_to_jpeg!
+          when :jpeg
+            recompress_jpeg!
+          end
           fix_orientation! if should_fix_orientation?
           crop! if should_crop?
           optimize! if should_optimize?
@@ -337,64 +343,8 @@ class UploadCreator
 
   MIN_PIXELS_TO_CONVERT_TO_JPEG = 1280 * 720
 
-  def convert_png_to_jpeg?
-    return false unless @image_info.type == :png
-    return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
-    return true if @opts[:pasted]
-    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
-  end
-
   MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
-
-  def convert_to_jpeg!
-    return if @opts[:type] == "topic_og_image"
-    return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
-    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
-
-    jpeg_tempfile = Tempfile.new(%w[image .jpg])
-
-    from = @file.path
-    to = jpeg_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    opts = {}
-
-    desired_quality = [
-      SiteSetting.ImageQuality.png_to_jpg_quality,
-      SiteSetting.ImageQuality.recompress_original_jpg_quality,
-    ].compact.min
-
-    target_quality = @upload.target_jpeg_image_quality(@file.path, desired_quality)
-    opts = { quality: target_quality } if target_quality
-
-    read = [@file.path]
-    write = [File.dirname(jpeg_tempfile.path)]
-
-    begin
-      execute_convert(from, to, opts, read:, write:)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true), read:, write:)
-    end
-
-    new_size = File.size(jpeg_tempfile.path)
-
-    keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
-    keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
-
-    if keep_jpeg
-      @file.respond_to?(:close!) ? @file.close! : @file.close
-      @file = jpeg_tempfile
-      extract_image_info!
-    else
-      jpeg_tempfile.close!
-    end
-  end
 
   def convert_heif!
     jpeg_tempfile = Tempfile.new(%w[image .jpg])
@@ -443,15 +393,6 @@ class UploadCreator
       failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
       timeout: MAX_CONVERT_FORMAT_SECONDS,
     )
-  end
-
-  def should_alter_jpeg_quality?
-    return false if @image_info.type != :jpeg
-
-    @upload.target_jpeg_image_quality(
-      @file.path,
-      SiteSetting.ImageQuality.recompress_original_jpg_quality,
-    ).present?
   end
 
   def should_downsize?
@@ -665,6 +606,66 @@ class UploadCreator
   end
 
   private
+
+  def convert_png_to_jpeg!
+    quality = SiteSetting.ImageQuality.png_to_jpg_quality
+    return if quality == 100
+    return unless @opts[:pasted] || pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
+
+    replace_with_smaller_jpeg!(quality:)
+  end
+
+  def recompress_jpeg!
+    quality =
+      @upload.target_jpeg_image_quality(
+        @file.path,
+        SiteSetting.ImageQuality.recompress_original_jpg_quality,
+      )
+    return if quality.nil?
+
+    replace_with_smaller_jpeg!(quality:)
+  end
+
+  def replace_with_smaller_jpeg!(quality:)
+    return if @opts[:type] == "topic_og_image"
+    return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
+    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
+    jpeg_tempfile = Tempfile.new(%w[image .jpg])
+
+    from = @file.path
+    to = jpeg_tempfile.path
+
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
+    to = OptimizedImage.prepend_decoder!(to)
+
+    opts = { quality: }
+
+    read = [@file.path]
+    write = [File.dirname(jpeg_tempfile.path)]
+
+    begin
+      execute_convert(from, to, opts, read:, write:)
+    rescue StandardError
+      # retry with debugging enabled
+      execute_convert(from, to, opts.merge(debug: true), read:, write:)
+    end
+
+    new_size = File.size(jpeg_tempfile.path)
+
+    keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
+    keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
+    if keep_jpeg
+      @file.respond_to?(:close!) ? @file.close! : @file.close
+      @file = jpeg_tempfile
+      extract_image_info!
+    else
+      jpeg_tempfile.close!
+    end
+  end
 
   def animated?
     return @animated if @animated != nil
