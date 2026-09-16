@@ -12,12 +12,22 @@ module Migrations
         end
 
         def initialize(settings)
-          @connection = PG::Connection.new(settings)
-          @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
-          @connection.field_name_type = :symbol
-          configure_connection
-
+          # Registered before the socket exists. A worker forked while this
+          # connects inherits the socket, and without the hook its libpq cleanup
+          # would send a Terminate over it at exit, ending this process's
+          # session mid-query.
           @fork_hook = ForkManager.after_fork_child { discard! }
+
+          begin
+            @connection = PG::Connection.new(settings)
+            @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
+            @connection.field_name_type = :symbol
+            configure_connection
+          rescue StandardError
+            ForkManager.remove_after_fork_child(@fork_hook)
+            @fork_hook = nil
+            raise
+          end
         end
 
         def exec(sql)
