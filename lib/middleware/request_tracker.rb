@@ -706,7 +706,9 @@ class Middleware::RequestTracker
         time_to_first_interaction_ms: payload["time_to_first_interaction_ms"].presence&.to_i,
       )
     rescue => e
-      Rails.logger.warn("Discarding session engagement: #{e.message}")
+      Rails.logger.warn(
+        "#{RailsMultisite::ConnectionManagement.current_db}: Discarding session engagement: #{e.message}",
+      )
     end
   end
 
