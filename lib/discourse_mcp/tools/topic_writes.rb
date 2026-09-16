@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class CreateTopic
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -40,6 +41,7 @@ module DiscourseMcp
     end
 
     class ReplyTopic
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -78,6 +80,7 @@ module DiscourseMcp
     end
 
     class EditPost
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -112,6 +115,7 @@ module DiscourseMcp
     end
 
     class UpdateTopic
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       MUTABLE_FIELDS = %w[title category_id tags featured_link].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -220,6 +224,7 @@ module DiscourseMcp
     end
 
     class SetPostDeleted
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(post_id: OutputSchema::INTEGER, deleted: OutputSchema::BOOLEAN)
 

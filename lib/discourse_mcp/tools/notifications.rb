@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class ListNotifications
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(notifications: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -14,7 +15,7 @@ module DiscourseMcp
             .includes(:topic)
             .order(id: :desc)
             .limit(limit)
-        if !request_context.has_scopes?("mcp:private-messages:read")
+        if !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
           notifications =
             notifications.left_joins(:topic).where(
               "topics.id IS NULL OR topics.archetype <> ?",

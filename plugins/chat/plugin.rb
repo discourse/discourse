@@ -658,7 +658,7 @@ after_initialize do
       "Lists chat channels followed by the authenticated user, including direct-message channels.",
     implementation: Chat::McpTools::ListChannels,
     output_schema: Chat::McpTools::ListChannels::OUTPUT_SCHEMA,
-    required_scopes: %w[chat:read],
+    required_scopes: Chat::McpTools::ListChannels::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -700,7 +700,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: Chat::McpTools::ListMessages::OUTPUT_SCHEMA,
-    required_scopes: %w[chat:read],
+    required_scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -734,7 +734,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: Chat::McpTools::CreateMessage::OUTPUT_SCHEMA,
-    required_scopes: %w[chat:write],
+    required_scopes: Chat::McpTools::CreateMessage::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

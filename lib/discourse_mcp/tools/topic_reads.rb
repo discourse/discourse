@@ -3,6 +3,7 @@
 module DiscourseMcp
   module Tools
     class ReadTopicPosts
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       SELECTION_KEYS = {
         "latest" => %w[limit replies_only],
         "earliest" => %w[limit replies_only],
@@ -138,6 +139,7 @@ module DiscourseMcp
     end
 
     class GetPostReplies
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       DIRECT_REPLIES_LIMIT = 20
       MODES = %w[reply_ids direct_replies reply_history].freeze
       OUTPUT_SCHEMA =
@@ -254,6 +256,7 @@ module DiscourseMcp
     end
 
     class ListLatestPosts
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -298,6 +301,7 @@ module DiscourseMcp
     end
 
     class GetTopicViewStats
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
@@ -345,6 +349,7 @@ module DiscourseMcp
     end
 
     class GetTopic
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -401,6 +406,7 @@ module DiscourseMcp
     end
 
     class GetPost
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[accepted_answer topic_accepted_answer],
@@ -436,6 +442,7 @@ module DiscourseMcp
     end
 
     class ListTopics
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(topics: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -453,6 +460,7 @@ module DiscourseMcp
     end
 
     class ListCategories
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(categories: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -473,6 +481,7 @@ module DiscourseMcp
     end
 
     class ListTags
+      REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       OUTPUT_SCHEMA = OutputSchema.object(tags: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)

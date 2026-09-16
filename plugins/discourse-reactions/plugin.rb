@@ -459,7 +459,7 @@ after_initialize do
       additionalProperties: false,
     },
     output_schema: DiscourseReactions::McpTools::SetReaction::OUTPUT_SCHEMA,
-    required_scopes: %w[discourse-reactions:write],
+    required_scopes: DiscourseReactions::McpTools::SetReaction::REQUIRED_SCOPES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,

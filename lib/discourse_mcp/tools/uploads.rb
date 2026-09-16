@@ -6,6 +6,7 @@ require "tempfile"
 module DiscourseMcp
   module Tools
     class UploadFile
+      REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       UPLOAD_TYPES = %w[avatar profile_background card_background composer].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
