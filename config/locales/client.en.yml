@@ -865,6 +865,7 @@ en:
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
+      edit_post: "Edit post draft"
       dropdown:
         title: "Open the latest drafts menu"
         untitled: "Untitled draft"
