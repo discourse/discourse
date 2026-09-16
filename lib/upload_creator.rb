@@ -117,9 +117,9 @@ class UploadCreator
           when :heic, :heif
             convert_heif!
           when :png
-            convert_png_to_jpeg!
+            convert_png_to_jpeg! if convert_png_to_jpeg?
           when :jpeg
-            recompress_jpeg!
+            recompress_jpeg! if should_alter_jpeg_quality?
           end
           fix_orientation! if should_fix_orientation?
           crop! if should_crop?
@@ -607,23 +607,24 @@ class UploadCreator
 
   private
 
-  def convert_png_to_jpeg!
-    quality = SiteSetting.ImageQuality.png_to_jpg_quality
-    return if quality == 100
-    return unless @opts[:pasted] || pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
+  def convert_png_to_jpeg?
+    return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
+    @opts[:pasted] || pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
+  end
 
-    replace_with_smaller_jpeg!(quality:)
+  def should_alter_jpeg_quality?
+    @upload.target_jpeg_image_quality(
+      @file.path,
+      SiteSetting.ImageQuality.recompress_original_jpg_quality,
+    ).present?
+  end
+
+  def convert_png_to_jpeg!
+    replace_with_smaller_jpeg!(quality: SiteSetting.ImageQuality.png_to_jpg_quality)
   end
 
   def recompress_jpeg!
-    quality =
-      @upload.target_jpeg_image_quality(
-        @file.path,
-        SiteSetting.ImageQuality.recompress_original_jpg_quality,
-      )
-    return if quality.nil?
-
-    replace_with_smaller_jpeg!(quality:)
+    replace_with_smaller_jpeg!(quality: SiteSetting.ImageQuality.recompress_original_jpg_quality)
   end
 
   def replace_with_smaller_jpeg!(quality:)
