@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Glossary do
-  subject(:glossary) { described_class.resource(JsonApiKit::Timeline::FIRST_RELEASE) }
+  subject(:glossary) { JsonApiKit::Edition.for(JsonApiKit::Timeline::FIRST_RELEASE).glossary }
 
   let(:type) { "discussion_threads" }
   let(:earlier_change) do

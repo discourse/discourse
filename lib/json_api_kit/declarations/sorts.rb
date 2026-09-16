@@ -5,18 +5,17 @@ module JsonApiKit
     class Sorts
       delegate :fetch, to: :sorts
 
-      def initialize(sorts, schema:, default: {}, unique_by: nil)
+      def initialize(sorts, schema:, unique_by: nil)
         @sorts = sorts.index_by(&:name)
         @schema = schema
-        @default = default.to_h.transform_keys(&:to_s)
         @unique_by = Array(unique_by.presence || schema.primary_key)
       end
 
-      def keyset(ordering = {}) = Pagination::Keyset.new(keys(ordering.presence || default))
+      def keyset(ordering) = Pagination::Keyset.new(keys(ordering))
 
       private
 
-      attr_reader :sorts, :schema, :default, :unique_by
+      attr_reader :sorts, :schema, :unique_by
 
       def keys(ordering)
         [

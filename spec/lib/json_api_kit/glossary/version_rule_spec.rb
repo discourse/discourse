@@ -51,18 +51,13 @@ module JsonApiKitSpec
 end
 
 RSpec.describe JsonApiKit::Glossary::VersionRule do
-  subject(:rule) { described_class.new(version) }
+  subject(:rule) { described_class.new(changes) }
 
-  let(:version) { JsonApiKit::ApiVersion.parse("2026-09-01") }
   let(:first_change) { JsonApiKitSpec::FirstRuleChange.new(__FILE__) }
   let(:second_change) { JsonApiKitSpec::SecondRuleChange.new(__FILE__) }
   let(:changes) { [first_change, second_change] }
   let(:name) { JsonApiKit::Name::Field.new(value:, type: "topics") }
   let(:value) { "posted_at" }
-
-  before do
-    allow(JsonApiKit::VersionChanges.core).to receive(:after).with(version).and_return(changes)
-  end
 
   describe "#declared_attributes" do
     subject(:declared_attributes) { rule.declared_attributes(attributes) }

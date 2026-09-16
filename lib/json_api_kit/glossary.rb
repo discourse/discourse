@@ -42,11 +42,7 @@ module JsonApiKit
       def arguments = [names]
     end
 
-    class << self
-      def kit = new([CasingRule])
-
-      def resource(version) = new([CasingRule, VersionRule.new(version)])
-    end
+    def self.kit = new([CasingRule])
 
     def initialize(rules)
       @rules = rules

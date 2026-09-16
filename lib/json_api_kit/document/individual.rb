@@ -4,10 +4,12 @@ module JsonApiKit
   class Document
     class Individual < Document
       class << self
-        def contract_class = Request::Contract::Individual
+        def input_class = Request::Input::Individual
 
         def for(id, parameters, resource:, client:)
-          build(parameters, resource:, client:) { resource.find(id, it, guardian: client.guardian) }
+          build(parameters, resource:, client:) do
+            resource.find(id, it, guardian: client.guardian, default_sorts: client.default_sorts)
+          end
         end
       end
 

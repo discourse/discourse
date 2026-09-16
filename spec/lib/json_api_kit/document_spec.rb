@@ -18,11 +18,11 @@ RSpec.describe JsonApiKit::Document do
     end
   end
   let(:guardian) { Guardian.new }
-  let(:glossary) { JsonApiKit::Glossary.kit }
+  let(:edition) { JsonApiKit::Edition.current }
   let(:urls) do
     JsonApiKit::Urls.new(base: "https://example.com/api", current: "https://example.com/api/topics")
   end
-  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:parameters) { {} }
 
   describe "Collection.for" do
