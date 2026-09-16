@@ -24,14 +24,14 @@ export default class FKControlCode extends FKBaseControl {
 
   <template>
     <CodeEditor
-      aria-describedby={{@field.describedBy}}
-      aria-invalid={{if @field.error "true"}}
       class="form-kit__control-code"
-      id={{@field.id}}
       name={{@field.name}}
       style={{this.style}}
       ...attributes
+      @describedBy={{@field.describedBy}}
       @disabled={{@field.disabled}}
+      @inputId={{@field.id}}
+      @invalid={{@field.error}}
       @language={{@lang}}
       @onChange={{this.handleInput}}
       @resizable={{true}}

@@ -62,13 +62,13 @@ export default class CodeControl extends Component {
   <template>
     <div class="workflows-code-control" {{didInsert this.normalizeFieldValue}}>
       <CodeEditor
-        aria-describedby={{@field.describedBy}}
-        aria-invalid={{if @field.error "true"}}
         class="form-kit__control-code"
-        id={{@field.id}}
         name={{@field.name}}
         style={{this.style}}
+        @describedBy={{@field.describedBy}}
         @disabled={{@field.disabled}}
+        @inputId={{@field.id}}
+        @invalid={{@field.error}}
         @language={{this.language}}
         @onChange={{this.handleInput}}
         @resizable={{true}}

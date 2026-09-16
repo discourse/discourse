@@ -10,8 +10,14 @@ import {
   completeFromList,
   completionStatus,
 } from "@codemirror/autocomplete";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+} from "@codemirror/commands";
 import { setDiagnostics } from "@codemirror/lint";
+import { search, searchKeymap } from "@codemirror/search";
 import { Compartment, EditorState, Transaction } from "@codemirror/state";
 import {
   EditorView,
@@ -147,6 +153,20 @@ export default class CodemirrorEditor extends Component {
       }),
     ];
 
+    if (this.args.codeEditing) {
+      extensions.push(search(), keymap.of([...searchKeymap, indentWithTab]));
+    }
+
+    extensions.push(
+      EditorView.contentAttributes.of(() => ({
+        ...(this.args.inputId ? { id: this.args.inputId } : {}),
+        ...(this.args.describedBy
+          ? { "aria-describedby": this.args.describedBy }
+          : {}),
+        ...(this.args.invalid ? { "aria-invalid": "true" } : {}),
+      }))
+    );
+
     if (this.args.lineNumbers) {
       extensions.push(lineNumbers());
     }
@@ -226,6 +246,11 @@ export default class CodemirrorEditor extends Component {
 
     this.updateLanguage();
     this.args.onSetup?.(this.view);
+  }
+
+  @bind
+  updateContentAttributes() {
+    this.view?.dispatch({});
   }
 
   @bind
@@ -351,6 +376,7 @@ export default class CodemirrorEditor extends Component {
       class="codemirror-editor {{@class}}"
       {{didInsert this.setup}}
       {{didUpdate this.updateValue @value}}
+      {{didUpdate this.updateContentAttributes @inputId @describedBy @invalid}}
       {{didUpdate this.updateLanguage @language}}
       {{didUpdate this.updateLanguage @languageOptions}}
       {{didUpdate this.updateReadOnly @readOnly}}
