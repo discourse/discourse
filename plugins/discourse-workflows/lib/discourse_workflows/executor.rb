@@ -247,12 +247,17 @@ module DiscourseWorkflows
     end
 
     def execute_flow(setup_method, *setup_args, &block)
-      return execution if send(setup_method, *setup_args) == false
-      yield
-      process_queue
-      @store.finish!(steps: @steps)
-    rescue ExecutionPaused => e
-      begin_wait!(e.wait_request)
+      begin
+        return execution if send(setup_method, *setup_args) == false
+        yield
+        process_queue
+        @store.finish!(steps: @steps)
+      rescue ExecutionPaused => e
+        begin_wait!(e.wait_request)
+      end
+    rescue Sidekiq::Shutdown => e
+      @store.fail!(error: e, steps: @steps) if @store.owns_execution?
+      raise
     rescue => e
       raise unless @store.owns_execution?
 
@@ -400,6 +405,9 @@ module DiscourseWorkflows
         )
         route_downstream(node, output_arrays)
       rescue ExecutionPaused
+        raise
+      rescue Sidekiq::Shutdown => e
+        step.fail!(e.message)
         raise
       rescue => e
         if (handled_outputs = continued_error_outputs(node, input_groups, e))
