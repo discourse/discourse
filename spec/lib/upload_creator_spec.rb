@@ -381,6 +381,8 @@ RSpec.describe UploadCreator do
       before { SiteSetting.png_to_jpg_quality = 1 }
 
       it "keeps PNG uploads below the minimum conversion size" do
+        # logo.png is 2,297 bytes. Converting it to JPEG saves 30%, but does not meet
+        # the required absolute savings of 75,000 bytes, so keep the PNG.
         upload =
           UploadCreator.new(
             small_file,
