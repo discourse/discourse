@@ -453,11 +453,7 @@ export default class BoardsBoardViewer extends Component {
       col.copy({ cards: [...col.cards] })
     );
 
-    this.columns = this.columns.map((col) =>
-      col.copy({
-        cards: col.cards.filter((c) => c.id !== cardId),
-      })
-    );
+    this.#handleCardDeleted(cardId);
 
     try {
       await ajax(`/boards/api/boards/${this.board.id}/cards/${cardId}`, {
@@ -609,6 +605,11 @@ export default class BoardsBoardViewer extends Component {
     if (categoryId) {
       try {
         opts.category = await Category.asyncFindById(categoryId);
+        if (!opts.category) {
+          this._cleanupPromotion();
+          this.dialog.alert(i18n("boards.board.errors.category_unavailable"));
+          return;
+        }
       } catch (error) {
         this._cleanupPromotion();
         popupAjaxError(error);
@@ -885,18 +886,7 @@ export default class BoardsBoardViewer extends Component {
       return;
     }
 
-    card = Card.create(card);
-    this.columns = this.columns.map((col) => {
-      if (col.id === card.column_id) {
-        return col.copy({
-          cards: sortCardsForColumn(col, [
-            ...col.cards.filter((c) => c.id !== card.id),
-            card,
-          ]),
-        });
-      }
-      return col;
-    });
+    this.#appendCardToColumn(card, card.column_id);
   }
 
   #handleCardUpdated(card) {
