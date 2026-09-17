@@ -305,13 +305,11 @@ class DiscourseVipsWorker
           block_loaders(allowed: [loader])
 
           if !width.empty? && !height.empty?
-            image =
-              Vips::Image.thumbnail(
-                input_path,
-                Integer(width),
-                height: Integer(height),
-                size: :down,
-              )
+            width = Integer(width)
+            height = Integer(height)
+            raise ArgumentError, "invalid resize bounds" if !width.positive? || !height.positive?
+
+            image = Vips::Image.thumbnail(input_path, width, height:, size: :down)
           else
             source = Vips::Image.new_from_file(input_path, access: :sequential)
             scale =
