@@ -63,10 +63,10 @@ module DiscourseVips
     )
   end
 
-  def self.recompress_jpeg(input_path:, output_path:, quality:, timeout:, read:, write:)
+  def self.reencode_jpeg(input_path:, output_path:, quality:, timeout:, read:, write:)
     Client.call(
-      ["recompress-jpeg", input_path, output_path, quality],
-      operation: :upload_jpeg_recompression,
+      ["reencode-jpeg", input_path, output_path, quality],
+      operation: :upload_jpeg_reencoding,
       timeout:,
       read:,
       write:,

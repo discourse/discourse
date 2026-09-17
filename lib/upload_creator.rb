@@ -119,7 +119,7 @@ class UploadCreator
           when :png
             convert_png_to_jpeg! if convert_png_to_jpeg?
           when :jpeg
-            recompress_jpeg! if should_alter_jpeg_quality?
+            reencode_jpeg! if should_alter_jpeg_quality?
           end
           fix_orientation! if should_fix_orientation?
           crop! if should_crop?
@@ -472,9 +472,10 @@ class UploadCreator
   end
 
   def should_fix_orientation?
+    # FastImage only detects orientation for JPEG among supported image uploads.
     # orientation is between 1 and 8, 1 being the default
     # cf. http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
-    @image_info.orientation.to_i > 1
+    @image_info.type == :jpeg && @image_info.orientation.to_i > 1
   end
 
   MAX_FIX_ORIENTATION_TIME = 5
@@ -484,15 +485,26 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    ImageMagick.magick(
-      path,
-      "-auto-orient",
-      path,
-      operation: :upload_auto_orient,
-      read: [@file.path],
-      write: [@file.path, File.dirname(@file.path)],
-      timeout: MAX_FIX_ORIENTATION_TIME,
-    )
+    if GlobalSetting.enable_vips_image_processing
+      DiscourseVips.reencode_jpeg(
+        input_path: @file.path,
+        output_path: @file.path,
+        quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+        timeout: MAX_FIX_ORIENTATION_TIME,
+        read: [@file.path],
+        write: [@file.path],
+      )
+    else
+      ImageMagick.magick(
+        path,
+        "-auto-orient",
+        path,
+        operation: :upload_auto_orient,
+        read: [@file.path],
+        write: [@file.path, File.dirname(@file.path)],
+        timeout: MAX_FIX_ORIENTATION_TIME,
+      )
+    end
 
     extract_image_info!
   end
@@ -631,10 +643,10 @@ class UploadCreator
     )
   end
 
-  def recompress_jpeg!
+  def reencode_jpeg!
     replace_with_jpeg_if_sufficiently_smaller!(
       quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
-      vips_method: :recompress_jpeg,
+      vips_method: :reencode_jpeg,
     )
   end
 

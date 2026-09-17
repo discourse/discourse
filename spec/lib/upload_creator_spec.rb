@@ -316,6 +316,29 @@ RSpec.describe UploadCreator do
           end
         end
       end
+
+      it "stores upright JPEGs at the configured quality with libvips enabled" do
+        global_setting :enable_vips_image_processing, true
+        uploads = []
+
+        [50, 95].each do |quality|
+          SiteSetting.recompress_original_jpg_quality = quality
+          with_jpeg_orientation(source_path:, orientation: 6) do |oriented_file|
+            upload =
+              described_class.new(oriented_file, "oriented.jpg", force_optimize: true).create_for(
+                user.id,
+              )
+            expect(upload).to be_persisted
+            expect(upload).to have_attributes(width: 40, height: 60)
+            image_info = FastImage.new(Discourse.store.path_for(upload))
+            expect(image_info.size).to eq([40, 60])
+            expect(image_info.orientation).to eq(1)
+            uploads << upload
+          end
+        end
+
+        expect(uploads.first.filesize).to be < uploads.last.filesize
+      end
     end
 
     context "when a detected PNG cannot be decoded during conversion" do

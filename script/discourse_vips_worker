@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "fileutils"
 require "landlock"
 require "msgpack"
 require "socket"
+require "tempfile"
 require "tmpdir"
 require "vips"
 
@@ -57,8 +59,8 @@ class DiscourseVipsWorker
         heif_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "png-to-jpeg"
         png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
-      when "recompress-jpeg"
-        recompress_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "reencode-jpeg"
+        reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -192,18 +194,25 @@ class DiscourseVipsWorker
     end
     private_class_method :png_to_jpeg
 
-    def self.recompress_jpeg(input_path:, output_path:, quality:)
+    def self.reencode_jpeg(input_path:, output_path:, quality:)
       new do
-        block_loaders(allowed: %w[VipsForeignLoadJpeg])
+        quality = Integer(quality)
+        raise ArgumentError, "invalid JPEG quality" unless (1..100).cover?(quality)
 
+        block_loaders(allowed: %w[VipsForeignLoadJpeg])
         begin
-          save_jpeg(Vips::Image.jpegload(input_path), input_path:, output_path:, quality:)
+          image = Vips::Image.jpegload(input_path, access: :random)
+          Tempfile.create(%w[reencoded .jpg]) do |reencoded_file|
+            save_jpeg(image, input_path:, output_path: reencoded_file.path, quality:)
+            FileUtils.copy_file(reencoded_file.path, output_path)
+          end
+          nil
         rescue Vips::Error => error
           raise InvalidImage, error.message
         end
       end
     end
-    private_class_method :recompress_jpeg
+    private_class_method :reencode_jpeg
 
     def self.save_jpeg(image, input_path:, output_path:, quality:)
       if File.expand_path(input_path) == File.expand_path(output_path) ||

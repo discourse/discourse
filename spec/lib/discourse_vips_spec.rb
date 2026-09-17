@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "chunky_png"
+
 RSpec.describe DiscourseVips do
   shared_examples "JPEG operation instrumentation" do |method, filename, operation|
     it "records the specific image-processing operation" do
@@ -441,18 +443,18 @@ RSpec.describe DiscourseVips do
     end
   end
 
-  describe ".recompress_jpeg" do
+  describe ".reencode_jpeg" do
     include_examples "JPEG operation instrumentation",
-                     :recompress_jpeg,
+                     :reencode_jpeg,
                      "logo.jpg",
-                     "upload_jpeg_recompression"
+                     "upload_jpeg_reencoding"
 
     it "encodes JPEG inputs at the requested quality" do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.jpg")
         input_path = file_from_fixtures("logo.jpg").path
 
-        described_class.recompress_jpeg(
+        described_class.reencode_jpeg(
           input_path:,
           output_path:,
           quality: 40,
@@ -464,7 +466,7 @@ RSpec.describe DiscourseVips do
         expect(FastImage.type(output_path)).to eq(:jpeg)
         expect(FastImage.size(output_path)).to eq(FastImage.size(input_path))
         higher_quality_path = File.join(directory, "higher-quality.jpg")
-        described_class.recompress_jpeg(
+        described_class.reencode_jpeg(
           input_path:,
           output_path: higher_quality_path,
           quality: 95,
@@ -476,23 +478,26 @@ RSpec.describe DiscourseVips do
       end
     end
 
-    it "preserves the input when the output refers to the same file" do
-      Dir.mktmpdir do |directory|
-        input_path = File.join(directory, "original.jpg")
-        FileUtils.cp(file_from_fixtures("logo.jpg").path, input_path)
-        original = File.binread(input_path)
+    context "when replacing the original JPEG" do
+      it "leaves the original JPEG unchanged when reencoding fails" do
+        Dir.mktmpdir do |directory|
+          input_path = File.join(directory, "original.jpg")
+          original = "invalid JPEG"
+          File.binwrite(input_path, original)
 
-        expect {
-          described_class.recompress_jpeg(
-            input_path:,
-            output_path: input_path,
-            quality: 40,
-            timeout: 5,
-            read: [input_path],
-            write: [File.dirname(input_path)],
-          )
-        }.to raise_error(DiscourseVips::Error, /separate input and output/)
-        expect(File.binread(input_path)).to eq(original)
+          expect {
+            described_class.reencode_jpeg(
+              input_path:,
+              output_path: input_path,
+              quality: 95,
+              timeout: 5,
+              read: [input_path],
+              write: [input_path],
+            )
+          }.to raise_error(DiscourseVips::InvalidImage)
+          expect(File.binread(input_path)).to eq(original)
+          expect(Dir.children(directory)).to contain_exactly("original.jpg")
+        end
       end
     end
   end
