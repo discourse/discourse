@@ -12,7 +12,32 @@ module Migrations
         # The extractor splits the round into V8 calls itself, so this only
         # limits how many bodies a worker holds in memory at once.
         BATCH_SIZE = 256
-        private_constant :DETAILS_HOST_LIMIT, :BATCH_SIZE
+
+        SOURCE_COLUMNS = %i[
+          id
+          action_code
+          created_at
+          deleted_at
+          deleted_by_id
+          hidden
+          hidden_at
+          hidden_reason_id
+          last_editor_id
+          like_count
+          locale
+          locked_by_id
+          raw
+          post_number
+          post_type
+          reply_to_user_id
+          sort_order
+          topic_id
+          user_deleted
+          user_id
+          wiki
+        ].freeze
+        SCAN_COLUMNS = [*SOURCE_COLUMNS, :reply_to_post_number].freeze
+        private_constant :DETAILS_HOST_LIMIT, :BATCH_SIZE, :SOURCE_COLUMNS, :SCAN_COLUMNS
 
         # Merges the workers' host lists into one log entry. Runs in the parent;
         # `results` are the workers' `result` values after their trip through JSON.
@@ -51,10 +76,12 @@ module Migrations
             # `reply_to_post_number` within the same topic, so the reference
             # survives renumbering at import. The self-join reads every post, so
             # a parent in another chunk still resolves.
+            selected_columns = SOURCE_COLUMNS.map { |column| "posts.#{column}" }.join(", ")
+
             @source_db.query(<<~SQL)
-              SELECT posts.*,
+              SELECT #{selected_columns},
                      reply_to.id AS reply_to_post_id
-                FROM (SELECT * FROM posts #{partition_where}) posts
+                FROM (SELECT #{SCAN_COLUMNS.join(", ")} FROM posts #{partition_where}) posts
                      LEFT JOIN posts reply_to
                        ON reply_to.topic_id = posts.topic_id
                       AND reply_to.post_number = posts.reply_to_post_number
