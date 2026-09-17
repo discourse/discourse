@@ -1,0 +1,33 @@
+# frozen_string_literal: true
+
+require "tmpdir"
+
+RSpec.describe Migrations::Converters::Discourse::Posts do
+  describe "#items" do
+    it "resolves a reply post number to the source post id in the same topic" do
+      Dir.mktmpdir do |dir|
+        Migrations::Database.connect(File.join(dir, "source.db")) do |source_db|
+          source_db.define_singleton_method(:chunk_filter) { |*| nil }
+          source_db.execute(<<~SQL)
+            CREATE TABLE posts (
+              id INTEGER PRIMARY KEY,
+              topic_id INTEGER NOT NULL,
+              post_number INTEGER NOT NULL,
+              reply_to_post_number INTEGER
+            )
+          SQL
+          source_db.execute(<<~SQL)
+            INSERT INTO posts (id, topic_id, post_number, reply_to_post_number)
+            VALUES (101, 10, 1, NULL), (205, 10, 2, 1), (901, 20, 1, NULL)
+          SQL
+
+          items = described_class.source_class.new(source_db:).items.to_a
+
+          expect(items.map { |item| [item[:id], item[:reply_to_post_id]] }).to eq(
+            [[101, nil], [205, 101], [901, nil]],
+          )
+        end
+      end
+    end
+  end
+end
