@@ -20,11 +20,12 @@ module DiscourseDataExplorer
       limit = INDEX_LIMIT
       offset = params[:offset].to_i
       filter = params[:filter]
+      tag = params[:tag]
 
       order_column = SORTABLE_COLUMNS.include?(params[:order]) ? params[:order] : "last_run_at"
       order_direction = params[:ascending] == "true" ? :asc : :desc
 
-      base_scope = DiscourseDataExplorer::Query.where(hidden: false).includes(:groups)
+      base_scope = DiscourseDataExplorer::Query.where(hidden: false).includes(:groups, :tags)
 
       if order_column == "username"
         base_scope =
@@ -44,9 +45,15 @@ module DiscourseDataExplorer
           )
       end
 
+      if tag.present?
+        normalized_tag = DiscourseDataExplorer::QueryTag.normalize_name(tag)
+        base_scope = base_scope.filter_by_tags(normalized_tag)
+      end
+
       persisted_count = base_scope.count
 
-      unpersisted_defaults = DiscourseDataExplorer::Query.unpersisted_defaults(search: filter)
+      unpersisted_defaults =
+        DiscourseDataExplorer::Query.unpersisted_defaults(search: filter, tag: tag)
 
       total_rows = persisted_count + unpersisted_defaults.size
 
@@ -65,10 +72,12 @@ module DiscourseDataExplorer
 
       json = serialize_data(queries, QuerySerializer, root: "queries")
       json["total_rows_queries"] = total_rows
+      json["extras"] = { "tags" => DiscourseDataExplorer::Query.available_tags }
 
       if next_offset < persisted_count
         load_more_params = { offset: next_offset }
         load_more_params[:filter] = filter if filter.present?
+        load_more_params[:tag] = tag if tag.present?
         load_more_params[:order] = order_column if order_column != "last_run_at"
         load_more_params[:ascending] = "true" if order_direction == :asc
         base_path = request.path.delete_suffix(".json")
@@ -100,6 +109,10 @@ module DiscourseDataExplorer
 
     def groups
       render json: Group.all.select(:id, :name).as_json(only: %i[id name]), root: false
+    end
+
+    def tags
+      render json: Query.available_tags, root: false
     end
 
     def group_reports_index
@@ -146,7 +159,7 @@ module DiscourseDataExplorer
     end
 
     def create
-      query_params = params.require(:query).permit(:name, :description, :sql)
+      query_params = params.require(:query).permit(:name, :description, :sql, tags: [])
       group_ids = params.require(:query)[:group_ids]
 
       query =
@@ -209,11 +222,12 @@ module DiscourseDataExplorer
 
     def update
       sql_changed = @query.sql != params.dig(:query, :sql)
+      query_params = params.require(:query).permit(:name, :sql, :description, tags: [])
+      tag_names = query_params.delete(:tags) if query_params.key?(:tags)
 
       ActiveRecord::Base.transaction do
-        @query.update!(
-          params.require(:query).permit(:name, :sql, :description).merge(hidden: false),
-        )
+        @query.update!(query_params.merge(hidden: false))
+        QueryTag.sync!(query: @query, names: tag_names) if tag_names
 
         group_ids = params.require(:query)[:group_ids]
         QueryGroup.where.not(group_id: group_ids).where(query_id: @query.id).delete_all

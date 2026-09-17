@@ -385,31 +385,27 @@ table.group-reports {
     white-space: pre-wrap;
   }
 
-  .groups {
+  &__metadata-field {
     margin: 10px 0;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
 
-    @include viewport.until(md) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .label {
-      margin-right: 10px;
-      color: var(--primary-high);
-    }
-
-    .name {
-      display: inline;
+    @include viewport.from(md) {
+      flex-direction: row;
+      align-items: center;
     }
 
     .select-kit.multi-select {
       @include viewport.until(md) {
-        width: 360px;
+        width: min(22.5rem, 100%);
       }
     }
+  }
+
+  &__metadata-label {
+    color: var(--primary-high);
   }
 }
 
@@ -980,18 +976,6 @@ table.group-reports {
     .query-name {
       color: var(--primary);
       max-width: 100%;
-    }
-
-    .query-badge {
-      font-size: var(--font-down-2);
-      padding: 0.15rem 0.3rem;
-      border-radius: 4px;
-      color: var(--primary-high);
-      background: var(--primary-low);
-      letter-spacing: 0.25px;
-      align-items: center;
-      display: inline-flex;
-      gap: var(--space-1);
     }
 
     .query-desc {

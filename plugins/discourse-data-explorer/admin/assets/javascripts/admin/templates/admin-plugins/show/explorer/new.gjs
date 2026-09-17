@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
 import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse/components/query-mode-switch";
 import QueryResult from "discourse/plugins/discourse-data-explorer/discourse/components/query-result";
+import QueryTagChooser from "discourse/plugins/discourse-data-explorer/discourse/components/query-tag-chooser";
 
 export default <template>
   <div class="admin-detail">
@@ -160,6 +161,15 @@ export default <template>
               @onChange={{@controller.updateAiGroupIds}}
               @value={{@controller.aiGroupIds}}
             />
+
+            <label class="query-new__field-label">
+              {{i18n "explorer.query_tags"}}
+            </label>
+            <QueryTagChooser
+              @availableTags={{@controller.availableTags}}
+              @onChange={{@controller.updateAiTags}}
+              @value={{@controller.aiTags}}
+            />
           </div>
 
           <div class="query-new__actions">
@@ -215,6 +225,21 @@ export default <template>
               <GroupChooser
                 class="query-group-select"
                 @content={{@controller.groupOptions}}
+                @onChange={{field.set}}
+                @value={{field.value}}
+              />
+            </field.Control>
+          </form.Field>
+          <form.Field
+            @format="full"
+            @name="tags"
+            @title={{i18n "explorer.query_tags"}}
+            @type="custom"
+            as |field|
+          >
+            <field.Control>
+              <QueryTagChooser
+                @availableTags={{@controller.availableTags}}
                 @onChange={{field.set}}
                 @value={{field.value}}
               />

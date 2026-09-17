@@ -25,7 +25,10 @@ en:
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."
     errors:
+      tag_contains_comma: "Tags cannot contain commas."
+      tag_too_long: "A tag can have at most %{max} characters."
       tool_not_allowed: "You are not allowed to use this tool"
+      too_many_tags: "A query can have at most %{max} tags."
     discourse_workflows:
       sql_action:
         no_query_selected: "No query selected."

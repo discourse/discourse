@@ -20,6 +20,8 @@ export default class PluginsExplorerController extends Controller {
   @tracked params;
   @tracked loading = false;
   @tracked searchLoading = false;
+  @tracked queryTags = [];
+  @tracked currentTag = "";
 
   queryParams = ["id"];
   explain = false;
@@ -37,6 +39,9 @@ export default class PluginsExplorerController extends Controller {
     if (this._currentFilter) {
       params.filter = this._currentFilter;
     }
+    if (this.currentTag) {
+      params.tag = this.currentTag;
+    }
     if (this.sortByProperty !== "last_run_at") {
       params.order = this.sortByProperty;
     }
@@ -44,6 +49,16 @@ export default class PluginsExplorerController extends Controller {
       params.ascending = "true";
     }
     return params;
+  }
+
+  get hasTagFilter() {
+    return Boolean(this.currentTag);
+  }
+
+  get tagSelection() {
+    return this.currentTag
+      ? [{ id: this.currentTag, name: this.currentTag }]
+      : [];
   }
 
   addCreatedRecord(record) {
@@ -88,8 +103,24 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
+  async loadTags(searchTerm) {
+    const term = (searchTerm || "").toLowerCase();
+    return this.queryTags
+      .filter((tag) => tag.toLowerCase().includes(term))
+      .map((tag) => ({ id: tag, name: tag }));
+  }
+
+  @action
+  onTagFilterChange(selection) {
+    this.currentTag = selection.at(-1)?.name ?? "";
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
   onResetFilters() {
     this._currentFilter = "";
+    this.currentTag = "";
     this.searchLoading = true;
     this._fetchQueries();
   }
@@ -158,6 +189,7 @@ export default class PluginsExplorerController extends Controller {
       this.model.content.splice(0, this.model.content.length, ...queries);
       this.model.totalRows = result.total_rows_queries || queries.length;
       this.model.loadMoreUrl = result.load_more_queries || null;
+      this.queryTags = result.extras?.tags ?? this.queryTags;
 
       this._setGroupNames(queries);
     } catch (e) {
