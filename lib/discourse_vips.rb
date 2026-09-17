@@ -110,7 +110,6 @@ module DiscourseVips
   def self.downsize(
     input_path:,
     output_path:,
-    format:,
     timeout:,
     read:,
     write:,
@@ -120,9 +119,11 @@ module DiscourseVips
     max_pixels: nil
   )
     if [scale, width || height, max_pixels].compact.length != 1 || width.nil? != height.nil?
-      raise ArgumentError, "provide a scale, width and height, or a pixel-area target"
+      raise ArgumentError,
+            "provide exactly one resize target: scale, width and height, or max_pixels"
     end
 
+    format = File.extname(input_path).delete_prefix(".").downcase
     raise ArgumentError, "unsupported format" if !%w[jpg jpeg png gif webp avif].include?(format)
 
     output_mode =
