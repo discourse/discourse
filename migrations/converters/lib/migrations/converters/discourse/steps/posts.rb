@@ -134,7 +134,7 @@ module Migrations
                 hashtag_names:,
                 markdown_engine: @markdown_engine,
                 custom_emoji_names:,
-                internal_link_hosts: internal_link_hosts || {},
+                internal_link_hosts:,
                 internal_link_base_prefix:,
                 on_foreign_host: ->(host) { @foreign_hosts << host },
                 on_engine_refusal: ->(cause, detail) { log_refusal(cause, detail) },
