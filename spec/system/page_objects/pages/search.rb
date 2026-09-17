@@ -43,6 +43,36 @@ module PageObjects
         has_selector?("#search-result-count")
       end
 
+      def switch_to_users
+        find(".search-types__type", text: I18n.t("js.search.type.users"), exact_text: true).click
+      end
+
+      def has_related_results?
+        has_css?(".ai-search-results-notice") && has_css?(".fps-result.ai-result")
+      end
+
+      def has_no_user_results?
+        has_no_css?(".search-container .spinner") && has_no_css?(".fps-user-item")
+      end
+
+      def has_full_page_no_results?
+        has_css?(".search-results", text: I18n.t("js.search.no_results"))
+      end
+
+      def has_user_results?(count:)
+        has_css?(".fps-user-item", count: count)
+      end
+
+      def has_result_count_for?(count:, term:)
+        has_css?(
+          "#search-result-count",
+          text:
+            ActionController::Base.helpers.strip_tags(
+              I18n.t("js.search.result_count", count: count, plus: "", term: term),
+            ),
+        )
+      end
+
       def has_no_result_count?
         has_no_selector?("#search-result-count")
       end
