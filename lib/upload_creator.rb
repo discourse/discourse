@@ -470,7 +470,7 @@ class UploadCreator
   end
 
   def should_fix_orientation?
-    # Keep standalone orientation correction limited to JPEG during the backend migration.
+    # FastImage only detects orientation for JPEG among supported image uploads.
     # orientation is between 1 and 8, 1 being the default
     # cf. http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
     @image_info.type == :jpeg && @image_info.orientation.to_i > 1
