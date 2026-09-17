@@ -324,6 +324,14 @@ RSpec.describe Migrations::Conversion::Step do
       source.items
       expect(source_db.select_args).to eq(["things", "active", :id])
     end
+
+    it "inherits the table declaration in step subclasses" do
+      parent_class = define_step { source { reads_table "things", where: "active" } }
+      source = Class.new(parent_class).source_class.new(source_db:)
+
+      expect(source.items).to eq([:row])
+      expect(source_db.select_args).to eq(["things", "active", nil])
+    end
   end
 
   describe "#cleanup" do
@@ -517,6 +525,24 @@ RSpec.describe Migrations::Conversion::Step do
       step = define_step { source { partition_by %i[topic_id user_id], from: "topic_users" } }
 
       expect(step.partitionable?).to be(true)
+    end
+
+    it "inherits the partition declaration in step subclasses" do
+      parent_class = define_step { source { partition_by :id, from: "things", base: "active" } }
+      step = Class.new(parent_class)
+      source_db =
+        Class
+          .new do
+            def chunk_filter(key, lower, upper, base:)
+              [key, lower, upper, base]
+            end
+          end
+          .new
+
+      expect(step.partitionable?).to be(true)
+      expect(step.source_class.new(source_db:, chunk: [1, 5]).partition_slice).to eq(
+        [:id, 1, 5, "active"],
+      )
     end
   end
 

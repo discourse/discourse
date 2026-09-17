@@ -30,7 +30,10 @@ module Migrations
             @table = { name:, where:, order: }
           end
 
-          attr_reader :table
+          def table
+            return @table if instance_variable_defined?(:@table)
+            superclass.table if superclass.respond_to?(:table)
+          end
 
           def reads_table?
             !table.nil?
@@ -44,7 +47,10 @@ module Migrations
             @partition = { key:, from:, base: }
           end
 
-          attr_reader :partition
+          def partition
+            return @partition if instance_variable_defined?(:@partition)
+            superclass.partition if superclass.respond_to?(:partition)
+          end
 
           def partitionable?
             !partition.nil?
