@@ -1,0 +1,11 @@
+{
+  "container_name": "downsize-01a0acf4",
+  "image_id": "sha256:1a7c2222fcaec01bb4f1adb9539c2256e8129abad3a76bfad1622907d6e24f0c",
+  "image_name": "tgx-dv:199c328d7a1ed437",
+  "image_repo_digests": [
+    "tgx-dv@sha256:1a7c2222fcaec01bb4f1adb9539c2256e8129abad3a76bfad1622907d6e24f0c"
+  ],
+  "memory_limit_bytes": 0,
+  "nano_cpus": 0,
+  "environment_note": "One session DV with Rails and Ember services running. Process-tree sampling isolates benchmark memory from those services. No fixed CPU or memory container limit."
+}
