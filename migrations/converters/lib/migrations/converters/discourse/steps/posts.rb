@@ -148,7 +148,7 @@ module Migrations
 
           def process_batch(items)
             prepared_bodies = prepare_bodies(items)
-            scan_data = @extractor.scan_batches(prepared_bodies.values.select(&:engine_bound?))
+            scan_data = @extractor.scan_batches(prepared_bodies.values)
 
             items.each do |item|
               convert(item, prepared_bodies[item[:id]], scan_data)
