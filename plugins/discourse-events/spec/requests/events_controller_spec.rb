@@ -678,7 +678,8 @@ module DiscourseEvents::Events
                              { "identifier" => "sam", "attendance" => "interested" },
                              { "identifier" => "the_foo_bar_group", "attendance" => "not_going" },
                            ],
-                         }
+                         },
+                         as: :json
                   end
 
                   expect(response.status).to eq(200)
