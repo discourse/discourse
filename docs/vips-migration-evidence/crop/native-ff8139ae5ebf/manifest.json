@@ -1,0 +1,142 @@
+{
+  "source_head": "ff8139ae5ebfa623684cef5393ba2469eaf0ebd0",
+  "files": {
+    "inputs/jpeg.jpg": "35f1fcee1a93fbc6e30a945c661fd966e0962f60e0ef40729b8d9e76cabaadfc",
+    "outputs/jpeg-0-imagemagick.jpg": "0bc3e50e904c676484e0fb65c4c42c3e1434f58cf1069c59770d6a31bf5a59fa",
+    "outputs/jpeg-0-libvips.jpg": "686308a6e74ddcd002668216d3924624cd778691ac47ccff4b560297286d3ac8",
+    "inputs/png.png": "c7b8f38aa309b7e32d7387dff4fb82aeeba3ede32116130600a05825b9966f18",
+    "outputs/png-0-imagemagick.png": "b0e1d57352f51d41225a741f0aac6a1fc139815bac10462dc0574396ee263e79",
+    "outputs/png-0-libvips.png": "a5b622d38fc19bf83df1e531bd5265211da6dd497f766f77c00e41999255d843",
+    "inputs/gif.gif": "088ca413cddfd6e6a1409329fbb7244dfcd57dbffadefb2ea876b6220a2aa199",
+    "outputs/gif-0-imagemagick.gif": "eed456b1906b283d1a7bb5f6826abaa63abad2dea22dc595fd94a06f7b22bacf",
+    "outputs/gif-0-libvips.gif": "bffd9879d36b7be3f3180512a299645abee9d67c5e6f263aa9d2b8a0f8b19561",
+    "inputs/webp.webp": "a49452e030e12cf6ce2eae9650f7534c50e596e711f0ea9ffbf54173f6ce230d",
+    "outputs/webp-0-imagemagick.webp": "f900d6927a2f7c54ae43fcf483172d66ca3c437964aabb455a5d1d5041a7385d",
+    "outputs/webp-0-libvips.webp": "e38bef7b65178cb94fe5badc7f1a912ffb8d369ca6d7d1b270b374d92a83ea13",
+    "inputs/avif.avif": "4010d8c8282a5bac43bb09fec9692e838ffd4e9fdb0a246c6a42d29d8a1271fa",
+    "outputs/avif-0-imagemagick.avif": "d90fa3ee9e40a751def0d36d0582e15bc40f0e702a396259e4b6318c281c4eed",
+    "outputs/avif-0-libvips.avif": "8687a1d2867f3ed9e12c950ec694c1d12c9889e3a05e754d61dcde0ff96c816b"
+  },
+  "cases": [
+    {
+      "case_id": "jpeg-0",
+      "id": "jpeg",
+      "input": "inputs/jpeg.jpg",
+      "input_dimensions": [
+        500,
+        333
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "imagemagick": {
+        "output": "outputs/jpeg-0-imagemagick.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-0-libvips.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "png-0",
+      "id": "png",
+      "input": "inputs/png.png",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "imagemagick": {
+        "output": "outputs/png-0-imagemagick.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-0-libvips.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "gif-0",
+      "id": "gif",
+      "input": "inputs/gif.gif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "imagemagick": {
+        "output": "outputs/gif-0-imagemagick.gif",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/gif-0-libvips.gif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "webp-0",
+      "id": "webp",
+      "input": "inputs/webp.webp",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "imagemagick": {
+        "output": "outputs/webp-0-imagemagick.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/webp-0-libvips.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "avif-0",
+      "id": "avif",
+      "input": "inputs/avif.avif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "imagemagick": {
+        "output": "outputs/avif-0-imagemagick.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/avif-0-libvips.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    }
+  ]
+}
