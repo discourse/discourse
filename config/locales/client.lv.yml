@@ -2437,6 +2437,7 @@ lv:
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
       no_description: "Lūdzu, pievieno aprakstu šai sadaļai."
+      latest_topics: "Jaunākās tēmas"
       already_used: "Šī krāsa ir izmantota citai sadaļai"
       security: "Drošība"
       permissions:

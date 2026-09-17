@@ -69,6 +69,10 @@ zh_CN:
         title: 使用 AI 为话题添加标签
         description: "使用 AI 自动为话题添加标签"
   site_settings:
+    ai_ask_ai_report_weekly_enabled: "每周自动生成一份“Ask AI”报告，涵盖过去七天的完整数据。报告会显示在仪表盘上。如果在 {{setting:ai_ask_ai_report_recipient_groups}}中选择了群组，这些群组还会收到一条私信。此功能需要启用“Ask AI”并配置报告语言模型。手动生成报告的功能仍然可用。"
+    ai_ask_ai_report_agent: "用于将用户问题分组到 Ask AI 控制面板报告中的代理。"
+    ai_ask_ai_report_max_asks: "每份报告分析的最大请求数。使用所选时间段内的所有请求，或截至此限制的最新请求，以较少者为准。较大的报告需要更多模型上下文信息，因此可能费用更高。"
+    ai_ask_ai_report_recipient_groups: "接收每周自动发送的报告私信的群组，也可添加到手动发送的报告私信中。报告包含用户提出的问题。留空则仅在仪表盘上显示自动报告。"
     discourse_ai_enabled: "启用 Discourse AI 插件。"
     enable_ai_bot_starred_conversations: "允许用户为 AI 机器人对话添加星标，并在“星标”边栏部分显示。"
     ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
@@ -281,6 +285,17 @@ zh_CN:
       title: "😲 惊讶"
       description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为惊讶情绪的帖子。"
   discourse_ai:
+    ask_ai_reports:
+      no_model: "在生成报告之前，请配置默认的AI语言模型。"
+      no_asks: "这段时间内没有提出任何要求。"
+      title: "用户提问： %{start} – %{end}"
+      coverage: "分析了本阶段最新的 %{count} 个 %{total} 问题。问题可能涉及多个学科。"
+      ungrouped_name: "未分组的问题"
+      ungrouped_description: "该报告没有将这些问题归入某个主题。"
+      no_insights: "这些问题并未提供足够的证据来提出具体的后续建议。"
+      suggested_action: "建议后续操作： %{action}"
+      view_dashboard: "在仪表板上浏览所有主题和问题。"
+      disclaimer: "人工智能生成的观察结果描述的是提出的问题，而非答案的质量或实用性。建议的后续问题是可供研究的方向，而非已确认的空白。问题可能出现在多个学科中。"
     ai_artifact:
       errors:
         max_keys_exceeded:
@@ -299,6 +314,14 @@ zh_CN:
           locked_default_llm_missing: "智能体 '%{agent}' 被锁定为其默认 LLM，但未配置有效的默认 LLM"
           llm_not_found: "找不到 ID 为 %{llm_model_id} 的 LLM 模型"
           no_llm_configured: "没有为智能体 '%{agent}' 配置 LLM。请选择一个 LLM 模型，或配置智能体/站点默认 LLM。"
+          uploads_not_sent: "代理“%{agent}”未收到所有上传内容"
+          upload_not_found: "未找到上传文件 %{upload_id}"
+          upload_not_visible: "%{username} 无法查看上传内容 %{upload_id}"
+          agent_cannot_see_images: "上传 %{upload_id} 是一张图片，而代理 '%{agent}' 的视力已关闭"
+          llm_cannot_see_images: "上传 %{upload_id} 是一张图片，而 LLM '%{llm}' 的视觉功能已禁用"
+          llm_cannot_read_documents: "上传文件 %{upload_id} 是一个文档，而 LLM '%{llm}' 不接受任何附件。"
+          unsupported_image_format: "上传 %{upload_id} 不是受支持的图像格式 (%{formats})"
+          upload_skipped: "上传 %{upload_id} (%{filename}) 未发送： %{message}"
     tools:
       custom_name: "%{name}（自定义）"
       presets:
@@ -431,26 +454,39 @@ zh_CN:
       logging_subject: "垃圾信息检测"
     ai_bot:
       search_discourse_navigation:
+        not_allowed: "您无权搜索管理目标。"
         invalid_query: "输入 1 到 %{max} 个字符之间的搜索查询。"
       navigation:
         settings:
           title: "站点设置"
+          description: "搜索并更改所有站点配置设置。"
         users:
           title: "用户"
+          description: "查找和管理会员帐户及用户权限。"
         groups:
           title: "群组"
+          description: "管理群组和群组成员。"
         review:
           title: "审核队列"
+          description: "审核被举报的帖子，并批准待审核的用户和内容。"
+        invites:
+          title: "创建邀请"
+          description: "邀请大家加入这个社区。"
         categories:
           title: "类别"
+          description: "浏览、创建和管理讨论类别。"
         tags:
           title: "标签"
+          description: "浏览和管理主题标签。"
         themes:
           title: "主题"
+          description: "安装和自定义主题，以改变网站的外观和设计。"
         authentication:
           title: "登录和身份验证"
+          description: "配置登录、注册、身份验证和单点登录。"
         backups:
           title: "备份"
+          description: "创建、下载和恢复网站备份。"
       ai_users: "AI 用户"
       ai_users_bio: "自动分组人工智能机器人账户"
       errors:
@@ -459,6 +495,7 @@ zh_CN:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
       thinking: "正在思考"
+      tool_pending_approval: "此操作需要获得批准："
       spawn_agent:
         description: "将一个独立的提示委托给一个允许的代理，并返回其响应。"
         prompt_description: "发送给选定代理并在思考框中显示的完整独立提示。"
@@ -612,6 +649,9 @@ zh_CN:
         discover:
           name: "发现"
           description: "发现功能（免费搜索）中使用的默认智能体"
+        ask_ai_reporter:
+          name: "询问 AI 报告者"
+          description: "将用户的问题按主题分组，用于生成 Ask AI 控制面板报告。"
         ask_ai_synthesis:
           name: "Ask AI 合成"
           description: "选择信息来源并准备由 Ask AI 显示的答案"
@@ -762,6 +802,7 @@ zh_CN:
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "正在搜索站点设置"
+        search_discourse_navigation: "网站导航搜索"
         read_site_setting: "阅读站点设置"
         change_site_setting: "更改站点设置"
         dall_e: "生成图片"
@@ -823,6 +864,7 @@ zh_CN:
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "搜索站点设置"
+        search_discourse_navigation: "查找指向本网站可用页面的已验证链接"
         read_site_setting: "读取站点设置的当前值"
         change_site_setting: "更改站点设置的值"
         dall_e: "使用 DALL-E 3 生成图片"
@@ -895,6 +937,8 @@ zh_CN:
           other: "正在研究：%{goals}\n\n找到 %{count} 个与“%{filter}”相符的帖子"
         search_settings:
           other: "找到 '%{query}' 的 %{count} 个结果"
+        search_discourse_navigation:
+          other: "找到 %{count} 个目的地"
         read_site_setting: "阅读站点设置 %{setting_name}"
         change_site_setting: "将站点设置 %{setting_name} 更改为 '%{value}'"
       discoveries:

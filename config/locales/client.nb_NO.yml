@@ -3709,6 +3709,7 @@ nb_NO:
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
       no_description: "Legg til en beskrivelse for denne kategorien."
+      latest_topics: "Siste emner"
       description_expand: "Vis mer"
       description_collapse: "Vis mindre"
       already_used: "Denne fargen er i bruk av en annen kategori"

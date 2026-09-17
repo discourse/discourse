@@ -24,6 +24,8 @@ zh_TW:
             title: "詢問 AI"
         ask_ai:
           title: "詢問 AI"
+          reports:
+            retry_questions: "重試"
           seconds: "%{seconds} 秒"
           date: "日期"
           outcomes:
