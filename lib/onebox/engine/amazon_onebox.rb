@@ -16,14 +16,10 @@ module Onebox
       )
 
       def url
-        @raw ||= nil
-
-        if @raw
-          canonical_link = @raw.at('//link[@rel="canonical"]/@href')
-          return canonical_link.to_s if canonical_link
-        end
-
         if match && match[:id]
+          canonical_link = @raw&.at('//link[@rel="canonical"]/@href').to_s
+          return canonical_link if canonical_link.match?(%r{/dp/#{match[:id]}\z}i)
+
           id =
             Addressable::URI.encode_component(match[:id], Addressable::URI::CharacterClasses::PATH)
           return "https://www.amazon.#{tld}/dp/#{id}"
@@ -78,6 +74,21 @@ module Onebox
         @match ||= @url.match(%r{(?:d|g)p/(?:product/|video/detail/)?(?<id>[A-Z0-9]+)(?:/|\?|$)}mi)
       end
 
+      def raw
+        @raw ||=
+          Nokogiri.HTML(
+            begin
+              Onebox::Helpers.fetch_response(
+                url,
+                headers: http_params,
+                raise_error_when_response_too_large: false,
+              )
+            rescue StandardError
+              nil
+            end,
+          )
+      end
+
       def image
         if (main_image = raw.css("#main-image")) && main_image.any?
           attributes = main_image.first.attributes
@@ -92,7 +103,7 @@ module Onebox
         if (landing_image = raw.css("#landingImage")) && landing_image.any?
           attributes = landing_image.first.attributes
 
-          if attributes["data-old-hires"]
+          if attributes["data-old-hires"].to_s.present?
             return attributes["data-old-hires"].to_s
           else
             return landing_image.first["src"].to_s
