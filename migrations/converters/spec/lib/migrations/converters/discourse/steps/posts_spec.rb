@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "tmpdir"
-
 RSpec.describe Migrations::Converters::Discourse::Posts do
   subject(:processor) { described_class.processor_class.new({}) }
+
+  include_context "with intermediate database"
 
   let(:enums) { Migrations::Database::IntermediateDB::Enums }
 
@@ -21,21 +21,6 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
     )
   end
 
-  around do |example|
-    Dir.mktmpdir do |dir|
-      db_path = File.join(dir, "intermediate.db")
-      Migrations::Database.migrate(
-        db_path,
-        migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
-      )
-      @db = Migrations::Database.connect(db_path)
-      Migrations::Database::IntermediateDB.setup(@db)
-      example.run
-    ensure
-      Migrations::Database::IntermediateDB.setup(nil)
-    end
-  end
-
   # A V8 isolate per example costs ~70ms and ~33 MiB, so the examples share
   # the suite's context.
   before do
@@ -48,10 +33,6 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
     processor.mention_names = mention_names
     processor.hashtag_names = markdown_engine.config.hashtag_names
     processor.internal_link_hosts = { "forum.example.com" => nil }
-  end
-
-  def rows(table)
-    [].tap { |out| @db.query("SELECT * FROM #{table}") { |row| out << row } }
   end
 
   def post_item(raw, id: 1, **overrides)

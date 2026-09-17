@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "tmpdir"
-
 RSpec.describe Migrations::Converters::EmbedBuffer do
   subject(:buffer) { described_class.new(owner_type:) }
 
@@ -254,24 +252,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
   end
 
   describe "#write_for" do
-    around do |example|
-      Dir.mktmpdir do |dir|
-        db_path = File.join(dir, "intermediate.db")
-        Migrations::Database.migrate(
-          db_path,
-          migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
-        )
-        @db = Migrations::Database.connect(db_path)
-        Migrations::Database::IntermediateDB.setup(@db)
-        example.run
-      ensure
-        Migrations::Database::IntermediateDB.setup(nil)
-      end
-    end
-
-    def rows(table)
-      [].tap { |out| @db.query("SELECT * FROM #{table}") { |row| out << row } }
-    end
+    include_context "with intermediate database"
 
     it "inserts each recorded embed into its linkage table under the owner" do
       quote = buffer.quote(quoted_user_id: 5)
