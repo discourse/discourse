@@ -96,12 +96,18 @@ class OptimizedImage < ActiveRecord::Base
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
-        target_quality =
-          upload.target_jpeg_image_quality(
-            original_path,
-            SiteSetting.ImageQuality.image_preview_jpg_quality,
-          )
-        opts = opts.merge(quality: target_quality) if target_quality
+        if GlobalSetting.enable_vips_image_processing
+          if %w[.jpg .jpeg].include?(extension.downcase)
+            opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
+          end
+        else
+          target_quality =
+            upload.target_jpeg_image_quality(
+              original_path,
+              SiteSetting.ImageQuality.image_preview_jpg_quality,
+            )
+          opts = opts.merge(quality: target_quality) if target_quality
+        end
         opts = opts.merge(upload_id: upload.id)
 
         # special case, when "resizing" vectors we simply copy

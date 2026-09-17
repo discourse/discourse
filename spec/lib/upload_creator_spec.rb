@@ -450,7 +450,8 @@ RSpec.describe UploadCreator do
           SiteSetting.image_preview_jpg_quality = 10
         end
 
-        it "alters the JPEG image quality" do
+        it "stores the JPEG at the configured recompression quality when libvips processing is disabled" do
+          global_setting :enable_vips_image_processing, false
           jpeg_file = file_from_fixtures("logo.jpg")
           File.truncate(
             jpeg_file.path,
