@@ -193,6 +193,43 @@ module DiscourseVips
     nil
   end
 
+  def self.crop(
+    input_path:,
+    output_path:,
+    input_format:,
+    output_format:,
+    width:,
+    height:,
+    timeout:,
+    read:,
+    write:,
+    quality: nil,
+    strip_metadata: false
+  )
+    if !%w[jpg jpeg png gif webp avif svg].include?(input_format) ||
+         !%w[jpg jpeg png gif webp avif].include?(output_format)
+      raise ArgumentError, "unsupported format"
+    end
+
+    output_mode =
+      File.exist?(output_path) ? File.stat(output_path).mode & 0o777 : 0o666 & ~File.umask
+
+    Tempfile.create(["crop-", ".#{output_format}"], File.dirname(output_path)) do |output|
+      output.close
+      Client.call(
+        ["crop", input_path, output.path, input_format, width, height, quality, strip_metadata],
+        operation: :optimized_image_crop,
+        read:,
+        write:,
+        timeout:,
+        nice: 10,
+      )
+      File.chmod(output_mode, output.path)
+      File.rename(output.path, output_path)
+    end
+    nil
+  end
+
   def self.before_fork
     Client.before_fork
   end
