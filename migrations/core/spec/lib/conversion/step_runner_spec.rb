@@ -218,7 +218,14 @@ RSpec.describe Migrations::Conversion::StepRunner do
         Class.new(Migrations::Conversion::Step) do
           source do
             def items
-              (1..10).map { |id| { id:, body: "ok" } }
+              [
+                { body: "a" * 5_001, metadata: { source: "legacy" } },
+                "raw item",
+                3,
+                nil,
+                { id: 5, body: "ok" },
+                *(6..10).map { |id| { id:, body: "ok" } },
+              ]
             end
           end
 
@@ -226,7 +233,7 @@ RSpec.describe Migrations::Conversion::StepRunner do
             batch_size 5
 
             def process_batch(items)
-              raise "boom" if items.first[:id] == 1
+              raise "boom" if items.first.is_a?(Hash) && !items.first.key?(:id)
 
               items.each do |item|
                 Migrations::Database::IntermediateDB.insert(
@@ -240,7 +247,7 @@ RSpec.describe Migrations::Conversion::StepRunner do
         end
       end
 
-      it "logs one error naming the batch's ids and carries on with the next slice" do
+      it "logs one error with useful batch details and carries on with the next slice" do
         described_class.new(step: step_class.new, shard_path: @shard_path, channel:).run
 
         expect(shard_rows("notes")).to eq((6..10).to_a)
@@ -250,7 +257,15 @@ RSpec.describe Migrations::Conversion::StepRunner do
 
         entry = log_entries.first
         expect(entry[:message]).to eq(I18n.t("converter.log.batch_failed"))
-        expect(JSON.parse(entry[:details])).to eq("size" => 5, "ids" => [1, 2, 3, 4, 5])
+        expect(JSON.parse(entry[:details])).to eq(
+          [
+            { "body" => "#{"a" * 4_997}...", "metadata" => { "source" => "legacy" } },
+            "raw item",
+            3,
+            nil,
+            { "id" => 5, "body" => "ok" },
+          ],
+        )
       end
     end
   end

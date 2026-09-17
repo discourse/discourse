@@ -14,6 +14,8 @@ module Migrations
       # How many processed items to accumulate before reporting progress.
       REPORT_INTERVAL = 1_000
 
+      MAX_LOGGED_STRING_LENGTH = 5_000
+
       # The whole source: one chunk, open at both ends. The default when no chunks
       # are given.
       WHOLE_SOURCE = [[nil, nil]].freeze
@@ -124,11 +126,19 @@ module Migrations
         )
       end
 
-      # The rows of a batch can be large (whole post bodies), so the log entry
-      # lists only their ids.
-      def batch_details(items)
-        ids = items.filter_map { |item| item[:id] if item.is_a?(Hash) }
-        ids.empty? ? { size: items.size } : { size: items.size, ids: }
+      def batch_details(value)
+        case value
+        when Array
+          value.map { |item| batch_details(item) }
+        when Hash
+          value.transform_values { |item| batch_details(item) }
+        when String
+          return value if value.length <= MAX_LOGGED_STRING_LENGTH
+
+          "#{value[0, MAX_LOGGED_STRING_LENGTH - 3]}..."
+        else
+          value
+        end
       end
 
       # The worker's one map/reduce message: the processor's accumulated result,
