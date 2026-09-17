@@ -406,7 +406,7 @@ RSpec.describe Report do
 
     let(:report) { Report.find("page_view_total_reqs") }
 
-    it "combines historical piggyback totals with beacon totals without counting overlap" do
+    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
       SiteSetting.use_legacy_pageviews = false
       ApplicationRequest.create!(
         date: Date.current - 2,
@@ -420,8 +420,8 @@ RSpec.describe Report do
         count: 8,
       )
 
-      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 3 }])
-      expect(report.total).to eq(7)
+      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }])
+      expect(report.total).to eq(12)
     end
 
     context "with no data" do
@@ -1830,31 +1830,51 @@ RSpec.describe Report do
       expect(series["page_view_other"]).to eq([{ x: Date.current, y: 2 }])
     end
 
-    it "uses historical piggyback counts before switching both browser series to beacons" do
+    it "keeps piggyback counts in the browser series after an isolated day of beacon data" do
+      ApplicationRequest.create!(
+        date: Date.current - 2,
+        req_type: :page_view_anon_browser_beacon,
+        count: 1,
+      )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 30)
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon, count: 30)
+
+      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
+
+      expect(series["page_view_anon_browser"].last).to eq({ x: Date.current, y: 30 })
+      expect(series["page_view_other"].last).to eq({ x: Date.current, y: 0 })
+    end
+
+    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
       ApplicationRequest.create!(
         date: Date.current - 2,
         req_type: :page_view_anon_browser,
         count: 4,
       )
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
       ApplicationRequest.create!(
-        date: Date.current,
+        date: Date.current - 2,
         req_type: :page_view_logged_in_browser,
         count: 6,
       )
+      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
       ApplicationRequest.create!(
         date: Date.current,
         req_type: :page_view_anon_browser_beacon,
         count: 8,
       )
+      ApplicationRequest.create!(
+        date: Date.current,
+        req_type: :page_view_logged_in_browser_beacon,
+        count: 2,
+      )
 
       series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
 
       expect(series["page_view_anon_browser"]).to eq(
-        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 3 }],
+        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }],
       )
       expect(series["page_view_logged_in_browser"]).to eq(
-        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 6 }],
+        [{ x: Date.current - 2, y: 6 }, { x: Date.current, y: 2 }],
       )
       expect(series["page_view_other"]).to eq(
         [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
