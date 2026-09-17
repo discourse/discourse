@@ -39,6 +39,7 @@ class EmailLoginCode::Redeem
   policy :can_register_new_account
   policy :can_register_from_ip
   policy :required_username_provided
+  policy :username_allowed
   policy :required_fields_provided
   policy :required_full_name_provided
 
@@ -99,6 +100,13 @@ class EmailLoginCode::Redeem
 
   def required_username_provided(existing_user:, params:)
     existing_user.present? || !params.username_required || params.username.present?
+  end
+
+  def username_allowed(existing_user:, params:)
+    return true if existing_user.present? || params.username.blank?
+
+    !User.reserved_username?(params.username) &&
+      !UsernameValidator.clashing_with_existing_route?(params.username)
   end
 
   def required_fields_provided(existing_user:, params:)

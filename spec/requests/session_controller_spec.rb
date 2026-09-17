@@ -1163,6 +1163,62 @@ RSpec.describe SessionController do
     context "when the email does not belong to a user" do
       let(:login_code) { EmailLoginCode.generate!(email: "newuser@example.com") }
 
+      it "rejects caller-supplied reserved and route-conflicting usernames without consuming the code" do
+        %w[MoDeRaToR ACCOUNT-CREATED].each do |username|
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 username:,
+               }
+
+          expect(response.parsed_body["error"]).to include(I18n.t("login.reserved_username")),
+          username
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+          expect(ReviewableUser.count).to eq(0)
+          expect(session[:current_user_id]).to be_nil
+          expect(login_code.reload.consumed_at).to be_nil
+        end
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "valid-chosen-name",
+             }
+
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(User.find_by_email("newuser@example.com").username).to eq("valid-chosen-name")
+      end
+
+      it "rejects reserved and route-conflicting usernames on an approval continuation" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        signup_token = response.parsed_body["signup_token"]
+
+        %w[MoDeRaToR ACCOUNT-CREATED].each do |username|
+          post "/session/login-code/verify.json", params: { signup_token:, username: }
+
+          expect(response.parsed_body["error"]).to include(I18n.t("login.reserved_username"))
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+          expect(ReviewableUser.count).to eq(0)
+          expect(session[:current_user_id]).to be_nil
+          expect(login_code.reload.consumed_at).to be_nil
+        end
+
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "valid-chosen-name",
+             }
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(User.find_by_email("newuser@example.com").username).to eq("valid-chosen-name")
+        expect(ReviewableUser.count).to eq(1)
+      end
+
       it "collects identity before creating a passwordless account awaiting approval" do
         Jobs.run_immediately!
         SiteSetting.must_approve_users = true

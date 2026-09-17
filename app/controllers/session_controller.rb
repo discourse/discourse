@@ -984,6 +984,9 @@ class SessionController < ApplicationController
       on_failed_policy(:can_register_from_ip) do
         render json: login_code_registration_ip_limit_error
       end
+      on_failed_policy(:username_allowed) do
+        render json: { error: I18n.t("login.reserved_username") }
+      end
       on_failed_policy(:required_fields_provided) do
         render json: { error: I18n.t("login.missing_user_field") }
       end
@@ -1014,11 +1017,8 @@ class SessionController < ApplicationController
     expires_in = (login_code.expires_at - Time.zone.now).ceil
     return render json: invalid_login_code if expires_in <= 0
 
-    server_session.set(
-      "#{LOGIN_CODE_SIGNUP_KEY_PREFIX}#{token}",
-      { email: login_code.email, code: params[:code] },
-      expires: expires_in,
-    )
+    proof = { email: login_code.email, code: params[:code] }.merge(verified_login_code_signup_proof)
+    server_session.set("#{LOGIN_CODE_SIGNUP_KEY_PREFIX}#{token}", proof, expires: expires_in)
 
     username =
       UserNameSuggester.suggest(login_code.email, allow_generic_fallback: false) ||
@@ -1034,11 +1034,10 @@ class SessionController < ApplicationController
 
   def complete_verified_login_code_signup
     token = params[:signup_token].to_s
-    return render json: invalid_login_code if token !~ /\A[0-9a-f]{64}\z/
+    proof = verified_login_code_signup_proof_for(token)
+    return render json: invalid_login_code if !proof.is_a?(Hash)
 
     key = "#{LOGIN_CODE_SIGNUP_KEY_PREFIX}#{token}"
-    proof = server_session[key]
-    return render json: invalid_login_code if !proof.is_a?(Hash)
     return render json: invalid_login_code if !SiteSetting.must_approve_users?
     return render json: invalid_login_code if EmailValidator.can_auto_approve_user?(proof[:email])
 
@@ -1069,6 +1068,9 @@ class SessionController < ApplicationController
       on_failed_policy(:required_username_provided) do
         render json: { error: I18n.t("login.missing_username") }
       end
+      on_failed_policy(:username_allowed) do
+        render json: { error: I18n.t("login.reserved_username") }
+      end
       on_failed_policy(:required_fields_provided) do
         render json: { error: I18n.t("login.missing_user_field") }
       end
@@ -1081,6 +1083,16 @@ class SessionController < ApplicationController
       end
       on_failure { render json: invalid_login_code }
     end
+  end
+
+  def verified_login_code_signup_proof
+    {}
+  end
+
+  def verified_login_code_signup_proof_for(token)
+    return if token !~ /\A[0-9a-f]{64}\z/
+
+    server_session["#{LOGIN_CODE_SIGNUP_KEY_PREFIX}#{token}"]
   end
 
   def signup_user_fields_missing?

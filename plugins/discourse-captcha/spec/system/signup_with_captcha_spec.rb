@@ -39,7 +39,6 @@ RSpec.describe "Signup with captcha" do
 
       it "displays the hCaptcha widget after requesting a signup code" do
         signup_page.open
-        find(".signup-page-cta__code-signup").click
         find(".code-login-form__email-step input[type='email']").fill_in(with: "test@example.com")
         find(".code-login-form__continue").click
 

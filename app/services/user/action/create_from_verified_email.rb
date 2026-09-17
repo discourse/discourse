@@ -37,6 +37,8 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
     assign_user_fields(user)
     user.password = password if password.present?
 
+    user.enforce_username_restrictions = username.present?
+
     if SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(email)
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
