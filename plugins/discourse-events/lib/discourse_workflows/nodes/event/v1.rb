@@ -76,7 +76,18 @@ if defined?(DiscourseWorkflows)
             desired_closed_state = operation == "close"
 
             if event.closed? != desired_closed_state
-              new_raw = raw_with_closed_state(event.post.raw, closed: desired_closed_state)
+              new_raw =
+                PrettyText.update_bbcode_attributes(
+                  event.post.raw,
+                  "event",
+                  { closed: desired_closed_state ? "true" : nil },
+                  topic_id: topic.id,
+                  user_id: event.post.user_id,
+                )
+
+              if new_raw.nil?
+                raise_node_error!(I18n.t("discourse_workflows.errors.event.missing_event_block"))
+              end
 
               post = exec_ctx.edit_post(user: actor, post_id: event.post.id, raw: new_raw)
 
@@ -98,147 +109,6 @@ if defined?(DiscourseWorkflows)
               post_id: event.post.id,
               closed: event.closed?,
             }
-          end
-
-          # Event state is derived from the [event] block in post.raw.
-          # Change the source BBCode, then let the normal post-edited hook
-          # synchronize the Event record.
-          def raw_with_closed_state(raw, closed:)
-            tag_range = event_opening_tag_range(raw)
-
-            if tag_range.nil?
-              raise_node_error!(I18n.t("discourse_workflows.errors.event.missing_event_block"))
-            end
-
-            opening_tag = raw[tag_range]
-            closed_range = attribute_range(opening_tag, "closed")
-
-            if closed
-              if closed_range
-                opening_tag[closed_range] = ' closed="true"'
-              else
-                opening_tag = opening_tag.sub(/\]\z/, ' closed="true"]')
-              end
-            elsif closed_range
-              opening_tag[closed_range] = ""
-            end
-
-            updated = raw.dup
-            updated[tag_range] = opening_tag
-            updated
-          end
-
-          # Locate the first real [event ...] opening tag while ignoring ]
-          # characters contained inside quoted attribute values.
-          def event_opening_tag_range(raw)
-            search_from = 0
-
-            loop do
-              start = raw.index("[event", search_from)
-              return if start.nil?
-
-              following = raw[start + 6]
-
-              unless following.nil? || following == "]" || following.match?(/\s/)
-                search_from = start + 6
-                next
-              end
-
-              index = start + 6
-              quote = nil
-              escaped = false
-
-              while index < raw.length
-                char = raw[index]
-
-                if quote
-                  if char == "\\" && !escaped
-                    escaped = true
-                  else
-                    quote = nil if char == quote && !escaped
-                    escaped = false
-                  end
-                elsif char == '"' || char == "'"
-                  quote = char
-                elsif char == "]"
-                  return start..index
-                end
-
-                index += 1
-              end
-
-              return
-            end
-          end
-
-          # Returns the range occupied by a named top-level BBCode
-          # attribute, including the whitespace immediately before it.
-          #
-          # Quoted values are consumed as a unit, so text such as:
-          #
-          #   location="Room closed=true"
-          #
-          # is not mistaken for a closed= attribute.
-          def attribute_range(tag, target_name)
-            index = 6 # immediately after "[event"
-            closing_index = tag.length - 1
-
-            while index < closing_index
-              whitespace_start = index
-              index += 1 while index < closing_index && tag[index].match?(/\s/)
-
-              break if index >= closing_index
-
-              name_start = index
-              index += 1 while index < closing_index && tag[index].match?(/[A-Za-z0-9_.-]/)
-
-              # Skip malformed/non-attribute characters safely.
-              if name_start == index
-                index += 1
-                next
-              end
-
-              name = tag[name_start...index]
-
-              index += 1 while index < closing_index && tag[index].match?(/\s/)
-
-              # Bare attribute/token.
-              if index >= closing_index || tag[index] != "="
-                index += 1 while index < closing_index && !tag[index].match?(/\s/)
-                next
-              end
-
-              index += 1
-              index += 1 while index < closing_index && tag[index].match?(/\s/)
-
-              if index < closing_index && %w[" '].include?(tag[index])
-                quote = tag[index]
-                index += 1
-                escaped = false
-
-                while index < closing_index
-                  char = tag[index]
-
-                  if char == "\\" && !escaped
-                    escaped = true
-                  else
-                    if char == quote && !escaped
-                      index += 1
-                      break
-                    end
-                    escaped = false
-                  end
-
-                  index += 1
-                end
-              else
-                index += 1 while index < closing_index && !tag[index].match?(/\s/)
-              end
-
-              return whitespace_start...index if name.casecmp(target_name).zero?
-            end
-
-            nil
           end
         end
       end
