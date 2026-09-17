@@ -969,10 +969,11 @@ en:
       show_more: "Show more"
       dsa:
         title: "DSA classification"
+        about: "The EU Digital Services Act asks platforms to record why content was moderated."
         category: "Category"
         subcategory: "Subcategory"
         subcategory_other: "Describe the violation"
-        save: "Save classification"
+        save: "Save"
         edit: "Edit classification"
         legal_basis:
           decision_ground_illegal_content: "Illegal content"
@@ -992,7 +993,9 @@ en:
           statement_category_self_harm: "Self-harm"
           statement_category_unsafe_and_prohibited_products: "Unsafe, non-compliant or prohibited products"
           statement_category_violence: "Violence"
-          statement_category_not_specified_notice: "Type of alleged illegal content not specified by the notifier"
+          # The DSA schema calls this "type of alleged illegal content not specified by the
+          # notifier". It carries no keywords, so there is nothing for a moderator to describe.
+          statement_category_not_specified_notice: "Unspecified"
           statement_category_other_violation_tc: "Other violation of provider’s terms and conditions"
         keywords:
           keyword_animal_harm: "Animal harm"
@@ -1062,7 +1065,8 @@ en:
           keyword_goods_services_not_permitted: "Goods/services not permitted to be offered on the platform"
           keyword_language_requirements: "Language requirements"
           keyword_nudity: "Nudity"
-          keyword_other: "Not captured by any other keyword"
+          # The DSA schema calls this "not captured by any other keyword".
+          keyword_other: "Other"
       show_less: "Show less"
       back_to_queue: "Back to queue"
       editing_post: "Editing post…"

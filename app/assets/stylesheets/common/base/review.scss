@@ -491,6 +491,17 @@
   gap: var(--space-2);
   margin-bottom: var(--space-4);
 
+  .review-item__aside-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__about {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
   &__summary {
     margin: 0;
     color: var(--primary-high);

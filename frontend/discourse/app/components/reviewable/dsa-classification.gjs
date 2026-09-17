@@ -3,7 +3,9 @@ import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
@@ -19,6 +21,9 @@ import { manuallyTrack } from "discourse/lib/tracked-tools";
 import { eq, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+
+const DSA_INFO_URL =
+  "https://digital-strategy.ec.europa.eu/en/policies/dsa-impact-platforms";
 
 export default class ReviewableDsaClassification extends Component {
   @service site;
@@ -111,6 +116,20 @@ export default class ReviewableDsaClassification extends Component {
     <div class="reviewable-dsa-classification">
       <h3 class="review-item__aside-title">
         {{i18n "review.dsa.title"}}
+
+        <DTooltip
+          class="reviewable-dsa-classification__about"
+          @icon="circle-question"
+          @interactive={{true}}
+          @trapTab={{false}}
+        >
+          <:content>
+            <span>
+              {{i18n "review.dsa.about"}}
+              {{trustHTML (i18n "learn_more_with_link" url=DSA_INFO_URL)}}
+            </span>
+          </:content>
+        </DTooltip>
       </h3>
 
       {{#if this.state.editing}}
