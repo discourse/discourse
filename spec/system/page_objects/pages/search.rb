@@ -48,7 +48,7 @@ module PageObjects
       end
 
       def has_related_results?
-        has_css?(".ai-search-results-notice") && has_css?(".fps-result.ai-result")
+        has_css?(".fps-result.ai-result")
       end
 
       def has_no_user_results?
@@ -57,20 +57,6 @@ module PageObjects
 
       def has_full_page_no_results?
         has_css?(".search-results", text: I18n.t("js.search.no_results"))
-      end
-
-      def has_user_results?(count:)
-        has_css?(".fps-user-item", count: count)
-      end
-
-      def has_result_count_for?(count:, term:)
-        has_css?(
-          "#search-result-count",
-          text:
-            ActionController::Base.helpers.strip_tags(
-              I18n.t("js.search.result_count", count: count, plus: "", term: term),
-            ),
-        )
       end
 
       def has_no_result_count?
