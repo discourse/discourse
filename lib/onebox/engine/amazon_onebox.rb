@@ -122,7 +122,7 @@ module Onebox
           text("#corePrice_feature_div .a-price .a-offscreen") ||
             text(".mediaMatrixListItem.a-active .a-color-price")
 
-        amount unless amount&.start_with?("$0")
+        amount if amount&.match?(/[1-9]/)
       end
 
       def text(path)
