@@ -1733,13 +1733,31 @@ RSpec.describe Middleware::RequestTracker do
       [
         payload.merge(session_id: 123),
         payload.merge(mouse_move_events: { "x" => 1 }),
-        payload.merge(mouse_move_events: 9_999_999_999),
       ].each do |malformed|
         expect {
           status, = middleware.call(engagement_env(malformed, same_origin))
           expect(status).to eq(204)
         }.not_to change { BrowserPageviewSessionEngagement.count }
       end
+    end
+
+    it "clamps out-of-range values instead of discarding the payload" do
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      middleware.call(
+        engagement_env(
+          payload.merge(
+            mouse_move_events: 9_999_999_999,
+            time_to_first_interaction_ms: 3_781_140_981,
+          ),
+          same_origin,
+        ),
+      )
+
+      expect(BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")).to have_attributes(
+        mouse_move_events: BrowserPageviewSessionEngagement::MAX_COLUMN_VALUE,
+        time_to_first_interaction_ms: nil,
+      )
     end
 
     it "clamps engaged seconds to the configured maximum" do
