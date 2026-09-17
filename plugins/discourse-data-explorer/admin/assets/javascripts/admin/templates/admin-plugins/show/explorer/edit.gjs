@@ -97,28 +97,30 @@ export default class QueriesEdit extends Component {
         {{/if}}
 
         {{#unless @controller.model.destroyed}}
-          <div class="query-edit__metadata-field">
-            <span class="query-edit__metadata-label">
-              {{i18n "explorer.allow_groups"}}
-            </span>
-            <GroupChooser
-              @content={{@controller.groupOptions}}
-              @onChange={{@controller.updateGroupIds}}
-              @value={{@controller.model.group_ids}}
-            />
-          </div>
+          <div class="query-edit__metadata-fields">
+            <div class="query-edit__metadata-field">
+              <span class="query-edit__metadata-label">
+                {{i18n "explorer.allow_groups"}}
+              </span>
+              <GroupChooser
+                @content={{@controller.groupOptions}}
+                @onChange={{@controller.updateGroupIds}}
+                @value={{@controller.model.group_ids}}
+              />
+            </div>
 
-          <div class="query-edit__metadata-field">
-            <span class="query-edit__metadata-label">
-              {{i18n "explorer.query_tags"}}
-            </span>
-            <QueryTagChooser
-              @availableTags={{@controller.availableTags}}
-              @mandatoryValues={{@controller.mandatoryTags}}
-              @mandatoryValueTitle={{i18n "explorer.default_tag_mandatory"}}
-              @onChange={{@controller.updateTags}}
-              @value={{@controller.model.tags}}
-            />
+            <div class="query-edit__metadata-field">
+              <span class="query-edit__metadata-label">
+                {{i18n "explorer.query_tags"}}
+              </span>
+              <QueryTagChooser
+                @availableTags={{@controller.availableTags}}
+                @mandatoryValues={{@controller.mandatoryTags}}
+                @mandatoryValueTitle={{i18n "explorer.default_tag_mandatory"}}
+                @onChange={{@controller.updateTags}}
+                @value={{@controller.model.tags}}
+              />
+            </div>
           </div>
         {{/unless}}
 

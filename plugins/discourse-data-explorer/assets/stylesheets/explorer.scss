@@ -385,8 +385,14 @@ table.group-reports {
     white-space: pre-wrap;
   }
 
-  &__metadata-field {
+  &__metadata-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
     margin: 10px 0;
+  }
+
+  &__metadata-field {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -701,6 +707,18 @@ table.group-reports {
     margin-top: 1.5em;
   }
 
+  .query-new__access-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: 1em;
+  }
+
+  .query-new__access-field {
+    flex: 1 1 15rem;
+    min-width: 0;
+  }
+
   .query-new__preview {
     margin-top: 0.5em;
   }
@@ -731,7 +749,8 @@ table.group-reports {
     min-height: 60px;
   }
 
-  .query-group-select {
+  .query-group-select,
+  .query-tag-chooser {
     width: 100%;
   }
 
