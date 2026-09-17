@@ -6,18 +6,19 @@ module JsonApiKit
       Conflict = Class.new(StandardError)
 
       def initialize(defaults)
-        @defaults = defaults.dup
+        @defaults = defaults.group_by(&:type)
+        @defaults.default = [].freeze
       end
 
       def verify!
         defaults
-          .map(&:type)
-          .tally
-          .detect { |_type, count| count > 1 }
-          .try { |type, _count| raise Conflict, "changes the default sort for #{type} twice." }
+          .detect { |_type, declarations| declarations.many? }
+          .try do |type, _declarations|
+            raise Conflict, "changes the default sort for #{type} twice."
+          end
       end
 
-      def convert_names(&) = defaults.map { it.convert_names(&) }
+      def each_for(type, &) = defaults[type].each(&)
 
       private
 

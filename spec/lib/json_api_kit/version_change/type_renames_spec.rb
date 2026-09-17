@@ -125,6 +125,42 @@ RSpec.describe JsonApiKit::VersionChange do
     end
   end
 
+  describe "#current_resource_type" do
+    subject(:type) { version_change.current_resource_type(previous_type) }
+
+    let(:previous_type) { "things" }
+
+    it "returns the type after the change" do
+      expect(type).to eq("items")
+    end
+
+    context "when the resource has no type rename" do
+      let(:previous_type) { "people" }
+
+      it "preserves the type" do
+        expect(type).to eq("people")
+      end
+    end
+  end
+
+  describe "#previous_resource_type" do
+    subject(:type) { version_change.previous_resource_type(current_type) }
+
+    let(:current_type) { "items" }
+
+    it "returns the type before the change" do
+      expect(type).to eq("things")
+    end
+
+    context "when the resource has no type rename" do
+      let(:current_type) { "people" }
+
+      it "preserves the type" do
+        expect(type).to eq("people")
+      end
+    end
+  end
+
   describe "#current_names" do
     subject(:current_names) { version_change.current_names(name) }
 
