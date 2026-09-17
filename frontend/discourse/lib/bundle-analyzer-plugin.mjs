@@ -179,7 +179,10 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
       // and should be served verbatim rather than hashed (and blocked).
       if (devMode) {
         fs.mkdirSync("./dist/assets/js", { recursive: true });
-        fs.writeFileSync("./dist/assets/js/bundle-analysis.digested.json", json);
+        fs.writeFileSync(
+          "./dist/assets/js/bundle-analysis.digested.json",
+          json
+        );
       } else {
         this.emitFile({
           type: "asset",

@@ -98,9 +98,9 @@ export default class EntrypointCard extends Component {
       class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
     >
       <button
-        type="button"
         class="ba-head"
         style="grid-template-columns:1fr 130px 130px 70px"
+        type="button"
         {{on "click" this.toggle}}
       >
         <span class="ba-name">
@@ -189,19 +189,19 @@ export default class EntrypointCard extends Component {
           {{/if}}
           <div class="ba-sub-list">
             <ChunkRow
-              @file={{@file}}
               @analysis={{@analysis}}
+              @file={{@file}}
               @filter={{@filter}}
               @loaded={{@loaded}}
               @root={{true}}
             />
             {{#each this.addedSorted as |f|}}
               <ChunkRow
-                @file={{f}}
+                @added={{this.markAdded}}
                 @analysis={{@analysis}}
+                @file={{f}}
                 @filter={{@filter}}
                 @loaded={{@loaded}}
-                @added={{this.markAdded}}
               />
             {{/each}}
           </div>

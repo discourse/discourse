@@ -68,7 +68,7 @@ export default class ChunkRow extends Component {
     <div
       class="ba-row {{if this.expanded 'open'}} {{if this.isLoaded 'loaded'}}"
     >
-      <button type="button" class="ba-head" {{on "click" this.toggle}}>
+      <button class="ba-head" type="button" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
           {{#if this.isLoaded}}

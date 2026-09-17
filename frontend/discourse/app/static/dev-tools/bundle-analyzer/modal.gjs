@@ -32,9 +32,9 @@ export default class BundleAnalyzerModal extends Component {
 
   <template>
     <DModal
-      @title={{i18n "dev_tools.bundle_analyzer.title"}}
-      @closeModal={{@closeModal}}
       class="bundle-analyzer-modal"
+      @closeModal={{@closeModal}}
+      @title={{i18n "dev_tools.bundle_analyzer.title"}}
     >
       <:body>
         <div {{didInsert this.load}}>

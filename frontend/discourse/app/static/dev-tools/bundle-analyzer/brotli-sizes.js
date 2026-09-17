@@ -38,6 +38,16 @@ export default class BrotliSizes {
     Promise.resolve().then(() => this.#begin());
   }
 
+  teardown() {
+    this.destroyed = true;
+    for (const worker of this.workers) {
+      worker.terminate();
+    }
+    this.workers = [];
+    // Persist whatever was computed before the modal closed.
+    this.#writeCache();
+  }
+
   #begin() {
     if (this.destroyed) {
       return;
@@ -122,15 +132,5 @@ export default class BrotliSizes {
     } catch {
       // Quota exceeded / unavailable — non-fatal, sizes were still computed.
     }
-  }
-
-  teardown() {
-    this.destroyed = true;
-    for (const worker of this.workers) {
-      worker.terminate();
-    }
-    this.workers = [];
-    // Persist whatever was computed before the modal closed.
-    this.#writeCache();
   }
 }

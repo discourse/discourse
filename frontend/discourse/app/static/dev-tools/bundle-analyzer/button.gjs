@@ -16,9 +16,9 @@ export default class BundleAnalyzerButton extends Component {
 
   <template>
     <button
-      type="button"
-      title={{i18n "dev_tools.toggle_bundle_analyzer"}}
       class="bundle-analyzer-button"
+      title={{i18n "dev_tools.toggle_bundle_analyzer"}}
+      type="button"
       {{on "click" this.show}}
     >
       {{dIcon "chart-column"}}

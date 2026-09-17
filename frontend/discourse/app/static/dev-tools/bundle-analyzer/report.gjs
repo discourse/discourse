@@ -56,6 +56,11 @@ export default class Report extends Component {
     return { count: files.length, ...this.analysis.totals(new Set(files)) };
   }
 
+  @action
+  updateFilter(event) {
+    this.filter = event.target.value.trim().toLowerCase();
+  }
+
   #addedSize(file) {
     const base = this.baselineClosure;
     return [...this.analysis.staticClosure(file)]
@@ -81,11 +86,6 @@ export default class Report extends Component {
       }
     }
     return false;
-  }
-
-  @action
-  updateFilter(event) {
-    this.filter = event.target.value.trim().toLowerCase();
   }
 
   <template>
@@ -120,8 +120,8 @@ export default class Report extends Component {
 
       <div class="ba-toolbar">
         <input
-          type="search"
           placeholder="Filter files / modules…"
+          type="search"
           {{on "input" this.updateFilter}}
         />
       </div>
@@ -139,11 +139,11 @@ export default class Report extends Component {
         <div>
           {{#each this.staticVisible as |f|}}
             <EntrypointCard
-              @file={{f}}
               @analysis={{this.analysis}}
-              @filter={{this.filter}}
-              @baselineClosure={{this.baselineClosure}}
               @baseline={{eq f this.baselineFile}}
+              @baselineClosure={{this.baselineClosure}}
+              @file={{f}}
+              @filter={{this.filter}}
               @loaded={{this.loaded}}
             />
           {{else}}
@@ -164,10 +164,10 @@ export default class Report extends Component {
         <div>
           {{#each this.dynamicVisible as |f|}}
             <EntrypointCard
-              @file={{f}}
               @analysis={{this.analysis}}
-              @filter={{this.filter}}
               @baselineClosure={{this.baselineClosure}}
+              @file={{f}}
+              @filter={{this.filter}}
               @loaded={{this.loaded}}
             />
           {{else}}
