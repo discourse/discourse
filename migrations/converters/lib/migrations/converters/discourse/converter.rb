@@ -23,11 +23,9 @@ module Migrations
 
         private
 
-        # Everything the Posts step needs besides its own connection: the name
-        # gates, the engine bundle and config, the source site's hosts. Loaded
-        # once per run. `step_args` is called from two scheduler threads and
-        # again in every worker, so without the memo each of them would stream
-        # all usernames again.
+        # The Posts step shares this data across its calls. `step_args` is called
+        # from two scheduler threads and again in every worker, so cache the data
+        # to avoid loading all usernames from the source database for every call.
         def posts_args
           POSTS_ARGS_LOCK.synchronize { @posts_args ||= load_posts_args }
         end
