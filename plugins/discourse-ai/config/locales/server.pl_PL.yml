@@ -72,6 +72,10 @@ pl_PL:
         title: Taguj tematy za pomocą AI
         description: "Automatycznie taguj tematy za pomocą AI"
   site_settings:
+    ai_ask_ai_report_weekly_enabled: "Automatycznie generuj raport Zapytaj AI co tydzień za ostatnie siedem pełnych dni. Raporty pojawiają się na pulpicie nawigacyjnym. Jeśli grupy są wybrane w {{setting:ai_ask_ai_report_recipient_groups}}, otrzymają one również PM. Wymaga włączenia Zapytaj AI i skonfigurowanego modelu języka raportów. Raporty ręczne pozostają dostępne."
+    ai_ask_ai_report_agent: "Agent służy do grupowania pytań użytkowników w raportach na pulpicie nawigacyjnym Zapytaj AI."
+    ai_ask_ai_report_max_asks: "Maksymalna liczba zapytań analizowanych w raporcie. Obejmuje wszystkie zapytania w wybranym okresie lub najnowsze zapytania do tego limitu, w zależności od tego, która liczba jest mniejsza. Większe raporty wymagają szerszego kontekstu modelu i mogą kosztować więcej."
+    ai_ask_ai_report_recipient_groups: "Grupy otrzymujące automatyczne cotygodniowe raporty PW i mogą być uwzględniane w ręcznych raportach PW. Raporty zawierają pytania użytkowników. Pozostaw puste, aby automatyczne raporty były widoczne tylko na pulpicie."
     discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
     enable_ai_bot_starred_conversations: "Zezwól użytkownikom na wyróżnianie rozmów botów AI i wyświetlanie ich w sekcji oznaczonej gwiazdką na pasku bocznym."
     ai_default_llm_model: "Domyślny model LLM do wykorzystania we wszystkich funkcjach AI"
@@ -284,6 +288,17 @@ pl_PL:
       title: "😲 Niespodzianka"
       description: "Posty sklasyfikowane według emocji zaskoczenia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
   discourse_ai:
+    ask_ai_reports:
+      no_model: "Przed wygenerowaniem raportów skonfiguruj domyślny model języka sztucznej inteligencji."
+      no_asks: "W tym okresie nie było żadnych próśb."
+      title: "O co pytają użytkownicy: %{start} – %{end}"
+      coverage: "Przeanalizowano ostatnie %{count} z %{total} pytań w tym okresie. Pytania mogą pojawiać się w wielu tematach."
+      ungrouped_name: "Pytania niepogrupowane"
+      ungrouped_description: "W raporcie nie przypisano tych pytań do konkretnego podmiotu."
+      no_insights: "Pytania te nie dostarczyły wystarczających dowodów, aby sformułować konkretne zalecenia dotyczące dalszych działań."
+      suggested_action: "Sugerowane dalsze działania: %{action}"
+      view_dashboard: "Przeglądaj wszystkie tematy i pytania na pulpicie nawigacyjnym"
+      disclaimer: "Obserwacje generowane przez sztuczną inteligencję opisują zadane pytania, a nie jakość czy przydatność odpowiedzi. Sugerowane działania następcze to możliwości zbadania tematu, a nie potwierdzone luki. Pytania mogą dotyczyć wielu przedmiotów."
     ai_artifact:
       errors:
         max_keys_exceeded:
@@ -643,6 +658,9 @@ pl_PL:
         discover:
           name: "Odkrywaj"
           description: "Domyślny agent używany w funkcji odkrywania (bezpłatne wyszukiwanie)"
+        ask_ai_reporter:
+          name: "Tworzący raporty Zapytaj AI"
+          description: "Grupuje pytania użytkowników według tematów na potrzeby raportów na pulpicie nawigacyjnym Zapytaj AI."
         ask_ai_synthesis:
           name: "Synteza Zapytaj AI"
           description: "Wybiera źródła i przygotowuje odpowiedź wyświetlaną przez Zapytaj AI"

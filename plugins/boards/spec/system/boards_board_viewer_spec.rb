@@ -252,7 +252,7 @@ describe "Boards Board Viewer" do
       board_viewer.visit_board(board)
 
       expect(board_viewer).to have_card_in_column("To Do", "Read only topic")
-      expect(board_viewer.card_draggable?("Read only topic")).to eq(false)
+      expect(board_viewer).to have_no_draggable_card("Read only topic")
     end
   end
 
@@ -728,7 +728,7 @@ describe "Boards Board Viewer" do
         "/boards/archive-roundtrip-archived-#{Time.zone.today.strftime("%Y%m%d")}/#{board.id}",
       )
       expect(board_viewer).to have_no_add_card_button_in_column("To Do")
-      expect(page).to have_css("[data-card-id='#{card.id}'][draggable='false']")
+      expect(page).to have_css("[data-card-id='#{card.id}']:not([data-drag-source])")
 
       board_viewer.open_controls_menu
       expect(board_viewer).to have_no_board_settings_option
@@ -741,7 +741,7 @@ describe "Boards Board Viewer" do
       expect(page).to have_no_css(".discourse-boards-archive-modal")
       expect(page).to have_current_path("/boards/archive-roundtrip/#{board.id}")
       expect(board_viewer).to have_add_card_button_in_column("To Do")
-      expect(page).to have_css("[data-card-id='#{card.id}'][draggable='true']")
+      expect(page).to have_css("[data-card-id='#{card.id}'][data-drag-source]")
     end
   end
 

@@ -130,6 +130,7 @@ en:
         created_by: "Created by"
         show_older_cards: "Show %{count} older cards"
         errors:
+          category_unavailable: "The destination category is no longer available. Update the board or column settings before creating a topic."
           acl_update_failed: "Failed to update board permissions."
           acl_create_failed: "Failed to create board permissions."
       manage:

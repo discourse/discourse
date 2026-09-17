@@ -2,6 +2,7 @@
 
 describe Jobs::GenerateWeeklyAskAiReport do
   fab!(:admin)
+  fab!(:user)
   fab!(:llm_model)
 
   before do
@@ -11,8 +12,19 @@ describe Jobs::GenerateWeeklyAskAiReport do
     freeze_time Time.utc(2026, 9, 16, 12)
   end
 
+  it "skips a week containing only questions from excluded groups" do
+    SiteSetting.ai_ask_ai_report_weekly_enabled = true
+    group = Fabricate(:group)
+    group.add(user)
+    SiteSetting.ai_ask_ai_report_exclude_groups = group.id.to_s
+    AskAiLog.create!(user:, query: "Excluded question", asked_at: 1.day.ago)
+
+    expect { described_class.new.execute({}) }.not_to change(AskAiReport, :count)
+    expect(Jobs::GenerateAskAiReport.jobs).to be_empty
+  end
+
   it "does not generate automatically by default" do
-    AskAiLog.create!(user: admin, query: "Question", asked_at: 1.day.ago)
+    AskAiLog.create!(user:, query: "Question", asked_at: 1.day.ago)
     expect(SiteSetting.ai_ask_ai_report_weekly_enabled).to eq(false)
     expect { described_class.new.execute({}) }.not_to change(AskAiReport, :count)
   end
@@ -20,7 +32,7 @@ describe Jobs::GenerateWeeklyAskAiReport do
   it "skips empty periods and respects the Ask AI switches" do
     SiteSetting.ai_ask_ai_report_weekly_enabled = true
     expect { described_class.new.execute({}) }.not_to change(AskAiReport, :count)
-    AskAiLog.create!(user: admin, query: "Question", asked_at: 1.day.ago)
+    AskAiLog.create!(user:, query: "Question", asked_at: 1.day.ago)
     SiteSetting.ai_ask_ai_enabled = false
     expect { described_class.new.execute({}) }.not_to change(AskAiReport, :count)
     SiteSetting.ai_ask_ai_enabled = true
@@ -30,15 +42,11 @@ describe Jobs::GenerateWeeklyAskAiReport do
 
   it "generates the previous seven complete days once and delivers to the configured groups" do
     SiteSetting.ai_ask_ai_report_weekly_enabled = true
-    first = AskAiLog.create!(user: admin, query: "Start of week", asked_at: Time.utc(2026, 9, 9))
+    first = AskAiLog.create!(user:, query: "Start of week", asked_at: Time.utc(2026, 9, 9))
     last =
-      AskAiLog.create!(
-        user: admin,
-        query: "End of week",
-        asked_at: Time.utc(2026, 9, 15, 23, 59, 59),
-      )
-    AskAiLog.create!(user: admin, query: "Too old", asked_at: Time.utc(2026, 9, 8, 23, 59, 59))
-    AskAiLog.create!(user: admin, query: "Today", asked_at: Time.current)
+      AskAiLog.create!(user:, query: "End of week", asked_at: Time.utc(2026, 9, 15, 23, 59, 59))
+    AskAiLog.create!(user:, query: "Too old", asked_at: Time.utc(2026, 9, 8, 23, 59, 59))
+    AskAiLog.create!(user:, query: "Today", asked_at: Time.current)
     described_class.new.execute({})
     report = AskAiReport.last
     expect(report).to have_attributes(
@@ -73,7 +81,7 @@ describe Jobs::GenerateWeeklyAskAiReport do
 
   it "keeps automatic reports separate from manual requests for the same period" do
     SiteSetting.ai_ask_ai_report_weekly_enabled = true
-    AskAiLog.create!(user: admin, query: "Question", asked_at: 1.day.ago)
+    AskAiLog.create!(user:, query: "Question", asked_at: 1.day.ago)
     described_class.new.execute({})
     automatic = AskAiReport.last
     manual =
@@ -89,7 +97,7 @@ describe Jobs::GenerateWeeklyAskAiReport do
 
   it "does not generate a queued automatic report after weekly reporting is disabled" do
     SiteSetting.ai_ask_ai_report_weekly_enabled = true
-    AskAiLog.create!(user: admin, query: "Question", asked_at: 1.day.ago)
+    AskAiLog.create!(user:, query: "Question", asked_at: 1.day.ago)
     described_class.new.execute({})
     report = AskAiReport.last
     SiteSetting.ai_ask_ai_report_weekly_enabled = false
@@ -103,7 +111,7 @@ describe Jobs::GenerateWeeklyAskAiReport do
   it "keeps automatic reports on the dashboard when no recipient groups are configured" do
     SiteSetting.ai_ask_ai_report_weekly_enabled = true
     SiteSetting.ai_ask_ai_report_recipient_groups = ""
-    ask = AskAiLog.create!(user: admin, query: "Question", asked_at: 1.day.ago)
+    ask = AskAiLog.create!(user:, query: "Question", asked_at: 1.day.ago)
     described_class.new.execute({})
     report = AskAiReport.last
     output = {

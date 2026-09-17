@@ -2,33 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { eq, not } from "discourse/truth-helpers";
+import { eq, includes, not } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import { loadCategories } from "../../lib/boards-categories";
 
-function includes(arr, item) {
-  return arr.includes(item);
-}
-
 export default class BoardsConstraintFix extends Component {
   @tracked selectedCategoryId = null;
   @tracked selectedTagNames = [];
-
-  constructor() {
-    super(...arguments);
-    const { mismatches, topic } = this.args.model;
-
-    if (mismatches.needsCategory && mismatches.boardCategoryIds.length === 1) {
-      this.selectedCategoryId = mismatches.boardCategoryIds[0];
-    }
-
-    if (!mismatches.needsCategory) {
-      this.selectedCategoryId = topic.category_id;
-    }
-  }
 
   get canSave() {
     const { mismatches } = this.args.model;
@@ -39,6 +22,16 @@ export default class BoardsConstraintFix extends Component {
       return false;
     }
     return true;
+  }
+
+  @action
+  async loadCategoryOptions(ids) {
+    const categories = await loadCategories(ids);
+    if (!this.isDestroying && ids.length === 1) {
+      this.selectedCategoryId = categories[0]?.id ?? null;
+    }
+
+    return categories;
   }
 
   @action
@@ -59,6 +52,10 @@ export default class BoardsConstraintFix extends Component {
 
   @action
   confirm() {
+    if (!this.canSave) {
+      return;
+    }
+
     const result = {};
     const { mismatches } = this.args.model;
 
@@ -95,7 +92,7 @@ export default class BoardsConstraintFix extends Component {
             <label>{{i18n "boards.board.constraint_fix_category"}}</label>
             <div class="discourse-boards-constraint-fix__options">
               <DAsyncContent
-                @asyncData={{loadCategories}}
+                @asyncData={{this.loadCategoryOptions}}
                 @context={{@model.mismatches.boardCategoryIds}}
               >
                 <:content as |categories|>

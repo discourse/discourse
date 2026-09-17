@@ -2050,6 +2050,7 @@ id:
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
+      latest_topics: "Topik Terbaru"
       description_expand: "Tampilkan lebih banyak"
       description_collapse: "Tampilkan lebih sedikit"
       permissions:

@@ -87,6 +87,7 @@ class UsersController < ApplicationController
                   update_security_key
                 ]
   before_action :respond_to_suspicious_request, only: [:create]
+  before_action :ensure_random_username_access, only: [:generate_random_username]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
@@ -109,6 +110,7 @@ class UsersController < ApplicationController
                        email_login
                        admin_login
                        confirm_admin
+                       generate_random_username
                      ]
   skip_before_action :redirect_to_profile_if_required, only: %i[show staff_info update]
 
@@ -651,8 +653,6 @@ class UsersController < ApplicationController
   end
 
   def generate_random_username
-    raise Discourse::NotFound if !SiteSetting.enable_random_usernames
-
     RateLimiter.new(nil, "random-username-#{request.remote_ip}", 20, 1.minute).performed!
 
     username = RandomUsernameGenerator.generate
@@ -2182,6 +2182,19 @@ class UsersController < ApplicationController
 
   private
 
+  def ensure_random_username_access
+    raise Discourse::NotFound if !SiteSetting.enable_random_usernames
+    return redirect_to_login_if_required if current_user
+    return if !SiteSetting.login_required?
+
+    signup_token = request.headers["X-Discourse-Signup-Token"].to_s
+    signup_proof =
+      if signup_token.match?(/\A[0-9a-f]{64}\z/)
+        server_session["#{SessionController::LOGIN_CODE_SIGNUP_KEY_PREFIX}#{signup_token}"]
+      end
+    raise Discourse::InvalidAccess if !signup_proof.is_a?(Hash)
+  end
+
   def assign_topic_post_count(user_serializer)
     topic_id = params[:include_post_count_for].to_i
     if topic_id != 0 && guardian.can_see?(Topic.find_by_id(topic_id))
@@ -2331,16 +2344,7 @@ class UsersController < ApplicationController
   end
 
   def clashing_with_existing_route?(username)
-    normalized_username = User.normalize_username(username)
-    http_verbs = %w[GET POST PUT DELETE PATCH]
-    allowed_actions = %w[show update destroy]
-
-    http_verbs.any? do |verb|
-      path = Rails.application.routes.recognize_path("/u/#{normalized_username}", method: verb)
-      allowed_actions.exclude?(path[:action])
-    rescue ActionController::RoutingError
-      false
-    end
+    UsernameValidator.clashing_with_existing_route?(username)
   end
 
   def confirm_server_session

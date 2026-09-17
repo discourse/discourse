@@ -2018,6 +2018,7 @@ sw:
       delete_confirm: "Una uhakika unataka kufuta kategoria hii?"
       delete_error: "Hitilafu imetokea wakati wa kuondoa kategoria."
       no_description: "Tafadhali, ongeza maelezo kuhusu kategoria hii."
+      latest_topics: "Mada za hivi karibuni"
       already_used: "Rangi hii imetumika kwenye kategoria nyingine"
       security: "Ulinzi"
       permissions:

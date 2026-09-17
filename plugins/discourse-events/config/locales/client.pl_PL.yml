@@ -424,6 +424,7 @@ pl_PL:
         description_private: "W przypadku wydarzeń prywatnych akceptowane są tylko nazwy grup w przypadku zaproszeń zbiorczych."
         download_sample_csv: "Pobierz przykładowy plik CSV"
         send_bulk_invites: "Wyślij zaproszenia"
+        add_attendee: "Dodaj uczestnika"
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
         attendance_label: "Obecność"

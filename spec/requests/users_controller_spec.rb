@@ -2418,6 +2418,36 @@ RSpec.describe UsersController do
       expect(response.parsed_body["avatar_template"]).to eq(User.default_template(username))
     end
 
+    context "when login is required" do
+      before { SiteSetting.login_required = true }
+
+      it "rejects an anonymous request without a verified signup continuation" do
+        get "/u/random-username.json"
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows a verified passwordless signup continuation" do
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.must_approve_users = true
+        login_code = EmailLoginCode.generate!(email: "newuser@example.com")
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: login_code.email,
+               code: login_code.code,
+             }
+        signup_token = response.parsed_body["signup_token"]
+
+        get "/u/random-username.json", headers: { "X-Discourse-Signup-Token" => signup_token }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username"]).to be_present
+        expect(User.find_by_email(login_code.email)).to be_nil
+        expect(session[:current_user_id]).to be_nil
+      end
+    end
+
     it "keeps an uploaded avatar when generating a username" do
       user = Fabricate(:user)
       upload = Fabricate(:upload, user:)

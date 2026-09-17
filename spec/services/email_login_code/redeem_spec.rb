@@ -308,6 +308,18 @@ RSpec.describe EmailLoginCode::Redeem do
 
       it { is_expected.to run_successfully }
 
+      context "when a new account is required" do
+        let(:params) { { email:, code:, new_account_required: true } }
+
+        it { is_expected.to fail_a_policy(:new_account_available) }
+
+        it "does not consume the code" do
+          result
+
+          expect(login_code.reload.consumed_at).to be_nil
+        end
+      end
+
       it "returns the user and consumes the code" do
         expect(result[:user]).to eq(user)
         expect(login_code.reload.consumed_at).to be_present

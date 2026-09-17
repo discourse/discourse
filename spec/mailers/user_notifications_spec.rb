@@ -77,6 +77,50 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".signup_after_approval" do
+    before do
+      SiteSetting.enable_local_logins_via_code = true
+      SiteSetting.enable_local_logins = true
+      SiteSetting.enable_local_logins_via_email = true
+    end
+
+    it "links a passwordless user to code login when it is available" do
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("#{Discourse.base_url}/login?mode=code")
+      expect(body).not_to include("code=")
+      expect(body).to include("#{Discourse.base_url}/guidelines")
+    end
+
+    it "links a user with a password to the default destination" do
+      body = UserNotifications.signup_after_approval(user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+
+    it "uses the default destination when code login is unavailable" do
+      SiteSetting.enable_local_logins_via_code = false
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+
+    it "uses the default destination when external login is required" do
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "s" * 32
+      SiteSetting.enable_discourse_connect = true
+      passwordless_user = Fabricate(:user, password: nil)
+      body = UserNotifications.signup_after_approval(passwordless_user).body.to_s
+
+      expect(body).to include("logging in at:\n#{Discourse.base_url}")
+      expect(body).not_to include("/login?mode=code")
+    end
+  end
+
   describe ".forgot_password" do
     subject(:email) { UserNotifications.forgot_password(user) }
 

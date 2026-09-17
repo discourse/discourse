@@ -1149,18 +1149,233 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to be_nil
     end
 
-    it "does not log in an unapproved user when approval is required" do
+    it "shows the pending approval result for an existing unapproved user" do
       SiteSetting.must_approve_users = true
 
       post "/session/login-code/verify.json", params: { email: user.email, code: }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["error"]).to eq(I18n.t("login.not_approved"))
+      expect(response.parsed_body).to eq("pending_approval" => true)
       expect(session[:current_user_id]).to be_nil
+      expect(login_code.reload.consumed_at).to be_present
     end
 
     context "when the email does not belong to a user" do
       let(:login_code) { EmailLoginCode.generate!(email: "newuser@example.com") }
+
+      it "rejects caller-supplied reserved and route-conflicting usernames without consuming the code" do
+        %w[MoDeRaToR ACCOUNT-CREATED].each do |username|
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 username:,
+               }
+
+          expect(response.parsed_body["error"]).to include(I18n.t("login.reserved_username")),
+          username
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+          expect(ReviewableUser.count).to eq(0)
+          expect(session[:current_user_id]).to be_nil
+          expect(login_code.reload.consumed_at).to be_nil
+        end
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "valid-chosen-name",
+             }
+
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(User.find_by_email("newuser@example.com").username).to eq("valid-chosen-name")
+      end
+
+      it "rejects reserved and route-conflicting usernames on an approval continuation" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        signup_token = response.parsed_body["signup_token"]
+
+        %w[MoDeRaToR ACCOUNT-CREATED].each do |username|
+          post "/session/login-code/verify.json", params: { signup_token:, username: }
+
+          expect(response.parsed_body["error"]).to include(I18n.t("login.reserved_username"))
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+          expect(ReviewableUser.count).to eq(0)
+          expect(session[:current_user_id]).to be_nil
+          expect(login_code.reload.consumed_at).to be_nil
+        end
+
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "valid-chosen-name",
+             }
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(User.find_by_email("newuser@example.com").username).to eq("valid-chosen-name")
+        expect(ReviewableUser.count).to eq(1)
+      end
+
+      it "collects identity before creating a passwordless account awaiting approval" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        SiteSetting.full_name_requirement = "required_at_signup"
+        user_field = Fabricate(:user_field, name: "Occupation")
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        signup_token = response.parsed_body["signup_token"]
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["signup_details_required"]).to eq(true)
+        expect(response.parsed_body["username"]).to be_present
+        expect(signup_token).to be_present
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "chosen-name",
+               name: "Chosen Name",
+               user_fields: {
+                 user_field.id => "Engineer",
+               },
+             }
+
+        new_user = User.find_by_email("newuser@example.com")
+        reviewable = ReviewableUser.find_by(target: new_user)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(new_user).to be_active
+        expect(new_user).not_to be_approved
+        expect(new_user.username).to eq("chosen-name")
+        expect(new_user.name).to eq("Chosen Name")
+        expect(new_user.custom_fields["user_field_#{user_field.id}"]).to eq("Engineer")
+        expect(new_user.user_password).to be_nil
+        expect(reviewable.payload.slice("username", "name")).to eq(
+          "username" => "chosen-name",
+          "name" => "Chosen Name",
+        )
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_present
+      end
+
+      it "allows correcting an invalid password without consuming the verified proof" do
+        SiteSetting.must_approve_users = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        signup_token = response.parsed_body["signup_token"]
+
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "valid-name",
+               password: "x" * (User.max_password_length + 1),
+             }
+
+        expect(response.parsed_body["error"]).to be_present
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "valid-name",
+               password: "short",
+             }
+
+        expect(response.parsed_body["password_error"]).to be_present
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+
+        password = "a-secure-password-42!"
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "valid-name",
+               password:,
+             }
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        new_user = User.find_by_email("newuser@example.com")
+        expect(new_user.username).to eq("valid-name")
+        expect(new_user.confirm_password?(password)).to eq(true)
+        expect(session[:current_user_id]).to be_nil
+      end
+
+      it "rejects an expired or reused signup proof" do
+        SiteSetting.must_approve_users = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        signup_token = response.parsed_body["signup_token"]
+
+        freeze_time 11.minutes.from_now do
+          post "/session/login-code/verify.json", params: { signup_token:, username: "too-late" }
+        end
+
+        expect(response.parsed_body).to eq("error" => I18n.t("email_login_code.invalid_code"))
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+
+        fresh_code = EmailLoginCode.generate!(email: "newuser@example.com")
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code: fresh_code.code,
+             }
+        fresh_token = response.parsed_body["signup_token"]
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token: fresh_token,
+               username: "created-once",
+             }
+        expect(response.parsed_body).to eq("pending_approval" => true)
+
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token: fresh_token,
+               username: "created-twice",
+             }
+
+        expect(response.parsed_body).to eq("error" => I18n.t("email_login_code.invalid_code"))
+        expect(UserEmail.where(email: "newuser@example.com").count).to eq(1)
+        expect(session[:current_user_id]).to be_nil
+      end
+
+      it "does not turn a signup continuation into an existing-account login" do
+        SiteSetting.must_approve_users = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        signup_token = response.parsed_body["signup_token"]
+        existing_user = Fabricate(:user, email: "newuser@example.com")
+        Fabricate(:user_second_factor_totp, user: existing_user)
+
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "should-not-login",
+             }
+
+        expect(response.parsed_body).to eq("error" => I18n.t("email_login_code.invalid_code"))
+        expect(response.body).not_to include(existing_user.username)
+        expect(session[:current_user_id]).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "keeps auto-approved domains on the immediate account creation path" do
+        SiteSetting.must_approve_users = true
+        SiteSetting.auto_approve_email_domains = "example.com"
+
+        post "/session/login-code/verify.json", params: { email: " NEWUSER@example.com ", code: }
+
+        new_user = User.find_by_email("newuser@example.com")
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(new_user).to be_approved
+        expect(session[:current_user_id]).to eq(new_user.id)
+      end
 
       it "creates and logs in a new user" do
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }

@@ -6,6 +6,10 @@ class EmailLoginCode::Redeem
   params base_class: EmailLoginCode::Verify::Contract do
     attribute :user_fields
     attribute :name, :string
+    attribute :password, :string
+    attribute :username, :string
+    attribute :username_required, :boolean, default: false
+    attribute :new_account_required, :boolean, default: false
 
     before_validation do
       # Only hash-like input can carry field values; anything else (a stray
@@ -20,16 +24,22 @@ class EmailLoginCode::Redeem
           end
         )
       self.name = name.to_s.strip.presence
+      self.username = username.to_s.strip.presence
     end
 
     validates :name, length: { maximum: 255 }
+    validates :password, length: { maximum: User.max_password_length }, allow_nil: true
   end
 
   model :login_code
   policy :code_matches
   model :existing_user, :fetch_existing_user, optional: true
+  policy :new_account_available
   policy :email_available_for_new_account
   policy :can_register_new_account
+  policy :can_register_from_ip
+  policy :required_username_provided
+  policy :username_allowed
   policy :required_fields_provided
   policy :required_full_name_provided
 
@@ -63,6 +73,10 @@ class EmailLoginCode::Redeem
   # belong to an existing account once normalized (e.g. a Gmail alias). Such a
   # code can neither log in nor create an account, so it's treated as invalid
   # (via the controller's generic failure) rather than leaking a reason.
+  def new_account_available(existing_user:, params:)
+    !params.new_account_required || existing_user.blank?
+  end
+
   def email_available_for_new_account(existing_user:, params:)
     return true if existing_user.present?
 
@@ -78,6 +92,21 @@ class EmailLoginCode::Redeem
     SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
       !SiteSetting.require_invite_code && EmailValidator.allowed?(params.email) &&
       !ScreenedEmail.should_block?(params.email)
+  end
+
+  def can_register_from_ip(existing_user:, ip_address:)
+    existing_user.present? || !SpamHandler.should_prevent_registration_from_ip?(ip_address)
+  end
+
+  def required_username_provided(existing_user:, params:)
+    existing_user.present? || !params.username_required || params.username.present?
+  end
+
+  def username_allowed(existing_user:, params:)
+    return true if existing_user.present? || params.username.blank?
+
+    !User.reserved_username?(params.username) &&
+      !UsernameValidator.clashing_with_existing_route?(params.username)
   end
 
   def required_fields_provided(existing_user:, params:)
@@ -116,6 +145,8 @@ class EmailLoginCode::Redeem
         ip_address: ip_address,
         user_fields: params.user_fields,
         name: params.name,
+        password: params.password,
+        username: params.username,
       )
   end
 

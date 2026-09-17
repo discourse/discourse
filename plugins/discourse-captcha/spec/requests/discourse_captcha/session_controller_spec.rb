@@ -76,6 +76,96 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to eq(existing_user.id)
     end
 
+    context "when an approval signup requires account details" do
+      fab!(:user_field, :user_field)
+
+      before do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        SiteSetting.full_name_requirement = "required_at_signup"
+      end
+
+      let(:email) { "approval.person@example.com" }
+      let(:login_code) { EmailLoginCode.generate!(email:) }
+      let(:account_details) do
+        {
+          username: "approval-person",
+          name: "Approval Person",
+          user_fields: {
+            user_field.id.to_s => "Developer",
+          },
+        }
+      end
+
+      it "carries verified CAPTCHA proof into the continuation without validating it twice" do
+        verification_request =
+          stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+            body: {
+              secret: SiteSetting.hcaptcha_secret_key,
+              response: "captcha-token",
+            },
+          ).to_return(status: 200, body: '{"success":true}')
+        post "/captcha/hcaptcha/create.json", params: { token: "captcha-token" }
+
+        expect {
+          post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+        }.not_to change(User, :count)
+        signup_token = response.parsed_body["signup_token"]
+
+        expect(signup_token).to be_present
+        expect(verification_request).to have_been_requested.once
+        expect(login_code.reload.consumed_at).to be_nil
+
+        expect {
+          post "/session/login-code/verify.json",
+               params: account_details.merge(signup_token: signup_token)
+        }.to change(User, :count).by(1).and change(ReviewableUser, :count).by(1)
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(verification_request).to have_been_requested.once
+      end
+
+      it "requires CAPTCHA on the final request when the continuation has no CAPTCHA proof" do
+        SiteSetting.discourse_captcha_enabled = false
+        post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+        signup_token = response.parsed_body["signup_token"]
+        SiteSetting.discourse_captcha_enabled = true
+
+        expect {
+          post "/session/login-code/verify.json",
+               params: account_details.merge(signup_token: signup_token)
+        }.not_to change(User, :count)
+        expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+        expect(ReviewableUser.count).to eq(0)
+        expect(login_code.reload.consumed_at).to be_nil
+
+        stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+          body: hash_including(response: "bad-token"),
+        ).to_return(status: 200, body: '{"success":false}')
+        post "/captcha/hcaptcha/create.json", params: { token: "bad-token" }
+        post "/session/login-code/verify.json",
+             params: account_details.merge(signup_token: signup_token)
+
+        expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+        expect(User.find_by_email(email)).to be_nil
+        expect(ReviewableUser.count).to eq(0)
+        expect(login_code.reload.consumed_at).to be_nil
+
+        stub_request(:post, DiscourseCaptcha::HcaptchaProvider::CAPTCHA_VERIFICATION_URL).with(
+          body: hash_including(response: "valid-token"),
+        ).to_return(status: 200, body: '{"success":true}')
+        post "/captcha/hcaptcha/create.json", params: { token: "valid-token" }
+
+        expect {
+          post "/session/login-code/verify.json",
+               params: account_details.merge(signup_token: signup_token)
+        }.to change(User, :count).by(1).and change(ReviewableUser, :count).by(1)
+
+        expect(response.parsed_body).to eq("pending_approval" => true)
+        expect(login_code.reload.consumed_at).to be_present
+      end
+    end
+
     context "when signup requires user fields" do
       fab!(:user_field, :user_field)
 
