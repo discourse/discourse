@@ -101,6 +101,35 @@ RSpec.describe Migrations::Conversion::StepRunner do
     expect(step.source).to have_received(:cleanup)
   end
 
+  it "cleans up the processor when processing fails" do
+    failing_step_class =
+      Class.new(Migrations::Conversion::Step) do
+        source do
+          def items
+            []
+          end
+        end
+
+        processor do
+          def result
+            raise "boom"
+          end
+
+          def cleanup
+            Migrations::Database::IntermediateDB.insert(
+              "INSERT INTO events (kind) VALUES (?)",
+              "processor cleanup",
+            )
+          end
+        end
+      end
+
+    expect do
+      described_class.new(step: failing_step_class.new, shard_path: @shard_path, channel:).run
+    end.to raise_error("boom")
+    expect(shard_count("events")).to eq(1)
+  end
+
   context "with a batched processor" do
     # The source records each row it yields, so the log shows that the runner
     # reads and processes in turns instead of draining the source first.

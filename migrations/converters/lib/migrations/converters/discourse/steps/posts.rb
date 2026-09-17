@@ -121,8 +121,7 @@ module Migrations
             @embeds = EmbedBuffer.new(owner_type: Enums::EmbedOwner::POST)
 
             # A V8 isolate doesn't survive a fork, so the context is built in the
-            # worker from the bundle the parent loaded. Nothing closes it; it
-            # dies with the worker.
+            # worker from the bundle the parent loaded.
             @markdown_engine =
               MarkdownEngine::Context.new(bundle: markdown_bundle, config: markdown_config)
 
@@ -141,6 +140,10 @@ module Migrations
                 on_engine_refusal: ->(cause, detail) { log_refusal(cause, detail) },
                 on_slow_parse: -> { log_slow_parse },
               )
+          end
+
+          def cleanup
+            @markdown_engine&.close
           end
 
           def process_batch(items)

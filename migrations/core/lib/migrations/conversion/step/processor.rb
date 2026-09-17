@@ -37,6 +37,11 @@ module Migrations
         def setup
         end
 
+        # Releases per-worker resources after processing, including when setup or
+        # processing raises.
+        def cleanup
+        end
+
         def process(item)
           raise NotImplementedError
         end

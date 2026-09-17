@@ -51,14 +51,18 @@ module Migrations
           # still needs.
           Database::IntermediateDB.with_connection(connection) do
             processor = @step.create_processor
-            SetupGuard.run(processor)
+            begin
+              SetupGuard.run(processor)
 
-            @chunks.each do |chunk|
-              source.chunk = chunk
-              process_items(source, processor)
+              @chunks.each do |chunk|
+                source.chunk = chunk
+                process_items(source, processor)
+              end
+
+              report_result(processor)
+            ensure
+              processor.cleanup
             end
-
-            report_result(processor)
           end
         ensure
           connection.close

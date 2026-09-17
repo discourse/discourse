@@ -12,6 +12,7 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
   # supplies both sides.
   let(:hashtag_name_list) { %w[support] }
 
+  let(:markdown_bundle) { MarkdownEngineHelper.bundle }
   let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: hashtag_name_list) }
 
   let(:mention_names) do
@@ -42,7 +43,7 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       markdown_engine,
     )
 
-    processor.markdown_bundle = MarkdownEngineHelper.bundle
+    processor.markdown_bundle = markdown_bundle
     processor.markdown_config = markdown_engine.config
     processor.mention_names = mention_names
     processor.hashtag_names = markdown_engine.config.hashtag_names
@@ -69,9 +70,36 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       processor.setup
 
       expect(Migrations::Converters::MarkdownEngine::Context).to have_received(:new).with(
-        bundle: MarkdownEngineHelper.bundle,
+        bundle: markdown_bundle,
         config: markdown_engine.config,
       )
+    end
+  end
+
+  describe "#cleanup" do
+    let(:markdown_bundle) { Object.new }
+    let(:markdown_engine_class) do
+      Class.new do
+        attr_reader :config
+        attr_accessor :closed
+
+        def initialize
+          @config = Struct.new(:hashtag_names).new([])
+        end
+
+        def close
+          self.closed = true
+        end
+      end
+    end
+    let(:markdown_engine) { markdown_engine_class.new }
+
+    it "closes the worker's markdown engine" do
+      processor.setup
+
+      processor.cleanup
+
+      expect(markdown_engine.closed).to eq(true)
     end
   end
 
