@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "discourse_vips/client"
+require "tempfile"
 
 module DiscourseVips
   SVG_DIMENSIONS_TIMEOUT_SECONDS = 3
@@ -81,6 +82,41 @@ module DiscourseVips
       write:,
       timeout:,
     )
+  end
+
+  def self.downsize(
+    input_path:,
+    output_path:,
+    format:,
+    timeout:,
+    scale: nil,
+    width: nil,
+    height: nil,
+    max_pixels: nil
+  )
+    if [scale, width || height, max_pixels].compact.length != 1 || width.nil? != height.nil?
+      raise ArgumentError, "provide a scale, width and height, or a pixel-area target"
+    end
+
+    raise InvalidImage, "unsupported format" if !%w[jpg jpeg png gif webp avif].include?(format)
+
+    output_mode =
+      File.exist?(output_path) ? File.stat(output_path).mode & 0o777 : 0o666 & ~File.umask
+
+    Tempfile.create(["downsize-", ".#{format}"], File.dirname(output_path)) do |output|
+      output.close
+      Client.call(
+        ["downsize", input_path, output.path, format, scale, width, height, max_pixels],
+        operation: :optimized_image_downsize,
+        read: [input_path],
+        write: [File.dirname(output.path)],
+        timeout:,
+        nice: 10,
+      )
+      File.chmod(output_mode, output.path)
+      File.rename(output.path, output_path)
+    end
+    nil
   end
 
   def self.before_fork

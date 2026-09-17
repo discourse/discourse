@@ -61,6 +61,16 @@ class DiscourseVipsWorker
         png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "reencode-jpeg"
         reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "downsize"
+        downsize(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          format: arguments[2],
+          scale: arguments[3],
+          width: arguments[4],
+          height: arguments[5],
+          max_pixels: arguments[6],
+        )
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -248,6 +258,51 @@ class DiscourseVipsWorker
     end
     private_class_method :svg_dimensions
 
+    def self.downsize(input_path:, output_path:, format:, scale:, width:, height:, max_pixels:)
+      new do
+        begin
+          loader =
+            {
+              "jpg" => "VipsForeignLoadJpeg",
+              "jpeg" => "VipsForeignLoadJpeg",
+              "png" => "VipsForeignLoadPng",
+              "gif" => "VipsForeignLoadNsgif",
+              "webp" => "VipsForeignLoadWebp",
+              "avif" => "VipsForeignLoadHeif",
+            }.fetch(format) { raise ArgumentError, "unsupported input format" }
+          block_loaders(allowed: [loader])
+
+          if !width.empty? && !height.empty?
+            image =
+              Vips::Image.thumbnail(
+                input_path,
+                Integer(width),
+                height: Integer(height),
+                size: :down,
+              )
+          else
+            source = Vips::Image.new_from_file(input_path, access: :sequential)
+            scale =
+              if max_pixels.empty?
+                Float(scale)
+              else
+                Math.sqrt(Integer(max_pixels).fdiv(source.width * source.height))
+              end
+            raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
+
+            edge = [([source.width, source.height].max * scale).round, 1].max
+            image = Vips::Image.thumbnail(input_path, edge)
+          end
+
+          image.write_to_file(output_path)
+        rescue Vips::Error, ArgumentError => error
+          raise InvalidImage, error.message
+        end
+        nil
+      end
+    end
+    private_class_method :downsize
+
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
       image = (image * 255).round(:rint) if %i[float double].include?(image.format)
@@ -367,7 +422,12 @@ class DiscourseVipsWorker
 
   def run_sandboxed(request:, operation:)
     Dir.mktmpdir("discourse-vips-") do |scratch|
-      sandbox_paths = operation.sandbox_paths(scratch:, read: request.fetch("read"), write: request.fetch("write"))
+      sandbox_paths =
+        operation.sandbox_paths(
+          scratch:,
+          read: request.fetch("read"),
+          write: request.fetch("write"),
+        )
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),
