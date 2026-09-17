@@ -15,6 +15,8 @@ RSpec.describe DiscourseVips do
               output_path: File.join(directory, "output.jpg"),
               quality: SiteSetting.image_quality,
               timeout: 20,
+              read: [input_path],
+              write: [File.dirname(File.join(directory, "output.jpg"))],
             )
           end
 
@@ -126,6 +128,8 @@ RSpec.describe DiscourseVips do
             output_path:,
             quality: SiteSetting.image_quality,
             timeout: 20,
+            read: [input_path],
+            write: [File.dirname(output_path)],
           )
 
           expect(FastImage.type(output_path)).to eq(:jpeg)
@@ -155,6 +159,8 @@ RSpec.describe DiscourseVips do
           output_path:,
           quality: SiteSetting.image_quality,
           timeout: 20,
+          read: [input_path],
+          write: [File.dirname(output_path)],
         )
 
         expect(FastImage.type(output_path)).to eq(:jpeg)
@@ -175,12 +181,16 @@ RSpec.describe DiscourseVips do
           output_path: lower_quality_path,
           quality: 40,
           timeout: 20,
+          read: [input_path],
+          write: [File.dirname(lower_quality_path)],
         )
         described_class.heif_to_jpeg(
           input_path:,
           output_path: higher_quality_path,
           quality: 95,
           timeout: 20,
+          read: [input_path],
+          write: [File.dirname(higher_quality_path)],
         )
 
         expect(File.size(lower_quality_path)).to be < File.size(higher_quality_path)
@@ -200,6 +210,8 @@ RSpec.describe DiscourseVips do
             output_path:,
             quality: SiteSetting.image_quality,
             timeout: 20,
+            read: [input_path],
+            write: [File.dirname(output_path)],
           )
         }.to raise_error(DiscourseVips::InvalidImage)
 
@@ -221,6 +233,8 @@ RSpec.describe DiscourseVips do
             output_path: input_path,
             quality: SiteSetting.image_quality,
             timeout: 20,
+            read: [input_path],
+            write: [File.dirname(input_path)],
           )
         }.to raise_error(
           DiscourseVips::Error,
@@ -244,6 +258,8 @@ RSpec.describe DiscourseVips do
               output_path:,
               quality: SiteSetting.image_quality,
               timeout: 0.05,
+              read: [input_path],
+              write: [File.dirname(output_path)],
             )
           }.to raise_error(DiscourseVips::OperationTimeout)
         end
@@ -388,11 +404,15 @@ RSpec.describe DiscourseVips do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.jpg")
 
+        input_path = file_from_fixtures("dominant-color-transparent.png").path
+
         described_class.png_to_jpeg(
-          input_path: file_from_fixtures("dominant-color-transparent.png").path,
+          input_path:,
           output_path:,
           quality: SiteSetting.ImageQuality.png_to_jpg_quality,
           timeout: 5,
+          read: [input_path],
+          write: [File.dirname(output_path)],
         )
 
         expect(FastImage.type(output_path)).to eq(:jpeg)
@@ -404,12 +424,16 @@ RSpec.describe DiscourseVips do
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.jpg")
 
+        input_path = file_from_fixtures("logo.jpg").path
+
         expect {
           described_class.png_to_jpeg(
-            input_path: file_from_fixtures("logo.jpg").path,
+            input_path:,
             output_path:,
             quality: SiteSetting.ImageQuality.png_to_jpg_quality,
             timeout: 5,
+            read: [input_path],
+            write: [File.dirname(output_path)],
           )
         }.to raise_error(DiscourseVips::InvalidImage)
         expect(File.exist?(output_path)).to eq(false)
@@ -428,7 +452,14 @@ RSpec.describe DiscourseVips do
         output_path = File.join(directory, "converted.jpg")
         input_path = file_from_fixtures("logo.jpg").path
 
-        described_class.recompress_jpeg(input_path:, output_path:, quality: 40, timeout: 5)
+        described_class.recompress_jpeg(
+          input_path:,
+          output_path:,
+          quality: 40,
+          timeout: 5,
+          read: [input_path],
+          write: [File.dirname(output_path)],
+        )
 
         expect(FastImage.type(output_path)).to eq(:jpeg)
         expect(FastImage.size(output_path)).to eq(FastImage.size(input_path))
@@ -438,6 +469,8 @@ RSpec.describe DiscourseVips do
           output_path: higher_quality_path,
           quality: 95,
           timeout: 5,
+          read: [input_path],
+          write: [File.dirname(higher_quality_path)],
         )
         expect(File.size(output_path)).to be < File.size(higher_quality_path)
       end
@@ -455,6 +488,8 @@ RSpec.describe DiscourseVips do
             output_path: input_path,
             quality: 40,
             timeout: 5,
+            read: [input_path],
+            write: [File.dirname(input_path)],
           )
         }.to raise_error(DiscourseVips::Error, /separate input and output/)
         expect(File.binread(input_path)).to eq(original)
