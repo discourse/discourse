@@ -73,7 +73,16 @@ class DiscourseVipsWorker
         reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "svg-to-png"
         svg_to_png(input_path: arguments[0], output_path: arguments[1])
-
+      when "resize"
+        resize(
+          input_path: arguments[0],
+          output_path: arguments[1],
+          input_format: arguments[2],
+          width: arguments[3],
+          height: arguments[4],
+          quality: arguments[5],
+          strip_metadata: arguments[6],
+        )
       when "downsize"
         downsize(
           input_path: arguments[0],
@@ -289,6 +298,63 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :svg_to_png
+
+    def self.resize(
+      input_path:,
+      output_path:,
+      input_format:,
+      width:,
+      height:,
+      quality:,
+      strip_metadata:
+    )
+      new do
+        width = Integer(width)
+        height = Integer(height)
+        raise ArgumentError, "invalid resize dimensions" if !width.positive? || !height.positive?
+        if !%w[true false].include?(strip_metadata)
+          raise ArgumentError, "invalid metadata stripping flag"
+        end
+        quality = nil if quality == ""
+        if quality
+          quality = Integer(quality)
+          raise ArgumentError, "invalid encoder quality" if !quality.between?(1, 100)
+        end
+
+        loader = {
+          "jpg" => "VipsForeignLoadJpeg",
+          "jpeg" => "VipsForeignLoadJpeg",
+          "png" => "VipsForeignLoadPng",
+          "gif" => "VipsForeignLoadNsgif",
+          "webp" => "VipsForeignLoadWebp",
+          "avif" => "VipsForeignLoadHeif",
+          "svg" => "VipsForeignLoadSvg",
+        }.fetch(input_format)
+        block_loaders(allowed: [loader])
+
+        begin
+          image =
+            Vips::Image.thumbnail(
+              input_path,
+              width,
+              height: height,
+              crop: :centre,
+              output_profile: "srgb",
+            )
+          options = { strip: strip_metadata == "true" }
+          options[:interlace] = false if %w[.jpg .jpeg .png .gif].include?(
+            File.extname(output_path),
+          )
+          options[:Q] = quality if quality &&
+            %w[.jpg .jpeg .webp .avif].include?(File.extname(output_path))
+          image.write_to_file(output_path, **options)
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+        nil
+      end
+    end
+    private_class_method :resize
 
     def self.downsize(input_path:, output_path:, format:, scale:, width:, height:, max_pixels:)
       new do
