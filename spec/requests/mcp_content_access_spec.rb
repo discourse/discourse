@@ -61,6 +61,140 @@ describe "MCP content access" do
     expect(response.body).not_to include(message.raw)
   end
 
+  it "requires the dedicated moderation and site-setting scopes" do
+    authorize
+    operations = {
+      "discourse_get_review_queue_count" => [{}, "mcp:moderation:read"],
+      "discourse_list_reviewables" => [{}, "mcp:moderation:read"],
+      "discourse_list_reviewable_topics" => [{}, "mcp:moderation:read"],
+      "discourse_get_reviewable" => [{ reviewable_id: 1 }, "mcp:moderation:read"],
+      "discourse_get_user_moderation_summary" => [
+        { username: user.username },
+        "mcp:moderation:read",
+      ],
+      "discourse_get_post_revision" => [{ post_id: 1 }, "mcp:moderation:read"],
+      "discourse_perform_reviewable_action" => [
+        { reviewable_id: 1, action_id: "reject", confirm: true },
+        "mcp:moderation:write",
+      ],
+      "discourse_list_site_settings" => [{}, "mcp:site-settings:read"],
+      "discourse_update_site_setting" => [
+        {
+          setting: "title",
+          operation: "set",
+          value: "Not applied",
+          expected_current_value: SiteSetting.title,
+          confirm_change: true,
+        },
+        "mcp:site-settings:write",
+      ],
+    }
+
+    operations.each do |name, (arguments, scope)|
+      call_tool(name, arguments)
+      aggregate_failures(name) { expect_missing_scope(scope) }
+    end
+
+    expect(SiteSetting.title).not_to eq("Not applied")
+  end
+
+  it "does not let a moderation scope bypass Guardian" do
+    authorize("mcp:moderation:read")
+
+    call_tool("discourse_get_review_queue_count", {})
+
+    expect(response.status).to eq(403)
+    expect(response.parsed_body.dig("error", "message")).to eq("Not authorized")
+  end
+
+  it "does not let site-setting scopes bypass Guardian" do
+    original_title = SiteSetting.title
+    authorize("mcp:site-settings:read", "mcp:site-settings:write")
+
+    call_tool("discourse_list_site_settings", {})
+    expect(response.status).to eq(403)
+    expect(response.parsed_body.dig("error", "message")).to eq("Not authorized")
+
+    call_tool(
+      "discourse_update_site_setting",
+      {
+        setting: "title",
+        operation: "set",
+        value: "Unauthorized title",
+        expected_current_value: original_title,
+        confirm_change: true,
+      },
+    )
+    expect(response.status).to eq(403)
+    expect(SiteSetting.title).to eq(original_title)
+  end
+
+  it "requires private-message read scope for private moderation content" do
+    user.update!(moderator: true)
+    Group.refresh_automatic_groups_for_user!(user)
+    reviewable =
+      Fabricate(
+        :reviewable_flagged_post,
+        topic: message.topic,
+        target: message,
+        target_created_by: message.user,
+      )
+    SiteSetting.editing_grace_period = 0
+    PostRevisor.new(message).revise!(message.user, raw: "Revised private message")
+    authorize("mcp:moderation:read")
+
+    call_tool("discourse_get_review_queue_count", {})
+    expect(response.parsed_body.dig("result", "structuredContent", "count")).to eq(0)
+
+    call_tool("discourse_list_reviewables", {})
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.dig("result", "structuredContent", "reviewables")).to eq([])
+
+    call_tool("discourse_list_reviewable_topics", {})
+    expect(response.parsed_body.dig("result", "structuredContent", "topics")).to eq([])
+
+    call_tool("discourse_get_reviewable", { reviewable_id: reviewable.id })
+    expect_missing_scope("mcp:private-messages:read")
+
+    call_tool("discourse_get_post_revision", { post_id: message.id })
+    expect_missing_scope("mcp:private-messages:read")
+    expect(response.body).not_to include("Revised private message")
+
+    authorize("mcp:moderation:read", "mcp:private-messages:read")
+    call_tool("discourse_get_review_queue_count", {})
+    expect(response.parsed_body.dig("result", "structuredContent", "count")).to eq(1)
+    call_tool("discourse_get_reviewable", { reviewable_id: reviewable.id })
+    expect(response.parsed_body.dig("result", "isError")).to eq(false)
+    call_tool("discourse_get_post_revision", { post_id: message.id })
+    expect(response.parsed_body.dig("result", "isError")).to eq(false)
+  end
+
+  it "requires private-message write scope for private reviewable actions" do
+    user.update!(moderator: true)
+    Group.refresh_automatic_groups_for_user!(user)
+    reviewable =
+      Fabricate(
+        :reviewable_flagged_post,
+        topic: message.topic,
+        target: message,
+        target_created_by: message.user,
+      )
+    authorize("mcp:moderation:write", "mcp:private-messages:read")
+
+    call_tool(
+      "discourse_perform_reviewable_action",
+      {
+        reviewable_id: reviewable.id,
+        action_id: "agree_and_keep",
+        expected_version: reviewable.version,
+        confirm: true,
+      },
+    )
+
+    expect_missing_scope("mcp:private-messages:write")
+    expect(reviewable.reload).to be_pending
+  end
+
   it "requires the read scope across generic private-message reads" do
     authorize("mcp:private-messages:write")
     operations = {
