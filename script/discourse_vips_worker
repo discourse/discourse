@@ -327,7 +327,7 @@ class DiscourseVipsWorker
           end
 
           image.write_to_file(output_path)
-        rescue Vips::Error, ArgumentError => error
+        rescue Vips::Error => error
           raise InvalidImage, error.message
         end
         nil
@@ -454,12 +454,7 @@ class DiscourseVipsWorker
 
   def run_sandboxed(request:, operation:)
     Dir.mktmpdir("discourse-vips-") do |scratch|
-      sandbox_paths =
-        operation.sandbox_paths(
-          scratch:,
-          read: request.fetch("read"),
-          write: request.fetch("write"),
-        )
+      sandbox_paths = operation.sandbox_paths(scratch:, read: request.fetch("read"), write: request.fetch("write"))
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),
