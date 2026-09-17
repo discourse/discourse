@@ -7,6 +7,7 @@ class Invite::RedeemWithEmailCode
     attribute :invite_key, :string
     attribute :user_fields
     attribute :name, :string
+    attribute :username, :string
 
     before_validation do
       self.invite_key = invite_key.to_s.strip
@@ -17,6 +18,7 @@ class Invite::RedeemWithEmailCode
           {}
         end
       self.name = name.to_s.strip.presence
+      self.username = username.to_s.strip.presence
     end
 
     validates :invite_key, presence: true
@@ -32,6 +34,8 @@ class Invite::RedeemWithEmailCode
   policy :can_register_new_account
   policy :required_fields_provided
   policy :required_full_name_provided
+  policy :required_username_provided
+  policy :username_not_reserved
 
   try(
     ActiveRecord::RecordInvalid,
@@ -110,6 +114,14 @@ class Invite::RedeemWithEmailCode
     !Site.full_name_required_for_signup || params.name.present?
   end
 
+  def required_username_provided(existing_user:, params:)
+    existing_user.present? || params.username.present?
+  end
+
+  def username_not_reserved(existing_user:, params:)
+    existing_user.present? || !User.reserved_username?(params.username)
+  end
+
   def consume_code(login_code:)
     fail!("code already redeemed") unless login_code.consume!
   end
@@ -122,6 +134,7 @@ class Invite::RedeemWithEmailCode
         {
           email: params.email,
           name: params.name,
+          username: params.username,
           user_custom_fields: params.user_fields,
           ip_address: ip_address,
           email_verified: true,
