@@ -62,6 +62,35 @@ export default class AdComponent extends Component {
   }
 
   @computed(
+    "router.currentRoute.attributes.category",
+    "router.currentRoute.parent.attributes.category"
+  )
+  get currentCategoryPath() {
+    const slugs = [];
+    let category =
+      this.router?.currentRoute?.attributes?.category ||
+      this.router?.currentRoute?.parent?.attributes?.category;
+
+    while (category?.slug) {
+      slugs.unshift(category.slug);
+      category = category.parentCategory ?? null;
+    }
+
+    return slugs;
+  }
+
+  @computed(
+    "router.currentRoute.attributes.category",
+    "router.currentRoute.parent.attributes.category"
+  )
+  get currentCategoryCustomFields() {
+    return (
+      this.router?.currentRoute?.attributes?.category ||
+      this.router?.currentRoute?.parent?.attributes?.category
+    )?.custom_fields;
+  }
+
+  @computed(
     "router.currentRoute.attributes.category.read_restricted",
     "router.currentRoute.parent.attributes.category.read_restricted"
   )
