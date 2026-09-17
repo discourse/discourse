@@ -64,11 +64,8 @@ module Migrations
           spoiler-alert
         ].freeze
 
-        # Digesting reads the host constants and file globs only, so no V8 boots
-        # here and the host classes stay Rails-free. All paths are resolved
-        # against `root`: the converter calls this from several threads, and
-        # Ruby doesn't allow a block-form `chdir` while another thread is inside
-        # one.
+        # Resolve paths against `root` because this can run concurrently and
+        # changing the process working directory is not thread-safe.
         def self.load_or_build(cache_dir: nil)
           root = MarkdownEngine.discourse_root
           cache_dir ||= File.join(root, CACHE_DIR)
