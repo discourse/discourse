@@ -361,6 +361,8 @@ class UploadCreator
         output_path: to,
         quality: SiteSetting.image_quality,
         timeout: MAX_CONVERT_FORMAT_SECONDS,
+        read:,
+        write:,
       )
     else
       begin
@@ -666,6 +668,8 @@ class UploadCreator
         output_path: to,
         quality:,
         timeout: MAX_CONVERT_FORMAT_SECONDS,
+        read: [from],
+        write: [File.dirname(to)],
       )
     else
       from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")

@@ -20,7 +20,13 @@ RSpec.describe DiscourseVips do
           input_path = oriented_file.path
           expect(Vips::Image.new_from_file(input_path).get("orientation")).to eq(8)
 
-          described_class.reencode_jpeg(input_path:, quality: 95, timeout: 5)
+          described_class.reencode_jpeg(
+            input_path:,
+            quality: 95,
+            timeout: 5,
+            read: [input_path],
+            write: [input_path],
+          )
 
           image = Vips::Image.jpegload(input_path, revalidate: true)
           expect([image.width, image.height]).to eq([1600, 1200])
@@ -42,7 +48,13 @@ RSpec.describe DiscourseVips do
             .autorot
             .jpegsave_buffer(Q: 95, interlace: false, optimize_coding: false)
 
-        described_class.reencode_jpeg(input_path:, quality: 95, timeout: 5)
+        described_class.reencode_jpeg(
+          input_path:,
+          quality: 95,
+          timeout: 5,
+          read: [input_path],
+          write: [input_path],
+        )
 
         expect(File.size(input_path)).to be < unoptimized.bytesize
         expect(Vips::Image.jpegload(input_path, revalidate: true).write_to_memory).to eq(
