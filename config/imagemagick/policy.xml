@@ -36,8 +36,6 @@
   <policy domain="coder" rights="read|write" pattern="MVG"/>
   <!-- XC: LetterAvatar canvas -->
   <policy domain="coder" rights="read|write" pattern="XC"/>
-  <!-- ICC/ICM: RT_sRGB.icm "-profile" on resize/crop/downsize -->
-  <policy domain="coder" rights="read|write" pattern="{ICC,ICM}"/>
   <!-- HISTOGRAM/INFO: Upload#calculate_dominant_color! -->
   <policy domain="coder" rights="read|write" pattern="{HISTOGRAM,INFO}"/>
 

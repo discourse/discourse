@@ -24,9 +24,7 @@ module ImageMagick
 
   def self.asset_read_paths
     @asset_read_paths ||=
-      Discourse::SafeExec.existing_paths(
-        [Rails.root.join("vendor").to_s, ENV["MAGICK_CONFIGURE_PATH"], *FONTCONFIG_READ_PATHS],
-      )
+      Discourse::SafeExec.existing_paths([ENV["MAGICK_CONFIGURE_PATH"], *FONTCONFIG_READ_PATHS])
   end
 
   def self.magick(
