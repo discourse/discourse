@@ -35,14 +35,14 @@ module Migrations
         def load_posts_args
           source_db = Adapter::Postgres.new(settings[:source_db])
 
-          source_settings = source_settings(source_db)
+          source_setting_overrides = source_setting_overrides(source_db)
           group_names = group_names(source_db)
-          here_mention = here_mention(source_settings)
+          here_mention = here_mention(source_setting_overrides)
           custom_emoji_names = custom_emoji_names(source_db)
 
           markdown_config =
             MarkdownEngine::Config.new(
-              source_settings:,
+              source_settings: source_setting_overrides,
               category_slugs: category_slugs(source_db),
               tag_names: tag_names(source_db),
               custom_emoji_names:,
@@ -114,9 +114,9 @@ module Migrations
           prefix.empty? ? nil : prefix
         end
 
-        # The engine config takes the markdown settings from this,
-        # `here_mention` the name of the `@here` mention.
-        def source_settings(source_db)
+        # The engine config merges these persisted overrides with its YAML
+        # defaults; `here_mention` applies its default separately.
+        def source_setting_overrides(source_db)
           source_db
             .query("SELECT name, value FROM site_settings")
             .to_h { |row| [row[:name], row[:value]] }
@@ -178,8 +178,8 @@ module Migrations
 
         # The Discourse default isn't stored in `site_settings` until someone
         # changes it.
-        def here_mention(source_settings)
-          source_settings["here_mention"].presence || "here"
+        def here_mention(source_setting_overrides)
+          source_setting_overrides["here_mention"].presence || "here"
         end
 
         def normalize(name)

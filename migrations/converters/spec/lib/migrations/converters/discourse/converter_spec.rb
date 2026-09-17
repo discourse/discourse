@@ -118,7 +118,7 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
         expect(args[:markdown_config].tag_names).to eq(%w[release])
       end
 
-      it "gives the engine the source's markdown site settings" do
+      it "gives the engine YAML defaults with the source's persisted overrides" do
         allow(source_db).to receive(:query).with(
           "SELECT name, value FROM site_settings",
         ).and_return(
@@ -130,6 +130,7 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
 
         settings = posts_args[:markdown_config].settings
 
+        expect(settings["enable_mentions"]).to be true
         expect(settings["enable_markdown_typographer"]).to be false
         expect(settings).not_to have_key("title")
       end
