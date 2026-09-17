@@ -221,6 +221,19 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
         expect(args[:internal_link_base_prefix]).to eq("/community")
       end
 
+      it "prefers the base URL prefix when a former URL has the same host" do
+        args =
+          posts_args(
+            source_site: {
+              base_url: "https://www.example.com/community",
+              former_domains: %w[https://www.example.com],
+            },
+          )
+
+        expect(args[:internal_link_hosts]).to eq("www.example.com" => "/community")
+        expect(args[:internal_link_base_prefix]).to eq("/community")
+      end
+
       it "leaves the base prefix nil when the base URL sits at the root" do
         args =
           posts_args(

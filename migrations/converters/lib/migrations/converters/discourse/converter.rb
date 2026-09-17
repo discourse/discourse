@@ -72,8 +72,9 @@ module Migrations
         # `former_domains` in the `source_site` settings. Hosts are downcased
         # without the port, so `http://`, `https://` and `//host` links all
         # match. The prefix is the URL's path (`/forum` for a subfolder install,
-        # nil for a root install) and can differ per host. Without the setting
-        # only relative links are detected.
+        # nil for a root install) and can differ per host. The current base URL
+        # wins when a former URL has the same host. Without the setting only
+        # relative links are detected.
         def internal_link_hosts
           source_site_urls.to_h { |url| host_and_prefix(url) }
         end
@@ -87,7 +88,7 @@ module Migrations
 
         def source_site_urls
           site = settings[:source_site] || {}
-          [site[:base_url], *Array(site[:former_domains])].compact
+          [*Array(site[:former_domains]), site[:base_url]].compact
         end
 
         # Splits a URL into its downcased host without the port and its path
