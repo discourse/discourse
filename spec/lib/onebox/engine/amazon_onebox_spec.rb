@@ -5,11 +5,6 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     before do
       @link = "https://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X"
       @uri = "https://www.amazon.com/dp/193609620X"
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X",
-      ).to_return(status: 200, body: onebox_response("amazon"))
     end
 
     include_context "with engines"
@@ -145,11 +140,6 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
         status: 200,
         body: onebox_response("amazon-og"),
       )
-
-      stub_request(:get, "https://www.amazon.com/Christine-Rebecca-Hall/dp/B01MFXN4Y2").to_return(
-        status: 200,
-        body: onebox_response("amazon-og"),
-      )
     end
 
     describe "#to_html" do
@@ -180,11 +170,6 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
         status: 200,
         body: onebox_response("amazon"),
       )
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X",
-      ).to_return(status: 200, body: onebox_response("amazon"))
     end
 
     describe "#to_html" do
@@ -214,11 +199,6 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
         status: 200,
         body: onebox_response("amazon-ebook"),
       )
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers-ebook/dp/B00AYQNR46",
-      ).to_return(status: 200, body: onebox_response("amazon-ebook"))
     end
 
     describe "#to_html" do
@@ -285,11 +265,6 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
         status: 200,
         body: onebox_response("amazon-alternate"),
       )
-
-      stub_request(
-        :get,
-        "https://www.amazon.com/Lnchett-Nibbler-Quality-Attachment-Straight/dp/B07FQ7M16H",
-      ).to_return(status: 200, body: onebox_response("amazon-alternate"))
     end
 
     describe "#to_html" do
@@ -310,6 +285,35 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
       it "includes title" do
         expect(html).to include("Quality Nibbler Drill Attachment...")
       end
+
+      it "links to the canonical product page" do
+        expect(html).to include(
+          %(href="https://www.amazon.com/Lnchett-Nibbler-Quality-Attachment-Straight/dp/B07FQ7M16H"),
+        )
+      end
+    end
+  end
+
+  describe "product page with a canonical link to another page" do
+    let(:link) { "https://www.amazon.com/dp/B082SBHKN2" }
+    let(:image) { "https://m.media-amazon.com/images/I/71-EGU00XgL.jpg" }
+    let(:html) { described_class.new(link).to_html }
+
+    before do
+      stub_request(:get, link).to_return(
+        status: 200,
+        body:
+          "<html><head><title>SwiftJet Car Wash Foam Gun</title><meta name='description' content='Foam gun'><link rel='canonical' href='https://www.amazon.com/clp/B082SBHKN2'></head><body><img id='landingImage' data-old-hires='' src='#{image}'></body></html>",
+      )
+
+      stub_request(:get, "https://www.amazon.com/clp/B082SBHKN2").to_return(
+        status: 200,
+        body: "<html><body><svg><title>open prime modal</title></svg></body></html>",
+      )
+    end
+
+    it "renders the product page" do
+      expect(html).to include("SwiftJet Car Wash Foam Gun", %(href="#{link}"), %(src="#{image}"))
     end
   end
 end
