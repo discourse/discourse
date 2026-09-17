@@ -147,11 +147,11 @@ module Migrations
           end
 
           def process_batch(items)
-            prepared = prepare_bodies(items)
-            scan_data = @extractor.scan_batches(prepared.values.select(&:engine_bound?))
+            prepared_bodies = prepare_bodies(items)
+            scan_data = @extractor.scan_batches(prepared_bodies.values.select(&:engine_bound?))
 
             items.each do |item|
-              convert(item, prepared[item[:id]], scan_data)
+              convert(item, prepared_bodies[item[:id]], scan_data)
             rescue StandardError => e
               # One bad body shouldn't fail the whole batch.
               tracker.log_error(
@@ -173,25 +173,25 @@ module Migrations
 
           # A post without a body gets a row but no scan.
           def prepare_bodies(items)
-            prepared = {}
+            prepared_bodies = {}
 
             items.each do |item|
               raw = item[:raw]
               next if raw.blank?
 
-              prepared[item[:id]] = @extractor.prepare(
+              prepared_bodies[item[:id]] = @extractor.prepare(
                 raw:,
                 id: item[:id],
                 topic_id: item[:topic_id],
               )
             end
 
-            prepared
+            prepared_bodies
           end
 
-          def convert(item, prepared, scan_data)
+          def convert(item, prepared_body, scan_data)
             @embeds.clear
-            raw = prepared ? extract(prepared, scan_data[item[:id]]) : item[:raw]
+            raw = prepared_body ? extract(prepared_body, scan_data[item[:id]]) : item[:raw]
 
             IntermediateDB::Post.create(
               original_id: item[:id],
@@ -227,9 +227,9 @@ module Migrations
 
           # The extractor's callbacks don't know which post is being extracted,
           # so the id is kept here.
-          def extract(prepared, scan_data)
-            @post_id = prepared.id
-            @extractor.extract_prepared(prepared, scan_data:)
+          def extract(prepared_body, scan_data)
+            @post_id = prepared_body.id
+            @extractor.extract_prepared(prepared_body, scan_data:)
           end
 
           # The extractor refused the body instead of guessing. Someone has to look
