@@ -15,7 +15,12 @@ module Migrations
           # an external engine for example. Without a value it returns the
           # declared size.
           def batch_size(value = nil)
-            return @batch_size if value.nil?
+            if value.nil?
+              return @batch_size if instance_variable_defined?(:@batch_size)
+              return superclass.batch_size if superclass.respond_to?(:batch_size)
+
+              return
+            end
 
             unless value.is_a?(Integer) && value > 0
               raise ArgumentError, "`batch_size` must be a positive integer"

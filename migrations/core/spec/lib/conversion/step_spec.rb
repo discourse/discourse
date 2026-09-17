@@ -468,6 +468,14 @@ RSpec.describe Migrations::Conversion::Step do
       expect(processor_class.batched?).to be(true)
     end
 
+    it "inherits the declared size in step subclasses" do
+      parent_class = define_step { processor { batch_size 64 } }
+      processor_class = Class.new(parent_class).processor_class
+
+      expect(processor_class.batch_size).to eq(64)
+      expect(processor_class.batched?).to be(true)
+    end
+
     it "rejects a size that isn't a positive integer" do
       expect { define_step { processor { batch_size 0 } }.processor_class }.to raise_error(
         ArgumentError,
