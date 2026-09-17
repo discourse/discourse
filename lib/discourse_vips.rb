@@ -158,6 +158,32 @@ module DiscourseVips
     nil
   end
 
+  def self.crop(
+    input_path:,
+    output_path:,
+    width:,
+    height:,
+    timeout:,
+    read:,
+    write:,
+    quality: nil,
+    strip_metadata: false
+  )
+    Tempfile.create("crop-", File.dirname(output_path)) do |output|
+      output.close
+      Client.call(
+        ["crop", input_path, output.path, output_path, width, height, quality, strip_metadata],
+        operation: :optimized_image_crop,
+        read:,
+        write:,
+        timeout:,
+        nice: 10,
+      )
+      File.rename(output.path, output_path)
+    end
+    nil
+  end
+
   def self.before_fork
     Client.before_fork
   end
