@@ -13,15 +13,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     DiscourseWorkflows::WorkflowDependency.clear_cache!
   end
 
-  def create_event_post(closed: false)
-    closed_attribute = closed ? ' closed="true"' : ""
-
+  def create_event_post(attributes: "")
     post =
       PostCreator.create!(
         admin,
         title: "Workflow event integration",
         raw:
-          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\"#{closed_attribute}]\n" \
+          "[event start=\"2030-04-24 14:15\" end=\"2030-04-24 15:15\" timezone=\"UTC\"#{attributes}]\n" \
             "Event description\n" \
             "[/event]",
       )
@@ -83,7 +81,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
   end
 
   it "opens an event through the real workflow execution context" do
-    post = create_event_post(closed: true)
+    post = create_event_post(attributes: ' closed="true"')
 
     expect(post.event).to be_present
     expect(post.event.closed?).to eq(true)
@@ -102,6 +100,36 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
       "topic_id" => post.topic_id,
       "closed" => false,
     )
+  end
+
+  it "preserves quoted attributes when closing an event" do
+    attributes = ' location="Room ] closed=true"'
+    post = create_event_post(attributes:)
+
+    execute_event_action(post, "close")
+
+    expect(post.reload.raw).to include(attributes, ' closed="true"]')
+    expect(post.event).to be_closed
+  end
+
+  it "preserves quoted attributes when opening an event" do
+    attributes = ' location="Room ] closed=true"'
+    post = create_event_post(attributes: attributes + ' closed="true"')
+    expected_raw = post.raw.sub(' closed="true"', "")
+
+    execute_event_action(post, "open")
+
+    expect(post.reload.raw).to eq(expected_raw)
+    expect(post.event).not_to be_closed
+  end
+
+  it "leaves an already closed event unchanged" do
+    post = create_event_post(attributes: ' closed="true"')
+
+    expect { execute_event_action(post, "close") }.not_to change {
+      post.reload.attributes.slice("raw", "version")
+    }
+    expect(post.event).to be_closed
   end
 
   it "does not recursively trigger post edited workflows" do
