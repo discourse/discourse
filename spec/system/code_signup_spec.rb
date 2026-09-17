@@ -317,6 +317,8 @@ describe "Sign up via email code" do
     fill_code(latest_emailed_code(email))
 
     expect(page).to have_button(I18n.t("js.code_login.create_password_optional"))
+    expect(page).to have_css(".code-login-form__create-password.btn-link")
+    expect(page).to have_no_button(I18n.t("js.code_login.use_different_email"))
     expect(page).to have_no_field("new-account-password")
     screenshot_marker(label: "code-signup-account-details-password-link")
 

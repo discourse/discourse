@@ -1258,7 +1258,7 @@ export default class CodeLoginForm extends Component {
             </div>
           {{else}}
             <DButton
-              class="btn-flat code-login-form__create-password"
+              class="btn-link code-login-form__create-password"
               @action={{this.revealOptionalPassword}}
               @label="code_login.create_password_optional"
             />
@@ -1288,11 +1288,6 @@ export default class CodeLoginForm extends Component {
               @disabled={{this.continueDisabled}}
               @isLoading={{this.verifying}}
               @label="code_login.submit_for_approval"
-            />
-            <DButton
-              class="btn-flat code-login-form__change-email"
-              @action={{this.changeEmail}}
-              @label="code_login.use_different_email"
             />
           </div>
         </div>

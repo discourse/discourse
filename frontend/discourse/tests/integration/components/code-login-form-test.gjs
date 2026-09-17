@@ -61,6 +61,9 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .includesText("user@example.com");
     assert.dom(".d-otp-input").exists();
     assert.dom(".code-login-form__resend").exists();
+    assert
+      .dom(".code-login-form__change-email")
+      .exists("the email can still be corrected before verification");
   });
 
   test("signup requests declare their intent", async function (assert) {
@@ -264,11 +267,19 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__account-details-step").exists();
     assert
       .dom(".code-login-form__create-password")
+      .hasClass("btn-link", "the optional password action uses link styling")
       .hasText(i18n("code_login.create_password_optional"));
     assert.dom("#new-account-password").doesNotExist();
+    assert
+      .dom(".code-login-form__change-email")
+      .doesNotExist("a verified email cannot be changed from account details");
 
     await click(".code-login-form__create-password");
     assert.dom("#new-account-password").hasAttribute("type", "password");
+    await click(".toggle-password-mask");
+    assert
+      .dom("#new-account-password")
+      .hasAttribute("type", "text", "the standard mask control reveals it");
     await fillIn("#new-account-password", "short");
     assert
       .dom(".code-login-form__submit-approval")
