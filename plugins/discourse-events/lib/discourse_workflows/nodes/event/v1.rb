@@ -44,13 +44,7 @@ if defined?(DiscourseWorkflows)
           def execute(exec_ctx)
             items =
               exec_ctx.input_items.map.with_index do |_item, item_index|
-                config = {
-                  "operation" =>
-                    exec_ctx.get_node_parameter("operation", item_index, default: "close"),
-                  "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
-                }
-
-                wrap(execute_with_config(exec_ctx, config, item_index))
+                wrap(execute_item(exec_ctx, item_index))
               end
 
             [items]
@@ -58,8 +52,8 @@ if defined?(DiscourseWorkflows)
 
           private
 
-          def execute_with_config(exec_ctx, config, item_index)
-            operation = config["operation"]
+          def execute_item(exec_ctx, item_index)
+            operation = exec_ctx.get_node_parameter("operation", item_index, default: "close")
 
             if OPERATIONS.exclude?(operation)
               raise_node_error!(
@@ -67,7 +61,7 @@ if defined?(DiscourseWorkflows)
               )
             end
 
-            topic = ::Topic.find(config["topic_id"])
+            topic = ::Topic.find(exec_ctx.get_node_parameter("topic_id", item_index))
             actor = exec_ctx.actor_from_parameter("actor_username", item_index)
 
             event = topic.first_post&.event
