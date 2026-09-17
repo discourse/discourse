@@ -7,9 +7,9 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
 
   let(:enums) { Migrations::Database::IntermediateDB::Enums }
 
-  # The names the source is pretended to have. The engine and the extractor have
-  # to agree on them, which is what the converter's `step_args` arranges — here
-  # the engine context's own config supplies both sides.
+  # The names the fake source has. The engine and the extractor must agree on
+  # them; the converter's `step_args` does that, here the engine config
+  # supplies both sides.
   let(:hashtag_name_list) { %w[support] }
 
   let(:markdown_engine) { MarkdownEngineHelper.context_for_names(hashtag_names: hashtag_name_list) }
@@ -35,8 +35,8 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
     end
   end
 
-  # Building a V8 isolate per example costs ~70ms and ~33 MiB, so the processor
-  # gets the run-wide memoized context instead of its own.
+  # A V8 isolate per example costs ~70ms and ~33 MiB, so the examples share
+  # the suite's context.
   before do
     allow(Migrations::Converters::MarkdownEngine::Context).to receive(:new).and_return(
       markdown_engine,
@@ -96,8 +96,8 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
         locale: "de",
         original_raw: "Welcome @alice, glad you joined!",
       )
-      # The deferred embeds leave a placeholder token behind in the stored raw;
-      # a body with nothing to defer is stored as it came in.
+      # Deferred embeds leave a placeholder in the stored raw; a body without
+      # embeds is stored as is.
       expect(Migrations::Placeholder).to be_include(posts[42][:raw])
       expect(Migrations::Placeholder).to be_include(posts[43][:raw])
       expect(posts[44][:raw]).to eq("Nothing to extract here.")
@@ -209,9 +209,8 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       expect(JSON.parse(entry[:details])).to eq("id" => 8)
     end
 
-    # The extractor decides when to report; the step only has to attach the post
-    # it is extracting, so the reports are driven through the callbacks it
-    # installed rather than through a body that happens to provoke them.
+    # The extractor decides when to report. The step only attaches the post id,
+    # so the reports are triggered through the callbacks directly.
     def refuse_on(processor, cause, detail)
       callback = extractor_option(processor, :@on_engine_refusal)
       allow_extraction(processor) { callback.call(cause, detail) }
@@ -247,9 +246,8 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
         ],
       )
 
-      # Nothing is written or counted during the scan; the list rides back via
-      # `result` for the parent's reducer, and a host that shows up again costs
-      # nothing.
+      # Nothing is logged during the scan; the list goes to the parent via
+      # `result`.
       expect(rows("log_entries")).to be_empty
       expect(processor.tracker.stats.warning_count).to eq(0)
       expect(processor.tracker.stats.error_count).to eq(0)

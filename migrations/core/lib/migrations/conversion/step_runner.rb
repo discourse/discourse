@@ -96,9 +96,8 @@ module Migrations
         @channel.report_progress(progress:, warnings:, errors:)
       end
 
-      # One unit of work per iteration: a row, or a slice of rows for a batched
-      # processor. `each_slice` pulls from the source enumerator as it goes, so a
-      # worker holds one slice at a time and never materializes its chunk.
+      # A row, or a slice of rows for a batched processor. `each_slice` reads
+      # lazily, so a worker holds one slice at a time.
       def units(source, processor)
         batch_size = processor.class.batch_size
         batch_size ? source.items.each_slice(batch_size) : source.items
@@ -117,9 +116,8 @@ module Migrations
         tracker.log_error("Failed to process batch", exception: e, details: batch_details(items))
       end
 
-      # A batch's rows are the reason the step batches at all — they can be large
-      # (a whole post body each), and the failure is about which rows were in
-      # flight, so the entry names them and leaves the rows out.
+      # The rows of a batch can be large (whole post bodies), so the log entry
+      # lists only their ids.
       def batch_details(items)
         ids = items.filter_map { |item| item[:id] if item.is_a?(Hash) }
         ids.empty? ? { size: items.size } : { size: items.size, ids: }

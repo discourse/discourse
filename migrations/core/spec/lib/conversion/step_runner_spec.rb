@@ -102,9 +102,8 @@ RSpec.describe Migrations::Conversion::StepRunner do
   end
 
   context "with a batched processor" do
-    # The source records every row it yields, so the event log below shows when
-    # the runner pulled it: a batched read has to interleave reads with batches
-    # instead of draining the source first.
+    # The source records each row it yields, so the log shows that the runner
+    # reads and processes in turns instead of draining the source first.
     let(:step_class) do
       Class.new(Migrations::Conversion::Step) do
         source do

@@ -3,12 +3,11 @@
 Migrations::Tooling::Schema.table :posts do
   index :topic_id, :post_number
 
-  # The finalized `raw` is rebuilt at import time; `original_raw` keeps the
-  # untouched source body alongside the placeholder-substituted `raw`.
+  # `raw` holds the body with placeholders, `original_raw` the untouched
+  # source body.
   add_column :original_raw, :text
 
-  # `reply_to_post_number` is resolved to the parent post's `original_id` in the
-  # converter, so it's stored as a post reference rather than a number.
+  # Resolved to the parent post's `original_id` by the converter.
   column :reply_to_post_number, rename_to: :reply_to_post_id
 
   column :post_type, :post_type
@@ -17,13 +16,10 @@ Migrations::Tooling::Schema.table :posts do
   # Post numbers are recomputed at import time, so the source value is optional.
   column :post_number, required: false
 
-  # Every converted post is Markdown; the importer leaves `cook_method` at
-  # `regular`. A `raw_html`/`email` post bypasses markdown-it at cook time, so
-  # none of the markdown the placeholder resolver splices in — upload
-  # references, quote tags, hashtags, rebuilt links — would render inside one.
-  # Making this converter-settable means pairing it with an HTML rendering mode
-  # in the resolver (or a no-embeds rule for such posts); unlock it with that,
-  # not before.
+  # Every converted post is Markdown, so the importer leaves `cook_method` at
+  # `regular`. A `raw_html` or `email` post skips markdown-it at cook time, and
+  # none of the markdown the resolver splices in would render. Support that
+  # together with an HTML mode in the resolver, not before.
   ignore :cook_method, reason: "Fixed at regular until non-Markdown posts are a designed feature"
 
   ignore :baked_at,

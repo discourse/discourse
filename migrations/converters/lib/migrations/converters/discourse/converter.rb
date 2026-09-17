@@ -20,19 +20,17 @@ module Migrations
 
         private
 
-        # What the Posts step needs beyond its source connection: the name gates,
-        # the engine bundle and config, and the source site's hosts. Built once
-        # per run. The scheduler asks for a step's args from its planning thread
-        # and its coordinator thread at the same time, and every worker builds
-        # its own step after the fork, so without the memo each of them would
-        # stream every username again; with it, the workers inherit one copy.
+        # Everything the Posts step needs besides its own connection: the name
+        # gates, the engine bundle and config, the source site's hosts. Loaded
+        # once per run. `step_args` is called from two scheduler threads and
+        # again in every worker, so without the memo each of them would stream
+        # all usernames again.
         def posts_args
           POSTS_ARGS_LOCK.synchronize { @posts_args ||= load_posts_args }
         end
 
-        # The queries run on a connection of their own, opened and closed here,
-        # so no long-lived connection sits idle in the parent for the workers to
-        # inherit. Only plain values leave this method.
+        # Uses its own connection and closes it right away, so the workers
+        # don't inherit an idle one.
         def load_posts_args
           source_db = Adapter::Postgres.new(settings[:source_db])
 
@@ -53,14 +51,13 @@ module Migrations
             group_names:,
             here_mention:,
             mention_names: mention_names(source_db, group_names, here_mention),
-            # The markdown engine and the extractor both decide whether a `#name`
-            # addresses anything, so the gate is the very set the engine config
-            # derives from the category and tag lists.
+            # The engine config builds the hashtag names from the same category
+            # and tag lists, so the gate and the engine agree on what a `#name`
+            # can be.
             hashtag_names: markdown_config.hashtag_names,
             custom_emoji_names:,
-            # The compiled markdown JavaScript is plain data every worker inherits
-            # across the fork; the V8 isolate that runs it is per-worker and is
-            # created in the step.
+            # Plain data the workers inherit across the fork. The V8 context
+            # that runs it is created per worker in the step.
             markdown_bundle: MarkdownEngine::Bundle.load_or_build,
             markdown_config:,
             internal_link_hosts:,
@@ -70,23 +67,18 @@ module Migrations
           source_db&.close
         end
 
-        # The source's own hosts mapped to their path prefixes, so the Posts step can
-        # tell an absolute internal link from an external one and, on a host shared
-        # with other apps, which paths belong to the forum. Built from `base_url` and
-        # any `former_domains` under the `source_site` setting (a site that moved
-        # carries links to both). Each host is downcased with the port dropped, so
-        # `http://`, `https://` and protocol-relative links all match; the prefix is
-        # the URL's path (`/forum` for a subfolder install, nil for a root install).
-        # Entries may carry different prefixes when a former root domain later moved
-        # into a subfolder. No setting means an empty hash, i.e. relative-only
-        # detection.
+        # The source site's hosts and their path prefixes, from `base_url` and
+        # `former_domains` in the `source_site` settings. Hosts are downcased
+        # without the port, so `http://`, `https://` and `//host` links all
+        # match. The prefix is the URL's path (`/forum` for a subfolder install,
+        # nil for a root install) and can differ per host. Without the setting
+        # only relative links are detected.
         def internal_link_hosts
           source_site_urls.to_h { |url| host_and_prefix(url) }
         end
 
-        # The current site's own path prefix, taken from `base_url`, so the Posts step
-        # can strip it from a relative internal link (`/forum/t/5`) before parsing the
-        # route. Nil for a root install (or no `base_url`).
+        # The path prefix of `base_url`. It is stripped from relative internal
+        # links (`/forum/t/5`) before the route is parsed. Nil for a root install.
         def internal_link_base_prefix
           base_url = settings.dig(:source_site, :base_url)
           base_url && host_and_prefix(base_url).last
@@ -97,12 +89,11 @@ module Migrations
           [site[:base_url], *Array(site[:former_domains])].compact
         end
 
-        # Splits a configured URL into its downcased host (port dropped) and path
-        # prefix, tolerating a bare host, a scheme-less `//host`, and a full URL with a
-        # path. The prefix is normalized to a leading slash and no trailing slash, or
-        # nil when the path is empty or the bare root `/`. A malformed URL or a URL
-        # with no host raises, so a settings typo surfaces here instead of silently
-        # disabling link detection.
+        # Splits a URL into its downcased host without the port and its path
+        # prefix. Accepts a bare host, `//host` and a full URL. The prefix has a
+        # leading slash and no trailing slash, or is nil for an empty path or `/`.
+        # A URL without a host raises, so a typo in the settings doesn't silently
+        # turn link detection off.
         def host_and_prefix(url)
           normalized = url.to_s.strip
           normalized = "//#{normalized}" if normalized.exclude?("//")
@@ -121,10 +112,8 @@ module Migrations
           prefix.empty? ? nil : prefix
         end
 
-        # The source's site settings as a `name => value` hash. It's a small table and
-        # both consumers want a different slice of it: the markdown engine takes the
-        # settings its pipeline reads, and `here_mention` names what an `@here`
-        # mention is spelled as on this source.
+        # The engine config takes the markdown settings from this,
+        # `here_mention` the name of the `@here` mention.
         def source_settings(source_db)
           source_db
             .query("SELECT name, value FROM site_settings")
@@ -136,17 +125,12 @@ module Migrations
           source_db.query("SELECT name FROM groups").map { |row| row[:name] }
         end
 
-        # Every name that can legitimately follow `@`, so the Posts step defers only
-        # a mention that names something real and leaves the rest (`@3pm`) as plain
-        # text: every username, every group name, the source's `here_mention` value
-        # and the literal `all`. Without the last three, `@staff`, `@here` and `@all`
-        # would be dropped — the gate must never be usernames only. Normalized like
-        # the importer normalizes a mention when it resolves it, so the two sides
-        # agree on what matches.
+        # Every name that can follow `@`: usernames, group names, the source's
+        # `here_mention` value and `all`. Without the last three, `@staff`,
+        # `@here` and `@all` would be dropped. Normalized the same way the
+        # importer normalizes a mention when it resolves it.
         #
-        # Usernames can run into the millions, so they're streamed straight into the
-        # gate; the query is drained fully (every row consumed) so the connection is
-        # clean for the queries that follow.
+        # There can be millions of usernames, so they are streamed into the set.
         def mention_names(source_db, group_names, here_mention)
           names = []
 
@@ -161,8 +145,7 @@ module Migrations
           Migrations::CompactStringSet.new(names)
         end
 
-        # Every way a hashtag can address a source category: by the category's own
-        # slug, and for a nested one also by its `parent:child` path.
+        # A category is addressed by its slug, a nested one also by `parent:child`.
         def category_slugs(source_db)
           slugs = []
 
@@ -185,14 +168,14 @@ module Migrations
           source_db.query("SELECT name FROM tags").map { |row| row[:name] }
         end
 
-        # Source custom emoji names, so the Posts step extracts only `:name:`
-        # shortcodes that name a real custom emoji (standard ones stay plain text).
+        # Only `:name:` shortcodes of a real custom emoji are extracted; standard
+        # emoji stay text.
         def custom_emoji_names(source_db)
           source_db.query("SELECT name FROM custom_emojis").map { |row| row[:name] }
         end
 
-        # The configurable name that triggers an `@here` mention. It falls back to the
-        # Discourse default, which isn't in `site_settings` until someone changes it.
+        # The Discourse default isn't stored in `site_settings` until someone
+        # changes it.
         def here_mention(source_settings)
           source_settings["here_mention"].presence || "here"
         end

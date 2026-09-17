@@ -14,14 +14,12 @@ module Migrations
           end
 
           def items
-            # The join hands the upload's columns to the processor (prefixed, so
-            # they can't collide with the emoji's own — `user_id` in particular),
-            # which registers the upload and stores the returned reference — the
-            # emoji image must be fetched like any other upload before the
-            # importer can create the emoji from it.
-            # LEFT JOIN so every emoji row arrives even when its upload is missing;
-            # an INNER JOIN would drop those rows and leave the progress short of
-            # `max_progress` (which counts every `custom_emojis` row).
+            # The upload's columns are prefixed so they can't collide with the
+            # emoji's own (`user_id`). The processor registers the upload, because
+            # the image has to be fetched like any other upload before the
+            # importer can create the emoji.
+            # LEFT JOIN, so an emoji with a missing upload still arrives and the
+            # progress matches `max_progress`.
             @source_db.query <<~SQL
               SELECT custom_emojis.id,
                      custom_emojis.name,
@@ -45,9 +43,8 @@ module Migrations
           end
 
           def process(item)
-            # A dangling upload_id (the upload row was deleted) must be visible, not
-            # silently dropped: an emoji without its image can't be imported, so warn
-            # and skip rather than write a row that points at nothing.
+            # An emoji whose upload row is gone can't be imported. Warn and skip
+            # instead of writing a row that points at nothing.
             if item[:upload_url].nil?
               tracker.log_warning(
                 DANGLING_UPLOAD_LOG_MESSAGE,

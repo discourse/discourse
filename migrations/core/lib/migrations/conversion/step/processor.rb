@@ -10,11 +10,10 @@ module Migrations
         attr_reader :tracker
 
         class << self
-          # Hand the items to `process_batch` in slices of `size` instead of one
-          # at a time. For a processor whose per-item cost is dominated by a
-          # call it can make once for many items (an external engine, a bulk
-          # lookup); anything else is cheaper per item and should stay on
-          # `process`. Called without a value it reads the declared size back.
+          # Hands the items to `process_batch` in slices of `size` instead of one
+          # at a time. For a processor that can handle many items in one call,
+          # an external engine for example. Without a value it returns the
+          # declared size.
           def batch_size(value = nil)
             return @batch_size if value.nil?
 
@@ -42,12 +41,11 @@ module Migrations
           raise NotImplementedError
         end
 
-        # The batched counterpart of `process`, called once per slice when the
-        # processor declares a `batch_size`. Progress counts the whole slice
-        # unless the method sets `tracker.progress=` itself, and an exception
-        # loses the slice, not the step — so a processor that can tell one bad
-        # item from the rest handles its own errors per item and lets this
-        # rescue catch only what breaks the batch as a whole.
+        # Called once per slice when the processor declares a `batch_size`.
+        # Progress counts the whole slice unless the method sets
+        # `tracker.progress=` itself. An exception loses the slice, not the
+        # step; a processor that can tell one bad item from the rest should
+        # handle that itself.
         def process_batch(items)
           raise NotImplementedError
         end

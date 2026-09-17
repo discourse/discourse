@@ -4,41 +4,31 @@ module Migrations
   module Converters
     module Discourse
       class Posts < Conversion::Step
-        # One log entry for the whole run, listing the hosts that carried
-        # internal-looking links without being configured as the source's own —
-        # where to look when a former domain is missing from the `source_site`
-        # settings. The extractor reports a host once, not once per link, so this
-        # is a set of host names and not a ranking; posts link many other
-        # Discourse sites, so a long list is normal and the entry stays INFO.
+        # Hosts with internal-looking links that aren't configured as the
+        # source's own. Logged once per run at INFO, because posts link to many
+        # other Discourse sites and a long list is normal. The extractor reports
+        # each host once, so this is a list of hosts, not a count of links.
         FOREIGN_LINK_LOG_MESSAGE = "Internal-looking links on unconfigured hosts"
 
-        # An engine refusal is a body whose extraction was abandoned rather than
-        # guessed at, so each one is named: these are the posts an operator has to
-        # look at before trusting the converted body.
+        # The extractor refused a body instead of guessing. Someone has to look
+        # at these posts before the converted body can be trusted.
         ENGINE_REFUSAL_LOG_MESSAGE = "Post embeds not extracted"
 
-        # A heads-up, not a problem: the body extracted fine, it just needed the
-        # slow retry to parse.
+        # Not a problem, the body was extracted. It only needed the slow retry.
         SLOW_PARSE_LOG_MESSAGE = "Post body needed the slow markdown parse"
 
-        # The most hosts we keep in `details`. The former-domain forensics only
-        # need a sample, and an unbounded list bloats one log row on link-heavy
-        # forums.
+        # Limits the hosts in `details`. The list only has to show where a
+        # former domain is missing; more would bloat the log entry.
         DETAILS_HOST_LIMIT = 500
         private_constant :DETAILS_HOST_LIMIT
 
-        # How many posts a worker reads and prepares before one round of engine
-        # scans. The extractor splits a round into V8 calls of its own, so this
-        # size only decides how many bodies a worker holds at once: enough that
-        # the per-round bookkeeping disappears next to the scanning, few enough
-        # that the held bodies stay a rounding error against the worker's memory.
+        # Posts a worker reads and prepares before one round of engine scans.
+        # The extractor splits the round into V8 calls itself, so this only
+        # limits how many bodies a worker holds in memory at once.
         BATCH_SIZE = 256
 
-        # Merges the workers' host lists into the run's one entry, logged through
-        # `tracker` so the step's tallies pick it up (see
-        # {StepCoordinator#reduce_results}). Runs in the parent under the run DB's
-        # single-writer discipline; `results` are the workers' `result` arrays,
-        # which crossed the process boundary as JSON.
+        # Merges the workers' host lists into one log entry. Runs in the parent;
+        # `results` are the workers' `result` values after their trip through JSON.
         def self.combine_results(results, tracker)
           hosts = results.flatten.uniq.sort
           return if hosts.empty?
@@ -52,14 +42,11 @@ module Migrations
         end
 
         source do
-          # Posts is the heaviest step, so split it across forks. Partition on the
-          # composite `(topic_id, post_number)`, not the obvious `id`: that pair is
-          # the target table's index (`idx_posts_topic_id_post_number`), so each fork
-          # converts a contiguous slice of it and the shards merge into the run DB as
-          # sequential index appends. Splitting on `id` would spread every fork's rows
-          # across that index, turning the merge into random inserts (~2x slower over
-          # the run). The pair is effectively unique, so the forks still get even row
-          # counts, and a huge topic is split across them instead of landing on one.
+          # Posts is the heaviest step, so it runs on several forks. Partition on
+          # `(topic_id, post_number)` instead of `id`: that pair is the target
+          # table's index, so each fork's shard merges into the run DB as
+          # sequential index appends. Partitioning on `id` made the merge about
+          # twice as slow.
           partition_by %i[topic_id post_number], from: "posts"
 
           def max_progress
@@ -69,11 +56,10 @@ module Migrations
           end
 
           def items
-            # `reply_to_post_id` resolves the source `reply_to_post_number` to the
-            # parent post's id (same topic) so the reference survives renumbering.
-            # The chunk filter goes on the scan subquery, where `topic_id` is
-            # unambiguous next to the `reply_to` self-join (which reads every post,
-            # so a parent in another chunk still resolves).
+            # `reply_to_post_id` is the parent post's id, found by
+            # `reply_to_post_number` within the same topic, so the reference
+            # survives renumbering at import. The self-join reads every post, so
+            # a parent in another chunk still resolves.
             @source_db.query(<<~SQL)
               SELECT posts.*,
                      reply_to.id AS reply_to_post_id
@@ -87,8 +73,7 @@ module Migrations
 
           private
 
-          # The `WHERE` limiting the scan to this worker's chunk, or "" when the step
-          # runs whole (inline or a single fork), where `partition_slice` is nil.
+          # Empty when the step runs unpartitioned (inline or on a single fork).
           def partition_where
             slice = partition_slice
             slice ? "WHERE #{slice}" : ""
@@ -109,21 +94,17 @@ module Migrations
                         :internal_link_base_prefix
 
           def setup
-            # Collect the foreign hosts with no logging or tracker calls — this
-            # runs while posts are scanned. `result` sends the list to the parent,
-            # where `combine_results` merges every worker's into one log entry.
+            # Only collected here. `result` sends the list to the parent, which
+            # merges all workers' lists in `combine_results`.
             @foreign_hosts = Set.new
 
-            # One buffer, reused (cleared) per post — a fresh one would allocate a
-            # new placeholder (a random nonce) for every post, most of which record
-            # nothing. The extractor binds it once at construction and records onto
-            # it on every extraction.
+            # One buffer for all posts. A new one per post would create a new
+            # placeholder nonce each time.
             @embeds = EmbedBuffer.new(owner_type: Enums::EmbedOwner::POST)
 
-            # A V8 isolate does not survive a fork, so the engine is built here, in
-            # the worker, out of the bundle the parent loaded once. There is no
-            # processor cleanup hook to close it in; the worker exits when the step
-            # is done and takes the isolate with it.
+            # A V8 isolate doesn't survive a fork, so the context is built in the
+            # worker from the bundle the parent loaded. Nothing closes it; it
+            # dies with the worker.
             @markdown_engine =
               MarkdownEngine::Context.new(bundle: markdown_bundle, config: markdown_config)
 
@@ -151,23 +132,19 @@ module Migrations
             items.each do |item|
               convert(item, prepared[item[:id]], scan_data)
             rescue StandardError => e
-              # A body the extraction chokes on costs its own post, not the rest of
-              # the batch it happens to share.
+              # One bad body shouldn't fail the whole batch.
               tracker.log_error("Failed to process post", exception: e, details: { id: item[:id] })
             end
           end
 
-          # The foreign hosts this worker saw, sent to `combine_results` in the
-          # parent. Nil when it saw none, so it sends nothing.
+          # Nil when this worker saw no foreign host, so nothing is sent.
           def result
             @foreign_hosts.sort unless @foreign_hosts.empty?
           end
 
           private
 
-          # Normalizes and classifies every body up front, so one round of engine
-          # scans covers the whole batch. A post with no body has nothing to scan
-          # and stays out of the round; it still gets its row.
+          # A post without a body gets a row but no scan.
           def prepare_bodies(items)
             prepared = {}
 
@@ -216,15 +193,13 @@ module Migrations
               wiki: item[:wiki],
             )
 
-            # The linkage tables are written by the shared `EmbedBuffer#write_for`,
-            # not here, so the per-converter coverage check holds them out (see
-            # `ReferenceCheck::EMBED_BUFFER_TABLES`).
+            # The embed tables are written by `EmbedBuffer#write_for`, which is why
+            # the coverage check leaves them out of the per-converter check.
             @embeds.write_for(item[:id])
           end
 
-          # The extractor reports a refusal or a slow parse while it scans and has
-          # no idea which post it is working on, so the id waits here for the
-          # callbacks.
+          # The extractor's callbacks don't know which post is being extracted,
+          # so the id is kept here.
           def extract(prepared, scan_data)
             @post_id = prepared.id
             @extractor.extract_prepared(prepared, scan_data:)
@@ -241,8 +216,7 @@ module Migrations
             tracker.log_info(SLOW_PARSE_LOG_MESSAGE, details: { id: @post_id })
           end
 
-          # Keeps only values the enum recognizes, otherwise the fallback (the
-          # source may carry values from plugins or versions we don't model).
+          # The source may carry values from plugins or versions we don't model.
           def valid_enum(enum_module, value, fallback: nil)
             enum_module.valid?(value) ? value : fallback
           end

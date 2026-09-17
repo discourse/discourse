@@ -27,9 +27,8 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     expect(names.last).to eq("migrations/emoji-data")
   end
 
-  # The converter loads the bundle from the scheduler's threads. Ruby refuses a
-  # block-form `chdir` while another thread is inside one, so the loader must
-  # not switch the working directory at all.
+  # The converter loads the bundle from several threads, and Ruby doesn't
+  # allow a block-form `chdir` while another thread is inside one.
   it "loads while another thread holds a working-directory block" do
     bundle
     loaded = nil
