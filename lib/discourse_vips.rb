@@ -110,19 +110,21 @@ module DiscourseVips
   def self.downsize(
     input_path:,
     output_path:,
-    format:,
     timeout:,
     read:,
     write:,
     scale: nil,
     width: nil,
     height: nil,
-    max_pixels: nil
+    max_pixels: nil,
+    strip_metadata: false
   )
     if [scale, width || height, max_pixels].compact.length != 1 || width.nil? != height.nil?
-      raise ArgumentError, "provide a scale, width and height, or a pixel-area target"
+      raise ArgumentError,
+            "provide exactly one resize target: scale, width and height, or max_pixels"
     end
 
+    format = File.extname(input_path).delete_prefix(".").downcase
     raise ArgumentError, "unsupported format" if !%w[jpg jpeg png gif webp avif].include?(format)
 
     output_mode =
@@ -131,7 +133,17 @@ module DiscourseVips
     Tempfile.create(["downsize-", ".#{format}"], File.dirname(output_path)) do |output|
       output.close
       Client.call(
-        ["downsize", input_path, output.path, format, scale, width, height, max_pixels],
+        [
+          "downsize",
+          input_path,
+          output.path,
+          format,
+          scale,
+          width,
+          height,
+          max_pixels,
+          strip_metadata,
+        ],
         operation: :optimized_image_downsize,
         read:,
         write:,

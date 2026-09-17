@@ -201,10 +201,15 @@ RSpec.describe OptimizedImage do
         File.binwrite(input_path, "invalid image")
       end
 
-      it "returns false by default" do
-        result = described_class.downsize(from: input_path, to: output_path, scale: 0.5)
+      it "logs the libvips error and returns false by default" do
+        logger =
+          track_log_messages do
+            result = described_class.downsize(from: input_path, to: output_path, scale: 0.5)
 
-        expect(result).to eq(false)
+            expect(result).to eq(false)
+          end
+
+        expect(logger.warnings.first).to match(/Failed to optimize image: VipsForeignLoad/)
       end
 
       it "raises the processing error when requested" do

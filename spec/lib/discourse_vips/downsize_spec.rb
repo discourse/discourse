@@ -10,11 +10,11 @@ RSpec.describe DiscourseVips do
 
     it "scales an image by the requested factor" do
       FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
+      output_path = File.join(directory, "output")
 
       described_class.downsize(
         input_path:,
         output_path:,
-        format: "png",
         scale: 0.5,
         timeout: 20,
         read: [input_path],
@@ -22,6 +22,7 @@ RSpec.describe DiscourseVips do
       )
 
       expect(FastImage.size(output_path)).to eq([122, 33])
+      expect(FastImage.type(output_path)).to eq(:png)
     end
 
     it "rejects an image disguised as another format" do
@@ -31,7 +32,6 @@ RSpec.describe DiscourseVips do
         described_class.downsize(
           input_path:,
           output_path:,
-          format: "png",
           scale: 0.5,
           timeout: 20,
           read: [input_path],
@@ -43,14 +43,12 @@ RSpec.describe DiscourseVips do
     end
 
     it "rejects an unsupported format" do
-      input_path = file_from_fixtures("logo.png").path
-      output_path = File.join(directory, "output.ico")
+      input_path = File.join(directory, "source.ico")
 
       expect {
         described_class.downsize(
           input_path:,
           output_path:,
-          format: "ico",
           scale: 0.5,
           timeout: 20,
           read: [input_path],
@@ -66,7 +64,6 @@ RSpec.describe DiscourseVips do
         described_class.downsize(
           input_path:,
           output_path:,
-          format: "png",
           scale: 0.5,
           width: 100,
           height: 100,
@@ -74,7 +71,10 @@ RSpec.describe DiscourseVips do
           read: [input_path],
           write: [directory],
         )
-      }.to raise_error(ArgumentError, /provide a scale/)
+      }.to raise_error(
+        ArgumentError,
+        "provide exactly one resize target: scale, width and height, or max_pixels",
+      )
     end
 
     it "reports invalid bounds as an operation error" do
@@ -84,14 +84,13 @@ RSpec.describe DiscourseVips do
         described_class.downsize(
           input_path:,
           output_path:,
-          format: "png",
           width: 0,
           height: 100,
           timeout: 20,
           read: [input_path],
           write: [directory],
         )
-      }.to raise_error { |error| expect(error.class).to eq(DiscourseVips::Error) }
+      }.to raise_error(DiscourseVips::Error, "invalid resize bounds")
     end
 
     it "reports an invalid scale as an operation error" do
@@ -101,13 +100,12 @@ RSpec.describe DiscourseVips do
         described_class.downsize(
           input_path:,
           output_path:,
-          format: "png",
           scale: 0,
           timeout: 20,
           read: [input_path],
           write: [directory],
         )
-      }.to raise_error { |error| expect(error.class).to eq(DiscourseVips::Error) }
+      }.to raise_error(DiscourseVips::Error, "invalid resize scale")
     end
 
     it "preserves the destination and removes temporary files when decoding fails" do
@@ -119,7 +117,6 @@ RSpec.describe DiscourseVips do
         described_class.downsize(
           input_path:,
           output_path:,
-          format: "png",
           scale: 0.5,
           timeout: 20,
           read: [input_path],
