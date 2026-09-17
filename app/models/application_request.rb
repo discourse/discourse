@@ -28,36 +28,39 @@ class ApplicationRequest < ActiveRecord::Base
 
   include CachedCounting
 
+  BROWSER_PAGEVIEW_TRANSPORTS = {
+    "page_view_anon_browser" => "page_view_anon_browser_beacon",
+    "page_view_logged_in_browser" => "page_view_logged_in_browser_beacon",
+  }.freeze
+
+  # Browser pageviews arrive through two transports: a beacon request and,
+  # historically, a piggybacked header on regular requests. Both can record the
+  # same visit, so counts are read from beacons whenever they recorded traffic
+  # and fall back to the piggyback counters when they did not. Anonymous and
+  # logged in visitors are decided separately, because either cohort can be the
+  # only one a beacon saw on a given day.
   def self.browser_pageviews
-    legacy_types = %i[page_view_anon_browser page_view_logged_in_browser]
-    beacon_types = %i[page_view_anon_browser_beacon page_view_logged_in_browser_beacon]
-    cutover_date = browser_pageview_beacon_cutover_date
+    conditions =
+      BROWSER_PAGEVIEW_TRANSPORTS.map do |legacy_type, beacon_type|
+        legacy_id, beacon_id = req_types.values_at(legacy_type, beacon_type)
 
-    return where(req_type: legacy_types) if cutover_date.nil?
+        <<~SQL
+          (
+            application_requests.req_type IN (#{legacy_id}, #{beacon_id})
+            AND (application_requests.req_type = #{beacon_id}) = EXISTS (
+              SELECT 1
+              FROM application_requests beacons
+              WHERE beacons.date = application_requests.date
+                AND beacons.req_type = #{beacon_id}
+                AND beacons.count > 0
+            )
+          )
+        SQL
+      end
 
-    # Both transports can record the same visit, so select one source for each date.
-    where(req_type: legacy_types).where("date < ?", cutover_date).or(
-      where(req_type: beacon_types).where("date >= ?", cutover_date),
+    where(req_type: req_types.values_at(*BROWSER_PAGEVIEW_TRANSPORTS.to_a.flatten)).where(
+      conditions.join(" OR "),
     )
-  end
-
-  def self.browser_pageview_beacon_cutover_date
-    first_beacon_date =
-      where(req_type: %i[page_view_anon_browser_beacon page_view_logged_in_browser_beacon]).where(
-        "count > 0",
-      ).minimum(:date)
-    return if first_beacon_date.nil?
-
-    # The first beacon day may be partial. Prefer existing piggyback traffic for that
-    # whole day, but retain the first day on sites that only recorded beacons.
-    if where(
-         date: first_beacon_date,
-         req_type: %i[page_view_anon_browser page_view_logged_in_browser],
-       ).where("count > 0").exists?
-      first_beacon_date.next_day
-    else
-      first_beacon_date
-    end
   end
 
   def self.browser_pageview_count_for_period(type, since)

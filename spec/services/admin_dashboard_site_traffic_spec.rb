@@ -189,20 +189,36 @@ RSpec.describe AdminDashboardSiteTraffic do
       )
     end
 
-    it "switches to beacon counters after the first day with beacon data" do
+    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
       Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 20)
       Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 15)
-      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 30)
-      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-02", count: 25)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 25)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-02", count: 30)
       Fabricate(:logged_in_browser_application_request, date: "2026-05-03", count: 40)
 
       response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")
 
       expect(traffic_series_data(response, :logged_in)).to eq(
         [
-          traffic_point("2026-05-01", 20),
-          traffic_point("2026-05-02", 25),
-          traffic_point("2026-05-03", 0),
+          traffic_point("2026-05-01", 15),
+          traffic_point("2026-05-02", 30),
+          traffic_point("2026-05-03", 40),
+        ],
+      )
+    end
+
+    it "keeps counting piggyback traffic after an isolated day of beacon data" do
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 1)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 30)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-03", count: 40)
+
+      response = build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")
+
+      expect(traffic_series_data(response, :logged_in)).to eq(
+        [
+          traffic_point("2026-05-01", 1),
+          traffic_point("2026-05-02", 30),
+          traffic_point("2026-05-03", 40),
         ],
       )
     end
