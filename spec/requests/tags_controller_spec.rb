@@ -1534,6 +1534,21 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
     end
 
+    it "does not merge hidden tags submitted by name" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      hidden_tag = Fabricate(:tag, name: "hidden-tag")
+      topic = Fabricate(:topic, tags: [hidden_tag])
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [hidden_tag])
+
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: [hidden_tag.name] }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
+      expect(hidden_tag.reload.target_tag_id).to be_nil
+      expect_same_tag_names(topic.reload.tags, [hidden_tag])
+    end
+
     context "when signed in as admin" do
       before { sign_in(admin) }
 
