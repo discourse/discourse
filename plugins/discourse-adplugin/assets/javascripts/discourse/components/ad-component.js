@@ -90,6 +90,11 @@ export default class AdComponent extends Component {
     )?.custom_fields;
   }
 
+  @computed("currentCategoryId")
+  get currentCategoryDfpConfig() {
+    return this.site?.dfp_category_settings?.[String(this.currentCategoryId)];
+  }
+
   @computed(
     "router.currentRoute.attributes.category.read_restricted",
     "router.currentRoute.parent.attributes.category.read_restricted"

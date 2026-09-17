@@ -5,7 +5,7 @@ en:
       gam_category_settings:
         title: "GAM / DFP"
         gam_adunit: "GAM ad unit"
-        gam_adunit_placeholder: "e.g. /8438/stltoday.com/sports/forums/cards-talk"
+        gam_adunit_placeholder: "e.g. /123456789/example.com/sports/forums/cards-talk"
         gam_keywords: "GAM keywords"
         gam_keywords_placeholder: "Comma separated, e.g. sports,mlb"
         gtm_taxonomy: "GTM taxonomy"
@@ -62,6 +62,22 @@ en:
           tabs:
             ads: "Ads"
             settings: "Settings"
+
+        dfp_settings:
+          title: "DFP / GAM"
+          nav_title: "DFP / GAM"
+          description: "Set a GAM ad unit, keywords and GTM taxonomy per category for DFP ads."
+          nav_description: "Per-category GAM ad units, keywords and GTM taxonomies."
+          category: "Category"
+          gam_adunit: "GAM ad unit"
+          gam_adunit_placeholder: "e.g. /123456789/example.com/sports/forums/cards-talk"
+          gam_keywords: "GAM keywords"
+          gam_keywords_placeholder: "Comma separated, e.g. sports,mlb"
+          gtm_taxonomy: "GTM taxonomy"
+          gtm_taxonomy_placeholder: "e.g. sports/forums/cards-talk"
+          add: "Add setting"
+          save: "Save"
+          loading: "Loading GAM settings..."
 
           above_site_header:
             title: "Above site header"
