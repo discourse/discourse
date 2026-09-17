@@ -488,6 +488,8 @@ class UploadCreator
         input_path: @file.path,
         quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
         timeout: MAX_FIX_ORIENTATION_TIME,
+        read: [@file.path],
+        write: [@file.path],
       )
     else
       ImageMagick.magick(

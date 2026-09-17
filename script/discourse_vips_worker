@@ -77,10 +77,10 @@ class DiscourseVipsWorker
       @action.call
     end
 
-    def sandbox_paths(scratch:)
+    def sandbox_paths(scratch:, read: nil, write: nil)
       {
-        "read" => existing_paths([*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *@read_paths]),
-        "write" => existing_paths([scratch, *@write_paths]),
+        "read" => existing_paths([*DEFAULT_READ_PATHS, DYNAMIC_LINKER_CACHE_PATH, *(read || @read_paths)]),
+        "write" => existing_paths([scratch, *(write || @write_paths)]),
       }
     end
 
@@ -378,7 +378,7 @@ class DiscourseVipsWorker
 
   def run_sandboxed(request:, operation:)
     Dir.mktmpdir("discourse-vips-") do |scratch|
-      sandbox_paths = operation.sandbox_paths(scratch:)
+      sandbox_paths = operation.sandbox_paths(scratch:, read: request["read"], write: request["write"])
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),

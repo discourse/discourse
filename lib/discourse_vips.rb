@@ -45,11 +45,13 @@ module DiscourseVips
     )
   end
 
-  def self.reencode_jpeg(input_path:, quality:, timeout:, output_path: nil)
+  def self.reencode_jpeg(input_path:, quality:, timeout:, output_path: nil, read: nil, write: nil)
     Client.call(
       ["reencode-jpeg", input_path, output_path, quality],
       operation: :upload_jpeg_reencoding,
       timeout:,
+      read:,
+      write:,
     )
   end
 
