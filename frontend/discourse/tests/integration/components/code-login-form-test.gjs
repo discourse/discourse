@@ -224,6 +224,7 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
   test("collects valid account details before submitting for approval", async function (assert) {
     stubCodeRequest();
+    this.siteSettings.enable_random_usernames = true;
     this.site.setProperties({
       full_name_required_for_signup: true,
       full_name_visible_in_signup: true,
@@ -276,6 +277,13 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
     await click(".code-login-form__create-password");
     assert.dom("#new-account-password").hasAttribute("type", "password");
+    assert.strictEqual(
+      document.querySelector("#new-account-password").getBoundingClientRect()
+        .width,
+      document.querySelector("#code-login-username").getBoundingClientRect()
+        .width,
+      "the password and username inputs have the same visible width"
+    );
     await click(".toggle-password-mask");
     assert
       .dom("#new-account-password")

@@ -1143,127 +1143,138 @@ export default class CodeLoginForm extends Component {
         </div>
       {{else if this.isAccountDetailsStep}}
         <div class="code-login-form__account-details-step">
-          <div class="code-login-form__username-field">
-            <label for="code-login-username">
-              {{i18n "code_login.username_label"}}
-            </label>
-            <div class="code-login-form__username-input">
-              <input
-                aria-describedby="code-login-username-error"
-                aria-invalid={{if this.usernameError "true"}}
-                autocomplete="username"
-                class="code-login-form__new-account-username
-                  {{if this.regenerating '--swapping'}}"
-                id="code-login-username"
-                name="username"
-                placeholder={{i18n "code_login.username_placeholder"}}
-                type="text"
-                value={{this.username}}
-                {{on "input" this.usernameChanged}}
-              />
-              {{#if this.siteSettings.enable_random_usernames}}
-                <DButton
-                  aria-busy={{if this.regenerating "true"}}
-                  class="btn-default code-login-form__username-regen
-                    {{if this.regenerating '--rolling'}}"
-                  @action={{this.regenerateUsername}}
-                  @ariaLabel="code_login.regenerate_username"
-                  @icon="dice"
-                  @title="code_login.regenerate_username"
-                />
-              {{/if}}
-            </div>
-            <div
-              aria-live="polite"
-              class="code-login-form__error"
-              id="code-login-username-error"
-              role="alert"
-            >
-              {{this.usernameError}}
-            </div>
-          </div>
-
-          {{#if this.site.full_name_visible_in_signup}}
-            <div class="code-login-form__name-field">
-              <label for="code-login-name">
-                {{i18n "user.name.title"}}
+          <div
+            class="code-login-form__account-fields
+              {{if
+                this.siteSettings.enable_random_usernames
+                '--with-username-generator'
+              }}"
+          >
+            <div class="code-login-form__username-field">
+              <label for="code-login-username">
+                {{i18n "code_login.username_label"}}
               </label>
-              <input
-                aria-describedby="code-login-name-error"
-                aria-invalid={{if this.nameError "true"}}
-                autocomplete="name"
-                class="code-login-form__name"
-                id="code-login-name"
-                maxlength="255"
-                name="name"
-                type="text"
-                value={{this.name}}
-                {{on "input" this.nameChanged}}
-              />
+              <div class="code-login-form__username-input">
+                <input
+                  aria-describedby="code-login-username-error"
+                  aria-invalid={{if this.usernameError "true"}}
+                  autocomplete="username"
+                  class="code-login-form__new-account-username
+                    {{if this.regenerating '--swapping'}}"
+                  id="code-login-username"
+                  name="username"
+                  placeholder={{i18n "code_login.username_placeholder"}}
+                  type="text"
+                  value={{this.username}}
+                  {{on "input" this.usernameChanged}}
+                />
+                {{#if this.siteSettings.enable_random_usernames}}
+                  <DButton
+                    aria-busy={{if this.regenerating "true"}}
+                    class="btn-default code-login-form__username-regen
+                      {{if this.regenerating '--rolling'}}"
+                    @action={{this.regenerateUsername}}
+                    @ariaLabel="code_login.regenerate_username"
+                    @icon="dice"
+                    @title="code_login.regenerate_username"
+                  />
+                {{/if}}
+              </div>
               <div
                 aria-live="polite"
                 class="code-login-form__error"
-                id="code-login-name-error"
+                id="code-login-username-error"
                 role="alert"
               >
-                {{this.nameError}}
+                {{this.usernameError}}
               </div>
             </div>
-          {{/if}}
 
-          {{#if this.showOptionalPassword}}
-            <div
-              class="input-group create-account__password code-login-form__password-field"
-            >
-              <DPasswordField
-                aria-describedby="password-validation password-validation-more-info"
-                aria-invalid={{this.passwordValidation.failed}}
-                autocomplete="new-password"
-                id="new-account-password"
-                type={{if this.maskPassword "password" "text"}}
-                @capsLockOn={{this.capsLockOn}}
-                @value={{this.accountPassword}}
-                {{on "input" this.passwordChanged}}
-              />
-              <label class="alt-placeholder" for="new-account-password">
-                {{i18n "user.password.title"}}
-              </label>
-              <DTogglePasswordMask
-                @maskPassword={{this.maskPassword}}
-                @togglePasswordMask={{this.togglePasswordMask}}
-              />
-              <div class="create-account__password-info">
-                <div class="create-account__password-tip-validation">
-                  {{#if this.showPasswordValidation}}
-                    <DInputTip
-                      id="password-validation"
-                      @validation={{this.passwordValidation}}
-                    />
-                  {{else if
-                    this.siteSettings.show_signup_form_password_instructions
-                  }}
-                    <span class="more-info" id="password-validation-more-info">
-                      {{this.passwordValidationHelper.passwordInstructions}}
-                    </span>
-                  {{/if}}
-                  <div
-                    class="caps-lock-warning
-                      {{unless this.capsLockOn 'hidden'}}"
-                  >
-                    {{dIcon "triangle-exclamation"}}
-                    {{i18n "login.caps_lock_warning"}}
+            {{#if this.site.full_name_visible_in_signup}}
+              <div class="code-login-form__name-field">
+                <label for="code-login-name">
+                  {{i18n "user.name.title"}}
+                </label>
+                <input
+                  aria-describedby="code-login-name-error"
+                  aria-invalid={{if this.nameError "true"}}
+                  autocomplete="name"
+                  class="code-login-form__name"
+                  id="code-login-name"
+                  maxlength="255"
+                  name="name"
+                  type="text"
+                  value={{this.name}}
+                  {{on "input" this.nameChanged}}
+                />
+                <div
+                  aria-live="polite"
+                  class="code-login-form__error"
+                  id="code-login-name-error"
+                  role="alert"
+                >
+                  {{this.nameError}}
+                </div>
+              </div>
+            {{/if}}
+
+            {{#if this.showOptionalPassword}}
+              <div
+                class="input-group create-account__password code-login-form__password-field"
+              >
+                <DPasswordField
+                  aria-describedby="password-validation password-validation-more-info"
+                  aria-invalid={{this.passwordValidation.failed}}
+                  autocomplete="new-password"
+                  id="new-account-password"
+                  type={{if this.maskPassword "password" "text"}}
+                  @capsLockOn={{this.capsLockOn}}
+                  @value={{this.accountPassword}}
+                  {{on "input" this.passwordChanged}}
+                />
+                <label class="alt-placeholder" for="new-account-password">
+                  {{i18n "user.password.title"}}
+                </label>
+                <DTogglePasswordMask
+                  @maskPassword={{this.maskPassword}}
+                  @togglePasswordMask={{this.togglePasswordMask}}
+                />
+                <div class="create-account__password-info">
+                  <div class="create-account__password-tip-validation">
+                    {{#if this.showPasswordValidation}}
+                      <DInputTip
+                        id="password-validation"
+                        @validation={{this.passwordValidation}}
+                      />
+                    {{else if
+                      this.siteSettings.show_signup_form_password_instructions
+                    }}
+                      <span
+                        class="more-info"
+                        id="password-validation-more-info"
+                      >
+                        {{this.passwordValidationHelper.passwordInstructions}}
+                      </span>
+                    {{/if}}
+                    <div
+                      class="caps-lock-warning
+                        {{unless this.capsLockOn 'hidden'}}"
+                    >
+                      {{dIcon "triangle-exclamation"}}
+                      {{i18n "login.caps_lock_warning"}}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          {{else}}
-            <DButton
-              class="btn-link code-login-form__create-password"
-              @action={{this.revealOptionalPassword}}
-              @label="code_login.create_password_optional"
-            />
-          {{/if}}
+            {{else}}
+              <DButton
+                class="btn-link code-login-form__create-password"
+                @action={{this.revealOptionalPassword}}
+                @label="code_login.create_password_optional"
+              />
+            {{/if}}
 
+          </div>
           <div class="user-fields">
             {{#each this.userFields as |f|}}
               <div class="input-group">

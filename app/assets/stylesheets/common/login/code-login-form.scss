@@ -72,6 +72,47 @@
     }
   }
 
+  &__account-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-self: stretch;
+    gap: 1em 0.5em;
+
+    &.--with-username-generator {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .code-login-form__username-field {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      gap: 0.25em 0.5em;
+
+      > label,
+      > .code-login-form__error {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .code-login-form__username-input {
+      display: contents;
+    }
+
+    .code-login-form__name-field {
+      grid-column: 1 / -1;
+    }
+
+    .code-login-form__password-field,
+    .code-login-form__create-password {
+      grid-column: 1;
+    }
+
+    .code-login-form__password-field input {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
   &__name-field {
     display: flex;
     flex-direction: column;
@@ -86,6 +127,7 @@
 
   &__password-field {
     align-self: stretch;
+    width: 100%;
     margin: 0;
   }
 
