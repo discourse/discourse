@@ -14,7 +14,7 @@ import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import Category from "discourse/models/category";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -23,6 +23,7 @@ import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
+import { loadCategory } from "../lib/boards-categories";
 import { boardsBoardUrl, boardsCardUrl } from "../lib/boards-urls";
 import AutoLinkedText from "./auto-linked-text";
 import BoardsCardDetailModal from "./modal/boards-card-detail";
@@ -113,11 +114,8 @@ export default class BoardsCard extends Component {
     return tags.length ? renderTags(null, { tags }) : null;
   }
 
-  get category() {
-    if (this.args.allSameCategory || !this.topic?.category_id) {
-      return null;
-    }
-    return Category.findById(this.topic.category_id);
+  get categoryId() {
+    return this.args.allSameCategory ? null : this.topic?.category_id;
   }
 
   get isDetailed() {
@@ -613,12 +611,21 @@ export default class BoardsCard extends Component {
       {{/if}}
 
       <div class="discourse-boards-card__row discourse-boards-card__meta-data">
-        {{#if this.category}}
-          <div
-            class="discourse-boards-card__category discourse-boards-card__row-item"
+        {{#if this.categoryId}}
+          <DAsyncContent
+            @asyncData={{loadCategory}}
+            @context={{this.categoryId}}
           >
-            {{dCategoryBadge this.category}}
-          </div>
+            <:content as |category|>
+              {{#if category}}
+                <div
+                  class="discourse-boards-card__category discourse-boards-card__row-item"
+                >
+                  {{dCategoryBadge category}}
+                </div>
+              {{/if}}
+            </:content>
+          </DAsyncContent>
         {{/if}}
         {{#if this.isDetailed}}
           <div class="discourse-boards-card__row-item">

@@ -1,8 +1,11 @@
 import { tracked } from "@glimmer/tracking";
+import { preloadCategories } from "../lib/boards-categories";
 import Column from "./column";
 
 export default class Board {
-  static createPayload(data) {
+  static async createPayload(data) {
+    await Board.preloadCategories(data);
+
     return {
       ...data,
       board: Board.create(data.board),
@@ -15,6 +18,16 @@ export default class Board {
       return args;
     }
     return new Board(args);
+  }
+
+  static preloadCategories({ board, columns = [] }) {
+    return preloadCategories([
+      ...(board.category_ids || []),
+      ...columns.flatMap((column) => [
+        column.move_to_category_id,
+        ...(column.cards || []).map((card) => card.topic?.category_id),
+      ]),
+    ]);
   }
 
   @tracked anonymous_can_read;

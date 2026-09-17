@@ -23,6 +23,7 @@ import DiscourseURL from "discourse/lib/url";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
@@ -37,6 +38,7 @@ import {
   isRecencyColumn,
   sortCardsForColumn,
 } from "../lib/boards-card-ordering";
+import { loadCategories } from "../lib/boards-categories";
 import { boardsBoardConfigureUrl, boardsBoardUrl } from "../lib/boards-urls";
 import Board from "../models/board";
 import Card from "../models/card";
@@ -205,18 +207,12 @@ export default class BoardsBoardViewer extends Component {
     this.#stopHorizontalAutoScroll();
   }
 
-  get boardCategories() {
-    return (this.board.category_ids || [])
-      .map((id) => Category.findById(id))
-      .filter(Boolean);
-  }
-
   get boardTagNames() {
     return this.board.tag_names || [];
   }
 
   get hasBoardFilters() {
-    return this.boardCategories.length > 0 || this.boardTagNames.length > 0;
+    return this.board.category_ids?.length > 0 || this.boardTagNames.length > 0;
   }
 
   get allSameCategory() {
@@ -571,7 +567,7 @@ export default class BoardsBoardViewer extends Component {
   }
 
   @action
-  onPromoteToTopic(cardId) {
+  async onPromoteToTopic(cardId) {
     let card;
     let column;
     for (const col of this.columns) {
@@ -611,7 +607,13 @@ export default class BoardsBoardViewer extends Component {
     const categoryId =
       column.move_to_category_id || this.board.category_ids?.[0];
     if (categoryId) {
-      opts.category = Category.findById(categoryId);
+      try {
+        opts.category = await Category.asyncFindById(categoryId);
+      } catch (error) {
+        this._cleanupPromotion();
+        popupAjaxError(error);
+        return;
+      }
     }
     this.composer.openNewTopic(opts);
   }
@@ -957,6 +959,7 @@ export default class BoardsBoardViewer extends Component {
   async #handleBoardUpdated() {
     try {
       const result = await ajax(`/boards/api/boards/${this.board.id}.json`);
+      await Board.preloadCategories(result);
       if (result.columns) {
         this.columns = result.columns.map((col) =>
           Column.create({
@@ -1426,9 +1429,16 @@ export default class BoardsBoardViewer extends Component {
           <div class="discourse-boards-board-viewer__metadata">
             {{#if this.hasBoardFilters}}
               <div class="discourse-boards-board-viewer__constraint">
-                {{#each this.boardCategories as |category|}}
-                  {{dBoundCategoryLink category link=true}}
-                {{/each}}
+                <DAsyncContent
+                  @asyncData={{loadCategories}}
+                  @context={{this.board.category_ids}}
+                >
+                  <:content as |categories|>
+                    {{#each categories as |category|}}
+                      {{dBoundCategoryLink category link=true}}
+                    {{/each}}
+                  </:content>
+                </DAsyncContent>
                 {{#if this.boardTagNames.length}}
                   <div class="list-tags">
                     {{dDiscourseTags null tags=this.boardTagNames}}

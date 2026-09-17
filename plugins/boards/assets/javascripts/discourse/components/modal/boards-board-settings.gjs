@@ -12,10 +12,12 @@ import discourseDebounce from "discourse/lib/debounce";
 import { slugify } from "discourse/lib/utilities";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import { eq, or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import { buildDefaultBoardAcl } from "../../lib/boards-access-control";
+import { loadCategories } from "../../lib/boards-categories";
 import BoardsAccessControlField from "../boards-access-control-field";
 import BoardsEditableTitle from "../boards-editable-title";
 
@@ -122,13 +124,6 @@ export default class BoardsBoardSettings extends Component {
   @action
   toggleAdvanced() {
     this.showAdvanced = !this.showAdvanced;
-  }
-
-  @action
-  selectedCategories(categoryIds) {
-    return (categoryIds || [])
-      .map((id) => this.site.categories?.find((c) => c.id === id))
-      .filter(Boolean);
   }
 
   @action
@@ -329,10 +324,17 @@ export default class BoardsBoardSettings extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <CategorySelector
-                      @categories={{this.selectedCategories data.category_ids}}
-                      @onChange={{fn this.onCategoriesChange field}}
-                    />
+                    <DAsyncContent
+                      @asyncData={{loadCategories}}
+                      @context={{data.category_ids}}
+                    >
+                      <:content as |categories|>
+                        <CategorySelector
+                          @categories={{categories}}
+                          @onChange={{fn this.onCategoriesChange field}}
+                        />
+                      </:content>
+                    </DAsyncContent>
                   </field.Control>
                 </form.Field>
               {{/if}}
