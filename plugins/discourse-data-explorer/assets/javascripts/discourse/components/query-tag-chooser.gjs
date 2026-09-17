@@ -33,11 +33,7 @@ export default class QueryTagChooser extends Component {
       @mandatoryValues={{@mandatoryValues}}
       @mandatoryValueTitle={{@mandatoryValueTitle}}
       @onChange={{@onChange}}
-      @options={{hash
-        allowAny=true
-        filterPlaceholder="explorer.select_or_create_tags"
-        none="explorer.select_or_create_tags"
-      }}
+      @options={{hash allowAny=true}}
       @value={{@value}}
     />
   </template>

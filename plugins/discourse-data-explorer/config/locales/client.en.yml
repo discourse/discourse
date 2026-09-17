@@ -146,7 +146,6 @@ en:
       query_name: "Query"
       query_groups: "Groups"
       query_tags: "Tags"
-      select_or_create_tags: "Select or create tags"
       default_tag_mandatory: "The Default tag cannot be removed from bundled queries."
       link: "Link for"
       report_name: "Report"

@@ -152,24 +152,30 @@ export default <template>
               {{on "input" @controller.updateDescription}}
             />
 
-            <label class="query-new__field-label">
-              {{i18n "explorer.allow_groups"}}
-            </label>
-            <GroupChooser
-              class="query-group-select"
-              @content={{@controller.groupOptions}}
-              @onChange={{@controller.updateAiGroupIds}}
-              @value={{@controller.aiGroupIds}}
-            />
+            <div class="query-new__access-fields">
+              <div class="query-new__access-field">
+                <label class="query-new__field-label">
+                  {{i18n "explorer.allow_groups"}}
+                </label>
+                <GroupChooser
+                  class="query-group-select"
+                  @content={{@controller.groupOptions}}
+                  @onChange={{@controller.updateAiGroupIds}}
+                  @value={{@controller.aiGroupIds}}
+                />
+              </div>
 
-            <label class="query-new__field-label">
-              {{i18n "explorer.query_tags"}}
-            </label>
-            <QueryTagChooser
-              @availableTags={{@controller.availableTags}}
-              @onChange={{@controller.updateAiTags}}
-              @value={{@controller.aiTags}}
-            />
+              <div class="query-new__access-field">
+                <label class="query-new__field-label">
+                  {{i18n "explorer.query_tags"}}
+                </label>
+                <QueryTagChooser
+                  @availableTags={{@controller.availableTags}}
+                  @onChange={{@controller.updateAiTags}}
+                  @value={{@controller.aiTags}}
+                />
+              </div>
+            </div>
           </div>
 
           <div class="query-new__actions">
@@ -214,37 +220,43 @@ export default <template>
           >
             <field.Control />
           </form.Field>
-          <form.Field
-            @format="full"
-            @name="groupIds"
-            @title={{i18n "explorer.allow_groups"}}
-            @type="custom"
-            as |field|
-          >
-            <field.Control>
-              <GroupChooser
-                class="query-group-select"
-                @content={{@controller.groupOptions}}
-                @onChange={{field.set}}
-                @value={{field.value}}
-              />
-            </field.Control>
-          </form.Field>
-          <form.Field
-            @format="full"
-            @name="tags"
-            @title={{i18n "explorer.query_tags"}}
-            @type="custom"
-            as |field|
-          >
-            <field.Control>
-              <QueryTagChooser
-                @availableTags={{@controller.availableTags}}
-                @onChange={{field.set}}
-                @value={{field.value}}
-              />
-            </field.Control>
-          </form.Field>
+          <form.Row as |row|>
+            <row.Col @size={{6}}>
+              <form.Field
+                @format="full"
+                @name="groupIds"
+                @title={{i18n "explorer.allow_groups"}}
+                @type="custom"
+                as |field|
+              >
+                <field.Control>
+                  <GroupChooser
+                    class="query-group-select"
+                    @content={{@controller.groupOptions}}
+                    @onChange={{field.set}}
+                    @value={{field.value}}
+                  />
+                </field.Control>
+              </form.Field>
+            </row.Col>
+            <row.Col @size={{6}}>
+              <form.Field
+                @format="full"
+                @name="tags"
+                @title={{i18n "explorer.query_tags"}}
+                @type="custom"
+                as |field|
+              >
+                <field.Control>
+                  <QueryTagChooser
+                    @availableTags={{@controller.availableTags}}
+                    @onChange={{field.set}}
+                    @value={{field.value}}
+                  />
+                </field.Control>
+              </form.Field>
+            </row.Col>
+          </form.Row>
           <label class="query-new__sql-label">
             {{i18n "explorer.ai.sql_label"}}
           </label>
