@@ -1097,9 +1097,12 @@ class PostsController < ApplicationController
   end
 
   def find_post_from_params_by_date
+    topic = Topic.with_deleted.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless guardian.can_see?(topic)
+
     by_date_finder =
       TopicView
-        .new(params[:topic_id], current_user)
+        .new(topic, current_user)
         .filtered_posts
         .where("created_at >= ?", Time.zone.parse(params[:date]))
         .order("created_at ASC")
@@ -1119,7 +1122,7 @@ class PostsController < ApplicationController
       raise Discourse::NotFound unless guardian.can_moderate_topic?(post.topic)
     end
 
-    guardian.ensure_can_see!(post)
+    raise Discourse::NotFound unless guardian.can_see?(post)
 
     post
   end

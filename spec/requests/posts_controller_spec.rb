@@ -8,7 +8,7 @@ RSpec.shared_examples "finding and showing post" do
     topic.convert_to_private_message(Discourse.system_user)
     topic.remove_allowed_user(Discourse.system_user, user.username)
     get url
-    expect(response).to be_forbidden
+    expect(response.status).to eq(404)
   end
 
   it "returns 200 for an accessible post" do
@@ -98,6 +98,17 @@ RSpec.describe PostsController do
   describe "#show" do
     include_examples "finding and showing post" do
       let(:url) { "/posts/#{post.id}.json" }
+    end
+
+    it "does not reveal private post existence to anonymous users" do
+      get "/posts/#{private_post.id}.json"
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(private_post.raw)
+
+      get "/posts/#{Post.maximum(:id) + 1}.json"
+
+      expect(response.status).to eq(404)
     end
 
     it "gets all the expected fields" do
@@ -251,11 +262,11 @@ RSpec.describe PostsController do
       sign_in(User.find(whisper_author.id))
 
       get "/posts/#{whisper.id}.json"
-      expect(response).to be_forbidden
+      expect(response.status).to eq(404)
       expect(response.body).not_to include(whisper.raw)
 
       get "/posts/by_number/#{topic.id}/#{whisper.post_number}.json"
-      expect(response).to be_forbidden
+      expect(response.status).to eq(404)
       expect(response.body).not_to include(whisper.raw)
 
       get "/raw/#{topic.id}/#{whisper.post_number}"
@@ -404,7 +415,7 @@ RSpec.describe PostsController do
         sign_in(user)
 
         delete "/posts/#{post.id}.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(404)
       end
 
       it "raises an error when the self deletions are disabled" do
@@ -655,7 +666,7 @@ RSpec.describe PostsController do
         sign_in(user)
 
         put "/posts/#{post.id}/recover.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(404)
       end
 
       it "raises an error when self deletion/recovery is disabled" do
@@ -3450,7 +3461,7 @@ RSpec.describe PostsController do
       it "throws an exception for users" do
         sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "works for admins" do
