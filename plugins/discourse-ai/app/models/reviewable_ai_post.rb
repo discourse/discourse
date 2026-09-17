@@ -218,12 +218,18 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  dsa_category            :string
+#  dsa_subcategory         :string
+#  dsa_subcategory_other   :string(500)
 #  force_review            :boolean          default(FALSE), not null
 #  latest_score            :datetime
+#  legal_basis             :string
+#  outcome_source          :string
 #  payload                 :json
 #  potential_spam          :boolean          default(FALSE), not null
 #  potentially_illegal     :boolean          default(FALSE)
 #  reject_reason           :text
+#  restriction_type        :string
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  score                   :float            default(0.0), not null
 #  status                  :integer          default("pending"), not null
@@ -242,6 +248,7 @@ end
 # Indexes
 #
 #  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
+#  index_reviewables_awaiting_dsa_classification               (status) WHERE ((legal_basis IS NOT NULL) AND (dsa_category IS NULL))
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

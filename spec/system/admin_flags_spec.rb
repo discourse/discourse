@@ -128,6 +128,7 @@ describe "Admin Flags Page" do
         "flag post allowed groups",
         "allow all users to flag illegal content",
         "email address to report illegal content",
+        "enable dsa reporting",
         "silence new user sensitivity",
         "num users to silence new user",
         "flag sockpuppets",
