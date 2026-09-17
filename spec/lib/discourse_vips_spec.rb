@@ -576,4 +576,211 @@ RSpec.describe DiscourseVips do
       success: true,
     )
   end
+
+  describe ".svg_to_png" do
+    it "renders referenced assets from a caller-permitted directory" do
+      Dir.mktmpdir do |directory|
+        allowed_path = File.join(directory, "allowed.png")
+        ChunkyPNG::Image.new(4, 4, ChunkyPNG::Color.rgb(255, 0, 0)).save(allowed_path)
+        input_path = File.join(directory, "input.svg")
+        output_directory = File.join(directory, "output")
+        Dir.mkdir(output_directory)
+        output_path = File.join(output_directory, "output.png")
+        File.write(input_path, <<~SVG)
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+            <image href="allowed.png" width="40" height="40"/>
+          </svg>
+        SVG
+
+        described_class.svg_to_png(
+          input_path:,
+          output_path:,
+          read: [directory],
+          write: [output_directory],
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect(png[20, 20]).to eq(ChunkyPNG::Color.rgb(255, 0, 0))
+      end
+    end
+
+    it "renders permitted file assets without including unpermitted file assets" do
+      skip "Landlock is not supported" if !Discourse::SafeExec.landlock_supported?
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "input.svg")
+        allowed_path = File.join(directory, "allowed.png")
+        private_path = File.join(directory, "private.png")
+        output_path = File.join(directory, "output.png")
+        ChunkyPNG::Image.new(4, 4, ChunkyPNG::Color.rgb(255, 0, 0)).save(allowed_path)
+        ChunkyPNG::Image.new(4, 4, ChunkyPNG::Color.rgb(0, 255, 0)).save(private_path)
+        File.write(output_path, "")
+        File.write(input_path, <<~SVG)
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="40">
+            <image href="allowed.png" width="40" height="40"/>
+            <image href="private.png" x="40" width="40" height="40"/>
+          </svg>
+        SVG
+
+        described_class.svg_to_png(
+          input_path:,
+          output_path:,
+          read: [input_path, allowed_path],
+          write: [output_path],
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png[20, 20], png[60, 20]]).to eq(
+          [ChunkyPNG::Color.rgb(255, 0, 0), ChunkyPNG::Color.rgb(255, 255, 255)],
+        )
+      end
+    end
+
+    it "raises an error when reading the input is not permitted" do
+      skip "Landlock is not supported" if !Discourse::SafeExec.landlock_supported?
+
+      file = file_from_fixtures("tiny.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        expect {
+          described_class.svg_to_png(
+            input_path: file.path,
+            output_path:,
+            read: [],
+            write: [directory],
+          )
+        }.to raise_error(DiscourseVips::Error)
+      end
+    end
+
+    it "renders transparent areas against a white background" do
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="4">
+          <rect width="4" height="4" fill="#ff0000"/>
+        </svg>
+      SVG
+      file = file_from_contents(svg, "transparency.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        described_class.svg_to_png(
+          input_path: file.path,
+          output_path:,
+          read: [file.path],
+          write: [directory],
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png[2, 2], png[10, 2]]).to eq(
+          [ChunkyPNG::Color.rgb(255, 0, 0), ChunkyPNG::Color.rgb(255, 255, 255)],
+        )
+      end
+    end
+
+    it "raises an error for malformed SVG input" do
+      file = file_from_contents('<svg width="100" height="50">', "invalid.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        expect {
+          described_class.svg_to_png(
+            input_path: file.path,
+            output_path:,
+            read: [file.path],
+            write: [directory],
+          )
+        }.to raise_error(DiscourseVips::Error)
+      end
+    end
+
+    it "raises an error when input and output refer to the same file" do
+      svg = '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+
+      Dir.mktmpdir do |directory|
+        input_path = File.join(directory, "input.svg")
+        output_path = File.join(directory, "output.png")
+        File.write(input_path, svg)
+        File.link(input_path, output_path)
+
+        expect {
+          described_class.svg_to_png(
+            input_path:,
+            output_path:,
+            read: [input_path],
+            write: [directory],
+          )
+        }.to raise_error(DiscourseVips::Error, "SVG input and PNG output must be different files")
+      end
+    end
+
+    it "raises an error when SVG input exceeds the size limit" do
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="100">
+          #{" " * 3.megabytes}
+        </svg>
+      SVG
+      file = file_from_contents(svg, "oversized.svg")
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        expect {
+          described_class.svg_to_png(
+            input_path: file.path,
+            output_path:,
+            read: [file.path],
+            write: [directory],
+          )
+        }.to raise_error(DiscourseVips::Error, /SVG exceeds/)
+      end
+    end
+
+    it "writes a PNG at the original SVG dimensions" do
+      file =
+        file_from_contents(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200"><rect width="600" height="200" fill="#ff0000"/></svg>',
+          "large.svg",
+        )
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "output.png")
+
+        described_class.svg_to_png(
+          input_path: file.path,
+          output_path:,
+          read: [file.path],
+          write: [directory],
+        )
+
+        png = ChunkyPNG::Image.from_file(output_path)
+        expect([png.width, png.height]).to eq([600, 200])
+        expect(png[png.width / 2, png.height / 2]).to eq(ChunkyPNG::Color.rgb(255, 0, 0))
+      end
+    end
+
+    it "raises an error when writing the output is not permitted" do
+      skip "Landlock is not supported" if !Discourse::SafeExec.landlock_supported?
+
+      file =
+        file_from_contents(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="60" height="20"/>',
+          "input.svg",
+        )
+
+      Dir.mktmpdir do |directory|
+        expect {
+          described_class.svg_to_png(
+            input_path: file.path,
+            output_path: File.join(directory, "output.png"),
+            read: [file.path],
+            write: [],
+          )
+        }.to raise_error(DiscourseVips::Error)
+      end
+    end
+  end
 end
