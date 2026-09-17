@@ -29,6 +29,8 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
         "http://www.amazon.fr/gp/product/B01BYD0TZM" => "https://www.amazon.fr/dp/B01BYD0TZM",
         "https://www.amazon.ca/gp/product/B087Z3N428?pf_rd_r=SXABADD0ZZ3NF9Q5F8TW&ref_=pd_gw_unk" =>
           "https://www.amazon.ca/dp/B087Z3N428",
+        "https://www.amazon.com/Anker-USB-C-HDP/dp/B0CK8TKV5Z" =>
+          "https://www.amazon.com/dp/B0CK8TKV5Z",
       }.each do |link, url|
         expect(Onebox::Matcher.new(link).oneboxed).to eq(described_class)
         expect(described_class.new(link).url).to eq(url)
