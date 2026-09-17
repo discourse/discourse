@@ -16,6 +16,9 @@ import BoardsTopicCardDetail from "discourse/plugins/boards/discourse/components
 import BoardsFabricators from "discourse/plugins/boards/discourse/lib/fabricators";
 import Board from "discourse/plugins/boards/discourse/models/board";
 
+const HTTP_NOT_FOUND = 404;
+const CONFIRM_BUTTON =
+  ".discourse-boards-constraint-fix-modal .d-modal__footer .btn-primary";
 const CATEGORY_ID = 12345;
 const CATEGORY_NAME = "Unvisited category";
 const ADDITIONAL_CATEGORY_ID = 12346;
@@ -94,7 +97,9 @@ module("Integration | Component | Boards category loading", function (hooks) {
         this.site.updateCategory(category);
       }
 
+      const onConfirm = sinon.spy();
       this.constraintModel = {
+        onConfirm,
         topic: { category_id: 1 },
         mismatches: {
           needsCategory: true,
@@ -103,27 +108,79 @@ module("Integration | Component | Boards category loading", function (hooks) {
       };
       await render(
         <template>
-          <BoardsConstraintFix @model={{this.constraintModel}} />
+          <BoardsConstraintFix
+            @closeModal={{this.closeModal}}
+            @model={{this.constraintModel}}
+          />
         </template>
       );
 
       assert.dom(`[data-category-id="${CATEGORY_ID}"]`).hasText(CATEGORY_NAME);
+      assert
+        .dom(CONFIRM_BUTTON)
+        .isEnabled("the loaded category can be confirmed");
+
+      await click(CONFIRM_BUTTON);
+
+      assert.deepEqual(
+        onConfirm.args,
+        [[{ category_id: CATEGORY_ID }]],
+        "confirmation uses the loaded category"
+      );
     });
   }
 
-  test("a category omitted by the server does not prevent loading the board", async function (assert) {
+  test("a missing category cannot be confirmed in the constraint dialog", async function (assert) {
+    pretender.get("/categories/find", () =>
+      response(HTTP_NOT_FOUND, { errors: ["Not found"] })
+    );
+    this.constraintModel = {
+      topic: { category_id: 1 },
+      mismatches: {
+        needsCategory: true,
+        boardCategoryIds: [CATEGORY_ID],
+      },
+    };
+
+    await render(
+      <template>
+        <BoardsConstraintFix
+          @closeModal={{this.closeModal}}
+          @model={{this.constraintModel}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("[data-category-id]")
+      .doesNotExist("the missing category is not offered");
+    assert
+      .dom(CONFIRM_BUTTON)
+      .isDisabled("confirmation requires an available category");
+  });
+
+  test("a partial category response keeps the settings selector available", async function (assert) {
     this.board.category_ids = [CATEGORY_ID, ADDITIONAL_CATEGORY_ID];
     pretender.get("/categories/find", () =>
       response({ categories: [category] })
     );
 
-    const payload = await Board.createPayload(this.model);
+    this.settingsModel.board = (await Board.createPayload(this.model)).board;
 
-    assert.strictEqual(
-      payload.board.id,
-      this.board.id,
-      "the board remains available"
+    await render(
+      <template>
+        <BoardsBoardSettings
+          @closeModal={{this.closeModal}}
+          @inline={{true}}
+          @model={{this.settingsModel}}
+        />
+      </template>
     );
+
+    assert
+      .dom(".category-selector")
+      .exists("the category selector remains available")
+      .includesText(CATEGORY_NAME, "the accessible category remains selected");
   });
 
   test("boards list displays category constraints", async function (assert) {
@@ -198,37 +255,53 @@ module("Integration | Component | Boards category loading", function (hooks) {
   });
 
   for (const source of ["board", "column"]) {
-    test(`promoting a floater passes the ${source} category to the composer`, async function (assert) {
-      const card = this.fabricators.card({
-        board_id: this.board.id,
-        column_id: this.column.id,
-      });
-      this.column.cards = [card];
-
-      if (source === "column") {
-        this.board.category_ids = [];
-        this.column.move_to_category_id = CATEGORY_ID;
-      }
-
-      const openNewTopic = sinon.stub().resolves();
-      this.owner.register(
-        "service:composer",
-        class extends Service {
-          openNewTopic = openNewTopic;
+    test.each(
+      `promoting a floater with a ${source} category`,
+      {
+        available: { categoryIds: [CATEGORY_ID], alerts: 0 },
+        missing: { categoryIds: [], alerts: 1 },
+      },
+      async function (assert, expected) {
+        const alert = sinon.stub(this.owner.lookup("service:dialog"), "alert");
+        if (!expected.categoryIds.length) {
+          pretender.get("/categories/find", () => response(HTTP_NOT_FOUND, {}));
         }
-      );
-      await render(
-        <template><BoardsBoardViewer @model={{this.model}} /></template>
-      );
-      await click(".discourse-boards-card__actions-trigger");
-      await click(".fk-d-menu button:has(.d-icon-plus)");
 
-      assert.true(openNewTopic.calledOnce, "the composer opens");
-      assert.strictEqual(
-        openNewTopic.firstCall.args[0].category?.id,
-        CATEGORY_ID,
-        "the composer receives the intended category"
-      );
-    });
+        this.column.cards = [
+          this.fabricators.card({
+            board_id: this.board.id,
+            column_id: this.column.id,
+          }),
+        ];
+        if (source === "column") {
+          this.board.category_ids = [];
+          this.column.move_to_category_id = CATEGORY_ID;
+        }
+
+        const openNewTopic = sinon.stub().resolves();
+        this.owner.register(
+          "service:composer",
+          class extends Service {
+            openNewTopic = openNewTopic;
+          }
+        );
+        await render(
+          <template><BoardsBoardViewer @model={{this.model}} /></template>
+        );
+        await click(".discourse-boards-card__actions-trigger");
+        await click(".fk-d-menu button:has(.d-icon-plus)");
+
+        assert.deepEqual(
+          openNewTopic.args.map(([options]) => options.category?.id),
+          expected.categoryIds,
+          "only an available category is passed to the composer"
+        );
+        assert.strictEqual(
+          alert.callCount,
+          expected.alerts,
+          "missing categories are reported"
+        );
+      }
+    );
   }
 });
