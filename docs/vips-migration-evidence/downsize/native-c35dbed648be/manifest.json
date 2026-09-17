@@ -1,0 +1,1379 @@
+{
+  "source_head": "c35dbed648beb52a788ab96847669e2cb92540cd",
+  "files": {
+    "inputs/jpeg-ycck.jpg": "3a17e3cca71f580d84ce054a5dd7e303766b3448a76d4583923f615a5eb5eb48",
+    "outputs/jpeg-ycck-0-imagemagick.jpg": "57efdd9af598d4244d5028fbf8db96f52c411b07aa773a95fea796caeb1bdf1c",
+    "outputs/jpeg-ycck-0-libvips.jpg": "e09cb8ec9b79b93cc28b82f1734b7e1f5d641020428cbe647244ed3fe8b4f087",
+    "inputs/jpeg-rgb.jpg": "35f1fcee1a93fbc6e30a945c661fd966e0962f60e0ef40729b8d9e76cabaadfc",
+    "outputs/jpeg-rgb-1-imagemagick.jpg": "bf9e4df5b38f891dbae73d7ba3b2e10286e0aa6ada23b6f70a95c419fcab9c3e",
+    "outputs/jpeg-rgb-1-libvips.jpg": "e05e9ed934d7cc52137aa147ab18cfc2a9aa5ce5a5970429c226cb2626c595b2",
+    "inputs/jpeg-mjpeg.jpg": "7762b7960f899868bf60dfbb0b8a66e5563b040b9d889c1c097bdf938ce972a0",
+    "outputs/jpeg-mjpeg-2-imagemagick.jpg": "b2338a637cc44cdeacdf6e25e525bdc84ee2fcf8356c3e53830a4308f5a55791",
+    "outputs/jpeg-mjpeg-2-libvips.jpg": "d28e1709414c2dda8eca32d13d881f71fd01088ed72b3ba343b08c3bab9b7373",
+    "inputs/jpeg-progressive3.jpg": "d19ebc7245629cc1e55cd0876fe671bde324893e73a75f3c467b8b4991214837",
+    "outputs/jpeg-progressive3-0-imagemagick.jpg": "c44ba310527c88108c23b01a37dcdcb893d63299877886b4acab2f59fd060faa",
+    "outputs/jpeg-progressive3-0-libvips.jpg": "0a172c287aa847990cc5593d3b28865aeeaddc8c2718a3b5e745af21fd282b9a",
+    "inputs/jpeg-blank_800x280.jpg": "78509405d9c6cbf9ee6393e0e74731e34fa0bc3efcc55a84c89f52707b8643cc",
+    "outputs/jpeg-blank_800x280-1-imagemagick.jpg": "14ad68b441049075222489ad2cb6e3bcaec12c9918b04e0f6ca3acad65b12684",
+    "outputs/jpeg-blank_800x280-1-libvips.jpg": "37b5572d823419c6f8f84eb82c1cc5361aadff398679f0e742e2739d0948d37e",
+    "inputs/jpeg-grayscale_large.jpg": "944bdb5edaea4065676e26681f779d24d11ff56bc7395411b53163d1ec9ae526",
+    "outputs/jpeg-grayscale_large-2-imagemagick.jpg": "245a052ca28e0c389abf5ea78ccce9f04639ffb172da5a4d1702cf12f4e67275",
+    "outputs/jpeg-grayscale_large-2-libvips.jpg": "ea8dc1bf471489a81504ec497d1840c23170910a83dc73ad25ebd07d04d5c0d0",
+    "inputs/jpeg-16bit-qtables.jpg": "361b5310287d576ca9d0b87b3999765e80baac2e92dc46438daaf33b2874322b",
+    "outputs/jpeg-16bit-qtables-0-imagemagick.jpg": "9d0506d96a795500e19869cd51b9050468ec0ac662b0e773be2debddd725a0c6",
+    "outputs/jpeg-16bit-qtables-0-libvips.jpg": "d0b66a240e02007ce858da54fd6554b7245bed5475b02abe28758af2a2051140",
+    "inputs/jpeg-Canon_40D.jpg": "6bfdabd4fc33d112283c147acccc574e770bbe6fbdbc3d4da968ba7b606ecc2f",
+    "outputs/jpeg-Canon_40D-1-imagemagick.jpg": "2ae2dc5849c5c45cc811c3a4e014d8d5f045d94bbbac4b012a90588001dcbe3e",
+    "outputs/jpeg-Canon_40D-1-libvips.jpg": "3b52622ec769a1275ec7b889c056d3dc4116678b2615e224bad9e604a6163300",
+    "inputs/jpeg-cmyk_logo.jpg": "1ebe10e651c34c8cdb42c3559bee1ce5d1918af611d1dc4238dc6dbf1792e550",
+    "outputs/jpeg-cmyk_logo-2-imagemagick.jpg": "1ecb1966655900b96f0a284a36dc7fdb3cba8aa4ef067709a4bdcc94576f9bc9",
+    "outputs/jpeg-cmyk_logo-2-libvips.jpg": "816ffcba84ef5caed1200b3996d8cd562b51cea15006eac4e089e014ccd59b79",
+    "inputs/jpeg-extraneous-data.jpg": "fb1038d735030426cc05deea8e073628b0bc31438b208be4773d453fad8609ef",
+    "outputs/jpeg-extraneous-data-0-imagemagick.jpg": "46d8f3040d88f609222cf67ac769c2096c1a59ee3c55e10247b2bef1efe9f871",
+    "outputs/jpeg-extraneous-data-0-libvips.jpg": "a5884847fca62b3b1dc2f444075c1f10eb90f28ccc72fafff75b3a2d9661231d",
+    "inputs/jpeg-grayscale_16x24_sampling2x2.jpg": "b6a104d1d022554023fc3208bf14b56c6e1caf163b48620e43b6a10b89a14027",
+    "outputs/jpeg-grayscale_16x24_sampling2x2-1-imagemagick.jpg": "e7885c173be727714a5140dd157387ba3b2fa3cfa3d3bd7e9bc5ad4e34c13c81",
+    "outputs/jpeg-grayscale_16x24_sampling2x2-1-libvips.jpg": "2cb59e33d0d9c61ba4eceb0735edbcc82362bf66f96b54fbc599b08434eec9d1",
+    "inputs/jpeg-Fujifilm_FinePix_E500.jpg": "ffbee7b07bf267dc0fb52817f8866df647758f7d48ac93e7a73d1914fb4c74da",
+    "outputs/jpeg-Fujifilm_FinePix_E500-2-imagemagick.jpg": "b2e30f3956a827d7969eca2386b307436fba3d4fb0fd1b1cd20fc0689252d397",
+    "outputs/jpeg-Fujifilm_FinePix_E500-2-libvips.jpg": "9effaa59871d25c1d7d1dc74068c751f67a106383902c9e62f46ccd5d1646120",
+    "inputs/jpeg-Nikon_D70.jpg": "8e2a627b96ca71c20129161f46bda3d338407da99bd11b1055adb27af27d7ef5",
+    "outputs/jpeg-Nikon_D70-0-imagemagick.jpg": "78acc7874e5fd64c5eee2092aafe209106a5cc6240b75572e47de64ed98c0fa8",
+    "outputs/jpeg-Nikon_D70-0-libvips.jpg": "6d42b8499588cb1234b674161f6a8727c15f48f14128762956da5812ab3e997a",
+    "inputs/jpeg-progressive_rst_420.jpg": "db57ee4239f9e6330421d60e6fd07c925ea06eebc48af0e3796951e7b0bcc5bc",
+    "outputs/jpeg-progressive_rst_420-1-imagemagick.jpg": "c52c9a9b8541349b569ed6b8c02a8ddbe769b05a21d5101f327a196ce627efb9",
+    "outputs/jpeg-progressive_rst_420-1-libvips.jpg": "55e4a2cb19e89c3ad2afb61821351a963ae08e0ad287ddb9743b9831f855b482",
+    "inputs/jpeg-restarts.jpg": "938a8107def3aca05261dccbc91a29cc31e98688c90f3ede200cb3f142030e8b",
+    "outputs/jpeg-restarts-2-imagemagick.jpg": "338869eef557dbd9fbb46b2c23a91da0777c1a9066ca1d0182c2b12816049c6d",
+    "outputs/jpeg-restarts-2-libvips.jpg": "01aa4376453fb3eebffb10e0c9b6cd4de78bc81bba891f0ad7c2a17cd0a32ff7",
+    "inputs/png-1025469.png": "c7b8f38aa309b7e32d7387dff4fb82aeeba3ede32116130600a05825b9966f18",
+    "outputs/png-1025469-0-imagemagick.png": "1c03cb422649ae34a6c2936cf565594d6fb8d648d17f6ad33bad01b9dee89488",
+    "outputs/png-1025469-0-libvips.png": "e580037c9533508c2be34d57c6403c9b225fa4344d92a2fb50c977689c486f2f",
+    "inputs/png-1044329.png": "a383f96f0634f2431e4490966acff583d78297622aff834a37f0f38c4683eb24",
+    "outputs/png-1044329-1-imagemagick.png": "297aab44d1a9fda4cb65a8e01a5765afdc11e277a1f686b68cd0586da675b08c",
+    "outputs/png-1044329-1-libvips.png": "2e1e71da834766e4d5c6d912626a2327419e5a6f1ddd5e55a846d6a59e286393",
+    "inputs/png-1189261.png": "245f6563c03d0d2728d679c5195b80e7d1ccdff3ee118648e910a42cadec7525",
+    "outputs/png-1189261-2-imagemagick.png": "758a1e7a3d7f42805e0020df379648945a4e1898e87ac8abe18236f30b5faeb6",
+    "outputs/png-1189261-2-libvips.png": "97ddd4defd88b1fa671ae57b7eb0182dc1035994146f7b0582def1ab115731ba",
+    "inputs/png-1279330.png": "5f3f81a1b4c6c3563024fec4e68aa3596bb5e5c9991c1a587a3d710c76f3eea3",
+    "outputs/png-1279330-0-imagemagick.png": "bc4e69c31cf6904e73c018fd6fd64d62d237ec8d282428c3a059848561d0ea3c",
+    "outputs/png-1279330-0-libvips.png": "d63255c6a64d6aa143002b3a09ee485b61ef49f4b924f349d24180b46611840d",
+    "inputs/png-1418519.png": "6703b5f4017b3310e940c5dd4a95e84f918eba3aa428165e52d16c028dc97375",
+    "outputs/png-1418519-1-imagemagick.png": "c5b26dcba60f95db2b9359e24973ecbe1eb59f22e4ba2f33536aeef20928e796",
+    "outputs/png-1418519-1-libvips.png": "cb57e14c4ec34111dd7c7dd53048885a118660b762a63139327c64c055158adf",
+    "inputs/png-1420710.png": "bae15f15b2ee7bf67c01508a50d36f511a4754a39fd02bd2623f3954e7a7cbfc",
+    "outputs/png-1420710-2-imagemagick.png": "3687dab67632b475195f2997723a34a62925fe72ecfe60e77cbb22a4ed01fa81",
+    "outputs/png-1420710-2-libvips.png": "034f3734a3b0f3083df2c812a9e02e9cd71340eb7ac5d4d04e7f5313b2332ad7",
+    "inputs/png-1475938.png": "6d5c46628de7584aed0c765593cdcb51932677e7d139791cd042d7ed4dbdc38c",
+    "outputs/png-1475938-0-imagemagick.png": "f7801492be16795ab51decc48fc638113efc44cddfbfb05c81020192a78e1bdb",
+    "outputs/png-1475938-0-libvips.png": "51e42599fc6f768fc69de12419cf1914f667eeb0ffac2674470e2999c0ec00d9",
+    "inputs/png-1531677.png": "a1fd3d6358d4d0a59a6f3705c5c2ef8c1fdd87db7c0001c24770a250796336a3",
+    "outputs/png-1531677-1-imagemagick.png": "f33e8e60f9dd70486dc236f73fbeac720e698558baec9edcbc10f6c21644be53",
+    "outputs/png-1531677-1-libvips.png": "d4db8220dbd7e05bcc879de84445372bc1eec77c870d279b25f9441331759dd9",
+    "inputs/png-1544947.png": "caf5b9b5bc5661fd00e15f64c0d990db688634598c152f32185b21eb3d24d953",
+    "outputs/png-1544947-2-imagemagick.png": "7ff47e0199de960977a1f3245509e3544f1a1b1923ca573d61578f8b49c0fa3e",
+    "outputs/png-1544947-2-libvips.png": "c01221c527fce88215496ab898c55b6829a233e2e6b5f1a68c68d69517ef92c4",
+    "inputs/png-159550.png": "a499a6c20fb44a603d9547c9b1129cd7ad6155a369681a424ef998eb0500b734",
+    "outputs/png-159550-0-imagemagick.png": "a24b84b86d083c205207e177f6402e51273cf8654f0ba3cd1861ac0cc85eb2ee",
+    "outputs/png-159550-0-libvips.png": "07077e844c84372214ce452602a3e8d0d99cc8718f905a6cb578dc4f392a5223",
+    "inputs/png-1624487.png": "761410fdd42fbd08a224955668071ae6292acf69e17fb9778a522114e0a034a6",
+    "outputs/png-1624487-1-imagemagick.png": "09e1e5ca18cacd816ec2fc4bc0bd8a4cbac88d1426585b5e898473b6e94dc791",
+    "outputs/png-1624487-1-libvips.png": "fed4956f738a6adf43c23893576d38a15579f6b56b4be722d8aded9ca6aecdca",
+    "inputs/png-162520.png": "2b7280cc6f4564a2fc7dc9c7f7cfad1030a4f24afef3614277ba2576eb748748",
+    "outputs/png-162520-2-imagemagick.png": "6a6e7b6bd1b6f9f6b747247fa39f23b45387c6311654959b77d954a2e651f702",
+    "outputs/png-162520-2-libvips.png": "9a7549382c6fca319deb5960db8deca6a9feaca9def3dd1483fac230e0d39be8",
+    "inputs/png-164595.png": "e608906b4f19f6f33ef7b6eaa85381a0f6c4256972f2b8d908f43a9574a27cb7",
+    "outputs/png-164595-0-imagemagick.png": "04963ba358b3e508eea6d6eff1bdf521cc5b14e902a2b6bb9633c4cc51ca05db",
+    "outputs/png-164595-0-libvips.png": "c61af40862be165f450dcf63994bd7d95100456ca8fbd7dff546b16304a964d1",
+    "inputs/png-2079234.png": "13fb77f61e513cc13c98f18cb7343598503a4b8f70eaea1bada47c68dd2339b6",
+    "outputs/png-2079234-1-imagemagick.png": "4bb41acc4c8c0dc8a90b18294ce283514eafcf3d55068e9a10d80ac973290048",
+    "outputs/png-2079234-1-libvips.png": "3b0153cbfb303b0c2f07d2d6f888ca61ece5b6c222e6fd3ee45f17b0cbd950b8",
+    "inputs/png-2190188.png": "50dd442c664f917a3cd013f9cf9e2dae1f02b1d2429d22a58d71f4b4c584b2f1",
+    "outputs/png-2190188-2-imagemagick.png": "dbd8a51ff2e6829d4017b2007e238e86e7c73a333510b6133e4853623f7dfa2e",
+    "outputs/png-2190188-2-libvips.png": "aac23719cb8a2cd5ad74784b3470154fcdfcec5ac2a90782da169efbc65d46db",
+    "inputs/fixture-gif-static.gif": "86976a133313408fb5dd53f4126550a6bde033eef79beed3e2ca860d6ac71e70",
+    "outputs/fixture-gif-static-0-imagemagick.gif": "745c2afb68b0807755a4c25353dbdc8adab5bfdd0d7cd0e8940dea6f79775fd8",
+    "outputs/fixture-gif-static-0-libvips.gif": "8314b811b4652fe990f2a589e58ef3e8238288c1086a96cafddde4cb4eb6d62f",
+    "outputs/fixture-gif-static-1-imagemagick.gif": "6dd4b41ed03007b6e2205f1c55101948459d0ae272cad693608889241b907419",
+    "outputs/fixture-gif-static-1-libvips.gif": "86976a133313408fb5dd53f4126550a6bde033eef79beed3e2ca860d6ac71e70",
+    "outputs/fixture-gif-static-2-imagemagick.gif": "7a151e70adc211815716b7356ef823676cdfce6acaf1bcd28b47f40d0e220bec",
+    "outputs/fixture-gif-static-2-libvips.gif": "347a19aa39d15bb4637c72707cc504daa230969523c889482dfbcbfea8d1cb7f",
+    "inputs/fixture-gif-tiny_animated.gif": "d3255fd4446c581da6fe23847ca3df8b2b9b729f60bad432cbb2bca2319951c5",
+    "outputs/fixture-gif-tiny_animated-0-imagemagick.gif": "289b8a6b06bea88c2a904b4c7bcf8479d42755ce7938e3361d6dd4ccc1227875",
+    "outputs/fixture-gif-tiny_animated-0-libvips.gif": "8314b811b4652fe990f2a589e58ef3e8238288c1086a96cafddde4cb4eb6d62f",
+    "outputs/fixture-gif-tiny_animated-1-imagemagick.gif": "d966b7f35927fa5aeeff1646e3fd604360dcdb78300432bf177b03a1d1082342",
+    "outputs/fixture-gif-tiny_animated-1-libvips.gif": "86976a133313408fb5dd53f4126550a6bde033eef79beed3e2ca860d6ac71e70",
+    "outputs/fixture-gif-tiny_animated-2-imagemagick.gif": "f5731489cebba1953311d4ce333048bf3345fe97143ed22961bc0c4401becf92",
+    "outputs/fixture-gif-tiny_animated-2-libvips.gif": "347a19aa39d15bb4637c72707cc504daa230969523c889482dfbcbfea8d1cb7f",
+    "inputs/fixture-webp-static.webp": "2fbaf43c86a30bc0bb7edfe34a454ebb09455c19407d7eb9fd33ed4285caf0b5",
+    "outputs/fixture-webp-static-0-imagemagick.webp": "9fd97e33ccf10d6c73160f4dc5d768fc7b5edd201d17e21198952b1c13566934",
+    "outputs/fixture-webp-static-0-libvips.webp": "c18dc257bdb82a862164422409aa2667618e9f6ebbc1434a3ae949e11f05f2ba",
+    "outputs/fixture-webp-static-1-imagemagick.webp": "10a96f0c5142156773910737c1a463ef935f282989e750c085bffd16b33aa644",
+    "outputs/fixture-webp-static-1-libvips.webp": "2fbaf43c86a30bc0bb7edfe34a454ebb09455c19407d7eb9fd33ed4285caf0b5",
+    "outputs/fixture-webp-static-2-imagemagick.webp": "68a1f93ba801029e5c371e410e95b05b89a36337414e257f704027b51120d61e",
+    "outputs/fixture-webp-static-2-libvips.webp": "ed6b4e1369128e8cb483c4466f0190cdd447cf1e79733f7a0305b243d2ebf13c",
+    "inputs/fixture-webp-animated.webp": "4a6b6b239d6da08999d4a2d5f2debb49cda6f1eedec4b241da8ee1d5c65cf1e0",
+    "outputs/fixture-webp-animated-0-imagemagick.webp": "343331ff36d43d6b0bcd8bf457d9dea0ba78889a98f8d6d51287e2ac95d0037f",
+    "outputs/fixture-webp-animated-0-libvips.webp": "2e1af0341c9d30cc8da32d807629fa99b42c1378ef2de986e64a7dab61d86888",
+    "outputs/fixture-webp-animated-1-imagemagick.webp": "96aff8ba47e1967f11815025c436e70c1b014c578e5ae391ef11b717efbabd1c",
+    "outputs/fixture-webp-animated-1-libvips.webp": "410b05d04da7847248692625d77201b805b4acddabb0b357f27a68786e001869",
+    "outputs/fixture-webp-animated-2-imagemagick.webp": "96aff8ba47e1967f11815025c436e70c1b014c578e5ae391ef11b717efbabd1c",
+    "outputs/fixture-webp-animated-2-libvips.webp": "d80fa6e0191c77a0be3ae97aed27988d0739e1a0b184b65bef09583a02f83ca6",
+    "inputs/fixture-avif-static.avif": "5e7acd7ee20124f83316f40ef3c395286b2d0e402468d3d97a0f18659540c0c6",
+    "outputs/fixture-avif-static-0-imagemagick.avif": "b8b836ffa903a63ef99ef9ec44c7792ffa6f0352bde28962767cf8cc1a1e29dc",
+    "outputs/fixture-avif-static-0-libvips.avif": "d723682229bcef5873121876627e0ccadae3456b56a51422c8800864b7254506",
+    "outputs/fixture-avif-static-1-imagemagick.avif": "0fcc7905151656d422eb72c4707b7c05575f971a04995a4edb172b94268813f1",
+    "outputs/fixture-avif-static-1-libvips.avif": "5e7acd7ee20124f83316f40ef3c395286b2d0e402468d3d97a0f18659540c0c6",
+    "outputs/fixture-avif-static-2-imagemagick.avif": "ed9ccdab3862219cb40912fe6b6f41f8388584058d365f223b885714aeb24322",
+    "outputs/fixture-avif-static-2-libvips.avif": "b68beac509a642c9cc1009e694a784d44915453df27f037938216346830d381c",
+    "inputs/fixture-avif-multipage.avif": "88ea0be3530a6a83f0e719aa6fd36ec96884d945512aeb52747ce7200b36eced",
+    "outputs/fixture-avif-multipage-0-imagemagick.avif": "0b3ad8bd29f19a925df83df5561fe3d9b4a4df87b1627e8eb2e8d3241b972cd2",
+    "outputs/fixture-avif-multipage-0-libvips.avif": "d723682229bcef5873121876627e0ccadae3456b56a51422c8800864b7254506",
+    "outputs/fixture-avif-multipage-1-imagemagick.avif": "67896455ff4632b833fc2bcdf5144c894016b8ad4c2a93f71b01bc591acd7ee1",
+    "outputs/fixture-avif-multipage-1-libvips.avif": "5e7acd7ee20124f83316f40ef3c395286b2d0e402468d3d97a0f18659540c0c6",
+    "outputs/fixture-avif-multipage-2-imagemagick.avif": "002e303a51c2983f9293a57db197668d273abb7acad22c4a198f06326dd8c619",
+    "outputs/fixture-avif-multipage-2-libvips.avif": "b68beac509a642c9cc1009e694a784d44915453df27f037938216346830d381c",
+    "inputs/fixture-svg-tiny.svg": "8849c51a8976901895a4b6d4e460a107802ee997769f4471f76335781ff43f6d",
+    "outputs/fixture-svg-tiny-0-libvips.png": "7edc3e91d21ca2518447186c91e673f33474d3a37fca4d6249bab02c431fed42",
+    "outputs/fixture-svg-tiny-1-libvips.png": "143093ab365a77290ac50ef1c9e96874bc0fc40e3b1eabf7d16929f9357c4017",
+    "outputs/fixture-svg-tiny-2-libvips.png": "1fa90d8cc7dffbd927326c6a4b4e7c2a81feaa67ce7a0208555f372f4d298e2a",
+    "inputs/fixture-png-dominant-color-semitransparent.png": "5fe7aae70febc60cc8eb90f3bf99b5295d4666206fa98b39705bd8407cd67edb",
+    "outputs/fixture-png-dominant-color-semitransparent-0-imagemagick.png": "f1f8dc010d6280228cf463b3e78fb85846dc0276a3a166c73a5a6efa5ee80642",
+    "outputs/fixture-png-dominant-color-semitransparent-0-libvips.png": "d6f77b5b8392eb422570be730d802bb5c923777021282d2a594d9df028277a84",
+    "outputs/fixture-png-dominant-color-semitransparent-1-imagemagick.png": "5ca4047adfc31d58186ca5a73283210c8774cb537b49be49c8dec946cf146daa",
+    "outputs/fixture-png-dominant-color-semitransparent-1-libvips.png": "65d05e7aeee42ef5f2301557b90d9ea21f720ea569a6a772781255b1b78a929c",
+    "outputs/fixture-png-dominant-color-semitransparent-2-imagemagick.png": "bae113c280c7a120d780b2434d85e893913254175b9b8b531ee72a59ff5d3ece",
+    "outputs/fixture-png-dominant-color-semitransparent-2-libvips.png": "da0af3feac73b86befc19489f7bc825951f79dfa24c54d05684102da934e23cb",
+    "inputs/fixture-png-dominant-color-low-alpha-16bit.png": "8a92a85d5adf068da430fbf07c74655b9dda5ced7fd37bbaba4f143cb87f2ea1",
+    "outputs/fixture-png-dominant-color-low-alpha-16bit-0-imagemagick.png": "5a14027fb8ba5f149ad1c3809143b050e1ac4f5b1c11a975b5dbc3c15531e00b",
+    "outputs/fixture-png-dominant-color-low-alpha-16bit-0-libvips.png": "1de29c99ba9abbb6e0ae9672a6de10b6c365a729966b22ac71f9db5b50ea8b0c",
+    "outputs/fixture-png-dominant-color-low-alpha-16bit-1-imagemagick.png": "5a14027fb8ba5f149ad1c3809143b050e1ac4f5b1c11a975b5dbc3c15531e00b",
+    "outputs/fixture-png-dominant-color-low-alpha-16bit-1-libvips.png": "d14b5686bbddd40580b60305bb120e79fa25773e9f2ac87ad8ea9ecd43fb1091",
+    "outputs/fixture-png-dominant-color-low-alpha-16bit-2-imagemagick.png": "f3ed28d6c91a74ce01b3523939add2803cc1e5b09291bc8b90dca2c423097483",
+    "outputs/fixture-png-dominant-color-low-alpha-16bit-2-libvips.png": "acba67aea7c59271b6cd114a15c330f8f932e4d1854f4c10a448fe9f6ed1366a",
+    "inputs/fixture-orientation-6.jpg": "684a4a7b75540be7d5e02e86d5a1a447aec28974d63eaa852ba3c808818f2052",
+    "outputs/fixture-orientation-6-0-imagemagick.jpg": "47529dc4245ab7f9b79523d90a264d79bfa9c858119e20760a6e323404f51483",
+    "outputs/fixture-orientation-6-0-libvips.jpg": "e96fa3406f258d04bf7c66bedbccfae40bd41de288b37413778354aa163cb095",
+    "outputs/fixture-orientation-6-1-imagemagick.jpg": "0c4febb412b2eda155ada23ce7eab2840e5da7ebbe6ec7bd7c1eaa655d7bb084",
+    "outputs/fixture-orientation-6-1-libvips.jpg": "7aafd194b55effb799fd950993420d5032b6644cbe71acb30dd5ee4785994a03",
+    "outputs/fixture-orientation-6-2-imagemagick.jpg": "8d5a1fee1cff5b0c11ba75830c2719a0b527b9fd83cc791fbc4377ad3c3a347e",
+    "outputs/fixture-orientation-6-2-libvips.jpg": "da8a6bc6131aadda914e013f856ff2becc22d8fffabe1407cddd71a6a9c380cc",
+    "screenshots/batch-1.png": "026adb1b747ec5b299a9ce5bc8124511dd24fd015d4b8db73b87067b6df576d5",
+    "screenshots/batch-2.png": "75670d76ccb93909a000967b6774a4134501611a7db2030873974d713b187f9d",
+    "screenshots/batch-3.png": "11b20969f9d67d23336be10cafe37b5ead83425baa3c50b949ad80e7a0a97c6f",
+    "screenshots/batch-4.png": "2060b9b12fd4203d0b800c24d608edb5f2d99dc3de0be4cb111fc6f4aa7521cc",
+    "screenshots/batch-5.png": "379ab0e547a80a7744b378bce00b2baa4a1bcc23bb68a057392eb4320bb2950b",
+    "screenshots/batch-6.png": "46a88cd949b66d9c3f5f14c4eeaac94d5c05195d0b078368ce8f67df583e6eaa",
+    "screenshots/batch-7.png": "c8979b098283e3915082b47ec127a15bd5a157a5af879159741ddc7d48ddd848",
+    "screenshots/batch-8.png": "7908b4c626af06ca35f084663cd30145146704611f3a3037c72a093c1f500a96",
+    "screenshots/batch-9.png": "aa29b02ac326dbd777174cbd9bbaf3cd1b9825cd6364c159695f0b0e29c97845",
+    "screenshots/batch-10.png": "c02b126450c510190a23b9ec7a28ffee13921a690a42a9b7d382b36118ec4f77",
+    "screenshots/batch-11.png": "b2317297f956533a29829c9e7d604ac6c5242a9ce7895639ef44210b2c4f2274",
+    "screenshots/batch-12.png": "53ac354eeb030d42fbe4c921c1a34ff0c2792403d977e28717eb5d39cba647ec",
+    "screenshots/batch-13.png": "caabec6d155e4a89454aa24e8a4078befbcd9bcef1a32699c9654fb40311ca47",
+    "screenshots/batch-14.png": "0f372ff67ef3cd0bb5376fdbf046f33cc8a3d3ef12aab4a2ed8fd8368580acb7",
+    "screenshots/batch-15.png": "2d60918dc6a1f71fff3195af96e4683d7b33fe3491647312766dbae9faa3bb9f",
+    "benchmark.rb": "228735b7c14cd34b8442ff94ec1b720e8a951722cecf608d3f96835b8c3b5586",
+    "results.json": "ef9a9f76881321632f5bc11583dca6b884b4b580c0c8660d86fbf93d667e9296",
+    "environment.json": "b2da9e7ad1bd2f7ce94f336cc72624e8f6e29d65a556084d591833972ff87f1c",
+    "comparison.html": "7fd592f05461919f5e9a8fba4f6edf5937fe706f4dc6179e8ad76afcb6117bfb"
+  },
+  "cases": [
+    {
+      "case_id": "jpeg-ycck-0",
+      "id": "jpeg-ycck",
+      "geometry": "50%",
+      "input": "inputs/jpeg-ycck.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-ycck-0-imagemagick.jpg",
+        "dimensions": [
+          250,
+          167
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-ycck-0-libvips.jpg",
+        "dimensions": [
+          250,
+          167
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-rgb-1",
+      "id": "jpeg-rgb",
+      "geometry": "100x100>",
+      "input": "inputs/jpeg-rgb.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-rgb-1-imagemagick.jpg",
+        "dimensions": [
+          100,
+          67
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-rgb-1-libvips.jpg",
+        "dimensions": [
+          100,
+          66
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-mjpeg-2",
+      "id": "jpeg-mjpeg",
+      "geometry": "10000@",
+      "input": "inputs/jpeg-mjpeg.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-mjpeg-2-imagemagick.jpg",
+        "dimensions": [
+          115,
+          87
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-mjpeg-2-libvips.jpg",
+        "dimensions": [
+          115,
+          87
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-progressive3-0",
+      "id": "jpeg-progressive3",
+      "geometry": "50%",
+      "input": "inputs/jpeg-progressive3.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-progressive3-0-imagemagick.jpg",
+        "dimensions": [
+          325,
+          235
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-progressive3-0-libvips.jpg",
+        "dimensions": [
+          325,
+          235
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-blank_800x280-1",
+      "id": "jpeg-blank_800x280",
+      "geometry": "100x100>",
+      "input": "inputs/jpeg-blank_800x280.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-blank_800x280-1-imagemagick.jpg",
+        "dimensions": [
+          100,
+          35
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-blank_800x280-1-libvips.jpg",
+        "dimensions": [
+          100,
+          35
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-grayscale_large-2",
+      "id": "jpeg-grayscale_large",
+      "geometry": "10000@",
+      "input": "inputs/jpeg-grayscale_large.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-grayscale_large-2-imagemagick.jpg",
+        "dimensions": [
+          3162,
+          3
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-grayscale_large-2-libvips.jpg",
+        "dimensions": [
+          3162,
+          3
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-16bit-qtables-0",
+      "id": "jpeg-16bit-qtables",
+      "geometry": "50%",
+      "input": "inputs/jpeg-16bit-qtables.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-16bit-qtables-0-imagemagick.jpg",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-16bit-qtables-0-libvips.jpg",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-Canon_40D-1",
+      "id": "jpeg-Canon_40D",
+      "geometry": "100x100>",
+      "input": "inputs/jpeg-Canon_40D.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-Canon_40D-1-imagemagick.jpg",
+        "dimensions": [
+          100,
+          68
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-Canon_40D-1-libvips.jpg",
+        "dimensions": [
+          100,
+          68
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-cmyk_logo-2",
+      "id": "jpeg-cmyk_logo",
+      "geometry": "10000@",
+      "input": "inputs/jpeg-cmyk_logo.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-cmyk_logo-2-imagemagick.jpg",
+        "dimensions": [
+          126,
+          79
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-cmyk_logo-2-libvips.jpg",
+        "dimensions": [
+          126,
+          79
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-extraneous-data-0",
+      "id": "jpeg-extraneous-data",
+      "geometry": "50%",
+      "input": "inputs/jpeg-extraneous-data.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-extraneous-data-0-imagemagick.jpg",
+        "dimensions": [
+          8,
+          8
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-extraneous-data-0-libvips.jpg",
+        "dimensions": [
+          8,
+          8
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-grayscale_16x24_sampling2x2-1",
+      "id": "jpeg-grayscale_16x24_sampling2x2",
+      "geometry": "100x100>",
+      "input": "inputs/jpeg-grayscale_16x24_sampling2x2.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-grayscale_16x24_sampling2x2-1-imagemagick.jpg",
+        "dimensions": [
+          16,
+          24
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-grayscale_16x24_sampling2x2-1-libvips.jpg",
+        "dimensions": [
+          16,
+          24
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-Fujifilm_FinePix_E500-2",
+      "id": "jpeg-Fujifilm_FinePix_E500",
+      "geometry": "10000@",
+      "input": "inputs/jpeg-Fujifilm_FinePix_E500.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-Fujifilm_FinePix_E500-2-imagemagick.jpg",
+        "dimensions": [
+          77,
+          130
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-Fujifilm_FinePix_E500-2-libvips.jpg",
+        "dimensions": [
+          77,
+          130
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-Nikon_D70-0",
+      "id": "jpeg-Nikon_D70",
+      "geometry": "50%",
+      "input": "inputs/jpeg-Nikon_D70.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-Nikon_D70-0-imagemagick.jpg",
+        "dimensions": [
+          50,
+          33
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-Nikon_D70-0-libvips.jpg",
+        "dimensions": [
+          50,
+          33
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-progressive_rst_420-1",
+      "id": "jpeg-progressive_rst_420",
+      "geometry": "100x100>",
+      "input": "inputs/jpeg-progressive_rst_420.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-progressive_rst_420-1-imagemagick.jpg",
+        "dimensions": [
+          16,
+          16
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-progressive_rst_420-1-libvips.jpg",
+        "dimensions": [
+          16,
+          16
+        ]
+      }
+    },
+    {
+      "case_id": "jpeg-restarts-2",
+      "id": "jpeg-restarts",
+      "geometry": "10000@",
+      "input": "inputs/jpeg-restarts.jpg",
+      "imagemagick": {
+        "output": "outputs/jpeg-restarts-2-imagemagick.jpg",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-restarts-2-libvips.jpg",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-1025469-0",
+      "id": "png-1025469",
+      "geometry": "50%",
+      "input": "inputs/png-1025469.png",
+      "imagemagick": {
+        "output": "outputs/png-1025469-0-imagemagick.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1025469-0-libvips.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      }
+    },
+    {
+      "case_id": "png-1044329-1",
+      "id": "png-1044329",
+      "geometry": "100x100>",
+      "input": "inputs/png-1044329.png",
+      "imagemagick": {
+        "output": "outputs/png-1044329-1-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1044329-1-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-1189261-2",
+      "id": "png-1189261",
+      "geometry": "10000@",
+      "input": "inputs/png-1189261.png",
+      "imagemagick": {
+        "output": "outputs/png-1189261-2-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1189261-2-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-1279330-0",
+      "id": "png-1279330",
+      "geometry": "50%",
+      "input": "inputs/png-1279330.png",
+      "imagemagick": {
+        "output": "outputs/png-1279330-0-imagemagick.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1279330-0-libvips.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      }
+    },
+    {
+      "case_id": "png-1418519-1",
+      "id": "png-1418519",
+      "geometry": "100x100>",
+      "input": "inputs/png-1418519.png",
+      "imagemagick": {
+        "output": "outputs/png-1418519-1-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1418519-1-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-1420710-2",
+      "id": "png-1420710",
+      "geometry": "10000@",
+      "input": "inputs/png-1420710.png",
+      "imagemagick": {
+        "output": "outputs/png-1420710-2-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1420710-2-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-1475938-0",
+      "id": "png-1475938",
+      "geometry": "50%",
+      "input": "inputs/png-1475938.png",
+      "imagemagick": {
+        "output": "outputs/png-1475938-0-imagemagick.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1475938-0-libvips.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      }
+    },
+    {
+      "case_id": "png-1531677-1",
+      "id": "png-1531677",
+      "geometry": "100x100>",
+      "input": "inputs/png-1531677.png",
+      "imagemagick": {
+        "output": "outputs/png-1531677-1-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1531677-1-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-1544947-2",
+      "id": "png-1544947",
+      "geometry": "10000@",
+      "input": "inputs/png-1544947.png",
+      "imagemagick": {
+        "output": "outputs/png-1544947-2-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1544947-2-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-159550-0",
+      "id": "png-159550",
+      "geometry": "50%",
+      "input": "inputs/png-159550.png",
+      "imagemagick": {
+        "output": "outputs/png-159550-0-imagemagick.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-159550-0-libvips.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      }
+    },
+    {
+      "case_id": "png-1624487-1",
+      "id": "png-1624487",
+      "geometry": "100x100>",
+      "input": "inputs/png-1624487.png",
+      "imagemagick": {
+        "output": "outputs/png-1624487-1-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-1624487-1-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-162520-2",
+      "id": "png-162520",
+      "geometry": "10000@",
+      "input": "inputs/png-162520.png",
+      "imagemagick": {
+        "output": "outputs/png-162520-2-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-162520-2-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-164595-0",
+      "id": "png-164595",
+      "geometry": "50%",
+      "input": "inputs/png-164595.png",
+      "imagemagick": {
+        "output": "outputs/png-164595-0-imagemagick.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-164595-0-libvips.png",
+        "dimensions": [
+          256,
+          256
+        ]
+      }
+    },
+    {
+      "case_id": "png-2079234-1",
+      "id": "png-2079234",
+      "geometry": "100x100>",
+      "input": "inputs/png-2079234.png",
+      "imagemagick": {
+        "output": "outputs/png-2079234-1-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-2079234-1-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-2190188-2",
+      "id": "png-2190188",
+      "geometry": "10000@",
+      "input": "inputs/png-2190188.png",
+      "imagemagick": {
+        "output": "outputs/png-2190188-2-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-2190188-2-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-gif-static-0",
+      "id": "fixture-gif-static",
+      "geometry": "50%",
+      "input": "inputs/fixture-gif-static.gif",
+      "imagemagick": {
+        "output": "outputs/fixture-gif-static-0-imagemagick.gif",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-gif-static-0-libvips.gif",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-gif-static-1",
+      "id": "fixture-gif-static",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-gif-static.gif",
+      "imagemagick": {
+        "output": "outputs/fixture-gif-static-1-imagemagick.gif",
+        "dimensions": [
+          2,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-gif-static-1-libvips.gif",
+        "dimensions": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-gif-static-2",
+      "id": "fixture-gif-static",
+      "geometry": "10000@",
+      "input": "inputs/fixture-gif-static.gif",
+      "imagemagick": {
+        "output": "outputs/fixture-gif-static-2-imagemagick.gif",
+        "dimensions": [
+          141,
+          71
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-gif-static-2-libvips.gif",
+        "dimensions": [
+          141,
+          71
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-gif-tiny_animated-0",
+      "id": "fixture-gif-tiny_animated",
+      "geometry": "50%",
+      "input": "inputs/fixture-gif-tiny_animated.gif",
+      "imagemagick": {
+        "output": "outputs/fixture-gif-tiny_animated-0-imagemagick.gif",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-gif-tiny_animated-0-libvips.gif",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-gif-tiny_animated-1",
+      "id": "fixture-gif-tiny_animated",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-gif-tiny_animated.gif",
+      "imagemagick": {
+        "output": "outputs/fixture-gif-tiny_animated-1-imagemagick.gif",
+        "dimensions": [
+          2,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-gif-tiny_animated-1-libvips.gif",
+        "dimensions": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-gif-tiny_animated-2",
+      "id": "fixture-gif-tiny_animated",
+      "geometry": "10000@",
+      "input": "inputs/fixture-gif-tiny_animated.gif",
+      "imagemagick": {
+        "output": "outputs/fixture-gif-tiny_animated-2-imagemagick.gif",
+        "dimensions": [
+          141,
+          71
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-gif-tiny_animated-2-libvips.gif",
+        "dimensions": [
+          141,
+          71
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-webp-static-0",
+      "id": "fixture-webp-static",
+      "geometry": "50%",
+      "input": "inputs/fixture-webp-static.webp",
+      "imagemagick": {
+        "output": "outputs/fixture-webp-static-0-imagemagick.webp",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-webp-static-0-libvips.webp",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-webp-static-1",
+      "id": "fixture-webp-static",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-webp-static.webp",
+      "imagemagick": {
+        "output": "outputs/fixture-webp-static-1-imagemagick.webp",
+        "dimensions": [
+          2,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-webp-static-1-libvips.webp",
+        "dimensions": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-webp-static-2",
+      "id": "fixture-webp-static",
+      "geometry": "10000@",
+      "input": "inputs/fixture-webp-static.webp",
+      "imagemagick": {
+        "output": "outputs/fixture-webp-static-2-imagemagick.webp",
+        "dimensions": [
+          141,
+          71
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-webp-static-2-libvips.webp",
+        "dimensions": [
+          141,
+          71
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-webp-animated-0",
+      "id": "fixture-webp-animated",
+      "geometry": "50%",
+      "input": "inputs/fixture-webp-animated.webp",
+      "imagemagick": {
+        "output": "outputs/fixture-webp-animated-0-imagemagick.webp",
+        "dimensions": [
+          125,
+          125
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-webp-animated-0-libvips.webp",
+        "dimensions": [
+          125,
+          125
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-webp-animated-1",
+      "id": "fixture-webp-animated",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-webp-animated.webp",
+      "imagemagick": {
+        "output": "outputs/fixture-webp-animated-1-imagemagick.webp",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-webp-animated-1-libvips.webp",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-webp-animated-2",
+      "id": "fixture-webp-animated",
+      "geometry": "10000@",
+      "input": "inputs/fixture-webp-animated.webp",
+      "imagemagick": {
+        "output": "outputs/fixture-webp-animated-2-imagemagick.webp",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-webp-animated-2-libvips.webp",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-avif-static-0",
+      "id": "fixture-avif-static",
+      "geometry": "50%",
+      "input": "inputs/fixture-avif-static.avif",
+      "imagemagick": {
+        "output": "outputs/fixture-avif-static-0-imagemagick.avif",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-avif-static-0-libvips.avif",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-avif-static-1",
+      "id": "fixture-avif-static",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-avif-static.avif",
+      "imagemagick": {
+        "output": "outputs/fixture-avif-static-1-imagemagick.avif",
+        "dimensions": [
+          2,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-avif-static-1-libvips.avif",
+        "dimensions": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-avif-static-2",
+      "id": "fixture-avif-static",
+      "geometry": "10000@",
+      "input": "inputs/fixture-avif-static.avif",
+      "imagemagick": {
+        "output": "outputs/fixture-avif-static-2-imagemagick.avif",
+        "dimensions": [
+          141,
+          71
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-avif-static-2-libvips.avif",
+        "dimensions": [
+          141,
+          71
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-avif-multipage-0",
+      "id": "fixture-avif-multipage",
+      "geometry": "50%",
+      "input": "inputs/fixture-avif-multipage.avif",
+      "imagemagick": {
+        "output": "outputs/fixture-avif-multipage-0-imagemagick.avif",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-avif-multipage-0-libvips.avif",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-avif-multipage-1",
+      "id": "fixture-avif-multipage",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-avif-multipage.avif",
+      "imagemagick": {
+        "output": "outputs/fixture-avif-multipage-1-imagemagick.avif",
+        "dimensions": [
+          2,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-avif-multipage-1-libvips.avif",
+        "dimensions": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-avif-multipage-2",
+      "id": "fixture-avif-multipage",
+      "geometry": "10000@",
+      "input": "inputs/fixture-avif-multipage.avif",
+      "imagemagick": {
+        "output": "outputs/fixture-avif-multipage-2-imagemagick.avif",
+        "dimensions": [
+          141,
+          71
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-avif-multipage-2-libvips.avif",
+        "dimensions": [
+          141,
+          71
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-svg-tiny-0",
+      "id": "fixture-svg-tiny",
+      "geometry": "50%",
+      "input": "inputs/fixture-svg-tiny.svg",
+      "imagemagick": {
+        "error": "Discourse::Utils::CommandError: nice -n 10 magick svg:/var/www/discourse/tmp/downsize-native-inputs/fixtures/tiny.svg[0] -auto-orient -gravity center -background transparent -interlace none -resize 50% -profile /var/www/discourse/vendor/data/RT_sRGB.icm png:/var/www/discourse/tmp/downsize-native-results/outputs/fixture-svg-tiny-0-imagemagick.png\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      },
+      "libvips": {
+        "output": "outputs/fixture-svg-tiny-0-libvips.png",
+        "dimensions": [
+          43,
+          33
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-svg-tiny-1",
+      "id": "fixture-svg-tiny",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-svg-tiny.svg",
+      "imagemagick": {
+        "error": "Discourse::Utils::CommandError: nice -n 10 magick svg:/var/www/discourse/tmp/downsize-native-inputs/fixtures/tiny.svg[0] -auto-orient -gravity center -background transparent -interlace none -resize 100x100> -profile /var/www/discourse/vendor/data/RT_sRGB.icm png:/var/www/discourse/tmp/downsize-native-results/outputs/fixture-svg-tiny-1-imagemagick.png\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      },
+      "libvips": {
+        "output": "outputs/fixture-svg-tiny-1-libvips.png",
+        "dimensions": [
+          86,
+          65
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-svg-tiny-2",
+      "id": "fixture-svg-tiny",
+      "geometry": "10000@",
+      "input": "inputs/fixture-svg-tiny.svg",
+      "imagemagick": {
+        "error": "Discourse::Utils::CommandError: nice -n 10 magick svg:/var/www/discourse/tmp/downsize-native-inputs/fixtures/tiny.svg[0] -auto-orient -gravity center -background transparent -interlace none -resize 10000@ -profile /var/www/discourse/vendor/data/RT_sRGB.icm png:/var/www/discourse/tmp/downsize-native-results/outputs/fixture-svg-tiny-2-imagemagick.png\nmagick: attempt to perform an operation not authorized by the security policy `SVG' @ error/constitute.c/IsCoderAuthorized/456.\n"
+      },
+      "libvips": {
+        "output": "outputs/fixture-svg-tiny-2-libvips.png",
+        "dimensions": [
+          115,
+          87
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-png-dominant-color-semitransparent-0",
+      "id": "fixture-png-dominant-color-semitransparent",
+      "geometry": "50%",
+      "input": "inputs/fixture-png-dominant-color-semitransparent.png",
+      "imagemagick": {
+        "output": "outputs/fixture-png-dominant-color-semitransparent-0-imagemagick.png",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-png-dominant-color-semitransparent-0-libvips.png",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-png-dominant-color-semitransparent-1",
+      "id": "fixture-png-dominant-color-semitransparent",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-png-dominant-color-semitransparent.png",
+      "imagemagick": {
+        "output": "outputs/fixture-png-dominant-color-semitransparent-1-imagemagick.png",
+        "dimensions": [
+          2,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-png-dominant-color-semitransparent-1-libvips.png",
+        "dimensions": [
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-png-dominant-color-semitransparent-2",
+      "id": "fixture-png-dominant-color-semitransparent",
+      "geometry": "10000@",
+      "input": "inputs/fixture-png-dominant-color-semitransparent.png",
+      "imagemagick": {
+        "output": "outputs/fixture-png-dominant-color-semitransparent-2-imagemagick.png",
+        "dimensions": [
+          141,
+          71
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-png-dominant-color-semitransparent-2-libvips.png",
+        "dimensions": [
+          141,
+          71
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-png-dominant-color-low-alpha-16bit-0",
+      "id": "fixture-png-dominant-color-low-alpha-16bit",
+      "geometry": "50%",
+      "input": "inputs/fixture-png-dominant-color-low-alpha-16bit.png",
+      "imagemagick": {
+        "output": "outputs/fixture-png-dominant-color-low-alpha-16bit-0-imagemagick.png",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-png-dominant-color-low-alpha-16bit-0-libvips.png",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-png-dominant-color-low-alpha-16bit-1",
+      "id": "fixture-png-dominant-color-low-alpha-16bit",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-png-dominant-color-low-alpha-16bit.png",
+      "imagemagick": {
+        "output": "outputs/fixture-png-dominant-color-low-alpha-16bit-1-imagemagick.png",
+        "dimensions": [
+          1,
+          1
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-png-dominant-color-low-alpha-16bit-1-libvips.png",
+        "dimensions": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-png-dominant-color-low-alpha-16bit-2",
+      "id": "fixture-png-dominant-color-low-alpha-16bit",
+      "geometry": "10000@",
+      "input": "inputs/fixture-png-dominant-color-low-alpha-16bit.png",
+      "imagemagick": {
+        "output": "outputs/fixture-png-dominant-color-low-alpha-16bit-2-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-png-dominant-color-low-alpha-16bit-2-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-orientation-6-0",
+      "id": "fixture-orientation-6",
+      "geometry": "50%",
+      "input": "inputs/fixture-orientation-6.jpg",
+      "imagemagick": {
+        "output": "outputs/fixture-orientation-6-0-imagemagick.jpg",
+        "dimensions": [
+          20,
+          30
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-orientation-6-0-libvips.jpg",
+        "dimensions": [
+          20,
+          30
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-orientation-6-1",
+      "id": "fixture-orientation-6",
+      "geometry": "100x100>",
+      "input": "inputs/fixture-orientation-6.jpg",
+      "imagemagick": {
+        "output": "outputs/fixture-orientation-6-1-imagemagick.jpg",
+        "dimensions": [
+          40,
+          60
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-orientation-6-1-libvips.jpg",
+        "dimensions": [
+          40,
+          60
+        ]
+      }
+    },
+    {
+      "case_id": "fixture-orientation-6-2",
+      "id": "fixture-orientation-6",
+      "geometry": "10000@",
+      "input": "inputs/fixture-orientation-6.jpg",
+      "imagemagick": {
+        "output": "outputs/fixture-orientation-6-2-imagemagick.jpg",
+        "dimensions": [
+          82,
+          122
+        ]
+      },
+      "libvips": {
+        "output": "outputs/fixture-orientation-6-2-libvips.jpg",
+        "dimensions": [
+          82,
+          122
+        ]
+      }
+    }
+  ],
+  "visual_verification": {
+    "source_head": "c35dbed648beb52a788ab96847669e2cb92540cd",
+    "cases_inspected": 60,
+    "sections": 15,
+    "images_decoded": 177,
+    "broken_images": 0,
+    "method": "Checkout Playwright Chromium captured the static local comparison.html; resident agent inspected all 15 screenshots. Playwright MCP could not reach the functioning DV proxy; tooling report c121867d0adff045bb63b71d801433de17000240."
+  }
+}
