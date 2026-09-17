@@ -2151,6 +2151,19 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe ".editable_synonym_ids" do
+    it "returns only tags the guardian can edit" do
+      SiteSetting.edit_tags_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      restricted_tag = Fabricate(:tag)
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [restricted_tag])
+
+      editable_ids =
+        DiscourseTagging.editable_synonym_ids(Tag.where(id: [tag1.id, restricted_tag.id]), guardian)
+
+      expect(editable_ids).to contain_exactly(tag1.id)
+    end
+  end
+
   describe "#add_or_create_synonyms" do
     it "can add an existing tag" do
       expect {
