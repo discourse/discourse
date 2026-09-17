@@ -517,6 +517,7 @@ zh_CN:
   provider_not_enabled: "您没有权限查看请求的资源。身份验证服务提供商未启用。"
   provider_not_found: "您没有权限查看请求的资源。身份验证服务提供商不存在。"
   read_only_mode_enabled: "该网站正处于只读模式。交互功能已被禁用。"
+  site_archived_error: "本网站已进入存档模式，交互功能已关闭。"
   invalid_grant_badge_reason_link: "徽章原因中不允许外部或无效的 Discourse 链接"
   email_template_cant_be_modified: "无法修改此电子邮件模板"
   invalid_whisper_access: "没有启用密语或者您无权创建密语帖子"
@@ -1215,6 +1216,7 @@ zh_CN:
   uploads:
     marked_insecure_from_theme_component_reason: "在主题组件中使用上传"
   unsubscribe:
+    title: "取消订阅 %{email}"
     unsubscribe: "退订"
     stop_watching_topic: "停止关注此话题，%{link}"
     mute_topic: "将此话题的所有通知设为免打扰，%{link}"
@@ -1788,7 +1790,13 @@ zh_CN:
       sidekiq_check: 'Sidekiq 未运行。许多任务（例如发送电子邮件）都由 Sidekiq 异步执行。请确保至少一个 Sidekiq 进程正在运行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
       queue_size: "队列中有 %{queue_size} 个作业，比较多。这可能表明 Sidekiq 进程存在问题，或者需要添加更多 Sidekiq 工作进程。"
       ram: "您的服务器运行的总内存不足 1 GB。建议使用至少 1 GB 的内存。"
+      google_oauth2_config: '{{setting:enable_google_oauth2_logins}} 已启用，但 %{missing_settings} 仍需设置。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">请参阅此指南了解更多信息</a>。'
+      facebook_config: '{{setting:enable_facebook_logins}} 已启用，但 %{missing_settings} 仍需设置。 <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">请参阅此指南了解更多信息</a>。'
+      twitter_config: '{{setting:enable_twitter_logins}} 已启用，但 %{missing_settings} 仍需设置。 <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">请参阅此指南了解更多信息</a>。'
+      github_config: '{{setting:enable_github_logins}} 已启用，但 %{missing_settings} 仍需设置。 <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">请参阅此指南了解更多信息</a>。'
       github_onebox_backoff: "GitHub 对服务器进行了速率限值，因此在限值重置之前，GitHub 链接可能无法预览。配置 {{setting:github_onebox_access_tokens}} 可以显著提高限值。"
+      s3_upload_config: '{{setting:enable_s3_uploads}} 已启用，但 %{missing_settings} 仍需设置。 <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置图像上传到 S3？”以了解更多信息</a>。'
+      s3_backup_config: '{{setting:backup_location}} 已设置为 S3，但 %{missing_settings} 仍必须设置。 <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置图像上传到 S3？”以了解更多信息</a>。'
       s3_cdn: '服务器被配置为将文件上传到 S3，但未配置 S3 CDN。这可能会导致昂贵的 S3 成本和网站性能降低。<a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅“使用对象存储进行上传”以了解详情</a>。'
       image_magick: '服务器被配置为创建大图片缩略图，但是未安装 ImageMagick。使用您喜爱的软件包管理器安装 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
       failing_emails: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
@@ -2131,6 +2139,7 @@ zh_CN:
     enable_linkedin_oidc_logins: "启用 LinkedIn 身份验证，需要 {{setting:linkedin_oidc_client_id}} 和 {{setting:linkedin_oidc_client_secret}}。"
     linkedin_oidc_client_id: "LinkedIn 身份验证的客户端 ID，在 <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a> 下注册"
     linkedin_oidc_client_secret: "LinkedIn 身份验证的客户端密钥，在 <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a> 下注册"
+    site_archived: "将网站置于存档模式。读取和登录功能仍然可用；新增内容、点赞和其他写入操作将被禁用。出于运行只读原因（故障转移、维护）而启用此功能时，其优先级仍然较高。"
     enable_backups: "允许管理员创建论坛备份"
     allow_restore: "允许恢复，这可以替换所有网站数据！除非您计划恢复备份，否则请保持禁用状态"
     maximum_backups: "要保留的最大备份数。系统将自动删除较旧的备份"
@@ -2758,6 +2767,7 @@ zh_CN:
     enable_new_defaults_for_trust_level_3_requirements: "我们更新了 TL3 的默认要求，使其对大型活跃社区的成员更加合理。如果您之前覆盖了这些设置，即将进行的更改将不会产生任何影响。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
     rename_faq_to_guidelines: "此次更改将“常见问题解答”页面重命名为“准则”。“常见问题解答”页面仍可通过 /faq 访问。{{setting:faq_url}} 设置与以前一样有效。"
+    enable_category_hashtag_cards: "当用户点击类别标签时，如果用户有权查看该类别，则显示一个浮动类别卡片。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
@@ -2841,6 +2851,7 @@ zh_CN:
       markdown_linkify_tlds: "您不能包含 '*' 的值。"
       google_oauth2_hd_groups: "在启用此设置之前，您必须配置所有 'google oauth2 hd' 设置。"
       discourse_id_registration: "无法使用 Discourse ID 自动注册。这可能是由于网络连接问题、防火墙限制或 Discourse ID 服务无法访问。请查看服务器日志了解更多详情或联系支持团队。"
+      auth_provider_credentials_missing: "必须先设置 %{settings} 才能启用此设置。"
       search_tokenize_chinese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_chinese'。"
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法启用 DiscourseConnect。"
@@ -2966,6 +2977,7 @@ zh_CN:
       status_public: "显示公共类别的话题"
       status_noreplies: "显示无回复的话题"
       status_single_user: "显示只有一个参与者的话题"
+      status_scheduled: "显示计划发布到某个类别的主题"
       in_pinned: "显示置顶的话题"
       in_bookmarked: "显示您添加了书签的话题"
       in_watching: "显示您正在关注的话题"
@@ -2977,6 +2989,7 @@ zh_CN:
       in_new_replies: "显示有新回复的话题"
       in_new_topics: "显示新话题"
       in_unseen: "显示您未看过的话题"
+      in_untagged: "显示不带任何标签的主题"
       order_activity: "按最新活动排序（最新的活动优先）"
       order_activity_asc: "按最新活动排序（最早的活动优先）"
       order_category: "按类别名称排序 (Z-A)"
@@ -2991,6 +3004,8 @@ zh_CN:
       order_likes_op_asc: "按第一个帖子的赞数排序（数量最少的优先）"
       order_posters: "按参与人数排序（数量最多的优先）"
       order_posters_asc: "按参与人数排序（数量最少的优先）"
+      order_posts: "按回复数量排序（最多排在最前面）"
+      order_posts_asc: "按回复数排序（最少的排在最前面）"
       order_title: "按标题排序 (Z-A)"
       order_title_asc: "按标题排序 (A-Z)"
       order_views: "按浏览量排序（数量最多的优先）"
@@ -3248,6 +3263,15 @@ zh_CN:
       ## %{code}
 
       此登录码将在 %{minutes} 分钟后到期。如果您没有申请该登录码，则可以放心地忽略这封电子邮件。
+  password_reset_code_mailer:
+    title: "密码重置码"
+    subject_template: "%{code} 是您的密码重置代码"
+    text_body_template: |
+      使用此代码重置您的密码，时间： %{site_name}:
+
+      ## %{code}
+
+      此代码将在 %{minutes} 分钟后过期。如果您未申请此代码，则可以忽略此邮件。
   invite_mailer:
     title: "邀请邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
@@ -4725,6 +4749,7 @@ zh_CN:
     file_missing: "抱歉，您必须提供要上传的文件。"
     empty: "抱歉，您提供的文件是空的。"
     failed: "抱歉，上传失败。请再试一次。"
+    ico_as_avatar: "抱歉，ICO 图片不能用作头像。"
     png_to_jpg_conversion_failure_message: "从 PNG 转换为 JPG 时出错。"
     optimize_failure_message: "优化上传的图片时出错。"
     download_failure: "从外部提供商下载文件失败。"

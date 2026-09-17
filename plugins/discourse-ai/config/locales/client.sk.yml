@@ -21,6 +21,8 @@ sk:
             title: "Spýtajte sa AI"
         ask_ai:
           title: "Spýtajte sa AI"
+          reports:
+            retry_questions: "Skúsiť znova"
           date: "Dátum"
           outcomes:
             failed: "Nepodarilo sa"

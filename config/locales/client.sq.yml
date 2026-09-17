@@ -3564,6 +3564,7 @@ sq:
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
+      latest_topics: "Temat e fundit"
       description_expand: "Shfaq më shumë"
       description_collapse: "Shfaq më pak"
       already_used: "Kjo ngjyrë është përdorur nga një kategori tjetër"

@@ -24,6 +24,8 @@ fr:
             title: "Demander à l'IA"
         ask_ai:
           title: "Demander à l'IA"
+          reports:
+            retry_questions: "Réessayer"
           date: "Date"
           outcomes:
             failed: "Échec"

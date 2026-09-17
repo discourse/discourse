@@ -3535,6 +3535,7 @@ lt:
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"
       delete_error: "Įvyko klaida ištrinant kategoriją."
       no_description: "Prašome pridėti aprašymą šiai kategorijai."
+      latest_topics: "Naujausios temos"
       description_expand: "Rodyti daugiau"
       description_collapse: "Rodyti mažiau"
       already_used: "Ši spalva jau priskirta prie kitos kategorijos"
@@ -3936,7 +3937,7 @@ lt:
       favorite_max_not_reached: "Pažymėkite šį ženklelį kaip mėgstamiausią"
       favorite_count: "%{count}/%{max} ženkleliai pažymėti kaip mėgstamiausi"
     download_calendar:
-      title: "Atsisiųsti kalendorių"
+      title: "Pridėti prie kalendoriaus"
       save_ics: "Atsisiųsti.ics failą"
       save_google: "Pridėti prie „Google“ kalendoriaus"
       remember: "Daugiau manęs neklausti"

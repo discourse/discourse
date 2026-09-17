@@ -24,6 +24,8 @@ ar:
             title: "اسأل الذكاء الاصطناعي"
         ask_ai:
           title: "اسأل الذكاء الاصطناعي"
+          reports:
+            retry_questions: "إعادة المحاولة"
           date: "التاريخ"
           outcomes:
             failed: "فشل"

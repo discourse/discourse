@@ -447,6 +447,8 @@ zh_CN:
     generic_error: "抱歉，出错了。"
     generic_error_with_reason: "出错了：%{error}"
     multiple_errors: "发生多个错误：%{errors}"
+    too_many_requests:
+      other: "您执行此操作的次数过多。请稍等 %{count} 秒后再试。"
     sign_up: "注册"
     log_in: "登录"
     age: "年龄"
@@ -2644,6 +2646,10 @@ zh_CN:
       login_disabled: "网站处于只读模式时登录被禁用。"
       logout_disabled: "网站处于只读模式时退出登录被禁用。"
       signup_disabled: "网站处于只读模式时，注册功能被禁用。"
+    site_archived:
+      enabled: "本网站已进入存档模式。请继续浏览，但回复、点赞及其他操作功能已被禁用。"
+      enabled_anonymous: "本网站已进入存档模式。您可以继续浏览或登录，但回复、点赞和其他操作功能已被禁用。"
+      signup_disabled: "网站处于存档模式时，注册功能将被禁用。"
     staff_writes_only_mode:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
       enabled_anonymous: "本网站目前仅供管理人员访问。请继续浏览，但注册功能暂不可用，且只有管理人员才能登录。"
@@ -2744,6 +2750,7 @@ zh_CN:
         approve: "批准"
         login: "登录"
     forgot_password:
+      code_instructions: "如果存在匹配的帐户，我们会向该帐户的电子邮件地址发送验证码。请输入验证码以重置密码。"
       title: "密码重置"
       action: "我忘记密码了"
       invite: "输入您的用户名或电子邮件地址，我们将向您发送密码重置电子邮件。"
@@ -3644,6 +3651,8 @@ zh_CN:
       full_page_title: "搜索"
       results: "结果"
       no_results: "找不到结果。"
+      results_announcement:
+        other: "“”有 %{count} 个结果"
       no_more_results: "没有找到更多结果。"
       post_format: "#%{post_number}，来自 %{username}"
       results_page: "'%{term}' 的搜索结果"
@@ -4945,6 +4954,7 @@ zh_CN:
       list: "列出类别"
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
+      latest_topics: "最新话题"
       description_updated: "描述已更新"
       description_expand: "展开"
       description_collapse: "收起"
@@ -5232,6 +5242,7 @@ zh_CN:
       with_category: "%{filter}%{category}话题"
       filter:
         title: "%{filter} 的筛选结果"
+        results_for: "搜索结果： %{query}"
         reset: "重置"
         button:
           label: "筛选"
@@ -5492,16 +5503,21 @@ zh_CN:
       favorite_max_not_reached: "将此徽章标记为收藏"
       favorite_count: "%{count}/%{max} 个徽章已被标记为收藏"
     download_calendar:
-      title: "下载日历"
+      title: "添加到日历"
+      calendar: "日历"
       save_ics: "下载 .ics 文件"
       save_google: "添加到 Google 日历"
+      save_outlook: "添加到 Microsoft Outlook"
+      save_apple: "添加到 Apple 日历"
       remember: "不再询问"
-      remember_explanation: "（您可以在用户偏好设置中更改此偏好设置）"
+      remember_explanation: "您稍后可以在个人资料设置中更改此偏好设置。"
       download: "下载"
       default_calendar: "默认日历"
       default_calendar_instruction: "决定保存日期时应使用哪个日历"
       add_to_calendar: "添加到日历"
       google: "Google 日历"
+      outlook: "Microsoft Outlook"
+      apple: "Apple 日历"
       ics: "ICS"
       default_title: "定时活动"
     tagging:
@@ -8141,6 +8157,14 @@ zh_CN:
           disable:
             title: "禁用只读模式"
             label: "禁用只读模式"
+        site_archived:
+          enable:
+            title: "启用存档模式"
+            label: "启用存档模式"
+            confirm: "您确定要启用归档模式吗？用户仍然可以登录和浏览，但所有写入操作都将被禁用。出于运行只读原因（故障转移、维护）而启用归档模式时，其优先级仍然很高。"
+          disable:
+            title: "禁用存档模式"
+            label: "禁用存档模式"
         logs:
           none: "暂无日志…"
         columns:

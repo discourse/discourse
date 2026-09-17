@@ -24,6 +24,8 @@ de:
             title: "KI fragen"
         ask_ai:
           title: "KI fragen"
+          reports:
+            retry_questions: "Erneut versuchen"
           date: "Datum"
           outcomes:
             failed: "Fehlgeschlagen"
