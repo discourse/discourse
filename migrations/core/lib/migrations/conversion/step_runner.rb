@@ -106,14 +106,18 @@ module Migrations
       def process_item(processor, tracker, item)
         processor.process(item)
       rescue StandardError => e
-        tracker.log_error("Failed to process item", exception: e, details: item)
+        tracker.log_error(I18n.t("converter.log.item_failed"), exception: e, details: item)
       end
 
       def process_batch(processor, tracker, items)
         tracker.progress = items.size
         processor.process_batch(items)
       rescue StandardError => e
-        tracker.log_error("Failed to process batch", exception: e, details: batch_details(items))
+        tracker.log_error(
+          I18n.t("converter.log.batch_failed"),
+          exception: e,
+          details: batch_details(items),
+        )
       end
 
       # The rows of a batch can be large (whole post bodies), so the log entry

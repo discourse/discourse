@@ -175,7 +175,7 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       expect(processor.tracker.stats.error_count).to eq(1)
 
       entry = rows("log_entries").first
-      expect(entry[:message]).to eq("Failed to process post")
+      expect(entry[:message]).to eq(I18n.t("converters.discourse.posts.post_failed"))
       expect(JSON.parse(entry[:details])).to eq("id" => 1)
     end
   end
@@ -190,7 +190,7 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
 
       expect(processor.tracker.stats.warning_count).to eq(1)
       entry = rows("log_entries").first
-      expect(entry[:message]).to eq(described_class::ENGINE_REFUSAL_LOG_MESSAGE)
+      expect(entry[:message]).to eq(I18n.t("converters.discourse.posts.embeds_not_extracted"))
       expect(JSON.parse(entry[:details])).to eq(
         "id" => 7,
         "cause" => "count_mismatch",
@@ -205,7 +205,7 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
 
       expect(processor.tracker.stats.warning_count).to eq(0)
       entry = rows("log_entries").first
-      expect(entry[:message]).to eq(described_class::SLOW_PARSE_LOG_MESSAGE)
+      expect(entry[:message]).to eq(I18n.t("converters.discourse.posts.slow_parse"))
       expect(JSON.parse(entry[:details])).to eq("id" => 8)
     end
 
@@ -313,7 +313,7 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       expect(tracker.stats.warning_count).to eq(0)
       expect(entry).to include(
         type: Migrations::Database::IntermediateDB::LogEntry::INFO,
-        message: described_class::FOREIGN_LINK_LOG_MESSAGE,
+        message: I18n.t("converters.discourse.posts.foreign_hosts"),
       )
 
       details = JSON.parse(entry[:details])

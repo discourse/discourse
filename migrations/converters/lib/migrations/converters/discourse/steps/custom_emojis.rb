@@ -4,8 +4,6 @@ module Migrations
   module Converters
     module Discourse
       class CustomEmojis < Conversion::Step
-        DANGLING_UPLOAD_LOG_MESSAGE = "Custom emoji skipped: its upload is missing"
-
         source do
           def max_progress
             @source_db.count <<~SQL
@@ -47,7 +45,7 @@ module Migrations
             # instead of writing a row that points at nothing.
             if item[:upload_url].nil?
               tracker.log_warning(
-                DANGLING_UPLOAD_LOG_MESSAGE,
+                I18n.t("converters.discourse.custom_emojis.upload_missing"),
                 details: {
                   id: item[:id],
                   name: item[:name],

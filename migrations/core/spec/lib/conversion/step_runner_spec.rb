@@ -220,7 +220,7 @@ RSpec.describe Migrations::Conversion::StepRunner do
         expect(channel.progress).to eq(10)
 
         entry = log_entries.first
-        expect(entry[:message]).to eq("Failed to process batch")
+        expect(entry[:message]).to eq(I18n.t("converter.log.batch_failed"))
         expect(JSON.parse(entry[:details])).to eq("size" => 5, "ids" => [1, 2, 3, 4, 5])
       end
     end

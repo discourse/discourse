@@ -4,28 +4,15 @@ module Migrations
   module Converters
     module Discourse
       class Posts < Conversion::Step
-        # Hosts with internal-looking links that aren't configured as the
-        # source's own. Logged once per run at INFO, because posts link to many
-        # other Discourse sites and a long list is normal. The extractor reports
-        # each host once, so this is a list of hosts, not a count of links.
-        FOREIGN_LINK_LOG_MESSAGE = "Internal-looking links on unconfigured hosts"
-
-        # The extractor refused a body instead of guessing. Someone has to look
-        # at these posts before the converted body can be trusted.
-        ENGINE_REFUSAL_LOG_MESSAGE = "Post embeds not extracted"
-
-        # Not a problem, the body was extracted. It only needed the slow retry.
-        SLOW_PARSE_LOG_MESSAGE = "Post body needed the slow markdown parse"
-
         # Limits the hosts in `details`. The list only has to show where a
         # former domain is missing; more would bloat the log entry.
         DETAILS_HOST_LIMIT = 500
-        private_constant :DETAILS_HOST_LIMIT
 
         # Posts a worker reads and prepares before one round of engine scans.
         # The extractor splits the round into V8 calls itself, so this only
         # limits how many bodies a worker holds in memory at once.
         BATCH_SIZE = 256
+        private_constant :DETAILS_HOST_LIMIT, :BATCH_SIZE
 
         # Merges the workers' host lists into one log entry. Runs in the parent;
         # `results` are the workers' `result` values after their trip through JSON.
@@ -38,7 +25,11 @@ module Migrations
           omitted = hosts.size - kept.size
           details[:omitted] = omitted if omitted > 0
 
-          tracker.log_info(FOREIGN_LINK_LOG_MESSAGE, details:)
+          # Logged at INFO: posts link to many other Discourse sites, so a long
+          # list is normal. The extractor reports each host once, so this is a
+          # list of hosts, not a count of links. Look here when a former domain
+          # is missing from the `source_site` settings.
+          tracker.log_info(I18n.t("converters.discourse.posts.foreign_hosts"), details:)
         end
 
         source do
@@ -133,7 +124,13 @@ module Migrations
               convert(item, prepared[item[:id]], scan_data)
             rescue StandardError => e
               # One bad body shouldn't fail the whole batch.
-              tracker.log_error("Failed to process post", exception: e, details: { id: item[:id] })
+              tracker.log_error(
+                I18n.t("converters.discourse.posts.post_failed"),
+                exception: e,
+                details: {
+                  id: item[:id],
+                },
+              )
             end
           end
 
@@ -205,15 +202,23 @@ module Migrations
             @extractor.extract_prepared(prepared, scan_data:)
           end
 
+          # The extractor refused the body instead of guessing. Someone has to look
+          # at these posts before the converted body can be trusted.
           def log_refusal(cause, detail)
             tracker.log_warning(
-              ENGINE_REFUSAL_LOG_MESSAGE,
+              I18n.t("converters.discourse.posts.embeds_not_extracted"),
               details: { id: @post_id, cause:, detail: }.compact,
             )
           end
 
+          # Not a problem, the body was extracted. It only needed the slow retry.
           def log_slow_parse
-            tracker.log_info(SLOW_PARSE_LOG_MESSAGE, details: { id: @post_id })
+            tracker.log_info(
+              I18n.t("converters.discourse.posts.slow_parse"),
+              details: {
+                id: @post_id,
+              },
+            )
           end
 
           # The source may carry values from plugins or versions we don't model.
