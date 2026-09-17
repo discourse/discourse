@@ -6,6 +6,9 @@ module DiscourseVips
   SVG_DIMENSIONS_TIMEOUT_SECONDS = 3
   private_constant :SVG_DIMENSIONS_TIMEOUT_SECONDS
 
+  SVG_TO_PNG_TIMEOUT_SECONDS = 3
+  private_constant :SVG_TO_PNG_TIMEOUT_SECONDS
+
   def self.version
     Client.call(["version"], operation: :vips_version, read: [], write: [])
   end
@@ -80,6 +83,26 @@ module DiscourseVips
       read:,
       write:,
       timeout:,
+    )
+  end
+
+  def self.svg_to_png(
+    input_path:,
+    output_path:,
+    read:,
+    write:,
+    timeout: SVG_TO_PNG_TIMEOUT_SECONDS,
+    operation: :svg_to_png,
+    nice: nil
+  )
+    timeout = [timeout, SVG_TO_PNG_TIMEOUT_SECONDS].min
+    Client.call(
+      ["svg-to-png", input_path, output_path],
+      operation:,
+      read: ["/etc/fonts", "/var/cache/fontconfig", *read],
+      write:,
+      timeout:,
+      nice:,
     )
   end
 

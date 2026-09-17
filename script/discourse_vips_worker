@@ -9,7 +9,7 @@ require "tempfile"
 require "tmpdir"
 require "vips"
 
-raise LoadError, "libvips 8.13 or newer is required" if !Vips.at_least_libvips?(8, 13)
+raise LoadError, "libvips 8.18 or newer is required" if !Vips.at_least_libvips?(8, 18)
 
 class DiscourseVipsWorker
   class InvalidImage < StandardError
@@ -31,6 +31,16 @@ class DiscourseVipsWorker
 
     SVG_DIMENSIONS_RLIMITS = { cpu_seconds: 1, memory_bytes: 1024 * 1024 * 1024 }.freeze
     private_constant :SVG_DIMENSIONS_RLIMITS
+
+    SVG_TO_PNG_MAX_INPUT_BYTES = 3 * 1024 * 1024
+    private_constant :SVG_TO_PNG_MAX_INPUT_BYTES
+
+    SVG_TO_PNG_RLIMITS = {
+      cpu_seconds: 1,
+      memory_bytes: 1024 * 1024 * 1024,
+      file_size_bytes: 1024 * 1024,
+    }.freeze
+    private_constant :SVG_TO_PNG_RLIMITS
 
     def self.warm
       WARM_OPERATIONS.each do |name|
@@ -61,6 +71,8 @@ class DiscourseVipsWorker
         png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "reencode-jpeg"
         reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
+      when "svg-to-png"
+        svg_to_png(input_path: arguments[0], output_path: arguments[1])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -247,6 +259,25 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :svg_dimensions
+
+    def self.svg_to_png(input_path:, output_path:)
+      new(rlimits: SVG_TO_PNG_RLIMITS) do
+        if File.expand_path(input_path) == File.expand_path(output_path) ||
+             (File.exist?(output_path) && File.identical?(input_path, output_path))
+          raise ArgumentError, "SVG input and PNG output must be different files"
+        end
+        if File.size(input_path) > SVG_TO_PNG_MAX_INPUT_BYTES
+          raise ArgumentError, "SVG exceeds #{SVG_TO_PNG_MAX_INPUT_BYTES} bytes"
+        end
+
+        block_loaders(allowed: %w[VipsForeignLoadSvg])
+        Vips.concurrency_set(1)
+        image = Vips::Image.svgload(input_path, dpi: 96, scale: 0.75)
+        image.flatten(background: [255, 255, 255]).pngsave(output_path)
+        nil
+      end
+    end
+    private_class_method :svg_to_png
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
