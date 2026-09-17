@@ -29,11 +29,9 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dBoundCategoryLink from "discourse/ui-kit/helpers/d-bound-category-link";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDragAndDropAutoScroll from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { i18n } from "discourse-i18n";
-import {
-  autoScrollSpeedForPointer,
-  dragToScroll,
-} from "../lib/boards-auto-scroll";
+import { dragToScroll } from "../lib/boards-auto-scroll";
 import {
   isRecencyColumn,
   sortCardsForColumn,
@@ -124,23 +122,7 @@ export default class BoardsBoardViewer extends Component {
   @tracked fullscreen = false;
   @tracked linkHighlightCardId = null;
   @tracked linkedCardId = null;
-
-  horizontalAutoScrollFrame = null;
-  horizontalAutoScrollSpeed = 0;
-  horizontalAutoScrollContainer = null;
-  horizontalAutoScrollHasDocumentListeners = false;
-  stopHorizontalAutoScroll = () => this.#stopHorizontalAutoScroll();
-  updateHorizontalAutoScroll = (event) => {
-    if (!this.dragData || !this.horizontalAutoScrollContainer) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    this.#updateHorizontalAutoScroll(
-      this.horizontalAutoScrollContainer,
-      event.clientX
-    );
-  };
+  @tracked pendingDropCardId = null;
 
   setupMessageBus = modifier((element) => {
     const channel = `/boards/${this.board.id}`;
@@ -204,7 +186,6 @@ export default class BoardsBoardViewer extends Component {
     super.willDestroy(...arguments);
     this._clearDropHighlight();
     this._cleanupPromotion();
-    this.#stopHorizontalAutoScroll();
   }
 
   get boardTagNames() {
@@ -298,152 +279,19 @@ export default class BoardsBoardViewer extends Component {
   }
 
   @action
-  dragOverBoardContainer(event) {
-    const dragData = this.dragData;
-    if (!dragData) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    event.preventDefault();
-    this.#updateHorizontalAutoScroll(event.currentTarget, event.clientX);
-  }
-
-  @action
-  dragLeaveBoardContainer(event) {
-    if (!this.dragData && !event.currentTarget.contains(event.relatedTarget)) {
-      this.#stopHorizontalAutoScroll();
-    }
-  }
-
-  @action
-  dropBoardContainer() {
-    this.#stopHorizontalAutoScroll();
-  }
-
-  @action
   async onDrop(cardId, toColumnId, afterCardId, fromColumnId) {
-    if (!this.board.canWrite || !fromColumnId) {
-      return;
-    }
-
-    const fromColumn = this.columns.find((c) => c.id === fromColumnId);
-    const toColumn = this.columns.find((c) => c.id === toColumnId);
-    if (!fromColumn || !toColumn) {
-      return;
-    }
-
-    const cardIndex = fromColumn.cards.findIndex((c) => c.id === cardId);
-    if (cardIndex === -1) {
-      return;
-    }
-
-    const card = fromColumn.cards[cardIndex];
-    const isSameColumn = fromColumnId === toColumnId;
-    const targetIsRecency = isRecencyColumn(toColumn);
-    if (isSameColumn && targetIsRecency) {
-      this.dragData = null;
-      return;
-    }
-
-    if (targetIsRecency) {
-      afterCardId = null;
-    }
-
-    let constraintFix = null;
-
-    if (!isSameColumn && card.topic) {
-      try {
-        constraintFix = await this.#resolveConstraintFix(
-          card.topic_id || card.topic.id,
-          card.topic,
-          toColumn
-        );
-      } catch (error) {
-        popupAjaxError(error);
-        return;
-      }
-
-      if (constraintFix === false) {
-        return;
-      }
-    }
-
-    if (!isSameColumn && !constraintFix && this.board.require_confirmation) {
-      const confirmed = await this._confirmMove(card, toColumn);
-      if (!confirmed) {
-        return;
-      }
-    }
-
-    const snapshot = this.columns.map((col) =>
-      col.copy({ cards: col.cards.map((c) => c.copy()) })
-    );
-
-    fromColumn.cards.splice(cardIndex, 1);
-
-    let insertIndex = targetIsRecency ? 0 : toColumn.cards.length;
-    if (!targetIsRecency && afterCardId != null) {
-      const idx = toColumn.cards.findIndex((c) => c.id === afterCardId);
-      if (idx !== -1) {
-        insertIndex = idx + 1;
-      }
-    } else {
-      insertIndex = 0;
-    }
-    toColumn.cards.splice(insertIndex, 0, card);
-    card.column_id = toColumnId;
-
-    this.columns = this.columns.map((col) => {
-      if (col.id === fromColumnId || col.id === toColumnId) {
-        return col.copy({ cards: [...col.cards] });
-      }
-      return col;
-    });
-    this.dragData = null;
-
-    const data = {
-      client_id: this.messageBus.clientId,
-      card: {
-        column_id: toColumnId,
-        after_card_id: afterCardId,
-      },
-    };
-    if (constraintFix) {
-      data.constraint_fix = constraintFix;
-    }
-
+    // A move can wait on a server check or a confirmation. Until it settles,
+    // keep the card hidden and the placeholder where it was dropped.
+    this.pendingDropCardId = cardId;
     try {
-      const result = await ajax(
-        `/boards/api/boards/${this.board.id}/cards/${card.id}`,
-        { type: "PUT", data }
+      await this.#moveDroppedCard(
+        cardId,
+        toColumnId,
+        afterCardId,
+        fromColumnId
       );
-      if (result?.card) {
-        const existingCard = this.columns
-          .flatMap((col) => col.cards)
-          .find((c) => c.id === result.card.id);
-        const mergedCard = existingCard
-          ? existingCard.copy(result.card)
-          : Card.create(result.card);
-        const withoutCard = this.columns.map((col) =>
-          col.copy({
-            cards: col.cards.filter((c) => c.id !== result.card.id),
-          })
-        );
-
-        this.columns = withoutCard.map((col) => {
-          if (col.id === mergedCard.column_id) {
-            return col.copy({
-              cards: sortCardsForColumn(col, [...col.cards, mergedCard]),
-            });
-          }
-          return col;
-        });
-      }
-      this._highlightDroppedCard(card.id);
-    } catch (error) {
-      this.columns = snapshot;
-      popupAjaxError(error);
+    } finally {
+      this.#settlePendingDrop(cardId);
     }
   }
 
@@ -974,100 +822,144 @@ export default class BoardsBoardViewer extends Component {
     }
   }
 
-  #updateHorizontalAutoScroll(container, clientX) {
-    const speed = autoScrollSpeedForPointer(
-      clientX,
-      container.getBoundingClientRect(),
-      "x"
+  async #moveDroppedCard(cardId, toColumnId, afterCardId, fromColumnId) {
+    if (!this.board.canWrite || !fromColumnId) {
+      return;
+    }
+
+    const fromColumn = this.columns.find((c) => c.id === fromColumnId);
+    const toColumn = this.columns.find((c) => c.id === toColumnId);
+    if (!fromColumn || !toColumn) {
+      return;
+    }
+
+    const cardIndex = fromColumn.cards.findIndex((c) => c.id === cardId);
+    if (cardIndex === -1) {
+      return;
+    }
+
+    const card = fromColumn.cards[cardIndex];
+    const isSameColumn = fromColumnId === toColumnId;
+    const targetIsRecency = isRecencyColumn(toColumn);
+    if (isSameColumn && targetIsRecency) {
+      this.dragData = null;
+      return;
+    }
+
+    if (targetIsRecency) {
+      afterCardId = null;
+    }
+
+    let constraintFix = null;
+
+    if (!isSameColumn && card.topic) {
+      try {
+        constraintFix = await this.#resolveConstraintFix(
+          card.topic_id || card.topic.id,
+          card.topic,
+          toColumn
+        );
+      } catch (error) {
+        popupAjaxError(error);
+        return;
+      }
+
+      if (constraintFix === false) {
+        return;
+      }
+    }
+
+    if (!isSameColumn && !constraintFix && this.board.require_confirmation) {
+      const confirmed = await this._confirmMove(card, toColumn);
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    const snapshot = this.columns.map((col) =>
+      col.copy({ cards: col.cards.map((c) => c.copy()) })
     );
 
-    if (
-      (speed < 0 && container.scrollLeft <= 0) ||
-      (speed > 0 &&
-        container.scrollLeft + container.clientWidth >= container.scrollWidth)
-    ) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
+    fromColumn.cards.splice(cardIndex, 1);
 
-    this.horizontalAutoScrollSpeed = speed;
-    this.horizontalAutoScrollContainer = container;
-    this.#ensureHorizontalAutoScrollDocumentListeners();
-
-    if (speed === 0) {
-      this.#stopHorizontalAutoScroll();
-      return;
-    }
-
-    if (!this.horizontalAutoScrollFrame) {
-      this.#horizontalAutoScroll();
-    }
-  }
-
-  #horizontalAutoScroll() {
-    this.horizontalAutoScrollFrame = requestAnimationFrame(() => {
-      this.horizontalAutoScrollFrame = null;
-
-      const container = this.horizontalAutoScrollContainer;
-      if (!container || this.horizontalAutoScrollSpeed === 0) {
-        return;
+    let insertIndex = targetIsRecency ? 0 : toColumn.cards.length;
+    if (!targetIsRecency && afterCardId != null) {
+      const idx = toColumn.cards.findIndex((c) => c.id === afterCardId);
+      if (idx !== -1) {
+        insertIndex = idx + 1;
       }
+    } else {
+      insertIndex = 0;
+    }
+    toColumn.cards.splice(insertIndex, 0, card);
+    card.column_id = toColumnId;
 
-      const previousScrollLeft = container.scrollLeft;
-      container.scrollLeft += this.horizontalAutoScrollSpeed;
-
-      if (container.scrollLeft === previousScrollLeft) {
-        this.#stopHorizontalAutoScroll();
-        return;
+    this.#settlePendingDrop(cardId);
+    this.columns = this.columns.map((col) => {
+      if (col.id === fromColumnId || col.id === toColumnId) {
+        return col.copy({ cards: [...col.cards] });
       }
-
-      this.#horizontalAutoScroll();
+      return col;
     });
+    this.dragData = null;
+
+    const data = {
+      client_id: this.messageBus.clientId,
+      card: {
+        column_id: toColumnId,
+        after_card_id: afterCardId,
+      },
+    };
+    if (constraintFix) {
+      data.constraint_fix = constraintFix;
+    }
+
+    try {
+      const result = await ajax(
+        `/boards/api/boards/${this.board.id}/cards/${card.id}`,
+        { type: "PUT", data }
+      );
+      if (result?.card) {
+        const existingCard = this.columns
+          .flatMap((col) => col.cards)
+          .find((c) => c.id === result.card.id);
+        const mergedCard = existingCard
+          ? existingCard.copy(result.card)
+          : Card.create(result.card);
+        const withoutCard = this.columns.map((col) =>
+          col.copy({
+            cards: col.cards.filter((c) => c.id !== result.card.id),
+          })
+        );
+
+        this.columns = withoutCard.map((col) => {
+          if (col.id === mergedCard.column_id) {
+            return col.copy({
+              cards: sortCardsForColumn(col, [...col.cards, mergedCard]),
+            });
+          }
+          return col;
+        });
+      }
+      this._highlightDroppedCard(card.id);
+    } catch (error) {
+      this.columns = snapshot;
+      popupAjaxError(error);
+    }
   }
 
-  #ensureHorizontalAutoScrollDocumentListeners() {
-    if (this.horizontalAutoScrollHasDocumentListeners) {
+  #settlePendingDrop(cardId) {
+    if (this.pendingDropCardId !== cardId) {
       return;
     }
 
-    document.addEventListener(
-      "dragover",
-      this.updateHorizontalAutoScroll,
-      true
-    );
-    document.addEventListener("dragend", this.stopHorizontalAutoScroll, true);
-    document.addEventListener("drop", this.stopHorizontalAutoScroll, true);
-    this.horizontalAutoScrollHasDocumentListeners = true;
-  }
-
-  #removeHorizontalAutoScrollDocumentListeners() {
-    if (!this.horizontalAutoScrollHasDocumentListeners) {
-      return;
-    }
-
-    document.removeEventListener(
-      "dragover",
-      this.updateHorizontalAutoScroll,
-      true
-    );
-    document.removeEventListener(
-      "dragend",
-      this.stopHorizontalAutoScroll,
-      true
-    );
-    document.removeEventListener("drop", this.stopHorizontalAutoScroll, true);
-    this.horizontalAutoScrollHasDocumentListeners = false;
-  }
-
-  #stopHorizontalAutoScroll() {
-    if (this.horizontalAutoScrollFrame) {
-      cancelAnimationFrame(this.horizontalAutoScrollFrame);
-      this.horizontalAutoScrollFrame = null;
-    }
-
-    this.horizontalAutoScrollSpeed = 0;
-    this.horizontalAutoScrollContainer = null;
-    this.#removeHorizontalAutoScrollDocumentListeners();
+    this.pendingDropCardId = null;
+    document
+      .querySelectorAll(".discourse-boards-column__drop-indicator")
+      .forEach((indicator) => indicator.remove());
+    document
+      .querySelectorAll(".discourse-boards-column__empty[hidden]")
+      .forEach((emptyMessage) => (emptyMessage.hidden = false));
   }
 
   async #resolveConstraintFix(topicId, topic, column) {
@@ -1540,9 +1432,7 @@ export default class BoardsBoardViewer extends Component {
       {{#if this.columns.length}}
         <div
           class="discourse-boards-board-container"
-          {{on "dragover" this.dragOverBoardContainer}}
-          {{on "dragleave" this.dragLeaveBoardContainer}}
-          {{on "drop" this.dropBoardContainer}}
+          {{dDragAndDropAutoScroll axis="horizontal" types="boards-card"}}
           {{dragToScroll}}
         >
           {{#each this.columns key="id" as |column|}}
@@ -1567,6 +1457,7 @@ export default class BoardsBoardViewer extends Component {
               @onPromoteToTopic={{this.onPromoteToTopic}}
               @onRefreshBoard={{this.refreshBoard}}
               @onUpdateCard={{this.onUpdateCard}}
+              @pendingDropCardId={{this.pendingDropCardId}}
             />
           {{/each}}
           {{#if this.board.canManage}}

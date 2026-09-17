@@ -8,6 +8,12 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import {
+  centerOf,
+  dragEvent,
+  dragOver,
+  startDrag,
+} from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
 import BoardsBoardViewer from "discourse/plugins/boards/discourse/components/boards-board-viewer";
 import BoardsFabricators from "discourse/plugins/boards/discourse/lib/fabricators";
 
@@ -29,18 +35,6 @@ function columnCardIds(columnId) {
 
 function recentISO(daysAgo) {
   return new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString();
-}
-
-function stubCardRect(cardId, { top = 0, height = 48 } = {}) {
-  const card = document.querySelector(cardSelector(cardId));
-  sinon.stub(card, "getBoundingClientRect").returns({
-    top,
-    bottom: top + height,
-    left: 0,
-    right: 200,
-    width: 200,
-    height,
-  });
 }
 
 module("Integration | Component | BoardsBoardViewer", function (hooks) {
@@ -97,20 +91,23 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     this.dragDataTransfer = null;
     this.dragCard = async (cardId) => {
       this.dragDataTransfer = new DataTransfer();
-      stubCardRect(cardId);
-
-      await triggerEvent(cardSelector(cardId), "dragstart", {
-        clientX: 10,
-        clientY: 10,
+      await startDrag(cardSelector(cardId), {
         dataTransfer: this.dragDataTransfer,
       });
     };
 
-    this.dropOnColumn = async (columnId, { clientY = 0 } = {}) => {
-      await triggerEvent(columnSelector(columnId), "drop", {
-        clientY,
-        dataTransfer: this.dragDataTransfer,
+    this.dropOnColumn = async (columnId, { clientY } = {}) => {
+      const target = columnSelector(columnId);
+      const coordinates = clientY === undefined ? {} : { clientY };
+      const dataTransfer = this.dragDataTransfer;
+
+      await dragOver(target, { dataTransfer, coordinates });
+      await dragEvent(target, "drop", {
+        dataTransfer,
+        ...centerOf(target),
+        ...coordinates,
       });
+      await settled();
     };
   });
 
@@ -183,9 +180,12 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
       });
     });
 
-    stubCardRect(102, { top: 0, height: 48 });
     await this.dragCard(101);
-    await this.dropOnColumn(20, { clientY: 30 });
+    // Below the target card's midpoint, so the drop lands after it.
+    const targetRect = document
+      .querySelector(cardSelector(102))
+      .getBoundingClientRect();
+    await this.dropOnColumn(20, { clientY: targetRect.bottom - 2 });
 
     assert.strictEqual(requestData.card.column_id, "20");
     assert.strictEqual(requestData.card.after_card_id, "102");
@@ -280,6 +280,15 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
         boardTagNames: [],
         boardCategoryIds: [3],
       });
+      assert
+        .dom(`${columnSelector(10)} ${cardSelector(101)}`)
+        .hasClass(
+          "discourse-boards-card--dragging",
+          "the card stays hidden in its old slot while the move is pending"
+        );
+      assert
+        .dom(`${columnSelector(20)} .discourse-boards-column__drop-indicator`)
+        .exists("the placeholder stays where the card was dropped");
       opts.model.onConfirm({ category_id: 3 });
     });
 
@@ -313,6 +322,15 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     await this.dropOnColumn(20);
 
     assert.strictEqual(moveRequestData.constraint_fix.category_id, "3");
+    assert
+      .dom(`${columnSelector(20)} ${cardSelector(101)}`)
+      .doesNotHaveClass(
+        "discourse-boards-card--dragging",
+        "the moved card is visible in its new column"
+      );
+    assert
+      .dom(".discourse-boards-column__drop-indicator")
+      .doesNotExist("the placeholder is cleared once the move lands");
   });
 
   test("renders and highlights an old linked card in a recency column", async function (assert) {
@@ -721,7 +739,10 @@ module("Integration | Component | BoardsBoardViewer", function (hooks) {
     );
     assert
       .dom(cardSelector(101))
-      .hasAttribute("draggable", "false", "archived cards cannot be dragged");
+      .doesNotHaveAttribute(
+        "data-drag-source",
+        "archived cards cannot be dragged"
+      );
     assert.true(
       this.messageBus.subscribe.calledWith("/boards/1"),
       "archived boards stay subscribed to receive unarchive events"
