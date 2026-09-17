@@ -91,29 +91,15 @@ function buildEmojiUnicodeReplacer(replacements) {
 
 export class PrettyTextRubyInterface {
   static cook(text, optInput) {
-    runtime.paths = optInput.paths || {};
-    runtime.avatarSizes = optInput.avatar_sizes;
+    return this.#processor(optInput).cook(text);
+  }
 
-    optInput.getURL = getURL;
-    optInput.getCurrentUser = getCurrentUser;
-    optInput.lookupAvatar = lookupAvatar;
-    optInput.lookupPrimaryUserGroup = lookupPrimaryUserGroup;
-    optInput.formatUsername = formatUsername;
-    optInput.getTopicInfo = getTopicInfo;
-    optInput.hashtagLookup = hashtagLookup;
-    optInput.lookupUploadUrls = lookupUploadUrls;
-    optInput.emojiUnicodeReplacer = emojiUnicodeReplacer;
-
-    const pt =
-      DiscourseMarkdownIt.withCustomFeatures(loadPluginFeatures()).withOptions(
-        optInput
-      );
-
-    if (optInput.disableSanitizer) {
-      pt.disableSanitizer();
-    }
-
-    return pt.cook(text);
+  static updateBBCodeAttributes(raw, tagName, attributes, optInput) {
+    return this.#processor(optInput).updateBBCodeAttributes(
+      raw,
+      tagName,
+      attributes
+    );
   }
 
   static sanitize(html, allowListOptions) {
@@ -150,5 +136,31 @@ export class PrettyTextRubyInterface {
 
   static spliceHashtags(raw, replacements) {
     return spliceHashtags(raw, replacements);
+  }
+
+  static #processor(optInput) {
+    runtime.paths = optInput.paths || {};
+    runtime.avatarSizes = optInput.avatar_sizes;
+
+    optInput.getURL = getURL;
+    optInput.getCurrentUser = getCurrentUser;
+    optInput.lookupAvatar = lookupAvatar;
+    optInput.lookupPrimaryUserGroup = lookupPrimaryUserGroup;
+    optInput.formatUsername = formatUsername;
+    optInput.getTopicInfo = getTopicInfo;
+    optInput.hashtagLookup = hashtagLookup;
+    optInput.lookupUploadUrls = lookupUploadUrls;
+    optInput.emojiUnicodeReplacer = emojiUnicodeReplacer;
+
+    const pt =
+      DiscourseMarkdownIt.withCustomFeatures(loadPluginFeatures()).withOptions(
+        optInput
+      );
+
+    if (optInput.disableSanitizer) {
+      pt.disableSanitizer();
+    }
+
+    return pt;
   }
 }

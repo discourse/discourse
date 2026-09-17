@@ -1,5 +1,6 @@
 import { cook as cookIt } from "./engine.js";
 import DEFAULT_FEATURES from "./features/index.js";
+import { updateBBCodeTag } from "./features/bbcode-block.js";
 import buildOptions from "./options.js";
 import setup from "./setup.js";
 
@@ -80,6 +81,28 @@ export default class DiscourseMarkdownIt {
 
   parse(markdown, env = {}) {
     return this.options.engine.parse(markdown, env);
+  }
+
+  updateBBCodeAttributes(raw, tagName, attributes) {
+    const token = this.parse(raw).find((item) => item.meta?.bbcode === tagName);
+    if (!token) {
+      return null;
+    }
+
+    const lineStart = raw
+      .split(/(?<=\n)/)
+      .slice(0, token.map[0])
+      .join("").length;
+    const start = raw.indexOf(token.markup, lineStart);
+    if (start === -1) {
+      return null;
+    }
+
+    return (
+      raw.slice(0, start) +
+      updateBBCodeTag(token.markup, attributes) +
+      raw.slice(start + token.markup.length)
+    );
   }
 
   sanitize(html) {
