@@ -14,10 +14,11 @@ module Migrations
             created_at,
             "group",
             name,
-            upload_id
+            upload_id,
+            user_id
           )
           VALUES (
-            ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -29,9 +30,10 @@ module Migrations
         # @param group         [String, nil]
         # @param name          [String]
         # @param upload_id     [String]
+        # @param user_id       [Integer, String, nil]
         #
         # @return [void]
-        def self.create(original_id:, created_at: nil, group: nil, name:, upload_id:)
+        def self.create(original_id:, created_at: nil, group: nil, name:, upload_id:, user_id: nil)
           Migrations::Database::IntermediateDB.insert(
             SQL,
             original_id,
@@ -39,6 +41,7 @@ module Migrations
             group,
             name,
             upload_id,
+            user_id,
           )
         end
       end

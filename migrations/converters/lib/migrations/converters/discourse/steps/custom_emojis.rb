@@ -26,6 +26,7 @@ module Migrations
               SELECT custom_emojis.id,
                      custom_emojis.name,
                      custom_emojis."group",
+                     custom_emojis.user_id,
                      custom_emojis.created_at,
                      uploads.url               AS upload_url,
                      uploads.original_filename AS upload_filename,
@@ -62,6 +63,7 @@ module Migrations
               original_id: item[:id],
               name: item[:name],
               group: item[:group],
+              user_id: item[:user_id],
               upload_id: @upload_creator.create_for(item),
               created_at: item[:created_at],
             )

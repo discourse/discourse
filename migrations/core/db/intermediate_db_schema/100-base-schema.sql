@@ -123,7 +123,8 @@ CREATE TABLE custom_emojis
     created_at  DATETIME,
     "group"     TEXT,
     name        TEXT     NOT NULL,
-    upload_id   TEXT     NOT NULL
+    upload_id   TEXT     NOT NULL,
+    user_id     NUMERIC
 );
 
 

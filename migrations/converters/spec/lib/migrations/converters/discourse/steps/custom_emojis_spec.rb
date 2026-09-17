@@ -33,6 +33,7 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
         id: 5,
         name: "parrot",
         group: "animals",
+        user_id: 42,
         upload_url: path,
         upload_filename: "parrot.png",
         upload_origin: nil,
@@ -45,7 +46,7 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
       hash_including(id: upload_id, path:, filename: "parrot.png", type: "custom_emoji"),
     )
     expect(rows("custom_emojis")).to contain_exactly(
-      hash_including(original_id: 5, name: "parrot", group: "animals", upload_id:),
+      hash_including(original_id: 5, name: "parrot", group: "animals", user_id: 42, upload_id:),
     )
   end
 
@@ -89,6 +90,8 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
       },
     )
 
-    expect(rows("custom_emojis")).to contain_exactly(hash_including(original_id: 6, group: nil))
+    expect(rows("custom_emojis")).to contain_exactly(
+      hash_including(original_id: 6, group: nil, user_id: nil),
+    )
   end
 end
