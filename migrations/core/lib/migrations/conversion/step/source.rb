@@ -68,10 +68,11 @@ module Migrations
 
         # The WHERE body that limits a query to this worker's chunk. Add it to a
         # custom query (`WHERE #{partition_slice}`); the generated queries already
-        # use it.
-        def partition_slice
+        # use it. Pass an aliased key when the custom query joins another table
+        # with the same column names.
+        def partition_slice(key: nil)
           lower, upper = chunk
-          @source_db.chunk_filter(partition_key, lower, upper, base: partition_base)
+          @source_db.chunk_filter(key || partition_key, lower, upper, base: partition_base)
         end
 
         def max_progress

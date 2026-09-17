@@ -4,10 +4,15 @@ require "tmpdir"
 
 RSpec.describe Migrations::Converters::Discourse::Posts do
   describe "#items" do
-    it "resolves a reply post number to the source post id in the same topic" do
+    it "resolves a reply whose parent is outside the partition" do
       Dir.mktmpdir do |dir|
         Migrations::Database.connect(File.join(dir, "source.db")) do |source_db|
-          source_db.define_singleton_method(:chunk_filter) { |*| nil }
+          source_db.define_singleton_method(:chunk_filter) do |key, lower, upper, base:|
+            columns = Array(key).join(", ")
+            conditions = [base, "(#{columns}) >= (#{lower.join(", ")})"]
+            conditions << "(#{columns}) < (#{upper.join(", ")})" if upper
+            conditions.compact.join(" AND ")
+          end
           source_db.execute(<<~SQL)
             CREATE TABLE posts (
               id INTEGER PRIMARY KEY,
@@ -40,10 +45,10 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
             VALUES (101, 10, 1, NULL), (205, 10, 2, 1), (901, 20, 1, NULL)
           SQL
 
-          items = described_class.source_class.new(source_db:).items.to_a
+          items = described_class.source_class.new(source_db:, chunk: [[10, 2], nil]).items.to_a
 
           expect(items.map { |item| [item[:id], item[:reply_to_post_id]] }).to eq(
-            [[101, nil], [205, 101], [901, nil]],
+            [[205, 101], [901, nil]],
           )
           expect(items).to all(satisfy { |item| !item.key?(:cooked) })
         end

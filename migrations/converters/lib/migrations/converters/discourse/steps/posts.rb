@@ -36,8 +36,7 @@ module Migrations
           user_id
           wiki
         ].freeze
-        SCAN_COLUMNS = [*SOURCE_COLUMNS, :reply_to_post_number].freeze
-        private_constant :DETAILS_HOST_LIMIT, :BATCH_SIZE, :SOURCE_COLUMNS, :SCAN_COLUMNS
+        private_constant :DETAILS_HOST_LIMIT, :BATCH_SIZE, :SOURCE_COLUMNS
 
         # Merges the workers' host lists into one log entry. Runs in the parent;
         # `results` are the workers' `result` values after their trip through JSON.
@@ -81,10 +80,11 @@ module Migrations
             @source_db.query(<<~SQL)
               SELECT #{selected_columns},
                      reply_to.id AS reply_to_post_id
-                FROM (SELECT #{SCAN_COLUMNS.join(", ")} FROM posts #{partition_where}) posts
-                     LEFT JOIN posts reply_to
+                FROM posts
+                     LEFT JOIN posts AS reply_to
                        ON reply_to.topic_id = posts.topic_id
                       AND reply_to.post_number = posts.reply_to_post_number
+              #{partition_where(key: %i[posts.topic_id posts.post_number])}
               ORDER BY posts.topic_id, posts.post_number
             SQL
           end
@@ -92,8 +92,8 @@ module Migrations
           private
 
           # Empty when the step runs unpartitioned (inline or on a single fork).
-          def partition_where
-            slice = partition_slice
+          def partition_where(key: nil)
+            slice = partition_slice(key:)
             slice ? "WHERE #{slice}" : ""
           end
         end
