@@ -39,7 +39,7 @@ module Onebox
       private
 
       def asin
-        @asin ||= @url[%r{[dg]p/(?:product/|video/detail/)?([A-Z0-9]+)(?:[/?]|$)}i, 1]
+        @asin ||= @url[%r{/[dg]p/(?:product/|video/detail/)?([A-Z0-9]+)(?:[/?]|$)}i, 1]
       end
 
       def raw
