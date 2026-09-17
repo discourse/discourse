@@ -325,8 +325,35 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height, opts = {})
-    optimize(:optimized_image_resize, from, to, "#{width}x#{height}", opts)
+    if GlobalSetting.enable_vips_image_processing
+      ensure_safe_paths!(from, to)
+      resize_with_vips(from: from, to: to, width: width, height: height, opts: opts)
+    else
+      optimize(:optimized_image_resize, from, to, "#{width}x#{height}", opts)
+    end
   end
+
+  def self.resize_with_vips(from:, to:, width:, height:, opts:)
+    DiscourseVips.thumbnail(
+      input_path: from,
+      output_path: to,
+      width: width,
+      height: height,
+      size: :both,
+      crop: :centre,
+      sharpen: true,
+      operation: :optimized_image_resize,
+      quality: opts[:quality],
+      strip_metadata: SiteSetting.strip_image_metadata,
+      timeout: MAX_CONVERT_SECONDS,
+      read: [from],
+      write: [File.dirname(to)],
+    )
+    optimize_image(to: to)
+  rescue => error
+    handle_optimization_error(error: error, to: to, opts: opts)
+  end
+  private_class_method :resize_with_vips
 
   def self.crop(from, to, width, height, opts = {})
     optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
@@ -358,13 +385,16 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.downsize_with_vips(from:, to:, scale:, width:, height:, max_pixels:, opts:)
-    DiscourseVips.downsize(
+    DiscourseVips.thumbnail(
       input_path: from,
       output_path: to,
       scale: scale,
       width: width,
       height: height,
       max_pixels: max_pixels,
+      size: width ? :down : :both,
+      sharpen: true,
+      operation: :optimized_image_downsize,
       strip_metadata: SiteSetting.strip_image_metadata,
       timeout: MAX_CONVERT_SECONDS,
       read: [from],
