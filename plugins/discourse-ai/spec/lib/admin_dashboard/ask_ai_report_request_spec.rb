@@ -2,6 +2,7 @@
 
 describe DiscourseAi::AdminDashboard::AskAiReportRequest do
   fab!(:admin)
+  fab!(:user)
   fab!(:llm_model)
 
   before do
@@ -11,8 +12,63 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
     freeze_time Time.utc(2026, 9, 9, 12)
   end
 
+  it "uses the default excluded group and includes everyone when the setting is cleared" do
+    SiteSetting.ai_ask_ai_report_max_asks = 1
+    ask = AskAiLog.create!(user:, query: "Member question", asked_at: Time.current)
+    AskAiLog.create!(user: admin, query: "Admin test", asked_at: Time.current)
+    moderator = Fabricate(:moderator)
+    staff_ask = AskAiLog.create!(user: moderator, query: "Moderator test", asked_at: Time.current)
+
+    report = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
+    expect(report.selected_ask_ids).to eq([ask.id])
+    expect(report.total_ask_count).to eq(1)
+    expect(report.reported_ask_count).to eq(1)
+
+    SiteSetting.ai_ask_ai_report_exclude_groups = ""
+    included = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
+    expect(included.id).not_to eq(report.id)
+    expect(included.selected_ask_ids).to eq([staff_ask.id])
+    expect(included.total_ask_count).to eq(3)
+    expect(AskAiLog.count).to eq(3)
+  end
+
+  it "excludes members of any selected group before counting and sampling" do
+    SiteSetting.ai_ask_ai_report_max_asks = 1
+    category_moderators = Fabricate(:group)
+    testers = Fabricate(:group)
+    category_moderator = Fabricate(:user)
+    tester = Fabricate(:user)
+    category_moderators.add(category_moderator)
+    testers.add(tester)
+    testers.add(category_moderator)
+    SiteSetting.ai_ask_ai_report_exclude_groups = "#{category_moderators.id}|#{testers.id}"
+
+    ask = AskAiLog.create!(user: admin, query: "Included admin question", asked_at: Time.current)
+    AskAiLog.create!(
+      user: category_moderator,
+      query: "Category moderator question",
+      asked_at: Time.current,
+    )
+    AskAiLog.create!(user: tester, query: "Test question", asked_at: Time.current)
+
+    report = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
+    expect(report.selected_ask_ids).to eq([ask.id])
+    expect(report.total_ask_count).to eq(1)
+    expect(report.reported_ask_count).to eq(1)
+    expect(AskAiLog.count).to eq(3)
+  end
+
+  it "does not enqueue a report when only staff have asked questions" do
+    AskAiLog.create!(user: admin, query: "Admin test", asked_at: Time.current)
+    expect {
+      described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
+    }.to raise_error(Discourse::InvalidParameters)
+    expect(AskAiReport.count).to eq(0)
+    expect(Jobs::GenerateAskAiReport.jobs).to be_empty
+  end
+
   it "reuses the snapshot across requesters and only enqueues one job" do
-    ask = AskAiLog.create!(user: admin, query: "猫", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
     report = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
     other_admin = Fabricate(:admin)
 
@@ -35,7 +91,7 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
   end
 
   it "allows a manual replacement for an abandoned report" do
-    AskAiLog.create!(user: admin, query: "Question", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Question", asked_at: Time.current)
     previous = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
     previous.update!(report_status: :running)
     freeze_time 31.minutes.from_now
@@ -49,9 +105,9 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
   end
 
   it "creates a new snapshot when more asks arrive" do
-    AskAiLog.create!(user: admin, query: "First", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "First", asked_at: Time.current)
     first = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
-    AskAiLog.create!(user: admin, query: "Second", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Second", asked_at: Time.current)
     second = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
 
     expect(second.id).not_to eq(first.id)
@@ -92,7 +148,7 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
 
   it "limits the snapshot and keeps its full coverage count" do
     SiteSetting.ai_ask_ai_report_max_asks = 2
-    3.times { AskAiLog.create!(user: admin, query: "Question", asked_at: Time.current) }
+    3.times { AskAiLog.create!(user:, query: "Question", asked_at: Time.current) }
     report = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
     expect(report).to have_attributes(reported_ask_count: 2, total_ask_count: 3)
     expect(report.selected_logs.count).to eq(2)
@@ -100,9 +156,9 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
 
   it "does not replace a deleted selected ask with an older unselected ask" do
     SiteSetting.ai_ask_ai_report_max_asks = 2
-    older = AskAiLog.create!(user: admin, query: "Older", asked_at: 3.minutes.ago)
-    middle = AskAiLog.create!(user: admin, query: "Middle", asked_at: 2.minutes.ago)
-    newest = AskAiLog.create!(user: admin, query: "Newest", asked_at: 1.minute.ago)
+    older = AskAiLog.create!(user:, query: "Older", asked_at: 3.minutes.ago)
+    middle = AskAiLog.create!(user:, query: "Middle", asked_at: 2.minutes.ago)
+    newest = AskAiLog.create!(user:, query: "Newest", asked_at: 1.minute.ago)
     report = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
     expect(report.selected_logs.pluck(:id)).to eq([newest.id, middle.id])
     newest.destroy!
@@ -111,11 +167,11 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
 
   it "keeps the request sample when an ask arrives before the report row is inserted" do
     SiteSetting.ai_ask_ai_report_max_asks = 2
-    first = AskAiLog.create!(user: admin, query: "First", asked_at: 1.minute.ago)
-    second = AskAiLog.create!(user: admin, query: "Second", asked_at: 30.seconds.ago)
+    first = AskAiLog.create!(user:, query: "First", asked_at: 1.minute.ago)
+    second = AskAiLog.create!(user:, query: "Second", asked_at: 30.seconds.ago)
     allow(AskAiReport).to receive(:create!).and_wrap_original do |method, **args|
       freeze_time 1.second.from_now
-      AskAiLog.create!(user: admin, query: "Arrived during request", asked_at: Time.current)
+      AskAiLog.create!(user:, query: "Arrived during request", asked_at: Time.current)
       method.call(**args)
     end
     report = described_class.call(user: admin, start_date: "2026-09-01", end_date: "2026-09-09")
@@ -124,7 +180,7 @@ describe DiscourseAi::AdminDashboard::AskAiReportRequest do
 
   it "supports custom periods longer than a year while keeping the sample bounded" do
     SiteSetting.ai_ask_ai_report_max_asks = 1
-    2.times { AskAiLog.create!(user: admin, query: "Question", asked_at: Time.current) }
+    2.times { AskAiLog.create!(user:, query: "Question", asked_at: Time.current) }
     report = described_class.call(user: admin, start_date: "2024-01-01", end_date: "2026-09-09")
     expect(report).to have_attributes(total_ask_count: 2, reported_ask_count: 1)
   end

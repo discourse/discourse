@@ -464,6 +464,13 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/search"
+  ai_ask_ai_report_exclude_groups:
+    type: group_list
+    list_type: compact
+    default: "3"
+    disallowed_groups: "0"
+    allow_any: false
+    area: "ai-features/search"
   ai_ask_ai_report_max_asks:
     default: 200
     min: 1
