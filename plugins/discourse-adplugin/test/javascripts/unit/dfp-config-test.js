@@ -4,8 +4,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { dfpConfig } from "discourse/plugins/discourse-adplugin/discourse/components/google-dfp-ad";
 
 const SETTINGS = {
-  dfp_publisher_id: "8438",
-  dfp_topic_list_top_code: "stltoday.com/forums",
+  dfp_publisher_id: "123456789",
+  dfp_topic_list_top_code: "example.com/forums",
   dfp_target_topic_list_top_key_code: "gam_keywords",
   dfp_target_topic_list_top_value_code: "red,blue",
 };
@@ -17,6 +17,7 @@ function context(overrides = {}) {
     categoryId: 41,
     routeName: "discovery.category",
     customFields: {},
+    categoryConfig: {},
     ...overrides,
   };
 }
@@ -34,7 +35,7 @@ module("Unit | Lib | dfp-config", function (hooks) {
 
     assert.strictEqual(
       config.adUnitPath,
-      "/8438/stltoday.com/forums",
+      "/123456789/example.com/forums",
       "ad unit path is built from the publisher id and placement code"
     );
 
@@ -52,22 +53,22 @@ module("Unit | Lib | dfp-config", function (hooks) {
       false,
       context({
         customFields: {
-          gam_adunit: "/8438/stltoday.com/sports/forums/cards-talk",
-          gam_keywords: "sports, mlb, St. Louis Cardinals",
+          gam_adunit: "/123456789/example.com/sports/forums/cards-talk",
+          gam_keywords: "sports, mlb",
         },
       })
     );
 
     assert.strictEqual(
       config.adUnitPath,
-      "/8438/stltoday.com/sports/forums/cards-talk",
+      "/123456789/example.com/sports/forums/cards-talk",
       "gam_adunit overrides the configured ad unit path"
     );
 
     assert.deepEqual(
       config.targeting,
       {
-        gam_keywords: ["sports", "mlb", "St. Louis Cardinals"],
+        gam_keywords: ["sports", "mlb"],
         "discourse-category": "cards-talk",
       },
       "gam_keywords override the dfp_target_* values"
@@ -82,12 +83,42 @@ module("Unit | Lib | dfp-config", function (hooks) {
       context({ customFields: { gtm_taxonomy: "sports/forums/cards-talk" } })
     );
 
-    assert.strictEqual(config.adUnitPath, "/8438/stltoday.com/forums");
+    assert.strictEqual(config.adUnitPath, "/123456789/example.com/forums");
 
     assert.deepEqual(
       config.targeting,
       { gam_keywords: ["red", "blue"], "discourse-category": "cards-talk" },
       "non-gam custom fields do not affect the ad config"
+    );
+  });
+
+  test("prefers centralized plugin settings over category custom fields", function (assert) {
+    const config = dfpConfig(
+      "topic-list-top",
+      SETTINGS,
+      false,
+      context({
+        customFields: {
+          gam_adunit: "/123456789/from/custom-fields",
+          gam_keywords: "custom,keywords",
+        },
+        categoryConfig: {
+          gam_adunit: "/123456789/example.com/sports/forums/cards-talk",
+          gam_keywords: "sports, mlb",
+        },
+      })
+    );
+
+    assert.strictEqual(
+      config.adUnitPath,
+      "/123456789/example.com/sports/forums/cards-talk",
+      "the centralized plugin configuration wins"
+    );
+
+    assert.deepEqual(
+      config.targeting,
+      { gam_keywords: ["sports", "mlb"], "discourse-category": "cards-talk" },
+      "centralized keywords replace category custom field keywords"
     );
   });
 
@@ -99,7 +130,7 @@ module("Unit | Lib | dfp-config", function (hooks) {
           if (ctx.categorySlug === "cards-talk") {
             return {
               ...value,
-              adUnitPath: "/8438/stltoday.com/sports/forums/cards-talk",
+              adUnitPath: "/123456789/example.com/sports/forums/cards-talk",
               targeting: { gam_keywords: ["sports", "mlb"] },
             };
           }
@@ -115,7 +146,7 @@ module("Unit | Lib | dfp-config", function (hooks) {
       false,
       context({
         customFields: {
-          gam_adunit: "/8438/stltoday.com/other/unit",
+          gam_adunit: "/123456789/example.com/other/unit",
           gam_keywords: "from,fields",
         },
       })
@@ -123,7 +154,7 @@ module("Unit | Lib | dfp-config", function (hooks) {
 
     assert.strictEqual(
       config.adUnitPath,
-      "/8438/stltoday.com/sports/forums/cards-talk",
+      "/123456789/example.com/sports/forums/cards-talk",
       "the transformer wins over category custom fields"
     );
 

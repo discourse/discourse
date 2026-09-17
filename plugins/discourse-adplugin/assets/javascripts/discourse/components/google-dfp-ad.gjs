@@ -194,10 +194,11 @@ export function applyCategoryCustomFields(config, customFields) {
 /**
  * Resolves the ad unit path and targeting for a placement.
  *
- * Resolution happens in order: the configured `dfp_*` settings, then the
- * category custom fields (`gam_adunit`/`gam_keywords`) when present, then any
- * `dfp-ad-config` value transformer registered by a theme component or plugin.
- * `adUnitPath` is the full GPT ad unit (e.g. `/8438/stltoday.com/forums`).
+ * Resolution happens in order: the configured `dfp_*` settings, then any
+ * per-category `gam_adunit`/`gam_keywords` custom fields, then the centralized
+ * per-category settings from the plugin dashboard (`context.categoryConfig`),
+ * then any `dfp-ad-config` value transformer registered by a theme component
+ * or plugin. `adUnitPath` is the full GPT ad unit (e.g. `/123456789/example.com/forums`).
  */
 export function dfpConfig(placement, settings, isMobile, context) {
   const config = isMobile
@@ -215,26 +216,27 @@ export function dfpConfig(placement, settings, isMobile, context) {
     ),
   };
 
-  const categoryConfig = applyCategoryCustomFields(
+  let resolved = applyCategoryCustomFields(
     settingsConfig,
     context.customFields
   );
+  resolved = applyCategoryCustomFields(resolved, context.categoryConfig);
 
   const overrides =
-    applyValueTransformer("dfp-ad-config", categoryConfig, {
+    applyValueTransformer("dfp-ad-config", resolved, {
       placement,
       ...context,
     }) || {};
 
   const targeting = {
-    ...categoryConfig.targeting,
+    ...resolved.targeting,
     ...(overrides.targeting || {}),
   };
 
   targeting["discourse-category"] = context.categorySlug || "0";
 
   return {
-    adUnitPath: overrides.adUnitPath || categoryConfig.adUnitPath,
+    adUnitPath: overrides.adUnitPath || resolved.adUnitPath,
     targeting,
   };
 }
@@ -517,6 +519,7 @@ export default class GoogleDfpAd extends AdComponent {
       categoryId: this.currentCategoryId,
       routeName: this.currentRouteName,
       customFields: this.currentCategoryCustomFields || {},
+      categoryConfig: this.currentCategoryDfpConfig || {},
     };
   }
 

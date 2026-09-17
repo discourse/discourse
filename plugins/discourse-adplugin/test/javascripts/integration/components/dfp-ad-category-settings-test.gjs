@@ -44,7 +44,7 @@ module("Integration | Component | DfpAdCategorySettings", function (hooks) {
   test("shows existing category custom field values", async function (assert) {
     this.data = {
       custom_fields: {
-        gam_adunit: "/8438/stltoday.com/sports/forums/cards-talk",
+        gam_adunit: "/123456789/example.com/sports/forums/cards-talk",
         gam_keywords: "sports,mlb",
         gtm_taxonomy: "sports/forums/cards-talk",
       },
@@ -68,7 +68,7 @@ module("Integration | Component | DfpAdCategorySettings", function (hooks) {
     assert
       .dom('.dfp-ad-category-settings input[name="custom_fields.gam_adunit"]')
       .hasValue(
-        "/8438/stltoday.com/sports/forums/cards-talk",
+        "/123456789/example.com/sports/forums/cards-talk",
         "the saved gam_adunit is shown"
       );
     assert

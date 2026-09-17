@@ -24,12 +24,15 @@ require_relative "lib/ad_plugin/ad_type"
 after_initialize do
   require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
   require_relative "app/controllers/ad_plugin/house_ads_controller"
+  require_relative "app/controllers/ad_plugin/dfp_category_settings_controller"
   require_relative "app/controllers/adstxt_controller"
   require_relative "app/controllers/ad_plugin/ad_impressions_controller"
   require_relative "app/serializers/ad_plugin/house_ad_serializer"
+  require_relative "app/serializers/ad_plugin/dfp_category_setting_serializer"
 
   require_relative "app/models/ad_plugin/house_ad_setting"
   require_relative "app/models/ad_plugin/house_ad"
+  require_relative "app/models/ad_plugin/dfp_category_setting"
   require_relative "app/models/ad_plugin/ad_impression"
   require_relative "app/models/concerns/reports/ad_plugin"
   require_relative "lib/adplugin/guardian_extensions"
@@ -56,6 +59,24 @@ after_initialize do
       delete "/house-ads/:id" => "ad_plugin/house_ads#destroy", :format => false
       post "/house-ads" => "ad_plugin/house_ads#create", :format => false
       put "/house-settings/:id" => "ad_plugin/house_ad_settings#update", :format => false
+
+      get "/dfp-settings" => "ad_plugin/dfp_category_settings#index", :format => false
+      post "/dfp-settings" => "ad_plugin/dfp_category_settings#create", :format => false
+      put "/dfp-settings/:id" => "ad_plugin/dfp_category_settings#update", :format => false
+      delete "/dfp-settings/:id" => "ad_plugin/dfp_category_settings#destroy", :format => false
+    end
+  end
+
+  add_to_serializer :site, :dfp_category_settings do
+    AdPlugin::DfpCategorySetting.all.to_h do |setting|
+      [
+        setting.category_id.to_s,
+        {
+          gam_adunit: setting.gam_adunit,
+          gam_keywords: setting.gam_keywords,
+          gtm_taxonomy: setting.gtm_taxonomy,
+        },
+      ]
     end
   end
 
