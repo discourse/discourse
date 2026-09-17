@@ -30,14 +30,6 @@ export default class BoardsConstraintFix extends Component {
     }
   }
 
-  get tagOptions() {
-    const { mismatches } = this.args.model;
-    if (!mismatches.needsTags) {
-      return [];
-    }
-    return mismatches.boardTagNames;
-  }
-
   get canSave() {
     const { mismatches } = this.args.model;
     if (mismatches.needsCategory && !this.selectedCategoryId) {
@@ -129,7 +121,7 @@ export default class BoardsConstraintFix extends Component {
           <div class="discourse-boards-constraint-fix__field">
             <label>{{i18n "boards.board.constraint_fix_tags"}}</label>
             <div class="discourse-boards-constraint-fix__options">
-              {{#each this.tagOptions as |tagName|}}
+              {{#each @model.mismatches.boardTagNames as |tagName|}}
                 <DButton
                   class={{if
                     (includes this.selectedTagNames tagName)

@@ -71,39 +71,22 @@ export default class BoardsBoardSettings extends Component {
 
   @cached
   get formData() {
-    const board = this.args.model.board;
-
-    // Existing board
-    if (board) {
-      return {
-        name: board.name || "",
-        slug: board.slug || "",
-        constraint_type: inferConstraintType(
-          board.category_ids,
-          board.tag_names
-        ),
-        category_ids: board.category_ids || [],
-        tag_names: board.tag_names || [],
-        card_style: board.card_style || "detailed",
-        show_tags: board.show_tags ?? false,
-        show_topic_thumbnail: board.show_topic_thumbnail ?? false,
-        require_confirmation: board.require_confirmation ?? false,
-        acl: board.acl,
-      };
-    }
-
-    // New board
-    return {
-      name: "",
-      slug: "",
-      constraint_type: null,
-      category_ids: [],
-      tag_names: [],
-      card_style: "detailed",
+    const board = this.args.model.board || {
       show_tags: true,
-      show_topic_thumbnail: false,
-      require_confirmation: false,
       acl: buildDefaultBoardAcl(this.site, this.siteSettings),
+    };
+
+    return {
+      name: board.name || "",
+      slug: board.slug || "",
+      constraint_type: inferConstraintType(board.category_ids, board.tag_names),
+      category_ids: board.category_ids || [],
+      tag_names: board.tag_names || [],
+      card_style: board.card_style || "detailed",
+      show_tags: board.show_tags ?? false,
+      show_topic_thumbnail: board.show_topic_thumbnail ?? false,
+      require_confirmation: board.require_confirmation ?? false,
+      acl: board.acl,
     };
   }
 
