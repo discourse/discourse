@@ -11,7 +11,15 @@ RSpec.describe DiscourseVips do
     it "scales an image by the requested factor" do
       FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
 
-      described_class.downsize(input_path:, output_path:, format: "png", scale: 0.5, timeout: 20)
+      described_class.downsize(
+        input_path:,
+        output_path:,
+        format: "png",
+        scale: 0.5,
+        timeout: 20,
+        read: [input_path],
+        write: [directory],
+      )
 
       expect(FastImage.size(output_path)).to eq([122, 33])
     end
@@ -20,7 +28,15 @@ RSpec.describe DiscourseVips do
       input_path = file_from_fixtures("svg.png").path
 
       expect {
-        described_class.downsize(input_path:, output_path:, format: "png", scale: 0.5, timeout: 20)
+        described_class.downsize(
+          input_path:,
+          output_path:,
+          format: "png",
+          scale: 0.5,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
       }.to raise_error(DiscourseVips::InvalidImage)
 
       expect(File).not_to exist(output_path)
@@ -31,7 +47,15 @@ RSpec.describe DiscourseVips do
       output_path = File.join(directory, "output.ico")
 
       expect {
-        described_class.downsize(input_path:, output_path:, format: "ico", scale: 0.5, timeout: 20)
+        described_class.downsize(
+          input_path:,
+          output_path:,
+          format: "ico",
+          scale: 0.5,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
       }.to raise_error(DiscourseVips::InvalidImage, "unsupported format")
     end
 
@@ -47,6 +71,8 @@ RSpec.describe DiscourseVips do
           width: 100,
           height: 100,
           timeout: 20,
+          read: [input_path],
+          write: [directory],
         )
       }.to raise_error(ArgumentError, /provide a scale/)
     end
@@ -57,7 +83,15 @@ RSpec.describe DiscourseVips do
       File.binwrite(output_path, original_content)
 
       expect {
-        described_class.downsize(input_path:, output_path:, format: "png", scale: 0.5, timeout: 20)
+        described_class.downsize(
+          input_path:,
+          output_path:,
+          format: "png",
+          scale: 0.5,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
       }.to raise_error(DiscourseVips::InvalidImage)
 
       expect(File.binread(output_path)).to eq(original_content)
