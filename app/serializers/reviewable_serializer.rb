@@ -26,6 +26,8 @@ class ReviewableSerializer < ApplicationSerializer
 
   attribute :status_for_database, key: :status
 
+  attributes :legal_basis, :dsa_category, :dsa_subcategory, :dsa_subcategory_other
+
   has_one :target_created_by, root: "users"
   has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
   has_one :target_deleted_by, serializer: BasicUserSerializer, root: "users"
@@ -55,6 +57,10 @@ class ReviewableSerializer < ApplicationSerializer
 
   def can_edit
     editable_fields.present?
+  end
+
+  %i[legal_basis dsa_category dsa_subcategory dsa_subcategory_other].each do |attr|
+    define_method(:"include_#{attr}?") { SiteSetting.enable_dsa_reporting }
   end
 
   def claimed_by

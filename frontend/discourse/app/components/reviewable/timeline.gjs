@@ -7,13 +7,18 @@ import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable/note-form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { dsaClassificationSummary } from "discourse/lib/dsa-classification";
 import escape from "discourse/lib/escape";
 import {
   penaltyIcon,
   penaltyPastTense,
 } from "discourse/lib/reviewable-penalty";
 import { sanitize } from "discourse/lib/text";
-import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
+import {
+  CLAIMED,
+  DSA_CLASSIFIED,
+  UNCLAIMED,
+} from "discourse/models/reviewable-history";
 import { and, eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
@@ -199,6 +204,20 @@ export default class ReviewableTimeline extends Component {
           user: history.created_by,
           icon: "user-xmark",
           titleKey: "review.timeline.unclaimed_by",
+        });
+      } else if (
+        history.reviewable_history_type === DSA_CLASSIFIED &&
+        history.dsa_classification
+      ) {
+        events.push({
+          type: "dsa_classified",
+          date: history.created_at,
+          user: history.created_by,
+          icon: "gavel",
+          titleKey: "review.timeline.dsa_classified_by",
+          description: trustHTML(
+            `<p>${escape(dsaClassificationSummary(history.dsa_classification))}</p>`
+          ),
         });
       }
     });

@@ -22,6 +22,10 @@ class ReviewablesController < ApplicationController
     status = (params[:status] || "pending").to_sym
     raise Discourse::InvalidParameters.new(:status) if allowed_statuses.exclude?(status)
 
+    if params[:dsa_category].present? && !valid_dsa_category?(params[:dsa_category])
+      raise Discourse::InvalidParameters.new(:dsa_category)
+    end
+
     topic_id = params[:topic_id] ? params[:topic_id].to_i : nil
     category_id = params[:category_id] ? params[:category_id].to_i : nil
 
@@ -47,6 +51,7 @@ class ReviewablesController < ApplicationController
       sort_order
       flagged_by
       score_type
+      dsa_category
     ].each { |filter_key| filters[filter_key] = params[filter_key] }
 
     total_rows = Reviewable.list_for(current_user, **filters).count
@@ -213,6 +218,24 @@ class ReviewablesController < ApplicationController
     render json: success_json
   end
 
+  def classify_for_dsa
+    Reviewables::ClassifyForDsa.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
+      end
+      on_failed_policy(:dsa_reporting_enabled) { raise Discourse::NotFound }
+      on_model_not_found(:reviewable) { raise Discourse::NotFound }
+      on_failed_policy(:can_review_target) { raise Discourse::InvalidAccess }
+      on_failed_policy(:requires_dsa_classification) do
+        render_json_error(I18n.t("reviewables.dsa_classification_not_required"), status: 422)
+      end
+      on_failed_policy(:category_matches_legal_basis) do
+        render_json_error(I18n.t("reviewables.dsa_category_mismatch"), status: 422)
+      end
+    end
+  end
+
   def update
     reviewable = find_reviewable
     if error = claim_error?(reviewable)
@@ -338,7 +361,13 @@ class ReviewablesController < ApplicationController
   end
 
   def allowed_statuses
-    @allowed_statuses ||= (%i[reviewed all] + Reviewable.statuses.symbolize_keys.keys)
+    @allowed_statuses ||=
+      (%i[reviewed all dsa_classification] + Reviewable.statuses.symbolize_keys.keys)
+  end
+
+  def valid_dsa_category?(category)
+    category == Reviewable::UNCLASSIFIED_DSA_CATEGORY ||
+      Reviewable::DsaTaxonomy.legal_basis_for(category).present?
   end
 
   def version_required
