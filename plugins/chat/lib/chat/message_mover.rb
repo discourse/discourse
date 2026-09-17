@@ -37,8 +37,8 @@ module Chat
     def initialize(acting_user:, source_channel:, message_ids:)
       @source_channel = source_channel
       @acting_user = acting_user
-      @source_message_ids = message_ids
-      @source_messages = find_messages(@source_message_ids, source_channel)
+      @source_messages = find_messages(message_ids, source_channel)
+      @source_message_ids = message_ids & @source_messages.map(&:id)
       @ordered_source_message_ids = @source_messages.map(&:id)
       @source_thread_ids = @source_messages.pluck(:thread_id).uniq.compact
     end
