@@ -23,9 +23,9 @@ en:
         go_to_line: "Go to line"
         go: "Go"
         current_match: "Current match"
-        on_line: "On line"
+        on_line: "on line"
         replaced_match: "Replaced match on line %{line}"
-        replaced_all: "Replaced matches: %{count}"
+        replaced_all: "Replaced matches: %{matches}"
     user_api_key:
       title: 'Authorize "%{application_name}"'
       authorize: "Authorize"

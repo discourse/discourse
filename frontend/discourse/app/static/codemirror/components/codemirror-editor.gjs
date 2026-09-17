@@ -18,7 +18,7 @@ import {
 } from "@codemirror/commands";
 import { setDiagnostics } from "@codemirror/lint";
 import { closeSearchPanel, search, searchKeymap } from "@codemirror/search";
-import { Compartment, EditorState, Prec, Transaction } from "@codemirror/state";
+import { Compartment, EditorState, Transaction } from "@codemirror/state";
 import {
   EditorView,
   highlightActiveLine,
@@ -26,12 +26,17 @@ import {
   keymap,
   lineNumbers,
   placeholder,
+  ViewPlugin,
 } from "@codemirror/view";
 import { loadCodemirrorLanguage } from "discourse/lib/codemirror-languages";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import { buildCmParams } from "../build-extensions";
 import { defaultHighlighting } from "../highlight-style";
+
+// How long after Escape the next Tab moves focus instead of indenting.
+const TAB_FOCUS_WINDOW = 2000;
+const MODIFIER_KEY_CODES = [16, 17, 18, 20, 91, 92, 224, 225];
 
 export default class CodemirrorEditor extends Component {
   @tracked view = null;
@@ -178,7 +183,7 @@ export default class CodemirrorEditor extends Component {
             { line: "$" }
           ),
           "replaced $ matches": i18n("code_editor.search.replaced_all", {
-            count: "$",
+            matches: "$",
           }),
         })
       );
@@ -220,26 +225,55 @@ export default class CodemirrorEditor extends Component {
       );
     }
 
+    // Escape closes what the editor owns before a surrounding dialog can
+    // react; a second Escape within the tab-focus window falls through to it.
+    let tabFocusArmedAt = 0;
+    const handleKeydown = (view, event) => {
+      if (event.key !== "Escape") {
+        // Mirrors the editor, which drops tab-focus mode on any other key.
+        if (!MODIFIER_KEY_CODES.includes(event.keyCode)) {
+          tabFocusArmedAt = 0;
+        }
+        return;
+      }
+
+      if (completionStatus(view.state)) {
+        closeCompletion(view);
+      } else if (!closeSearchPanel(view)) {
+        if (!this.args.codeEditing) {
+          view.contentDOM.blur();
+          event.preventDefault();
+          return;
+        }
+        if (Date.now() - tabFocusArmedAt < TAB_FOCUS_WINDOW) {
+          return;
+        }
+        view.setTabFocusMode(TAB_FOCUS_WINDOW);
+        tabFocusArmedAt = Date.now();
+      }
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
     extensions.push(
-      Prec.highest(
-        keymap.of([
-          {
-            key: "Escape",
-            run: (view) => {
-              if (completionStatus(view.state)) {
-                return closeCompletion(view);
+      ViewPlugin.fromClass(
+        class {
+          constructor(view) {
+            this.view = view;
+            this.handler = (event) => {
+              if (this.view.dom.contains(document.activeElement)) {
+                handleKeydown(this.view, event);
               }
-              if (closeSearchPanel(view)) {
-                return true;
-              }
-              if (this.args.codeEditing) {
-                return false;
-              }
-              view.contentDOM.blur();
-              return true;
-            },
-          },
-        ])
+            };
+            window.addEventListener("keydown", this.handler, { capture: true });
+          }
+
+          destroy() {
+            window.removeEventListener("keydown", this.handler, {
+              capture: true,
+            });
+          }
+        }
       )
     );
 

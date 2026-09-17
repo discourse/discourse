@@ -60,6 +60,15 @@
     color: var(--primary);
   }
 
+  .cm-panels-bottom {
+    border-top-color: var(--primary-low-mid);
+  }
+
+  .cm-textfield,
+  .cm-button {
+    border-color: var(--primary-low-mid);
+  }
+
   .cm-cursor {
     border-left-color: var(--primary);
   }
