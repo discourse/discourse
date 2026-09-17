@@ -515,17 +515,17 @@ describe Jobs::DiscoursePostEventSendReminder do
       def advance_to_next_occurrence
         freeze_time(recurring_event.original_starts_at + 1.day + 1.hour)
         recurring_event.event_dates.pending.update_all(finished_at: 1.hour.ago)
-        recurring_event.set_next_date
+        recurring_event.set_next_recurrent_event_date
       end
 
       it "sends reminders for the first occurrence" do
-        recurring_event.set_next_date
+        recurring_event.set_next_recurrent_event_date
 
         expect { send_reminder }.to change { going_user.reload.unread_notifications }.by(1)
       end
 
       it "sends reminders for subsequent occurrences" do
-        recurring_event.set_next_date
+        recurring_event.set_next_recurrent_event_date
         first_event_date = recurring_event.event_dates.pending.first
 
         send_reminder
@@ -542,7 +542,7 @@ describe Jobs::DiscoursePostEventSendReminder do
 
       it "handles timezone-specific events" do
         recurring_event.update!(timezone: "America/Los_Angeles")
-        recurring_event.set_next_date
+        recurring_event.set_next_recurrent_event_date
 
         expect { send_reminder }.to change { going_user.reload.unread_notifications }.by(1)
 
@@ -612,7 +612,7 @@ describe Jobs::DiscoursePostEventSendReminder do
       end
 
       it "prevents duplicate reminders for same occurrence" do
-        recurring_event.set_next_date
+        recurring_event.set_next_recurrent_event_date
 
         expect { send_reminder }.to change { going_user.reload.unread_notifications }.by(1)
         expect { send_reminder }.not_to change { going_user.reload.unread_notifications }
@@ -655,7 +655,7 @@ describe Jobs::DiscoursePostEventSendReminder do
 
         freeze_time(Time.find_zone("America/New_York").parse("2025-11-05 10:50"))
 
-        dst_event.set_next_date
+        dst_event.set_next_recurrent_event_date
         monitor_job = Jobs::DiscourseCalendar::MonitorEventDates.new
         monitor_job.execute({})
 
