@@ -13,9 +13,12 @@ module Migrations
         # step gets its own adapter; the step's source closes it in its `cleanup`.
         def step_args(step_class)
           source_db = Adapter::Postgres.new(settings[:source_db])
-          return { source_db: } unless step_class == Posts
 
-          { source_db:, **posts_args }
+          if step_class == Posts
+            { source_db:, **posts_args }
+          else
+            { source_db: }
+          end
         end
 
         private
