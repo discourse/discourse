@@ -2,6 +2,14 @@ en:
   js:
     adplugin:
       advertisement_label: "ADVERTISEMENT"
+      gam_category_settings:
+        title: "GAM / DFP"
+        gam_adunit: "GAM ad unit"
+        gam_adunit_placeholder: "e.g. /8438/stltoday.com/sports/forums/cards-talk"
+        gam_keywords: "GAM keywords"
+        gam_keywords_placeholder: "Comma separated, e.g. sports,mlb"
+        gtm_taxonomy: "GTM taxonomy"
+        gtm_taxonomy_placeholder: "e.g. sports/forums/cards-talk"
   admin_js:
     admin:
       site_settings:
