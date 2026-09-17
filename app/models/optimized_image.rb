@@ -417,6 +417,8 @@ class OptimizedImage < ActiveRecord::Base
     message = +"Failed to optimize image:"
     if error.message =~ /\A(?:convert|magick):([^`]+)/
       message << $1
+    elsif error.is_a?(DiscourseVips::Error)
+      message << " #{error.message}"
     else
       message << " unknown reason"
     end
