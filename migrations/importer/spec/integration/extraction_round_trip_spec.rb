@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-# No gem depends on both sides of this contract; the tooling gem is the one that
-# runs both, so the composition is checked here.
 require "migrations-converters"
-require "migrations-importer"
 
 # The extractor replaces every reference in a post body with a placeholder token
 # and records an embed row for it; the importer's resolver puts the tokens back.
