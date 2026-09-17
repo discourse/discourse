@@ -252,6 +252,24 @@ module PrettyText
     protect { v8.call("__PrettyText.spliceHashtags", raw.to_s, replacements) }
   end
 
+  def self.update_bbcode_attributes(raw, tag_name, attributes, opts = {})
+    protect do
+      DiscourseEvent.trigger(:markdown_context, v8)
+      v8.call(
+        "__PrettyText.updateBBCodeAttributes",
+        raw,
+        tag_name,
+        attributes,
+        {
+          siteSettings: SiteSetting.client_settings_hash,
+          paths: paths,
+          topicId: opts[:topic_id],
+          userId: opts[:user_id],
+        },
+      )
+    end
+  end
+
   def self.unescape_emoji(title)
     return title unless SiteSetting.enable_emoji? && title
 

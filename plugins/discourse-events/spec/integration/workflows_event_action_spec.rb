@@ -69,7 +69,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
     post.reload
     post.association(:event).reload
 
-    expect(post.raw).to include('closed="true"')
+    expect(post.raw).to include("closed=true")
     expect(post.event.closed?).to eq(true)
 
     expect(result["event"]).to include(
@@ -108,7 +108,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
 
     execute_event_action(post, "close")
 
-    expect(post.reload.raw).to include(attributes, ' closed="true"]')
+    expect(post.reload.raw).to include(attributes, " closed=true]")
     expect(post.event).to be_closed
   end
 
@@ -121,6 +121,27 @@ RSpec.describe DiscourseWorkflows::Nodes::Event::V1 do
 
     expect(post.reload.raw).to eq(expected_raw)
     expect(post.event).not_to be_closed
+  end
+
+  it "preserves Unicode-quoted attributes when closing an event" do
+    attributes = " location=«Room ] closed=true»"
+    post = create_event_post(attributes:)
+
+    execute_event_action(post, "close")
+
+    expect(post.reload.event).to be_closed
+    expect(post.event.location).to eq("Room ] closed=true")
+  end
+
+  it "edits the event after a fenced BBCode example" do
+    example = "```\n[event start=\"2030-04-24 14:15\"]\nExample\n[/event]\n```\n\n"
+    post = create_event_post
+    PostRevisor.new(post).revise!(admin, { raw: example + post.raw })
+
+    execute_event_action(post, "close")
+
+    expect(post.reload.raw).to start_with(example)
+    expect(post.event).to be_closed
   end
 
   it "leaves an already closed event unchanged" do
