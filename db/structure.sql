@@ -12732,7 +12732,8 @@ CREATE TABLE public.user_options (
     chat_channel_list_sort_starred integer DEFAULT 0 NOT NULL,
     chat_channel_list_sort_dms integer DEFAULT 2 NOT NULL,
     chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
-    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL
+    chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL,
+    event_reminder_preference integer DEFAULT 0 NOT NULL
 );
 
 
@@ -25388,6 +25389,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260914172801'),
 ('20260914172757'),
 ('20260914140746'),
+('20260914032737'),
 ('20260910110851'),
 ('20260910033302'),
 ('20260910030427'),

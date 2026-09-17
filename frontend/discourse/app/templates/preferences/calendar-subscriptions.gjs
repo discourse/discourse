@@ -76,6 +76,10 @@ export default class CalendarSubscriptions extends Component {
   }
 
   <template>
+    <PluginOutlet
+      @name="calendar-preferences"
+      @outletArgs={{lazyHash model=@controller.model}}
+    />
     <div class="calendar-subscriptions">
       <p class="calendar-subscriptions__description">
         {{i18n "user.calendar_subscriptions.description"}}
