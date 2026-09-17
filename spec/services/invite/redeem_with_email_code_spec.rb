@@ -196,7 +196,18 @@ RSpec.describe Invite::RedeemWithEmailCode do
       before { SiteSetting.reserved_usernames = "reserved_name" }
 
       it "rejects the username without consuming the code or creating an account" do
-        expect(result).to fail_a_policy(:username_not_reserved)
+        expect(result).to fail_a_policy(:username_allowed)
+        expect(login_code.reload.consumed_at).to be_nil
+        expect(User.find_by_email(email)).to be_nil
+        expect(invite.reload.redemption_count).to eq(0)
+      end
+    end
+
+    context "when the username conflicts with a route" do
+      let(:username) { "ACCOUNT-CREATED" }
+
+      it "rejects the username without consuming the code or redeeming the invite" do
+        expect(result).to fail_a_policy(:username_allowed)
         expect(login_code.reload.consumed_at).to be_nil
         expect(User.find_by_email(email)).to be_nil
         expect(invite.reload.redemption_count).to eq(0)

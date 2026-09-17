@@ -829,13 +829,18 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
   test("keeps a local avatar preview without uploading before account creation", async function (assert) {
     stubCodeRequest();
+    this.siteSettings.selectable_avatars_mode = "tl2";
     let uploads = 0;
     pretender.post("/uploads.json", () => {
       uploads++;
       return response({ id: 42 });
     });
     pretender.post("/session/login-code/verify", () =>
-      response({ username_required: true, can_upload_avatar: true })
+      response({
+        username_required: true,
+        can_upload_avatar: true,
+        trust_level: 2,
+      })
     );
     pretender.get("/u/check_username", () =>
       response({ available: true, avatar_template: "/letter/j.png" })

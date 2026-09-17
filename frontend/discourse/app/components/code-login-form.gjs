@@ -96,6 +96,7 @@ export default class CodeLoginForm extends Component {
   #draftEmail;
   #collectedUserFields = false;
   #usernameCheckSeq = 0;
+  @tracked _signupTrustLevel = 0;
   @tracked _step;
 
   constructor() {
@@ -557,6 +558,7 @@ export default class CodeLoginForm extends Component {
   setupSignupDetails(result) {
     this.username = result.username || "";
     this.avatarTemplate = result.avatar_template;
+    this._signupTrustLevel = result.trust_level ?? 0;
     this.canUploadAvatar =
       result.can_upload_avatar && allowsImages(false, this.siteSettings);
     if (this.username) {
@@ -662,6 +664,7 @@ export default class CodeLoginForm extends Component {
         deferSave: true,
         avatarTemplate: this.avatarTemplate,
         canUploadAvatar: this.canUploadAvatar,
+        trustLevel: this._signupTrustLevel,
         selection: this.pendingAvatar,
         onSelect: this.selectPendingAvatar,
       },

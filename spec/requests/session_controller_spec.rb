@@ -965,6 +965,17 @@ RSpec.describe SessionController do
         expect(login_code.reload.consumed_at).to be_nil
       end
 
+      it "returns the invitee trust level for the deferred avatar selector" do
+        SiteSetting.default_trust_level = 0
+        SiteSetting.default_invitee_trust_level = 2
+
+        post "/session/login-code/verify.json", params: { invite_key: invite.invite_key, code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["trust_level"]).to eq(2)
+      end
+
       it "activates an existing inactive invitee and keeps them signed in" do
         user.update!(email: invite.email, active: false)
 
@@ -1404,6 +1415,17 @@ RSpec.describe SessionController do
         expect(response.parsed_body["account_created"]).to eq(true)
         expect(new_user).to be_approved
         expect(session[:current_user_id]).to eq(new_user.id)
+      end
+
+      it "returns the default trust level for the deferred avatar selector" do
+        SiteSetting.default_trust_level = 1
+        SiteSetting.default_invitee_trust_level = 2
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["trust_level"]).to eq(1)
       end
 
       it "waits for username selection before creating or authenticating an account" do

@@ -99,6 +99,9 @@ export default class AvatarSelectorModal extends Component {
 
   get showCustomAvatarSelector() {
     const mode = this.siteSettings.selectable_avatars_mode;
+    const trustLevel = this.deferSave
+      ? this.args.model.trustLevel
+      : this.user?.trust_level;
     switch (mode) {
       case "no_one":
         return false;
@@ -110,7 +113,7 @@ export default class AvatarSelectorModal extends Component {
         return (
           this.user?.admin ||
           this.user?.moderator ||
-          (this.user?.trust_level ?? 0) >= allowedTl
+          (trustLevel ?? 0) >= allowedTl
         );
       case "staff":
         return this.user?.admin || this.user?.moderator;

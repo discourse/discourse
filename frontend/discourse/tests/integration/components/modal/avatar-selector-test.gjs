@@ -119,6 +119,23 @@ module("Integration | Component | Modal | AvatarSelector", function (hooks) {
     );
   });
 
+  for (const trustLevel of [0, 1, 2, 3, 4]) {
+    test(`deferred uploads respect the prospective trust level ${trustLevel}`, async function (assert) {
+      this.siteSettings.selectable_avatars_mode = "tl2";
+      await showAvatarSelector(this, {
+        deferSave: true,
+        canUploadAvatar: true,
+        trustLevel,
+      });
+
+      if (trustLevel >= 2) {
+        assert.dom("#deferred-avatar-upload").exists();
+      } else {
+        assert.dom("#deferred-avatar-upload").doesNotExist();
+      }
+    });
+  }
+
   test("normal saving persists the selected avatar to the account", async function (assert) {
     const onAvatarChange = sinon.spy();
     const model = {

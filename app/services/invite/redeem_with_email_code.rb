@@ -35,7 +35,7 @@ class Invite::RedeemWithEmailCode
   policy :required_fields_provided
   policy :required_full_name_provided
   policy :required_username_provided
-  policy :username_not_reserved
+  policy :username_allowed
 
   try(
     ActiveRecord::RecordInvalid,
@@ -118,8 +118,11 @@ class Invite::RedeemWithEmailCode
     existing_user.present? || params.username.present?
   end
 
-  def username_not_reserved(existing_user:, params:)
-    existing_user.present? || !User.reserved_username?(params.username)
+  def username_allowed(existing_user:, params:)
+    return true if existing_user.present?
+
+    !User.reserved_username?(params.username) &&
+      !UsernameValidator.clashing_with_existing_route?(params.username)
   end
 
   def consume_code(login_code:)

@@ -1225,7 +1225,7 @@ class SessionController < ApplicationController
       on_failed_policy(:required_username_provided) do
         render_signup_username_required(result[:params].email, invite: result[:invite])
       end
-      on_failed_policy(:username_not_reserved) do
+      on_failed_policy(:username_allowed) do
         render json: { username_errors: [I18n.t("login.reserved_username")] }
       end
       on_model_errors(:user) { |user| render json: login_code_account_error(user) }
@@ -1267,6 +1267,7 @@ class SessionController < ApplicationController
     render json: {
              username_required: true,
              username: username,
+             trust_level: trust_level,
              avatar_template: username && User.default_template(username),
              can_upload_avatar:
                group_ids.intersect?(SiteSetting.uploaded_avatars_allowed_groups_map),
