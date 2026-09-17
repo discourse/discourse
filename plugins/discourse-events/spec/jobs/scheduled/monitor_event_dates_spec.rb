@@ -174,6 +174,18 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
       )
     end
 
+    it "publishes a latest update when a recurring event advances" do
+      past_event.update!(recurrence: "every_week")
+
+      freeze_time 8.days.after
+
+      allow(TopicTrackingState).to receive(:publish_latest)
+
+      job.execute({})
+
+      expect(TopicTrackingState).to have_received(:publish_latest).with(past_event.post.topic)
+    end
+
     it "does not process closed events" do
       past_event.update!(recurrence: "every_week", closed: true)
       initial_event_date = past_event.event_dates.first
