@@ -77,6 +77,23 @@ RSpec.describe DiscourseVips do
       }.to raise_error(ArgumentError, /provide a scale/)
     end
 
+    it "reports invalid bounds as an operation error" do
+      FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
+
+      expect {
+        described_class.downsize(
+          input_path:,
+          output_path:,
+          format: "png",
+          width: 0,
+          height: 100,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error { |error| expect(error.class).to eq(DiscourseVips::Error) }
+    end
+
     it "reports an invalid scale as an operation error" do
       FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
 

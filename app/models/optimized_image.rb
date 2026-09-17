@@ -360,7 +360,7 @@ class OptimizedImage < ActiveRecord::Base
   def self.downsize_with_vips(from:, to:, scale:, width:, height:, max_pixels:, opts:)
     format = image_extension(path: from, ext_path: to, opts: opts).downcase
 
-    optimize_image(to: to, opts: opts) do
+    begin
       DiscourseVips.downsize(
         input_path: from,
         output_path: to,
@@ -373,6 +373,9 @@ class OptimizedImage < ActiveRecord::Base
         read: [from],
         write: [File.dirname(to)],
       )
+      optimize_image(to: to)
+    rescue => error
+      handle_optimization_error(error: error, to: to, opts: opts)
     end
   end
   private_class_method :downsize_with_vips
@@ -386,7 +389,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
-    optimize_image(to: to, opts: opts, instructions: instructions) do
+    begin
       ImageMagick.magick(
         *instructions,
         operation: operation,
@@ -395,38 +398,39 @@ class OptimizedImage < ActiveRecord::Base
         nice: 10,
         timeout: MAX_CONVERT_SECONDS,
       )
+      optimize_image(to: to)
+    rescue => error
+      handle_optimization_error(error: error, to: to, opts: opts, instructions: instructions)
     end
   end
 
-  def self.optimize_image(to:, opts:, instructions: nil)
-    yield
-
+  def self.optimize_image(to:)
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
     true
-  rescue => e
-    if opts[:raise_on_error]
-      raise e
-    else
-      error = +"Failed to optimize image:"
-
-      if e.message =~ /\A(?:convert|magick):([^`]+)/
-        error << $1
-      else
-        error << " unknown reason"
-      end
-
-      Discourse.warn(
-        error,
-        upload_id: opts[:upload_id],
-        location: to,
-        error_message: e.message,
-        instructions: instructions,
-      )
-      false
-    end
   end
   private_class_method :optimize_image
+
+  def self.handle_optimization_error(error:, to:, opts:, instructions: nil)
+    raise error if opts[:raise_on_error]
+
+    message = +"Failed to optimize image:"
+    if error.message =~ /\A(?:convert|magick):([^`]+)/
+      message << $1
+    else
+      message << " unknown reason"
+    end
+
+    Discourse.warn(
+      message,
+      upload_id: opts[:upload_id],
+      location: to,
+      error_message: error.message,
+      instructions: instructions,
+    )
+    false
+  end
+  private_class_method :handle_optimization_error
 end
 
 # == Schema Information
