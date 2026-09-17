@@ -56,7 +56,7 @@ RSpec.describe DiscourseVips do
           read: [input_path],
           write: [directory],
         )
-      }.to raise_error(DiscourseVips::InvalidImage, "unsupported format")
+      }.to raise_error(ArgumentError, "unsupported format")
     end
 
     it "rejects conflicting resize targets" do
@@ -75,6 +75,22 @@ RSpec.describe DiscourseVips do
           write: [directory],
         )
       }.to raise_error(ArgumentError, /provide a scale/)
+    end
+
+    it "reports an invalid scale as an operation error" do
+      FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
+
+      expect {
+        described_class.downsize(
+          input_path:,
+          output_path:,
+          format: "png",
+          scale: 0,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error { |error| expect(error.class).to eq(DiscourseVips::Error) }
     end
 
     it "preserves the destination and removes temporary files when decoding fails" do

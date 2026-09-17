@@ -100,7 +100,7 @@ module DiscourseVips
       raise ArgumentError, "provide a scale, width and height, or a pixel-area target"
     end
 
-    raise InvalidImage, "unsupported format" if !%w[jpg jpeg png gif webp avif].include?(format)
+    raise ArgumentError, "unsupported format" if !%w[jpg jpeg png gif webp avif].include?(format)
 
     output_mode =
       File.exist?(output_path) ? File.stat(output_path).mode & 0o777 : 0o666 & ~File.umask
