@@ -70,6 +70,7 @@ module Migrations
           root = MarkdownEngine.discourse_root
           cache_dir ||= File.join(root, CACHE_DIR)
           require_host_build_classes(root)
+          check_input_files!(root)
 
           digest = input_digest(root)
           cache_file = File.join(cache_dir, "markdown-engine-bundle-#{digest}.json")
@@ -190,6 +191,17 @@ module Migrations
                 digest.update(File.read(File.join(root, file)))
               end
           end
+        end
+
+        # A checkout without its frontend dependencies (a fresh worktree, say)
+        # would otherwise fail deep inside the build with a missing file.
+        def self.check_input_files!(root)
+          missing = PLUGIN_VENDOR_FILES.reject { |path| File.exist?(File.join(root, path)) }
+          return if missing.empty?
+
+          raise BuildError,
+                "frontend dependencies are not installed in #{root} " \
+                  "(missing #{missing.join(", ")}); run `pnpm install` there first"
         end
 
         def self.input_files(root)

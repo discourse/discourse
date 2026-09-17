@@ -40,6 +40,18 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Bundle do
     expect(loaded.entries.size).to eq(bundle.entries.size)
   end
 
+  it "names the missing frontend dependency instead of failing inside the build" do
+    stub_const(
+      "#{described_class}::PLUGIN_VENDOR_FILES",
+      ["frontend/discourse/node_modules/not-installed/index.js"],
+    )
+
+    expect { described_class.load_or_build(cache_dir: Dir.mktmpdir) }.to raise_error(
+      described_class::BuildError,
+      %r{not-installed/index\.js.*pnpm install},
+    )
+  end
+
   it "caches the built bundle on disk and reuses it" do
     bundle
     cache_dir =
