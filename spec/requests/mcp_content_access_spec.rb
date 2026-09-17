@@ -169,6 +169,32 @@ describe "MCP content access" do
     expect(response.parsed_body.dig("result", "isError")).to eq(false)
   end
 
+  it "omits private flag conversations without PM read scope while returning the public reviewable" do
+    user.update!(moderator: true)
+    Group.refresh_automatic_groups_for_user!(user)
+    flag_reason = "private flag conversation 猫"
+    result =
+      PostActionCreator.notify_moderators(
+        Fabricate(:user, refresh_auto_groups: true),
+        Fabricate(:post),
+        flag_reason,
+      )
+    authorize("mcp:moderation:read")
+
+    call_tool("discourse_get_reviewable", { reviewable_id: result.reviewable.id })
+
+    structured_content = response.parsed_body.dig("result", "structuredContent")
+    expect(structured_content.dig("reviewable", "id")).to eq(result.reviewable.id)
+    expect(structured_content["reviewable_conversations"]).to be_blank
+    expect(structured_content["conversation_posts"]).to be_blank
+    expect(response.body).not_to include(flag_reason)
+
+    authorize("mcp:moderation:read", "mcp:private-messages:read")
+    call_tool("discourse_get_reviewable", { reviewable_id: result.reviewable.id })
+
+    expect(response.body).to include(flag_reason)
+  end
+
   it "requires private-message write scope for private reviewable actions" do
     user.update!(moderator: true)
     Group.refresh_automatic_groups_for_user!(user)

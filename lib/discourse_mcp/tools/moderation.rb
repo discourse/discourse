@@ -76,7 +76,8 @@ module DiscourseMcp
         raise ToolError, I18n.t("mcp.errors.invalid_date")
       end
 
-      def serialize_reviewables(reviewables, guardian)
+      def serialize_reviewables(reviewables, request_context)
+        guardian = request_context.guardian
         claimed_topics =
           ReviewableClaimedTopic.claimed_hash(reviewables.map(&:topic_id).compact.uniq)
         Reviewable.preload_author_penalties(reviewables)
@@ -85,7 +86,15 @@ module DiscourseMcp
           reviewables.map do |reviewable|
             reviewable
               .serializer
-              .new(reviewable, root: nil, hash: side_loads, scope: guardian, claimed_topics:)
+              .new(
+                reviewable,
+                root: nil,
+                hash: side_loads,
+                scope: guardian,
+                claimed_topics:,
+                include_private_conversations:
+                  request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
+              )
               .as_json
           end
 
@@ -93,8 +102,8 @@ module DiscourseMcp
         [bounded(serialized), bounded(side_loads).deep_symbolize_keys]
       end
 
-      def serialize_reviewable(reviewable, guardian)
-        reviewables, side_loads = serialize_reviewables([reviewable], guardian)
+      def serialize_reviewable(reviewable, request_context)
+        reviewables, side_loads = serialize_reviewables([reviewable], request_context)
         { reviewable: reviewables.first, **side_loads }
       end
 
@@ -218,7 +227,7 @@ module DiscourseMcp
           query = ModerationSupport.without_private_messages(query, request_context)
           total = query.count
           reviewables = query.limit(ModerationSupport::PER_PAGE).offset(offset).to_a
-          rows, side_loads = ModerationSupport.serialize_reviewables(reviewables, guardian)
+          rows, side_loads = ModerationSupport.serialize_reviewables(reviewables, request_context)
           has_more = offset + rows.length < total
           ToolHelpers.text_and_structured(
             reviewables: rows,
@@ -326,7 +335,7 @@ module DiscourseMcp
             request_context,
             access: :read,
           )
-          result = ModerationSupport.serialize_reviewable(reviewable, guardian)
+          result = ModerationSupport.serialize_reviewable(reviewable, request_context)
           result[:explanation] = reviewable.explain_score if arguments["include_explanation"]
           ToolHelpers.text_and_structured(ModerationSupport.bounded(result))
         end
