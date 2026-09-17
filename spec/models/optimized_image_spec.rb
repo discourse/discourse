@@ -165,6 +165,36 @@ RSpec.describe OptimizedImage do
     end
   end
 
+  describe ".resize" do
+    let(:directory) { Dir.mktmpdir }
+    let(:input_path) { File.join(directory, "source.png") }
+
+    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
+
+    after { FileUtils.remove_entry(directory) }
+
+    shared_examples "resize processing" do
+      it "resizes an image in place" do
+        result = described_class.resize(input_path, input_path, 100, 50)
+
+        expect(result).to eq(true)
+        expect(FastImage.size(input_path)).to eq([100, 50])
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "resize processing"
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "resize processing"
+    end
+  end
+
   describe ".downsize" do
     let(:directory) { Dir.mktmpdir }
     let(:input_path) { File.join(directory, "source.png") }

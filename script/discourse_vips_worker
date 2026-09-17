@@ -26,7 +26,7 @@ class DiscourseVipsWorker
     DYNAMIC_LINKER_CACHE_PATH = "/etc/ld.so.cache"
     private_constant :DYNAMIC_LINKER_CACHE_PATH
 
-    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail].freeze
+    WARM_OPERATIONS = %w[text gravity flatten pngsave thumbnail sharpen].freeze
     private_constant :WARM_OPERATIONS
 
     SVG_DIMENSIONS_RLIMITS = { cpu_seconds: 1, memory_bytes: 1024 * 1024 * 1024 }.freeze
@@ -73,17 +73,20 @@ class DiscourseVipsWorker
         reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "svg-to-png"
         svg_to_png(input_path: arguments[0], output_path: arguments[1])
-
-      when "downsize"
-        downsize(
+      when "thumbnail"
+        thumbnail(
           input_path: arguments[0],
           output_path: arguments[1],
-          format: arguments[2],
-          scale: arguments[3],
-          width: arguments[4],
-          height: arguments[5],
+          destination_path: arguments[2],
+          width: arguments[3],
+          height: arguments[4],
+          scale: arguments[5],
           max_pixels: arguments[6],
-          strip_metadata: arguments[7],
+          size: arguments[7],
+          crop: arguments[8],
+          sharpen: arguments[9],
+          quality: arguments[10],
+          strip_metadata: arguments[11],
         )
       else
         raise ArgumentError, "unsupported libvips operation"
@@ -291,65 +294,107 @@ class DiscourseVipsWorker
     end
     private_class_method :svg_to_png
 
-    def self.downsize(
+    def self.thumbnail(
       input_path:,
       output_path:,
-      format:,
-      scale:,
+      destination_path:,
       width:,
       height:,
+      scale:,
       max_pixels:,
+      size:,
+      crop:,
+      sharpen:,
+      quality:,
       strip_metadata:
     )
       new do
-        begin
-          if !%w[true false].include?(strip_metadata)
-            raise ArgumentError, "invalid metadata stripping flag"
-          end
-          loader =
-            {
-              "jpg" => "VipsForeignLoadJpeg",
-              "jpeg" => "VipsForeignLoadJpeg",
-              "png" => "VipsForeignLoadPng",
-              "gif" => "VipsForeignLoadNsgif",
-              "webp" => "VipsForeignLoadWebp",
-              "avif" => "VipsForeignLoadHeif",
-            }.fetch(format) { raise ArgumentError, "unsupported input format" }
-          block_loaders(allowed: [loader])
+        input_format = image_format(path: input_path)
+        output_format = image_format(path: destination_path, fallback: input_format)
+        raise ArgumentError, "invalid thumbnail size" if !%w[both up down force].include?(size)
+        if !%w[none centre entropy attention low high all].include?(crop)
+          raise ArgumentError, "invalid thumbnail crop"
+        end
+        if !%w[true false].include?(sharpen)
+          raise ArgumentError, "invalid sharpening flag"
+        end
+        if !%w[true false].include?(strip_metadata)
+          raise ArgumentError, "invalid metadata stripping flag"
+        end
+        quality = nil if quality == ""
+        if quality
+          quality = Integer(quality)
+          raise ArgumentError, "invalid encoder quality" if !quality.between?(1, 100)
+        end
 
+        loader = {
+          "jpg" => "VipsForeignLoadJpeg",
+          "jpeg" => "VipsForeignLoadJpeg",
+          "png" => "VipsForeignLoadPng",
+          "gif" => "VipsForeignLoadNsgif",
+          "webp" => "VipsForeignLoadWebp",
+          "avif" => "VipsForeignLoadHeif",
+        }.fetch(input_format)
+        block_loaders(allowed: [loader])
+
+        begin
           if !width.empty? && !height.empty?
             width = Integer(width)
             height = Integer(height)
             raise ArgumentError, "invalid resize bounds" if !width.positive? || !height.positive?
-
-            image =
-              Vips::Image.thumbnail(input_path, width, height:, size: :down, output_profile: "srgb")
           else
             source = Vips::Image.new_from_file(input_path)
             scale =
               if max_pixels.empty?
                 Float(scale)
               else
-                Math.sqrt(Integer(max_pixels).fdiv(source.width * source.height))
+                max_pixels = Integer(max_pixels)
+                raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
+
+                Math.sqrt(max_pixels.fdiv(source.width * source.height))
               end
             raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
 
-            edge = [([source.width, source.height].max * scale).round, 1].max
-            image = Vips::Image.thumbnail(input_path, edge, output_profile: "srgb")
+            width = [([source.width, source.height].max * scale).round, 1].max
+            height = width
           end
 
+          image =
+            Vips::Image.thumbnail(
+              input_path,
+              width,
+              height: height,
+              size: size.to_sym,
+              crop: crop.to_sym,
+              output_profile: "srgb",
+            )
+          image = image.sharpen if sharpen == "true"
           options = { strip: strip_metadata == "true" }
-          options[:interlace] = false if %w[.jpg .jpeg .png .gif].include?(
-            File.extname(output_path),
+          options[:interlace] = false if %w[jpg jpeg png gif].include?(output_format)
+          options[:Q] = quality if quality &&
+            %w[jpg jpeg webp avif].include?(output_format)
+          image.write_to_target(
+            Vips::Target.new_to_file(output_path),
+            ".#{output_format}",
+            **options,
           )
-          image.write_to_file(output_path, **options)
         rescue Vips::Error => error
           raise InvalidImage, error.message
         end
         nil
       end
     end
-    private_class_method :downsize
+    private_class_method :thumbnail
+
+    def self.image_format(path:, fallback: nil)
+      format = File.extname(path).delete_prefix(".").downcase
+      format = fallback if format.empty?
+      if !%w[jpg jpeg png gif webp avif].include?(format)
+        raise ArgumentError, "unsupported format"
+      end
+      format
+    end
+    private_class_method :image_format
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
