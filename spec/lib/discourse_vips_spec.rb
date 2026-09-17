@@ -478,26 +478,6 @@ RSpec.describe DiscourseVips do
       end
     end
 
-    it "preserves the input when the output refers to the same file" do
-      Dir.mktmpdir do |directory|
-        input_path = File.join(directory, "original.jpg")
-        FileUtils.cp(file_from_fixtures("logo.jpg").path, input_path)
-        original = File.binread(input_path)
-
-        expect {
-          described_class.reencode_jpeg(
-            input_path:,
-            output_path: input_path,
-            quality: 40,
-            timeout: 5,
-            read: [input_path],
-            write: [File.dirname(input_path)],
-          )
-        }.to raise_error(DiscourseVips::Error, /separate input and output/)
-        expect(File.binread(input_path)).to eq(original)
-      end
-    end
-
     context "when replacing the original JPEG" do
       it "leaves the original JPEG unchanged when reencoding fails" do
         Dir.mktmpdir do |directory|
@@ -508,6 +488,7 @@ RSpec.describe DiscourseVips do
           expect {
             described_class.reencode_jpeg(
               input_path:,
+              output_path: input_path,
               quality: 95,
               timeout: 5,
               read: [input_path],

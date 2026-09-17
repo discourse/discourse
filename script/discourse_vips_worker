@@ -195,7 +195,6 @@ class DiscourseVipsWorker
     private_class_method :png_to_jpeg
 
     def self.reencode_jpeg(input_path:, output_path:, quality:)
-      output_path = nil if output_path == ""
       new do
         quality = Integer(quality)
         raise ArgumentError, "invalid JPEG quality" unless (1..100).cover?(quality)
@@ -203,13 +202,9 @@ class DiscourseVipsWorker
         block_loaders(allowed: %w[VipsForeignLoadJpeg])
         begin
           image = Vips::Image.jpegload(input_path, access: :random)
-          if output_path
-            save_jpeg(image, input_path:, output_path:, quality:)
-          else
-            Tempfile.create(%w[reencoded .jpg]) do |reencoded_file|
-              save_jpeg(image, input_path:, output_path: reencoded_file.path, quality:)
-              FileUtils.copy_file(reencoded_file.path, input_path)
-            end
+          Tempfile.create(%w[reencoded .jpg]) do |reencoded_file|
+            save_jpeg(image, input_path:, output_path: reencoded_file.path, quality:)
+            FileUtils.copy_file(reencoded_file.path, output_path)
           end
           nil
         rescue Vips::Error => error

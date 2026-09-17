@@ -488,6 +488,7 @@ class UploadCreator
     if GlobalSetting.enable_vips_image_processing
       DiscourseVips.reencode_jpeg(
         input_path: @file.path,
+        output_path: @file.path,
         quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
         timeout: MAX_FIX_ORIENTATION_TIME,
         read: [@file.path],
