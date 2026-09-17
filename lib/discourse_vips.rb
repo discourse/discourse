@@ -107,44 +107,58 @@ module DiscourseVips
     )
   end
 
-  def self.downsize(
+  def self.thumbnail(
     input_path:,
     output_path:,
     timeout:,
     read:,
     write:,
-    scale: nil,
     width: nil,
     height: nil,
+    scale: nil,
     max_pixels: nil,
-    strip_metadata: false
+    size: :both,
+    crop: :none,
+    sharpen: false,
+    quality: nil,
+    strip_metadata: false,
+    operation: :optimized_image_resize
   )
     if [scale, width || height, max_pixels].compact.length != 1 || width.nil? != height.nil?
       raise ArgumentError,
             "provide exactly one resize target: scale, width and height, or max_pixels"
     end
 
-    format = File.extname(input_path).delete_prefix(".").downcase
-    raise ArgumentError, "unsupported format" if !%w[jpg jpeg png gif webp avif].include?(format)
+    input_format = File.extname(input_path).delete_prefix(".").downcase
+    output_format = File.extname(output_path).delete_prefix(".").downcase
+    output_format = input_format if output_format.empty?
+    if !%w[jpg jpeg png gif webp avif].include?(input_format) ||
+         !%w[jpg jpeg png gif webp avif].include?(output_format)
+      raise ArgumentError, "unsupported format"
+    end
 
     output_mode =
       File.exist?(output_path) ? File.stat(output_path).mode & 0o777 : 0o666 & ~File.umask
 
-    Tempfile.create(["downsize-", ".#{format}"], File.dirname(output_path)) do |output|
+    Tempfile.create(["thumbnail-", ".#{output_format}"], File.dirname(output_path)) do |output|
       output.close
       Client.call(
         [
-          "downsize",
+          "thumbnail",
           input_path,
           output.path,
-          format,
-          scale,
+          input_format,
           width,
           height,
+          scale,
           max_pixels,
+          size,
+          crop,
+          sharpen,
+          quality,
           strip_metadata,
         ],
-        operation: :optimized_image_downsize,
+        operation:,
         read:,
         write:,
         timeout:,

@@ -783,4 +783,161 @@ RSpec.describe DiscourseVips do
       end
     end
   end
+
+  describe ".thumbnail" do
+    let(:directory) { Dir.mktmpdir }
+    let(:input_path) { File.join(directory, "source.png") }
+    let(:output_path) { File.join(directory, "output.png") }
+
+    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
+
+    after { FileUtils.remove_entry(directory) }
+
+    it "resizes an image in place" do
+      described_class.thumbnail(
+        input_path: input_path,
+        output_path: input_path,
+        width: 100,
+        height: 50,
+        crop: :centre,
+        sharpen: true,
+        timeout: 10,
+        read: [input_path],
+        write: [directory],
+      )
+
+      expect(FastImage.size(input_path)).to eq([100, 50])
+    end
+
+    it "rejects unsupported output extensions" do
+      expect {
+        described_class.thumbnail(
+          input_path: input_path,
+          output_path: File.join(directory, "output.svg"),
+          width: 100,
+          height: 50,
+          timeout: 10,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(ArgumentError, "unsupported format")
+    end
+
+    it "rejects unsupported input extensions" do
+      expect {
+        described_class.thumbnail(
+          input_path: File.join(directory, "source.svg"),
+          output_path: output_path,
+          width: 100,
+          height: 50,
+          timeout: 10,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(ArgumentError, "unsupported format")
+    end
+
+    it "reports invalid dimensions as an operation error" do
+      expect {
+        described_class.thumbnail(
+          input_path: input_path,
+          output_path: output_path,
+          width: 0,
+          height: 50,
+          timeout: 10,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(DiscourseVips::Error, "invalid resize bounds")
+    end
+
+    it "preserves the destination and removes temporary files after a decode error" do
+      File.binwrite(input_path, "invalid image")
+      File.binwrite(output_path, "existing destination")
+
+      expect {
+        described_class.thumbnail(
+          input_path: input_path,
+          output_path: output_path,
+          width: 100,
+          height: 50,
+          timeout: 10,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(DiscourseVips::InvalidImage)
+
+      expect(File.binread(output_path)).to eq("existing destination")
+      expect(Dir.children(directory)).to contain_exactly("source.png", "output.png")
+    end
+
+    it "rejects an SVG disguised as a PNG" do
+      FileUtils.cp(file_from_fixtures("svg.png").path, input_path)
+
+      expect {
+        described_class.thumbnail(
+          input_path: input_path,
+          output_path: output_path,
+          width: 100,
+          height: 50,
+          timeout: 10,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(DiscourseVips::InvalidImage)
+    end
+
+    it "scales an image by the requested factor" do
+      FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
+      output_path = File.join(directory, "output")
+
+      described_class.thumbnail(
+        input_path:,
+        output_path:,
+        scale: 0.5,
+        sharpen: true,
+        timeout: 20,
+        read: [input_path],
+        write: [directory],
+      )
+
+      expect(FastImage.size(output_path)).to eq([122, 33])
+      expect(FastImage.type(output_path)).to eq(:png)
+    end
+
+    it "rejects conflicting resize targets" do
+      input_path = file_from_fixtures("logo.png").path
+
+      expect {
+        described_class.thumbnail(
+          input_path:,
+          output_path:,
+          scale: 0.5,
+          width: 100,
+          height: 100,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(
+        ArgumentError,
+        "provide exactly one resize target: scale, width and height, or max_pixels",
+      )
+    end
+
+    it "reports an invalid scale as an operation error" do
+      FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
+
+      expect {
+        described_class.thumbnail(
+          input_path:,
+          output_path:,
+          scale: 0,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(DiscourseVips::Error, "invalid resize scale")
+    end
+  end
 end
