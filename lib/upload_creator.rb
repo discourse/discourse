@@ -119,7 +119,7 @@ class UploadCreator
           when :png
             convert_png_to_jpeg! if convert_png_to_jpeg?
           when :jpeg
-            recompress_jpeg! if should_alter_jpeg_quality?
+            reencode_jpeg! if should_alter_jpeg_quality?
           end
           fix_orientation! if should_fix_orientation?
           crop! if should_crop?
@@ -484,7 +484,7 @@ class UploadCreator
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
     if GlobalSetting.enable_vips_image_processing
-      DiscourseVips.auto_orient(
+      DiscourseVips.reencode_jpeg(
         input_path: @file.path,
         quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
         timeout: MAX_FIX_ORIENTATION_TIME,
@@ -638,10 +638,10 @@ class UploadCreator
     )
   end
 
-  def recompress_jpeg!
+  def reencode_jpeg!
     replace_with_jpeg_if_sufficiently_smaller!(
       quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
-      vips_method: :recompress_jpeg,
+      vips_method: :reencode_jpeg,
     )
   end
 

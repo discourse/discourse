@@ -354,7 +354,7 @@ RSpec.describe UploadCreator do
           end
           expect(uploads.first.filesize).to be < uploads.last.filesize
           operations = events.map { |event| event[:params].first[:operation] }
-          expect(operations).to include("upload_auto_orient")
+          expect(operations).to include("upload_jpeg_reencoding")
           expect(operations).not_to include("upload_quality_probe")
         end
       end

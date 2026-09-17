@@ -59,10 +59,8 @@ class DiscourseVipsWorker
         heif_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "png-to-jpeg"
         png_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
-      when "recompress-jpeg"
-        recompress_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
-      when "auto-orient"
-        auto_orient(input_path: arguments[0], quality: arguments[1])
+      when "reencode-jpeg"
+        reencode_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       else
         raise ArgumentError, "unsupported libvips operation"
       end
@@ -201,18 +199,31 @@ class DiscourseVipsWorker
     end
     private_class_method :png_to_jpeg
 
-    def self.recompress_jpeg(input_path:, output_path:, quality:)
-      new(read_paths: [input_path], write_paths: [File.dirname(output_path)]) do
-        block_loaders(allowed: %w[VipsForeignLoadJpeg])
+    def self.reencode_jpeg(input_path:, output_path:, quality:)
+      output_path = nil if output_path == ""
+      write_paths = output_path ? [File.dirname(output_path)] : [input_path]
+      new(read_paths: [input_path], write_paths:) do
+        quality = Integer(quality)
+        raise ArgumentError, "invalid JPEG quality" unless (1..100).cover?(quality)
 
+        block_loaders(allowed: %w[VipsForeignLoadJpeg])
         begin
-          save_jpeg(Vips::Image.jpegload(input_path), input_path:, output_path:, quality:)
+          image = Vips::Image.jpegload(input_path, access: :random)
+          if output_path
+            save_jpeg(image, input_path:, output_path:, quality:)
+          else
+            Tempfile.create(%w[reencoded .jpg]) do |reencoded_file|
+              save_jpeg(image, input_path:, output_path: reencoded_file.path, quality:)
+              FileUtils.copy_file(reencoded_file.path, input_path)
+            end
+          end
+          nil
         rescue Vips::Error => error
           raise InvalidImage, error.message
         end
       end
     end
-    private_class_method :recompress_jpeg
+    private_class_method :reencode_jpeg
 
     def self.save_jpeg(image, input_path:, output_path:, quality:)
       if File.expand_path(input_path) == File.expand_path(output_path) ||
@@ -247,26 +258,6 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :svg_dimensions
-
-    def self.auto_orient(input_path:, quality:)
-      new(read_paths: [input_path], write_paths: [input_path]) do
-        quality = Integer(quality)
-        raise ArgumentError, "invalid JPEG quality" unless (1..100).cover?(quality)
-
-        block_loaders(allowed: %w[VipsForeignLoadJpeg])
-        begin
-          Tempfile.create(%w[oriented .jpg]) do |oriented_file|
-            image = Vips::Image.jpegload(input_path, access: :random)
-            save_jpeg(image, input_path:, output_path: oriented_file.path, quality:)
-            FileUtils.copy_file(oriented_file.path, input_path)
-          end
-          nil
-        rescue Vips::Error => error
-          raise InvalidImage, error.message
-        end
-      end
-    end
-    private_class_method :auto_orient
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)

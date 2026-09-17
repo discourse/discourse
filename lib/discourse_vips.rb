@@ -45,10 +45,10 @@ module DiscourseVips
     )
   end
 
-  def self.recompress_jpeg(input_path:, output_path:, quality:, timeout:)
+  def self.reencode_jpeg(input_path:, quality:, timeout:, output_path: nil)
     Client.call(
-      ["recompress-jpeg", input_path, output_path, quality],
-      operation: :upload_jpeg_recompression,
+      ["reencode-jpeg", input_path, output_path, quality],
+      operation: :upload_jpeg_reencoding,
       timeout:,
     )
   end
@@ -59,10 +59,6 @@ module DiscourseVips
       operation: :upload_png_to_jpeg,
       timeout:,
     )
-  end
-
-  def self.auto_orient(input_path:, quality:, timeout:)
-    Client.call(["auto-orient", input_path, quality], operation: :upload_auto_orient, timeout:)
   end
 
   def self.before_fork
