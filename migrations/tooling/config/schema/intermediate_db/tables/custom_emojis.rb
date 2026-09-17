@@ -8,5 +8,5 @@
 # step resolves the FK to the upload's `sha1` in its `items` query. The global
 # `.*upload.*_id$ => :text` convention already types this column as text to match.
 Migrations::Tooling::Schema.table :custom_emojis do
-  ignore :user_id, reason: "The uploader isn't needed to recreate the emoji"
+  ignore :user_id, reason: "Imported emoji are attributed to the destination system user"
 end
