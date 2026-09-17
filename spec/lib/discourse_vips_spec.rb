@@ -498,7 +498,7 @@ RSpec.describe DiscourseVips do
       end
     end
 
-    context "without an output path" do
+    context "when replacing the original JPEG" do
       %w[
         TopLeft
         TopRight
@@ -509,7 +509,7 @@ RSpec.describe DiscourseVips do
         RightBottom
         LeftBottom
       ].each_with_index do |orientation, index|
-        it "normalizes #{orientation} JPEG pixels and orientation metadata" do
+        it "stores #{orientation} JPEGs upright with cleared orientation metadata" do
           Dir.mktmpdir do |directory|
             input_path = File.join(directory, "oriented.jpg")
             output_path = input_path
@@ -619,7 +619,7 @@ RSpec.describe DiscourseVips do
         end
       end
 
-      it "preserves the input and removes the temporary output when conversion fails" do
+      it "leaves the original JPEG unchanged when reencoding fails" do
         Dir.mktmpdir do |directory|
           input_path = File.join(directory, "original.jpg")
           original = "invalid JPEG"

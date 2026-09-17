@@ -288,7 +288,7 @@ RSpec.describe UploadCreator do
       end
 
       shared_examples "EXIF orientation normalization" do
-        it "honors every EXIF orientation" do
+        it "stores JPEG uploads upright for every EXIF orientation" do
           expected_color_grids.each do |orientation, expected_color_grid|
             with_jpeg_orientation(
               source_path: source_path,
@@ -330,7 +330,7 @@ RSpec.describe UploadCreator do
 
         include_examples "EXIF orientation normalization"
 
-        it "normalizes orientation at the configured quality without a quality probe" do
+        it "stores upright JPEGs at the configured quality" do
           SiteSetting.instrument_image_processing = true
           uploads = []
 

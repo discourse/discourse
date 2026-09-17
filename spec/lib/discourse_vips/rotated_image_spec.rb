@@ -6,7 +6,7 @@ RSpec.describe DiscourseVips do
   describe ".reencode_jpeg" do
     include ImageOrientationHelpers
 
-    it "rotates a large image and preserves its color layout" do
+    it "stores a large rotated JPEG upright with the expected color layout" do
       Dir.mktmpdir do |directory|
         source_path = File.join(directory, "source.jpg")
         left = Vips::Image.black(600, 1600).new_from_image([255, 0, 0])
@@ -38,7 +38,7 @@ RSpec.describe DiscourseVips do
       end
     end
 
-    it "optimizes Huffman coding without changing decoded pixels" do
+    it "produces a smaller JPEG with the same decoded pixels" do
       source_path = Rails.root.join("spec/fixtures/images/exif_orientation.jpg")
       with_jpeg_orientation(source_path:, orientation: 6) do |oriented_file|
         input_path = oriented_file.path
