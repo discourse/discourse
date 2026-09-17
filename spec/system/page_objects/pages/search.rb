@@ -43,22 +43,6 @@ module PageObjects
         has_selector?("#search-result-count")
       end
 
-      def switch_to_users
-        find(".search-types__type", text: I18n.t("js.search.type.users"), exact_text: true).click
-      end
-
-      def has_related_results?
-        has_css?(".fps-result.ai-result")
-      end
-
-      def has_no_user_results?
-        has_no_css?(".search-container .spinner") && has_no_css?(".fps-user-item")
-      end
-
-      def has_full_page_no_results?
-        has_css?(".search-results", text: I18n.t("js.search.no_results"))
-      end
-
       def has_no_result_count?
         has_no_selector?("#search-result-count")
       end

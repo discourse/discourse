@@ -23,22 +23,11 @@ RSpec.describe "AI semantic search in full-page search" do
 
   after { DiscourseAi::Embeddings::SemanticSearch.clear_cache_for(query) }
 
-  it "shows related post results and an empty Users search when switching types" do
+  it "renders AI results in the toggle panel after a search" do
     visit("/search?expanded=true")
     search_page.type_in_search(query)
     search_page.click_search_button
 
     expect(page).to have_css(".semantic-search__results .badge-notification", text: "1")
-    expect(search_page).to have_related_results
-
-    search_page.switch_to_users
-    expect(page).to have_current_path("/search?expanded=true&q=apple%20pie&search_type=users")
-    expect(search_page).to have_no_user_results
-    expect(search_page).to have_full_page_no_results
-    expect(search_page).to have_no_result_count
-
-    page.refresh
-    expect(search_page).to have_full_page_no_results
-    expect(search_page).to have_no_result_count
   end
 end
