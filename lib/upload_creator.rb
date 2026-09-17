@@ -412,7 +412,13 @@ class UploadCreator
 
       OptimizedImage.ensure_safe_paths!(from, to)
 
-      OptimizedImage.downsize(from, to, "50%", scale_image: true, raise_on_error: true)
+      OptimizedImage.downsize(
+        from: from,
+        to: to,
+        scale: 0.5,
+        scale_image: true,
+        raise_on_error: true,
+      )
 
       @file.respond_to?(:close!) ? @file.close! : @file.close
       @file = down_tempfile
@@ -541,9 +547,10 @@ class UploadCreator
           max_height: max_width,
         )
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{width}x#{height}\>",
+        from: @file.path,
+        to: @file.path,
+        width: width,
+        height: height,
         filename: filename_with_correct_ext,
       )
     when "card_background"
@@ -556,16 +563,18 @@ class UploadCreator
           max_height: max_width,
         )
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{width}x#{height}\>",
+        from: @file.path,
+        to: @file.path,
+        width: width,
+        height: height,
         filename: filename_with_correct_ext,
       )
     when "custom_emoji"
       OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "100x100\>",
+        from: @file.path,
+        to: @file.path,
+        width: 100,
+        height: 100,
         filename: filename_with_correct_ext,
       )
     end
