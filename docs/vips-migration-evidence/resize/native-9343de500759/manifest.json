@@ -1,0 +1,142 @@
+{
+  "source_head": "9343de5007596d8318e9e26e3a912ae404466d31",
+  "files": {
+    "inputs/jpeg.jpg": "35f1fcee1a93fbc6e30a945c661fd966e0962f60e0ef40729b8d9e76cabaadfc",
+    "outputs/jpeg-0-imagemagick.jpg": "396445ead2effd8b0ea3d4360712745faf1e6d1a8bb91e5b289390c303521c4e",
+    "outputs/jpeg-0-libvips.jpg": "e58f636cb0ff510cef18585d90d49ad98ec3501b88c38244a200d2c2dbc795d7",
+    "inputs/png.png": "c7b8f38aa309b7e32d7387dff4fb82aeeba3ede32116130600a05825b9966f18",
+    "outputs/png-0-imagemagick.png": "d98431143faa818292fab366d928751ed78ce71d8c3214af56814c7aaf855e50",
+    "outputs/png-0-libvips.png": "53b55db7fc1e8b1265ce950c68986104835bdc64b54d4414904879abff616ba4",
+    "inputs/gif.gif": "088ca413cddfd6e6a1409329fbb7244dfcd57dbffadefb2ea876b6220a2aa199",
+    "outputs/gif-0-imagemagick.gif": "b04d921ccc2f7e90b6e85bdcd9e24982e0d7bc7e34370ab208325c8320d34ec6",
+    "outputs/gif-0-libvips.gif": "0e8c236d8298a192b8616686e2617a508ee0757222abbc98555f44dc6907ad28",
+    "inputs/webp.webp": "a49452e030e12cf6ce2eae9650f7534c50e596e711f0ea9ffbf54173f6ce230d",
+    "outputs/webp-0-imagemagick.webp": "2753022b9ca50b3f072c947c50d1d9bcd4eedd33b52fa3577bfe873fc4fa1768",
+    "outputs/webp-0-libvips.webp": "7a9d4d1df135fe6674fb0e933d4a3b08fe6fd1ace58d0a3fc0744b4683cf0ced",
+    "inputs/avif.avif": "4010d8c8282a5bac43bb09fec9692e838ffd4e9fdb0a246c6a42d29d8a1271fa",
+    "outputs/avif-0-imagemagick.avif": "b343314391efa2559ff571299e42f607e9e447967ecb20be40de33718515c0ce",
+    "outputs/avif-0-libvips.avif": "faa4a9e0ac09d0b598b0a56095852f5105cfc52a03e8640f80e7dd56fb1a9371"
+  },
+  "cases": [
+    {
+      "case_id": "jpeg-0",
+      "id": "jpeg",
+      "input": "inputs/jpeg.jpg",
+      "input_dimensions": [
+        500,
+        333
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "imagemagick": {
+        "output": "outputs/jpeg-0-imagemagick.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-0-libvips.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "png-0",
+      "id": "png",
+      "input": "inputs/png.png",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "imagemagick": {
+        "output": "outputs/png-0-imagemagick.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-0-libvips.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "gif-0",
+      "id": "gif",
+      "input": "inputs/gif.gif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "imagemagick": {
+        "output": "outputs/gif-0-imagemagick.gif",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/gif-0-libvips.gif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "webp-0",
+      "id": "webp",
+      "input": "inputs/webp.webp",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "imagemagick": {
+        "output": "outputs/webp-0-imagemagick.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/webp-0-libvips.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "avif-0",
+      "id": "avif",
+      "input": "inputs/avif.avif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "imagemagick": {
+        "output": "outputs/avif-0-imagemagick.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/avif-0-libvips.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    }
+  ]
+}
