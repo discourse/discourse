@@ -91,6 +91,7 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
     assert.deepEqual(groups[2].settings, ["ai_ask_ai_allowed_groups"]);
     assert.deepEqual(groups[3].settings, [
       "ai_ask_ai_report_weekly_enabled",
+      "ai_ask_ai_report_exclude_groups",
       "ai_ask_ai_report_max_asks",
       "ai_ask_ai_report_recipient_groups",
     ]);

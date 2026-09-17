@@ -12,7 +12,10 @@ module Jobs
 
       end_date = Date.yesterday
       start_date = end_date - 6
-      unless AskAiLog.where(asked_at: start_date.beginning_of_day..end_date.end_of_day).exists?
+      unless AskAiLog
+               .for_reports
+               .where(asked_at: start_date.beginning_of_day..end_date.end_of_day)
+               .exists?
         return
       end
 
