@@ -49,6 +49,22 @@ body.embed-mode {
     display: none !important;
   }
 
+  // Like and reaction controls for the (hidden) first post
+  .embed-topic-actions {
+    &__menu {
+      padding: 0.5em 0 0.75em;
+      border-bottom: 1px solid var(--content-border-color);
+
+      nav.post-controls {
+        width: 100%;
+      }
+
+      .post-action-menu__like .d-button-label {
+        display: inline;
+      }
+    }
+  }
+
   .embed-topic-footer {
     margin-top: 1.5em;
     text-align: center;

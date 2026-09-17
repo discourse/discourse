@@ -8,6 +8,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import EmbedTopicActions from "discourse/components/embed-topic-actions";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -852,6 +853,8 @@ export default class Nested extends Component {
         @topicCategoryChanged={{@topicCategoryChanged}}
         @topicTagsChanged={{@topicTagsChanged}}
       />
+
+      <EmbedTopicActions @topic={{@topic}} />
 
       <PluginOutlet
         @connectorTagName="div"
