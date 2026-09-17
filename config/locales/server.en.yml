@@ -3581,6 +3581,7 @@ en:
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the required user fields"
+    missing_username: "Please enter a username"
     missing_full_name: "Please enter your full name"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
@@ -5261,7 +5262,7 @@ en:
         A staff member approved your account on %{site_name}.
 
         You can now access your new account by logging in at:
-        %{base_url}
+        %{login_url}
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
