@@ -403,6 +403,18 @@ RSpec.describe FinalDestination do
         expect(get_stub).to_not have_been_requested
         expect(head_stub).to have_been_requested
       end
+
+      it "will do a HEAD on a host that merely ends with the wildcard domain but isn't a subdomain of it" do
+        url = "https://evilihaveawildcard.com/some/other/content"
+        get_stub = fd_stub_request(:get, url)
+        head_stub = fd_stub_request(:head, url)
+
+        final = FinalDestination.new(url, opts)
+        expect(final.resolve.to_s).to eq(url)
+        expect(final.status).to eq(:resolved)
+        expect(get_stub).to_not have_been_requested
+        expect(head_stub).to have_been_requested
+      end
     end
 
     context "when HEAD not supported" do
