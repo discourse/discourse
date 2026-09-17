@@ -112,6 +112,8 @@ module DiscourseVips
     output_path:,
     format:,
     timeout:,
+    read:,
+    write:,
     scale: nil,
     width: nil,
     height: nil,
@@ -131,8 +133,8 @@ module DiscourseVips
       Client.call(
         ["downsize", input_path, output.path, format, scale, width, height, max_pixels],
         operation: :optimized_image_downsize,
-        read: [input_path],
-        write: [File.dirname(output.path)],
+        read:,
+        write:,
         timeout:,
         nice: 10,
       )

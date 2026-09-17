@@ -370,6 +370,8 @@ class OptimizedImage < ActiveRecord::Base
         height: height,
         max_pixels: max_pixels,
         timeout: MAX_CONVERT_SECONDS,
+        read: [from],
+        write: [File.dirname(to)],
       )
     end
   end
