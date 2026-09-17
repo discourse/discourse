@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import LoginMethod from "discourse/models/login-method";
@@ -153,31 +153,15 @@ acceptance("Create Account with email code available", function (needs) {
     enable_local_logins_via_email: true,
   });
 
-  test("defaults to password signup and creates a password account", async function (assert) {
+  test("defaults to email-only signup", async function (assert) {
     await visit("/signup");
 
-    assert.dom("#new-account-password").exists("shows the password form");
-    assert.dom(".code-login-form").doesNotExist("does not open code signup");
     assert
-      .dom(".signup-page-cta__code-signup")
-      .exists("offers email-code signup");
-
-    await fillIn("#new-account-name", "Password Person");
-    await fillIn("#new-account-password", "cool password bro");
-    await fillIn("#new-account-email", "password.person@example.com");
-    await fillIn("#new-account-username", "password-person");
-
-    pretender.post("/u", (request) => {
-      const data = parsePostData(request.requestBody);
-      assert.strictEqual(
-        data.password,
-        "cool password bro",
-        "submits the password"
-      );
-      return response({ success: true });
-    });
-
-    await click(".signup-page-cta__signup");
+      .dom(".code-login-form__email-step")
+      .exists("shows email-code signup");
+    assert
+      .dom("#new-account-password")
+      .doesNotExist("does not show a password field");
   });
 
   test("restores a verified signup after a full page load", async function (assert) {
@@ -191,13 +175,8 @@ acceptance("Create Account with email code available", function (needs) {
       },
     });
 
-    await visit("/signup?mode=code");
+    await visit("/signup");
 
-    assert.strictEqual(
-      currentURL(),
-      "/signup?mode=code",
-      "keeps the explicit signup mode"
-    );
     assert
       .dom(".code-login-form__account-details-step")
       .exists("restores the account details step");
@@ -206,45 +185,12 @@ acceptance("Create Account with email code available", function (needs) {
       .hasValue("verified@example.com", "preserves the verified email");
   });
 
-  test("opts into code signup and can return with the email preserved", async function (assert) {
+  test("uses traditional signup when email-code signup is unavailable", async function (assert) {
+    this.siteSettings.enable_local_logins_via_email = false;
     await visit("/signup");
-    await fillIn("#new-account-email", "person@example.com");
-    await click(".signup-page-cta__code-signup");
 
-    assert.dom(".code-login-form").exists("opens code signup explicitly");
-    assert.strictEqual(
-      currentURL(),
-      "/signup?mode=code",
-      "keeps the opted-in mode across reloads"
-    );
-    assert
-      .dom(".code-login-form__email-step input")
-      .hasValue(
-        "person@example.com",
-        "carries the password-form email forward"
-      );
-
-    await fillIn(".code-login-form__email-step input", "updated@example.com");
-    await click(".code-login-form__password-toggle");
-
-    assert.dom("#new-account-password").exists("returns to password signup");
-    assert
-      .dom("#new-account-email")
-      .hasValue("updated@example.com", "preserves the updated email");
-
-    await visit("/signup?mode=unknown");
-    assert
-      .dom("#new-account-password")
-      .exists("ignores an unknown signup mode");
-
-    this.siteSettings.enable_local_logins_via_code = false;
-    await visit("/signup?mode=code");
-    assert
-      .dom("#new-account-password")
-      .exists("ignores unavailable code signup");
-    assert
-      .dom(".signup-page-cta__code-signup")
-      .doesNotExist("hides unavailable code signup");
+    assert.dom("#new-account-password").exists("shows traditional signup");
+    assert.dom(".code-login-form").doesNotExist("does not show code signup");
   });
 });
 

@@ -6,6 +6,7 @@ class EmailLoginCode::Redeem
   params base_class: EmailLoginCode::Verify::Contract do
     attribute :user_fields
     attribute :name, :string
+    attribute :password, :string
     attribute :username, :string
     attribute :username_required, :boolean, default: false
     attribute :new_account_required, :boolean, default: false
@@ -27,6 +28,7 @@ class EmailLoginCode::Redeem
     end
 
     validates :name, length: { maximum: 255 }
+    validates :password, length: { maximum: User.max_password_length }, allow_nil: true
   end
 
   model :login_code
@@ -135,6 +137,7 @@ class EmailLoginCode::Redeem
         ip_address: ip_address,
         user_fields: params.user_fields,
         name: params.name,
+        password: params.password,
         username: params.username,
       )
   end

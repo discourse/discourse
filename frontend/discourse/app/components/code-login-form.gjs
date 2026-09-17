@@ -22,6 +22,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
+import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import {
   applyBehaviorTransformer,
   applyValueTransformer,
@@ -33,8 +34,11 @@ import { getWebauthnCredential } from "discourse/lib/webauthn";
 import User, { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DInputTip from "discourse/ui-kit/d-input-tip";
 import DOtp from "discourse/ui-kit/d-otp";
+import DPasswordField from "discourse/ui-kit/d-password-field";
 import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
+import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -58,6 +62,10 @@ export default class CodeLoginForm extends Component {
   @tracked newAccount;
   @tracked accountUser;
   @tracked name = "";
+  @tracked accountPassword = "";
+  @tracked showOptionalPassword = false;
+  @tracked maskPassword = true;
+  @tracked capsLockOn = false;
   @tracked nameRequired = false;
   @tracked signupToken;
   @tracked nameError;
@@ -78,10 +86,11 @@ export default class CodeLoginForm extends Component {
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
   code = "";
+  passwordValidationHelper = new PasswordValidationHelper(this);
   userFieldsValidationHelper = new UserFieldsValidationHelper({
     getUserFields: () =>
       this.site.get("user_fields")?.filter((f) => f.show_on_signup),
-    getAccountPassword: () => null,
+    getAccountPassword: () => this.accountPassword,
     showValidationOnInit: false,
   });
   #cooldownTimer;
@@ -212,7 +221,7 @@ export default class CodeLoginForm extends Component {
   }
 
   get continueDisabled() {
-    if (this.verifying) {
+    if (this.verifying || this.passwordValidation.failed) {
       return true;
     }
     // When the username can't be changed there's nothing to validate.
@@ -224,6 +233,30 @@ export default class CodeLoginForm extends Component {
 
   get userFields() {
     return this.userFieldsValidationHelper.userFields;
+  }
+
+  get accountEmail() {
+    return this.email;
+  }
+
+  get accountName() {
+    return this.name;
+  }
+
+  get accountUsername() {
+    return this.username;
+  }
+
+  get passwordRequired() {
+    return this.accountPassword.length > 0;
+  }
+
+  get passwordValidation() {
+    return this.passwordValidationHelper.passwordValidation;
+  }
+
+  get showPasswordValidation() {
+    return this.accountPassword.length > 0 && this.passwordValidation.reason;
   }
 
   // Re-rendering DOtp with a fresh identity is the only way to clear it
@@ -309,6 +342,8 @@ export default class CodeLoginForm extends Component {
   @action
   changeEmail() {
     cancel(this.#cooldownTimer);
+    this.accountPassword = "";
+    this.showOptionalPassword = false;
     this.resendCooldown = 0;
     this.code = "";
     this.codeError = null;
@@ -455,6 +490,22 @@ export default class CodeLoginForm extends Component {
   nameChanged(event) {
     this.name = event.target.value;
     this.nameError = null;
+  }
+
+  @action
+  revealOptionalPassword() {
+    this.showOptionalPassword = true;
+  }
+
+  @action
+  passwordChanged(event) {
+    this.accountPassword = event.target.value;
+    this.codeError = null;
+  }
+
+  @action
+  togglePasswordMask() {
+    this.maskPassword = !this.maskPassword;
   }
 
   @action
@@ -641,6 +692,9 @@ export default class CodeLoginForm extends Component {
     if (this.site.full_name_visible_in_signup) {
       data.name = this.name.trim();
     }
+    if (this.accountPassword) {
+      data.password = this.accountPassword;
+    }
     this.userFields.forEach((field) => {
       data.user_fields[field.field.id] = field.value;
     });
@@ -652,9 +706,19 @@ export default class CodeLoginForm extends Component {
       });
 
       if (result?.pending_approval) {
+        this.accountPassword = "";
         this.#clearSignupContinuation();
         this.step = "pending-approval";
       } else if (result?.error) {
+        if (result.password_error && this.accountPassword) {
+          this.passwordValidationHelper.rejectedPasswords.push(
+            this.accountPassword
+          );
+          this.passwordValidationHelper.rejectedPasswordsMessages.set(
+            this.accountPassword,
+            result.password_error
+          );
+        }
         this.codeError = result.error;
       } else {
         this.redirectAfterLogin(result?.redirect_url);
@@ -1147,6 +1211,59 @@ export default class CodeLoginForm extends Component {
             </div>
           {{/if}}
 
+          {{#if this.showOptionalPassword}}
+            <div
+              class="input-group create-account__password code-login-form__password-field"
+            >
+              <DPasswordField
+                aria-describedby="password-validation password-validation-more-info"
+                aria-invalid={{this.passwordValidation.failed}}
+                autocomplete="new-password"
+                id="new-account-password"
+                type={{if this.maskPassword "password" "text"}}
+                @capsLockOn={{this.capsLockOn}}
+                @value={{this.accountPassword}}
+                {{on "input" this.passwordChanged}}
+              />
+              <label class="alt-placeholder" for="new-account-password">
+                {{i18n "user.password.title"}}
+              </label>
+              <DTogglePasswordMask
+                @maskPassword={{this.maskPassword}}
+                @togglePasswordMask={{this.togglePasswordMask}}
+              />
+              <div class="create-account__password-info">
+                <div class="create-account__password-tip-validation">
+                  {{#if this.showPasswordValidation}}
+                    <DInputTip
+                      id="password-validation"
+                      @validation={{this.passwordValidation}}
+                    />
+                  {{else if
+                    this.siteSettings.show_signup_form_password_instructions
+                  }}
+                    <span class="more-info" id="password-validation-more-info">
+                      {{this.passwordValidationHelper.passwordInstructions}}
+                    </span>
+                  {{/if}}
+                  <div
+                    class="caps-lock-warning
+                      {{unless this.capsLockOn 'hidden'}}"
+                  >
+                    {{dIcon "triangle-exclamation"}}
+                    {{i18n "login.caps_lock_warning"}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{else}}
+            <DButton
+              class="btn-flat code-login-form__create-password"
+              @action={{this.revealOptionalPassword}}
+              @label="code_login.create_password_optional"
+            />
+          {{/if}}
+
           <div class="user-fields">
             {{#each this.userFields as |f|}}
               <div class="input-group">
@@ -1180,11 +1297,7 @@ export default class CodeLoginForm extends Component {
           </div>
         </div>
       {{else if this.isPendingApprovalStep}}
-        <div class="code-login-form__pending-approval-step" role="status">
-          <p class="code-login-form__instructions">
-            {{i18n "code_login.pending_approval_next_step"}}
-          </p>
-        </div>
+        <div class="code-login-form__pending-approval-step" role="status"></div>
       {{else if this.isCompleteStep}}
         <div class="code-login-form__complete-step">
           {{#unless this.isSignup}}

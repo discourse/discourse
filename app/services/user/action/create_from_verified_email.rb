@@ -5,6 +5,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :ip_address, optional: true
   option :user_fields, optional: true
   option :name, optional: true
+  option :password, optional: true
   option :username, optional: true
 
   def call
@@ -34,6 +35,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
     }
 
     assign_user_fields(user)
+    user.password = password if password.present?
 
     if SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(email)
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)

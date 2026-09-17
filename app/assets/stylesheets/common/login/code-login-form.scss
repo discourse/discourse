@@ -84,6 +84,15 @@
     margin: 0;
   }
 
+  &__password-field {
+    align-self: stretch;
+    margin: 0;
+  }
+
+  &__create-password {
+    padding-inline: 0;
+  }
+
   &__new-account {
     display: flex;
     flex-direction: column;

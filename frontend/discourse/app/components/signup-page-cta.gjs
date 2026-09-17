@@ -18,14 +18,6 @@ const SignupPageCta = <template>
         @isLoading={{@formSubmitted}}
         @label="create_account.title"
       />
-      {{#if @onUseEmailCode}}
-        <DButton
-          class="btn-large btn-flat signup-page-cta__code-signup"
-          @action={{@onUseEmailCode}}
-          @disabled={{@formSubmitted}}
-          @label="code_login.signup_with_email_code"
-        />
-      {{/if}}
       {{#unless @hasAuthOptions}}
         <span class="signup-page-cta__existing-account">
           {{i18n "create_account.already_have_account"}}

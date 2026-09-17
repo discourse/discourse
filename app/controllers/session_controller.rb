@@ -1042,7 +1042,7 @@ class SessionController < ApplicationController
     return render json: invalid_login_code if !SiteSetting.must_approve_users?
     return render json: invalid_login_code if EmailValidator.can_auto_approve_user?(proof[:email])
 
-    signup_params = params.permit(:username, :name, user_fields: {}).to_h
+    signup_params = params.permit(:username, :name, :password, user_fields: {}).to_h
     EmailLoginCode::Redeem.call(
       service_params.deep_merge(
         ip_address: request.remote_ip,
@@ -1077,7 +1077,7 @@ class SessionController < ApplicationController
       end
       on_model_errors(:user) { |user| render json: login_code_signup_error(user) }
       on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+        render json: { error: contract.errors.full_messages.join(". ") }
       end
       on_failure { render json: invalid_login_code }
     end
@@ -1270,7 +1270,10 @@ class SessionController < ApplicationController
   end
 
   def login_code_signup_error(user)
-    { error: user.errors.full_messages.join(". ") }
+    response = { error: user.errors.full_messages.join(". ") }
+    password_errors = user.user_password&.errors&.full_messages_for(:password)
+    response[:password_error] = password_errors.join(". ") if password_errors.present?
+    response
   end
 
   def login_code_account_error(user)

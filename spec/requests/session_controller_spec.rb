@@ -1208,7 +1208,7 @@ RSpec.describe SessionController do
         expect(login_code.reload.consumed_at).to be_present
       end
 
-      it "allows correcting invalid details without consuming the verified proof" do
+      it "allows correcting an invalid password without consuming the verified proof" do
         SiteSetting.must_approve_users = true
 
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
@@ -1217,17 +1217,37 @@ RSpec.describe SessionController do
         post "/session/login-code/verify.json",
              params: {
                signup_token:,
-               username: "invalid username!",
+               username: "valid-name",
+               password: "x" * (User.max_password_length + 1),
              }
 
         expect(response.parsed_body["error"]).to be_present
         expect(User.find_by_email("newuser@example.com")).to be_nil
         expect(login_code.reload.consumed_at).to be_nil
 
-        post "/session/login-code/verify.json", params: { signup_token:, username: "valid-name" }
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "valid-name",
+               password: "short",
+             }
+
+        expect(response.parsed_body["password_error"]).to be_present
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+
+        password = "a-secure-password-42!"
+        post "/session/login-code/verify.json",
+             params: {
+               signup_token:,
+               username: "valid-name",
+               password:,
+             }
 
         expect(response.parsed_body).to eq("pending_approval" => true)
-        expect(User.find_by_email("newuser@example.com").username).to eq("valid-name")
+        new_user = User.find_by_email("newuser@example.com")
+        expect(new_user.username).to eq("valid-name")
+        expect(new_user.confirm_password?(password)).to eq(true)
         expect(session[:current_user_id]).to be_nil
       end
 

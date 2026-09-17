@@ -36,12 +36,8 @@ export default class SignupPageController extends Controller {
   @tracked skipConfirmation;
   @tracked serverAccountEmail;
   @tracked serverEmailValidation;
-  @tracked codeSignupSelected = false;
   @tracked codeSignupStep = "email";
-  @tracked signupMode = null;
   @autoTrackedArray rejectedEmails = [];
-
-  queryParams = [{ signupMode: "mode" }];
 
   accountChallenge = 0;
   accountHoneypot = 0;
@@ -120,12 +116,7 @@ export default class SignupPageController extends Controller {
     return this.nameValidationHelper.forceValidationReason;
   }
 
-  @computed(
-    "hasAuthOptions",
-    "canCreateLocal",
-    "skipConfirmation",
-    "showCodeSignupForm"
-  )
+  @computed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
   get showCreateForm() {
     return (
       (this.hasAuthOptions || this.canCreateLocal) &&
@@ -134,29 +125,20 @@ export default class SignupPageController extends Controller {
     );
   }
 
-  get canUseCodeSignup() {
+  @computed(
+    "hasAuthOptions",
+    "canCreateLocal",
+    "siteSettings.enable_local_logins_via_code",
+    "siteSettings.enable_local_logins_via_email",
+    "skipConfirmation"
+  )
+  get showCodeSignupForm() {
     return (
       this.siteSettings.enable_local_logins_via_code &&
       this.siteSettings.enable_local_logins_via_email &&
       this.canCreateLocal &&
       !this.hasAuthOptions &&
       !this.skipConfirmation
-    );
-  }
-
-  @computed(
-    "codeSignupSelected",
-    "hasAuthOptions",
-    "canCreateLocal",
-    "siteSettings.enable_local_logins_via_code",
-    "siteSettings.enable_local_logins_via_email",
-    "signupMode",
-    "skipConfirmation"
-  )
-  get showCodeSignupForm() {
-    return (
-      this.canUseCodeSignup &&
-      (this.codeSignupSelected || this.signupMode === "code")
     );
   }
 
@@ -394,26 +376,6 @@ export default class SignupPageController extends Controller {
   @action
   updateCodeSignupStep(step) {
     this.codeSignupStep = step;
-  }
-
-  @action
-  showCodeSignup() {
-    if (this.canUseCodeSignup) {
-      this.codeSignupSelected = true;
-      this.signupMode = "code";
-    }
-  }
-
-  @action
-  usePasswordSignup(email) {
-    if (typeof email === "string") {
-      this.accountEmail = email;
-    }
-    this.codeSignupSelected = false;
-    this.codeSignupStep = "email";
-    if (this.signupMode === "code") {
-      this.signupMode = "password";
-    }
   }
 
   @action

@@ -243,7 +243,10 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
       accountDetailAttempts++;
       return accountDetailAttempts === 1
-        ? response({ error: "Please retry" })
+        ? response({
+            error: "Password is too common",
+            password_error: "Choose a more secure password",
+          })
         : response({ pending_approval: true });
     });
 
@@ -259,6 +262,19 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .dom(".login-title")
       .hasText(i18n("code_login.account_details_title"));
     assert.dom(".code-login-form__account-details-step").exists();
+    assert
+      .dom(".code-login-form__create-password")
+      .hasText(i18n("code_login.create_password_optional"));
+    assert.dom("#new-account-password").doesNotExist();
+
+    await click(".code-login-form__create-password");
+    assert.dom("#new-account-password").hasAttribute("type", "password");
+    await fillIn("#new-account-password", "short");
+    assert
+      .dom(".code-login-form__submit-approval")
+      .isDisabled("a locally invalid password cannot be submitted");
+    await fillIn("#new-account-password", "Correct Horse Battery Staple");
+
     assert.strictEqual(
       verifyRequests.length,
       1,
@@ -290,14 +306,28 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert
       .dom(".code-login-form__account-details-step")
       .exists("a server error keeps the details editable");
+    assert.dom("#code-login-username").hasValue("chosen-name");
+    assert.dom("#code-login-name").hasValue("  Chosen Name  ");
+    assert
+      .dom("#new-account-password")
+      .hasValue("Correct Horse Battery Staple");
+    assert
+      .dom("#password-validation")
+      .includesText("Choose a more secure password");
     assert.strictEqual(accountDetailAttempts, 1, "the first attempt failed");
 
+    await fillIn("#new-account-password", "A different secure password 42!");
     await click(".code-login-form__submit-approval");
 
     assert.dom(".code-login-form__pending-approval-step").exists();
     assert.strictEqual(verifyRequests[1].get("signup_token"), "signup-token");
     assert.strictEqual(verifyRequests[1].get("username"), "chosen-name");
     assert.strictEqual(verifyRequests[1].get("name"), "Chosen Name");
+    assert.strictEqual(
+      verifyRequests[2].get("password"),
+      "A different secure password 42!",
+      "the password is only sent with final account-detail submissions"
+    );
     assert.strictEqual(
       accountDetailAttempts,
       2,
@@ -399,7 +429,7 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .hasText(i18n("code_login.pending_approval_instructions"));
     assert
       .dom(".code-login-form__pending-approval-step")
-      .hasText(i18n("code_login.pending_approval_next_step"));
+      .hasNoText("does not add extra instructions below the explanation");
     assert.dom(".d-otp-input").doesNotExist("removes the code input");
     assert.dom(".code-login-form__resend").doesNotExist("removes resend");
   });

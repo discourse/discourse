@@ -11,10 +11,8 @@ describe "Sign up via email code" do
 
   def open_code_signup
     visit("/signup")
-    expect(page).to have_css("#new-account-password")
-    expect(page).to have_no_css(".code-login-form")
-    find(".signup-page-cta__code-signup").click
     expect(page).to have_css(".code-login-form__email-step")
+    expect(page).to have_no_css("#new-account-password")
   end
 
   def fill_code(code)
@@ -231,7 +229,7 @@ describe "Sign up via email code" do
     with_logs do |browser_logs|
       page.refresh
 
-      expect(page).to have_current_path("/signup?mode=code")
+      expect(page).to have_current_path("/signup")
       expect(page).to have_css(".code-login-form__account-details-step")
       expect(page).to have_field("code-login-username")
       expect(User.find_by_email(email)).to be_nil
@@ -264,10 +262,6 @@ describe "Sign up via email code" do
     expect(page).to have_css(
       ".login-subheader",
       text: I18n.t("js.code_login.pending_approval_instructions"),
-    )
-    expect(page).to have_css(
-      ".code-login-form__pending-approval-step",
-      text: I18n.t("js.code_login.pending_approval_next_step"),
     )
     expect(page).to have_no_css(".d-otp-input")
     expect(page).to have_no_css(".header-dropdown-toggle.current-user")
@@ -310,6 +304,64 @@ describe "Sign up via email code" do
 
     expect(page).to have_css(".header-dropdown-toggle.current-user")
     expect(User.find_by_email(email).username).to eq(rolled_username)
+  end
+
+  it "creates a password account before approval and logs in with it after approval" do
+    SiteSetting.must_approve_users = true
+    admin = Fabricate(:admin)
+    email = "password.approval@example.com"
+    password = "a-secure-password-42!"
+
+    open_code_signup
+    submit_email(email)
+    fill_code(latest_emailed_code(email))
+
+    expect(page).to have_button(I18n.t("js.code_login.create_password_optional"))
+    expect(page).to have_no_field("new-account-password")
+    screenshot_marker(label: "code-signup-account-details-password-link")
+
+    find(".code-login-form__create-password").click
+    expect(page).to have_field("new-account-password", type: "password")
+    screenshot_marker(label: "code-signup-account-details-password-expanded")
+
+    fill_in("new-account-password", with: "short")
+    expect(page).to have_css(".code-login-form__submit-approval[disabled]")
+
+    fill_in("new-account-password", with: password)
+    expect(page).to have_no_css(".code-login-form__submit-approval[disabled]")
+    find(".code-login-form__submit-approval").click
+
+    expect(page).to have_css(".code-login-form__pending-approval-step")
+    expect(page).to have_no_css(".header-dropdown-toggle.current-user")
+    screenshot_marker(label: "code-signup-pending-approval")
+
+    user = User.find_by_email(email)
+    expect(user).not_to be_approved
+    expect(user.confirm_password?(password)).to eq(true)
+
+    reviewable = ReviewableUser.pending.find_by!(target: user)
+    sign_in(admin)
+    review_page = PageObjects::Pages::Review.new
+    review_page.visit_reviewable(reviewable)
+    review_page.click_approve_user_button
+
+    expect(review_page).to have_reviewable_with_approved_status(reviewable)
+    approval_email = ActionMailer::Base.deliveries.last
+    expect(approval_email.body.to_s).to include("logging in at:")
+    expect(approval_email.body.to_s).not_to include("request a fresh login code")
+
+    user_menu = PageObjects::Components::UserMenu.new
+    user_menu.open.click_profile_tab
+    find("#quick-access-profile .logout .btn").click
+    expect(page).to have_current_path("/")
+
+    visit("/login")
+    expect(page).to have_field("login-account-password")
+    fill_in("login-account-name", with: email)
+    fill_in("login-account-password", with: password)
+    find("#login-button").click
+
+    expect(page).to have_css(".header-dropdown-toggle.current-user")
   end
 
   context "with required user fields" do
