@@ -15,6 +15,7 @@ describe DiscourseDataExplorer::QueryController do
         sql: sql,
         hidden: opts[:hidden] || false,
       )
+    DiscourseDataExplorer::QueryTag.sync!(query:, names: opts[:tags]) if opts[:tags]
     group_ids.each { |group_id| query.query_groups.create!(group_id: group_id) }
     query
   end
@@ -126,6 +127,47 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(200)
         expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
       end
+
+      it "filters by tag and applies text search within the active tag" do
+        DiscourseDataExplorer::Query.destroy_all
+        make_query("SELECT 1", name: "Monthly staff report", tags: ["Staff"])
+        make_query("SELECT 2", name: "Daily staff report", tags: %w[Staff Daily])
+        make_query("SELECT 3", name: "Monthly member report", tags: ["Members"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json",
+            params: {
+              tag: "Staff",
+              filter: "monthly",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["name"] }).to eq(
+          ["Monthly staff report"],
+        )
+        expect(response_json["extras"]["tags"]).to eq(%w[daily Default members staff])
+      end
+
+      it "returns the Default tag for bundled queries" do
+        DiscourseDataExplorer::Query.destroy_all
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tag: "Default" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"]).to be_present
+        expect(response_json["queries"].flat_map { |query| query["tags"] }.uniq).to eq(["Default"])
+      end
+    end
+
+    describe "#tags" do
+      it "returns tags from visible queries and bundled defaults" do
+        make_query("SELECT 1", tags: %w[Staff Monthly])
+        make_query("SELECT 2", tags: ["Hidden"], hidden: true)
+
+        get "/admin/plugins/discourse-data-explorer/queries/tags.json"
+
+        expect(response.status).to eq(200)
+        expect(response_json).to eq(%w[Default monthly staff])
+      end
     end
 
     describe "#create" do
@@ -139,11 +181,13 @@ describe DiscourseDataExplorer::QueryController do
                  description: "A description",
                  sql: "SELECT 1",
                  group_ids: [group.id],
+                 tags: %w[Staff Monthly],
                },
              }
 
         expect(response.status).to eq(200)
         expect(response_json["query"]["group_ids"]).to eq([group.id])
+        expect(response_json["query"]["tags"]).to eq(%w[monthly staff])
       end
 
       it "creates a query without groups when none are given" do
@@ -195,6 +239,37 @@ describe DiscourseDataExplorer::QueryController do
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["errors"]).to eq(["Name can't be blank"])
+      end
+
+      it "updates query tags" do
+        query = make_query("SELECT 1", tags: ["Staff"])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags: %w[Staff Monthly],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(query.reload.tag_names).to eq(%w[monthly staff])
+      end
+
+      it "updates additional tags on default queries without removing the default tag" do
+        query = DiscourseDataExplorer::Query.find(-4)
+        query.save!
+        DiscourseDataExplorer::QueryTag.sync!(query:, names: %w[Default Staff Monthly])
+
+        put "/admin/plugins/discourse-data-explorer/queries/#{query.id}.json",
+            params: {
+              query: {
+                tags: ["Staff"],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(response_json["query"]["tags"]).to eq(%w[Default staff])
+        expect(DiscourseDataExplorer::Query.find(-4).tag_names).to eq(%w[Default staff])
       end
     end
 

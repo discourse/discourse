@@ -3962,6 +3962,68 @@ ALTER SEQUENCE public.data_explorer_query_stats_id_seq OWNED BY public.data_expl
 
 
 --
+-- Name: data_explorer_query_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_query_tags (
+    id bigint NOT NULL,
+    query_id bigint NOT NULL,
+    query_tag_id bigint NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_query_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_query_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_query_tags_id_seq OWNED BY public.data_explorer_query_tags.id;
+
+
+--
+-- Name: data_explorer_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_tags (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_tags_id_seq OWNED BY public.data_explorer_tags.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14323,6 +14385,20 @@ ALTER TABLE ONLY public.data_explorer_query_stats ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: data_explorer_query_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_query_tags_id_seq'::regclass);
+
+
+--
+-- Name: data_explorer_tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_tags_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -16897,6 +16973,22 @@ ALTER TABLE ONLY public.data_explorer_query_stats
 
 
 --
+-- Name: data_explorer_query_tags data_explorer_query_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_tags
+    ADD CONSTRAINT data_explorer_query_tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: data_explorer_tags data_explorer_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_tags
+    ADD CONSTRAINT data_explorer_tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: developers developers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19372,6 +19464,27 @@ CREATE INDEX idx_chat_messages_thread_id_id_user_id_not_deleted ON public.chat_m
 --
 
 CREATE INDEX idx_chat_pinned_messages_channel_created ON public.chat_pinned_messages USING btree (chat_channel_id, created_at DESC);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_query_tag; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_query_tag ON public.data_explorer_query_tags USING btree (query_id, query_tag_id);
+
+
+--
+-- Name: idx_data_explorer_query_tags_on_tag_query; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_query_tags_on_tag_query ON public.data_explorer_query_tags USING btree (query_tag_id, query_id);
+
+
+--
+-- Name: idx_data_explorer_tags_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_data_explorer_tags_on_name ON public.data_explorer_tags USING btree (name);
 
 
 --
@@ -25383,6 +25496,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260917145657'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),

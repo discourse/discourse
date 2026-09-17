@@ -5,6 +5,7 @@ import { not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
@@ -36,6 +37,7 @@ export default <template>
     </DPageSubheader>
 
     <DFilterControls
+      @additionalFiltersActive={{@controller.hasTagFilter}}
       @array={{@controller.model.content}}
       @inputPlaceholder={{i18n "explorer.search_placeholder"}}
       @loading={{@controller.searchLoading}}
@@ -51,6 +53,19 @@ export default <template>
           </div>
         {{/if}}
       </:aboveFilters>
+
+      <:additionalFilters>
+        <DMultiSelect
+          class="query-tag-filter"
+          @label={{i18n "explorer.filter_by_tag"}}
+          @loadFn={{@controller.loadTags}}
+          @onChange={{@controller.onTagFilterChange}}
+          @selection={{@controller.tagSelection}}
+        >
+          <:selection as |tag|>{{tag.name}}</:selection>
+          <:result as |tag|>{{tag.name}}</:result>
+        </DMultiSelect>
+      </:additionalFilters>
 
       <:content as |filteredQueries|>
         {{#if @controller.model.content.length}}
@@ -128,13 +143,7 @@ export default <template>
                         >
                           <div
                             class="d-table__overview-name query-name"
-                          >{{query.name}}
-                            {{#if query.is_default}}
-                              <span class="query-badge">{{i18n
-                                  "explorer.default_query"
-                                }}</span>
-                            {{/if}}
-                          </div>
+                          >{{query.name}}</div>
                           <div
                             class="query-desc"
                             title={{query.description}}

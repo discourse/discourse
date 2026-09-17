@@ -31,7 +31,7 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
         (query.group_ids || []).map((id) => groupNames[id])
       );
     });
-    return { model, groups };
+    return { model, groups, queryTags: model.extras?.tags ?? [] };
   }
 
   setupController(controller, model) {

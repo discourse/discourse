@@ -63,6 +63,10 @@ acceptance("New Query", function (needs) {
       });
     });
 
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["Default", "Staff"])
+    );
+
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [],
@@ -81,6 +85,7 @@ acceptance("New Query", function (needs) {
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [41],
+          tags: ["Monthly"],
           last_run_at: "2021-02-08T15:37:49.188Z",
           hidden: false,
           user_id: -1,
@@ -134,7 +139,19 @@ acceptance("New Query", function (needs) {
       ".query-new__manual-form [data-name='description'] textarea",
       "a test query"
     );
+    const tags = selectKit(
+      ".query-new__manual-form [data-name='tags'] .query-tag-chooser"
+    );
+    await tags.expand();
+    await tags.fillInFilter("Monthly");
+    await tags.selectRowByValue("Monthly");
     await click(".query-new__manual-form .btn-primary");
+
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["Monthly"],
+      "the newly created tag is sent with the query"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -253,6 +270,9 @@ acceptance("New Query - AI", function (needs) {
     server.get("/admin/plugins/discourse-data-explorer/schema.json", () =>
       helper.response({ topics: [] })
     );
+    server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
+      helper.response(["Default", "Staff"])
+    );
     server.get("/admin/plugins/discourse-data-explorer/queries", () =>
       helper.response({ queries: [] })
     );
@@ -288,6 +308,7 @@ acceptance("New Query - AI", function (needs) {
           description: "",
           param_info: [],
           group_ids: [],
+          tags: ["Staff"],
           hidden: false,
           user_id: -1,
         },
@@ -398,12 +419,20 @@ acceptance("New Query - AI", function (needs) {
     );
 
     await groups.selectRowByValue(41);
+    const tags = selectKit(".query-new__fields .query-tag-chooser");
+    await tags.expand();
+    await tags.selectRowByValue("Staff");
     await click(".query-new__save-btn");
 
     assert.deepEqual(
       createParams.getAll("query[group_ids][]"),
       ["41"],
       "the selected groups are sent with the new query"
+    );
+    assert.deepEqual(
+      createParams.getAll("query[tags][]"),
+      ["Staff"],
+      "the selected tag is sent with the new query"
     );
   });
 
