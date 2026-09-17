@@ -358,25 +358,20 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.downsize_with_vips(from:, to:, scale:, width:, height:, max_pixels:, opts:)
-    format = image_extension(path: from, ext_path: to, opts: opts).downcase
-
-    begin
-      DiscourseVips.downsize(
-        input_path: from,
-        output_path: to,
-        format: format,
-        scale: scale,
-        width: width,
-        height: height,
-        max_pixels: max_pixels,
-        timeout: MAX_CONVERT_SECONDS,
-        read: [from],
-        write: [File.dirname(to)],
-      )
-      optimize_image(to: to)
-    rescue => error
-      handle_optimization_error(error: error, to: to, opts: opts)
-    end
+    DiscourseVips.downsize(
+      input_path: from,
+      output_path: to,
+      scale: scale,
+      width: width,
+      height: height,
+      max_pixels: max_pixels,
+      timeout: MAX_CONVERT_SECONDS,
+      read: [from],
+      write: [File.dirname(to)],
+    )
+    optimize_image(to: to)
+  rescue => error
+    handle_optimization_error(error: error, to: to, opts: opts)
   end
   private_class_method :downsize_with_vips
 
@@ -417,6 +412,8 @@ class OptimizedImage < ActiveRecord::Base
     message = +"Failed to optimize image:"
     if error.message =~ /\A(?:convert|magick):([^`]+)/
       message << $1
+    elsif error.is_a?(DiscourseVips::Error)
+      message << " #{error.message}"
     else
       message << " unknown reason"
     end

@@ -309,9 +309,10 @@ class DiscourseVipsWorker
             height = Integer(height)
             raise ArgumentError, "invalid resize bounds" if !width.positive? || !height.positive?
 
-            image = Vips::Image.thumbnail(input_path, width, height:, size: :down)
+            image =
+              Vips::Image.thumbnail(input_path, width, height:, size: :down, output_profile: "srgb")
           else
-            source = Vips::Image.new_from_file(input_path, access: :sequential)
+            source = Vips::Image.new_from_file(input_path)
             scale =
               if max_pixels.empty?
                 Float(scale)
@@ -321,10 +322,14 @@ class DiscourseVipsWorker
             raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
 
             edge = [([source.width, source.height].max * scale).round, 1].max
-            image = Vips::Image.thumbnail(input_path, edge)
+            image = Vips::Image.thumbnail(input_path, edge, output_profile: "srgb")
           end
 
-          image.write_to_file(output_path)
+          options = {}
+          options[:interlace] = false if %w[.jpg .jpeg .png .gif].include?(
+            File.extname(output_path),
+          )
+          image.write_to_file(output_path, **options)
         rescue Vips::Error => error
           raise InvalidImage, error.message
         end
