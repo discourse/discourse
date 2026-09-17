@@ -16,7 +16,7 @@ import { module, test } from "qunit";
 import CodeEditor from "discourse/components/code-editor";
 import { capabilities } from "discourse/services/capabilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { I18n } from "discourse-i18n";
+import I18n from "discourse-i18n";
 
 // The editor binds to whichever modifier the platform uses for its commands.
 function pressWithModifier(element, key) {
