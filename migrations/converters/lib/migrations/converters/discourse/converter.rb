@@ -100,7 +100,7 @@ module Migrations
           uri = URI.parse(normalized)
           host = uri.host&.downcase
 
-          raise "Invalid source_site URL (no host): #{url.inspect}" if host.nil? || host.empty?
+          raise "Invalid source_site URL (no host): #{url.inspect}" if host.blank?
 
           [host, normalize_prefix(uri.path)]
         rescue URI::InvalidURIError => e

@@ -177,7 +177,7 @@ module Migrations
 
             items.each do |item|
               raw = item[:raw]
-              next if raw.nil? || raw.empty?
+              next if raw.blank?
 
               prepared[item[:id]] = @extractor.prepare(
                 raw:,
