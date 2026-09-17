@@ -254,7 +254,7 @@ export function lookupWorkflowMethodDoc(parentPath, methodName) {
   return { detail: doc.detail, info: i18n(doc.infoKey) };
 }
 
-function buildScopeFromFields(fields) {
+export function buildScopeFromFields(fields) {
   if (!fields?.length) {
     return Object.create(null);
   }
@@ -283,7 +283,7 @@ function buildScopeFromFields(fields) {
   return obj;
 }
 
-function buildSiteSettingsScope(siteSettings) {
+export function buildSiteSettingsScope(siteSettings) {
   if (!siteSettings) {
     return Object.create(null);
   }
@@ -306,7 +306,7 @@ function buildSiteSettingsScope(siteSettings) {
   return scope;
 }
 
-function buildVarsScope(workflowVars) {
+export function buildVarsScope(workflowVars) {
   const scope = Object.create(null);
   if (workflowVars?.length) {
     for (const v of workflowVars) {
@@ -316,7 +316,7 @@ function buildVarsScope(workflowVars) {
   return scope;
 }
 
-function buildExecutionScope(nodes) {
+export function buildExecutionScope(nodes) {
   const scope = cleanObject({
     id: 0,
     workflow_id: 0,

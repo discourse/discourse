@@ -65,11 +65,10 @@ module DiscourseWorkflows
               default: DEFAULT_TEMPLATE,
               no_data_expression: true,
               ui: {
-                control: :code,
+                control: :liquid,
               },
               control_options: {
                 height: 240,
-                lang: :text,
               },
             },
           },
