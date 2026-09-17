@@ -124,7 +124,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
       stub_request(:get, link).to_return(
         status: 200,
         body:
-          "<html><head><title>SwiftJet Car Wash Foam Gun</title><meta name='description' content='Foam gun'><link rel='canonical' href='https://www.amazon.com/clp/B082SBHKN2'></head><body><img id='landingImage' data-old-hires='' src='#{image}'></body></html>",
+          "<html><head><title>SwiftJet Car Wash Foam Gun</title><meta name='description' content='Foam gun'><link rel='canonical' href='https://www.amazon.com/clp/B082SBHKN2'></head><body><img id='landingImage' data-old-hires='' src='#{image}'><div id='corePrice_feature_div'><span class='a-price'><span class='a-offscreen'>$0.99</span></span></div></body></html>",
       )
 
       stub_request(:get, "https://www.amazon.com/clp/B082SBHKN2").to_return(
@@ -134,7 +134,12 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     end
 
     it "renders the product page" do
-      expect(html).to include("SwiftJet Car Wash Foam Gun", %(href="#{link}"), %(src="#{image}"))
+      expect(html).to include(
+        "SwiftJet Car Wash Foam Gun",
+        %(href="#{link}"),
+        %(src="#{image}"),
+        "$0.99",
+      )
     end
   end
 
