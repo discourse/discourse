@@ -133,9 +133,7 @@ module Migrations
         when Hash
           value.transform_values { |item| batch_details(item) }
         when String
-          return value if value.length <= MAX_LOGGED_STRING_LENGTH
-
-          "#{value[0, MAX_LOGGED_STRING_LENGTH - 3]}..."
+          value.truncate(MAX_LOGGED_STRING_LENGTH)
         else
           value
         end
