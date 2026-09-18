@@ -1606,7 +1606,7 @@ class BulkImport::Base
 
   def process_group_user(group_user)
     group_user[:owner] ||= false
-    group_user[:created_at] = NOW
+    group_user[:created_at] ||= NOW
     group_user[:updated_at] = NOW
     group_user
   end
@@ -2034,6 +2034,22 @@ class BulkImport::Base
   end
 
   def process_badge(badge)
+    if (existing_badge_id = badge[:existing_id]).present?
+      if existing_badge_id.is_a?(String) && existing_badge_id !~ /^\d+$/
+        existing_badge = Badge.find_by(name: existing_badge_id)
+        existing_badge_id = existing_badge&.id
+      else
+        existing_badge_id = existing_badge_id.to_i
+      end
+
+      if existing_badge_id && Badge.exists?(id: existing_badge_id)
+        @imported_records[badge[:original_id].to_s] = existing_badge_id
+        @badge_mapping[badge[:original_id].to_s] = existing_badge_id
+        badge[:skip] = true
+        return badge
+      end
+    end
+
     badge[:id] = @last_badge_id += 1
     badge[:created_at] ||= NOW
     badge[:updated_at] ||= NOW
