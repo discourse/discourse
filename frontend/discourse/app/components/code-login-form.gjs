@@ -32,7 +32,7 @@ import UserFieldsValidationHelper from "discourse/lib/user-fields-validation-hel
 import { emailValid } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import User, { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { or } from "discourse/truth-helpers";
+import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DInputTip from "discourse/ui-kit/d-input-tip";
 import DOtp from "discourse/ui-kit/d-otp";
@@ -529,11 +529,7 @@ export default class CodeLoginForm extends Component {
   setupNewAccount(result) {
     const user = result.user;
     this.newAccount = user;
-    // can_upload_avatar isn't in UserSerializer, so carry it from the response.
-    this.accountUser = User.create({
-      ...user,
-      can_upload_avatar: result.can_upload_avatar,
-    });
+    this.accountUser = User.create(user);
     this.usernameEditable = result.can_edit_username;
     this.username = result.prefill_username ? user.username : "";
     this.avatarTemplate = user.avatar_template;
@@ -1320,14 +1316,20 @@ export default class CodeLoginForm extends Component {
           <div class="code-login-form__new-account">
             <button
               class="code-login-form__avatar"
-              title={{i18n "code_login.change_avatar"}}
+              disabled={{not this.accountUser.can_edit_avatar}}
+              title={{if
+                this.accountUser.can_edit_avatar
+                (i18n "code_login.change_avatar")
+              }}
               type="button"
               {{on "click" this.changeAvatar}}
             >
               {{dBoundAvatarTemplate this.avatarTemplate "huge"}}
-              <span class="code-login-form__avatar-edit">
-                {{dIcon "pencil"}}
-              </span>
+              {{#if this.accountUser.can_edit_avatar}}
+                <span class="code-login-form__avatar-edit">
+                  {{dIcon "pencil"}}
+                </span>
+              {{/if}}
             </button>
 
             {{#if this.usernameEditable}}
