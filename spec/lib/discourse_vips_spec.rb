@@ -146,7 +146,7 @@ RSpec.describe DiscourseVips do
     end
 
     it "flattens transparent 12-bit HEIF pixels onto white" do
-      input_path = file_from_fixtures("heif-color-grid-alpha-12bit.heic").path
+      input_path = file_from_fixtures("transparent-alpha-12bit.heic").path
 
       Dir.mktmpdir do |directory|
         output_path = File.join(directory, "converted.jpg")
@@ -160,15 +160,7 @@ RSpec.describe DiscourseVips do
           write: [directory],
         )
 
-        expect(
-          ImageMagick.identify(
-            "-format",
-            "%[hex:p{5,5}]",
-            output_path,
-            operation: :upload_heif_to_jpeg,
-            read: [output_path],
-          ),
-        ).to eq("FFFFFF")
+        expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq("FFFFFF")
       end
     end
 
@@ -441,15 +433,7 @@ RSpec.describe DiscourseVips do
         )
 
         expect(FastImage.type(output_path)).to eq(:jpeg)
-        expect(
-          ImageMagick.identify(
-            "-format",
-            "%[hex:p{16,16}]",
-            output_path,
-            operation: :upload_png_to_jpeg,
-            read: [output_path],
-          ),
-        ).to eq("FFFFFF")
+        expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq("FFFFFF")
       end
     end
 
