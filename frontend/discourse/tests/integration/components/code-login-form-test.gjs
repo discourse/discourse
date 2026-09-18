@@ -439,6 +439,12 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .dom(".code-login-form__signup-details-step")
       .exists("the interaction step is visible");
     assert
+      .dom(".login-title")
+      .hasText(
+        i18n("code_login.account_details_title"),
+        "generated mode uses the generic account details heading"
+      );
+    assert
       .dom(".code-login-form__continue-to-site")
       .exists("the normal final action remains available");
 

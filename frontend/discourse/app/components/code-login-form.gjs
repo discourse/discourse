@@ -182,6 +182,14 @@ export default class CodeLoginForm extends Component {
     return this.step === "pending-approval";
   }
 
+  get signupDetailsTitle() {
+    return i18n(
+      this.generatedUsername
+        ? "code_login.account_details_title"
+        : "code_login.signup_details_title"
+    );
+  }
+
   get heading() {
     if (this.isAccountDetailsStep) {
       return {
@@ -214,7 +222,7 @@ export default class CodeLoginForm extends Component {
         };
       case "signup-details":
         return {
-          title: i18n("code_login.signup_details_title"),
+          title: this.signupDetailsTitle,
         };
       case "second-factor":
         return { title: i18n("login.second_factor_title"), subtitle: null };
@@ -1406,7 +1414,7 @@ export default class CodeLoginForm extends Component {
         <div class="code-login-form__signup-details-step">
           {{#unless this.isSignup}}
             <h2 class="code-login-form__title">
-              {{i18n "code_login.signup_details_title"}}
+              {{this.signupDetailsTitle}}
             </h2>
           {{/unless}}
 
