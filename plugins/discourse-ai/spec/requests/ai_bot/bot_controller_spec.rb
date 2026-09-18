@@ -264,6 +264,60 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(404)
     end
 
+    it "does not expose a moderator's secure upload when a regular user retries the reply" do
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      llm_model.update!(vision_enabled: true)
+      ai_persona.update!(vision_enabled: true)
+      AiPersona.persona_cache.flush!
+
+      source_topic = Fabricate(:private_message_topic, user: moderator)
+      source_post = Fabricate(:post, topic: source_topic, user: moderator)
+      secure_upload = Fabricate(:image_upload, user: moderator)
+      secure_upload.update!(secure: true, access_control_post: source_post)
+
+      topic = Fabricate(:topic, user: moderator)
+      trigger_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: moderator,
+          raw: "Inspect this private image: ![private](#{secure_upload.short_url})",
+        )
+
+      aggregate_failures do
+        expect(Guardian.new(moderator).can_see_upload?(secure_upload)).to eq(true)
+        expect(Guardian.new(user).can_see_upload?(secure_upload)).to eq(false)
+      end
+
+      reply_post =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Initial response"]) do
+          DiscourseAi::AiBot::Playground.new(bot).reply_to(trigger_post)
+        end
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+
+      response_status = response.status
+      response_body = response.body
+      job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+      prompts = nil
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["Retry response"],
+      ) do |_, _, captured_prompts|
+        Jobs::CreateAiReply.new.execute(job_args)
+        prompts = captured_prompts
+      end
+
+      prompt_content = prompts.flat_map(&:messages).map { |message| message[:content] }.join
+
+      aggregate_failures do
+        expect(response_status).to eq(200)
+        expect(response_body).to include("success")
+        expect(job_args[:visibility_user_id]).to eq(user.id)
+        expect(prompt_content).not_to include("upload_id #{secure_upload.id}")
+      end
+    end
+
     it "allows retrying if LLM model has a negative id (seeded)" do
       seeded_llm_model = Fabricate(:llm_model, id: -9999, user: bot_user, name: "second-model")
 

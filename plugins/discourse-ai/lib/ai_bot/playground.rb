@@ -426,6 +426,7 @@ module DiscourseAi
         cancel_manager: nil,
         attributed_user: nil,
         feature_context: nil,
+        visibility_user: post.user,
         &blk
       )
         # this is a multithreading issue
@@ -458,6 +459,7 @@ module DiscourseAi
           max_context_posts = bot.persona.class.max_context_posts || 40
         end
 
+        visibility_guardian = Guardian.new(visibility_user)
         context =
           DiscourseAi::Personas::BotContext.new(
             post: post,
@@ -468,6 +470,7 @@ module DiscourseAi
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
+                guardian: visibility_guardian,
                 style: context_style,
                 max_posts: max_context_posts,
                 include_uploads: bot.persona.class.vision_enabled,
