@@ -71,6 +71,10 @@ module DiscourseAi
             SiteSetting.ai_translation_backfill_start_date = 5.days.ago.utc.to_date.iso8601
           end
         end
+
+        plugin.add_to_serializer(:current_user, :in_any_content_localization_allowed_groups) do
+          object.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
+        end
       end
     end
   end
