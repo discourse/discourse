@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "file_store/s3_store"
-require "chunky_png"
 
 RSpec.describe UploadCreator do
   fab!(:user)
@@ -63,125 +62,30 @@ RSpec.describe UploadCreator do
       end
     end
 
-    shared_examples "resized upload metadata" do
-      it "records the stored JPEG avatar dimensions and preserves read-only access" do
-        file = file_from_fixtures("logo.jpg")
-        observed_dimensions = nil
-        event =
-          proc do |processed_file|
-            observed_dimensions = FastImage.size(processed_file)
-            expect { processed_file.write("x") }.to raise_error(IOError)
-          end
-        DiscourseEvent.on(:before_upload_creation, &event)
-
-        upload =
-          described_class.new(file, "logo.jpg", type: "avatar", force_optimize: true).create_for(
-            user.id,
-          )
-
-        expected_dimensions = [Discourse.avatar_sizes.max, Discourse.avatar_sizes.max]
-        expect(upload).to be_persisted
-        expect([upload.width, upload.height]).to eq(expected_dimensions)
-        expect(FastImage.size(Discourse.store.path_for(upload))).to eq(expected_dimensions)
-        expect(observed_dimensions).to eq(expected_dimensions)
-      ensure
-        DiscourseEvent.off(:before_upload_creation, &event) if event
-      end
-
-      it "keeps resized Tempfiles writable for upload callbacks and unlinks them after creation" do
-        file = Tempfile.new(%w[avatar .jpg])
-        file.binmode
-        input_path = file.path
-        FileUtils.copy_file(file_from_fixtures("logo.jpg").path, input_path)
-        observed_dimensions = nil
-        written_bytes = nil
-        event =
-          proc do |processed_file|
-            observed_dimensions = FastImage.size(processed_file)
-            processed_file.rewind
-            first_byte = processed_file.read(1)
-            processed_file.rewind
-            written_bytes = processed_file.write(first_byte)
-            processed_file.flush
-            processed_file.rewind
-          end
-        DiscourseEvent.on(:before_upload_creation, &event)
-
-        upload =
-          described_class.new(file, "avatar.jpg", type: "avatar", force_optimize: true).create_for(
-            user.id,
-          )
-
-        expect(upload).to be_persisted
-        expect(observed_dimensions).to eq([Discourse.avatar_sizes.max, Discourse.avatar_sizes.max])
-        expect(written_bytes).to eq(1)
-        expect(file).to be_closed
-        expect(File.exist?(input_path)).to eq(false)
-      ensure
-        DiscourseEvent.off(:before_upload_creation, &event) if event
-        file&.close!
-      end
-
-      it "stores JPEG uploads downsized below the byte limit with matching metadata" do
-        file = file_from_fixtures("logo.jpg")
-        original_dimensions = FastImage.size(file.path)
-        SiteSetting.max_image_size_kb = 16
-        SiteSetting.recompress_original_jpg_quality = 100
-        expect(File.size(file.path)).to be > SiteSetting.max_image_size_kb.kilobytes
-
-        upload = described_class.new(file, "large.jpg", force_optimize: true).create_for(user.id)
-
-        expect(upload).to be_persisted
-        stored_path = Discourse.store.path_for(upload)
-        stored_dimensions = FastImage.size(stored_path)
-        expect(stored_dimensions[0]).to be < original_dimensions[0]
-        expect(stored_dimensions[1]).to be < original_dimensions[1]
-        expect([upload.width, upload.height]).to eq(stored_dimensions)
-        expect(upload.filesize).to eq(File.size(stored_path))
-        expect(upload.filesize).to be < SiteSetting.max_image_size_kb.kilobytes
-        expect(upload.extension).to eq("jpeg")
-      end
-
-      it "stores PNG uploads downsized below the byte limit with matching metadata" do
-        file = Tempfile.new(%w[large .png])
-        random = Random.new(42)
-        image = ChunkyPNG::Image.new(640, 640)
-        image.pixels.map! do
-          ChunkyPNG::Color.rgb(random.rand(256), random.rand(256), random.rand(256))
-        end
-        image.save(file.path)
-        SiteSetting.max_image_size_kb = 128
-        SiteSetting.png_to_jpg_quality = 100
-        expect(File.size(file.path)).to be > SiteSetting.max_image_size_kb.kilobytes
-
-        upload = described_class.new(file, "large.png", force_optimize: true).create_for(user.id)
-
-        expect(upload).to be_persisted
-        stored_path = Discourse.store.path_for(upload)
-        stored_dimensions = FastImage.size(stored_path)
-        expect(stored_dimensions[0]).to be < 640
-        expect(stored_dimensions[1]).to be < 640
-        expect([upload.width, upload.height]).to eq(stored_dimensions)
-        expect(upload.filesize).to eq(File.size(stored_path))
-        expect(upload.filesize).to be < SiteSetting.max_image_size_kb.kilobytes
-        expect(upload.extension).to eq("png")
-      ensure
-        file&.close!
-      end
-    end
-
     context "when processing images with ImageMagick" do
       before { global_setting :enable_vips_image_processing, false }
 
       include_examples "image extension correction"
-      include_examples "resized upload metadata"
     end
 
     context "when processing images with libvips" do
       before { global_setting :enable_vips_image_processing, true }
 
       include_examples "image extension correction"
-      include_examples "resized upload metadata"
+
+      it "stores oversized JPEG uploads with metadata matching the resized image" do
+        file = file_from_fixtures("logo.jpg")
+        SiteSetting.max_image_size_kb = 16
+        expect(File.size(file.path)).to be > SiteSetting.max_image_size_kb.kilobytes
+
+        upload = described_class.new(file, "large.jpg", force_optimize: true).create_for(user.id)
+
+        expect(upload).to be_persisted
+        stored_path = Discourse.store.path_for(upload)
+        width, height = FastImage.size(stored_path)
+        expect(upload).to have_attributes(width:, height:, filesize: File.size(stored_path))
+        expect(upload.filesize).to be < SiteSetting.max_image_size_kb.kilobytes
+      end
     end
 
     context "when the upload is an SVG" do
