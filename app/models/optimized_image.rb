@@ -62,6 +62,9 @@ class OptimizedImage < ActiveRecord::Base
 
     return thumbnail if thumbnail
 
+    upload.fix_image_extension if upload.persisted?
+    extension = ".#{opts[:format] || upload.extension}"
+
     store = Discourse.store
 
     # create the thumbnail otherwise
