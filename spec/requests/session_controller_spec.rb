@@ -1377,26 +1377,20 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(new_user.id)
       end
 
-      it "creates and logs in a new user" do
+      it "creates and logs in a new user with account-ready permissions" do
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
-        expect(response.status).to eq(200)
+        expect(response).to be_successful
 
         new_user = User.find_by_email("newuser@example.com")
         expect(new_user).to be_active
         expect(session[:current_user_id]).to eq(new_user.id)
-      end
-
-      it "returns the flags the account-ready step needs" do
-        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
         body = response.parsed_body
         expect(body["account_created"]).to eq(true)
         expect(body["can_edit_username"]).to eq(true)
-        # The avatar picker needs the upload permission, which isn't on
-        # UserSerializer. (Its value depends on automatic group membership,
-        # added on commit, so only assert the flag is present here.)
-        expect(body).to have_key("can_upload_avatar")
+        expect(body["user"]["can_edit_avatar"]).to eq(true)
+        expect(body["user"]).to have_key("can_upload_avatar")
       end
 
       it "defers a pending DiscourseConnect provider handoff to the account-ready step" do

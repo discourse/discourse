@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,12 +10,32 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse/lib/environment";
 import { allowsImages } from "discourse/lib/uploads";
+import { findAll as findLoginMethods } from "discourse/models/login-method";
+import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
+
+const ASSOCIATED_ACCOUNT_AVATAR = "associated_account";
+
+const AvatarChoice = <template>
+  <div class="avatar-choice" ...attributes>
+    <DRadioButton
+      @id={{@id}}
+      @name={{or @name "avatar"}}
+      @onChange={{@onChange}}
+      @selection={{@selection}}
+      @value={{@value}}
+    />
+    <label class="radio" for={{@id}}>
+      {{yield}}
+    </label>
+    {{yield to="action"}}
+  </div>
+</template>;
 
 export default class AvatarSelectorModal extends Component {
   @service currentUser;
@@ -29,10 +49,6 @@ export default class AvatarSelectorModal extends Component {
     return this._selected ?? this.defaultSelection;
   }
 
-  set selected(value) {
-    this._selected = value;
-  }
-
   get user() {
     return this.args.model.user;
   }
@@ -42,13 +58,12 @@ export default class AvatarSelectorModal extends Component {
   }
 
   get selectableAvatars() {
-    const mode = this.siteSettings.selectable_avatars_mode;
+    if (!this.showSelectableAvatars) {
+      return null;
+    }
+
     const list = this.siteSettings.selectable_avatars;
-    return mode !== "disabled"
-      ? Array.isArray(list)
-        ? list
-        : list?.split("|") || []
-      : null;
+    return Array.isArray(list) ? list : list?.split("|") || [];
   }
 
   get showSelectableAvatars() {
@@ -65,51 +80,74 @@ export default class AvatarSelectorModal extends Component {
       case "tl3":
       case "tl4":
         const allowedTl = parseInt(mode.replace("tl", ""), 10);
-        return (
-          this.user.admin ||
-          this.user.moderator ||
-          this.user.trust_level >= allowedTl
-        );
+        return this.user.staff || this.user.trust_level >= allowedTl;
       case "staff":
-        return this.user.admin || this.user.moderator;
-      case "everyone":
+        return this.user.staff;
       default:
         return true;
     }
   }
 
+  get associatedAccountAvatars() {
+    const methods = findLoginMethods();
+    return (this.user.associated_account_avatars || []).map((avatar) => ({
+      ...avatar,
+      name:
+        methods.find(({ name }) => name === avatar.name)?.prettyName ||
+        avatar.name,
+      selection: `${ASSOCIATED_ACCOUNT_AVATAR}:${avatar.id}`,
+    }));
+  }
+
   get defaultSelection() {
     if (this.user.use_logo_small_as_avatar) {
       return "logo";
-    } else if (this.user.avatar_template === this.user.system_avatar_template) {
-      return "system";
-    } else if (
-      this.user.avatar_template === this.user.gravatar_avatar_template
+    }
+
+    const account = this.associatedAccountAvatars.find(
+      ({ id }) => id === this.user.selected_user_associated_account_id
+    );
+    if (account) {
+      return account.selection;
+    }
+
+    if (
+      !this.user.uploaded_avatar_id ||
+      this.user.avatar_template === this.user.system_avatar_template
     ) {
+      return "system";
+    }
+
+    if (this.user.avatar_template === this.user.gravatar_avatar_template) {
       return "gravatar";
-    } else {
+    }
+
+    if (this.user.avatar_template === this.user.custom_avatar_template) {
       return "custom";
     }
+
+    return "current";
   }
 
-  get selectedUploadId() {
-    const selected = this.selected;
-    switch (selected) {
+  get #selectedUploadId() {
+    switch (this.selected) {
       case "system":
         return this.user.system_avatar_upload_id;
       case "gravatar":
         return this.user.gravatar_avatar_upload_id;
+      case "current":
+        return this.user.uploaded_avatar_id;
       default:
         return this.user.custom_avatar_upload_id;
     }
   }
 
   get allowAvatarUpload() {
-    // Falls back to the edited user when there is no current user yet, e.g.
-    // right after a passwordless signup before the app has rebooted.
     const user = this.currentUser ?? this.user;
     return (
-      user.can_upload_avatar && allowsImages(user.staff, this.siteSettings)
+      this.user.can_upload_avatar &&
+      user.can_upload_avatar &&
+      allowsImages(user.staff, this.siteSettings)
     );
   }
 
@@ -119,18 +157,7 @@ export default class AvatarSelectorModal extends Component {
 
   @action
   onSelectedChanged(value) {
-    this.selected = value;
-  }
-
-  // Callers that pass `model.onAvatarChange` (e.g. inline signup) handle the
-  // result themselves; otherwise we reload so the new avatar shows everywhere.
-  afterAvatarSaved({ guardTesting = false } = {}) {
-    if (this.args.model.onAvatarChange) {
-      this.args.model.onAvatarChange();
-      this.args.closeModal?.();
-    } else if (!guardTesting || !isTesting()) {
-      window.location.reload();
-    }
+    this._selected = value;
   }
 
   @action
@@ -138,15 +165,10 @@ export default class AvatarSelectorModal extends Component {
     event?.preventDefault();
     try {
       await this.user.selectAvatar(url);
-      this.afterAvatarSaved();
+      this.#afterAvatarSaved();
     } catch (error) {
       popupAjaxError(error);
     }
-  }
-
-  @action
-  uploadComplete() {
-    this.selected = "custom";
   }
 
   @action
@@ -161,15 +183,15 @@ export default class AvatarSelectorModal extends Component {
         }
       );
 
-      if (!result.gravatar_upload_id) {
-        this.gravatarFailed = true;
-      } else {
-        this.gravatarFailed = false;
-        this.user.setProperties({
-          gravatar_avatar_upload_id: result.gravatar_upload_id,
-          gravatar_avatar_template: result.gravatar_avatar_template,
-        });
+      this.gravatarFailed = !result.gravatar_upload_id;
+      if (this.gravatarFailed) {
+        return;
       }
+
+      this.user.setProperties({
+        gravatar_avatar_upload_id: result.gravatar_upload_id,
+        gravatar_avatar_template: result.gravatar_avatar_template,
+      });
     } finally {
       this.gravatarRefreshDisabled = false;
     }
@@ -177,11 +199,28 @@ export default class AvatarSelectorModal extends Component {
 
   @action
   async saveAvatarSelection() {
+    const account = this.associatedAccountAvatars.find(
+      ({ selection }) => selection === this.selected
+    );
+
     try {
-      await this.user.pickAvatar(this.selectedUploadId, this.selected);
-      this.afterAvatarSaved({ guardTesting: true });
+      await this.user.pickAvatar(
+        account?.upload_id ?? this.#selectedUploadId,
+        account ? ASSOCIATED_ACCOUNT_AVATAR : this.selected,
+        account?.id
+      );
+      this.#afterAvatarSaved();
     } catch (error) {
       popupAjaxError(error);
+    }
+  }
+
+  #afterAvatarSaved() {
+    if (this.args.model.onAvatarChange) {
+      this.args.model.onAvatarChange();
+      this.args.closeModal?.();
+    } else if (!isTesting()) {
+      window.location.reload();
     }
   }
 
@@ -211,46 +250,39 @@ export default class AvatarSelectorModal extends Component {
         {{/if}}
         {{#if this.showCustomAvatarSelector}}
           {{#if this.user.use_logo_small_as_avatar}}
-            <div class="avatar-choice">
-              <DRadioButton
-                @id="logo-small"
-                @name="logo"
-                @onChange={{this.onSelectedChanged}}
-                @selection={{this.selected}}
-                @value="logo"
-              />
-              <label class="radio" for="logo-small">
-                {{dBoundAvatarTemplate
-                  this.siteSettings.site_logo_small_url
-                  "large"
-                }}
-                {{i18n "user.change_avatar.logo_small"}}
-              </label>
-            </div>
-          {{/if}}
-          <div class="avatar-choice avatar-choice--system">
-            <DRadioButton
-              @id="system-avatar"
-              @name="avatar"
+            <AvatarChoice
+              @id="logo-small"
+              @name="logo"
               @onChange={{this.onSelectedChanged}}
               @selection={{this.selected}}
-              @value="system"
-            />
-            <label class="radio" for="system-avatar">
-              {{dBoundAvatarTemplate this.user.system_avatar_template "large"}}
-              {{i18n "user.change_avatar.letter_based"}}
-            </label>
-          </div>
+              @value="logo"
+            >
+              {{dBoundAvatarTemplate
+                this.siteSettings.site_logo_small_url
+                "large"
+              }}
+              {{i18n "user.change_avatar.logo_small"}}
+            </AvatarChoice>
+          {{/if}}
+          <AvatarChoice
+            class="avatar-choice--system"
+            @id="system-avatar"
+            @onChange={{this.onSelectedChanged}}
+            @selection={{this.selected}}
+            @value="system"
+          >
+            {{dBoundAvatarTemplate this.user.system_avatar_template "large"}}
+            {{i18n "user.change_avatar.letter_based"}}
+          </AvatarChoice>
           {{#if this.allowGravatar}}
-            <div class="avatar-choice avatar-choice--gravatar">
-              <DRadioButton
-                @id="gravatar"
-                @name="avatar"
-                @onChange={{this.onSelectedChanged}}
-                @selection={{this.selected}}
-                @value="gravatar"
-              />
-              <label class="radio" for="gravatar">
+            <AvatarChoice
+              class="avatar-choice--gravatar"
+              @id="gravatar"
+              @onChange={{this.onSelectedChanged}}
+              @selection={{this.selected}}
+              @value="gravatar"
+            >
+              <:default>
                 {{dBoundAvatarTemplate
                   this.user.gravatar_avatar_template
                   "large"
@@ -266,58 +298,87 @@ export default class AvatarSelectorModal extends Component {
                   }}
                   {{this.user.email}}
                 </span>
-              </label>
-
-              <DButton
-                class="btn-default avatar-selector-refresh-gravatar"
-                @action={{this.refreshGravatar}}
-                @disabled={{this.gravatarRefreshDisabled}}
-                @icon="arrows-rotate"
-                @translatedTitle={{i18n
-                  "user.change_avatar.refresh_gravatar_title"
-                  gravatarName=this.siteSettings.gravatar_name
-                }}
-              />
-
-              {{#if this.gravatarFailed}}
-                <p class="error">
-                  {{i18n
-                    "user.change_avatar.gravatar_failed"
+              </:default>
+              <:action>
+                <DButton
+                  class="btn-default avatar-selector-refresh-gravatar"
+                  @action={{this.refreshGravatar}}
+                  @disabled={{this.gravatarRefreshDisabled}}
+                  @icon="arrows-rotate"
+                  @translatedTitle={{i18n
+                    "user.change_avatar.refresh_gravatar_title"
                     gravatarName=this.siteSettings.gravatar_name
                   }}
-                </p>
-              {{/if}}
-            </div>
+                />
+
+                {{#if this.gravatarFailed}}
+                  <p class="error">
+                    {{i18n
+                      "user.change_avatar.gravatar_failed"
+                      gravatarName=this.siteSettings.gravatar_name
+                    }}
+                  </p>
+                {{/if}}
+              </:action>
+            </AvatarChoice>
           {{/if}}
           {{#if this.allowAvatarUpload}}
-            <div class="avatar-choice avatar-choice--upload">
-              <DRadioButton
-                @id="uploaded-avatar"
-                @name="avatar"
+            {{#if (eq this.defaultSelection "current")}}
+              <AvatarChoice
+                class="avatar-choice--current"
+                @id="current-avatar"
                 @onChange={{this.onSelectedChanged}}
                 @selection={{this.selected}}
-                @value="custom"
-              />
-              <label class="radio" for="uploaded-avatar">
+                @value="current"
+              >
+                {{dBoundAvatarTemplate this.user.avatar_template "large"}}
+                {{i18n "user.change_avatar.current_avatar"}}
+              </AvatarChoice>
+            {{/if}}
+            {{#each this.associatedAccountAvatars as |account|}}
+              <AvatarChoice
+                class="avatar-choice--associated-account"
+                @id={{concat "associated-account-avatar-" account.id}}
+                @onChange={{this.onSelectedChanged}}
+                @selection={{this.selected}}
+                @value={{account.selection}}
+              >
+                {{dBoundAvatarTemplate account.avatar_template "large"}}
+                {{i18n
+                  "user.change_avatar.associated_account"
+                  provider=account.name
+                }}
+              </AvatarChoice>
+            {{/each}}
+            <AvatarChoice
+              class="avatar-choice--upload"
+              @id="uploaded-avatar"
+              @onChange={{this.onSelectedChanged}}
+              @selection={{this.selected}}
+              @value="custom"
+            >
+              <:default>
+                {{dBoundAvatarTemplate
+                  this.user.custom_avatar_template
+                  "large"
+                }}
                 {{#if this.user.custom_avatar_template}}
-                  {{dBoundAvatarTemplate
-                    this.user.custom_avatar_template
-                    "large"
-                  }}
                   {{i18n "user.change_avatar.uploaded_avatar"}}
                 {{else}}
                   {{i18n "user.change_avatar.uploaded_avatar_empty"}}
                 {{/if}}
-              </label>
-              <AvatarUploader
-                class="avatar-uploader"
-                @done={{this.uploadComplete}}
-                @id="avatar-uploader"
-                @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
-                @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
-                @user_id={{this.user.id}}
-              />
-            </div>
+              </:default>
+              <:action>
+                <AvatarUploader
+                  class="avatar-uploader"
+                  @done={{fn this.onSelectedChanged "custom"}}
+                  @id="avatar-uploader"
+                  @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
+                  @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
+                  @user_id={{this.user.id}}
+                />
+              </:action>
+            </AvatarChoice>
           {{/if}}
         {{/if}}
       </:body>

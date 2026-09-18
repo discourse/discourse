@@ -679,12 +679,17 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__continue-to-site").isDisabled();
   });
 
-  test("shows a fixed username without editing controls when it can't be changed", async function (assert) {
+  test("keeps locked profile details read-only after signup", async function (assert) {
     stubCodeRequest();
     pretender.post("/session/login-code/verify", () =>
       response({
         account_created: true,
-        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        user: {
+          id: 1,
+          username: "jane",
+          avatar_template: "/letter/j.png",
+          can_edit_avatar: false,
+        },
         can_edit_username: false,
         prefill_username: true,
       })
@@ -693,6 +698,15 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     await goToCodeStep();
     await fillIn(".d-otp-input", "123456");
 
+    assert
+      .dom(".code-login-form__avatar")
+      .isDisabled("prevents opening the picker");
+    assert
+      .dom(".code-login-form__avatar-edit")
+      .doesNotExist("hides the edit icon");
+    assert
+      .dom(".code-login-form__avatar img")
+      .exists("keeps the picture visible");
     assert.dom(".code-login-form__new-account-username").hasText("jane");
     assert.dom("#code-login-username").doesNotExist();
     assert.dom(".code-login-form__username-regen").doesNotExist();
