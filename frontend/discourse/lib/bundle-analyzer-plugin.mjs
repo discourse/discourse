@@ -1,5 +1,13 @@
+import { createHash } from "crypto";
 import * as fs from "fs";
 import { relative } from "path";
+
+// The report describes the finished bundle, so its content only exists once
+// every chunk is hashed and named — too late for rolldown to fingerprint it as
+// an ordinary asset. Name it from a digest of the report itself, and let the
+// manifest carry that name to Rails, which puts it in the page's import map.
+export const BUNDLE_ANALYSIS_RE =
+  /^assets\/js\/bundle-analysis-\w+\.digested\.json$/;
 
 // Brotli sizes are intentionally NOT computed here — brotli at max quality is
 // the slowest part of the build. The dev-tools UI computes them on demand in a
@@ -218,22 +226,28 @@ export default function bundleAnalyzerPlugin({ devMode } = {}) {
 
       const json = JSON.stringify(data);
 
-      // Co-located with the JS chunks so the dev-tools UI can fetch it relative
-      // to its own import.meta.url (assets/js/dev-tools-*.js -> ./bundle-analysis.digested.json).
-      // The `.digested.` marker tells Rails/propshaft this is pre-fingerprinted
-      // and should be served verbatim rather than hashed (and blocked).
+      // The `.digested.` marker tells Rails/propshaft the file is pre-fingerprinted
+      // and should be served verbatim; the digest in the name is what makes that
+      // promise true, so a rebuilt report is a new URL rather than a stale hit.
+      const digest = createHash("sha256")
+        .update(json)
+        .digest("hex")
+        .slice(0, 12);
+      const fileName = `assets/js/bundle-analysis-${digest}.digested.json`;
+
+      this.emitFile({ type: "asset", fileName, source: json });
+
       if (devMode) {
-        fs.mkdirSync("./dist/assets/js", { recursive: true });
-        fs.writeFileSync(
-          "./dist/assets/js/bundle-analysis.digested.json",
-          json
-        );
-      } else {
-        this.emitFile({
-          type: "asset",
-          fileName: "assets/js/bundle-analysis.digested.json",
-          source: json,
-        });
+        // The dev engine leaves emitted assets unwritten, and keeps the output
+        // directory between builds, so clear the reports this one replaces.
+        const dir = "./dist/assets/js";
+        fs.mkdirSync(dir, { recursive: true });
+        for (const stale of fs.readdirSync(dir)) {
+          if (BUNDLE_ANALYSIS_RE.test(`assets/js/${stale}`)) {
+            fs.rmSync(`${dir}/${stale}`);
+          }
+        }
+        fs.writeFileSync(`./dist/${fileName}`, json);
       }
     },
   };

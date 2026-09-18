@@ -1,7 +1,9 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
-import bundleAnalyzerPlugin from "./lib/bundle-analyzer-plugin.mjs";
+import bundleAnalyzerPlugin, {
+  BUNDLE_ANALYSIS_RE,
+} from "./lib/bundle-analyzer-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
 import dynamicChunkUrlPlugin from "./lib/dynamic-chunk-url-plugin.mjs";
@@ -189,10 +191,14 @@ export function buildConfig({ devMode } = {}) {
             entrypoints: {},
             dynamicEntrypoints: {},
             chunks: {},
+            bundleAnalysis: null,
           };
 
           for (const [fileName, chunk] of Object.entries(bundle)) {
             if (chunk.type !== "chunk") {
+              if (BUNDLE_ANALYSIS_RE.test(fileName)) {
+                manifest.bundleAnalysis = fileName;
+              }
               continue;
             }
 

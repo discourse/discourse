@@ -13,14 +13,12 @@ export default class BundleAnalyzerModal extends Component {
 
   load = async () => {
     try {
-      // Computed at runtime rather than `new URL("./...", import.meta.url)` so
-      // rolldown's resolveNewUrlToAsset doesn't try to resolve it as a build
-      // asset. The JSON is emitted next to this chunk by bundle-analyzer-plugin.
-      const url = import.meta.url.replace(
-        /[^/]+$/,
-        "bundle-analysis.digested.json"
+      // Resolved through the page's import map, which Rails rebuilds from the
+      // manifest on every render, so this always names the current build's
+      // report rather than whichever one the browser has cached.
+      const response = await fetch(
+        import.meta.resolve("discourse/bundle-analysis")
       );
-      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }

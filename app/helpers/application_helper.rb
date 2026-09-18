@@ -124,6 +124,10 @@ module ApplicationHelper
       end
     end
 
+    if (analysis = EmberAssets.bundle_analysis_asset)
+      imports["discourse/bundle-analysis"] = ActionController::Base.helpers.asset_path(analysis)
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
