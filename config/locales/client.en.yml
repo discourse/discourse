@@ -5572,6 +5572,7 @@ en:
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
       latest_topics: "Latest topics"
+      view_all_topics: "View all topics (%{number})"
       description_updated: "Description updated"
       description_expand: "Show more"
       description_collapse: "Show less"
