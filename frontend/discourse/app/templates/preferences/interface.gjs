@@ -211,32 +211,34 @@ export default <template>
     </div>
   </div>
 
-  <fieldset
-    class="control-group pref-composer-toolbar"
-    data-setting-name="user-composer-toolbar"
-  >
-    <legend class="control-label">{{i18n
-        "user.composer_toolbar.title"
-      }}</legend>
-    <div class="instructions">
-      {{i18n "user.composer_toolbar.instructions"}}
-    </div>
-    {{#each @controller.composerToolbarButtons key="id" as |button|}}
-      <div class="controls">
-        <label class="checkbox-label">
-          <input
-            checked={{button.shown}}
-            type="checkbox"
-            {{on
-              "change"
-              (fn @controller.toggleComposerToolbarButton button.id)
-            }}
-          />
-          {{i18n button.label}}
-        </label>
+  {{#if @controller.siteSettings.enable_composer_toolbar_customization}}
+    <fieldset
+      class="control-group pref-composer-toolbar"
+      data-setting-name="user-composer-toolbar"
+    >
+      <legend class="control-label">{{i18n
+          "user.composer_toolbar.title"
+        }}</legend>
+      <div class="instructions">
+        {{i18n "user.composer_toolbar.instructions"}}
       </div>
-    {{/each}}
-  </fieldset>
+      {{#each @controller.composerToolbarButtons key="id" as |button|}}
+        <div class="controls">
+          <label class="checkbox-label">
+            <input
+              checked={{button.shown}}
+              type="checkbox"
+              {{on
+                "change"
+                (fn @controller.toggleComposerToolbarButton button.id)
+              }}
+            />
+            {{i18n button.label}}
+          </label>
+        </div>
+      {{/each}}
+    </fieldset>
+  {{/if}}
 
   <fieldset class="control-group other" data-setting-name="user-other-settings">
     <legend class="control-label">{{i18n "user.other_settings"}}</legend>

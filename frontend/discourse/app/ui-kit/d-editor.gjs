@@ -182,7 +182,10 @@ export default class DEditor extends Component {
   }
 
   get hiddenToolbarButtons() {
-    if (!this.userToolbarPreferences) {
+    if (
+      !this.userToolbarPreferences ||
+      !this.siteSettings.enable_composer_toolbar_customization
+    ) {
       return [];
     }
 
