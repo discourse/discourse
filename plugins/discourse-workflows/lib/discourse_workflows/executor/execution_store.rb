@@ -100,14 +100,17 @@ module DiscourseWorkflows
       end
 
       def pause_waiting_execution!(node:, waiting_until: nil, timeout_action: nil, steps: [])
-        execution.update!(
-          status: :waiting,
-          waiting_node_id: node.id,
-          waiting_until: waiting_until,
-          resume_token: @execution_context.resume_token,
-          timeout_action: timeout_action,
-        )
-        save!(steps)
+        execution.transaction do
+          execution.update!(
+            status: :waiting,
+            waiting_node_id: node.id,
+            waiting_until: waiting_until,
+            resume_token: @execution_context.resume_token,
+            timeout_action: timeout_action,
+          )
+          save!(steps)
+        end
+
         publish_waiting_form_notification(node)
         publish_progress(refresh: true)
         execution
