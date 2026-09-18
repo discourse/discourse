@@ -8,7 +8,10 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Uploader do
   subject(:uploader) do
     described_class.allocate.tap do |task|
       task.instance_variable_set(:@seen_upload_ids, Set.new)
-      task.instance_variable_set(:@downloads, {})
+      task.instance_variable_set(
+        :@downloader,
+        Migrations::Importer::Uploads::Downloader.new(cache_path: "", downloads: {}),
+      )
       task.reporter = reporter
     end
   end
