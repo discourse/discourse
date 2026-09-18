@@ -89,8 +89,30 @@ RSpec.describe OptimizedImage do
         expect(instructions).to include("-colors")
       end
     end
+  end
 
-    describe ".resize" do
+  describe ".resize" do
+    let(:directory) { Dir.mktmpdir }
+    let(:input_path) { File.join(directory, "source.png") }
+
+    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
+
+    after { FileUtils.remove_entry(directory) }
+
+    shared_examples "resize processing" do
+      it "resizes an image in place" do
+        result = described_class.resize(input_path, input_path, 100, 50)
+
+        expect(result).to eq(true)
+        expect(FastImage.size(input_path)).to eq([100, 50])
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "resize processing"
+
       it "optimizes the image" do
         file = File.open("#{Rails.root.join("spec/fixtures/images/resized.png")}")
         upload = UploadCreator.new(file, "test.bin").create_for(-1)
@@ -122,49 +144,23 @@ RSpec.describe OptimizedImage do
         expect(thumb.filesize).to be > 200
       end
 
-      describe "when an svg with a href is masked as a png" do
-        it "does not trigger an external request" do
-          tmp_path = "/tmp/resized.png"
+      it "rejects an SVG disguised as a PNG" do
+        tmp_path = "/tmp/resized.png"
 
-          begin
-            expect do
-              OptimizedImage.resize(
-                "#{Rails.root.join("spec/fixtures/images/svg.png")}",
-                tmp_path,
-                5,
-                5,
-                raise_on_error: true,
-              )
-            end.to raise_error(Discourse::Utils::CommandError)
-          ensure
-            File.delete(tmp_path) if File.exist?(tmp_path)
-          end
+        begin
+          expect do
+            OptimizedImage.resize(
+              "#{Rails.root.join("spec/fixtures/images/svg.png")}",
+              tmp_path,
+              5,
+              5,
+              raise_on_error: true,
+            )
+          end.to raise_error(Discourse::Utils::CommandError)
+        ensure
+          File.delete(tmp_path) if File.exist?(tmp_path)
         end
       end
-    end
-  end
-
-  describe ".resize" do
-    let(:directory) { Dir.mktmpdir }
-    let(:input_path) { File.join(directory, "source.png") }
-
-    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
-
-    after { FileUtils.remove_entry(directory) }
-
-    shared_examples "resize processing" do
-      it "resizes an image in place" do
-        result = described_class.resize(input_path, input_path, 100, 50)
-
-        expect(result).to eq(true)
-        expect(FastImage.size(input_path)).to eq([100, 50])
-      end
-    end
-
-    context "with libvips disabled" do
-      before { global_setting :enable_vips_image_processing, false }
-
-      include_examples "resize processing"
     end
 
     context "with libvips enabled" do
