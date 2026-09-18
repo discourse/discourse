@@ -120,11 +120,7 @@ module DiscourseWorkflows
     private_class_method :build_resume_snapshot!
 
     def run
-      unless @workflow.published? || @options.draft_execution || @options.workflow_version ||
-               @options.workflow_snapshot
-        return @store.create_execution_with_status(:skipped)
-      end
-      return @store.create_rate_limited_execution unless rate_limiter.within_limits?
+      return execution if @store.find_job_execution
 
       execute_flow(:start_execution!) do
         next prepare_step_flow! if step_mode?
@@ -251,13 +247,15 @@ module DiscourseWorkflows
     end
 
     def execute_flow(setup_method, *setup_args, &block)
-      send(setup_method, *setup_args)
+      return execution if send(setup_method, *setup_args) == false
       yield
       process_queue
       @store.finish!(steps: @steps)
     rescue ExecutionPaused => e
       begin_wait!(e.wait_request)
     rescue => e
+      raise unless @store.owns_execution?
+
       @store.fail!(error: e, steps: @steps)
     ensure
       commit_static_data!
@@ -985,7 +983,16 @@ module DiscourseWorkflows
     end
 
     def start_execution!
-      @store.start!
+      started =
+        if @options.job_id.present?
+          DistributedMutex.synchronize("discourse_workflows_job_#{@options.job_id}") do
+            create_execution!
+          end
+        else
+          create_execution!
+        end
+      return false unless started
+
       @snapshot = @store.workflow_snapshot
       @steps = []
       @queue = []
@@ -994,6 +1001,23 @@ module DiscourseWorkflows
       @waiting_input_sources = {}
       @waiting_input_targets = {}
       @input_wait_requirements = {}
+    end
+
+    def create_execution!
+      return false if @store.find_job_execution
+
+      unless @workflow.published? || @options.draft_execution || @options.workflow_version ||
+               @options.workflow_snapshot
+        @store.create_execution_with_status(:skipped)
+        return false
+      end
+
+      unless rate_limiter.within_limits?
+        @store.create_rate_limited_execution
+        return false
+      end
+
+      @store.start!
     end
 
     def resume_execution!(execution)
