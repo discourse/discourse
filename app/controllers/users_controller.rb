@@ -2131,9 +2131,17 @@ class UsersController < ApplicationController
 
     if @user
       server_session["password-#{token}"] = @user.id
-    else
-      user_id = server_session["password-#{token}"].to_i
-      @user = User.find(user_id) if user_id > 0
+    elsif user_id = server_session["password-#{token}"].to_i
+      confirmed_token =
+        EmailToken
+          .active
+          .where(
+            token_hash: EmailToken.hash_token(token),
+            scope: [nil, EmailToken.scopes[:password_reset]],
+            confirmed: true,
+          )
+          .find_by(user_id: user_id)
+      @user = confirmed_token&.user
     end
 
     @error = I18n.t("password_reset.no_token", base_url: Discourse.base_url) if !@user
