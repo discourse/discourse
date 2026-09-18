@@ -15,16 +15,32 @@ acceptance("User Preferences - Account", function (needs) {
 
   let customUserProps = {};
   let pickAvatarRequestData = null;
-  let gravatarUploadId = 123456789;
+  const gravatarUploadId = 123456789;
+  const associatedAccountAvatars = [
+    {
+      id: 12,
+      name: "facebook",
+      upload_id: 42,
+      avatar_template: "/images/provider.png",
+    },
+    {
+      id: 13,
+      name: "github",
+      upload_id: 43,
+      avatar_template: "/images/another-provider.png",
+    },
+  ];
 
   needs.pretender((server, helper) => {
     server.get("/u/eviltrout.json", () => {
       const json = cloneJSON(fixturesByUrl["/u/eviltrout.json"]);
-      json.user.can_edit = true;
-
-      for (const [key, value] of Object.entries(customUserProps)) {
-        json.user[key] = value;
-      }
+      Object.assign(json.user, {
+        can_edit: true,
+        can_edit_avatar: true,
+        can_upload_avatar: true,
+        associated_account_avatars: associatedAccountAvatars,
+        ...customUserProps,
+      });
 
       return helper.response(json);
     });
@@ -145,138 +161,41 @@ acceptance("User Preferences - Account", function (needs) {
       .includesHtml("Connect");
   });
 
-  test("avatars are selectable for staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {
-    this.siteSettings.selectable_avatars_mode = "staff";
+  [
+    { mode: "staff", user: { moderator: true }, access: "allowed" },
+    { mode: "staff", user: {}, access: "restricted" },
+    { mode: "no_one", user: { admin: true }, access: "restricted" },
+    { mode: "tl3", user: { trust_level: 3 }, access: "allowed" },
+    { mode: "tl3", user: { trust_level: 2 }, access: "restricted" },
+    {
+      mode: "tl3",
+      user: { trust_level: 2, moderator: true },
+      access: "allowed",
+    },
+  ].forEach(({ mode, user, access }) => {
+    test(`avatar sources are ${access} in ${mode} mode for ${JSON.stringify(user)}`, async function (assert) {
+      this.siteSettings.selectable_avatars_mode = mode;
+      customUserProps = { admin: false, moderator: false, ...user };
 
-    customUserProps = {
-      moderator: true,
-      admin: false,
-    };
+      await visit("/u/eviltrout/preferences/account");
+      await click(".pref-avatar .btn");
 
-    await visit("/u/eviltrout/preferences/account");
-    await click(".pref-avatar .btn");
+      assert.dom(".selectable-avatars").exists("offers the preset list");
 
-    assert
-      .dom(".selectable-avatars")
-      .exists("opens the avatar selection modal");
-
-    assert
-      .dom("#uploaded-avatar")
-      .exists("avatar selection modal includes option to upload");
-  });
-
-  test("avatar selector handles an empty selectable avatars list", async function (assert) {
-    this.siteSettings.selectable_avatars_mode = "everyone";
-    this.siteSettings.selectable_avatars = [];
-
-    await visit("/u/eviltrout/preferences/account");
-    await click(".pref-avatar .btn");
-
-    assert
-      .dom(".avatar-choice")
-      .exists("opens the avatar selection modal without selectable avatars");
-  });
-
-  test("avatars are not selectable for non-staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {
-    this.siteSettings.selectable_avatars_mode = "staff";
-
-    customUserProps = {
-      moderator: false,
-      admin: false,
-    };
-
-    await visit("/u/eviltrout/preferences/account");
-    await click(".pref-avatar .btn");
-
-    assert
-      .dom(".selectable-avatars")
-      .exists("opens the avatar selection modal");
-
-    assert
-      .dom("#uploaded-avatar")
-      .doesNotExist("avatar selection modal does not include option to upload");
-  });
-
-  test("avatars not selectable when `selectable_avatars_mode` site setting is set to `no_one`", async function (assert) {
-    this.siteSettings.selectable_avatars_mode = "no_one";
-
-    customUserProps = {
-      admin: true,
-    };
-
-    await visit("/u/eviltrout/preferences/account");
-    await click(".pref-avatar .btn");
-
-    assert
-      .dom(".selectable-avatars")
-      .exists("opens the avatar selection modal");
-
-    assert
-      .dom("#uploaded-avatar")
-      .doesNotExist("avatar selection modal does not include option to upload");
-  });
-
-  test("avatars are selectable for user with required trust level when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
-    this.siteSettings.selectable_avatars_mode = "tl3";
-
-    customUserProps = {
-      trust_level: 3,
-      moderator: false,
-      admin: false,
-    };
-
-    await visit("/u/eviltrout/preferences/account");
-    await click(".pref-avatar .btn");
-
-    assert
-      .dom(".selectable-avatars")
-      .exists("opens the avatar selection modal");
-
-    assert
-      .dom("#uploaded-avatar")
-      .exists("avatar selection modal includes option to upload");
-  });
-
-  test("avatars are not selectable for user without required trust level when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
-    this.siteSettings.selectable_avatars_mode = "tl3";
-
-    customUserProps = {
-      trust_level: 2,
-      moderator: false,
-      admin: false,
-    };
-
-    await visit("/u/eviltrout/preferences/account");
-    await click(".pref-avatar .btn");
-
-    assert
-      .dom(".selectable-avatars")
-      .exists("opens the avatar selection modal");
-
-    assert
-      .dom("#uploaded-avatar")
-      .doesNotExist("avatar selection modal does not include option to upload");
-  });
-
-  test("avatars are selectable for staff user when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
-    this.siteSettings.selectable_avatars_mode = "tl3";
-
-    customUserProps = {
-      trust_level: 2,
-      moderator: true,
-      admin: false,
-    };
-
-    await visit("/u/eviltrout/preferences/account");
-    await click(".pref-avatar .btn");
-
-    assert
-      .dom(".selectable-avatars")
-      .exists("opens the avatar selection modal");
-
-    assert
-      .dom("#uploaded-avatar")
-      .exists("avatar selection modal includes option to upload");
+      if (access === "allowed") {
+        assert.dom("#uploaded-avatar").exists("allows uploaded pictures");
+        assert
+          .dom(".avatar-choice--associated-account")
+          .exists({ count: 2 }, "allows provider pictures");
+      } else {
+        assert
+          .dom("#uploaded-avatar")
+          .doesNotExist("restricts uploaded pictures");
+        assert
+          .dom(".avatar-choice--associated-account")
+          .doesNotExist("restricts provider pictures");
+      }
+    });
   });
 
   test("default avatar selector", async function (assert) {
@@ -302,6 +221,116 @@ acceptance("User Preferences - Account", function (needs) {
       },
       "includes the right pick avatar request params"
     );
+  });
+
+  test("switching between connected accounts and an uploaded picture", async function (assert) {
+    const avatarTemplate = associatedAccountAvatars[0].avatar_template;
+    customUserProps = {
+      avatar_template: avatarTemplate,
+      custom_avatar_template: avatarTemplate,
+      selected_user_associated_account_id: 12,
+    };
+
+    await visit("/u/eviltrout/preferences/account");
+    await click(".pref-avatar .btn");
+
+    assert
+      .dom("#associated-account-avatar-12")
+      .isChecked("prefers the recorded source over a matching upload");
+    assert
+      .dom("#current-avatar")
+      .doesNotExist("does not duplicate the current picture");
+    assert
+      .dom('label[for="associated-account-avatar-12"]')
+      .includesText("Facebook", "identifies the provider");
+    assert
+      .dom('label[for="associated-account-avatar-12"] img')
+      .hasAttribute("src", avatarTemplate, "shows the provider preview");
+    assert
+      .dom(".avatar-choice--upload img")
+      .hasAttribute("src", avatarTemplate, "keeps the uploaded preview");
+
+    await click("#associated-account-avatar-13");
+    await click(".d-modal__footer .btn-primary");
+
+    assert.deepEqual(
+      pickAvatarRequestData,
+      {
+        type: "associated_account",
+        upload_id: "43",
+        associated_account_id: "13",
+      },
+      "saves the other provider and its upload"
+    );
+
+    await click("#uploaded-avatar");
+    await click(".d-modal__footer .btn-primary");
+
+    assert.deepEqual(
+      pickAvatarRequestData,
+      {
+        type: "custom",
+        upload_id: "1573",
+      },
+      "switches back to the upload without retaining the provider selection"
+    );
+  });
+
+  test("saving a current picture preserves it without replacing the uploaded picture", async function (assert) {
+    this.siteSettings.selectable_avatars_mode = "everyone";
+    this.siteSettings.selectable_avatars = ["/images/current.png"];
+    customUserProps = {
+      avatar_template: "/images/current.png",
+      uploaded_avatar_id: 42,
+      custom_avatar_template: "/images/uploaded.png",
+      custom_avatar_upload_id: 43,
+    };
+
+    await visit("/u/eviltrout/preferences/account");
+    await click(".pref-avatar .btn");
+
+    assert
+      .dom("#current-avatar")
+      .isChecked("keeps the current picture selected");
+    assert
+      .dom('label[for="current-avatar"] img')
+      .hasAttribute("src", "/images/current.png", "shows the current picture");
+    await click(".d-modal__footer .btn-primary");
+
+    assert.deepEqual(
+      pickAvatarRequestData,
+      { type: "current", upload_id: "42" },
+      "preserves the current picture without replacing the saved upload"
+    );
+  });
+
+  test("a site default picture stays selected with an empty preset list", async function (assert) {
+    this.siteSettings.selectable_avatars_mode = "everyone";
+    this.siteSettings.selectable_avatars = [];
+    customUserProps = {
+      avatar_template: "/images/site-default.png",
+      uploaded_avatar_id: null,
+      system_avatar_template: "/images/letter-avatar.png",
+    };
+
+    await visit("/u/eviltrout/preferences/account");
+    await click(".pref-avatar .btn");
+
+    assert.dom("#system-avatar").isChecked("selects the system source");
+    assert
+      .dom("#current-avatar")
+      .doesNotExist("does not offer an empty current upload");
+  });
+
+  test("connected account avatars require avatar upload permission", async function (assert) {
+    customUserProps = { can_upload_avatar: false };
+
+    await visit("/u/eviltrout/preferences/account");
+    await click(".pref-avatar .btn");
+
+    assert
+      .dom(".avatar-choice--associated-account")
+      .doesNotExist("provider choices require the same permission as uploads");
   });
 });
 
