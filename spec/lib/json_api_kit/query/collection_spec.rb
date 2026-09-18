@@ -13,7 +13,8 @@ RSpec.describe JsonApiKit::Query::Collection do
     Fabricate(:topic, title: "Bands read one at a time", created_at: Time.utc(2026, 8, 3))
   end
 
-  let(:resource) do
+  let(:resource) { resource_class.new(guardian:, edition:) }
+  let(:resource_class) do
     Class.new(JsonApiKit::Resource) do
       model Topic
       type :topics
@@ -25,10 +26,11 @@ RSpec.describe JsonApiKit::Query::Collection do
     JsonApiKit::Request::Collection.new(
       JsonApiKit::Request::Input.with_defaults(params, resource:, default_sorts:),
       guardian:,
-      default_sorts:,
+      edition:,
     )
   end
-  let(:default_sorts) { JsonApiKit::Edition.current.default_sorts }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:default_sorts) { edition.default_sorts }
   let(:params) { {} }
   let(:guardian) { Guardian.new }
   let(:scoped_to) { nil }
@@ -37,7 +39,7 @@ RSpec.describe JsonApiKit::Query::Collection do
     JsonApiKit::Request::Collection.new(
       JsonApiKit::Request::Input.with_defaults(params, resource:, default_sorts:),
       guardian: Guardian.new,
-      default_sorts:,
+      edition:,
     )
 
   describe ".new" do
@@ -111,7 +113,7 @@ RSpec.describe JsonApiKit::Query::Collection do
   describe "the fields it renders" do
     subject(:fields) { query.records.map(&:attributes) }
 
-    let(:resource) do
+    let(:resource_class) do
       Class.new(JsonApiKit::Resource) do
         model Topic
         type :topics
@@ -146,7 +148,7 @@ RSpec.describe JsonApiKit::Query::Collection do
     end
 
     context "when the fields hold a block attribute" do
-      let(:resource) do
+      let(:resource_class) do
         Class.new(JsonApiKit::Resource) do
           model Topic
           type :topics
@@ -196,7 +198,7 @@ RSpec.describe JsonApiKit::Query::Collection do
     end
 
     context "when the filter holds a value" do
-      let(:resource) { Class.new(super()) { filter :title } }
+      let(:resource_class) { Class.new(super()) { filter :title } }
       let(:params) { { filter: { title: second_topic.title } } }
 
       it "returns only the rows that filter keeps" do
@@ -205,7 +207,7 @@ RSpec.describe JsonApiKit::Query::Collection do
     end
 
     context "when the resource declares a scope" do
-      let(:resource) do
+      let(:resource_class) do
         Class.new(super()) { scope { |guardian| Topic.where(user_id: guardian.user&.id) } }
       end
       let(:guardian) { Guardian.new(second_topic.user) }

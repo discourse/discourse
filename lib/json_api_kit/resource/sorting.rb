@@ -66,6 +66,8 @@ module JsonApiKit
             "declare it with `sort` before naming it as the default"
         end
       end
+
+      delegate :sort_names, :order, :sortable_by?, :default_ordering, to: :class
     end
   end
 end

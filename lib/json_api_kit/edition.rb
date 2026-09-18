@@ -18,6 +18,8 @@ module JsonApiKit
 
     def default_sorts = @default_sorts ||= DefaultSorts.new(changes)
 
+    def removed_filters = @removed_filters ||= RemovedFilters.new(changes)
+
     private
 
     attr_reader :changes
