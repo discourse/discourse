@@ -49,5 +49,15 @@ RSpec.describe DiscourseDataExplorer::QueryTag do
 
       expect(query.tags).to be_empty
     end
+
+    it "stores only additional tags for bundled queries" do
+      bundled_query = DiscourseDataExplorer::Query.find(-1)
+      bundled_query.save!
+
+      described_class.sync!(query: bundled_query, names: %w[Default Staff])
+
+      expect(bundled_query.tag_names).to eq(%w[default staff])
+      expect(bundled_query.tags.map(&:name)).to eq(["staff"])
+    end
   end
 end

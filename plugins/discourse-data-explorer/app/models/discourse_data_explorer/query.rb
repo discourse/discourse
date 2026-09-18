@@ -83,7 +83,6 @@ module DiscourseDataExplorer
 
     def record_run!
       persisted? ? update_columns(last_run_at: Time.now) : update!(last_run_at: Time.now)
-      QueryTag.sync!(query: self, names: tag_names) if self.class.is_default_query?(id)
       DiscourseDataExplorer::QueryStat.log(id) unless Query.is_default_query?(id)
     end
 

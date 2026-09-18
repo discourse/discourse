@@ -30,6 +30,20 @@ RSpec.describe DiscourseDataExplorer::Query do
     end
   end
 
+  describe "#record_run!" do
+    it "keeps the default tag virtual after running a bundled query" do
+      query = DiscourseDataExplorer::Query.find(-1)
+
+      query.record_run!
+
+      expect(query.tag_names).to eq([DiscourseDataExplorer::Query::DEFAULT_TAG])
+      expect(query.tags).to be_empty
+      expect(
+        DiscourseDataExplorer::QueryTag.exists?(name: DiscourseDataExplorer::Query::DEFAULT_TAG),
+      ).to eq(false)
+    end
+  end
+
   describe ".unpersisted_defaults" do
     it "assigns and filters by the default tag" do
       defaults = DiscourseDataExplorer::Query.unpersisted_defaults(tag: "default")
