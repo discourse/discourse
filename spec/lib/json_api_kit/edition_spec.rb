@@ -91,4 +91,10 @@ RSpec.describe JsonApiKit::Edition do
       expect(edition.removed_filters).to equal(edition.removed_filters)
     end
   end
+
+  describe "#removed_sorts" do
+    it "retains the resolver for the edition" do
+      expect(edition.removed_sorts).to equal(edition.removed_sorts)
+    end
+  end
 end
