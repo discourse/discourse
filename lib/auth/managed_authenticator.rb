@@ -109,6 +109,14 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result.extra_data = { provider: auth_token[:provider], uid: auth_token[:uid] }
     result.user = association.user
 
+    result.associated_groups =
+      DiscoursePluginRegistry.apply_modifier(
+        :auth_managed_authenticator_associated_groups,
+        result.associated_groups,
+        auth_token,
+        result,
+      )
+
     result
   end
 
