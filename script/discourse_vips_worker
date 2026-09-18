@@ -87,6 +87,8 @@ class DiscourseVipsWorker
           quality: arguments[9],
           strip_metadata: arguments[10],
           gravity: arguments[11],
+          input_format: arguments[12],
+          output_format: arguments[13],
         )
       else
         raise ArgumentError, "unsupported libvips operation"
@@ -306,7 +308,9 @@ class DiscourseVipsWorker
       sharpen:,
       quality:,
       strip_metadata:,
-      gravity:
+      gravity:,
+      input_format:,
+      output_format:
     )
       new do
         if !%w[true false].include?(sharpen)
@@ -317,15 +321,22 @@ class DiscourseVipsWorker
         end
         quality = quality.empty? ? nil : Integer(quality)
 
-        block_loaders(
-          allowed: %w[
-            VipsForeignLoadJpeg
-            VipsForeignLoadPng
-            VipsForeignLoadNsgif
-            VipsForeignLoadWebp
-            VipsForeignLoadHeif
-          ],
-        )
+        loaders = {
+          "jpg" => "VipsForeignLoadJpeg",
+          "jpeg" => "VipsForeignLoadJpeg",
+          "png" => "VipsForeignLoadPng",
+          "gif" => "VipsForeignLoadNsgif",
+          "webp" => "VipsForeignLoadWebp",
+          "avif" => "VipsForeignLoadHeif",
+        }
+        allowed = loaders.values.uniq
+        if !input_format.empty?
+          loader = loaders[input_format.downcase]
+          raise ArgumentError, "unsupported input format" if !loader
+
+          allowed = [loader]
+        end
+        block_loaders(allowed: allowed)
 
         source =
           begin
@@ -366,7 +377,15 @@ class DiscourseVipsWorker
         image = image.sharpen if sharpen == "true"
         options = { strip: strip_metadata == "true" }
         options[:Q] = quality if quality
-        image.write_to_file(output_path, **options)
+        if output_format.empty?
+          image.write_to_file(output_path, **options)
+        else
+          image.write_to_target(
+            Vips::Target.new_to_file(output_path),
+            ".#{output_format.downcase}",
+            **options,
+          )
+        end
         nil
       end
     end

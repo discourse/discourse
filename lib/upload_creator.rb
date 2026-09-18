@@ -110,8 +110,6 @@ class UploadCreator
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        ensure_image_extension!
-
         if @image_info.type == :svg
           clean_svg!
         elsif @image_info.type != :ico && (!Rails.env.test? || @opts[:force_optimize])
@@ -491,6 +489,7 @@ class UploadCreator
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
+    path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
     if GlobalSetting.enable_vips_image_processing
       DiscourseVips.reencode_jpeg(
@@ -526,11 +525,18 @@ class UploadCreator
 
   def crop!
     max_pixel_ratio = Discourse::PIXEL_RATIOS.max
+    filename_with_correct_ext = "image.#{@image_info.type}"
 
     case @opts[:type]
     when "avatar"
       width = height = Discourse.avatar_sizes.max
-      OptimizedImage.resize(@file.path, @file.path, width, height)
+      OptimizedImage.resize(
+        @file.path,
+        @file.path,
+        width,
+        height,
+        filename: filename_with_correct_ext,
+      )
     when "profile_background"
       max_width = 850 * max_pixel_ratio
       width, height =
@@ -540,7 +546,13 @@ class UploadCreator
           max_width: max_width,
           max_height: max_width,
         )
-      OptimizedImage.downsize(from: @file.path, to: @file.path, width: width, height: height)
+      OptimizedImage.downsize(
+        from: @file.path,
+        to: @file.path,
+        width: width,
+        height: height,
+        filename: filename_with_correct_ext,
+      )
     when "card_background"
       max_width = 590 * max_pixel_ratio
       width, height =
@@ -550,9 +562,21 @@ class UploadCreator
           max_width: max_width,
           max_height: max_width,
         )
-      OptimizedImage.downsize(from: @file.path, to: @file.path, width: width, height: height)
+      OptimizedImage.downsize(
+        from: @file.path,
+        to: @file.path,
+        width: width,
+        height: height,
+        filename: filename_with_correct_ext,
+      )
     when "custom_emoji"
-      OptimizedImage.downsize(from: @file.path, to: @file.path, width: 100, height: 100)
+      OptimizedImage.downsize(
+        from: @file.path,
+        to: @file.path,
+        width: 100,
+        height: 100,
+        filename: filename_with_correct_ext,
+      )
     end
 
     extract_image_info!
@@ -658,6 +682,8 @@ class UploadCreator
         write: [File.dirname(to)],
       )
     else
+      from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
+      to = OptimizedImage.prepend_decoder!(to)
       opts = { quality: }
       read = [@file.path]
       write = [File.dirname(jpeg_tempfile.path)]
@@ -724,22 +750,5 @@ class UploadCreator
 
   def generate_fake_sha1_hash
     SecureRandom.hex(20)
-  end
-
-  private
-
-  def ensure_image_extension!
-    extension = ".#{@image_info.type}".sub(".jpeg", ".jpg")
-    return if File.extname(@file.path).downcase.sub(".jpeg", ".jpg") == extension
-
-    tempfile = Tempfile.new(["upload", extension])
-    @file.rewind
-    IO.copy_stream(@file, tempfile)
-    tempfile.rewind
-
-    @file.respond_to?(:close!) ? @file.close! : @file.close
-    @file = tempfile
-  ensure
-    tempfile&.close! unless @file.equal?(tempfile)
   end
 end
