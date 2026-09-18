@@ -417,25 +417,33 @@ RSpec.describe DiscourseVips do
                      "logo.png",
                      "upload_png_to_jpeg"
 
-    it "flattens transparent 16-bit PNG pixels onto white" do
-      Dir.mktmpdir do |directory|
-        output_path = File.join(directory, "converted.jpg")
+    shared_examples "PNG transparency conversion" do |filename|
+      it "flattens #{filename} onto white" do
+        Dir.mktmpdir do |directory|
+          output_path = File.join(directory, "converted.jpg")
 
-        input_path = file_from_fixtures("jpeg-flatten-rgb-16bit.png").path
+          input_path = file_from_fixtures(filename).path
 
-        described_class.png_to_jpeg(
-          input_path:,
-          output_path:,
-          quality: SiteSetting.ImageQuality.png_to_jpg_quality,
-          timeout: 5,
-          read: [input_path],
-          write: [File.dirname(output_path)],
-        )
+          described_class.png_to_jpeg(
+            input_path:,
+            output_path:,
+            quality: SiteSetting.ImageQuality.png_to_jpg_quality,
+            timeout: 5,
+            read: [input_path],
+            write: [directory],
+          )
 
-        expect(FastImage.type(output_path)).to eq(:jpeg)
-        expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq("FFFFFF")
+          expect(FastImage.type(output_path)).to eq(:jpeg)
+          expect(described_class.dominant_color(input_path: output_path, timeout: 5)).to eq(
+            "FFFFFF",
+          )
+        end
       end
     end
+
+    include_examples "PNG transparency conversion", "dominant-color-transparent.png"
+    include_examples "PNG transparency conversion", "jpeg-flatten-rgb-16bit.png"
+    include_examples "PNG transparency conversion", "jpeg-flatten-gray-16bit.png"
 
     it "rejects non-PNG input" do
       Dir.mktmpdir do |directory|
