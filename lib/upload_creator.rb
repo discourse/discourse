@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "fastimage"
+require "fcntl"
 
 class UploadCreator
   TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
@@ -315,6 +316,8 @@ class UploadCreator
   def extract_image_info!
     @image_info =
       begin
+        access_mode = @file.fcntl(Fcntl::F_GETFL) & Fcntl::O_ACCMODE
+        @file.reopen(@file.path, access_mode, binmode: @file.binmode?)
         image = FastImage.new(@file)
         image.type # eager load to rescue errors early
         image
