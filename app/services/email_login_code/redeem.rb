@@ -38,10 +38,10 @@ class EmailLoginCode::Redeem
   policy :email_available_for_new_account
   policy :can_register_new_account
   policy :can_register_from_ip
+  policy :required_username_provided
   policy :username_allowed
   policy :required_fields_provided
   policy :required_full_name_provided
-  policy :required_username_provided
 
   lock(:email) do
     transaction do
@@ -98,6 +98,10 @@ class EmailLoginCode::Redeem
     existing_user.present? || !SpamHandler.should_prevent_registration_from_ip?(ip_address)
   end
 
+  def required_username_provided(existing_user:, params:)
+    existing_user.present? || !params.username_required || params.username.present?
+  end
+
   def username_allowed(existing_user:, params:)
     return true if existing_user.present? || params.username.blank?
 
@@ -126,10 +130,6 @@ class EmailLoginCode::Redeem
     return true if existing_user.present?
 
     !Site.full_name_required_for_signup || params.name.present?
-  end
-
-  def required_username_provided(existing_user:, params:)
-    existing_user.present? || params.username.present?
   end
 
   def consume_code(login_code:)

@@ -134,12 +134,6 @@ describe "Login via email code" do
 
       expect(page).to have_css(".code-login-form__complete-step")
 
-      fill_in("code-login-username", with: "new-person")
-      expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
-      find(".code-login-form__continue-to-site").click
-
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-
       user = User.find_by_email(new_email)
       expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("true")
     end
