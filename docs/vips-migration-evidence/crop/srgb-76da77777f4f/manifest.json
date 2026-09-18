@@ -1,0 +1,348 @@
+{
+  "source_head": "76da77777f4f121fa18a1a61fa5c977f06d71647",
+  "files": {
+    "inputs/jpeg.jpg": "35f1fcee1a93fbc6e30a945c661fd966e0962f60e0ef40729b8d9e76cabaadfc",
+    "outputs/jpeg-0-imagemagick.jpg": "0bc3e50e904c676484e0fb65c4c42c3e1434f58cf1069c59770d6a31bf5a59fa",
+    "outputs/jpeg-0-libvips.jpg": "686308a6e74ddcd002668216d3924624cd778691ac47ccff4b560297286d3ac8",
+    "inputs/png.png": "c7b8f38aa309b7e32d7387dff4fb82aeeba3ede32116130600a05825b9966f18",
+    "outputs/png-0-imagemagick.png": "b0e1d57352f51d41225a741f0aac6a1fc139815bac10462dc0574396ee263e79",
+    "outputs/png-0-libvips.png": "a5b622d38fc19bf83df1e531bd5265211da6dd497f766f77c00e41999255d843",
+    "inputs/gif.gif": "088ca413cddfd6e6a1409329fbb7244dfcd57dbffadefb2ea876b6220a2aa199",
+    "outputs/gif-0-imagemagick.gif": "eed456b1906b283d1a7bb5f6826abaa63abad2dea22dc595fd94a06f7b22bacf",
+    "outputs/gif-0-libvips.gif": "bffd9879d36b7be3f3180512a299645abee9d67c5e6f263aa9d2b8a0f8b19561",
+    "inputs/webp.webp": "a49452e030e12cf6ce2eae9650f7534c50e596e711f0ea9ffbf54173f6ce230d",
+    "outputs/webp-0-imagemagick.webp": "f900d6927a2f7c54ae43fcf483172d66ca3c437964aabb455a5d1d5041a7385d",
+    "outputs/webp-0-libvips.webp": "e38bef7b65178cb94fe5badc7f1a912ffb8d369ca6d7d1b270b374d92a83ea13",
+    "inputs/avif.avif": "4010d8c8282a5bac43bb09fec9692e838ffd4e9fdb0a246c6a42d29d8a1271fa",
+    "outputs/avif-0-imagemagick.avif": "d90fa3ee9e40a751def0d36d0582e15bc40f0e702a396259e4b6318c281c4eed",
+    "outputs/avif-0-libvips.avif": "8687a1d2867f3ed9e12c950ec694c1d12c9889e3a05e754d61dcde0ff96c816b",
+    "inputs/png-landscape.png": "417e0b373520a9c0efe99de07825663519b2dbc43f3805e3eef855e3f70dcb10",
+    "outputs/png-landscape-0-imagemagick.png": "852da5762f7b641867b9ae5a589b07c06223b675a865defc51bc18fa3bf9ba06",
+    "outputs/png-landscape-0-libvips.png": "8703ccdddc60835fa34809d8d7cc27ad73b68facd1402b3173873aab975408f1",
+    "inputs/png-portrait.png": "bfeadba8c1a389007b8e0e40bfc3cbe32f1e20ff6d5d04fb00d732c205a5328c",
+    "outputs/png-portrait-0-imagemagick.png": "805a23588e8f92c55e568944e8aa8798020d2a8b683aa9550504388408881681",
+    "outputs/png-portrait-0-libvips.png": "abe8d8be1177d2e9bad186020bdb7645f9dbb85bd5dfbba4a979bcb27c7d32ab",
+    "inputs/png-wide.png": "de5e3898d155b03c7a0dbe0b5b7d37568fbfa7e36a937c42fb0df56ba721e7b3",
+    "outputs/png-wide-0-imagemagick.png": "5d9a44b5345c9a4f7608033056cf12f20fd02cebab89732cf18f495b929b3775",
+    "outputs/png-wide-0-libvips.png": "06c09e19595f98191df65b0645fc17a4cd533642740e5a8ffd27a221076d4275",
+    "inputs/png-tall.png": "f1686785e7c74a701814e994a40243cd54203777f632a4bd3c41c1738574d10f",
+    "outputs/png-tall-0-imagemagick.png": "6e0772971187ac24886239af5c4af930c594e178b8637c5a64499d7e8842fc11",
+    "outputs/png-tall-0-libvips.png": "188a68f9531840853051d370876fa1c17a3993ea55869a14223686c8867f3062",
+    "inputs/png-small.png": "d61c6d6211b0a2f7aa7f44ce61d80d3edb91f8648ee6378aa0ea9c336a3e0f96",
+    "outputs/png-small-0-imagemagick.png": "23e10b3be7fdf078bbedda325818475b2e7f4b38a9a3f61ec5c96ff554f2cfe0",
+    "outputs/png-small-0-libvips.png": "d52ffb16cdc927dd482946ef42c8d04a315c11bd865acfa65f87fe40f3b48ff1",
+    "inputs/png-p3.png": "5013bc3b97547284132bec721212ad14935f5d4b36efe89e9fc902edcb7a6cc5",
+    "outputs/png-p3-0-imagemagick.png": "cacc561d84aa1aa42a41960263be19868085f1d93143492a80fbf643efa13057",
+    "outputs/png-p3-0-libvips.png": "4f4866dc786ed591ac309a86c01ddc95e1492fdd4195003fa6d63e25e338fad7"
+  },
+  "cases": [
+    {
+      "case_id": "jpeg-0",
+      "id": "jpeg",
+      "input": "inputs/jpeg.jpg",
+      "input_dimensions": [
+        500,
+        333
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/jpeg-0-imagemagick.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-0-libvips.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "png-0",
+      "id": "png",
+      "input": "inputs/png.png",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/png-0-imagemagick.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-0-libvips.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "gif-0",
+      "id": "gif",
+      "input": "inputs/gif.gif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/gif-0-imagemagick.gif",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/gif-0-libvips.gif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "webp-0",
+      "id": "webp",
+      "input": "inputs/webp.webp",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/webp-0-imagemagick.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/webp-0-libvips.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "avif-0",
+      "id": "avif",
+      "input": "inputs/avif.avif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/avif-0-imagemagick.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/avif-0-libvips.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "png-landscape-0",
+      "id": "png-landscape",
+      "input": "inputs/png-landscape.png",
+      "input_dimensions": [
+        512,
+        256
+      ],
+      "description": "Scale to cover 100\u00d7100 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 100,
+        "height": 100
+      },
+      "imagemagick": {
+        "output": "outputs/png-landscape-0-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-landscape-0-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-portrait-0",
+      "id": "png-portrait",
+      "input": "inputs/png-portrait.png",
+      "input_dimensions": [
+        256,
+        512
+      ],
+      "description": "Scale to cover 160\u00d780 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 160,
+        "height": 80
+      },
+      "imagemagick": {
+        "output": "outputs/png-portrait-0-imagemagick.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-portrait-0-libvips.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      }
+    },
+    {
+      "case_id": "png-wide-0",
+      "id": "png-wide",
+      "input": "inputs/png-wide.png",
+      "input_dimensions": [
+        512,
+        128
+      ],
+      "description": "Scale to cover 80\u00d7160 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 80,
+        "height": 160
+      },
+      "imagemagick": {
+        "output": "outputs/png-wide-0-imagemagick.png",
+        "dimensions": [
+          80,
+          160
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-wide-0-libvips.png",
+        "dimensions": [
+          80,
+          160
+        ]
+      }
+    },
+    {
+      "case_id": "png-tall-0",
+      "id": "png-tall",
+      "input": "inputs/png-tall.png",
+      "input_dimensions": [
+        128,
+        512
+      ],
+      "description": "Scale to cover 160\u00d780 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 160,
+        "height": 80
+      },
+      "imagemagick": {
+        "output": "outputs/png-tall-0-imagemagick.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-tall-0-libvips.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      }
+    },
+    {
+      "case_id": "png-small-0",
+      "id": "png-small",
+      "input": "inputs/png-small.png",
+      "input_dimensions": [
+        32,
+        32
+      ],
+      "description": "Scale to cover 96\u00d764 pixels, then crop from the top, centered horizontally.",
+      "target": {
+        "width": 96,
+        "height": 64
+      },
+      "imagemagick": {
+        "output": "outputs/png-small-0-imagemagick.png",
+        "dimensions": [
+          96,
+          64
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-small-0-libvips.png",
+        "dimensions": [
+          96,
+          64
+        ]
+      }
+    },
+    {
+      "case_id": "png-p3-0",
+      "id": "png-p3",
+      "input": "inputs/png-p3.png",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d7100 pixels, then crop from the top, centered horizontally. Convert embedded Display P3 colors to sRGB.",
+      "target": {
+        "width": 100,
+        "height": 100
+      },
+      "imagemagick": {
+        "output": "outputs/png-p3-0-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-p3-0-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    }
+  ]
+}
