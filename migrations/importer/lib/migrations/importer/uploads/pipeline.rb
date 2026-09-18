@@ -158,7 +158,6 @@ module Migrations
             end
 
             @status_queue << results unless results.empty?
-            break if @interrupt_requested
           end
         end
 

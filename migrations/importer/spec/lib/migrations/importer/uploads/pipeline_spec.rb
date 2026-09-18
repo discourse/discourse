@@ -238,5 +238,37 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
       expect(reporter.step.finished_outcome).to eq(:interrupted)
       expect(task.after_run_called).to be(true) # still drains and commits
     end
+
+    it "unblocks a producer waiting on a full work queue" do
+      processing_started = Queue.new
+      release_worker = Queue.new
+      producer_at_capacity = Queue.new
+      process =
+        lambda do |row, _resource|
+          processing_started << true
+          release_worker.pop
+          row
+        end
+      task = FakeTask.new(rows: rows(100), worker_count: 1, process:)
+      task.define_singleton_method(:produce) do |emit_work:, emit_result:|
+        @rows.each do |row|
+          producer_at_capacity << true if row[:id] == 2
+          emit_work.call(row)
+        end
+      end
+      pipeline = build_pipeline(task, batch_size: 1, work_queue_slots: 1)
+
+      runner = Thread.new { pipeline.run }
+      processing_started.pop
+      producer_at_capacity.pop
+      pipeline.handle_interrupt
+      release_worker << true
+
+      expect(runner.join(1)).to eq(runner)
+      expect(reporter.step.finished_outcome).to eq(:interrupted)
+    ensure
+      runner&.kill
+      runner&.join
+    end
   end
 end
