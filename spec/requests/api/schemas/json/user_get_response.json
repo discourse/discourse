@@ -193,6 +193,12 @@
         "can_edit": {
           "type": "boolean"
         },
+        "can_edit_avatar": {
+          "type": "boolean"
+        },
+        "can_upload_avatar": {
+          "type": "boolean"
+        },
         "can_edit_username": {
           "type": "boolean"
         },
@@ -309,6 +315,31 @@
         },
         "system_avatar_template": {
           "type": "string"
+        },
+        "associated_account_avatars": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "upload_id": {
+                "type": "integer"
+              },
+              "avatar_template": {
+                "type": "string"
+              }
+            },
+            "required": ["id", "name", "upload_id", "avatar_template"]
+          }
+        },
+        "selected_user_associated_account_id": {
+          "type": ["integer", "null"]
         },
         "muted_usernames": {
           "type": "array",
@@ -942,6 +973,8 @@
         "featured_topic",
         "staged",
         "can_edit",
+        "can_edit_avatar",
+        "can_upload_avatar",
         "can_edit_username",
         "can_edit_email",
         "can_edit_name",
@@ -968,6 +1001,8 @@
         "watched_first_post_category_ids",
         "system_avatar_upload_id",
         "system_avatar_template",
+        "associated_account_avatars",
+        "selected_user_associated_account_id",
         "muted_usernames",
         "ignored_usernames",
         "allowed_pm_usernames",
