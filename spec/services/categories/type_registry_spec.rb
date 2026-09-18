@@ -55,6 +55,38 @@ RSpec.describe Categories::TypeRegistry do
       expect(discussion).to include(available: true)
     end
 
+    it "loads site setting overrides once across category types" do
+      first_type =
+        Class.new(Categories::Types::Base) do
+          type_id :test_site_settings_one
+
+          def self.configuration_schema
+            { site_settings: { title: "Forum One" } }
+          end
+        end
+
+      second_type =
+        Class.new(Categories::Types::Base) do
+          type_id :test_site_settings_two
+
+          def self.configuration_schema
+            { site_settings: { allow_user_locale: false } }
+          end
+        end
+
+      described_class.register(first_type)
+      described_class.register(second_type)
+
+      provider = SiteSetting.provider
+
+      provider.expects(:all).once.returns([])
+
+      described_class.list
+    ensure
+      described_class.all.delete(:test_site_settings_one)
+      described_class.all.delete(:test_site_settings_two)
+    end
+
     context "with a plugin-enabling type" do
       let(:test_type) do
         Class.new(Categories::Types::Base) do
