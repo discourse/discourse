@@ -27,6 +27,38 @@ RSpec.describe DiscourseAi::AiBot::ConversationsController do
     [conversation, starred_conversation, other_conversation].each { |topic| mark_ai_bot_pm(topic) }
   end
 
+  describe "GET /" do
+    fab!(:bot_allowed_group, :group)
+    fab!(:llm_model)
+
+    before do
+      toggle_enabled_bots(bots: [llm_model])
+      SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_bot_allowed_groups = bot_allowed_group.id.to_s
+      SiteSetting.top_menu = "latest|new|top|categories"
+      SiteSetting.default_homepage = "ai-conversations"
+      SiteSetting.has_login_hint = false
+    end
+
+    it "renders conversations as the homepage for people who can use the bot" do
+      bot_allowed_group.add(current_user)
+
+      get "/"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(
+        '<meta name="discourse_current_homepage" content="ai-conversations">',
+      )
+    end
+
+    it "renders the top menu homepage for people outside the bot's allowed groups" do
+      get "/"
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include('<meta name="discourse_current_homepage" content="latest">')
+    end
+  end
+
   describe "GET /discourse-ai/ai-bot/conversations.json" do
     before do
       DiscourseAi::AiBot::ConversationStar.create!(user: current_user, topic: starred_conversation)

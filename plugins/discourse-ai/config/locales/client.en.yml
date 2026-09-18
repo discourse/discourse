@@ -1631,6 +1631,7 @@ en:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          homepage_option: "AI bot conversations"
           header: "What can I help with?"
           submit: "Submit question"
           disclaimer: "Generative AI can make mistakes. Verify important information."

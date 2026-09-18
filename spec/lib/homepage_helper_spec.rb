@@ -86,6 +86,86 @@ RSpec.describe HomepageHelper do
       end
     end
 
+    context "with a registered homepage" do
+      let(:plugin) { Plugin::Instance.new }
+
+      around do |example|
+        registrations = DiscoursePluginRegistry._raw_homepage_options.dup
+        example.run
+        DiscoursePluginRegistry._raw_homepage_options.replace(registrations)
+      end
+
+      before do
+        plugin.stubs(:enabled?).returns(true)
+        SiteSetting.top_menu = "new|top|latest"
+      end
+
+      it "falls back to the top menu when the homepage is unavailable" do
+        plugin.register_homepage(
+          "members_only",
+          name: "plugin.members_only",
+          path: "/members-only",
+          route: "plugin#index",
+          anonymous: true,
+          available: ->(guardian:, request:) { !guardian.anonymous? },
+        )
+        SiteSetting.default_homepage = "members_only"
+
+        expect(HomepageHelper.resolve(nil, user)).to eq("members_only")
+        expect(HomepageHelper.resolve).to eq("top")
+      end
+
+      it "checks availability once per request and user" do
+        calls = 0
+        plugin.register_homepage(
+          "counted",
+          name: "plugin.counted",
+          path: "/counted",
+          route: "plugin#index",
+          available: ->(guardian:, request:) do
+            calls += 1
+            true
+          end,
+        )
+        SiteSetting.default_homepage = "counted"
+        request = ActionDispatch::TestRequest.create
+
+        3.times { HomepageHelper.resolve(request, user) }
+        expect(calls).to eq(1)
+
+        HomepageHelper.resolve(request, Fabricate(:user))
+        expect(calls).to eq(2)
+      end
+
+      it "falls back to the top menu when the availability check raises" do
+        plugin.register_homepage(
+          "broken",
+          name: "plugin.broken",
+          path: "/broken",
+          route: "plugin#index",
+          available: ->(guardian:, request:) { raise "availability check failed" },
+        )
+        SiteSetting.default_homepage = "broken"
+
+        expect(HomepageHelper.resolve(nil, user)).to eq("new")
+      end
+
+      it "passes the request to the availability check" do
+        crawler_request = ActionDispatch::TestRequest.create("HTTP_USER_AGENT" => "Googlebot")
+        plugin.register_homepage(
+          "humans_only",
+          name: "plugin.humans_only",
+          path: "/humans-only",
+          route: "plugin#index",
+          available: ->(guardian:, request:) { !CrawlerDetection.crawler_layout_request?(request) },
+        )
+        SiteSetting.default_homepage = "humans_only"
+
+        expect(HomepageHelper.resolve(nil, user)).to eq("humans_only")
+        expect(HomepageHelper.resolve(crawler_request, user)).to eq("new")
+      end
+    end
+
     context "with login required" do
       before do
         SiteSetting.login_required = true

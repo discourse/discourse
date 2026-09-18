@@ -94,6 +94,17 @@ module DiscourseAi
 
         plugin.register_topic_custom_field_type(TOPIC_AI_BOT_PM_FIELD, :string)
 
+        plugin.register_homepage(
+          "ai-conversations",
+          name: "discourse_ai.ai_bot.conversations.homepage_option",
+          path: "/discourse-ai/ai-bot/conversations",
+          route: "discourse_ai/ai_bot/conversations#index",
+          enabled: -> { SiteSetting.ai_bot_enabled },
+          available: ->(guardian:, request:) do
+            EntryPoint.personal_message_bot_user_ids(guardian.user).present?
+          end,
+        )
+
         # Hide bot PMs from the personal inbox queries (Latest, New, Unread)
         # so human conversations are not buried under bot replies. Sent and
         # Archive are intentionally untouched.
