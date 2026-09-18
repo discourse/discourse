@@ -2,6 +2,8 @@
 
 RSpec.describe RandomUsernameGenerator do
   describe ".generate" do
+    before { SiteSetting.enable_random_usernames = true }
+
     it "returns a valid, available username built from the word lists and a number" do
       username = described_class.generate
 

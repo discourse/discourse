@@ -38,6 +38,8 @@ describe "Sign up via email code" do
   end
 
   it "creates a passwordless account, picks a username, and logs in" do
+    SiteSetting.enable_random_usernames = true
+
     open_code_signup
     expect(page).to have_css(".code-login-form__email-step")
     expect(page).to have_content(I18n.t("js.code_login.signup_title"))
@@ -51,8 +53,6 @@ describe "Sign up via email code" do
     expect(page).to have_css(".code-login-form__complete-step")
     screenshot_marker(label: "code-signup-complete-step")
 
-    # A random username is assigned and prefilled, so the account is usable
-    # as-is; the user can roll a new suggestion or type their own.
     generated = find("#code-login-username").value
     expect(generated).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
     expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
@@ -96,7 +96,7 @@ describe "Sign up via email code" do
 
     expect(page).to have_css(".code-login-form__complete-step")
     expect(page).to have_css(".login-welcome-header", count: 1)
-    expect(page).to have_css(".login-title", text: I18n.t("js.code_login.account_ready_title"))
+    expect(page).to have_css(".login-title", text: I18n.t("js.code_login.signup_details_title"))
     expect(page).to have_no_css(".code-login-form__title")
   end
 
@@ -125,9 +125,8 @@ describe "Sign up via email code" do
     expect(find("#code-login-username").value).to eq("jane")
   end
 
-  it "makes the user pick a username when random usernames are disabled" do
+  it "makes the user pick a username by default" do
     SiteSetting.use_email_for_username_and_name_suggestions = false
-    SiteSetting.enable_random_usernames = false
 
     open_code_signup
     submit_email("no.random@example.com")
@@ -135,19 +134,22 @@ describe "Sign up via email code" do
 
     expect(page).to have_css(".code-login-form__complete-step")
     expect(page).to have_no_css(".code-login-form__username-regen")
-    # The account carries a generic placeholder name, so it isn't offered up
-    # for the user to accept as-is.
     expect(find("#code-login-username").value).to eq("")
     expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
+    expect(page).to have_css(".code-login-form__avatar .d-icon-user")
+    expect(page).to have_no_css(".code-login-form__avatar img")
+    screenshot_marker(label: "deferred-signup-neutral-avatar")
 
     pick_username("no-random")
+    expect(page).to have_css(".code-login-form__avatar img")
+    expect(page).to have_no_css(".code-login-form__avatar .d-icon-user")
     find(".code-login-form__continue-to-site").click
 
     expect(page).to have_css(".header-dropdown-toggle.current-user")
     expect(User.find_by_email("no.random@example.com").username).to eq("no-random")
   end
 
-  it "keeps the generated username when usernames can't be changed" do
+  it "lets the user choose their initial username when later changes are disabled" do
     SiteSetting.username_change_period = 0
 
     open_code_signup
@@ -155,22 +157,54 @@ describe "Sign up via email code" do
     fill_code(latest_emailed_code("locked.name@example.com"))
 
     expect(page).to have_css(".code-login-form__complete-step")
-    expect(page).to have_no_css("#code-login-username")
+    pick_username("locked-name")
 
     find(".code-login-form__continue-to-site").click
     expect(page).to have_css(".header-dropdown-toggle.current-user")
-    expect(User.find_by_email("locked.name@example.com")).to be_present
+    expect(User.find_by_email("locked.name@example.com").username).to eq("locked-name")
   end
 
-  it "opens the avatar picker before continuing" do
+  it "stays logged out when the user leaves without choosing a username" do
+    open_code_signup
+    submit_email("abandoned.person@example.com")
+    fill_code(latest_emailed_code("abandoned.person@example.com"))
+
+    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
+
+    visit("/")
+
+    expect(page).to have_no_css(".header-dropdown-toggle.current-user")
+    expect(page).to have_css(".login-button")
+  end
+
+  it "previews a chosen avatar and applies it after creating the account" do
+    User.set_callback(:create, :after, :ensure_in_trust_level_group)
+
     open_code_signup
     submit_email("avatar.person@example.com")
     fill_code(latest_emailed_code("avatar.person@example.com"))
 
     expect(page).to have_css(".code-login-form__complete-step")
     find(".code-login-form__avatar").click
+    attach_file(
+      "deferred-avatar-upload",
+      File.absolute_path(file_from_fixtures("logo.jpg")),
+      make_visible: true,
+    )
 
-    expect(page).to have_css(".avatar-selector-modal")
+    expect(page).to have_css(".avatar-choice--upload img[src^='blob:']")
+    screenshot_marker(label: "deferred-signup-avatar-picker")
+    find(".avatar-selector-modal .btn-primary").click
+
+    expect(page).to have_css(".code-login-form__avatar img[src^='blob:']")
+    pick_username("avatar-person")
+    screenshot_marker(label: "deferred-signup-avatar-preview")
+    find(".code-login-form__continue-to-site").click
+
+    expect(page).to have_css(".header-dropdown-toggle.current-user img[src*='/user_avatar/']")
+  ensure
+    User.skip_callback(:create, :after, :ensure_in_trust_level_group)
   end
 
   it "shows an error for an incorrect code" do
@@ -203,6 +237,7 @@ describe "Sign up via email code" do
   end
 
   it "collects account details before approval and requires a fresh code afterward" do
+    SiteSetting.enable_random_usernames = true
     SiteSetting.login_required = true
     SiteSetting.must_approve_users = true
     SiteSetting.full_name_requirement = "required_at_signup"
@@ -326,6 +361,8 @@ describe "Sign up via email code" do
     expect(page).to have_field("new-account-password", type: "password")
     screenshot_marker(label: "code-signup-account-details-password-expanded")
 
+    pick_username("password-approval")
+
     fill_in("new-account-password", with: "short")
     expect(page).to have_css(".code-login-form__submit-approval[disabled]")
 
@@ -414,6 +451,10 @@ describe "Sign up via email code" do
       find(".code-login-form__user-fields-step .code-login-form__verify").click
 
       expect(page).to have_css(".code-login-form__complete-step")
+      pick_username("named-person")
+      find(".code-login-form__continue-to-site").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
       expect(User.find_by_email("named.person@example.com").name).to eq("Jane Doe")
     end
   end
