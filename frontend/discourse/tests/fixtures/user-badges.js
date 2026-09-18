@@ -22,11 +22,22 @@ const userBadgesFixtures = {
           "//www.gravatar.com/avatar/a4151b1fd72089c54e2374565a87da7f.png?s={size}\u0026r=pg\u0026d=identicon",
       },
     ],
+    topics: [
+      {
+        id: 280,
+        title: "Topic 280",
+        fancy_title: "Topic &amp; more",
+        slug: "topic-280",
+        posts_count: 10,
+      },
+    ],
     user_badge: {
       id: 665,
       granted_at: "2014-03-09T20:30:01.190-04:00",
       badge_id: 874,
       granted_by_id: 13470,
+      post_number: 5,
+      topic_id: 280,
     },
   },
   "/user-badges/:username": {
