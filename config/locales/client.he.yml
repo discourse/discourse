@@ -288,7 +288,7 @@ he:
       pt:
         name: פורטוגלית
       pt_BR:
-        name: פורטוגלית
+        name: פורטוגלית ברזילאית
       ro:
         name: רומנית
       ru:
@@ -383,7 +383,7 @@ he:
     emails_are_disabled_non_staff: "דוא״ל יוצא הושבת עבור משתמשים שאינם מהסגל."
     software_update_prompt:
       message: "עדכנו את האתר, <span>נא לרענן</span> כדי שהדברים פה יחזרו לרוץ בצורה חלקה."
-      dismiss: "התעלמות"
+      dismiss: "סילוק"
     notifications_tracking:
       tooltip: "רמת התראה: %{level}"
     back_button: "חזרה"
@@ -542,7 +542,7 @@ he:
       back: "חזרה"
       next: "הבא"
       sections:
-        theme: "תמה"
+        theme: "ערכת עיצוב"
         fonts: "גופנים"
         homepage: "דף הבית"
       theme:
@@ -559,7 +559,7 @@ he:
         styles:
           boxes: "תיבות"
     about:
-      edit: "עריכת עמוד זה"
+      edit: "עריכת העמוד הזה"
       simple_title: "על אודות"
       title: "על %{title}"
       stats: "סטטיסטיקת אתר"
@@ -4474,7 +4474,7 @@ he:
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       cancel_composer:
-        confirm: "להתעלם מהפוסט שלך?"
+        confirm: "לסלק את הפוסט שלך?"
         confirm_edit: "להתעלם מהשינויים שלך?"
         discard: "להשליך"
         discard_edit: "התעלמות מהשינויים"
@@ -5378,7 +5378,7 @@ he:
       manage_groups: "ניהול קבוצות תגיות"
       manage_groups_description: "הגדרת קבוצות לארגון תגיות"
       upload: "העלאת תגיות"
-      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות בבת אחת"
+      upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות במרוכז"
       upload_instructions: "אחת בשורה, אפשר עם קבוצת תגיות בתצורה ‚שם_תגית,קבוצת_תגיות’."
       upload_successful: "התגיות הועלו בהצלחה"
       bulk_create_inline_placeholder: "יצירת תגיות (מופרדות בפסיקים)"
@@ -6459,7 +6459,7 @@ he:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
         discourse_last_updated: "עדכון Discourse:"
-        version: "גירסה"
+        version: "גרסה"
         up_to_date: "הכול עדכני!"
         updates_available: "עדכונים מוכנים."
         please_update: "נא לעדכן!"
