@@ -680,6 +680,8 @@ export default class InterfaceController extends Controller {
         return this.siteSettings.enable_gifs;
       case "toggle-direction":
         return this.siteSettings.support_mixed_text_direction;
+      case "post-language-selector":
+        return this.siteSettings.content_localization_enabled;
       default:
         return true;
     }

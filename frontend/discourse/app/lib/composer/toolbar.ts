@@ -198,6 +198,10 @@ export const HIDEABLE_BUTTONS = [
   { id: "toggle-direction", label: "composer.toggle_direction" },
   { id: "emoji", label: "composer.emoji" },
   { id: "gifs", label: "gifs.composer_title" },
+  {
+    id: "post-language-selector",
+    label: "post.localizations.post_language_selector.title",
+  },
 ];
 
 const HIDEABLE_BUTTON_IDS = new Set(HIDEABLE_BUTTONS.map(({ id }) => id));
