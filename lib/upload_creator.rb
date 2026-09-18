@@ -257,32 +257,52 @@ class UploadCreator
       end
       return @upload unless @upload.errors.empty? && @upload.save(validate: @opts[:validate])
 
-      should_move = false
-      upload_changed =
-        if external_upload_too_big
-          false
-        else
-          Upload.generate_digest(@file) != sha1_before_changes
-        end
-
       store = Discourse.store
 
-      if @opts[:existing_external_upload_key] && store.external?
-        should_move = external_upload_too_big || !upload_changed
-      end
+      if external_upload_too_big
+        should_move = @opts[:existing_external_upload_key].present? && store.external?
 
-      if should_move
-        # move the file in the store instead of reuploading
-        url =
-          store.move_existing_stored_upload(
-            existing_external_upload_key: @opts[:existing_external_upload_key],
-            upload: @upload,
-          )
+        if should_move
+          # move the file in the store instead of reuploading
+          url =
+            store.move_existing_stored_upload(
+              existing_external_upload_key: @opts[:existing_external_upload_key],
+              upload: @upload,
+            )
+        end
       else
-        # store the file and update its url
-        File.open(@file.path) { |f| url = store.store_upload(f, @upload) }
-        if @opts[:existing_external_upload_key]
-          store.delete_file(@opts[:existing_external_upload_key])
+        # Copy the working file into a fresh tempfile that image conversion
+        # never had write access to, then hash and store from that copy.
+        #
+        # Conversion (see #convert_heif! and friends) runs in a Landlock
+        # sandbox that is still granted write access to the converted file's
+        # directory. A compromised decoder, or a descendant that outlives the
+        # converter, can therefore replace @file.path with a symlink after the
+        # output is validated. Every later reopen-by-path would then read the
+        # symlink target with the unrestricted Rails process's authority: the
+        # sha, the local store's copy, and the S3 transfer manager (which
+        # reopens file.path for large files) would all read an attacker-chosen
+        # file such as config/discourse.conf. Rehoming through a NOFOLLOW,
+        # regular-file-verified read into a Rails-owned path closes that
+        # confused-deputy TOCTOU: nothing the sandbox can reach is reopened by
+        # name again.
+        rehome_verified_file! do |file|
+          upload_changed = digest_of(file) != sha1_before_changes
+
+          if @opts[:existing_external_upload_key] && store.external? && !upload_changed
+            # move the file in the store instead of reuploading
+            url =
+              store.move_existing_stored_upload(
+                existing_external_upload_key: @opts[:existing_external_upload_key],
+                upload: @upload,
+              )
+          else
+            file.rewind
+            url = store.store_upload(file, @upload)
+            if @opts[:existing_external_upload_key]
+              store.delete_file(@opts[:existing_external_upload_key])
+            end
+          end
         end
       end
 
@@ -750,5 +770,45 @@ class UploadCreator
 
   def generate_fake_sha1_hash
     SecureRandom.hex(20)
+  end
+
+  # Copies @file into a fresh tempfile the image sandbox never had write
+  # access to, swaps @file to the copy, and yields it open for hashing and
+  # storage. The source is opened with O_NOFOLLOW and fstat-verified to be an
+  # ordinary file, so a symlink left in place of the sandbox output is refused
+  # rather than read with Rails' authority. After this, @file.path is a
+  # Rails-owned tempfile, so downstream reopen-by-path (local copy, S3 transfer
+  # manager) is safe. See the caller for the full threat model.
+  def rehome_verified_file!
+    source = File.open(@file.path, File::RDONLY | File::NOFOLLOW)
+
+    if !source.stat.file?
+      raise SecurityError, "refusing to store non-regular upload file at #{@file.path.inspect}"
+    end
+
+    rehomed = Tempfile.new(%w[upload-verified .tmp])
+    rehomed.binmode
+    IO.copy_stream(source, rehomed)
+    rehomed.flush
+    rehomed.rewind
+
+    previous = @file
+    @file = rehomed
+    previous.respond_to?(:close!) ? previous.close! : previous.close
+
+    yield rehomed
+  ensure
+    source&.close
+  end
+
+  def digest_of(file)
+    digest = Digest::SHA1.new
+    file.rewind
+    while (chunk = file.read(1.megabyte))
+      digest.update(chunk)
+    end
+    digest.hexdigest
+  ensure
+    file.rewind
   end
 end

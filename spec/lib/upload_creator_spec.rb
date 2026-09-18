@@ -749,6 +749,73 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe "conversion sandbox boundary" do
+      # Image conversion runs in a Landlock sandbox that is still granted write
+      # access to the converted file's directory, so a compromised decoder, or
+      # a descendant outliving it, can replace the working file's path with a
+      # symlink after validation. If the unrestricted parent then reopened that
+      # path by name it would read the symlink target (e.g. config containing
+      # secret_key_base) with its own authority and store those bytes. Storage
+      # goes through UploadCreator#rehome_verified_file!, which opens the path
+      # with O_NOFOLLOW, refuses anything but a regular file, and copies it into
+      # a Rails-owned tempfile before any reopen-by-path. These specs exercise
+      # that parent-side defense directly rather than a real sandbox escape.
+      let(:creator) { described_class.new(file_from_fixtures("logo.jpg"), "logo.jpg") }
+
+      let(:secret) do
+        file = Tempfile.new(%w[stolen-secret .conf])
+        file.write("secret_key_base = TOTALLY_SECRET_VALUE\n")
+        file.flush
+        file
+      end
+
+      # Points @file at a real working file, then swaps that path for a symlink
+      # to `target`, standing in for a sandbox descendant that replaces the
+      # converted output after validation.
+      def swap_working_file_for_symlink_to(target)
+        working = Tempfile.new(%w[working .jpg])
+        working.write("real converted jpeg bytes")
+        working.flush
+        path = working.path
+        creator.instance_variable_set(:@file, working)
+
+        working.close
+        File.unlink(path)
+        File.symlink(target, path)
+        path
+      end
+
+      after { secret.close! }
+
+      it "refuses a working file that has been swapped for a symlink" do
+        path = swap_working_file_for_symlink_to(secret.path)
+
+        expect { creator.send(:rehome_verified_file!) { |file| file.read } }.to raise_error(
+          StandardError,
+        ) { |error| expect(error).to be_a(SecurityError).or be_a(SystemCallError) }
+      ensure
+        File.unlink(path) if path && (File.symlink?(path) || File.exist?(path))
+      end
+
+      it "rehomes to a Rails-owned path and stores the pre-swap bytes" do
+        working = Tempfile.new(%w[working .jpg])
+        working.write("real converted jpeg bytes")
+        working.flush
+        working_path = working.path
+        creator.instance_variable_set(:@file, working)
+
+        stored_bytes = nil
+        creator.send(:rehome_verified_file!) do |file|
+          # @file is now a fresh tempfile, not the path the sandbox could reach.
+          expect(creator.instance_variable_get(:@file).path).not_to eq(working_path)
+          stored_bytes = file.read
+        end
+
+        expect(stored_bytes).to eq("real converted jpeg bytes")
+        expect(stored_bytes).not_to include("TOTALLY_SECRET_VALUE")
+      end
+    end
+
     describe "secure attachments" do
       let(:filename) { "small.pdf" }
       let(:file) { file_from_fixtures(filename, "pdf") }
