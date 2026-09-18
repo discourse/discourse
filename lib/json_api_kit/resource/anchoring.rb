@@ -34,6 +34,8 @@ module JsonApiKit
 
         def declared_anchor(name) = declared_anchors.detect { it.name == name.to_s }
       end
+
+      delegate :anchor_names, :anchor_accepts?, :anchored_by?, :anchors, to: :class
     end
   end
 end

@@ -3,7 +3,10 @@
 RSpec.describe JsonApiKit::DefaultSorts::History do
   subject(:history) { described_class.new(resource:, changes:) }
 
-  let(:resource) do
+  let(:resource) { resource_class.new(guardian:, edition:) }
+  let(:guardian) { Guardian.new }
+  let(:edition) { JsonApiKit::Edition.new(changes) }
+  let(:resource_class) do
     Class.new(JsonApiKit::Resource) do
       model Topic
       type :topics
@@ -211,7 +214,9 @@ RSpec.describe JsonApiKit::DefaultSorts::History do
         resources.to_h { [it.type, described_class.new(resource: it, changes:).ordering] }
       end
 
-      let(:resources) { [resource, Class.new(resource) { type :users }] }
+      let(:resources) do
+        [resource, Class.new(resource_class) { type :users }.new(guardian:, edition:)]
+      end
       let(:changes) do
         [
           Class

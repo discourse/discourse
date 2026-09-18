@@ -15,7 +15,9 @@ RSpec.describe JsonApiKit::Request::Input::Collection do
       end
       .new(__FILE__)
   end
-  let(:resource) do
+  let(:resource) { resource_class.new(guardian:, edition:) }
+  let(:guardian) { Guardian.new }
+  let(:resource_class) do
     Class.new(JsonApiKit::Resource) do
       model Topic
       type :topics

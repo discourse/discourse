@@ -7,13 +7,8 @@ module JsonApiKit
         def input_class = Request::Input::Collection
 
         def for(parameters, resource:, client:, scoped_to: nil)
-          build(parameters, resource:, client:) do
-            resource.all(
-              it,
-              guardian: client.guardian,
-              scoped_to:,
-              default_sorts: client.default_sorts,
-            )
+          build(parameters, resource:, client:) do |params, instance|
+            instance.all(params, scoped_to:)
           end
         end
       end
