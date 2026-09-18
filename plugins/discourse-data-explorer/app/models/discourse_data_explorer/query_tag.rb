@@ -51,9 +51,8 @@ module DiscourseDataExplorer
 
     def self.sync!(query:, names:)
       names = normalize_all(names)
-      names.unshift(Query::DEFAULT_TAG) if query.id.negative?
-      names.uniq!
       validate_names!(query:, names:)
+      names.delete(Query::DEFAULT_TAG) if query.id.negative?
 
       desired = resolve_or_create!(names)
       desired_ids = desired.map(&:id)
@@ -91,7 +90,7 @@ module DiscourseDataExplorer
 
     def self.validate_names!(query:, names:)
       errors = ActiveModel::Errors.new(query)
-      validate_names(names, errors)
+      validate_names(query.id.negative? ? (names | [Query::DEFAULT_TAG]) : names, errors)
       if !Query.is_default_query?(query.id) && names.include?(Query::DEFAULT_TAG)
         errors.add(:base, I18n.t("discourse_data_explorer.errors.default_tag_reserved"))
       end
