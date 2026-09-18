@@ -249,9 +249,12 @@ class DiscourseVipsWorker
         raise ArgumentError, "JPEG conversion requires separate input and output files"
       end
 
-      image.autorot.jpegsave(
+      image = image.autorot
+      image = image.colourspace(image.bands == 2 ? :b_w : :srgb) if image.has_alpha?
+
+      image.jpegsave(
         output_path,
-        background: [255, 255, 255],
+        background: [255],
         Q: Integer(quality),
         interlace: false,
         # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
