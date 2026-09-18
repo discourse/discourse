@@ -249,9 +249,14 @@ class DiscourseVipsWorker
         raise ArgumentError, "JPEG conversion requires separate input and output files"
       end
 
-      image.autorot.jpegsave(
+      image = image.autorot
+      if image.has_alpha?
+        white = %i[rgb16 grey16].include?(image.interpretation) ? 65_535 : 255
+        image = image.flatten(background: [white])
+      end
+
+      image.jpegsave(
         output_path,
-        background: [255, 255, 255],
         Q: Integer(quality),
         interlace: false,
         # Optimized Huffman coding reduces JPEG size without changing decoded pixels.
@@ -313,9 +318,7 @@ class DiscourseVipsWorker
       output_format:
     )
       new do
-        if !%w[true false].include?(sharpen)
-          raise ArgumentError, "invalid sharpening flag"
-        end
+        raise ArgumentError, "invalid sharpening flag" if !%w[true false].include?(sharpen)
         if !%w[true false].include?(strip_metadata)
           raise ArgumentError, "invalid metadata stripping flag"
         end
@@ -332,9 +335,7 @@ class DiscourseVipsWorker
         allowed = loaders.values
         if !input_format.empty?
           loader =
-            loaders.fetch(input_format.downcase) do
-              raise ArgumentError, "unsupported input format"
-            end
+            loaders.fetch(input_format.downcase) { raise ArgumentError, "unsupported input format" }
           allowed = [loader]
         end
         block_loaders(allowed: allowed)
@@ -511,7 +512,12 @@ class DiscourseVipsWorker
 
   def run_sandboxed(request:, operation:)
     Dir.mktmpdir("discourse-vips-") do |scratch|
-      sandbox_paths = operation.sandbox_paths(scratch:, read: request.fetch("read"), write: request.fetch("write"))
+      sandbox_paths =
+        operation.sandbox_paths(
+          scratch:,
+          read: request.fetch("read"),
+          write: request.fetch("write"),
+        )
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),

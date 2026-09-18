@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "chunky_png"
+require "vips"
 
 RSpec.describe DiscourseVips do
   shared_examples "JPEG operation instrumentation" do |method, filename, operation|
@@ -147,6 +148,31 @@ RSpec.describe DiscourseVips do
 
     context "with a transparent 12-bit HEIF" do
       include_examples "HEIF conversion", "heif-color-grid-alpha-12bit.heic"
+    end
+
+    it "flattens transparent 12-bit HEIF pixels onto white" do
+      input_path = file_from_fixtures("heif-color-grid-alpha-12bit.heic").path
+
+      Dir.mktmpdir do |directory|
+        output_path = File.join(directory, "converted.jpg")
+
+        described_class.heif_to_jpeg(
+          input_path:,
+          output_path:,
+          quality: 95,
+          timeout: 20,
+          read: [input_path],
+          write: [directory],
+        )
+
+        image = Vips::Image.new_from_file(output_path)
+        [[5, [255, 255, 255]], [20, [127, 255, 127]], [50, [0, 0, 255]]].each do |x, expected|
+          image
+            .getpoint(x, 5)
+            .zip(expected)
+            .each { |actual, channel| expect(actual).to be_within(5).of(channel) }
+        end
+      end
     end
 
     it "preserves image dimensions without changing the source" do
@@ -401,6 +427,40 @@ RSpec.describe DiscourseVips do
                      :png_to_jpeg,
                      "logo.png",
                      "upload_png_to_jpeg"
+
+    [
+      ["jpeg-flatten-rgb-8bit.png", [255, 127, 127], [0, 0, 255]],
+      ["jpeg-flatten-rgb-16bit.png", [255, 127, 127], [0, 0, 255]],
+      ["jpeg-flatten-gray-16bit.png", [127, 127, 127], [0, 0, 0]],
+    ].each do |filename, blended_pixel, opaque_pixel|
+      it "flattens #{filename} onto white while preserving opaque pixels" do
+        input_path = file_from_fixtures(filename).path
+        original_content = File.binread(input_path)
+
+        Dir.mktmpdir do |directory|
+          output_path = File.join(directory, "converted.jpg")
+
+          described_class.png_to_jpeg(
+            input_path:,
+            output_path:,
+            quality: 95,
+            timeout: 5,
+            read: [input_path],
+            write: [directory],
+          )
+
+          image = Vips::Image.new_from_file(output_path).colourspace(:srgb)
+          [[16, [255, 255, 255]], [48, blended_pixel], [80, opaque_pixel]].each do |x, expected|
+            image
+              .getpoint(x, 16)
+              .zip(expected)
+              .each { |actual, channel| expect(actual).to be_within(2).of(channel) }
+          end
+          expect(FastImage.size(output_path)).to eq([96, 32])
+          expect(File.binread(input_path)).to eq(original_content)
+        end
+      end
+    end
 
     it "flattens transparent PNG pixels onto white" do
       Dir.mktmpdir do |directory|
