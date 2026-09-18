@@ -1,18 +1,15 @@
-import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
 import { fmt, routeName, stem } from "./analysis";
 import ChunkRow from "./chunk-row";
+import ExpandableRow from "./expandable-row";
 
 // One entrypoint (static or dynamic), rolled up into an expandable card that
 // shows the chunks it pulls in. `@baseline` marks discourse.js, the basis every
 // other card measures its "additional" bytes against; that card shows its full
 // initial load instead of a delta.
-export default class EntrypointCard extends Component {
-  @tracked open = false;
-
+export default class EntrypointCard extends ExpandableRow {
   get analysis() {
     return this.args.analysis;
   }
@@ -75,10 +72,9 @@ export default class EntrypointCard extends Component {
     return t.brotliReady ? fmt(t.brotli) : "…";
   }
 
-  // While a filter is active the card opens itself (everything shown is a
-  // match) so the matching chunks/modules below are visible without a click.
-  get expanded() {
-    return this.open || !!this.args.filter;
+  // Every card on screen matches the active filter, so a filter opens them all.
+  get autoExpanded() {
+    return !!this.args.filter;
   }
 
   get addedSorted() {
@@ -86,11 +82,6 @@ export default class EntrypointCard extends Component {
       .filter((f) => f !== this.args.file)
       .filter((f) => this.analysis.chunkMatches(f, this.args.filter))
       .sort((a, b) => this.analysis.sortSize(b) - this.analysis.sortSize(a));
-  }
-
-  @action
-  toggle() {
-    this.open = !this.open;
   }
 
   <template>

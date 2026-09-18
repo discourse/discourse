@@ -1,14 +1,10 @@
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
 import { barWidth, fmt, matches, routeName, stem } from "./analysis";
+import ExpandableRow from "./expandable-row";
 
 // One expandable chunk row. `@root` renders it as the minimal "dynamic
 // entrypoint root" header; `@added` flags it as new vs. the initial load.
-export default class ChunkRow extends Component {
-  @tracked open = false;
-
+export default class ChunkRow extends ExpandableRow {
   get chunk() {
     return this.args.analysis.chunks[this.args.file];
   }
@@ -41,27 +37,18 @@ export default class ChunkRow extends Component {
     return this.chunk.modules.filter((m) => matches(m.id, this.args.filter));
   }
 
-  // Auto-open when the filter matches a module path inside this chunk, so the
-  // matching source path is revealed without a click.
-  get moduleMatch() {
+  // A filter matching a module path inside this chunk opens it, revealing the
+  // matching source path without a click.
+  get autoExpanded() {
     return (
       !!this.args.filter &&
       this.chunk.modules.some((m) => matches(m.id, this.args.filter))
     );
   }
 
-  get expanded() {
-    return this.open || this.moduleMatch;
-  }
-
   get brotliLabel() {
     const size = this.args.analysis.brotliOf(this.args.file);
     return size == null ? "…" : fmt(size);
-  }
-
-  @action
-  toggle() {
-    this.open = !this.open;
   }
 
   <template>
