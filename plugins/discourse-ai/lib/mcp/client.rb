@@ -8,6 +8,7 @@ module DiscourseAi
       PROTOCOL_VERSION = "2025-03-26"
       USER_AGENT = "Discourse AI MCP Client"
       MAX_RESPONSE_BODY_LENGTH = 5.megabytes
+      MAX_PAGINATION_PAGES = 100
 
       Error = Class.new(StandardError)
       AuthorizationRequiredError = Class.new(Error)
@@ -52,9 +53,31 @@ module DiscourseAi
       end
 
       def list_tools(session_id: nil)
-        response = post_jsonrpc("tools/list", session_id: session_id)
-        result = extract_result!(response.payload)
-        Array(result["tools"])
+        tools = []
+        cursor = nil
+        seen_cursors = Set.new
+        page_count = 0
+
+        loop do
+          page_count += 1
+          if page_count > MAX_PAGINATION_PAGES
+            raise Error, "MCP tools/list exceeded the #{MAX_PAGINATION_PAGES}-page limit"
+          end
+
+          params = { cursor: cursor } unless cursor.nil?
+          response = post_jsonrpc("tools/list", params: params, session_id: session_id)
+          result = extract_result!(response.payload)
+
+          tools.concat(Array(result["tools"]))
+          cursor = result["nextCursor"]
+          break if cursor.nil?
+
+          if !seen_cursors.add?(cursor)
+            raise Error, "MCP tools/list returned a repeated pagination cursor"
+          end
+        end
+
+        tools
       end
 
       def call_tool(tool_name, arguments, session_id: nil)
