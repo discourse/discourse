@@ -1,7 +1,7 @@
 ---
 title: Using the AI bot via the Discourse API
 short_title: AI bot via API
-id: ai-evals
+id: ai-bot-api
 ---
 
 ## Overview
