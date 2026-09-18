@@ -309,8 +309,6 @@ class DiscourseVipsWorker
       strip_metadata:
     )
       new do
-        input_format = image_format(path: input_path)
-        output_format = image_format(path: destination_path, fallback: input_format)
         if !%w[true false].include?(sharpen)
           raise ArgumentError, "invalid sharpening flag"
         end
@@ -319,21 +317,35 @@ class DiscourseVipsWorker
         end
         quality = quality.empty? ? nil : Integer(quality)
 
-        loader = {
-          "jpg" => "VipsForeignLoadJpeg",
-          "jpeg" => "VipsForeignLoadJpeg",
-          "png" => "VipsForeignLoadPng",
-          "gif" => "VipsForeignLoadNsgif",
-          "webp" => "VipsForeignLoadWebp",
-          "avif" => "VipsForeignLoadHeif",
-        }.fetch(input_format)
-        block_loaders(allowed: [loader])
+        block_loaders(
+          allowed: %w[
+            VipsForeignLoadJpeg
+            VipsForeignLoadPng
+            VipsForeignLoadNsgif
+            VipsForeignLoadWebp
+            VipsForeignLoadHeif
+          ],
+        )
 
         source =
           begin
             Vips::Image.new_from_file(input_path)
           rescue Vips::Error => error
             raise InvalidImage, error.message
+          end
+
+        input_format = {
+          "jpegload" => "jpg",
+          "pngload" => "png",
+          "gifload" => "gif",
+          "webpload" => "webp",
+          "heifload" => "avif",
+        }.fetch(source.get("vips-loader"))
+        output_format =
+          if input_path == destination_path
+            input_format
+          else
+            image_format(path: destination_path, fallback: input_format)
           end
 
         if !width.empty? && !height.empty?

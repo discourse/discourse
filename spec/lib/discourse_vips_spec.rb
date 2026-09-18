@@ -786,7 +786,7 @@ RSpec.describe DiscourseVips do
 
   describe ".thumbnail" do
     let(:directory) { Dir.mktmpdir }
-    let(:input_path) { File.join(directory, "source.png") }
+    let(:input_path) { File.join(directory, "source.jpg") }
     let(:output_path) { File.join(directory, "output.png") }
 
     before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
@@ -808,6 +808,7 @@ RSpec.describe DiscourseVips do
       )
 
       expect(FastImage.size(input_path)).to eq([100, 50])
+      expect(FastImage.type(input_path)).to eq(:png)
     end
 
     it "rejects unsupported output extensions" do
@@ -815,21 +816,6 @@ RSpec.describe DiscourseVips do
         described_class.thumbnail(
           input_path: input_path,
           output_path: File.join(directory, "output.svg"),
-          width: 100,
-          height: 50,
-          timeout: 10,
-          operation: :optimized_image_resize,
-          read: [input_path],
-          write: [directory],
-        )
-      }.to raise_error(DiscourseVips::Error, "unsupported format")
-    end
-
-    it "rejects unsupported input extensions" do
-      expect {
-        described_class.thumbnail(
-          input_path: File.join(directory, "source.svg"),
-          output_path: output_path,
           width: 100,
           height: 50,
           timeout: 10,
@@ -877,7 +863,7 @@ RSpec.describe DiscourseVips do
       }.to raise_error(DiscourseVips::InvalidImage)
 
       expect(File.binread(output_path)).to eq("existing destination")
-      expect(Dir.children(directory)).to contain_exactly("source.png", "output.png")
+      expect(Dir.children(directory)).to contain_exactly("source.jpg", "output.png")
     end
 
     it "rejects an SVG disguised as a PNG" do
