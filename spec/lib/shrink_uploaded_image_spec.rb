@@ -34,7 +34,6 @@ RSpec.describe ShrinkUploadedImage do
         from: Discourse.store.path_for(upload),
         to: "/tmp/smaller.png",
         max_pixels: 10_000,
-        filename: upload.original_filename,
       )
       smaller_sha1 = Upload.generate_digest("/tmp/smaller.png")
       smaller_upload = Fabricate(:image_upload, sha1: smaller_sha1)

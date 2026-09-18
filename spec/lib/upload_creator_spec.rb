@@ -33,6 +33,43 @@ RSpec.describe UploadCreator do
       include_examples "animated upload preservation"
     end
 
+    shared_examples "image extension correction" do
+      it "resizes PNG data with a .bin extension and stores it as a PNG" do
+        file = Tempfile.new(%w[upload .bin])
+        FileUtils.copy_file(file_from_fixtures("logo.png").path, file.path)
+
+        upload =
+          described_class.new(
+            file,
+            "wrong_upload.bin",
+            type: "avatar",
+            force_optimize: true,
+          ).create_for(user.id)
+
+        expect(upload).to be_persisted
+        expect(upload.original_filename).to eq("wrong_upload.png")
+        expect(upload.extension).to eq("png")
+        expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq(
+          [Discourse.avatar_sizes.max, Discourse.avatar_sizes.max],
+        )
+      ensure
+        file&.close!
+      end
+    end
+
+    context "when processing images with ImageMagick" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "image extension correction"
+    end
+
+    context "when processing images with libvips" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "image extension correction"
+    end
+
     context "when the upload is an SVG" do
       before { SiteSetting.authorized_extensions = "svg" }
 

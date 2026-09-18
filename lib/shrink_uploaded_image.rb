@@ -32,12 +32,7 @@ class ShrinkUploadedImage
       return false
     end
 
-    OptimizedImage.downsize(
-      from: path,
-      to: path,
-      max_pixels: @max_pixels,
-      filename: upload.original_filename,
-    )
+    OptimizedImage.downsize(from: path, to: path, max_pixels: @max_pixels)
     sha1 = Upload.generate_digest(path)
 
     if sha1 == upload.sha1
