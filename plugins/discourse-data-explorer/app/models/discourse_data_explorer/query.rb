@@ -16,7 +16,7 @@ module DiscourseDataExplorer
   class Query < ActiveRecord::Base
     self.table_name = "data_explorer_queries"
 
-    DEFAULT_TAG = "Default"
+    DEFAULT_TAG = "default"
 
     has_many :query_groups
     has_many :groups, through: :query_groups

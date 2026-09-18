@@ -67,6 +67,8 @@ export default class Query extends RestModel {
 
   updateProperties() {
     const props = this.getProperties(Query.updatePropertyNames);
+    props.group_ids_present = true;
+    props.tags_present = true;
     if (this.destroyed) {
       props.id = this.id;
     }

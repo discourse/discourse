@@ -16,9 +16,12 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
   }
 
   async model() {
+    const filterParams = this.controllerFor(
+      "adminPlugins.show.explorer.index"
+    ).fetchParams;
     const [groups, model] = await Promise.all([
       ajax("/admin/plugins/discourse-data-explorer/groups.json"),
-      this.store.findAll("query"),
+      this.store.findAll("query", filterParams),
     ]);
 
     const groupNames = {};

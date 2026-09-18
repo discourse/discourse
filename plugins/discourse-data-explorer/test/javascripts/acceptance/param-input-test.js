@@ -38,7 +38,7 @@ acceptance("Param Input", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
-      helper.response(["Default"])
+      helper.response(["default"])
     );
 
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {

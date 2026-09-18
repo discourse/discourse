@@ -39,6 +39,7 @@ export default <template>
     <DFilterControls
       @additionalFiltersActive={{@controller.hasTagFilter}}
       @array={{@controller.model.content}}
+      @initialTextFilter={{@controller.textFilter}}
       @inputPlaceholder={{i18n "explorer.search_placeholder"}}
       @loading={{@controller.searchLoading}}
       @noResultsMessage={{i18n "explorer.no_search_results"}}
