@@ -5,6 +5,65 @@ RSpec.describe UserSerializer do
 
   before { user.user_stat.update!(post_count: 1, topic_count: 2) }
 
+  context "with associated account avatars" do
+    fab!(:upload)
+    fab!(:account) do
+      Fabricate(
+        :user_associated_account,
+        user: user,
+        provider_name: "google_oauth2",
+        avatar_upload_id: upload.id,
+      )
+    end
+
+    before do
+      SiteSetting.google_oauth2_client_id = "client-id"
+      SiteSetting.google_oauth2_client_secret = "client-secret"
+      SiteSetting.enable_google_oauth2_logins = true
+      user.user_avatar.update!(selected_user_associated_account_id: account.id)
+    end
+
+    it "includes the retained provider picture and selected source for its owner" do
+      json = described_class.new(user, scope: user.guardian, root: false).as_json
+
+      expect(json[:associated_account_avatars]).to eq(
+        [
+          {
+            id: account.id,
+            name: account.provider_name,
+            upload_id: upload.id,
+            avatar_template: User.avatar_template(user.username, upload.id),
+          },
+        ],
+      )
+      expect(json[:selected_user_associated_account_id]).to eq(account.id)
+    end
+
+    it "excludes disabled providers and accounts without a retained picture" do
+      account.update!(avatar_upload_id: nil)
+
+      json = described_class.new(user, scope: user.guardian, root: false).as_json
+
+      expect(json[:associated_account_avatars]).to eq([])
+
+      account.update!(avatar_upload_id: upload.id)
+      SiteSetting.enable_google_oauth2_logins = false
+
+      json = described_class.new(user, scope: user.guardian, root: false).as_json
+
+      expect(json[:associated_account_avatars]).to eq([])
+    end
+
+    it "keeps provider choices and selection private" do
+      [Guardian.new, Fabricate(:user).guardian].each do |scope|
+        json = described_class.new(user, scope: scope, root: false).as_json
+
+        expect(json).not_to have_key(:associated_account_avatars)
+        expect(json).not_to have_key(:selected_user_associated_account_id)
+      end
+    end
+  end
+
   context "with a TL0 user seen as anonymous" do
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
@@ -42,6 +101,30 @@ RSpec.describe UserSerializer do
   end
 
   context "as current user" do
+    it "allows admins, but not anonymous users, to upload an anonymous user's avatar" do
+      SiteSetting.allow_anonymous_mode = true
+      anonymous_user = Fabricate(:anonymous, refresh_auto_groups: true)
+
+      json =
+        described_class.new(anonymous_user, scope: anonymous_user.guardian, root: false).as_json
+
+      expect(json[:can_upload_avatar]).to eq(false)
+
+      json =
+        described_class.new(anonymous_user, scope: Fabricate(:admin).guardian, root: false).as_json
+
+      expect(json[:can_upload_avatar]).to eq(true)
+    end
+
+    it "previews the configured default for the system avatar choice" do
+      default_avatar_template = "https://example.com/default-avatar/{size}.png"
+      SiteSetting.default_avatars = default_avatar_template
+
+      json = described_class.new(user, scope: user.guardian, root: false).as_json
+
+      expect(json[:system_avatar_template]).to eq(default_avatar_template)
+    end
+
     it "serializes options correctly" do
       # so we serialize more stuff
       SiteSetting.default_other_auto_track_topics_after_msecs = 0

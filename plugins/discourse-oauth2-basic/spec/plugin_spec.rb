@@ -327,19 +327,6 @@ describe OAuth2BasicAuthenticator do
 
       let(:job_klass) { Jobs::DownloadAvatarFromUrl }
 
-      before do
-        png =
-          Base64.decode64(
-            "R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==",
-          )
-        stub_request(:get, "http://avatar.example.com/avatar.png").to_return(
-          body: png,
-          headers: {
-            "Content-Type" => "image/png",
-          },
-        )
-      end
-
       it "enqueues a download_avatar_from_url job for existing user" do
         authenticator.expects(:fetch_user_details).returns(
           email: user.email,
@@ -351,7 +338,7 @@ describe OAuth2BasicAuthenticator do
 
         expect(job_args["url"]).to eq("http://avatar.example.com/avatar.png")
         expect(job_args["user_id"]).to eq(user.id)
-        expect(job_args["override_gravatar"]).to eq(false)
+        expect(job_args["associated_account_id"]).to eq(user.user_associated_accounts.first.id)
       end
 
       it "enqueues a download_avatar_from_url job for new user" do
@@ -373,7 +360,7 @@ describe OAuth2BasicAuthenticator do
 
         expect(job_args["url"]).to eq("http://avatar.example.com/avatar.png")
         expect(job_args["user_id"]).to eq(user.id)
-        expect(job_args["override_gravatar"]).to eq(false)
+        expect(job_args["associated_account_id"]).to eq(user.user_associated_accounts.first.id)
       end
     end
   end
