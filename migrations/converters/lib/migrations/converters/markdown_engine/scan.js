@@ -4,6 +4,7 @@
 // separately the line maps of code/html/quote blocks. A reference definition
 // becomes a block of its own holding the destination its line spells, because
 // the links and images that resolve through it spell no URL where they stand.
+// A raw HTML block becomes one too, for the upload sources core rewrote in it.
 // Only this compact data crosses the V8 boundary, never the token tree itself.
 
 function __scanCountOccurrences(haystack, needle) {
@@ -37,6 +38,31 @@ function __scanLabelHits(label, href) {
     return __scanCountOccurrences(label, bare);
   }
   return 0;
+}
+
+// The `upload://` sources of a raw HTML tag. Core's upload protocol rewrites
+// such a source into a placeholder image and keeps the original in
+// `data-orig-src`, so the rewritten content is where a tag's uploads are
+// readable at all. They join the image list, which is what the URL of an
+// image token reports too.
+function __scanHtmlUploads(content, block) {
+  const pattern = /data-orig-src="(upload:\/\/[^"]*)"/g;
+  let match;
+  while ((match = pattern.exec(content)) !== null) {
+    block.images.push(match[1]);
+  }
+}
+
+function __scanBlock(map) {
+  return {
+    map,
+    mentions: [],
+    hashtags: [],
+    links: [],
+    images: [],
+    emojis: [],
+    code: 0,
+  };
 }
 
 function __scanWalk(children, block) {
@@ -102,6 +128,8 @@ function __scanWalk(children, block) {
       }
     } else if (child.type === "code_inline") {
       block.code += 1;
+    } else if (child.type === "html_inline") {
+      __scanHtmlUploads(child.content, block);
     } else {
       if (child.type === "text" && linkStack.length > 0) {
         const open = linkStack[linkStack.length - 1];
@@ -134,15 +162,9 @@ function __scanDefinition(token, env, seenLabels) {
     return null;
   }
 
-  return {
-    map: token.map,
-    mentions: [],
-    hashtags: [],
-    links: [{ href: reference.href, labelHits: 0 }],
-    images: [],
-    emojis: [],
-    code: 0,
-  };
+  const block = __scanBlock(token.map);
+  block.links.push({ href: reference.href, labelHits: 0 });
+  return block;
 }
 
 function __scanOne(post) {
@@ -157,15 +179,7 @@ function __scanOne(post) {
       quoteHeader = token;
     }
     if (token.type === "inline") {
-      const block = {
-        map: token.map,
-        mentions: [],
-        hashtags: [],
-        links: [],
-        images: [],
-        emojis: [],
-        code: 0,
-      };
+      const block = __scanBlock(token.map);
       __scanWalk(token.children, block);
       if (
         block.mentions.length ||
@@ -192,6 +206,13 @@ function __scanOne(post) {
         // tag.
         token.type === "bbcode_open")
     ) {
+      if (token.type === "html_block") {
+        const block = __scanBlock(token.map);
+        __scanHtmlUploads(token.content, block);
+        if (block.images.length) {
+          blocks.push(block);
+        }
+      }
       const entry = { type: token.type, tag: token.tag, map: token.map };
       if (token.type === "bbcode_open" && token.tag === "blockquote" && quoteHeader) {
         // The header fields make one quote distinguishable from another, so
