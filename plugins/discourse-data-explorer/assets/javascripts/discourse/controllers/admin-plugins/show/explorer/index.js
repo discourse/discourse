@@ -8,6 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import getURL from "discourse/lib/get-url";
+import { applyQueryParams } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export default class PluginsExplorerController extends Controller {
@@ -21,9 +23,9 @@ export default class PluginsExplorerController extends Controller {
   @tracked loading = false;
   @tracked searchLoading = false;
   @tracked queryTags = [];
-  @tracked currentTags = [];
+  @tracked tags = "";
 
-  queryParams = ["id"];
+  queryParams = ["id", "tags"];
   explain = false;
   acceptedImportFileTypes = ["application/json"];
   order = null;
@@ -54,6 +56,10 @@ export default class PluginsExplorerController extends Controller {
 
   get hasTagFilter() {
     return this.currentTags.length > 0;
+  }
+
+  get currentTags() {
+    return this.tags ? this.tags.split(",") : [];
   }
 
   get textFilter() {
@@ -116,15 +122,37 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   onTagFilterChange(selection) {
-    this.currentTags = selection.map((tag) => tag.name);
+    this.tags = selection.map((tag) => tag.name).join(",");
     this.searchLoading = true;
     this._fetchQueries();
   }
 
   @action
+  addTagFilter(tagName, event) {
+    event?.preventDefault();
+
+    if (this.currentTags.includes(tagName)) {
+      return;
+    }
+
+    this.tags = [...this.currentTags, tagName].join(",");
+    this.searchLoading = true;
+    this._fetchQueries();
+  }
+
+  @action
+  tagFilterHref(tagName) {
+    return getURL(
+      applyQueryParams(this.router.urlFor("adminPlugins.show.explorer.index"), {
+        tags: tagName,
+      })
+    );
+  }
+
+  @action
   onResetFilters() {
     this._currentFilter = "";
-    this.currentTags = [];
+    this.tags = "";
     this.searchLoading = true;
     this._fetchQueries();
   }
