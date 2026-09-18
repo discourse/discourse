@@ -811,6 +811,59 @@ RSpec.describe DiscourseVips do
       expect(FastImage.type(output_path)).to eq(:png)
     end
 
+    it "uses format hints to write PNG data to a .bin output path" do
+      destination_path = File.join(directory, "output.bin")
+
+      described_class.thumbnail(
+        input_path: input_path,
+        output_path: destination_path,
+        input_format: "png",
+        output_format: "png",
+        width: 100,
+        height: 50,
+        crop: :centre,
+        timeout: 10,
+        operation: :optimized_image_resize,
+        read: [input_path],
+        write: [directory],
+      )
+
+      expect(FastImage.size(destination_path)).to eq([100, 50])
+      expect(FastImage.type(destination_path)).to eq(:png)
+    end
+
+    it "rejects PNG data when the input format hint is JPEG" do
+      expect {
+        described_class.thumbnail(
+          input_path: input_path,
+          output_path: output_path,
+          input_format: "jpg",
+          width: 100,
+          height: 50,
+          timeout: 10,
+          operation: :optimized_image_resize,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(DiscourseVips::InvalidImage)
+    end
+
+    it "rejects an input format outside the raster loader allowlist" do
+      expect {
+        described_class.thumbnail(
+          input_path: input_path,
+          output_path: output_path,
+          input_format: "svg",
+          width: 100,
+          height: 50,
+          timeout: 10,
+          operation: :optimized_image_resize,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(DiscourseVips::Error, "unsupported input format")
+    end
+
     it "rejects unsupported output extensions" do
       expect {
         described_class.thumbnail(

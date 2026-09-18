@@ -62,9 +62,6 @@ class OptimizedImage < ActiveRecord::Base
 
     return thumbnail if thumbnail
 
-    upload.fix_image_extension if upload.persisted?
-    extension = ".#{opts[:format] || upload.extension}"
-
     store = Discourse.store
 
     # create the thumbnail otherwise
@@ -208,12 +205,40 @@ class OptimizedImage < ActiveRecord::Base
 
   IM_DECODERS = /\A(jpe?g|png|gif|webp|avif|svg)\z/i
 
+  def self.prepend_decoder!(path, ext_path = nil, opts = nil)
+    "#{image_extension(path: path, ext_path: ext_path, opts: opts || {})}:#{path}"
+  end
+
+  def self.image_extension(path:, ext_path:, opts:)
+    # This logic is a little messy but the result of using mocks for most
+    # of the image tests. The idea here is you shouldn't trust the "original"
+    # path of a file to figure out its extension. However, in certain cases
+    # such as generating the loading upload thumbnail, we force the format,
+    # and this allows us to use the forced format in that case.
+    extension = nil
+    if opts[:format] && path != ext_path
+      extension = File.extname(path)[1..-1]
+    else
+      extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
+    end
+
+    if !extension || !extension.match?(IM_DECODERS)
+      raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
+    end
+    extension
+  end
+  private_class_method :image_extension
+
   def self.thumbnail_or_resize
     SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
   end
 
   def self.resize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
+
+    # note FROM my not be named correctly
+    from = prepend_decoder!(from, to, opts)
+    to = prepend_decoder!(to, to, opts)
 
     instructions = ["#{from}[0]"]
 
@@ -249,6 +274,9 @@ class OptimizedImage < ActiveRecord::Base
   def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
+    from = prepend_decoder!(from, to, opts)
+    to = prepend_decoder!(to, to, opts)
+
     instructions = %W{
       #{from}[0]
       -auto-orient
@@ -275,6 +303,9 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
+
+    from = prepend_decoder!(from, to, opts)
+    to = prepend_decoder!(to, to, opts)
 
     %W{
       #{from}[0]
@@ -306,6 +337,8 @@ class OptimizedImage < ActiveRecord::Base
     DiscourseVips.thumbnail(
       input_path: from,
       output_path: to,
+      input_format: image_extension(path: from, ext_path: to, opts: opts),
+      output_format: image_extension(path: to, ext_path: to, opts: opts),
       width: width,
       height: height,
       size: :both,
@@ -337,6 +370,8 @@ class OptimizedImage < ActiveRecord::Base
     DiscourseVips.thumbnail(
       input_path: from,
       output_path: to,
+      input_format: image_extension(path: from, ext_path: to, opts: opts),
+      output_format: image_extension(path: to, ext_path: to, opts: opts),
       width: width,
       height: height,
       crop: :all,
@@ -384,6 +419,8 @@ class OptimizedImage < ActiveRecord::Base
     DiscourseVips.thumbnail(
       input_path: from,
       output_path: to,
+      input_format: image_extension(path: from, ext_path: to, opts: opts),
+      output_format: image_extension(path: to, ext_path: to, opts: opts),
       scale: scale,
       width: width,
       height: height,
