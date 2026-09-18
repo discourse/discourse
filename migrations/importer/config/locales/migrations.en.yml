@@ -9,6 +9,7 @@ en:
     posts:
       topic_not_imported: "Skipped post %{post_id}: its topic %{topic_id} was not imported"
       invalid_post_type: "Post %{post_id}: post type %{post_type} is invalid, using %{default_post_type}"
+      invalid_locale: "Post %{post_id}: locale '%{value}' is not supported and was dropped"
       orphan_placeholder: "Post %{post_id}: a %{kind} placeholder has no linkage row and was removed"
       unresolved_embeds: "Could not resolve %{count} %{kind} embeds"
       empty_raw: "<Empty imported post>"
