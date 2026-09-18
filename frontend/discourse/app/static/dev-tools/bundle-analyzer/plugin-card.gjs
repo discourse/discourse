@@ -42,17 +42,28 @@ export default class PluginCard extends ExpandableRow {
     });
   }
 
-  // Each route bundle is counted against its own entrypoint, so the number is
-  // what landing on that url adds rather than what it weighs in total.
+  // One row per bundle, listing every url that loads it. Routes are mapped url by
+  // url, and a plugin usually points a whole group of them at one bundle; a row
+  // each would repeat the same bytes and read like a separate download per url.
+  //
+  // Each bundle is counted against its own entrypoint, so the number is what
+  // landing on one of its urls adds rather than what it weighs in total.
   @cached
   get routeBundles() {
     const rows = [];
     for (const [entry, bundles] of Object.entries(this.plugin.routeBundles)) {
       const base = this.#closure(this.plugin.entrypoints[entry]);
+      const urlsByFile = new Map();
       for (const { url, fileName } of bundles) {
-        const added = [...this.#closure(fileName)].filter((f) => !base.has(f));
+        if (!urlsByFile.has(fileName)) {
+          urlsByFile.set(fileName, []);
+        }
+        urlsByFile.get(fileName).push(url);
+      }
+      for (const [file, urls] of urlsByFile) {
+        const added = [...this.#closure(file)].filter((f) => !base.has(f));
         const totals = this.analysis.totals(added);
-        rows.push({ entry, url, file: fileName, totals, label: label(totals) });
+        rows.push({ entry, urls, file, totals, label: label(totals) });
       }
     }
     return rows.sort((a, b) => b.totals.raw - a.totals.raw);
@@ -73,13 +84,8 @@ export default class PluginCard extends ExpandableRow {
   }
 
   <template>
-    <div class="ba-row {{if this.expanded 'open'}}">
-      <button
-        class="ba-head"
-        style="grid-template-columns:1fr 130px 130px 70px"
-        type="button"
-        {{on "click" this.toggle}}
-      >
+    <div class="ba-row ba-plugin-row {{if this.expanded 'open'}}">
+      <button class="ba-head" type="button" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
           <span class="ba-badge entry">plugin</span>
@@ -115,10 +121,14 @@ export default class PluginCard extends ExpandableRow {
             </div>
             <div class="ba-sub-list">
               {{#each this.routeBundles as |b|}}
-                <div class="ba-plugin-line">
+                <div class="ba-plugin-line --routes">
                   <span class="ba-name">
                     <span class="ba-badge route">{{b.entry}}</span>
-                    <code class="ba-label">{{b.url}}</code>
+                    <span class="ba-route-urls">
+                      {{#each b.urls as |u|}}
+                        <code>{{u}}</code>
+                      {{/each}}
+                    </span>
                   </span>
                   <span class="ba-num">+{{b.label}}
                     <span class="ba-pill">added</span></span>

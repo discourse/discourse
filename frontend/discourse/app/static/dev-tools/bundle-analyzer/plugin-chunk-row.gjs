@@ -30,13 +30,8 @@ export default class PluginChunkRow extends ExpandableRow {
   }
 
   <template>
-    <div class="ba-row {{if this.expanded 'open'}}">
-      <button
-        class="ba-head"
-        style="grid-template-columns:1fr 130px 130px 70px"
-        type="button"
-        {{on "click" this.toggle}}
-      >
+    <div class="ba-row ba-plugin-row {{if this.expanded 'open'}}">
+      <button class="ba-head" type="button" {{on "click" this.toggle}}>
         <span class="ba-name">
           <span class="ba-tw">▶</span>
           {{#if this.chunk.isEntry}}

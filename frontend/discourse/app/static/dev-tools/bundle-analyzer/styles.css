@@ -291,13 +291,30 @@
   box-shadow: inset 3px 0 0 var(--ba-good);
 }
 
+.bundle-analyzer .ba-plugin-row > .ba-head,
+.bundle-analyzer .ba-plugin-line {
+  grid-template-columns: 1fr 130px 130px 70px;
+}
 .bundle-analyzer .ba-plugin-line {
   display: grid;
-  grid-template-columns: 1fr 130px 70px;
   gap: 8px;
   align-items: center;
   padding: 3px 0;
 }
+.bundle-analyzer .ba-plugin-line.--routes {
+  align-items: start;
+}
+.bundle-analyzer .ba-route-urls {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+}
 .bundle-analyzer .ba-plugin-line code {
   font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
