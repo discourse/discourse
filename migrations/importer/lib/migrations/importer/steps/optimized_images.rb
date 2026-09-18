@@ -41,9 +41,9 @@ module Migrations
         SQL
 
         # SHA-1 deduplication can make several source upload results point to one
-        # files.uploads row, so the join fans out. DISTINCT collapses it back to
-        # one row per optimized image because all results map to the same
-        # Discourse upload id.
+        # files.uploads row, so the join can return duplicate rows. DISTINCT
+        # removes the duplicates because all results map to the same Discourse
+        # upload id.
         rows_query <<~SQL, MappingType::UPLOADS
           SELECT DISTINCT
                  mu.discourse_id AS upload_id,
