@@ -5,7 +5,7 @@
 Migrations::Tooling::Schema.table :optimized_images do
   include_all
 
-  # The optimizer's already-done detection is `SELECT DISTINCT upload_id`; the
-  # index turns that into an index scan.
+  # The optimizer loads every distinct `upload_id` at startup. This index lets
+  # SQLite read those ids without scanning the full table.
   index :upload_id
 end
