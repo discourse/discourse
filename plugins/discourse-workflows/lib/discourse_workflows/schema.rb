@@ -125,6 +125,7 @@ module DiscourseWorkflows
         "approved": { "type": "boolean" },
         "silenced": { "type": "boolean" },
         "suspended": { "type": "boolean" },
+        "staged": { "type": "boolean" },
         "uploaded_avatar_id": { "type": ["integer", "null"] },
         "avatar_template": { "type": "string" }
       }
@@ -316,15 +317,7 @@ module DiscourseWorkflows
     USER_EVENT_SCHEMA =
       entity(
         "user",
-        USER_PROPERTIES.merge(
-          "staged" => {
-            "type" => "boolean",
-          },
-          "created_at" => {
-            "type" => "string",
-            "format" => "date-time",
-          },
-        ),
+        USER_PROPERTIES.merge("created_at" => { "type" => "string", "format" => "date-time" }),
         "User account event payload",
       )
 

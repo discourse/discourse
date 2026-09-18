@@ -67,6 +67,14 @@ module DiscourseWorkflows
     end
 
     def get_credentials(slot)
+      DiscourseWorkflows::ExpressionResolver.resolve_hash(
+        get_credential(slot).public_data,
+        context: credential_resolver_context,
+        user: user,
+      )
+    end
+
+    def get_credential(slot)
       definition = credential_definition(slot)
       credential = credential_for_slot(slot)
       raise Discourse::InvalidAccess if definition.blank? || credential.blank?
@@ -77,11 +85,7 @@ module DiscourseWorkflows
         raise Discourse::InvalidAccess
       end
 
-      DiscourseWorkflows::ExpressionResolver.resolve_hash(
-        credential_record.data || {},
-        context: credential_resolver_context,
-        user: user,
-      )
+      credential_record
     end
 
     def helpers

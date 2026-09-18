@@ -33,6 +33,9 @@ module DiscourseWorkflows
           identifier: klass.identifier,
           display_name: klass.display_name,
           property_schema: klass.property_schema,
+          oauth2: klass.respond_to?(:oauth_provider),
+          ui: (klass.ui_metadata if klass.respond_to?(:ui_metadata)),
+          setup_key: (klass.setup_key if klass.respond_to?(:setup_key)),
         }
       end
     end

@@ -14,6 +14,7 @@ module DiscourseWorkflows
                :approved,
                :silenced,
                :suspended,
+               :staged,
                :uploaded_avatar_id,
                :avatar_template
 
@@ -31,6 +32,10 @@ module DiscourseWorkflows
 
     def suspended
       object.suspended?
+    end
+
+    def staged
+      object.staged?
     end
   end
 end

@@ -185,6 +185,22 @@ module DiscourseWorkflows
           ],
         )
 
+        def self.property_schema
+          schema = super.deep_dup
+          schema[:authentication][:options] += Registry.oauth2_credential_types.map do |type|
+            { value: type.identifier, label: type.display_name }
+          end
+          schema
+        end
+
+        def self.credentials
+          definitions = super.deep_dup
+          identifiers = Registry.oauth2_credential_types.map(&:identifier)
+          definitions.first[:credential_types] += identifiers
+          definitions.first[:display_options][:show][:authentication] += identifiers
+          definitions
+        end
+
         def execute(exec_ctx)
           items =
             exec_ctx.input_items.flat_map.with_index do |item, item_index|

@@ -86,11 +86,7 @@ module DiscourseWorkflows
 
         def output
           {
-            user:
-              serialize_user(@user).merge(
-                staged: @user.staged?,
-                created_at: @user.created_at&.iso8601,
-              ),
+            user: serialize_user(@user).merge(created_at: @user.created_at&.iso8601),
             changed: @changed,
           }
         end

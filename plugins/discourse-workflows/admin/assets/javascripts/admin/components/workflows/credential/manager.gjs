@@ -1,8 +1,11 @@
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
@@ -11,8 +14,13 @@ import EmptyState from "../empty-state";
 import InUseDialog from "../in-use-dialog";
 import PaginatedListManager from "../paginated-list-manager";
 import CredentialModal from "./modal";
+import OAuth2ConnectionDetails from "./oauth2-connection-details";
 
 export default class CredentialsManager extends PaginatedListManager {
+  @service toasts;
+
+  @tracked connectingId;
+
   get collectionKey() {
     return "credentials";
   }
@@ -51,6 +59,26 @@ export default class CredentialsManager extends PaginatedListManager {
         },
       },
     });
+  }
+
+  @action
+  async connectCredential(credential) {
+    this.connectingId = credential.id;
+    try {
+      await ajax(`${this.basePath}/${credential.id}/connect.json`, {
+        type: "POST",
+      });
+      await this.loadItems();
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("discourse_workflows.oauth2.results.connected") },
+      });
+    } catch (error) {
+      await this.loadItems();
+      popupAjaxError(error);
+    } finally {
+      this.connectingId = null;
+    }
   }
 
   @action
@@ -132,12 +160,18 @@ export default class CredentialsManager extends PaginatedListManager {
       <:row as |credential|>
         <td class="d-table__cell --overview">
           <strong class="d-table__overview-name">{{credential.name}}</strong>
+          {{#if credential.oauth_connection}}
+            <OAuth2ConnectionDetails
+              @compact={{true}}
+              @connection={{credential.oauth_connection}}
+            />
+          {{/if}}
         </td>
         <td class="d-table__cell --detail">
           <div class="d-table__mobile-label">
             {{i18n "discourse_workflows.credentials.type"}}
           </div>
-          {{credential.credential_type}}
+          {{credential.display_name}}
         </td>
         <td class="d-table__cell --detail">
           <div class="d-table__mobile-label">
@@ -147,6 +181,14 @@ export default class CredentialsManager extends PaginatedListManager {
         </td>
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">
+            {{#if credential.oauth_connection}}
+              <DButton
+                class="btn-default btn-small workflows-credential-connection__connect"
+                @action={{fn this.connectCredential credential}}
+                @disabled={{eq this.connectingId credential.id}}
+                @label="discourse_workflows.oauth2.test_connection"
+              />
+            {{/if}}
             <DButton
               class="btn-default btn-small"
               @action={{fn this.editCredential credential}}

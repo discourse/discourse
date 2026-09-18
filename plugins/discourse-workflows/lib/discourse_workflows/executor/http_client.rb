@@ -28,6 +28,25 @@ module DiscourseWorkflows
           ).build
         never_error = config.fetch("never_error", false)
         response = run_with_retries(request_method, uri, request_headers, request_body, config)
+        if Registry.find_credential_type(config["authentication"]).respond_to?(:oauth_provider) &&
+             response.status == 401
+          oauth = Oauth2Connection.new(@exec_ctx.get_credential("auth"))
+          if oauth.expired_session?(response)
+            request_headers["Authorization"] = oauth.refresh_authorization(
+              uri.to_s,
+              rejected_header: request_headers["Authorization"],
+            )
+            # Only an explicit invalid-session response is safe to replay for non-idempotent requests.
+            response =
+              connection.run_request(request_method, uri.to_s, request_body, request_headers)
+          end
+          if response.status == 401
+            oauth.reject_authorization(
+              rejected_header: request_headers["Authorization"],
+              raise_error: !never_error,
+            )
+          end
+        end
         if !never_error && !(200..299).cover?(response.status)
           filtered_url = filtered_url_for_logging(config["url"], config["query_params"])
           raise_node_error!(

@@ -22,6 +22,11 @@ module DiscourseWorkflows
     policy :can_manage_workflows, class_name: Policy::CanManageWorkflows
     model :credential
 
+    only_if :oauth_credential? do
+      try Oauth2Provider::Error do
+        step :update_connection
+      end
+    end
     model :credential, :save_credential
     step :log_credential_update
 
@@ -31,7 +36,17 @@ module DiscourseWorkflows
       DiscourseWorkflows::Credential.find_by(id: params.credential_id)
     end
 
+    def oauth_credential?(credential:)
+      credential.oauth2?
+    end
+
+    def update_connection(credential:, params:)
+      Oauth2Connection.new(credential).update(name: params.name, data: params.data)
+    end
+
     def save_credential(credential:, params:)
+      return credential if credential.oauth2?
+
       credential.name = params.name
       credential.merge_data(params.data) if params.data.present?
       credential.save

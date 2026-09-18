@@ -44,6 +44,7 @@ module DiscourseWorkflows
           inputs: klass.input_ports,
           outputs: klass.ports,
           properties: properties,
+          credentials: klass.credentials,
           webhooks: webhooks,
         )
 

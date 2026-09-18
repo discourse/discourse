@@ -16,6 +16,7 @@ end
 
 require_relative "lib/discourse_workflows/engine"
 require_relative "lib/discourse_workflows/plugin_node_registration"
+require_relative "lib/discourse_workflows/plugin_credential_registration"
 
 register_asset "stylesheets/common/index.scss"
 register_svg_icon "bolt"
@@ -63,7 +64,12 @@ DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_nodes)
 DiscoursePluginRegistry.define_filtered_register(:discourse_workflows_credential_types)
 
 after_initialize do
-  Rails.application.config.filter_parameters += %i[signature]
+  Rails.application.config.filter_parameters += %i[
+    signature
+    client_secret
+    access_token
+    refresh_token
+  ]
 
   add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
 
@@ -86,6 +92,10 @@ after_initialize do
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(
     "DiscourseWorkflows::CredentialTypes::BearerToken",
+    self,
+  )
+  DiscoursePluginRegistry.register_discourse_workflows_credential_type(
+    "DiscourseWorkflows::CredentialTypes::Oauth2ClientCredentials",
     self,
   )
   DiscoursePluginRegistry.register_discourse_workflows_credential_type(

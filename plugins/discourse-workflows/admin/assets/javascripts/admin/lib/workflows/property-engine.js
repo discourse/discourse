@@ -461,6 +461,14 @@ export function fieldVisible(schema = {}, configuration = {}) {
   return fieldDisplayState(schema, configuration) !== "hidden";
 }
 
+/**
+ * Fields a form may tuck behind an "Advanced" disclosure. Marked with
+ * `ui: { advanced: true }` in the property schema.
+ */
+export function fieldAdvanced(schema = {}) {
+  return !!fieldUi(schema).advanced;
+}
+
 export function fieldDefinitelyVisible(schema = {}, configuration = {}) {
   return fieldDisplayState(schema, configuration) === "visible";
 }
