@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Signup with captcha" do
+  include ThemeScreenshotMarker
   let(:signup_page) { PageObjects::Pages::Signup.new }
   let(:captcha) { PageObjects::Components::Captcha.new }
 
@@ -35,14 +36,25 @@ RSpec.describe "Signup with captcha" do
     end
 
     context "with code-based signup" do
-      before { SiteSetting.enable_local_logins_via_code = true }
+      before do
+        SiteSetting.enable_local_logins_via_code = true
+        Jobs.run_immediately!
+      end
 
-      it "displays the hCaptcha widget after requesting a signup code" do
+      it "shows the hCaptcha widget when choosing a username after email verification" do
         signup_page.open
         find(".code-login-form__email-step input[type='email']").fill_in(with: "test@example.com")
         find(".code-login-form__continue").click
 
-        expect(captcha).to have_hcaptcha_container
+        expect(page).to have_css(".code-login-form__code-step")
+        expect(captcha).to have_no_hcaptcha_container
+
+        code = ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1]
+        find(".d-otp-input").fill_in(with: code)
+
+        expect(page).to have_css(".code-login-form__signup-details-step")
+        expect(captcha).to have_hcaptcha_widget
+        screenshot_marker(label: "deferred-signup-captcha", only: :desktop)
       end
     end
 

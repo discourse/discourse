@@ -100,6 +100,12 @@ export default class extends DiscourseRoute {
     }
   }
 
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.signupContext = null;
+    }
+  }
+
   setupController(controller) {
     super.setupController(...arguments);
 
