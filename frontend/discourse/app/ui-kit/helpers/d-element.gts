@@ -13,7 +13,13 @@ type ShortcutTag =
   | "td"
   | "aside"
   | "ul"
-  | "li";
+  | "li"
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6";
 
 /**
  * A wrapper component for a single known tag, typed with the matching element so
@@ -60,6 +66,24 @@ const shortcuts: { [K in ShortcutTag]: ElementWrapper<K> } = {
   </template>,
   li: <template>
     <li ...attributes>{{yield}}</li>
+  </template>,
+  h1: <template>
+    <h1 ...attributes>{{yield}}</h1>
+  </template>,
+  h2: <template>
+    <h2 ...attributes>{{yield}}</h2>
+  </template>,
+  h3: <template>
+    <h3 ...attributes>{{yield}}</h3>
+  </template>,
+  h4: <template>
+    <h4 ...attributes>{{yield}}</h4>
+  </template>,
+  h5: <template>
+    <h5 ...attributes>{{yield}}</h5>
+  </template>,
+  h6: <template>
+    <h6 ...attributes>{{yield}}</h6>
   </template>,
 };
 
