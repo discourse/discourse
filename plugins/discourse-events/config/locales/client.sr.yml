@@ -13,6 +13,11 @@ sr:
             topic_id:
               label: ID Teme
     discourse_events:
+      preferences:
+        reminders:
+          preferences:
+            notification: "Obaveštenje"
+            none: "Ništa"
       disable_holiday: "Onemogući"
       enable_holiday: "Omogući"
       region:

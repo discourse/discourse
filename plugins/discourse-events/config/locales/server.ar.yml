@@ -41,6 +41,8 @@ ar:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "تذكير بالحدث"
   site_settings:
     map_events_to_color: "تعيين لون لكل وسم أو فئة."
     map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
@@ -82,6 +84,11 @@ ar:
     livestream_embeddable_chat_allowed_paths: "المسارات المسموح بها لدردشة البث المباشر القابلة للتضمين"
     livestream_enable_modal_chat_on_mobile: "عرض دردشة البث المباشر في نافذة منبثقة على الجوَّال"
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} على وشك البدء"
+        after: "انتهى %{title}"
+      guest: "- %{name}"
     category_type:
       default_calendar_view:
         label: "عرض التقويم الافتراضي"

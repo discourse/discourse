@@ -2688,6 +2688,7 @@ fi:
     wrong_invite_code: "Antamasi kutsukoodi oli väärä."
     reserved_username: "Käyttäjätunnus ei ole sallittu."
     missing_user_field: "Et ole täyttänyt kaikkia pakollisia käyttäjäkenttiä"
+    missing_username: "Syötä käyttäjätunnus"
     auth_complete: "Todennus suoritettu."
     click_to_continue: "Jatka klikkaamalla tästä."
     already_logged_in: "Tämä kutsu on tarkoitettu uusille käyttäjille, joilla ei vielä ole olemassa olevaa tiliä."
@@ -3975,7 +3976,7 @@ fi:
         Henkilökunnan jäsen hyväksyi tilisi sivustolle %{site_name}.
 
         Voit kirjautua sisään osoitteessa:
-        %{base_url}
+        %{login_url}
 
         Jos et voi klikata linkkiä, yritä kopioida ja liittää se selaimesi osoiteriville.
 
@@ -4652,6 +4653,8 @@ fi:
       disagree_and_restore:
         title: "Palauta viesti"
         complete: "Viesti palautettu."
+      disagree_and_keep_deleted:
+        title: "Pidä viesti poistettuna"
       disagree_bundle:
         title: "Ei"
       disagree:

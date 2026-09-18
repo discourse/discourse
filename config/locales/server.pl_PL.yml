@@ -19,6 +19,8 @@ pl_PL:
       filter_required: "Do widoku filtrowanego wymagany jest filtr niepusty"
       invalid_post_selection: "Opcje wyboru postu są nieprawidłowe"
       invalid_search_query: "Zapytanie wyszukiwania jest nieprawidłowe"
+      invalid_reviewable_status: "Status do sprawdzenia jest nieprawidłowy"
+      invalid_reviewable_type: "Typ podlegający przeglądowi jest nieprawidłowy"
       group_mailbox_sent: "Skrzynki pocztowe grupowe do przesyłania prywatnych wiadomości nie obsługują wysłanych wiadomości"
       invalid_upload_data: "Przesłane dane nie są prawidłowym systemem base64"
       invalid_upload_source: "Podaj dane w formacie base64 z nazwą pliku lub jednym zdalnym adresem URL"
@@ -30,6 +32,26 @@ pl_PL:
       private_message_not_found: "Nie znaleziono prywatnej wiadomości"
       private_message_recipient_required: "Wymagany jest co najmniej jeden odbiorca prywatnej wiadomości"
       private_message_single_recipient: "Podaj dokładnie jednego użytkownika, grupę lub odbiorcę wiadomości e-mail"
+      post_revision_not_found: "Nie znaleziono wersji wpisu"
+      reviewable_action_failed: "Czynność podlegająca przeglądowi nie powiodła się"
+      reviewable_action_unavailable: "Czynność podlegająca przeglądowi nie jest już dostępna"
+      reviewable_confirmation_required: "Do przeprowadzenia przeglądu wymagane jest wyraźne potwierdzenie"
+      reviewable_conflict: "Możliwość przeglądu uległa zmianie od momentu przeczytania"
+      reviewable_fields_unavailable: "Pola te nie są akceptowane przez czynność podlegającą przeglądowi: %{fields}"
+      reviewable_not_found: "Nie znaleziono możliwości sprawdzenia"
+      reviewable_reject_reason_required: "Do wykonania tej czynności wymagane jest podanie przyczyny odrzucenia"
+      site_setting_confirmation_required: "To ustawienie witryny wymaga wyraźnego potwierdzenia"
+      site_setting_change_confirmation_required: "Aby zmienić ustawienia witryny, wymagane jest wyraźne potwierdzenie"
+      site_setting_conflict: "Ustawienia witryny uległy zmianie od momentu odczytania"
+      site_setting_dependency: "Te zależności ustawień witryny nie są spełnione: %{settings}"
+      site_setting_no_change: "Żądana zmiana ustawień witryny nie ma żadnego efektu"
+      site_setting_not_found: "Nie znaleziono ustawień witryny"
+      site_setting_sensitive: "To narzędzie nie może odczytać ani zmienić ustawień poufnych witryny"
+      site_setting_type_unsupported: "Tego typu ustawień witryny nie można zmienić za pomocą tego narzędzia"
+      site_setting_update_failed: "Nie można zaktualizować ustawień witryny"
+      site_setting_value_forbidden: "Nie podawaj wartości podczas resetowania ustawień witryny"
+      site_setting_value_required: "Podaj wartość podczas ustawiania ustawień witryny"
+      site_setting_verification_failed: "Nie można zweryfikować aktualizacji ustawień witryny"
       topic_not_found: "Temat nie został znaleziony"
       topic_update_required: "Podaj co najmniej jedno pole tematu do aktualizacji"
       top_period_only_for_top_view: "Okres górny obsługiwany jest tylko przez widok górny"
@@ -3476,6 +3498,7 @@ pl_PL:
     wrong_invite_code: "Wprowadzony kod zaproszenia był nieprawidłowy."
     reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich wymaganych pól użytkownika"
+    missing_username: "Wpisz nazwę użytkownika"
     missing_full_name: "Wpisz swoje imię i nazwisko"
     auth_complete: "Uwierzytelnianie zostało zakończone."
     click_to_continue: "Kliknij tutaj aby kontynuować."
@@ -5021,7 +5044,7 @@ pl_PL:
         Personel zatwierdził Twoje konto na %{site_name}.
 
         Możesz teraz uzyskać dostęp do swojego nowego konta, logując się pod adresem:
-        %{base_url}
+        %{login_url}
 
         Jeśli powyższego łącza nie można kliknąć, spróbuj je skopiować i wkleić w pasku adresu swojej przeglądarki internetowej.
 
@@ -6190,6 +6213,10 @@ pl_PL:
         title: "Przywróć wpis"
         description: "Nie zgódź się z flagą i przywróć wpis"
         complete: "Post przywrócony."
+      disagree_and_keep_deleted:
+        title: "Zachowaj usunięcie wpisu"
+        description: "Nie zgadzam się z flagą i usuwam wpis."
+        complete: "Wpis został usunięty."
       disagree_bundle:
         title: "Nie"
       disagree:

@@ -1917,6 +1917,7 @@ gl:
     email_too_long: "O correo electrónico facilitado é demasiado longo. Os nomes dos correos electrónicos non deben superar os 254 caracteres e os nomes de dominio non deben ter máis de 253."
     wrong_invite_code: "O código de convite que introduciu era incorrecto."
     reserved_username: "Este nome de usuario non está permitido."
+    missing_username: "Escriba un nome de usuario"
     auth_complete: "Completouse a autenticación."
     click_to_continue: "Prema aquí para continuar."
     already_logged_in: "Perdoe! Esta invitación está destinada a novos usuarios, que aínda non teñen unha conta."
@@ -3010,7 +3011,7 @@ gl:
         Un membro do equipo aprobou a súa conta en %{site_name}.
 
         Agora pode acceder á súa nova conta iniciando sesión en:
-        %{base_url}
+        %{login_url}
 
         Se non pode premer na ligazón, probe a copiala e pegala na barra de enderezos do seu navegador.
 

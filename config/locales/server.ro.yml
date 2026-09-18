@@ -1542,6 +1542,7 @@ ro:
     password_too_long: "Parole sunt limitate la 200 caractere."
     email_too_long: "Adresa de email pe care ai introdus-o este prea lungă. Numele de căsuțe poștale nu trebuie să depășească 254 de caractere, și numele de domenii nu trebuie să depășească 253 de caractere."
     reserved_username: "Acest nume utilizator nu este permis."
+    missing_username: "Te rugăm să introduci un nume de utilizator"
     second_factor_title: "Autentificare în doi pași (2FA)"
     second_factor_description: "Introdu codul de autentificare din aplicația 2FA"
     invalid_second_factor_code: "Cod de autentificare invalid. Fiecare cod poate fi utilizat o singură dată."

@@ -3049,6 +3049,7 @@ zh_TW:
     wrong_invite_code: "您輸入的邀請碼不正確。"
     reserved_username: "不允許使用該使用者名。"
     missing_user_field: "您尚未完成所有必填使用者欄位"
+    missing_username: "請輸入使用者名稱"
     missing_full_name: "請輸入您的全名"
     auth_complete: "身份驗證完成。"
     click_to_continue: "點擊此處繼續。"
@@ -4547,7 +4548,7 @@ zh_TW:
         工作人員已核准您在 %{site_name} 的帳號。
 
         您現在可以在以下網址登入並存取新帳號：
-        %{base_url}
+        %{login_url}
 
         若無法點選上述連結，請嘗試將其複製並貼到網頁瀏覽器的網址列。
 
@@ -5406,6 +5407,9 @@ zh_TW:
         title: "還原貼文"
         description: "不同意檢舉，并恢復貼文"
         complete: "貼文已還原。"
+      disagree_and_keep_deleted:
+        title: "維持貼文刪除狀態"
+        complete: "貼文保持刪除狀態。"
       disagree_bundle:
         title: "否"
       disagree:

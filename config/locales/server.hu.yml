@@ -2785,6 +2785,7 @@ hu:
     wrong_invite_code: "A megadott meghívókód helytelen."
     reserved_username: "Ez a felhasználónév nem engedélyezett."
     missing_user_field: "Nem töltötte ki az összes kötelező felhasználói mezőt"
+    missing_username: "Adjon meg egy felhasználónevet"
     auth_complete: "A hitelesítés befejeződött."
     click_to_continue: "Kattintson ide a folytatáshoz."
     already_logged_in: "Sajnálom! Ez a meghívás új felhasználóknak szól, akik még nem rendelkeznek meglévő fiókkal."
@@ -4065,7 +4066,7 @@ hu:
         Üdvözölünk a %{site_name}n!
 
         Egy adminisztrátorunk jóváhagyta a fiókodat a %{site_name}.n, most már beléphetsz, ha bejelentkezel az alábbi oldalon:
-        %{base_url}
+        %{login_url}
 
         Ha a fenti link nem kattintható, próbáld meg másolni és beilleszteni a webböngésző címsorába.
 
@@ -4896,6 +4897,8 @@ hu:
         title: "Bejegyzés visszaállítása"
         description: "Nem értek egyet a megjelöléssel és visszaállítom a bejegyzést"
         complete: "A bejegyzés visszaállítva."
+      disagree_and_keep_deleted:
+        title: "A bejegyzés maradjon törölve"
       disagree_bundle:
         title: "Nem"
       disagree:
