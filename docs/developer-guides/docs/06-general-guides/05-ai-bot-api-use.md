@@ -3,21 +3,22 @@ title: Using the AI bot via the Discourse API
 short_title: AI bot via API
 id: ai-evals
 ---
+
 ## Overview
 
-Discourse AI exposes an admin/API endpoint for streaming an AI Agent reply over a raw chunked HTTP response. 
+Discourse AI exposes an admin/API endpoint for streaming an AI Agent reply over a raw chunked HTTP response.
 
-*   **Protocol:** Raw chunked HTTP transfer encoding (NOT Server-Sent Events).
-*   **Implementation:** Hijacks the Rack socket to stream newline-separated JSON objects.
-*   **Side Effects:** This is not just a completion API; it creates real Discourse Private Message (PM) posts.
+- **Protocol:** Raw chunked HTTP transfer encoding (NOT Server-Sent Events).
+- **Implementation:** Hijacks the Rack socket to stream newline-separated JSON objects.
+- **Side Effects:** This is not just a completion API; it creates real Discourse Private Message (PM) posts.
 
 ---
 
 ## Endpoint Details
 
-*   **Location:** `plugins/discourse-ai/app/controllers/discourse_ai/admin/ai_agents_controller.rb:175-272`
-*   **Route:** `POST /admin/plugins/discourse-ai/ai-agents/stream-reply.json`
-*   **API Key Scope:** `ai:stream_completion` (registered in `plugins/discourse-ai/lib/ai_bot/entry_point.rb:283-286`)
+- **Location:** `plugins/discourse-ai/app/controllers/discourse_ai/admin/ai_agents_controller.rb:175-272`
+- **Route:** `POST /admin/plugins/discourse-ai/ai-agents/stream-reply.json`
+- **API Key Scope:** `ai:stream_completion` (registered in `plugins/discourse-ai/lib/ai_bot/entry_point.rb:283-286`)
 
 ### Request Headers
 
@@ -30,16 +31,16 @@ Content-Type: application/json
 
 ### Request Body Parameters
 
-| Parameter | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
-| `agent_id` | Integer | Optional* | Identifier for the agent. |
-| `agent_name` | String | Optional* | Alternative identifier for the agent. |
-| `query` | String | **Yes** | The user's prompt/question. |
-|`username`|String|Required if `user_unique_id` is omitted| Used incase the chat PM needs to be associated with an existing user. 
-| `user_unique_id` | String | Required if `username` is omitted | Identifies the end-user. Creates/reuses a staged user keyed by custom field `ai-stream-conversation-unique-id`. |
-| `preferred_username` | String | Optional* | Username for the user (if `user_unique_id` is not used). |
-| `topic_id` | Integer | Optional | Continue an existing PM conversation. |
-| `custom_instructions`| String | Optional | Appended into the agent prompt context. |
+| Parameter             | Type    | Required                                | Description                                                                                                     |
+| :-------------------- | :------ | :-------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+| `agent_id`            | Integer | Optional\*                              | Identifier for the agent.                                                                                       |
+| `agent_name`          | String  | Optional\*                              | Alternative identifier for the agent.                                                                           |
+| `query`               | String  | **Yes**                                 | The user's prompt/question.                                                                                     |
+| `username`            | String  | Required if `user_unique_id` is omitted | Used incase the chat PM needs to be associated with an existing user.                                           |
+| `user_unique_id`      | String  | Required if `username` is omitted       | Identifies the end-user. Creates/reuses a staged user keyed by custom field `ai-stream-conversation-unique-id`. |
+| `preferred_username`  | String  | Optional\*                              | Username for the user (if `user_unique_id` is not used).                                                        |
+| `topic_id`            | Integer | Optional                                | Continue an existing PM conversation.                                                                           |
+| `custom_instructions` | String  | Optional                                | Appended into the agent prompt context.                                                                         |
 
 \u003E **Note:** You must identify the end-user by either `username` (existing Discourse user) or `user_unique_id`.
 
@@ -76,7 +77,7 @@ X-Content-Type-Options: nosniff
 {\"partial\":\" there\"}
 ```
 
-*The client should concatenate `partial` fields to build the final answer.*
+_The client should concatenate `partial` fields to build the final answer._
 
 ---
 
@@ -139,7 +140,7 @@ If the model calls a tool, the stream emits a `tool_calls` event and stops:
 }
 ```
 
-*The server persists conversation state in Redis at this point.*
+_The server persists conversation state in Redis at this point._
 
 ### 3. Resume with Tool Results
 
@@ -161,31 +162,33 @@ The server reloads the saved prompt state, inserts the tool result, continues ge
 
 ### Tool Limits
 
-*   Max custom tools: **20**
-*   Max tool results: **20**
-*   Max custom tool definition size: **10,000 bytes**
-*   Max tool result content size: **100 KB**
-*   Resume TTL: **15 minutes**
-*   Max resume rounds: **10**
+- Max custom tools: **20**
+- Max tool results: **20**
+- Max custom tool definition size: **10,000 bytes**
+- Max tool result content size: **100 KB**
+- Resume TTL: **15 minutes**
+- Max resume rounds: **10**
 
 ---
 
 ## Implementation References
 
-*   **Controller:** `plugins/discourse-ai/app/controllers/discourse_ai/admin/ai_agents_controller.rb`
-*   **Streamer:** `plugins/discourse-ai/lib/ai_bot/response_http_streamer.rb`
-*   **Custom Tools Session:** `plugins/discourse-ai/lib/ai_bot/stream_reply_custom_tools_session.rb`
+- **Controller:** `plugins/discourse-ai/app/controllers/discourse_ai/admin/ai_agents_controller.rb`
+- **Streamer:** `plugins/discourse-ai/lib/ai_bot/response_http_streamer.rb`
+- **Custom Tools Session:** `plugins/discourse-ai/lib/ai_bot/stream_reply_custom_tools_session.rb`
 
 ### Test Examples
 
 See `plugins/discourse-ai/spec/requests/admin/ai_agents_controller_spec.rb` for comprehensive examples:
 
-*   **New streamed conversation:** Lines 1248-1356
-*   **Custom tools + resume token:** Lines 1358-1448
-*   **Parallel tool calls:** Lines 1467-1590\u003Cdiv data-theme-toc=\"true\"\u003E \u003C/div\u003E
+- **New streamed conversation:** Lines 1248-1356
+- **Custom tools + resume token:** Lines 1358-1448
+- **Parallel tool calls:** Lines 1467-1590\u003Cdiv data-theme-toc=\"true\"\u003E \u003C/div\u003E
 
 ### Sample implementation
+
 [details=Ruby Script]
+
 ```ruby
 require 'net/http'
 require 'json'
@@ -231,18 +234,18 @@ http.request(request) do |response|
     if response.code == '200'
     puts \"Stream started successfully.\"
     puts \"Response headers: #{response.to_hash}\"
-    puts \"Streaming content:\"   
-    
+    puts \"Streaming content:\"
+
     # Read the chunked response
     response.read_body do |chunk|
         # The response is newline-separated JSON objects
         chunk.each_line do |line|
         line = line.strip
         next if line.empty?
-        
+
         begin
             json = JSON.parse(line)
-            
+
             if json['topic_id']
             puts \"\
 --- Context Received ---\"
@@ -277,8 +280,10 @@ Error parsing JSON: #{e.message}\"
     end
 end
 ```
+
 [/details]
 
 ### Notes
-- If you want the conversation to be in the name of a new staged user, pass the `unique_user_id` and `preferred_username` as the new desired username and skip the `username` field. 
+
+- If you want the conversation to be in the name of a new staged user, pass the `unique_user_id` and `preferred_username` as the new desired username and skip the `username` field.
 - If you want to converse using an existing user, pass that user's `username` and skip the `unique_user_id` and `preferred_username` fields.
