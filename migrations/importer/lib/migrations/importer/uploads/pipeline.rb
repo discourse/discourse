@@ -210,9 +210,8 @@ module Migrations
           end
         end
 
-        # Rails no longer releases connections that manually created threads lease,
-        # so each item borrows one and gives it straight back — an idle worker
-        # blocked on the queue must not pin a pool slot.
+        # Each item borrows a connection and gives it straight back so an idle
+        # worker blocked on the queue does not retain a pool slot.
         def default_with_connection(&block)
           ActiveRecord::Base.connection_pool.with_connection(&block)
         end

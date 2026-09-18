@@ -37,9 +37,9 @@ module Migrations
             nil
           end
 
-          # Same static formula as before the rework: cores, scaled by the
-          # configured factor, doubled for an external store (its uploads spend
-          # most of their time waiting on the network).
+          # Scale the available cores by the configured factor, and double the
+          # result for external stores whose uploads spend most of their time
+          # waiting on the network.
           def worker_count
             base = Etc.nprocessors
             factor = settings.fetch(:thread_count_factor, DEFAULT_THREAD_FACTOR)

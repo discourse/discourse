@@ -30,11 +30,9 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
     end
   end
 
-  # The whole enqueue path — the tracking sets loaded in `before_run` deciding
-  # what `produce` hands to the workers — against real, migrated databases. An
-  # earlier version of the set loaders queried IntermediateDB columns that don't
-  # exist, so every row was "unreferenced" and --optimize silently optimized
-  # nothing; a query that drifts from the schema fails here.
+  # Exercise the whole enqueue path — from the tracking sets loaded in
+  # `before_run` to the work emitted by `produce` — against real, migrated
+  # databases so queries that drift from the schema fail here.
   describe "enqueueing" do
     it "enqueues post images and avatars and skips the rest" do
       insert_uploaded_image(source_id: "s-post", upload_id: 1)

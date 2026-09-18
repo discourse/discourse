@@ -3,13 +3,10 @@
 module Migrations
   module Importer
     module Uploads
-      # Decides which failures are worth retrying. The old code retried every
-      # failure three times, which re-ran full ImageMagick pipelines for things
-      # that will never succeed (validation errors, missing files, corrupt
-      # images). Here only the errors that are actually transient — S3 hiccups,
-      # network timeouts, deadlocks, a duplicate-key race — get retried, with
-      # jittered exponential backoff. Everything else propagates on the first try
-      # so the caller can record it and move on.
+      # Retries transient failures — S3 hiccups, network timeouts, deadlocks, and
+      # duplicate-key races — with jittered exponential backoff. Permanent
+      # failures propagate on the first attempt so the caller can record them and
+      # move on.
       #
       # The transient error classes are injected rather than referenced here so
       # the policy stays free of Rails/AWS constants and can be unit-tested on its
