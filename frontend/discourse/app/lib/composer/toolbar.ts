@@ -132,6 +132,8 @@ export interface ToolbarButton {
   shortcutAction?: (event: ToolbarEvent) => void;
   /** Whether the button is disabled. */
   disabled?: boolean;
+  /** Whether the user's preferences exclude the button from the toolbar. */
+  hiddenByUser?: boolean;
 }
 
 type ToolbarButtonAttrs = Omit<
@@ -171,12 +173,34 @@ export interface ToolbarOptions {
   site?: Partial<Site>;
   /** Whether the link button is included. */
   showLink?: boolean;
+  /** Ids of the buttons the user has chosen to hide. Only honoured for ids in `HIDEABLE_BUTTONS`. */
+  hiddenButtons?: string[];
 }
 
 function getButtonLabel(labelKey: string, defaultLabel: string): string | null {
   // use the Font Awesome icon if the label matches the default
   return i18n(labelKey) === defaultLabel ? null : labelKey;
 }
+
+/**
+ * Core buttons a user may remove from the composer toolbar, with the translation
+ * key naming each one. Buttons outside this list — including every button
+ * contributed by a plugin — are always shown.
+ */
+export const HIDEABLE_BUTTONS = [
+  { id: "bold", label: "composer.bold_title" },
+  { id: "italic", label: "composer.italic_title" },
+  { id: "heading", label: "composer.text_size_title" },
+  { id: "link", label: "composer.link_title" },
+  { id: "blockquote", label: "composer.blockquote_title" },
+  { id: "code", label: "composer.code_title" },
+  { id: "list", label: "composer.list_title" },
+  { id: "toggle-direction", label: "composer.toggle_direction" },
+  { id: "emoji", label: "composer.emoji" },
+  { id: "gifs", label: "gifs.composer_title" },
+];
+
+const HIDEABLE_BUTTON_IDS = new Set(HIDEABLE_BUTTONS.map(({ id }) => id));
 
 const DEFAULT_GROUP = "main";
 
@@ -199,6 +223,9 @@ export class ToolbarBase {
   /** Site state used to configure toolbar behavior. */
   site: Partial<Site>;
 
+  /** Ids of the buttons the user has chosen to hide, read once when the toolbar is built. */
+  hiddenButtons: string[];
+
   constructor(opts: ToolbarOptions = {}) {
     this.shortcuts = {};
     this.context = {};
@@ -206,6 +233,7 @@ export class ToolbarBase {
     this.siteSettings = opts.siteSettings || {};
     this.capabilities = opts.capabilities || {};
     this.site = opts.site || {};
+    this.hiddenButtons = opts.hiddenButtons || [];
   }
 
   /** Adds a button to its configured toolbar group. */
@@ -225,6 +253,9 @@ export class ToolbarBase {
     createdButton.tabindex ??= "-1";
     createdButton.className ||= buttonAttrs.id;
     createdButton.condition ||= () => true;
+    createdButton.hiddenByUser =
+      HIDEABLE_BUTTON_IDS.has(buttonAttrs.id) &&
+      this.hiddenButtons.includes(buttonAttrs.id);
 
     createdButton.action = async () => {
       if (buttonAttrs.popupMenu) {

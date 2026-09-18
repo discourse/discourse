@@ -330,6 +330,7 @@ end
 #  enable_upcoming_change_available_notifications :boolean          default(TRUE), not null
 #  event_reminder_preference                      :integer          default("personal_message"), not null
 #  external_links_in_new_tab                      :boolean          default(FALSE), not null
+#  hidden_composer_toolbar_buttons                :string           default([]), not null, is an Array
 #  hide_presence                                  :boolean          default(FALSE), not null
 #  hide_profile                                   :boolean          default(FALSE), not null
 #  hide_profile_and_presence                      :boolean          default(FALSE), not null
