@@ -147,6 +147,30 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["extras"]["tags"]).to eq(%w[daily default members staff])
       end
 
+      it "matches every selected tag" do
+        DiscourseDataExplorer::Query.destroy_all
+        make_query("SELECT 1", name: "Shared report", tags: %w[Staff Daily])
+        make_query("SELECT 2", name: "Staff report", tags: ["Staff"])
+        make_query("SELECT 3", name: "Daily report", tags: ["Daily"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tags: "staff,daily" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |query| query["name"] }).to eq(["Shared report"])
+      end
+
+      it "matches a persisted default query by its virtual and additional tags" do
+        DiscourseDataExplorer::Query.destroy_all
+        query = DiscourseDataExplorer::Query.find(-1)
+        query.save!
+        DiscourseDataExplorer::QueryTag.sync!(query:, names: ["Staff"])
+
+        get "/admin/plugins/discourse-data-explorer/queries.json", params: { tags: "default,staff" }
+
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].map { |result| result["id"] }).to eq([query.id])
+      end
+
       it "returns the default tag for bundled queries" do
         DiscourseDataExplorer::Query.destroy_all
 

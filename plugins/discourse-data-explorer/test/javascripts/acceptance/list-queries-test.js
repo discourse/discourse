@@ -1,5 +1,13 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  settled,
+  visit,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -8,6 +16,7 @@ acceptance("List Queries", function (needs) {
   needs.settings({ data_explorer_enabled: true });
 
   let lastQueryParams;
+  let handleQueries;
 
   needs.hooks.beforeEach(() => {
     lastQueryParams = null;
@@ -61,7 +70,7 @@ acceptance("List Queries", function (needs) {
       });
     });
 
-    const handleQueries = (request) => {
+    handleQueries = (request) => {
       lastQueryParams = request.queryParams;
       const queries = [
         {
@@ -73,7 +82,7 @@ acceptance("List Queries", function (needs) {
           group_ids: [],
           last_run_at: "2021-02-11T08:29:59.337Z",
           user_id: -1,
-          tags: ["default"],
+          tags: ["default", "staff"],
         },
         {
           id: -5,
@@ -97,11 +106,11 @@ acceptance("List Queries", function (needs) {
           tags: ["staff"],
         },
       ];
-      const tag = request.queryParams.tag;
+      const tags = request.queryParams.tags?.split(",") ?? [];
       const filter = request.queryParams.filter?.toLowerCase();
       const filteredQueries = queries.filter((query) => {
         return (
-          (!tag || query.tags.includes(tag)) &&
+          tags.every((tag) => query.tags.includes(tag)) &&
           (!filter || query.name.toLowerCase().includes(filter))
         );
       });
@@ -163,7 +172,7 @@ acceptance("List Queries", function (needs) {
       );
   });
 
-  test("combines tag and text filters", async function (assert) {
+  test("filters by multiple tags", async function (assert) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     await click(".query-tag-filter.d-multi-select-trigger");
@@ -177,17 +186,15 @@ acceptance("List Queries", function (needs) {
       .dom("div.container table.recent-queries tbody tr")
       .exists({ count: 2 }, "only default queries are shown");
 
-    await fillIn(".d-filter-controls__input", "Active");
+    await click(".d-multi-select__result:first-child");
 
     assert
-      .dom("div.container table.recent-queries tbody tr")
-      .exists({ count: 1 }, "text search filters within the selected tag");
+      .dom(".query-tag-filter .d-multi-select-trigger__selected-item")
+      .exists({ count: 2 }, "both selected tags remain visible");
+    assert.strictEqual(lastQueryParams.tags, "default,staff");
     assert
       .dom("div.container table.recent-queries tbody tr td")
-      .hasText(
-        /^\s*Top 100 Active Topics/,
-        "the matching default query is shown"
-      );
+      .hasText(/^\s*Top 100 Likers/, "only queries with both tags are shown");
   });
 
   test("keeps tag and text filters when returning from a query", async function (assert) {
@@ -201,7 +208,7 @@ acceptance("List Queries", function (needs) {
     await click(".back-button");
 
     assert.strictEqual(
-      lastQueryParams.tag,
+      lastQueryParams.tags,
       "staff",
       "the tag is sent on return"
     );
@@ -222,5 +229,42 @@ acceptance("List Queries", function (needs) {
     assert
       .dom("div.container table.recent-queries tbody tr td")
       .hasText(/^\s*Staff activity/, "the matching query remains visible");
+  });
+
+  test("ignores an older tag-filter response that finishes last", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+
+    const requests = [];
+    pretender.get(
+      "/admin/plugins/discourse-data-explorer/queries.json",
+      (request) => {
+        requests.push(request);
+        return handleQueries(request);
+      },
+      true
+    );
+
+    const controller = this.owner.lookup(
+      "controller:adminPlugins.show.explorer.index"
+    );
+    controller.onTagFilterChange([{ id: "default", name: "default" }]);
+    controller.onTagFilterChange([{ id: "staff", name: "staff" }]);
+
+    await waitUntil(() => requests.length === 2);
+    pretender.resolve(requests[1]);
+    await waitUntil(() =>
+      find(".recent-queries tbody tr:last-child td")?.textContent.includes(
+        "Staff activity"
+      )
+    );
+    pretender.resolve(requests[0]);
+    await settled();
+
+    assert
+      .dom(".recent-queries tbody tr:last-child td")
+      .hasText(
+        /^\s*Staff activity/,
+        "the latest filter results remain visible"
+      );
   });
 });
