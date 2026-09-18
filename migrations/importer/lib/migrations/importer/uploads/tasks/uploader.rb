@@ -22,31 +22,8 @@ module Migrations
           Status = Database::FilesDB::Enums::UploadResultStatus
           SkipReason = Database::FilesDB::Enums::UploadSkipReason
 
-          # Columns the generated `FilesDB::Upload` model accepts. `upload.attributes`
-          # also carries user_id/access_control_post_id/retain_hours/updated_at,
-          # which the files DB schema drops, so we slice down to these.
-          UPLOAD_COLUMNS = %i[
-            id
-            animated
-            created_at
-            dominant_color
-            etag
-            extension
-            filesize
-            height
-            origin
-            original_filename
-            original_sha1
-            secure
-            security_last_changed_at
-            security_last_changed_reason
-            sha1
-            thumbnail_height
-            thumbnail_width
-            url
-            verification_status
-            width
-          ].freeze
+          UPLOAD_COLUMNS =
+            Database::FilesDB::Upload.method(:create).parameters.map { |_type, name| name }.freeze
 
           UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
 
