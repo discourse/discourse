@@ -1,5 +1,6 @@
 import {
   click,
+  currentURL,
   fillIn,
   find,
   settled,
@@ -165,6 +166,10 @@ acceptance("List Queries", function (needs) {
       .doesNotExist("default queries do not render a separate badge");
 
     assert
+      .dom(".query-row:first-child .query-tags .d-table-badge")
+      .exists({ count: 2 }, "the query tags appear below its description");
+
+    assert
       .dom(".query-tag-filter .d-multi-select-trigger__label")
       .hasText(
         i18n("explorer.filter_by_tag"),
@@ -192,9 +197,42 @@ acceptance("List Queries", function (needs) {
       .dom(".query-tag-filter .d-multi-select-trigger__selected-item")
       .exists({ count: 2 }, "both selected tags remain visible");
     assert.strictEqual(lastQueryParams.tags, "default,staff");
+    assert.strictEqual(
+      new URLSearchParams(currentURL().split("?")[1]).get("tags"),
+      "default,staff",
+      "the selected tags are reflected in the URL"
+    );
     assert
       .dom("div.container table.recent-queries tbody tr td")
       .hasText(/^\s*Top 100 Likers/, "only queries with both tags are shown");
+  });
+
+  test("filters by tags from the URL", async function (assert) {
+    await visit(
+      "/admin/plugins/discourse-data-explorer/queries?tags=default,staff"
+    );
+
+    assert.strictEqual(lastQueryParams.tags, "default,staff");
+    assert
+      .dom(".query-tag-filter .d-multi-select-trigger__selected-item")
+      .exists({ count: 2 }, "both URL tags are selected");
+    assert
+      .dom(".recent-queries tbody tr")
+      .exists({ count: 1 }, "only the query with both tags is shown");
+
+    await fillIn(".d-filter-controls__input", "likers");
+    assert.strictEqual(lastQueryParams.tags, "default,staff");
+    assert.strictEqual(lastQueryParams.filter, "likers");
+  });
+
+  test("filters by clicking a query tag", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+    await click(".query-row:first-child .query-tags .d-table-badge:last-child");
+
+    assert.strictEqual(lastQueryParams.tags, "staff");
+    assert
+      .dom(".recent-queries tbody tr")
+      .exists({ count: 2 }, "only queries with the clicked tag are shown");
   });
 
   test("keeps tag and text filters when returning from a query", async function (assert) {
@@ -216,6 +254,11 @@ acceptance("List Queries", function (needs) {
       lastQueryParams.filter,
       "activity",
       "the text search is sent on return"
+    );
+    assert.strictEqual(
+      new URLSearchParams(currentURL().split("?")[1]).get("tags"),
+      "staff",
+      "the tag remains in the URL on return"
     );
     assert
       .dom(".query-tag-filter .d-multi-select-trigger__selection-label")

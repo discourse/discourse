@@ -150,6 +150,22 @@ export default <template>
                             title={{query.description}}
                           >{{query.description}}</div>
                         </LinkTo>
+                        {{#if query.tags.length}}
+                          <div class="d-table__badges query-tags">
+                            {{#each query.tags as |tag|}}
+                              <a
+                                class="d-table-badge"
+                                href={{@controller.tagFilterHref tag}}
+                                title={{i18n "explorer.filter_by_this_tag"}}
+                                {{on "click" (fn @controller.addTagFilter tag)}}
+                              >
+                                <span
+                                  class="d-table-badge__content"
+                                >{{tag}}</span>
+                              </a>
+                            {{/each}}
+                          </div>
+                        {{/if}}
                       </td>
                       <td class="d-table__cell --detail query-created-by">
                         <div class="d-table__mobile-label">

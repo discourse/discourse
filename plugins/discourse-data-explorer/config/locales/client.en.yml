@@ -157,6 +157,7 @@ en:
       reset_params: "Reset"
       search_placeholder: "Search..."
       filter_by_tag: "Filter by tag"
+      filter_by_this_tag: "Filter the list by this tag"
       no_search_results: "Sorry, we couldn't find any results matching your text."
       form:
         errors:
