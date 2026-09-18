@@ -136,11 +136,33 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
 
   it "reads the reply number from the pre-pass" do
     create_source_post(1)
+    create_source_post(2)
+    create_source_post(3, reply_to_post_id: 2)
+
+    execute_step
+
+    expect(destination_posts.map(&:reply_to_post_number)).to eq([nil, nil, 2])
+  end
+
+  # A reply to the first post is a reply to the topic, which core stores as
+  # no reply at all.
+  it "stores no reply number for a reply to the first post" do
+    create_source_post(1)
     create_source_post(2, reply_to_post_id: 1)
 
     execute_step
 
-    expect(destination_posts.map(&:reply_to_post_number)).to eq([nil, 1])
+    expect(destination_posts.map(&:reply_to_post_number)).to eq([nil, nil])
+  end
+
+  it "keeps a supported locale and drops an unsupported one" do
+    create_source_post(1, locale: "de")
+    create_source_post(2, locale: "klingon")
+
+    execute_step
+
+    expect(destination_posts.map(&:locale)).to eq(["de", nil])
+    expect(notices).to include(a_string_including("locale 'klingon'"))
   end
 
   it "skips a post whose topic was not imported" do
@@ -159,6 +181,30 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
   end
 
   it "reports an embed it could not resolve" do
+    token = placeholder.mint(:upload)
+    create_source_post(1, raw: "before #{token} after")
+    Migrations::Database::IntermediateDB::EmbedUpload.create(
+      owner_type: enums::EmbedOwner::POST,
+      owner_id: 1,
+      placeholder: token,
+      upload_id: "missing",
+      original_markdown: "upload://missing.png",
+    )
+
+    execute_step
+
+    rows = intermediate_db.query("SELECT * FROM mapped.unresolved_embeds")
+    expect(rows.size).to eq(1)
+    expect(rows.first[:kind]).to eq("upload")
+    expect(rows.first[:entity_id]).to eq("missing")
+    expect(rows.first[:owner_id]).to eq(1)
+    expect(notices).to include(a_string_including("1 upload embeds"))
+  end
+
+  # Until polls and events have steps of their own, every one of them would
+  # be an unresolved embed; the report leaves them out so the real misses
+  # stay visible.
+  it "leaves polls and events out of the report for now" do
     token = placeholder.mint(:poll)
     create_source_post(1, raw: "before #{token} after")
     Migrations::Database::IntermediateDB::EmbedPoll.create(
@@ -170,12 +216,8 @@ RSpec.describe "Migrations::Importer::Steps::Posts", :rails do
 
     execute_step
 
-    rows = intermediate_db.query("SELECT * FROM mapped.unresolved_embeds")
-    expect(rows.size).to eq(1)
-    expect(rows.first[:kind]).to eq("poll")
-    expect(rows.first[:entity_id]).to eq("77")
-    expect(rows.first[:owner_id]).to eq(1)
-    expect(notices).to include(a_string_including("1 poll embeds"))
+    expect(intermediate_db.query("SELECT * FROM mapped.unresolved_embeds")).to be_empty
+    expect(notices).not_to include(a_string_including("poll"))
   end
 
   it "updates the counters of the topics it touched" do

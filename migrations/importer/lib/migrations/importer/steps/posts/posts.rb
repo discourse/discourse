@@ -7,6 +7,7 @@ module Migrations
         POST_TYPES = Post.types.values.to_set.freeze
         DEFAULT_POST_TYPE = Post.types[:regular]
         HIDDEN_REASONS = Post.hidden_reasons.values.to_set.freeze
+        SUPPORTED_LOCALES = LocaleSiteSetting.supported_locales.to_set.freeze
         WORD_PATTERN = /[[:word:]]+/
         NULL_BYTE = "\u0000"
 
@@ -141,7 +142,10 @@ module Migrations
           row[:topic_id] = row[:discourse_topic_id]
           row[:post_number] = row[:discourse_post_number]
           row[:sort_order] = row[:post_number]
+          # A reply to the first post is a reply to the topic; core stores no
+          # number for that.
           row[:reply_to_post_number] = row[:discourse_reply_to_post_number]
+          row[:reply_to_post_number] = nil if row[:reply_to_post_number] == 1
 
           row[:user_id] = row[:discourse_user_id] || SYSTEM_USER_ID
           row[:last_editor_id] = row[:discourse_last_editor_id] || row[:user_id]
@@ -184,6 +188,17 @@ module Migrations
               allowed_set: HIDDEN_REASONS,
               default_value: nil,
             )
+          end
+
+          if row[:locale] && SUPPORTED_LOCALES.exclude?(row[:locale])
+            notice(
+              I18n.t(
+                "importer.posts.invalid_locale",
+                post_id: row[:original_id],
+                value: row[:locale],
+              ),
+            )
+            row[:locale] = nil
           end
 
           row[:created_at] ||= NOW
