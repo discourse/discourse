@@ -6,14 +6,14 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:admin)
 
   describe "creating a post" do
-    let!(:topic) { Fabricate(:topic, category: category) }
-    let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
-
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
+    let(:new_reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
     context "when creating" do
       it "triggers queued_post_created" do
-        event = DiscourseEvent.track(:queued_post_created) { reviewable.save! }
+        event = DiscourseEvent.track(:queued_post_created) { new_reviewable.save! }
         expect(event).to be_present
-        expect(event[:params][0]).to eq(reviewable)
+        expect(event[:params][0]).to eq(new_reviewable)
       end
 
       it "returns the appropriate create options" do
@@ -266,19 +266,78 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
 
       context "with delete_user" do
+        fab!(:other_reviewable) do
+          Fabricate(:reviewable_queued_post, created_by: reviewable.target_created_by)
+        end
+
         it "deletes the user and rejects the post" do
-          other_reviewable =
-            Fabricate(:reviewable_queued_post, created_by: reviewable.target_created_by)
+          other_reviewable_id = other_reviewable.id
 
           result = reviewable.perform(moderator, :delete_user)
           expect(result.success?).to eq(true)
           expect(User.find_by(id: reviewable.target_created_by)).to be_blank
 
           expect(result.remove_reviewable_ids).to include(reviewable.id)
-          expect(result.remove_reviewable_ids).to include(other_reviewable.id)
+          expect(result.remove_reviewable_ids).to include(other_reviewable_id)
 
           expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
-          expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
+          expect(ReviewableQueuedPost.where(id: other_reviewable_id)).to be_blank
+        end
+
+        it "does not expose restricted reviewable IDs after deletion succeeds" do
+          restricted_group = Fabricate(:group)
+          restricted_category = Fabricate(:private_category, group: restricted_group)
+          restricted_reviewable =
+            Fabricate(
+              :reviewable_queued_post,
+              created_by: reviewable.target_created_by,
+              category: restricted_category,
+            )
+          restricted_reviewable_id = restricted_reviewable.id
+
+          visible_reviewable_ids = Reviewable.viewable_by(moderator, preload: false).pluck(:id)
+          expect(visible_reviewable_ids).not_to include(restricted_reviewable_id)
+
+          result = reviewable.perform(moderator, :delete_user)
+
+          expect(result.remove_reviewable_ids).not_to include(restricted_reviewable_id)
+        end
+
+        context "when user deletion fails" do
+          fab!(:spammer) { reviewable.target_created_by }
+          fab!(:other_queued_post) { Fabricate(:reviewable_queued_post, created_by: spammer) }
+          fab!(:another_queued_post) do
+            Fabricate(:reviewable_queued_post, target_created_by: spammer)
+          end
+
+          before { UserDestroyer.any_instance.stubs(:destroy).returns(nil) }
+
+          it "does not resolve related reviewables" do
+            result = reviewable.perform(moderator, :delete_user)
+
+            # User should still exist since deletion failed
+            expect(User.find_by(id: spammer.id)).to be_present
+
+            expect(result.remove_reviewable_ids).not_to include(other_queued_post.id)
+
+            # Both reviewables should still be pending since deletion failed
+            expect(other_queued_post.reload).to be_pending
+            expect(another_queued_post.reload).to be_pending
+          end
+
+          it "does not expose reviewable IDs from restricted categories" do
+            restricted_group = Fabricate(:group)
+            restricted_category = Fabricate(:private_category, group: restricted_group)
+            restricted_reviewable =
+              Fabricate(:reviewable_queued_post, created_by: spammer, category: restricted_category)
+
+            visible_reviewables = Reviewable.viewable_by(moderator, preload: false).pluck(:id)
+            expect(visible_reviewables).not_to include(restricted_reviewable.id)
+
+            result = reviewable.perform(moderator, :delete_user)
+
+            expect(result.remove_reviewable_ids).not_to include(restricted_reviewable.id)
+          end
         end
       end
     end
