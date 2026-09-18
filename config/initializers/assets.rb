@@ -18,6 +18,8 @@ Rails.application.config.assets.paths.push(
 
 Rails.application.config.assets.paths.push(
   *Discourse.plugins.map { |p| "#{Rails.root.join("app/assets/generated/#{p.directory_name}/")}" },
+  # Plugin::JsManager::BUNDLE_ANALYSIS_DIR — not autoloaded this early.
+  "#{Rails.root.join("app/assets/generated/bundle-analysis")}",
 )
 
 # These paths are added automatically by propshaft, but we don't want them

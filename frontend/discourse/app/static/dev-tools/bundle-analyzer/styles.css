@@ -290,3 +290,14 @@
 .bundle-analyzer .ba-row.loaded > .ba-head {
   box-shadow: inset 3px 0 0 var(--ba-good);
 }
+
+.bundle-analyzer .ba-plugin-line {
+  display: grid;
+  grid-template-columns: 1fr 130px 70px;
+  gap: 8px;
+  align-items: center;
+  padding: 3px 0;
+}
+.bundle-analyzer .ba-plugin-line code {
+  font-size: 11px;
+}

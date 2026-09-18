@@ -219,6 +219,9 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            dynamicImports: chunk.dynamicImports.filter((i) =>
+              bundle.output.find((c) => c.fileName === i)
+            ),
             routeBundles: chunk.isEntry
               ? routeBundlesForEntry(chunk.name)
               : undefined,
