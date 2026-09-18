@@ -6,6 +6,8 @@ title: Agent-readable Markdown endpoints
 
 When the server-only `experimental_markdown_endpoints` site setting is enabled, Discourse can return supported public and authorized content as `text/markdown`.
 
+The setting is hidden from the admin UI and defaults to off during internal testing. It can be enabled through the Rails console with `SiteSetting.experimental_markdown_endpoints = true`. The intended rollout is to enable the feature by default once it is ready.
+
 Clients can request Markdown in either of these ways:
 
 - append `.md` to a supported URL, such as `/t/example/123.md` or `/latest.md`;
