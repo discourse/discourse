@@ -73,7 +73,7 @@ RSpec.describe UploadCreator do
 
       include_examples "image extension correction"
 
-      it "stores oversized JPEG uploads with metadata matching the resized image" do
+      it "accepts JPEG uploads after downsizing them below the size limit" do
         file = file_from_fixtures("logo.jpg")
         SiteSetting.max_image_size_kb = 16
         expect(File.size(file.path)).to be > SiteSetting.max_image_size_kb.kilobytes
