@@ -9,7 +9,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWaitingExecution do
   fab!(:execution) do
     Fabricate(
       :discourse_workflows_execution,
-      workflow: workflow,
+      workflow:,
       status: :waiting,
       waiting_until: 1.minute.ago,
       resume_token: "wait-token",

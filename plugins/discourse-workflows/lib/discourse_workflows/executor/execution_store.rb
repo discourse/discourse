@@ -37,7 +37,7 @@ module DiscourseWorkflows
           @workflow_snapshot.to_h["nodes"],
           workflow_name: @workflow_snapshot.workflow_name,
         )
-        persist_execution!(status: :running, trigger_data: trigger_data)
+        persist_execution!(status: :running, trigger_data:)
         return false if @duplicate_job
 
         reset_collaborators!
@@ -95,7 +95,7 @@ module DiscourseWorkflows
           waiting_until: nil,
           timeout_action: nil,
         )
-        execution.trigger_error_workflow(error, steps: steps)
+        execution.trigger_error_workflow(error, steps:)
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
         )
@@ -107,7 +107,7 @@ module DiscourseWorkflows
       end
 
       def create_execution_with_status(status, trigger_data: self.trigger_data)
-        persist_execution!(status: status, trigger_data: trigger_data, finished_at: Time.current)
+        persist_execution!(status:, trigger_data:, finished_at: Time.current)
       end
 
       def create_rate_limited_execution
@@ -119,9 +119,9 @@ module DiscourseWorkflows
           execution.update!(
             status: :waiting,
             waiting_node_id: node.id,
-            waiting_until: waiting_until,
+            waiting_until:,
             resume_token: @execution_context.resume_token,
-            timeout_action: timeout_action,
+            timeout_action:,
           )
           save!(steps)
         end
@@ -142,7 +142,7 @@ module DiscourseWorkflows
       end
 
       def publish_progress(step: nil, refresh: false)
-        ExecutionProgressPublisher.publish(execution, step: step, refresh: refresh)
+        ExecutionProgressPublisher.publish(execution, step:, refresh:)
       end
 
       private
@@ -155,11 +155,11 @@ module DiscourseWorkflows
           workflow_id: workflow.id,
           workflow_version_id: execution_workflow_version_id,
           trigger_node_id: @trigger_node_id,
-          status: status,
-          trigger_data: trigger_data,
+          status:,
+          trigger_data:,
           execution_mode: @execution_mode,
           started_at: @execution.started_at || Time.current,
-          finished_at: finished_at,
+          finished_at:,
         }
 
         if @options.job_id.present?

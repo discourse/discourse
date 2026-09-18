@@ -9,7 +9,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ResumeWebhookWaiting do
   fab!(:execution) do
     Fabricate(
       :discourse_workflows_execution,
-      workflow: workflow,
+      workflow:,
       status: :waiting,
       resume_token: "wait-token",
     )

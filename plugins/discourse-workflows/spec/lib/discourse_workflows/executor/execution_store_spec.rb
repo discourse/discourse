@@ -5,19 +5,15 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
 
   let(:trigger_data) { { "topic_id" => 1 } }
   let(:execution_context) do
-    DiscourseWorkflows::Executor::ExecutionContext.new(
-      workflow: workflow,
-      trigger_data: trigger_data,
-      user: nil,
-    )
+    DiscourseWorkflows::Executor::ExecutionContext.new(workflow:, trigger_data:, user: nil)
   end
   let(:options) { DiscourseWorkflows::Executor::ExecutionOptions.new }
   let(:store) do
     described_class.new(
       trigger_node_id: "node_1",
-      execution_context: execution_context,
+      execution_context:,
       execution_mode: :normal,
-      options: options,
+      options:,
     )
   end
 
@@ -44,7 +40,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
 
       messages =
         MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
-          store.publish_progress(step: step)
+          store.publish_progress(step:)
         end
 
       expect(messages.length).to eq(1)
@@ -92,7 +88,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
         ),
       ]
 
-      store.finish!(steps: steps)
+      store.finish!(steps:)
 
       parsed = store.execution.execution_data.data
       expect(parsed["context"]["node_a"]).to eq([{ "json" => { "x" => 1 } }])
@@ -111,7 +107,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       )
       steps = [
         DiscourseWorkflows::Executor::Step.build(
-          node: node,
+          node:,
           position: 0,
           input: input_groups.first,
           status: DiscourseWorkflows::Executor::Step::SUCCESS,
@@ -121,7 +117,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
 
       messages =
         MessageBus.track_publish("/discourse-workflows/workflow/#{workflow.id}") do
-          store.finish!(steps: steps)
+          store.finish!(steps:)
         end
 
       expect(messages.length).to eq(1)
@@ -160,7 +156,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
           ),
         ]
 
-        store.finish!(steps: steps)
+        store.finish!(steps:)
 
         entry = store.execution.execution_data.data.dig("entries", "1", 0)
         expect(entry.dig("input", 0, "json", "body")).to include(
@@ -192,7 +188,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
             ),
           ]
 
-          store.finish!(steps: steps)
+          store.finish!(steps:)
 
           entry = store.execution.execution_data.data.dig("entries", "1", 0)
           expect(entry["input"]).to include(
@@ -230,7 +226,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
             )
           end
 
-        store.finish!(steps: steps)
+        store.finish!(steps:)
 
         data = store.execution.execution_data.data
         entry = data.dig("entries", "node-0", 0)
@@ -257,11 +253,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
     it "persists the requested timeout action" do
       waiting_until = 15.minutes.from_now
 
-      store.pause_waiting_execution!(
-        node: node,
-        waiting_until: waiting_until,
-        timeout_action: "fail",
-      )
+      store.pause_waiting_execution!(node:, waiting_until:, timeout_action: "fail")
 
       expect(store.execution.reload).to have_attributes(
         status: "waiting",
@@ -272,7 +264,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
     end
 
     it "keeps timeout action nil when existing callers omit it" do
-      store.pause_waiting_execution!(node: node)
+      store.pause_waiting_execution!(node:)
 
       expect(store.execution.reload.timeout_action).to be_nil
     end
@@ -282,7 +274,7 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       interrupt_checkpoint = -> { raise Sidekiq::Shutdown }
       DiscourseWorkflows::ExecutionData.set_callback(:save, :before, interrupt_checkpoint)
 
-      expect { store.pause_waiting_execution!(node: node) }.to raise_error(Sidekiq::Shutdown)
+      expect { store.pause_waiting_execution!(node:) }.to raise_error(Sidekiq::Shutdown)
 
       expect(store.execution.reload).to have_attributes(status: "running", waiting_node_id: nil)
       expect(store.execution.execution_data).to be_nil
@@ -374,31 +366,27 @@ RSpec.describe DiscourseWorkflows::Executor::ExecutionStore do
       )
       steps = [
         DiscourseWorkflows::Executor::Step.build(
-          node: node,
+          node:,
           position: 0,
           input: [],
           status: DiscourseWorkflows::Executor::Step::WAITING,
           output: output_groups.first,
         ),
       ]
-      store.finish!(steps: steps)
+      store.finish!(steps:)
       existing_data = store.execution.execution_data.data.deep_dup
       existing_data["node_contexts"] = { "node_a" => { "counter" => 1 } }
       store.execution.execution_data.update!(data: existing_data)
       store.execution.update!(status: :waiting, waiting_node_id: "1")
 
       restored_context =
-        DiscourseWorkflows::Executor::ExecutionContext.new(
-          workflow: workflow,
-          trigger_data: trigger_data,
-          user: nil,
-        )
+        DiscourseWorkflows::Executor::ExecutionContext.new(workflow:, trigger_data:, user: nil)
       restored =
         described_class.new(
           trigger_node_id: "node_1",
           execution_context: restored_context,
           execution_mode: :normal,
-          options: options,
+          options:,
         )
 
       restored.resume!(store.execution)
