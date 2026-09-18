@@ -13,6 +13,12 @@ module Migrations
       SQL
       private_constant :INSERT_SQL
 
+      # FIXME: polls and events have no converter and importer steps yet, so
+      # every one of them would end up here and drown out the real misses.
+      # Remove this once those steps exist.
+      EXCLUDED_KINDS = %i[poll event].freeze
+      private_constant :EXCLUDED_KINDS
+
       attr_reader :counts_by_kind
 
       def initialize(intermediate_db)
@@ -21,6 +27,8 @@ module Migrations
       end
 
       def <<(embed)
+        return self if EXCLUDED_KINDS.include?(embed.kind)
+
         @counts_by_kind[embed.kind] += 1
         @intermediate_db.insert(
           INSERT_SQL,
