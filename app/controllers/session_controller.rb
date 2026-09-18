@@ -38,6 +38,7 @@ class SessionController < ApplicationController
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
+  LOGIN_CODE_SIGNUP_KEY_PREFIX = "login-code-signup-"
 
   def csrf
     render json: { csrf: form_authenticity_token }
@@ -538,6 +539,8 @@ class SessionController < ApplicationController
   def verify_login_code
     expires_now
 
+    return complete_verified_login_code_signup if params[:signup_token].present?
+
     EmailLoginCode::Verify.call(login_code_verification_params) do |result|
       on_success { |user:| process_verified_login_code(user) }
       on_failed_contract do |contract|
@@ -959,6 +962,8 @@ class SessionController < ApplicationController
 
     return process_verified_invite_login_code(matched_user) if params[:invite_key].present?
 
+    return begin_verified_login_code_signup if pending_approval_signup?(matched_user)
+
     if matched_user.nil? && registration_via_login_code_open?
       user_fields_required = signup_user_fields_missing?
       name_required = signup_full_name_missing?
@@ -975,6 +980,12 @@ class SessionController < ApplicationController
       end
       on_failed_policy(:can_register_new_account) do
         render json: { error: I18n.t("login.new_registrations_disabled") }
+      end
+      on_failed_policy(:can_register_from_ip) do
+        render json: login_code_registration_ip_limit_error
+      end
+      on_failed_policy(:username_allowed) do
+        render json: { error: I18n.t("login.reserved_username") }
       end
       on_failed_policy(:required_fields_provided) do
         render json: { error: I18n.t("login.missing_user_field") }
@@ -993,6 +1004,97 @@ class SessionController < ApplicationController
   # Required signup details are only collected once the code has proven
   # ownership of the inbox, so these responses can't be used to probe whether
   # an account exists.
+  def pending_approval_signup?(matched_user)
+    matched_user.nil? && registration_via_login_code_open? && SiteSetting.must_approve_users? &&
+      !EmailValidator.can_auto_approve_user?(params[:email].to_s.strip.downcase)
+  end
+
+  def begin_verified_login_code_signup
+    login_code = EmailLoginCode.login.active.for_email(params[:email].to_s.strip).first
+    return render json: invalid_login_code if login_code.blank?
+
+    token = SecureRandom.hex(32)
+    expires_in = (login_code.expires_at - Time.zone.now).ceil
+    return render json: invalid_login_code if expires_in <= 0
+
+    proof = { email: login_code.email, code: params[:code] }.merge(verified_login_code_signup_proof)
+    server_session.set("#{LOGIN_CODE_SIGNUP_KEY_PREFIX}#{token}", proof, expires: expires_in)
+
+    username =
+      UserNameSuggester.suggest(login_code.email, allow_generic_fallback: false) ||
+        RandomUsernameGenerator.generate
+
+    render json: {
+             signup_details_required: true,
+             signup_token: token,
+             username: username,
+             expires_in: expires_in,
+           }
+  end
+
+  def complete_verified_login_code_signup
+    token = params[:signup_token].to_s
+    proof = verified_login_code_signup_proof_for(token)
+    return render json: invalid_login_code if !proof.is_a?(Hash)
+
+    key = "#{LOGIN_CODE_SIGNUP_KEY_PREFIX}#{token}"
+    return render json: invalid_login_code if !SiteSetting.must_approve_users?
+    return render json: invalid_login_code if EmailValidator.can_auto_approve_user?(proof[:email])
+
+    signup_params = params.permit(:username, :name, :password, user_fields: {}).to_h
+    EmailLoginCode::Redeem.call(
+      service_params.deep_merge(
+        ip_address: request.remote_ip,
+        params:
+          signup_params.merge(
+            email: proof[:email],
+            code: proof[:code],
+            new_account_required: true,
+            username_required: true,
+          ),
+      ),
+    ) do |result|
+      on_success do |user:, existing_user:|
+        server_session.delete(key)
+        login_with_login_code(user, created_account: existing_user.nil?)
+      end
+      on_failed_policy(:new_account_available) { render json: invalid_login_code }
+      on_failed_policy(:can_register_new_account) do
+        render json: { error: I18n.t("login.new_registrations_disabled") }
+      end
+      on_failed_policy(:can_register_from_ip) do
+        render json: login_code_registration_ip_limit_error
+      end
+      on_failed_policy(:required_username_provided) do
+        render json: { error: I18n.t("login.missing_username") }
+      end
+      on_failed_policy(:username_allowed) do
+        render json: { error: I18n.t("login.reserved_username") }
+      end
+      on_failed_policy(:required_fields_provided) do
+        render json: { error: I18n.t("login.missing_user_field") }
+      end
+      on_failed_policy(:required_full_name_provided) do
+        render json: { error: I18n.t("login.missing_full_name") }
+      end
+      on_model_errors(:user) { |user| render json: login_code_signup_error(user) }
+      on_failed_contract do |contract|
+        render json: { error: contract.errors.full_messages.join(". ") }
+      end
+      on_failure { render json: invalid_login_code }
+    end
+  end
+
+  def verified_login_code_signup_proof
+    {}
+  end
+
+  def verified_login_code_signup_proof_for(token)
+    return if token !~ /\A[0-9a-f]{64}\z/
+
+    server_session["#{LOGIN_CODE_SIGNUP_KEY_PREFIX}#{token}"]
+  end
+
   def signup_user_fields_missing?
     params[:user_fields].blank? && UserField.required.where(show_on_signup: true).exists?
   end
@@ -1034,7 +1136,7 @@ class SessionController < ApplicationController
     raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
     if login_not_approved_for?(user)
-      render json: login_not_approved
+      render json: { pending_approval: true }
     elsif payload = login_error_check(user)
       render json: payload
     elsif created_account
@@ -1124,6 +1226,9 @@ class SessionController < ApplicationController
       on_failed_policy(:can_register_new_account) do
         render json: { error: I18n.t("login.new_registrations_disabled") }
       end
+      on_failed_policy(:can_register_from_ip) do
+        render json: login_code_registration_ip_limit_error
+      end
       on_failed_policy(:required_fields_provided) do
         render json: { error: I18n.t("login.missing_user_field") }
       end
@@ -1174,6 +1279,13 @@ class SessionController < ApplicationController
           "activerecord.errors.models.user.attributes.ip_address.max_new_accounts_per_registration_ip",
         ),
     }
+  end
+
+  def login_code_signup_error(user)
+    response = { error: user.errors.full_messages.join(". ") }
+    password_errors = user.user_password&.errors&.full_messages_for(:password)
+    response[:password_error] = password_errors.join(". ") if password_errors.present?
+    response
   end
 
   def login_code_account_error(user)

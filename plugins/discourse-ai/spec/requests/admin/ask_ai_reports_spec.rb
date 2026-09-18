@@ -2,6 +2,7 @@
 
 describe DiscourseAi::Admin::AskAiReportsController do
   fab!(:admin)
+  fab!(:user)
   fab!(:moderator)
   fab!(:llm_model)
 
@@ -14,8 +15,8 @@ describe DiscourseAi::Admin::AskAiReportsController do
   it "accepts the dashboard date range when the browser is ahead of UTC" do
     freeze_time Time.utc(2026, 9, 16, 17)
     sign_in(admin)
-    ask = AskAiLog.create!(user: admin, query: "猫", asked_at: Time.current)
-    AskAiLog.create!(user: admin, query: "Future", asked_at: 1.hour.from_now)
+    ask = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Future", asked_at: 1.hour.from_now)
     dashboard =
       DiscourseAi::AdminDashboard::AskAi.build(
         start_date: "2026-08-19",
@@ -91,13 +92,13 @@ describe DiscourseAi::Admin::AskAiReportsController do
       )
     ask =
       AskAiLog.create!(
-        user: admin,
+        user:,
         query: "猫",
         asked_at: Time.utc(2026, 9, 16, 7, 25),
         answer: "Stored answer",
         ask_outcome: :answered,
       )
-    AskAiLog.create!(user: admin, query: "Not included", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Not included", asked_at: Time.current)
     [report, other_report].each do |item|
       2.times do |position|
         subject =
@@ -158,7 +159,7 @@ describe DiscourseAi::Admin::AskAiReportsController do
 
   it "returns the queued snapshot and report history" do
     sign_in(admin)
-    AskAiLog.create!(user: admin, query: "猫", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
     post "/admin/plugins/discourse-ai/ask-ai-reports.json",
          params: {
            start_date: Date.current.to_s,
@@ -177,7 +178,7 @@ describe DiscourseAi::Admin::AskAiReportsController do
 
   it "accepts a custom period longer than a year and persists its selected asks" do
     sign_in(admin)
-    ask = AskAiLog.create!(user: admin, query: "猫", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
     start_date = 2.years.ago.to_date.iso8601
     post "/admin/plugins/discourse-ai/ask-ai-reports.json",
          params: {
@@ -221,13 +222,13 @@ describe DiscourseAi::Admin::AskAiReportsController do
       )
     ids =
       22.times.map do |index|
-        ask = AskAiLog.create!(user: admin, query: "猫 #{index}", asked_at: Time.current)
+        ask = AskAiLog.create!(user:, query: "猫 #{index}", asked_at: Time.current)
         subject.ask_ai_report_subject_asks.create!(ask_ai_log: ask)
         ask.id
       end
     duplicate =
       AskAiLog.create!(
-        user: admin,
+        user:,
         query: "猫 21",
         asked_at: Time.current,
         answer: "Stored answer 猫",
@@ -236,7 +237,7 @@ describe DiscourseAi::Admin::AskAiReportsController do
     subject.ask_ai_report_subject_asks.create!(ask_ai_log: duplicate)
     ids[-1] = duplicate.id
     AskAiLog.where(id: ids.first).delete_all
-    AskAiLog.create!(user: admin, query: "Unrelated", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Unrelated", asked_at: Time.current)
     path =
       "/admin/plugins/discourse-ai/ask-ai-reports/#{report.id}/subjects/#{subject.id}/asks.json"
     get path

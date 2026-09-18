@@ -3099,6 +3099,7 @@ sl:
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       no_description: "Dodajte opis kategorije."
+      latest_topics: "Zadnje teme"
       description_expand: "Več"
       description_collapse: "Manj"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
@@ -3492,6 +3493,7 @@ sl:
         posting:
           name: Prispevki
     download_calendar:
+      title: "Dodaj v koledar"
       download: "Naloži"
     tagging:
       other_tags: "Druge oznake"

@@ -7,6 +7,8 @@ class OptimizedImage < ActiveRecord::Base
   # BUMP UP if optimized image algorithm changes
   VERSION = 2
   URL_REGEX = %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
+  MAX_PNGQUANT_SIZE = 500_000
+  MAX_CONVERT_SECONDS = 20
 
   def self.lock(upload_id, width, height)
     @hostname ||= Discourse.os_hostname
@@ -204,8 +206,10 @@ class OptimizedImage < ActiveRecord::Base
   IM_DECODERS = /\A(jpe?g|png|gif|webp|avif|svg)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
-    opts ||= {}
+    "#{image_extension(path: path, ext_path: ext_path, opts: opts || {})}:#{path}"
+  end
 
+  def self.image_extension(path:, ext_path:, opts:)
     # This logic is a little messy but the result of using mocks for most
     # of the image tests. The idea here is you shouldn't trust the "original"
     # path of a file to figure out its extension. However, in certain cases
@@ -221,8 +225,9 @@ class OptimizedImage < ActiveRecord::Base
     if !extension || !extension.match?(IM_DECODERS)
       raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
     end
-    "#{extension}:#{path}"
+    extension
   end
+  private_class_method :image_extension
 
   def self.thumbnail_or_resize
     SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
@@ -327,9 +332,49 @@ class OptimizedImage < ActiveRecord::Base
     optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
   end
 
-  def self.downsize(from, to, dimensions, opts = {})
-    optimize(:optimized_image_downsize, from, to, dimensions, opts)
+  def self.downsize(from:, to:, scale: nil, width: nil, height: nil, max_pixels: nil, **opts)
+    if GlobalSetting.enable_vips_image_processing
+      ensure_safe_paths!(from, to)
+      downsize_with_vips(
+        from: from,
+        to: to,
+        scale: scale,
+        width: width,
+        height: height,
+        max_pixels: max_pixels,
+        opts: opts,
+      )
+    else
+      dimensions =
+        if scale
+          "#{scale * 100}%"
+        elsif max_pixels
+          "#{max_pixels}@"
+        else
+          "#{width}x#{height}>"
+        end
+      optimize(:optimized_image_downsize, from, to, dimensions, opts)
+    end
   end
+
+  def self.downsize_with_vips(from:, to:, scale:, width:, height:, max_pixels:, opts:)
+    DiscourseVips.downsize(
+      input_path: from,
+      output_path: to,
+      scale: scale,
+      width: width,
+      height: height,
+      max_pixels: max_pixels,
+      strip_metadata: SiteSetting.strip_image_metadata,
+      timeout: MAX_CONVERT_SECONDS,
+      read: [from],
+      write: [File.dirname(to)],
+    )
+    optimize_image(to: to)
+  rescue => error
+    handle_optimization_error(error: error, to: to, opts: opts)
+  end
+  private_class_method :downsize_with_vips
 
   INSTRUCTION_METHODS = {
     optimized_image_resize: :resize_instructions,
@@ -340,47 +385,50 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     instructions = public_send(INSTRUCTION_METHODS.fetch(operation), from, to, dimensions, opts)
-    convert_with(instructions, from, to, opts, operation:)
+    begin
+      ImageMagick.magick(
+        *instructions,
+        operation: operation,
+        read: [from],
+        write: [File.dirname(to)],
+        nice: 10,
+        timeout: MAX_CONVERT_SECONDS,
+      )
+      optimize_image(to: to)
+    rescue => error
+      handle_optimization_error(error: error, to: to, opts: opts, instructions: instructions)
+    end
   end
 
-  MAX_PNGQUANT_SIZE = 500_000
-  MAX_CONVERT_SECONDS = 20
-
-  def self.convert_with(instructions, from, to, opts = {}, operation:)
-    ImageMagick.magick(
-      *instructions,
-      operation:,
-      read: [from],
-      write: [File.dirname(to)],
-      nice: 10,
-      timeout: MAX_CONVERT_SECONDS,
-    )
-
+  def self.optimize_image(to:)
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
     true
-  rescue => e
-    if opts[:raise_on_error]
-      raise e
-    else
-      error = +"Failed to optimize image:"
-
-      if e.message =~ /\A(?:convert|magick):([^`]+)/
-        error << $1
-      else
-        error << " unknown reason"
-      end
-
-      Discourse.warn(
-        error,
-        upload_id: opts[:upload_id],
-        location: to,
-        error_message: e.message,
-        instructions: instructions,
-      )
-      false
-    end
   end
+  private_class_method :optimize_image
+
+  def self.handle_optimization_error(error:, to:, opts:, instructions: nil)
+    raise error if opts[:raise_on_error]
+
+    message = +"Failed to optimize image:"
+    if error.message =~ /\A(?:convert|magick):([^`]+)/
+      message << $1
+    elsif error.is_a?(DiscourseVips::Error)
+      message << " #{error.message}"
+    else
+      message << " unknown reason"
+    end
+
+    Discourse.warn(
+      message,
+      upload_id: opts[:upload_id],
+      location: to,
+      error_message: error.message,
+      instructions: instructions,
+    )
+    false
+  end
+  private_class_method :handle_optimization_error
 end
 
 # == Schema Information

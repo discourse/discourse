@@ -554,6 +554,48 @@ describe DiscourseEvents::Events::Event do
             expect(post_event.starts_at).to eq_time(alt_starts_at)
             expect(post_event.ends_at).to eq_time(alt_ends_at)
           end
+
+          it "preserves going invitees and resets other responses when the date changes" do
+            going_user = Fabricate(:user)
+            interested_user = Fabricate(:user)
+            invitee_klass = DiscourseEvents::Events::Invitee
+
+            post_event.create_invitees(
+              [
+                {
+                  user_id: going_user.id,
+                  status: invitee_klass.statuses[:going],
+                  notified: true,
+                  recurring: false,
+                },
+                {
+                  user_id: interested_user.id,
+                  status: invitee_klass.statuses[:interested],
+                  notified: true,
+                  recurring: false,
+                },
+              ],
+            )
+
+            post_event.update_with_params!(
+              original_starts_at: alt_starts_at,
+              original_ends_at: alt_ends_at,
+            )
+
+            going_invitee = post_event.invitees.find_by(user_id: going_user.id)
+            interested_invitee = post_event.invitees.find_by(user_id: interested_user.id)
+
+            expect(going_invitee).to have_attributes(
+              status: invitee_klass.statuses[:going],
+              notified: true,
+              recurring: false,
+            )
+            expect(interested_invitee).to have_attributes(
+              status: nil,
+              notified: true,
+              recurring: false,
+            )
+          end
         end
 
         context "when the associated post is not the OP" do

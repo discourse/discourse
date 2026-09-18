@@ -12,9 +12,11 @@ pl_PL:
       nodes:
         "action:create_board_column": "Utwórz kolumnę tablicy"
         "action:create_board": "Utwórz tablicę"
+        "trigger:card_moved": "Karta przeniesiona"
       node_descriptions:
         "action:create_board_column": "Utwórz kolumnę na tablicy z opcjonalną ikoną, kolorem, tagiem i domyślnym sortowaniem"
         "action:create_board": "Utwórz tablicę z uprawnieniami dostępu i opcjonalnymi ograniczeniami tagów i kategorii"
+        "trigger:card_moved": "Wypala się, gdy karta jest przenoszona z jednej kolumny do drugiej na tablicy"
       create_board_column:
         board_id: "Tablica"
         board_id_description: "Wybierz tablicę lub użyj identyfikatora tablicy z poprzedniego kroku."
@@ -38,6 +40,7 @@ pl_PL:
         acl_description: "Wybierz, kto może przeglądać, edytować i zarządzać tablicą."
       card_moved:
         board_id: "Tablica"
+        board_id_description: "Wybierz tablicę, aby ograniczyć ten wyzwalacz, lub pozostaw puste pole dla wszystkich tablic."
         board_id_placeholder: "Wszystkie tablice"
     boards:
       filter_boards: "Filtruj tablice"

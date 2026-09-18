@@ -3022,6 +3022,7 @@ pl_PL:
     enable_new_defaults_for_trust_level_3_requirements: "Zaktualizowaliśmy domyślne wymagania TL3, aby były bardziej rozsądne dla członków dużych, aktywnych społeczności. Jeśli wcześniej nadpisano te ustawienia, ta nadchodząca zmiana nie będzie miała żadnego wpływu."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie {{setting:faq_url}} działa jak poprzednio."
+    enable_category_hashtag_cards: "Wyświetla pływającą kartę kategorii po kliknięciu hashtagu kategorii, jeśli użytkownik ma uprawnienia do wyświetlania danej kategorii."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
     reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     modernize_foundation_theme: "Zmiana ta wprowadza modyfikacje projektowe do motywu Foundation w Discourse."

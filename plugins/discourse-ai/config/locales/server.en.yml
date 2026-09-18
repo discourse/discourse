@@ -66,6 +66,7 @@ en:
   site_settings:
     ai_ask_ai_report_weekly_enabled: "Automatically generate an Ask AI report each week for the previous seven complete days. Reports appear on the dashboard. If groups are selected in {{setting:ai_ask_ai_report_recipient_groups}}, they also receive a PM. Requires Ask AI to be enabled and a configured report language model. Manual reports remain available."
     ai_ask_ai_report_agent: "Agent used to group users’ questions into Ask AI dashboard reports."
+    ai_ask_ai_report_exclude_groups: "Exclude questions asked by members of these groups from new Ask AI reports. Leave empty to include everyone."
     ai_ask_ai_report_max_asks: "Maximum number of asks analysed per report. Uses all asks in the selected period or the latest asks up to this limit, whichever is fewer. Larger reports need more model context and may cost more."
     ai_ask_ai_report_recipient_groups: "Groups that receive automatic weekly report PMs and can be included in manual report PMs. Reports include users’ questions. Leave empty to keep automatic reports on the dashboard only."
     discourse_ai_enabled: "Enable the discourse AI plugin."
@@ -297,7 +298,7 @@ en:
   discourse_ai:
     ask_ai_reports:
       no_model: "Configure a default AI language model before generating reports."
-      no_asks: "There are no asks in this period."
+      no_asks: "There are no questions matching the report settings in this period."
       title: "What users are asking: %{start} – %{end}"
       coverage: "Analysed the latest %{count} of %{total} asks in this period. Questions can appear in multiple subjects."
       ungrouped_name: "Ungrouped questions"

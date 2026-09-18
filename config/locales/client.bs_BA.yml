@@ -2616,6 +2616,7 @@ bs_BA:
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       no_description: "Please add a description for this category."
+      latest_topics: "Latest topics"
       already_used: "This color has been used by another category"
       security: "Security"
       permissions:

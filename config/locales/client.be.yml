@@ -1742,6 +1742,7 @@ be:
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўнены, што хочаце выдаліць гэту катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
+      latest_topics: "Апошнія тэмы"
       description_expand: "Паказаць больш"
       description_collapse: "Паказаць менш"
       already_used: "Гэты колер ужо выкарыстоўваецца іншай катэгорыяй"

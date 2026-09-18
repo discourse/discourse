@@ -415,6 +415,7 @@ zh_CN:
         description_private: "不公开活动的批量邀请仅接受群组名。"
         download_sample_csv: "下载示例 CSV 文件"
         send_bulk_invites: "发送邀请"
+        add_attendee: "添加与会者"
         group_selector_placeholder: "选择群组…"
         user_selector_placeholder: "选择用户…"
         attendance_label: "出席"

@@ -3302,6 +3302,7 @@ ro:
       delete_confirm: "Sigur dorești să ștergi această categorie?"
       delete_error: "A apărut o eroare la ștergerea acestei categorii."
       no_description: "Adaugă o descriere acestei categorii."
+      latest_topics: "Ultimele subiecte"
       description_expand: "Arată mai multe"
       description_collapse: "Arată mai puține"
       already_used: "Această culoare este folosită la o altă categorie"
@@ -3673,6 +3674,7 @@ ro:
           name: Care postează
       favorite_count: "%{count}/%{max} insigne marcate ca favorite"
     download_calendar:
+      title: "Adaugă în calendar"
       download: "Descărcare"
     tagging:
       other_tags: "Alte etichete"

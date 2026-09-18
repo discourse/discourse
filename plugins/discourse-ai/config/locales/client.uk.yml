@@ -24,6 +24,8 @@ uk:
             title: "Запитайте ШІ"
         ask_ai:
           title: "Запитайте ШІ"
+          reports:
+            retry_questions: "Повторити спробу"
           seconds: "%{seconds} сек"
           date: "Дата"
           outcomes:

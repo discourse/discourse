@@ -2596,6 +2596,7 @@ ca:
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"
       delete_error: "Hi ha hagut un error en suprimir aquesta categoria"
       no_description: "Introduïu una descripció per a aquesta categoria."
+      latest_topics: "Temes més recents"
       already_used: "Aquest color ha estat utilitzat per una altra categoria"
       security: "Seguretat"
       permissions:

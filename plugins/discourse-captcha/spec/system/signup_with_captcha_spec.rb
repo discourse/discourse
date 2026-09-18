@@ -8,8 +8,7 @@ RSpec.describe "Signup with captcha" do
     SiteSetting.enable_local_logins = true
     SiteSetting.discourse_captcha_enabled = true
 
-    # The captcha outlet only exists on the password signup form, which the
-    # code-based form replaces when enable_local_logins_via_code is on.
+    # Most examples exercise the password form, so keep the code option unavailable.
     SiteSetting.enable_local_logins_via_code = false
   end
 

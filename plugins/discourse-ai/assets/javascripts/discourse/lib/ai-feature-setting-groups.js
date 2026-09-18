@@ -194,6 +194,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
       titleKey: "discourse_ai.features.search.setting_groups.ask_ai_reports",
       settings: [
         "ai_ask_ai_report_weekly_enabled",
+        "ai_ask_ai_report_exclude_groups",
         "ai_ask_ai_report_max_asks",
         "ai_ask_ai_report_recipient_groups",
       ],

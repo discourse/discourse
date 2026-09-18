@@ -3601,6 +3601,7 @@ da:
       delete_error: "Der opstod en fejl under sletningen af kategorien."
       no_description: "Der er ingen beskrivelse for denne kategori."
       change_in_category_topic: "Rediger beskrivelse"
+      latest_topics: "Seneste emner"
       description_expand: "Vis mere"
       description_collapse: "Vis mindre"
       already_used: "Denne farve er blevet brugt af en anden kategori"
@@ -3995,7 +3996,7 @@ da:
       favorite_max_not_reached: "Markér dette emblem som favorit"
       favorite_count: "%{count}/%{max} emblemer markeret som favoritter"
     download_calendar:
-      title: "Hent kalender"
+      title: "Føj til kalender"
       save_ics: "Hent .ics fil"
       save_google: "Tilføj til Google kalender"
       remember: "Spørg mig ikke igen"

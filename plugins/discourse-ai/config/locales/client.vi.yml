@@ -24,6 +24,8 @@ vi:
             title: "Hỏi AI"
         ask_ai:
           title: "Hỏi AI"
+          reports:
+            retry_questions: "Thử lại"
           date: "Ngày"
           outcomes:
             failed: "Thất bại"

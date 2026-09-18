@@ -25,7 +25,7 @@ module DiscourseAi
         end
 
         cutoff = [Time.current, last.end_of_day].min
-        logs = AskAiLog.where(asked_at: first.beginning_of_day..cutoff)
+        logs = AskAiLog.for_reports.where(asked_at: first.beginning_of_day..cutoff)
         report = nil
         DistributedMutex.synchronize("ask-ai-report-request-#{first}-#{last}") do
           selected =

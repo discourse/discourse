@@ -1,4 +1,4 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CodeLoginForm from "discourse/components/code-login-form";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -61,6 +61,9 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .includesText("user@example.com");
     assert.dom(".d-otp-input").exists();
     assert.dom(".code-login-form__resend").exists();
+    assert
+      .dom(".code-login-form__change-email")
+      .exists("the email can still be corrected before verification");
   });
 
   test("signup requests declare their intent", async function (assert) {
@@ -217,6 +220,237 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .dom(".code-login-form__error")
       .hasText(i18n("email_login_code.invalid_code"));
     assert.dom(".d-otp-input").hasValue("", "the code input is cleared");
+  });
+
+  test("collects valid account details before submitting for approval", async function (assert) {
+    stubCodeRequest();
+    this.siteSettings.enable_random_usernames = true;
+    this.site.setProperties({
+      full_name_required_for_signup: true,
+      full_name_visible_in_signup: true,
+    });
+
+    const verifyRequests = [];
+    let accountDetailAttempts = 0;
+    pretender.post("/session/login-code/verify", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      verifyRequests.push(params);
+
+      if (!params.get("signup_token")) {
+        return response({
+          signup_details_required: true,
+          signup_token: "signup-token",
+          username: "suggested-name",
+          expires_in: 600,
+        });
+      }
+
+      accountDetailAttempts++;
+      return accountDetailAttempts === 1
+        ? response({
+            error: "Password is too common",
+            password_error: "Choose a more secure password",
+          })
+        : response({ pending_approval: true });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "123456");
+
+    assert
+      .dom(".login-title")
+      .hasText(i18n("code_login.account_details_title"));
+    assert.dom(".code-login-form__account-details-step").exists();
+    assert
+      .dom(".code-login-form__create-password")
+      .hasClass("btn-link", "the optional password action uses link styling")
+      .hasText(i18n("code_login.create_password_optional"));
+    assert.dom("#new-account-password").doesNotExist();
+    assert
+      .dom(".code-login-form__change-email")
+      .doesNotExist("a verified email cannot be changed from account details");
+
+    await click(".code-login-form__create-password");
+    assert.dom("#new-account-password").hasAttribute("type", "password");
+    assert.strictEqual(
+      document.querySelector("#new-account-password").getBoundingClientRect()
+        .width,
+      document.querySelector("#code-login-username").getBoundingClientRect()
+        .width,
+      "the password and username inputs have the same visible width"
+    );
+    await click(".toggle-password-mask");
+    assert
+      .dom("#new-account-password")
+      .hasAttribute("type", "text", "the standard mask control reveals it");
+    await fillIn("#new-account-password", "short");
+    assert
+      .dom(".code-login-form__submit-approval")
+      .isDisabled("a locally invalid password cannot be submitted");
+    await fillIn("#new-account-password", "Correct Horse Battery Staple");
+
+    assert.strictEqual(
+      verifyRequests.length,
+      1,
+      "verifying the code does not create the account"
+    );
+
+    await fillIn("#code-login-username", "taken");
+    await waitFor(".code-login-form__submit-approval[disabled]");
+    assert
+      .dom(".code-login-form__username-field .code-login-form__error")
+      .includesText("nottaken");
+
+    await fillIn("#code-login-username", "chosen-name");
+    await waitFor(".code-login-form__submit-approval:not([disabled])");
+    await click(".code-login-form__submit-approval");
+
+    assert
+      .dom(".code-login-form__name-field .code-login-form__error")
+      .hasText(i18n("user.name.required"));
+    assert.strictEqual(
+      verifyRequests.length,
+      1,
+      "invalid details are not submitted"
+    );
+
+    await fillIn("#code-login-name", "  Chosen Name  ");
+    await click(".code-login-form__submit-approval");
+
+    assert
+      .dom(".code-login-form__account-details-step")
+      .exists("a server error keeps the details editable");
+    assert.dom("#code-login-username").hasValue("chosen-name");
+    assert.dom("#code-login-name").hasValue("  Chosen Name  ");
+    assert
+      .dom("#new-account-password")
+      .hasValue("Correct Horse Battery Staple");
+    assert
+      .dom("#password-validation")
+      .includesText("Choose a more secure password");
+    assert.strictEqual(accountDetailAttempts, 1, "the first attempt failed");
+
+    await fillIn("#new-account-password", "A different secure password 42!");
+    await click(".code-login-form__submit-approval");
+
+    assert.dom(".code-login-form__pending-approval-step").exists();
+    assert.strictEqual(verifyRequests[1].get("signup_token"), "signup-token");
+    assert.strictEqual(verifyRequests[1].get("username"), "chosen-name");
+    assert.strictEqual(verifyRequests[1].get("name"), "Chosen Name");
+    assert.strictEqual(
+      verifyRequests[2].get("password"),
+      "A different secure password 42!",
+      "the password is only sent with final account-detail submissions"
+    );
+    assert.strictEqual(
+      accountDetailAttempts,
+      2,
+      "the verified continuation can be retried"
+    );
+  });
+
+  test("restores a verified signup continuation at the account details step", async function (assert) {
+    this.owner.lookup("service:session-store").setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "user@example.com",
+        expiresAt: Date.now() + 60_000,
+        signupToken: "signup-token",
+        username: "",
+      },
+    });
+
+    let verificationRequests = 0;
+    pretender.post("/session/login-code/verify", () => {
+      verificationRequests++;
+      return response({ pending_approval: true });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert
+      .dom(".code-login-form__account-details-step")
+      .exists("the account details step is restored");
+    assert
+      .dom(".code-login-form__hidden-email")
+      .hasValue("user@example.com", "the verified email is preserved");
+    assert.strictEqual(
+      verificationRequests,
+      0,
+      "restoring the continuation does not create an account"
+    );
+
+    await fillIn("#code-login-username", "chosen-name");
+    await waitFor(".code-login-form__submit-approval:not([disabled])");
+    await click(".code-login-form__submit-approval");
+
+    assert.strictEqual(verificationRequests, 1, "the proof remains usable");
+    assert
+      .dom(".code-login-form__pending-approval-step")
+      .exists("valid details submit for approval");
+  });
+
+  test("ignores missing and expired signup continuations", async function (assert) {
+    const sessionStore = this.owner.lookup("service:session-store");
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("a missing continuation starts a fresh signup");
+
+    sessionStore.setObject({
+      key: "email-code-signup-continuation",
+      value: {
+        email: "user@example.com",
+        expiresAt: Date.now() - 1,
+        signupToken: "expired-token",
+        username: "",
+      },
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert
+      .dom(".code-login-form__email-step")
+      .exists("an expired continuation starts a fresh signup");
+    assert.strictEqual(
+      sessionStore.getObject("email-code-signup-continuation"),
+      null,
+      "the expired continuation is removed"
+    );
+  });
+
+  test("shows the pending approval screen after a valid signup code", async function (assert) {
+    stubCodeRequest();
+    pretender.post("/session/login-code/verify", () =>
+      response({ pending_approval: true })
+    );
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "123456");
+
+    assert
+      .dom(".login-title")
+      .hasText(i18n("code_login.pending_approval_title"));
+    assert
+      .dom(".login-subheader")
+      .hasText(i18n("code_login.pending_approval_instructions"));
+    assert
+      .dom(".code-login-form__pending-approval-step")
+      .hasNoText("does not add extra instructions below the explanation");
+    assert.dom(".d-otp-input").doesNotExist("removes the code input");
+    assert.dom(".code-login-form__resend").doesNotExist("removes resend");
   });
 
   test("shows the second factor form when required", async function (assert) {

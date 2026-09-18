@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 require_relative "discourse_vips/client"
+require "tempfile"
 
 module DiscourseVips
   SVG_DIMENSIONS_TIMEOUT_SECONDS = 3
   private_constant :SVG_DIMENSIONS_TIMEOUT_SECONDS
+
+  SVG_TO_PNG_TIMEOUT_SECONDS = 3
+  private_constant :SVG_TO_PNG_TIMEOUT_SECONDS
 
   def self.version
     Client.call(["version"], operation: :vips_version, read: [], write: [])
@@ -81,6 +85,75 @@ module DiscourseVips
       write:,
       timeout:,
     )
+  end
+
+  def self.svg_to_png(
+    input_path:,
+    output_path:,
+    read:,
+    write:,
+    timeout: SVG_TO_PNG_TIMEOUT_SECONDS,
+    operation: :svg_to_png,
+    nice: nil
+  )
+    timeout = [timeout, SVG_TO_PNG_TIMEOUT_SECONDS].min
+    Client.call(
+      ["svg-to-png", input_path, output_path],
+      operation:,
+      read: ["/etc/fonts", "/var/cache/fontconfig", *read],
+      write:,
+      timeout:,
+      nice:,
+    )
+  end
+
+  def self.downsize(
+    input_path:,
+    output_path:,
+    timeout:,
+    read:,
+    write:,
+    scale: nil,
+    width: nil,
+    height: nil,
+    max_pixels: nil,
+    strip_metadata: false
+  )
+    if [scale, width || height, max_pixels].compact.length != 1 || width.nil? != height.nil?
+      raise ArgumentError,
+            "provide exactly one resize target: scale, width and height, or max_pixels"
+    end
+
+    format = File.extname(input_path).delete_prefix(".").downcase
+    raise ArgumentError, "unsupported format" if !%w[jpg jpeg png gif webp avif].include?(format)
+
+    output_mode =
+      File.exist?(output_path) ? File.stat(output_path).mode & 0o777 : 0o666 & ~File.umask
+
+    Tempfile.create(["downsize-", ".#{format}"], File.dirname(output_path)) do |output|
+      output.close
+      Client.call(
+        [
+          "downsize",
+          input_path,
+          output.path,
+          format,
+          scale,
+          width,
+          height,
+          max_pixels,
+          strip_metadata,
+        ],
+        operation: :optimized_image_downsize,
+        read:,
+        write:,
+        timeout:,
+        nice: 10,
+      )
+      File.chmod(output_mode, output.path)
+      File.rename(output.path, output_path)
+    end
+    nil
   end
 
   def self.before_fork

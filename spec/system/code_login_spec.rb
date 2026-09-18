@@ -28,8 +28,6 @@ describe "Login via email code" do
   def start_code_login(email)
     visit("/login")
     expect(page).to have_css("#login-account-name")
-    screenshot_marker(label: "code-login-password-form")
-
     find("#one-time-code-link").click
     expect(page).to have_css(".code-login-form__email-step")
     screenshot_marker(label: "code-login-email-step")
@@ -83,13 +81,14 @@ describe "Login via email code" do
     end
   end
 
-  it "can switch to the code form and back to password login" do
+  it "defaults to password login and can opt into code login" do
     visit("/login")
     expect(page).to have_css("#login-account-name")
+    expect(page).to have_no_css(".code-login-form")
+    screenshot_marker(label: "code-login-password-form")
 
     find("#one-time-code-link").click
     expect(page).to have_css(".code-login-form__email-step")
-
     find(".code-login-form__password-toggle").click
     expect(page).to have_css("#login-account-name")
 
@@ -108,9 +107,7 @@ describe "Login via email code" do
     it "renders the checkbox at a usable size and lets it be toggled" do
       new_email = "new.person@example.com"
 
-      visit("/login")
-      expect(page).to have_css("#login-account-name")
-      find("#one-time-code-link").click
+      visit("/login?mode=code")
       expect(page).to have_css(".code-login-form__email-step")
 
       find(".code-login-form__email-step input[type='email']").fill_in(with: new_email)

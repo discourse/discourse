@@ -2,6 +2,7 @@
 
 describe Jobs::GenerateAskAiReport do
   fab!(:admin)
+  fab!(:user)
   fab!(:llm_model)
 
   before do
@@ -21,7 +22,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "stores verified subjects and sends one PM even when the job runs twice" do
-    ask = AskAiLog.create!(user: admin, query: "How do I configure email?", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "How do I configure email?", asked_at: Time.current)
     report = request_report
     output = {
       insights: [
@@ -56,7 +57,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "does not publish a result that arrives after the report expires" do
-    ask = AskAiLog.create!(user: admin, query: "Question", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "Question", asked_at: Time.current)
     report = request_report
     output = {
       "summary" => "Summary",
@@ -81,7 +82,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "does not call the model for an expired queued report" do
-    AskAiLog.create!(user: admin, query: "Question", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Question", asked_at: Time.current)
     report = request_report
     freeze_time 31.minutes.from_now
     allow(DiscourseAi::Completions::Llm).to receive(:proxy)
@@ -94,8 +95,8 @@ describe Jobs::GenerateAskAiReport do
 
   it "fails without publishing when a selected ask was deleted before generation" do
     SiteSetting.ai_ask_ai_report_max_asks = 1
-    AskAiLog.create!(user: admin, query: "Older question", asked_at: Time.current)
-    selected = AskAiLog.create!(user: admin, query: "Selected question", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Older question", asked_at: Time.current)
+    selected = AskAiLog.create!(user:, query: "Selected question", asked_at: Time.current)
     report = request_report
     selected.destroy!
 
@@ -107,7 +108,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "fails without publishing when the model invents ask IDs" do
-    ask = AskAiLog.create!(user: admin, query: "Email", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
     report = request_report
     output = {
       insights: [],
@@ -125,8 +126,8 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "keeps ungrouped questions without requesting a second analysis" do
-    grouped = AskAiLog.create!(user: admin, query: "Email setup", asked_at: Time.current)
-    ungrouped = AskAiLog.create!(user: admin, query: "猫", asked_at: Time.current)
+    grouped = AskAiLog.create!(user:, query: "Email setup", asked_at: Time.current)
+    ungrouped = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
     report = request_report
     output = {
       summary: "Email setup questions",
@@ -145,7 +146,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "rejects duplicate assignments without requesting a corrected report" do
-    ask = AskAiLog.create!(user: admin, query: "猫", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "猫", asked_at: Time.current)
     report = request_report
     subject = { name: "Cats", description: "Cat questions", ask_ids: [ask.id] }
     invalid = {
@@ -165,7 +166,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "delivers to the admins group only when selected" do
-    ask = AskAiLog.create!(user: admin, query: "Email", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
     report = request_report(send_to_groups: true)
     output = {
       insights: [],
@@ -185,7 +186,7 @@ describe Jobs::GenerateAskAiReport do
   it "uses the configured groups when the job runs" do
     group = Fabricate(:group)
     SiteSetting.ai_ask_ai_report_recipient_groups = group.id.to_s
-    ask = AskAiLog.create!(user: admin, query: "Email", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
     report = request_report(send_to_groups: true)
     other_group = Fabricate(:group)
     SiteSetting.ai_ask_ai_report_recipient_groups = other_group.id.to_s
@@ -204,7 +205,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "allows overlapping subjects and uses the reporter model selected at generation time" do
-    ask = AskAiLog.create!(user: admin, query: "Ask AI settings 猫", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "Ask AI settings 猫", asked_at: Time.current)
     report = request_report
     model = Fabricate(:llm_model)
     agent = Fabricate(:ai_agent, enabled: false, default_llm_id: model.id)
@@ -230,7 +231,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "rejects insights that cite questions outside the report" do
-    ask = AskAiLog.create!(user: admin, query: "Email", asked_at: Time.current)
+    ask = AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
     report = request_report
     output = {
       summary: "Email setup",
@@ -252,7 +253,7 @@ describe Jobs::GenerateAskAiReport do
   end
 
   it "does not publish after the requester loses admin access" do
-    AskAiLog.create!(user: admin, query: "Email", asked_at: Time.current)
+    AskAiLog.create!(user:, query: "Email", asked_at: Time.current)
     report = request_report
     admin.update!(admin: false)
     described_class.new.execute(report_id: report.id)
