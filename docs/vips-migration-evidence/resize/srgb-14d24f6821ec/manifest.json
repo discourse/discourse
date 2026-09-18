@@ -1,0 +1,348 @@
+{
+  "source_head": "14d24f6821ec6c6674e6c950694bc2601a08bc91",
+  "files": {
+    "inputs/jpeg.jpg": "35f1fcee1a93fbc6e30a945c661fd966e0962f60e0ef40729b8d9e76cabaadfc",
+    "outputs/jpeg-0-imagemagick.jpg": "396445ead2effd8b0ea3d4360712745faf1e6d1a8bb91e5b289390c303521c4e",
+    "outputs/jpeg-0-libvips.jpg": "55294939c3a6bfab28cd0a6b50c8fe638de7eece497ee63ee5a60e74b628f312",
+    "inputs/png.png": "c7b8f38aa309b7e32d7387dff4fb82aeeba3ede32116130600a05825b9966f18",
+    "outputs/png-0-imagemagick.png": "d98431143faa818292fab366d928751ed78ce71d8c3214af56814c7aaf855e50",
+    "outputs/png-0-libvips.png": "8413926d68e186b3a39183f46f2cfdd9d54c997b80589fa2e5982c3c65c0a363",
+    "inputs/gif.gif": "088ca413cddfd6e6a1409329fbb7244dfcd57dbffadefb2ea876b6220a2aa199",
+    "outputs/gif-0-imagemagick.gif": "b04d921ccc2f7e90b6e85bdcd9e24982e0d7bc7e34370ab208325c8320d34ec6",
+    "outputs/gif-0-libvips.gif": "cda4bb7cefa42bffc0b95ca488cefb4909b2daa1adbca4655ed5129f3634d632",
+    "inputs/webp.webp": "a49452e030e12cf6ce2eae9650f7534c50e596e711f0ea9ffbf54173f6ce230d",
+    "outputs/webp-0-imagemagick.webp": "2753022b9ca50b3f072c947c50d1d9bcd4eedd33b52fa3577bfe873fc4fa1768",
+    "outputs/webp-0-libvips.webp": "a58f1b0ad42bbc693b773bb20250fc788645d0d4889cbcc5a8e5e6ac629a3a60",
+    "inputs/avif.avif": "4010d8c8282a5bac43bb09fec9692e838ffd4e9fdb0a246c6a42d29d8a1271fa",
+    "outputs/avif-0-imagemagick.avif": "b343314391efa2559ff571299e42f607e9e447967ecb20be40de33718515c0ce",
+    "outputs/avif-0-libvips.avif": "33b26878dfd84e9e0303e5de5a14f4b5fbce89440b45414d2213e5ef47b45610",
+    "inputs/png-landscape.png": "417e0b373520a9c0efe99de07825663519b2dbc43f3805e3eef855e3f70dcb10",
+    "outputs/png-landscape-0-imagemagick.png": "852da5762f7b641867b9ae5a589b07c06223b675a865defc51bc18fa3bf9ba06",
+    "outputs/png-landscape-0-libvips.png": "0cb376f8a3e525858685da35d855ec14c938184d0bd979ceb44352d142faa159",
+    "inputs/png-portrait.png": "bfeadba8c1a389007b8e0e40bfc3cbe32f1e20ff6d5d04fb00d732c205a5328c",
+    "outputs/png-portrait-0-imagemagick.png": "105ed9ebdeac87003d630eb9efd87e6f60c849e5c3da7cb55c3e3b9e8632d212",
+    "outputs/png-portrait-0-libvips.png": "81234c63abdc6ab137b0f6aeea23a937392a39a6f19141d662c3b96d48b16068",
+    "inputs/png-wide.png": "de5e3898d155b03c7a0dbe0b5b7d37568fbfa7e36a937c42fb0df56ba721e7b3",
+    "outputs/png-wide-0-imagemagick.png": "5d9a44b5345c9a4f7608033056cf12f20fd02cebab89732cf18f495b929b3775",
+    "outputs/png-wide-0-libvips.png": "2af56557244fd3a91f576b05dfe905667899ce9a5da999ab2f6f80e77f6280f4",
+    "inputs/png-tall.png": "f1686785e7c74a701814e994a40243cd54203777f632a4bd3c41c1738574d10f",
+    "outputs/png-tall-0-imagemagick.png": "72eef732426b451f2df766000be6e32dc81392d8476218a9ec79bcf89a48d7e8",
+    "outputs/png-tall-0-libvips.png": "c0fb8bce8cae07d0c5ef582cd1a67f0c7db3584c1106fb735d2cc1f8724cd3d8",
+    "inputs/png-small.png": "d61c6d6211b0a2f7aa7f44ce61d80d3edb91f8648ee6378aa0ea9c336a3e0f96",
+    "outputs/png-small-0-imagemagick.png": "e638357569d11d35b966bd8a5039607ed01b1c229b02c91df9325a43f1e51410",
+    "outputs/png-small-0-libvips.png": "8c83ab4a1f3a0d671a8bfa5b1f6a01c0db7a4da4ae25dff6ede3405f929f9844",
+    "inputs/png-p3.png": "5013bc3b97547284132bec721212ad14935f5d4b36efe89e9fc902edcb7a6cc5",
+    "outputs/png-p3-0-imagemagick.png": "cacc561d84aa1aa42a41960263be19868085f1d93143492a80fbf643efa13057",
+    "outputs/png-p3-0-libvips.png": "546a9d52d132d0bae91e45e18b4e5c335b1c1cc365db9e567c24ffdb86ff5801"
+  },
+  "cases": [
+    {
+      "case_id": "jpeg-0",
+      "id": "jpeg",
+      "input": "inputs/jpeg.jpg",
+      "input_dimensions": [
+        500,
+        333
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/jpeg-0-imagemagick.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/jpeg-0-libvips.jpg",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "png-0",
+      "id": "png",
+      "input": "inputs/png.png",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/png-0-imagemagick.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-0-libvips.png",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "gif-0",
+      "id": "gif",
+      "input": "inputs/gif.gif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/gif-0-imagemagick.gif",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/gif-0-libvips.gif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "webp-0",
+      "id": "webp",
+      "input": "inputs/webp.webp",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/webp-0-imagemagick.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/webp-0-libvips.webp",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "avif-0",
+      "id": "avif",
+      "input": "inputs/avif.avif",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d750 pixels, then crop the center.",
+      "target": {
+        "width": 100,
+        "height": 50
+      },
+      "imagemagick": {
+        "output": "outputs/avif-0-imagemagick.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      },
+      "libvips": {
+        "output": "outputs/avif-0-libvips.avif",
+        "dimensions": [
+          100,
+          50
+        ]
+      }
+    },
+    {
+      "case_id": "png-landscape-0",
+      "id": "png-landscape",
+      "input": "inputs/png-landscape.png",
+      "input_dimensions": [
+        512,
+        256
+      ],
+      "description": "Scale to cover 100\u00d7100 pixels, then crop the center.",
+      "target": {
+        "width": 100,
+        "height": 100
+      },
+      "imagemagick": {
+        "output": "outputs/png-landscape-0-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-landscape-0-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    },
+    {
+      "case_id": "png-portrait-0",
+      "id": "png-portrait",
+      "input": "inputs/png-portrait.png",
+      "input_dimensions": [
+        256,
+        512
+      ],
+      "description": "Scale to cover 160\u00d780 pixels, then crop the center.",
+      "target": {
+        "width": 160,
+        "height": 80
+      },
+      "imagemagick": {
+        "output": "outputs/png-portrait-0-imagemagick.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-portrait-0-libvips.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      }
+    },
+    {
+      "case_id": "png-wide-0",
+      "id": "png-wide",
+      "input": "inputs/png-wide.png",
+      "input_dimensions": [
+        512,
+        128
+      ],
+      "description": "Scale to cover 80\u00d7160 pixels, then crop the center.",
+      "target": {
+        "width": 80,
+        "height": 160
+      },
+      "imagemagick": {
+        "output": "outputs/png-wide-0-imagemagick.png",
+        "dimensions": [
+          80,
+          160
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-wide-0-libvips.png",
+        "dimensions": [
+          80,
+          160
+        ]
+      }
+    },
+    {
+      "case_id": "png-tall-0",
+      "id": "png-tall",
+      "input": "inputs/png-tall.png",
+      "input_dimensions": [
+        128,
+        512
+      ],
+      "description": "Scale to cover 160\u00d780 pixels, then crop the center.",
+      "target": {
+        "width": 160,
+        "height": 80
+      },
+      "imagemagick": {
+        "output": "outputs/png-tall-0-imagemagick.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-tall-0-libvips.png",
+        "dimensions": [
+          160,
+          80
+        ]
+      }
+    },
+    {
+      "case_id": "png-small-0",
+      "id": "png-small",
+      "input": "inputs/png-small.png",
+      "input_dimensions": [
+        32,
+        32
+      ],
+      "description": "Scale to cover 96\u00d764 pixels, then crop the center.",
+      "target": {
+        "width": 96,
+        "height": 64
+      },
+      "imagemagick": {
+        "output": "outputs/png-small-0-imagemagick.png",
+        "dimensions": [
+          96,
+          64
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-small-0-libvips.png",
+        "dimensions": [
+          96,
+          64
+        ]
+      }
+    },
+    {
+      "case_id": "png-p3-0",
+      "id": "png-p3",
+      "input": "inputs/png-p3.png",
+      "input_dimensions": [
+        512,
+        512
+      ],
+      "description": "Scale to cover 100\u00d7100 pixels, then crop the center. Convert embedded Display P3 colors to sRGB.",
+      "target": {
+        "width": 100,
+        "height": 100
+      },
+      "imagemagick": {
+        "output": "outputs/png-p3-0-imagemagick.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      },
+      "libvips": {
+        "output": "outputs/png-p3-0-libvips.png",
+        "dimensions": [
+          100,
+          100
+        ]
+      }
+    }
+  ]
+}
