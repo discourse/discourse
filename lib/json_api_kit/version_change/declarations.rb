@@ -8,16 +8,24 @@ module JsonApiKit
         @transformations = []
         @default_sorts = []
         @removed_filters = []
+        @removed_sorts = []
       end
 
-      attr_reader :default_sorts, :removed_filters
+      attr_reader :default_sorts, :removed_filters, :removed_sorts
 
-      def transformations = @transformations + removed_filters.flat_map(&:transformations)
+      def transformations
+        @transformations + removed_filters.flat_map(&:transformations) +
+          removed_sorts.flat_map(&:transformations)
+      end
 
       def changed_default_sort(from:) = default_sorts << DefaultSort.new(type, from)
 
       def removed_filter(name, &condition)
         removed_filters << RemovedFilter.new(type, name, &condition)
+      end
+
+      def removed_sort(name, **options)
+        removed_sorts << RemovedSort.new(type, name, **options)
       end
 
       def renamed_attribute(**) = declare(Declaration::RenamedAttribute.new(type, **))

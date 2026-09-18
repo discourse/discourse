@@ -23,6 +23,7 @@ module JsonApiKit
             transformations.concat(it.transformations)
             default_sorts.concat(it.default_sorts)
             removed_filters.concat(it.removed_filters)
+            removed_sorts.concat(it.removed_sorts)
           end
       end
 
@@ -40,6 +41,8 @@ module JsonApiKit
       def default_sorts = @default_sorts ||= []
 
       def removed_filters = @removed_filters ||= []
+
+      def removed_sorts = @removed_sorts ||= []
     end
 
     delegate :version, :description, to: :class
@@ -52,6 +55,7 @@ module JsonApiKit
       @type_renames = TypeRenames.new(self.class.type_renames)
       @default_sorts = DefaultSorts.new(self.class.default_sorts)
       @removed_filters = RemovedFilters.new(self.class.removed_filters)
+      @removed_sorts = RemovedSorts.new(self.class.removed_sorts)
     end
 
     def verify!
@@ -90,6 +94,8 @@ module JsonApiKit
 
     def each_removed_filter(type, &) = removed_filters.each_for(type, &)
 
+    def each_removed_sort(type, &) = removed_sorts.each_for(type, &)
+
     def each_current_default_sort(type)
       default_sorts.each_for(type) do |default|
         yield default.convert_names { transformations.current_names(it).sole }
@@ -98,7 +104,7 @@ module JsonApiKit
 
     private
 
-    attr_reader :transformations, :type_renames, :default_sorts, :removed_filters
+    attr_reader :transformations, :type_renames, :default_sorts, :removed_filters, :removed_sorts
 
     def current_type(name) = name.convert_type { current_resource_type(it) }
 
