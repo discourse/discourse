@@ -163,41 +163,64 @@ RSpec.describe OptimizedImage do
         end
       end
     end
+  end
 
-    describe ".downsize" do
-      it "downsizes the logo with ImageMagick 7" do
-        tmp_path = "/tmp/downsized.png"
+  describe ".downsize" do
+    let(:directory) { Dir.mktmpdir }
+    let(:input_path) { File.join(directory, "source.png") }
+    let(:output_path) { File.join(directory, "output.png") }
 
-        begin
-          OptimizedImage.downsize(
-            "#{Rails.root.join("spec/fixtures/images/logo.png")}",
-            tmp_path,
-            "100x100\>",
-          )
+    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
 
-          info = FastImage.new(tmp_path)
-          expect(info.size).to eq([100, 27])
-          expect(File.size(tmp_path)).to be < 2300
-        ensure
-          File.delete(tmp_path) if File.exist?(tmp_path)
-        end
+    after { FileUtils.remove_entry(directory) }
+
+    shared_examples "downsizing" do
+      it "downsizes an image in place" do
+        result = described_class.downsize(from: input_path, to: input_path, scale: 0.5)
+
+        expect(result).to eq(true)
+        expect(FastImage.size(input_path)).to eq([122, 33])
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "downsizing"
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "downsizing"
+    end
+
+    context "when libvips processing fails" do
+      before do
+        global_setting :enable_vips_image_processing, true
+        File.binwrite(input_path, "invalid image")
       end
 
-      it "keeps a tiny image at its original dimensions when it is within the requested bounds" do
-        FileHelper.stubs(:optimize_image!).returns(true)
+      it "logs the libvips error and returns false by default" do
+        logger =
+          track_log_messages do
+            result = described_class.downsize(from: input_path, to: output_path, scale: 0.5)
 
-        Dir.mktmpdir do |dir|
-          output_path = File.join(dir, "downsized.png")
+            expect(result).to eq(false)
+          end
 
-          OptimizedImage.downsize(
-            "#{Rails.root.join("spec/fixtures/images/resized.png")}",
-            output_path,
-            "10x10\>",
+        expect(logger.warnings.first).to match(/Failed to optimize image: VipsForeignLoad/)
+      end
+
+      it "raises the processing error when requested" do
+        expect {
+          described_class.downsize(
+            from: input_path,
+            to: output_path,
+            scale: 0.5,
+            raise_on_error: true,
           )
-
-          expect(FastImage.type(output_path)).to eq(:png)
-          expect(FastImage.size(output_path)).to eq([5, 5])
-        end
+        }.to raise_error(DiscourseVips::InvalidImage)
       end
     end
   end
