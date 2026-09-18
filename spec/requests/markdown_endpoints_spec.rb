@@ -16,6 +16,47 @@ RSpec.describe "Markdown endpoints" do
     response.headers.fetch("Vary", "").split(",").map(&:strip)
   end
 
+  it "serves latest topics for Markdown requests to the homepage" do
+    get "/", headers: { "ACCEPT" => "text/markdown" }
+
+    expect(response).to have_http_status(:ok)
+    expect(response.media_type).to eq("text/markdown")
+    expect(response.body).to include(topic.title, "**URL:** #{Discourse.base_url}/latest.md")
+    expect(vary_tokens).to include("Accept")
+
+    head "/", headers: { "ACCEPT" => "text/markdown" }
+    expect(response.media_type).to eq("text/markdown")
+    expect(response.body).to be_empty
+
+    get "/.md"
+    expect(response).to have_http_status(:not_found)
+  end
+
+  it "preserves the configured HTML homepage and advertises latest Markdown" do
+    Fabricate(:admin)
+    SiteSetting.top_menu = "categories|latest|hot|top"
+
+    [
+      "text/html",
+      "*/*",
+      "text/markdown;q=0, text/html",
+      "text/markdown, text/html",
+    ].each do |accept|
+      get "/", headers: { "ACCEPT" => accept }
+
+      expect(response).to have_http_status(:ok), accept
+      expect(response.media_type).to eq("text/html")
+      expect(controller.controller_name).to eq("categories")
+      expect(response.headers["Link"]).to include("#{Discourse.base_url}/latest.md")
+      expect(response.body).to include('type="text/markdown"', "/latest.md")
+      expect(vary_tokens).to include("Accept")
+    end
+
+    get "/", headers: { "ACCEPT" => "text/markdown" }
+    expect(response.media_type).to eq("text/markdown")
+    expect(response.body).to start_with("# Latest")
+  end
+
   it "adds Vary: Accept to negotiated responses and redirects" do
     [
       %w[text/html text/html],
@@ -114,19 +155,29 @@ RSpec.describe "Markdown endpoints" do
     expect(response.media_type).not_to eq("text/markdown")
   end
 
-  it "negotiates category none, top period, and dotted username routes" do
-    dotted_user = Fabricate(:user, username: "markdown.user", trust_level: TrustLevel[2])
-    dotted_topic = Fabricate(:topic, user: dotted_user)
-    Fabricate(:post, topic: dotted_topic, user: dotted_user)
-
-    [
-      "/c/#{category.slug}/#{category.id}/none",
+  it "limits Markdown and discovery to the supported routes" do
+    tag = Fabricate(:tag)
+    paths = [
+      "/new",
+      "/unread",
       "/top/yearly",
-      "/u/#{dotted_user.username}/activity",
-    ].each do |path|
+      "/c/#{category.slug}/#{category.id}/none",
+      "/c/#{category.slug}/#{category.id}/l/latest",
+      "/tag/#{tag.slug_for_url}/#{tag.id}/l/latest",
+      "/u/#{user.username}/activity",
+    ]
+
+    paths.each do |path|
+      get "#{path}.md"
+      expect(response).to have_http_status(:not_found), path
+
       get path, headers: { "ACCEPT" => "text/markdown" }
-      expect(response).to have_http_status(:ok), "#{path}: #{response.status}"
-      expect(response.media_type).to eq("text/markdown"), path
+      expect(response.media_type).not_to eq("text/markdown"), path
+      expect(response.headers["Link"]).to be_blank, path
+
+      get path, headers: { "ACCEPT" => "text/html" }
+      expect(response.headers["Link"]).to be_blank, path
+      expect(response.body).not_to include('type="text/markdown"'), path
     end
   end
 
@@ -148,30 +199,60 @@ RSpec.describe "Markdown endpoints" do
     expect(response).to have_http_status(:not_found)
   end
 
-  it "renders one requested post or every visible post without topic pagination" do
+  it "paginates rendered posts with Markdown navigation links" do
     replies =
       2
-        .upto(25)
+        .upto(TopicView::CHUNK_SIZE + 1)
         .map do |post_number|
-          Fabricate(
-            :post,
-            topic: topic,
-            user: user,
-            post_number: post_number,
-            raw: "Reply #{post_number}",
-          )
+          Fabricate(:post, topic:, user:, post_number:, raw: "Reply #{post_number}")
         end
 
     get "/t/#{topic.slug}/#{topic.id}.md"
-    expect(response.body).to include(post.raw, replies.last.raw, "## Post 25")
+    expect(response.body).to include(post.raw, "**Page:** 1", "[Next page](#{topic.url}.md?page=2)")
+    expect(response.body).not_to include(replies.last.raw)
 
-    get "/t/#{topic.slug}/#{topic.id}/25.md"
+    get "/t/#{topic.slug}/#{topic.id}.md?page=2"
     expect(response.body).to include(
       replies.last.raw,
-      "**Showing post:** 25",
+      "**Page:** 2",
+      "[Previous page](#{topic.url}.md?page=1)",
+    )
+    expect(response.body).not_to include(post.raw, "[Next page]")
+  end
+
+  it "renders just the requested post" do
+    reply = Fabricate(:post, topic:, user:, raw: "Reply body")
+
+    get "/t/#{topic.slug}/#{topic.id}/#{reply.post_number}.md"
+    expect(response.body).to include(
+      reply.raw,
+      "**Showing post:** #{reply.post_number}",
       "View the full topic",
     )
-    expect(response.body).not_to include(post.raw)
+    expect(response.body).not_to include(post.raw, "[Next page]", "[Previous page]")
+  end
+
+  it "preserves topic author filters through discovery and pagination" do
+    excluded = Fabricate(:post, topic: topic, raw: "Another author's reply")
+    2.times { Fabricate(:post, topic: topic, user: user) }
+
+    [{ username_filters: user.username }, { replies_to_post_number: "1" }].each do |filters|
+      get "/t/#{topic.slug}/#{topic.id}", params: filters, headers: { "ACCEPT" => "text/html" }
+      alternate = response.headers.fetch("Link")[/<([^>]+)>/, 1]
+      expect(Rack::Utils.parse_nested_query(URI(alternate).query)).to eq(filters.stringify_keys)
+    end
+
+    stub_const(TopicView, :CHUNK_SIZE, 2) do
+      get "/t/#{topic.slug}/#{topic.id}.md", params: { username_filters: user.username }
+      next_url = response.body[/\[Next page\]\(([^)]+)\)/, 1]
+      expect(Rack::Utils.parse_nested_query(URI(next_url).query)).to eq(
+        "page" => "2",
+        "username_filters" => user.username,
+      )
+      get URI(next_url).request_uri
+      expect(response.body).not_to include(excluded.raw)
+      expect(response.body).to include("username_filters=#{user.username}")
+    end
   end
 
   it "invalidates transformed bodies after cooked-only changes in the same second" do
@@ -182,6 +263,23 @@ RSpec.describe "Markdown endpoints" do
     get "/t/#{topic.slug}/#{topic.id}.md"
     expect(response.body).to include("Rebaked body")
     expect(response.body).not_to include(post.raw)
+  end
+
+  it "renders cooked content with portable links instead of raw authoring syntax" do
+    post.update_columns(
+      raw: "[details=More]Original source[/details]",
+      cooked:
+        '<details><summary>More</summary><p>Rendered <strong>content</strong> <a href="/latest">topics</a></p></details>',
+    )
+
+    get "/t/#{topic.slug}/#{topic.id}.md"
+
+    expect(response.body).to include(
+      "> **More**",
+      "Rendered **content**",
+      "[topics](#{Discourse.base_url}/latest)",
+    )
+    expect(response.body).not_to include(post.raw, "<details>")
   end
 
   it "uses subfolder-safe topic links in lists and discovery" do
@@ -211,13 +309,13 @@ RSpec.describe "Markdown endpoints" do
     expect(individual_author_queries).to be_empty
   end
 
-  it "preloads and renders localized titles and all localized post bodies" do
+  it "preloads and renders localized titles and post bodies" do
     SiteSetting.content_localization_enabled = true
     topic.update!(locale: "ja")
     Fabricate(:topic_localization, topic:, locale: "en", title: "Translated topic title")
     post.update!(locale: "ja")
     Fabricate(:post_localization, post:, locale: "en", cooked: "<p>Translated post 1</p>")
-    2.upto(25) do |post_number|
+    2.upto(3) do |post_number|
       localized_post =
         Fabricate(:post, topic:, user:, post_number:, locale: "ja", raw: "Original #{post_number}")
       Fabricate(
@@ -230,7 +328,7 @@ RSpec.describe "Markdown endpoints" do
 
     queries = track_sql_queries { get "/t/#{topic.slug}/#{topic.id}.md" }
 
-    expect(response.body).to include("# Translated topic title", "Translated post 25")
+    expect(response.body).to include("# Translated topic title", "Translated post 3")
     expect(queries.grep(/FROM "post_localizations"/).length).to be <= 2
   end
 
@@ -245,43 +343,31 @@ RSpec.describe "Markdown endpoints" do
     expect(response.body).to include("https://cdn.example.test/uploads/example.png")
   end
 
-  it "serves root, filter, category, category-without-subcategories, tag, and user lists" do
+  it "serves the main topic lists by suffix and Accept header" do
     tag = Fabricate(:tag, name: "markdown-tag")
     topic.tags << tag
     subcategory = Fabricate(:category, parent_category: category)
-    child_topic =
-      Fabricate(:topic, category: subcategory, user: user, title: "Child category topic")
-    Fabricate(:post, topic: child_topic, user: user)
+    paths = [
+      "/latest",
+      "/hot",
+      "/top",
+      "/c/#{category.slug}/#{category.id}",
+      "/c/#{category.slug}/#{subcategory.slug}/#{subcategory.id}",
+      "/tag/#{tag.name}",
+      "/tag/#{tag.slug_for_url}/#{tag.id}",
+    ]
 
-    [
-      "/",
-      "/latest.md",
-      "/hot.md",
-      "/top.md?period=all",
-      "/c/#{category.slug}/#{category.id}.md",
-      "/tag/#{tag.name}.md",
-      "/u/#{user.username}/activity.md",
-    ].each do |path|
-      get path, headers: ({ "ACCEPT" => "text/markdown" } if path == "/")
-      if response.moved_permanently?
-        expect(response.location).to include(".md")
-        follow_redirect!
+    paths.each do |path|
+      ["#{path}.md", path].each do |url|
+        get url, headers: { "ACCEPT" => "text/markdown" }
+        if response.moved_permanently?
+          expect(response.location).to include(".md")
+          follow_redirect!
+        end
+        expect(response).to have_http_status(:ok), "#{url}: #{response.status}"
+        expect(response.media_type).to eq("text/markdown"), url
       end
-      expect(response).to have_http_status(:ok), "#{path}: #{response.status} #{response.body}"
-      expect(response.media_type).to eq("text/markdown"), path
     end
-
-    get "/c/#{category.slug}/#{category.id}/l/latest", headers: { "ACCEPT" => "text/markdown" }
-    expect(response).to have_http_status(:ok)
-    expect(response.media_type).to eq("text/markdown")
-
-    get "/tag/#{tag.slug_for_url}/#{tag.id}/l/latest", headers: { "ACCEPT" => "text/markdown" }
-    expect(response).to have_http_status(:ok)
-    expect(response.media_type).to eq("text/markdown")
-
-    get "/c/#{category.slug}/#{category.id}/none.md"
-    expect(response.body).to include(topic.title)
-    expect(response.body).not_to include(child_topic.title)
   end
 
   it "retains native list pagination" do
@@ -292,7 +378,47 @@ RSpec.describe "Markdown endpoints" do
 
     get "/latest.md?page=1"
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("**Page:** 2", "**Topics on this page:**")
+    expect(response.body).to include("**Page:** 2")
+    expect(response.body).not_to include("Topics on this page", "[Next page]")
+  end
+
+  it "follows Markdown list pagination while retaining filters and subfolder paths" do
+    set_subfolder "/forum"
+    category.clear_url_cache
+    other = Fabricate(:topic, user: user, category: category)
+    Fabricate(:post, topic: other, user: user)
+    tag = Fabricate(:tag)
+    [topic, other].each do |listed_topic|
+      listed_topic.tags << tag
+      TopicHotScore.create!(topic: listed_topic, score: listed_topic.id)
+      TopTopic.create!(topic: listed_topic, yearly_score: listed_topic.id)
+    end
+
+    [
+      "/latest",
+      "/hot",
+      "/top",
+      "/c/#{category.slug}/#{category.id}",
+      "/tag/#{tag.slug_for_url}/#{tag.id}",
+    ].each do |path|
+      get "#{path}.md", params: { per_page: 1, category: category.id, period: "yearly" }
+      expect(response).to have_http_status(:ok), "#{path}: #{response.status} #{response.location}"
+      first_title = response.body[/^## \[(.*?)\]/, 1]
+      next_url = response.body[/\[Next page\]\(([^)]+)\)/, 1]
+      expect(next_url).to start_with("#{Discourse.base_url}#{path}.md?")
+      expect(Rack::Utils.parse_nested_query(URI(next_url).query)).to include(
+        "page" => "1",
+        "per_page" => "1",
+      )
+
+      get URI(next_url).request_uri.delete_prefix(Discourse.base_path)
+      expect(response).to have_http_status(:ok)
+      expect(response.body[/^## \[(.*?)\]/, 1]).not_to eq(first_title)
+      previous_url = response.body[/\[Previous page\]\(([^)]+)\)/, 1]
+      expect(previous_url).to start_with("#{Discourse.base_url}#{path}.md?")
+      get URI(previous_url).request_uri.delete_prefix(Discourse.base_path)
+      expect(response.body[/^## \[(.*?)\]/, 1]).to eq(first_title)
+    end
   end
 
   it "preserves topic, category, and tag authorization" do
@@ -393,22 +519,6 @@ RSpec.describe "Markdown endpoints" do
     expect(response.body).not_to include(restricted_tag.name, deleted_post.raw)
   end
 
-  it "enforces profile visibility before querying user activity" do
-    profile_user = Fabricate(:user, trust_level: TrustLevel[1])
-    profile_topic = Fabricate(:topic, user: profile_user, title: "Hidden profile user topic")
-    Fabricate(:post, topic: profile_topic, user: profile_user)
-    SiteSetting.allow_users_to_hide_profile = true
-    profile_user.user_option.update!(hide_profile: true)
-
-    get "/u/#{profile_user.username}/activity.md"
-    expect(response).to have_http_status(:not_found)
-
-    sign_in(profile_user)
-    get "/u/#{profile_user.username}/activity.md"
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include(profile_topic.title)
-  end
-
   it "advertises only real supported counterparts in headers, HTML, and feeds" do
     tag = Fabricate(:tag, name: "discovery-tag")
     topic.tags << tag
@@ -419,8 +529,22 @@ RSpec.describe "Markdown endpoints" do
     expect(response.body).to include('rel="alternate"', 'type="text/markdown"', "/latest.md?page=2")
 
     [
+      "/t/#{topic.slug}/#{topic.id}",
+      "/hot",
+      "/top",
+      "/c/#{category.slug}/#{category.id}",
+      "/tag/#{tag.slug_for_url}/#{tag.id}",
+    ].each do |path|
+      get path, headers: { "ACCEPT" => "text/html" }
+      expect(response.headers["Link"]).to include("#{path}.md"), path
+      expect(response.body).to include('type="text/markdown"', "#{path}.md"), path
+    end
+
+    [
       "/latest.rss?page=2&unknown=secret",
+      "/hot.rss",
       "/top.rss?period=yearly",
+      "/t/#{topic.slug}/#{topic.id}.rss",
       "/c/#{category.slug}/#{category.id}.rss",
       "/tag/#{tag.slug_for_url}/#{tag.id}.rss",
     ].each do |path|
@@ -496,5 +620,12 @@ RSpec.describe "Markdown endpoints" do
     get "/latest", headers: { "ACCEPT" => "text/html" }
     expect(response.headers["Link"]).to be_blank
     expect(response.body).not_to include('type="text/markdown"')
+
+    get "/", headers: { "ACCEPT" => "text/markdown" }
+    expect(response.media_type).not_to eq("text/markdown")
+
+    get "/", headers: { "ACCEPT" => "text/html" }
+    expect(response.media_type).to eq("text/html")
+    expect(response.headers["Link"]).to be_blank
   end
 end

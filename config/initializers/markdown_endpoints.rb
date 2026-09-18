@@ -7,6 +7,7 @@ require "markdown_endpoint/vary_middleware"
 require "markdown_endpoint/cooked_processor"
 require "markdown_endpoint/topic_renderer"
 require "markdown_endpoint/topic_list_renderer"
+require "markdown_endpoint/directory_renderer"
 require "markdown_endpoint/controller_support"
 
 Mime::Type.register("text/markdown", :md) unless Mime::Type.lookup_by_extension(:md)

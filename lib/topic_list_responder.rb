@@ -19,15 +19,10 @@ module TopicListResponder
       format.md do
         localize_topic_list_content(list)
         title =
-          if defined?(@target_user) && @target_user
-            "@#{@target_user.username} - Activity"
-          elsif defined?(@category) && @category
-            filter = action_name.sub("category_none_", "").sub("category_", "")
-            filter = @category.default_view.presence || "latest" if filter == "default"
-            "#{@category.name} - #{filter.titleize}"
-          elsif defined?(@tag_name) && @tag_name
-            filter = action_name == "show" ? "latest" : action_name.delete_prefix("show_")
-            "##{@tag_name} - #{filter.titleize}"
+          if @category
+            @category.name
+          elsif @tag_name
+            "##{@tag_name}"
           else
             action_name.titleize
           end
@@ -37,6 +32,8 @@ module TopicListResponder
             title: title,
             url: markdown_alternate_url,
             page: params[:page],
+            next_page_url: (list.more_topics_url if list.topics.size == list.per_page),
+            previous_page_url: (list.prev_topics_url if params[:page].to_i.positive?),
           ).render,
         )
       end

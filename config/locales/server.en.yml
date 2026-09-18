@@ -1,4 +1,12 @@
 en:
+  markdown_endpoints:
+    latest: "Latest"
+    categories: "Categories"
+    tags: "Tags"
+    parent: "Parent: %{parent}"
+    previous_page: "Previous page"
+    next_page: "Next page"
+    empty: "No entries to display."
   mcp:
     errors:
       draft_sequence_conflict: "Draft sequence conflict"

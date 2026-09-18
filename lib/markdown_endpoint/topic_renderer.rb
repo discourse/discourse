@@ -4,40 +4,45 @@ require "digest"
 
 module MarkdownEndpoint
   class TopicRenderer
-    def initialize(topic_view, guardian:, post_number: nil)
+    def initialize(topic_view, guardian:, post_number: nil, query: {})
       @topic_view = topic_view
       @topic = topic_view.topic
       @guardian = guardian
       @post_number = post_number&.to_i
+      @query = query
     end
 
     def render
       posts = visible_posts
       raise Discourse::NotFound if single_post? && posts.empty?
 
-      visible_post_count = single_post? ? visible_post_scope.count : posts.length
-      buffer = String.new(header(visible_post_count))
+      buffer = String.new(header(posts.length))
       posts.each_with_index do |post, index|
         buffer << (index.zero? ? "\n\n" : "\n\n---\n\n")
         buffer << render_post(post)
       end
       buffer << "\n\n---\n\n_[View the full topic](#{@topic.url})._" if single_post?
+      unless single_post?
+        {
+          "Previous page" => @topic_view.prev_page,
+          "Next page" => @topic_view.next_page,
+        }.each do |label, page|
+          next unless page
+
+          query = @query.merge("page" => page).to_query
+          buffer << "\n\n[#{label}](#{@topic.url}.md?#{query})"
+        end
+      end
       buffer << "\n"
     end
 
     private
 
     def visible_posts
-      posts = visible_post_scope
-      posts = posts.where(post_number: @post_number) if single_post?
-      associations = [:user]
-      associations << :localizations if SiteSetting.content_localization_enabled
-      posts.preload(*associations).order(:sort_order).to_a
-    end
-
-    def visible_post_scope
-      posts = @topic_view.filtered_posts
-      posts = posts.where.not(post_type: Post.types[:whisper]) unless can_see_whispers?
+      posts = @topic_view.posts.to_a
+      posts = posts.select { |post| post.post_number == @post_number } if single_post?
+      posts =
+        posts.reject { |post| post.post_type == Post.types[:whisper] } unless can_see_whispers?
       posts
     end
 
@@ -58,8 +63,9 @@ module MarkdownEndpoint
       tags = @topic_view.visible_tags.map(&:name)
       lines << "**Tags:** #{tags.map { |tag| escape_text(tag) }.join(", ")}" if tags.present?
       lines << "**Created:** #{@topic.created_at.iso8601}"
-      lines << "**Posts:** #{visible_post_count}"
-      lines << "**Showing post:** #{@post_number} of #{visible_post_count}" if single_post?
+      lines << "**Posts on this page:** #{visible_post_count}"
+      lines << "**Page:** #{@topic_view.page}" unless single_post?
+      lines << "**Showing post:** #{@post_number}" if single_post?
       lines.join("\n")
     end
 

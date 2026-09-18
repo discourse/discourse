@@ -12,7 +12,10 @@ module MarkdownEndpoint
       exclude_tag
       f
       filter
+      filter_top_level_replies
+      filter_upwards_post_id
       group_name
+      include_subcategories
       match_all_tags
       max_posts
       min_posts
@@ -20,15 +23,22 @@ module MarkdownEndpoint
       no_tags
       order
       page
+      parent_category_id
       per_page
       period
+      post_number
+      print
       q
+      replies_to_post_number
       search
+      show_deleted
       state
       status
       subset
+      tag
       tags
       topic_ids
+      username_filters
     ].freeze
 
     included do
@@ -101,7 +111,7 @@ module MarkdownEndpoint
 
     def markdown_alternate_path
       app_path = request.path.delete_prefix(Discourse.base_path)
-      app_path = "/" if app_path.blank?
+      return "#{Discourse.base_path}/latest.md" if app_path.blank? || app_path == "/"
       return if app_path.end_with?(".json")
       route_path = app_path.delete_suffix(".md")
 
@@ -111,36 +121,22 @@ module MarkdownEndpoint
           %w[show feed].include?(action_name) &&
             route_path.match?(%r{\A/t/(?:[^/]+/)?\d+(?:/\d+)?(?:\.rss)?\z})
         when "list"
-          markdown_list_path?(route_path)
+          route_path.match?(%r{\A/(?:latest|hot|top)(?:\.rss)?\z}) ||
+            route_path.match?(%r{\A/c/.+/\d+(?:\.rss)?\z})
         when "tags"
-          (
-            action_name == "show" || action_name == "tag_feed" || action_name.start_with?("show_")
-          ) && markdown_tag_path?(route_path)
-        when "users"
-          action_name == "show" && route_path.match?(%r{\A/u/#{RouteFormat.username}/activity\z})
+          (action_name == "index" && route_path == "/tags") ||
+            (
+              %w[show tag_feed].include?(action_name) &&
+                route_path.match?(%r{\A/tag/[^/]+(?:/\d+)?(?:\.rss)?\z})
+            )
+        when "categories"
+          action_name == "index" && route_path == "/categories"
         else
           false
         end
       return unless supported
 
-      route_path = "/latest" if route_path == "/"
       "#{Discourse.base_path}#{route_path.delete_suffix(".rss").chomp("/")}.md"
-    end
-
-    def markdown_list_path?(path)
-      filters = Discourse.filters.map { |filter| Regexp.escape(filter.to_s) }.join("|")
-      periods = TopTopic.periods.map { |period| Regexp.escape(period.to_s) }.join("|")
-      return true if path == "/"
-      return true if path.match?(%r{\A/(?:#{filters})(?:\.rss)?\z})
-      return true if path.match?(%r{\A/top/(?:#{periods})(?:\.rss)?\z})
-      return true if path.match?(%r{\A/c/.+/\d+(?:/none)?(?:/l/(?:#{filters}))?(?:\.rss)?\z})
-
-      action_name == "topics_by" && path.match?(%r{\A/u/#{RouteFormat.username}/activity\z})
-    end
-
-    def markdown_tag_path?(path)
-      filters = Discourse.filters.map { |filter| Regexp.escape(filter.to_s) }.join("|")
-      path.match?(%r{\A/tag/[^/]+(?:/\d+)?(?:/l/(?:#{filters}))?(?:\.rss)?\z})
     end
   end
 end

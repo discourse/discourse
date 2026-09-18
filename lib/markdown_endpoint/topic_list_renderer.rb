@@ -2,11 +2,13 @@
 
 module MarkdownEndpoint
   class TopicListRenderer
-    def initialize(topics:, title:, url:, page:)
+    def initialize(topics:, title:, url:, page:, next_page_url: nil, previous_page_url: nil)
       @topics = topics.to_a
       @title = title
       @url = url
       @page = page.to_i
+      @next_page_url = next_page_url
+      @previous_page_url = previous_page_url
       preload_users
     end
 
@@ -16,10 +18,26 @@ module MarkdownEndpoint
         buffer << "\n\n---\n\n"
         buffer << render_topic(topic)
       end
+      {
+        "previous_page" => @previous_page_url,
+        "next_page" => @next_page_url,
+      }.each { |label, target| buffer << "\n\n#{page_link(label, target)}" if target.present? }
       buffer << "\n"
     end
 
     private
+
+    def page_link(label, target)
+      url = URI(@url)
+      query = Rack::Utils.parse_nested_query(url.query).except("page")
+      query.merge!(
+        Rack::Utils.parse_nested_query(URI(target).query).slice(
+          *ControllerSupport::SAFE_QUERY_PARAMETERS,
+        ),
+      )
+      url.query = query.to_query.presence
+      "[#{I18n.t("markdown_endpoints.#{label}")}](#{url})"
+    end
 
     def preload_users
       ActiveRecord::Associations::Preloader.new(records: @topics, associations: :user).call
@@ -27,8 +45,8 @@ module MarkdownEndpoint
 
     def header
       lines = ["# #{escape_text(@title)}", "", "**URL:** #{@url}"]
-      lines << "**Page:** #{@page + 1}" if @page.positive?
-      lines << "**Topics on this page:** #{@topics.length}"
+      lines.concat(["", DirectoryRenderer.navigation])
+      lines.concat(["", "**Page:** #{@page + 1}"]) if @page.positive?
       lines.join("\n")
     end
 

@@ -16,265 +16,39 @@ Discourse::Application.routes.draw do
   constraints MarkdownEndpoint::RequestConstraint.new do
     get "/",
         to: "list#latest",
-        constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-        defaults: {
-          format: :md,
-        }
-
-    Discourse.filters.each do |filter|
-      get "#{filter}.md", to: "list##{filter}", format: false, defaults: { format: :md }
-      get "#{filter}",
-          to: "list##{filter}",
-          format: false,
-          constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-          defaults: {
-            format: :md,
-          }
-      get "c/*category_slug_path_with_id/none/l/#{filter}.md",
-          to: "list#category_none_#{filter}",
-          format: false,
-          defaults: {
-            format: :md,
-          }
-      get "c/*category_slug_path_with_id/none/l/#{filter}",
-          to: "list#category_none_#{filter}",
-          format: false,
-          constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-          defaults: {
-            format: :md,
-          }
-      get "c/*category_slug_path_with_id/l/#{filter}.md",
-          to: "list#category_#{filter}",
-          format: false,
-          defaults: {
-            format: :md,
-          }
-      get "c/*category_slug_path_with_id/l/#{filter}",
-          to: "list#category_#{filter}",
-          format: false,
-          constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-          defaults: {
-            format: :md,
-          }
-    end
-
-    TopTopic.periods.each do |period|
-      get "top/#{period}.md",
-          to: "list#top",
-          format: false,
-          defaults: {
-            format: :md,
-            period: period,
-          }
-      get "top/#{period}",
-          to: "list#top",
-          format: false,
-          constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-          defaults: {
-            format: :md,
-            period: period,
-          }
-    end
-
-    get "c/*category_slug_path_with_id/none.md",
-        to: "list#category_none_default",
         format: false,
-        constraints: {
-          category_slug_path_with_id: %r{.+/\d+},
-        },
         defaults: {
           format: :md,
-        }
-    get "c/*category_slug_path_with_id.md",
-        to: "list#category_default",
-        format: false,
-        constraints: {
-          category_slug_path_with_id: %r{.+/\d+},
         },
-        defaults: {
-          format: :md,
-        }
-    constraints MarkdownEndpoint::RequestConstraint.new(accept: true) do
-      get "c/*category_slug_path_with_id/none",
-          to: "list#category_none_default",
-          format: false,
-          constraints: {
-            category_slug_path_with_id: %r{.+/\d+},
+        constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+
+    scope format: false,
+          defaults: {
+            format: :md,
           },
-          defaults: {
-            format: :md,
-          }
-      get "c/*category_slug_path_with_id",
-          to: "list#category_default",
-          format: false,
-          constraints: {
-            category_slug_path_with_id: %r{.+/\d+},
-          },
-          defaults: {
-            format: :md,
-          }
-    end
-
-    Discourse.filters.each do |filter|
-      get "tag/:tag_slug/:tag_id/l/#{filter}.md",
-          to: "tags#show_#{filter}",
-          format: false,
-          constraints: {
-            tag_id: /\d+/,
-          },
-          defaults: {
-            format: :md,
-          }
-      get "tag/:tag_slug/:tag_id/l/#{filter}",
-          to: "tags#show_#{filter}",
-          format: false,
-          constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-          defaults: {
-            format: :md,
-          }
-      get "tag/:tag_name/l/#{filter}.md",
-          to: "tags#show_#{filter}",
-          format: false,
-          defaults: {
-            format: :md,
-          }
-      get "tag/:tag_name/l/#{filter}",
-          to: "tags#show_#{filter}",
-          format: false,
-          constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-          defaults: {
-            format: :md,
-          }
-    end
-    get "tag/:tag_slug/:tag_id.md",
-        to: "tags#show",
-        format: false,
-        constraints: {
-          tag_id: /\d+/,
-        },
-        defaults: {
-          format: :md,
-        }
-    constraints MarkdownEndpoint::RequestConstraint.new(accept: true) do
-      get "tag/:tag_slug/:tag_id",
-          to: "tags#show",
-          format: false,
-          constraints: {
-            tag_id: /\d+/,
-          },
-          defaults: {
-            format: :md,
-          }
-    end
-    get "tag/:tag_name.md", to: "tags#show", format: false, defaults: { format: :md }
-    get "tag/:tag_name",
-        to: "tags#show",
-        format: false,
-        constraints: MarkdownEndpoint::RequestConstraint.new(accept: true),
-        defaults: {
-          format: :md,
-        }
-
-    get "u/:username/activity.md",
-        to: "list#topics_by",
-        format: false,
-        constraints: {
-          username: RouteFormat.username,
-        },
-        defaults: {
-          format: :md,
-        }
-    constraints MarkdownEndpoint::RequestConstraint.new(accept: true) do
-      get "u/:username/activity",
-          to: "list#topics_by",
-          format: false,
-          constraints: {
-            username: RouteFormat.username,
-          },
-          defaults: {
-            format: :md,
-          }
-    end
-
-    get "t/:slug/:topic_id/:post_number.md",
-        to: "topics#show",
-        format: false,
-        constraints: {
-          topic_id: /\d+/,
-          post_number: /\d+/,
-        },
-        defaults: {
-          format: :md,
-        }
-    get "t/:topic_id/:post_number.md",
-        to: "topics#show",
-        format: false,
-        constraints: {
-          topic_id: /\d+/,
-          post_number: /\d+/,
-        },
-        defaults: {
-          format: :md,
-        }
-    get "t/:slug/:topic_id.md",
-        to: "topics#show",
-        format: false,
-        constraints: {
-          topic_id: /\d+/,
-        },
-        defaults: {
-          format: :md,
-        }
-    get "t/:topic_id.md",
-        to: "topics#show",
-        format: false,
-        constraints: {
-          topic_id: /\d+/,
-        },
-        defaults: {
-          format: :md,
-        }
-    constraints MarkdownEndpoint::RequestConstraint.new(accept: true) do
-      get "t/:topic_id/:post_number",
-          to: "topics#show",
-          format: false,
           constraints: {
             topic_id: /\d+/,
             post_number: /\d+/,
-          },
-          defaults: {
-            format: :md,
-          }
-      get "t/:topic_id",
-          to: "topics#show",
-          format: false,
-          constraints: {
-            topic_id: /\d+/,
-          },
-          defaults: {
-            format: :md,
-          }
-    end
-    constraints MarkdownEndpoint::RequestConstraint.new(accept: true) do
-      get "t/:slug/:topic_id/:post_number",
-          to: "topics#show",
-          format: false,
-          constraints: {
-            topic_id: /\d+/,
-            post_number: /\d+/,
-          },
-          defaults: {
-            format: :md,
-          }
-      get "t/:slug/:topic_id",
-          to: "topics#show",
-          format: false,
-          constraints: {
-            topic_id: /\d+/,
-          },
-          defaults: {
-            format: :md,
-          }
+            tag_id: /\d+/,
+            category_slug_path_with_id: %r{.+/\d+},
+          } do
+      {
+        "latest" => "list#latest",
+        "hot" => "list#hot",
+        "top" => "list#top",
+        "categories" => "categories#index",
+        "tags" => "tags#index",
+        "c/*category_slug_path_with_id" => "list#category_default",
+        "tag/:tag_slug/:tag_id" => "tags#show",
+        "tag/:tag_name" => "tags#show",
+        "t/:topic_id/:post_number" => "topics#show",
+        "t/:topic_id" => "topics#show",
+        "t/:slug/:topic_id/:post_number" => "topics#show",
+        "t/:slug/:topic_id" => "topics#show",
+      }.each do |path, action|
+        get "#{path}.md", to: action
+        get path, to: action, constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+      end
     end
   end
 
@@ -2160,33 +1934,38 @@ Discourse::Application.routes.draw do
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit]
     get "/tag_groups/filter/search" => "tag_groups#search", :format => :json
 
-    Discourse.filters.each do |filter|
-      root to: "list##{filter}",
-           constraints: HomePageConstraint.new("#{filter}"),
-           as: "list_#{filter}"
-    end
+    # Allow the controller to fall back to HTML when Markdown loses Accept negotiation.
+    scope constraints: { format: %r{(json|html|markdown|\*/\*)} } do
+      Discourse.filters.each do |filter|
+        root to: "list##{filter}",
+             constraints: HomePageConstraint.new("#{filter}"),
+             as: "list_#{filter}"
+      end
 
-    DiscoursePluginRegistry._raw_homepage_options.each do |registration|
-      option = registration[:value]
-      get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+      DiscoursePluginRegistry._raw_homepage_options.each do |registration|
+        option = registration[:value]
+        get "/", to: option[:route], constraints: HomePageConstraint.new(option[:id])
+      end
+
+      # special case for categories
+      root to: "categories#index",
+           constraints: HomePageConstraint.new("categories"),
+           as: "categories_index"
+
+      root to: "finish_installation#index",
+           constraints: HomePageConstraint.new("finish_installation"),
+           as: "installation_redirect"
+
+      root to: "home_page#custom",
+           constraints: HomePageConstraint.new("custom"),
+           as: "home_page_custom"
+
+      root to: "home_page#blank",
+           constraints: HomePageConstraint.new("blank"),
+           as: "home_page_blank"
     end
 
     get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
-
-    # special case for categories
-    root to: "categories#index",
-         constraints: HomePageConstraint.new("categories"),
-         as: "categories_index"
-
-    root to: "finish_installation#index",
-         constraints: HomePageConstraint.new("finish_installation"),
-         as: "installation_redirect"
-
-    root to: "home_page#custom",
-         constraints: HomePageConstraint.new("custom"),
-         as: "home_page_custom"
-
-    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
 
     get "/custom" => "home_page#custom"
 

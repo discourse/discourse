@@ -1585,6 +1585,10 @@ class TopicsController < ApplicationController
             @topic_view,
             guardian: guardian,
             post_number: params[:post_number],
+            query:
+              request.query_parameters.slice(
+                *MarkdownEndpoint::ControllerSupport::SAFE_QUERY_PARAMETERS,
+              ),
           ).render,
         )
       end

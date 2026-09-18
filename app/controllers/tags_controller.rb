@@ -98,6 +98,7 @@ class TagsController < ::ApplicationController
       format.html { render :index }
 
       format.json { render json: { tags: @tags, extras: @extras } }
+      format.md { render_markdown(MarkdownEndpoint::DirectoryRenderer.new.tags(@tags, @extras)) }
     end
   end
 
