@@ -135,6 +135,82 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
           Discourse::InvalidAccess,
         )
       end
+
+      it "does not change the primary group by default" do
+        user.update!(primary_group: group_2)
+        group_2.add(user)
+
+        config = { "operation" => "add", "username" => user.username, "group_id" => group.id.to_s }
+
+        execute_node(configuration: config, item: item)
+
+        expect(user.reload.primary_group_id).to eq(group_2.id)
+      end
+
+      context "with set_primary_group" do
+        let(:config) do
+          {
+            "operation" => "add",
+            "username" => user.username,
+            "group_id" => group.id.to_s,
+            "set_primary_group" => true,
+          }
+        end
+
+        it "sets the group as the user's primary group", :aggregate_failures do
+          result = execute_node(configuration: config, item: item)
+
+          expect(user.reload.primary_group_id).to eq(group.id)
+          expect(GroupUser.exists?(user: user, group: group)).to be(true)
+          expect(result["user"]["id"]).to eq(user.id)
+          expect(result).to match_node_output_schema(described_class, configuration: config)
+        end
+
+        it "replaces an existing primary group and its title and flair", :aggregate_failures do
+          group_2.update!(title: "Old title")
+          group_2.add(user)
+          user.update!(primary_group: group_2, flair_group: group_2, title: "Old title")
+          group.update!(title: "New title")
+
+          execute_node(configuration: config, item: item)
+
+          user.reload
+          expect(user.primary_group_id).to eq(group.id)
+          expect(user.flair_group_id).to eq(group.id)
+          expect(user.title).to eq("New title")
+        end
+
+        it "agrees with a group that automatically becomes the primary group",
+           :aggregate_failures do
+          group_2.update!(title: "Old title")
+          group_2.add(user)
+          user.update!(primary_group: group_2, flair_group: group_2, title: "Old title")
+          group.update!(primary_group: true, title: "New title")
+
+          execute_node(configuration: config, item: item)
+
+          user.reload
+          expect(user.primary_group_id).to eq(group.id)
+          expect(user.flair_group_id).to eq(group.id)
+          expect(user.title).to eq("New title")
+        end
+
+        it "sets the primary group when the user is already a member" do
+          group.add(user)
+
+          execute_node(configuration: config, item: item)
+
+          expect(user.reload.primary_group_id).to eq(group.id)
+        end
+
+        it "resolves the value from an expression" do
+          config["set_primary_group"] = "={{ $json.make_primary }}"
+
+          execute_node(configuration: config, item: { "json" => { "make_primary" => true } })
+
+          expect(user.reload.primary_group_id).to eq(group.id)
+        end
+      end
     end
 
     context "with remove operation" do
