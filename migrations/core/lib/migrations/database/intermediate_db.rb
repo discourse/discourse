@@ -25,7 +25,7 @@ module Migrations
 
       # Returns `:ignore` for models using `INSERT OR IGNORE`, otherwise `:raise`.
       def self.conflict_strategy_for(table)
-        module_name = table.to_s.singularize.camelize
+        module_name = table.singularize.camelize
         return :raise unless const_defined?(module_name, false)
 
         model = const_get(module_name, false)
