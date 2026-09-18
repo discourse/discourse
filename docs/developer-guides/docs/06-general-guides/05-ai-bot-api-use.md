@@ -4,6 +4,8 @@ short_title: AI bot via API
 id: ai-bot-api
 ---
 
+<div data-theme-toc="true"> </div>
+
 ## Overview
 
 Discourse AI exposes an admin/API endpoint for streaming an AI Agent reply over a raw chunked HTTP response.
@@ -24,8 +26,8 @@ Discourse AI exposes an admin/API endpoint for streaming an AI Agent reply over 
 
 ```http
 POST /admin/plugins/discourse-ai/ai-agents/stream-reply.json
-Api-Key: \u003Cyour_api_key\u003E
-Api-Username: \u003Cyour_username\u003E
+Api-Key: <your_api_key>
+Api-Username: <your_username>
 Content-Type: application/json
 ```
 
@@ -42,7 +44,7 @@ Content-Type: application/json
 | `topic_id`            | Integer | Optional                                | Continue an existing PM conversation.                                                                           |
 | `custom_instructions` | String  | Optional                                | Appended into the agent prompt context.                                                                         |
 
-\u003E **Note:** You must identify the end-user by either `username` (existing Discourse user) or `user_unique_id`.
+**Note:** You must identify the end-user by either `username` (existing Discourse user) or `user_unique_id`.
 
 ---
 
@@ -70,11 +72,11 @@ X-Content-Type-Options: nosniff
 **Example Stream:**
 
 ```json
-{\"topic_id\":42,\"bot_user_id\":7,\"agent_id\":123}
+{"topic_id":42,"bot_user_id":7,"agent_id":123}
 
-{\"partial\":\"Hello\"}
+{"partial":"Hello"}
 
-{\"partial\":\" there\"}
+{"partial":" there"}
 ```
 
 _The client should concatenate `partial` fields to build the final answer._
@@ -102,19 +104,19 @@ Include `custom_tools` in the request body:
 
 ```json
 {
-  \"agent_id\": 123,
-  \"query\": \"What's the weather?\",
-  \"user_unique_id\": \"external-user-42\",
-  \"custom_tools\": [
+  "agent_id": 123,
+  "query": "What's the weather?",
+  "user_unique_id": "external-user-42",
+  "custom_tools": [
     {
-      \"name\": \"client_weather\",
-      \"description\": \"Gets weather from the client runtime\",
-      \"parameters\": [
+      "name": "client_weather",
+      "description": "Gets weather from the client runtime",
+      "parameters": [
         {
-          \"name\": \"city\",
-          \"description\": \"City to fetch weather for\",
-          \"type\": \"string\",
-          \"required\": true
+          "name": "city",
+          "description": "City to fetch weather for",
+          "type": "string",
+          "required": true
         }
       ]
     }
@@ -128,15 +130,15 @@ If the model calls a tool, the stream emits a `tool_calls` event and stops:
 
 ```json
 {
-  \"event\": \"tool_calls\",
-  \"tool_calls\": [
+  "event": "tool_calls",
+  "tool_calls": [
     {
-      \"id\": \"tool_1\",
-      \"name\": \"client_weather\",
-      \"parameters\": { \"city\": \"Austin\" }
+      "id": "tool_1",
+      "name": "client_weather",
+      "parameters": { "city": "Austin" }
     }
   ],
-  \"resume_token\": \"...\"
+  "resume_token": "..."
 }
 ```
 
@@ -148,11 +150,11 @@ The client executes the tool and resumes the stream:
 
 ```json
 {
-  \"resume_token\": \"...\",
-  \"tool_results\": [
+  "resume_token": "...",
+  "tool_results": [
     {
-      \"tool_call_id\": \"tool_1\",
-      \"content\": { \"temperature_c\": 23 }
+      "tool_call_id": "tool_1",
+      "content": { "temperature_c": 23 }
     }
   ]
 }
@@ -183,7 +185,7 @@ See `plugins/discourse-ai/spec/requests/admin/ai_agents_controller_spec.rb` for 
 
 - **New streamed conversation:** Lines 1248-1356
 - **Custom tools + resume token:** Lines 1358-1448
-- **Parallel tool calls:** Lines 1467-1590\u003Cdiv data-theme-toc=\"true\"\u003E \u003C/div\u003E
+- **Parallel tool calls:** Lines 1467-1590
 
 ### Sample implementation
 
@@ -195,16 +197,16 @@ require 'json'
 require 'uri'
 
 # Configuration
-DISCOURSE_URL = '\u003Cyour site URL\u003E'
-API_KEY = '\u003Cyour API key\u003E'
-USERNAME = '\u003Cyour username\u003E'
+DISCOURSE_URL = '<your site URL>'
+API_KEY = '<your API key>'
+USERNAME = '<your username>'
 AGENT_ID = -1 # Or use agent_name
-QUERY = \"Hello, how are you today?\"
-USER_UNIQUE_ID ='\u003Cleave empty if want the PM to be sent to the USERNAME user\u003E'
+QUERY = "Hello, how are you today?"
+USER_UNIQUE_ID ='leave empty if want the PM to be sent to the USERNAME user'
 
 
 # Helper to create the URI
-uri = URI(\"#{DISCOURSE_URL}/admin/plugins/discourse-ai/ai-agents/stream-reply.json\")
+uri = URI("#{DISCOURSE_URL}/admin/plugins/discourse-ai/ai-agents/stream-reply.json")
 
 # Create the HTTP request
 request = Net::HTTP::Post.new(uri)
@@ -232,9 +234,9 @@ http.use_ssl = (uri.scheme == 'https')
 http.request(request) do |response|
     # Check if the response is successful
     if response.code == '200'
-    puts \"Stream started successfully.\"
-    puts \"Response headers: #{response.to_hash}\"
-    puts \"Streaming content:\"
+    puts "Stream started successfully."
+    puts "Response headers: #{response.to_hash}"
+    puts "Streaming content:"
 
     # Read the chunked response
     response.read_body do |chunk|
@@ -247,36 +249,32 @@ http.request(request) do |response|
             json = JSON.parse(line)
 
             if json['topic_id']
-            puts \"\
---- Context Received ---\"
-            puts \"Topic ID: #{json['topic_id']}\"
-            puts \"Bot User ID: #{json['bot_user_id']}\"
-            puts \"Agent ID: #{json['agent_id']}\"
+            puts "--- Context Received ---"
+            puts "Topic ID: #{json['topic_id']}"
+            puts "Bot User ID: #{json['bot_user_id']}"
+            puts "Agent ID: #{json['agent_id']}"
             elsif json['partial']
             # Stream the partial content
             print json['partial']
             elsif json['event'] == 'tool_calls'
-            puts \"\
---- Tool Call Received ---\"
+            puts "--- Tool Call Received ---"
             puts JSON.pretty_generate(json)
             # Here you would handle tool execution and resume
             # For this example, we just print it
             end
 
-            # puts \"\u003Cnew word\u003E\"
-        rescue JSON::ParserError =\u003E e
-            puts \"\
-Error parsing JSON: #{e.message}\"
-            puts \"Raw line: #{line}\"
+            # puts "<new word>"
+        rescue JSON::ParserError => e
+            puts "Error parsing JSON: #{e.message}"
+            puts "Raw line: #{line}"
         end
         end
     end
-    puts \"\
---- Stream Finished ---\"
+    puts "--- Stream Finished ---"
 
     else
-    puts \"Error: #{response.code} #{response.message}\"
-    puts \"Response body: #{response.body}\"
+    puts "Error: #{response.code} #{response.message}"
+    puts "Response body: #{response.body}"
     end
 end
 ```
