@@ -985,13 +985,16 @@ class SessionController < ApplicationController
         render json: login_code_registration_ip_limit_error
       end
       on_failed_policy(:username_allowed) do
-        render json: { error: I18n.t("login.reserved_username") }
+        render json: { username_errors: [I18n.t("login.reserved_username")] }
       end
       on_failed_policy(:required_fields_provided) do
         render json: { error: I18n.t("login.missing_user_field") }
       end
       on_failed_policy(:required_full_name_provided) do
         render json: { error: I18n.t("login.missing_full_name") }
+      end
+      on_failed_policy(:required_username_provided) do
+        render_signup_username_required(result[:params].email)
       end
       on_model_errors(:user) { |user| render json: login_code_account_error(user) }
       on_failed_contract do |contract|
@@ -1140,9 +1143,6 @@ class SessionController < ApplicationController
     elsif payload = login_error_check(user)
       render json: payload
     elsif created_account
-      # Same tail as `login`, except the response tells the client a new
-      # account was created so it can show the "account ready" step before
-      # following the usual post-login redirect.
       session.delete(ACTIVATE_USER_KEY)
       user.update_timezone_if_missing(params[:timezone])
       log_on_user(user, replay_anonymous_action: true)
@@ -1150,19 +1150,6 @@ class SessionController < ApplicationController
                success_json.merge(
                  account_created: true,
                  user: serialize_data(user, UserSerializer, root: false),
-                 # The generic "userN" fallback is a placeholder rather than a
-                 # suggestion, so the client leaves the field empty and makes
-                 # the user pick. Checked against the name actually assigned,
-                 # since generation can fall back for reasons beyond the
-                 # settings (e.g. unusable word lists).
-                 prefill_username: !UserNameSuggester.generic_username?(user.username),
-                 # Sites that lock usernames (e.g. username_change_period: 0)
-                 # can't offer an inline pick, so the client keeps the generated
-                 # name instead of dead-ending on a forbidden change.
-                 can_edit_username: user.guardian.can_edit_username?(user),
-                 # `can_upload_avatar` lives on CurrentUserSerializer, but the
-                 # account-ready step builds the user from UserSerializer, so
-                 # the avatar picker needs the upload permission passed through.
                  can_upload_avatar:
                    user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map),
                  # A pending provider handoff takes precedence, since an external
@@ -1235,9 +1222,17 @@ class SessionController < ApplicationController
       on_failed_policy(:required_full_name_provided) do
         render json: { error: I18n.t("login.missing_full_name") }
       end
+      on_failed_policy(:required_username_provided) do
+        render_signup_username_required(result[:params].email, invite: result[:invite])
+      end
+      on_failed_policy(:username_allowed) do
+        render json: { username_errors: [I18n.t("login.reserved_username")] }
+      end
       on_model_errors(:user) { |user| render json: login_code_account_error(user) }
       on_model_not_found(:user) do |model_result|
-        if model_result.exception.is_a?(Invite::UserExists)
+        if model_result.exception.is_a?(ActiveRecord::RecordInvalid)
+          render json: login_code_account_error(model_result.exception.record)
+        elsif model_result.exception.is_a?(Invite::UserExists)
           render json: { error: model_result.exception.message }
         else
           render json: invalid_login_code
@@ -1255,9 +1250,33 @@ class SessionController < ApplicationController
     topic && user.guardian.can_see?(topic) ? path(topic.relative_url) : path("/")
   end
 
+  def render_signup_username_required(email, invite: nil)
+    username =
+      UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
+        RandomUsernameGenerator.generate
+    username = nil if UserNameSuggester.generic_username?(username)
+
+    trust_level = invite ? SiteSetting.default_invitee_trust_level : SiteSetting.default_trust_level
+    group_ids =
+      Group.desired_trust_level_groups(trust_level) + [Group::AUTO_GROUPS[:logged_in_users]]
+    if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+      group_ids << Group::AUTO_GROUPS[:everyone]
+    end
+    group_ids.concat(invite.groups.pluck(:id)) if invite
+
+    render json: {
+             username_required: true,
+             username: username,
+             trust_level: trust_level,
+             avatar_template: username && User.default_template(username),
+             can_upload_avatar:
+               group_ids.intersect?(SiteSetting.uploaded_avatars_allowed_groups_map),
+           }
+  end
+
   # A pending provider handoff would redirect as soon as the session exists,
-  # skipping the account-ready step, so the URL is handed to the client to
-  # follow once signup is finished (as account activation does). Consumes the
+  # skipping the pending avatar upload, so the client follows the URL once
+  # signup is finished (as account activation does). Consumes the
   # payload so a later login isn't sent through a handoff it didn't start.
   def deferred_sso_provider_url
     return if !SiteSetting.enable_discourse_connect_provider
@@ -1289,6 +1308,10 @@ class SessionController < ApplicationController
   end
 
   def login_code_account_error(user)
+    if user.errors[:username].present?
+      return { username_errors: user.errors.full_messages_for(:username) }
+    end
+
     ip_error =
       user.errors.find do |error|
         error.attribute == :ip_address &&
