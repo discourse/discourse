@@ -329,11 +329,12 @@ class DiscourseVipsWorker
           "webp" => "VipsForeignLoadWebp",
           "avif" => "VipsForeignLoadHeif",
         }
-        allowed = loaders.values.uniq
+        allowed = loaders.values
         if !input_format.empty?
-          loader = loaders[input_format.downcase]
-          raise ArgumentError, "unsupported input format" if !loader
-
+          loader =
+            loaders.fetch(input_format.downcase) do
+              raise ArgumentError, "unsupported input format"
+            end
           allowed = [loader]
         end
         block_loaders(allowed: allowed)
