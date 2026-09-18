@@ -8,13 +8,6 @@ module Migrations
         # lifting (UploadCreator, downloads) runs on the pipeline's worker threads;
         # only {#write} touches the files DB, on the single writer thread.
         class Uploader < Base
-          class DownloadFailedError < StandardError
-          end
-
-          class UploadSizeExceededError < DownloadFailedError
-          end
-
-          MAX_FILE_SIZE = 1.gigabyte
           # Post-store check retries: create succeeded but the file isn't in the
           # store yet. Try once more, then give up.
           POST_STORE_RETRIES = 1
@@ -41,7 +34,7 @@ module Migrations
             handle_surplus_uploads if surplus_upload_ids.any?
 
             @seen_upload_ids = load_existing_ids(files_db, "SELECT id FROM uploads")
-            @downloads = load_downloads
+            @downloader = Downloader.new(cache_path: settings[:download_cache_path], downloads:)
 
             @max_count = (@source_existing_ids - @output_existing_ids).size
             @source_existing_ids = nil
@@ -72,7 +65,7 @@ module Migrations
               data_file.rewind
               path = data_file.path
             elsif row[:url].present?
-              path, filename, download_record = download_file(url: row[:url], id: row[:id])
+              path, filename, download_record = @downloader.download(url: row[:url], id: row[:id])
               return nil if path.nil? # nothing to download; not an error, drop the row
 
               metadata.original_filename = filename
@@ -83,14 +76,14 @@ module Migrations
             end
 
             create_upload_result(row, path, metadata, download_record)
-          rescue UploadSizeExceededError => e
+          rescue Downloader::UploadSizeExceededError => e
             error_result(
               row,
               skip_reason: SkipReason::UPLOAD_SIZE_EXCEEDED,
               skip_details: e.message,
               download: download_record,
             )
-          rescue DownloadFailedError => e
+          rescue Downloader::DownloadFailedError => e
             error_result(
               row,
               skip_reason: SkipReason::DOWNLOAD_ERROR,
@@ -366,7 +359,7 @@ module Migrations
             )
             # Keep the in-memory cache current so a later row that hits the same
             # download id finds it. Writer-thread only, matching the insert above.
-            @downloads[record[:id]] = record[:original_filename]
+            @downloader.remember(record[:id], record[:original_filename])
           end
 
           def retry_policy
@@ -385,98 +378,12 @@ module Migrations
             classes
           end
 
-          # --- Download cache. The whole `downloads` table is read into a Hash in
-          # `before_run`, so the workers never touch the DB connection to look up a
-          # cached filename. A fresh download's record travels back on its result
-          # and is inserted (and added to the Hash) by {#write} on the writer
-          # thread. A download id is processed at most once per run, so no worker
-          # ever reads a key while the writer is adding it. ---
-
-          def load_downloads
+          def downloads
             hash = {}
             files_db.query("SELECT id, original_filename FROM downloads") do |row|
               hash[row[:id]] = row[:original_filename]
             end
             hash
-          end
-
-          def download_file(url:, id:)
-            path = download_cache_path(id)
-
-            if File.exist?(path) && (filename = get_original_filename(id))
-              return path, filename, nil
-            end
-
-            file = nil
-            filename = nil
-
-            begin
-              fd = FinalDestination.new(url)
-
-              fd.get do |response, chunk, uri|
-                if file.nil?
-                  check_response!(response, uri)
-                  filename = extract_filename_from_response(response, uri)
-                  file = File.open(path, "wb")
-                end
-
-                file.write(chunk)
-
-                if file.size > MAX_FILE_SIZE
-                  File.unlink(path)
-                  raise UploadSizeExceededError,
-                        "Upload size #{file.size} bytes exceeds the limit of #{MAX_FILE_SIZE} bytes"
-                end
-              end
-
-              return nil, nil, nil if file.nil?
-
-              [path, filename, { id:, original_filename: filename }]
-            rescue UploadSizeExceededError
-              raise
-            rescue StandardError => e
-              raise DownloadFailedError, "Failed to download upload from #{url}: #{e.message}"
-            ensure
-              file&.close
-            end
-          end
-
-          def download_cache_path(id)
-            id = id.gsub("/", "_").gsub("=", "-")
-            File.join(settings[:download_cache_path], id)
-          end
-
-          def get_original_filename(id)
-            @downloads[id]
-          end
-
-          def check_response!(response, uri)
-            return if uri.present?
-
-            if response.code.to_i >= 400
-              response.value
-            else
-              throw :done
-            end
-          end
-
-          def extract_filename_from_response(response, uri)
-            filename =
-              if (header = response.header["Content-Disposition"].presence)
-                disposition_filename =
-                  header[/filename\*=UTF-8''(\S+)\b/i, 1] ||
-                    header[/filename=(?:"(.+)"|[^\s;]+)/i, 1]
-                URI.decode_www_form_component(disposition_filename) if disposition_filename.present?
-              end
-
-            filename = File.basename(uri.path).presence || "file" if filename.blank?
-
-            if File.extname(filename).blank? && response.content_type.present?
-              ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
-              filename = "#{filename}.#{ext}" if ext.present?
-            end
-
-            filename
           end
 
           def copy_to_tempfile(source_path)
