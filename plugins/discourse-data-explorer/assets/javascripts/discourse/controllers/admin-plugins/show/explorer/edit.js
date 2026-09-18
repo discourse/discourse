@@ -20,7 +20,7 @@ import {
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
-const DEFAULT_QUERY_TAG = "Default";
+const DEFAULT_QUERY_TAG = "default";
 const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class PluginsExplorerController extends Controller {
@@ -500,10 +500,11 @@ export default class PluginsExplorerController extends Controller {
         return;
       }
     }
+    const stringifiedParams = JSON.stringify(params);
     this.setProperties({
       loading: true,
       showResults: false,
-      params: JSON.stringify(params),
+      params: params === null ? null : stringifiedParams,
     });
 
     ajax(
@@ -513,7 +514,7 @@ export default class PluginsExplorerController extends Controller {
       {
         type: "POST",
         data: {
-          params: JSON.stringify(params),
+          params: stringifiedParams,
           explain,
         },
       }

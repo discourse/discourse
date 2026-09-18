@@ -16,11 +16,11 @@ RSpec.describe DiscourseDataExplorer::Query do
       query.save!
       DiscourseDataExplorer::QueryTag.sync!(query:, names: ["Staff"])
 
-      expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(%w[Default staff])
+      expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(%w[default staff])
 
       DiscourseDataExplorer::QueryTag.sync!(query:, names: [])
 
-      expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(["Default"])
+      expect(DiscourseDataExplorer::Query.find(-1).tag_names).to eq(["default"])
     end
   end
 
@@ -32,10 +32,10 @@ RSpec.describe DiscourseDataExplorer::Query do
 
   describe ".unpersisted_defaults" do
     it "assigns and filters by the default tag" do
-      defaults = DiscourseDataExplorer::Query.unpersisted_defaults(tag: "Default")
+      defaults = DiscourseDataExplorer::Query.unpersisted_defaults(tag: "default")
 
       expect(defaults).to be_present
-      expect(defaults.flat_map(&:tag_names).uniq).to eq(["Default"])
+      expect(defaults.flat_map(&:tag_names).uniq).to eq(["default"])
       expect(DiscourseDataExplorer::Query.unpersisted_defaults(tag: "Custom")).to be_empty
     end
   end

@@ -34,7 +34,7 @@ export default class PluginsExplorerController extends Controller {
     return this.params ? JSON.parse(this.params) : null;
   }
 
-  get _fetchParams() {
+  get fetchParams() {
     const params = {};
     if (this._currentFilter) {
       params.filter = this._currentFilter;
@@ -53,6 +53,10 @@ export default class PluginsExplorerController extends Controller {
 
   get hasTagFilter() {
     return Boolean(this.currentTag);
+  }
+
+  get textFilter() {
+    return this._currentFilter;
   }
 
   get tagSelection() {
@@ -179,7 +183,7 @@ export default class PluginsExplorerController extends Controller {
     try {
       const result = await ajax(
         "/admin/plugins/discourse-data-explorer/queries.json",
-        { data: this._fetchParams }
+        { data: this.fetchParams }
       );
 
       const queries = result.queries.map((q) =>

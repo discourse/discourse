@@ -64,7 +64,7 @@ acceptance("New Query", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
-      helper.response(["Default", "Staff"])
+      helper.response(["default", "staff"])
     );
 
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {
@@ -85,7 +85,7 @@ acceptance("New Query", function (needs) {
           created_at: "2021-02-05T16:42:45.572Z",
           username: "system",
           group_ids: [41],
-          tags: ["Monthly"],
+          tags: ["monthly"],
           last_run_at: "2021-02-08T15:37:49.188Z",
           hidden: false,
           user_id: -1,
@@ -143,6 +143,18 @@ acceptance("New Query", function (needs) {
       ".query-new__manual-form [data-name='tags'] .query-tag-chooser"
     );
     await tags.expand();
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered"
+    );
+    await tags.fillInFilter("Default");
+    assert.deepEqual(
+      tags.displayedContent(),
+      [],
+      "the default tag cannot be created manually"
+    );
+    await tags.emptyFilter();
     await tags.fillInFilter("Monthly");
     await tags.selectRowByValue("Monthly");
     await click(".query-new__manual-form .btn-primary");
@@ -271,7 +283,7 @@ acceptance("New Query - AI", function (needs) {
       helper.response({ topics: [] })
     );
     server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
-      helper.response(["Default", "Staff"])
+      helper.response(["default", "staff"])
     );
     server.get("/admin/plugins/discourse-data-explorer/queries", () =>
       helper.response({ queries: [] })
@@ -308,7 +320,7 @@ acceptance("New Query - AI", function (needs) {
           description: "",
           param_info: [],
           group_ids: [],
-          tags: ["Staff"],
+          tags: ["staff"],
           hidden: false,
           user_id: -1,
         },
@@ -421,7 +433,12 @@ acceptance("New Query - AI", function (needs) {
     await groups.selectRowByValue(41);
     const tags = selectKit(".query-new__fields .query-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("Staff");
+    assert.deepEqual(
+      tags.displayedContent().map((row) => row.name),
+      ["staff"],
+      "the system-only default tag is not offered in the AI form"
+    );
+    await tags.selectRowByValue("staff");
     await click(".query-new__save-btn");
 
     assert.deepEqual(
@@ -431,7 +448,7 @@ acceptance("New Query - AI", function (needs) {
     );
     assert.deepEqual(
       createParams.getAll("query[tags][]"),
-      ["Staff"],
+      ["staff"],
       "the selected tag is sent with the new query"
     );
   });

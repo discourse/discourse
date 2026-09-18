@@ -222,16 +222,26 @@ module DiscourseDataExplorer
 
     def update
       sql_changed = @query.sql != params.dig(:query, :sql)
-      query_params = params.require(:query).permit(:name, :sql, :description, tags: [])
-      tag_names = query_params.delete(:tags) if query_params.key?(:tags)
+      submitted_query = params.require(:query)
+      query_params = submitted_query.permit(:name, :sql, :description, tags: [])
+      tag_names = query_params.delete(:tags)
 
       ActiveRecord::Base.transaction do
         @query.update!(query_params.merge(hidden: false))
-        QueryTag.sync!(query: @query, names: tag_names) if tag_names
+        if tag_names || submitted_query.key?(:tags_present)
+          QueryTag.sync!(query: @query, names: tag_names || [])
+        end
 
-        group_ids = params.require(:query)[:group_ids]
-        QueryGroup.where.not(group_id: group_ids).where(query_id: @query.id).delete_all
-        group_ids&.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
+        if submitted_query.key?(:group_ids) || submitted_query.key?(:group_ids_present)
+          group_ids = Array.wrap(submitted_query[:group_ids]).reject(&:blank?)
+          query_groups = QueryGroup.where(query_id: @query.id)
+          if group_ids.empty?
+            query_groups.delete_all
+          else
+            query_groups.where.not(group_id: group_ids).delete_all
+          end
+          group_ids.each { |group_id| @query.query_groups.find_or_create_by!(group_id: group_id) }
+        end
       end
 
       QueryRunner.invalidate(@query.id) if sql_changed

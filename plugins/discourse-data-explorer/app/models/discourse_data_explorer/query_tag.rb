@@ -22,8 +22,7 @@ module DiscourseDataExplorer
               }
 
     def self.normalize_name(name)
-      normalized_name = name.to_s.strip.downcase.gsub(/[[:space:]]+/, " ")
-      normalized_name == Query::DEFAULT_TAG.downcase ? Query::DEFAULT_TAG : normalized_name
+      name.to_s.strip.downcase.gsub(/[[:space:]]+/, " ")
     end
 
     def self.normalize_all(names)
@@ -93,6 +92,9 @@ module DiscourseDataExplorer
     def self.validate_names!(query:, names:)
       errors = ActiveModel::Errors.new(query)
       validate_names(names, errors)
+      if !Query.is_default_query?(query.id) && names.include?(Query::DEFAULT_TAG)
+        errors.add(:base, I18n.t("discourse_data_explorer.errors.default_tag_reserved"))
+      end
       return if errors.empty?
 
       errors.each { |error| query.errors.import(error) }

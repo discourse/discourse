@@ -1,5 +1,6 @@
 import {
   click,
+  currentURL,
   find,
   triggerEvent,
   triggerKeyEvent,
@@ -38,10 +39,12 @@ acceptance("Run Query", function (needs) {
   needs.settings({ data_explorer_enabled: true });
 
   let updateParams;
+  let query2Tags;
 
   needs.hooks.beforeEach(() => {
     sinon.stub(window, "open");
     updateParams = null;
+    query2Tags = ["existing"];
   });
 
   needs.hooks.afterEach(() => {
@@ -127,7 +130,7 @@ acceptance("Run Query", function (needs) {
     });
 
     server.get("/admin/plugins/discourse-data-explorer/queries/tags.json", () =>
-      helper.response(["Default", "Existing"])
+      helper.response(["default", "existing"])
     );
 
     server.get("/admin/plugins/discourse-data-explorer/queries", () => {
@@ -140,7 +143,7 @@ acceptance("Run Query", function (needs) {
               "returns the top 100 likers for a given monthly period ordered by like_count. It accepts a ‘months_ago’ parameter, defaults to 1 to give results for the last calendar month.",
             username: "system",
             group_ids: [],
-            tags: ["Default"],
+            tags: ["default"],
             last_run_at: "2021-02-11T08:29:59.337Z",
             user_id: -1,
             is_default: true,
@@ -151,7 +154,7 @@ acceptance("Run Query", function (needs) {
             description: "",
             username: "system",
             group_ids: [],
-            tags: ["Existing"],
+            tags: ["existing"],
             last_run_at: "2023-05-04T22:16:23.858Z",
             user_id: 1,
             is_default: false,
@@ -179,7 +182,7 @@ acceptance("Run Query", function (needs) {
           created_at: "2021-02-02T12:21:11.449Z",
           username: "system",
           group_ids: [],
-          tags: ["Default", "Existing"],
+          tags: ["default", "existing"],
           last_run_at: "2021-02-11T08:29:59.337Z",
           hidden: false,
           user_id: -1,
@@ -199,7 +202,7 @@ acceptance("Run Query", function (needs) {
           created_at: "2023-05-04T22:16:06.007Z",
           username: "system",
           group_ids: [],
-          tags: ["Existing"],
+          tags: query2Tags,
           last_run_at: "2023-05-04T22:16:23.858Z",
           hidden: false,
           user_id: 1,
@@ -262,6 +265,9 @@ acceptance("Run Query", function (needs) {
       "/admin/plugins/discourse-data-explorer/queries/2",
       (request) => {
         updateParams = new URLSearchParams(request.requestBody);
+        query2Tags = updateParams
+          .getAll("query[tags][]")
+          .map((tag) => tag.toLowerCase());
         return helper.response({
           query: {
             id: 2,
@@ -270,7 +276,7 @@ acceptance("Run Query", function (needs) {
             description: "",
             param_info: [],
             group_ids: [],
-            tags: ["Existing", "Monthly"],
+            tags: query2Tags,
             hidden: false,
             user_id: 1,
           },
@@ -290,7 +296,7 @@ acceptance("Run Query", function (needs) {
             description: "",
             param_info: [],
             group_ids: [],
-            tags: ["Default", "Monthly"],
+            tags: ["default", "monthly"],
             hidden: false,
             user_id: -1,
             is_default: true,
@@ -482,6 +488,12 @@ acceptance("Run Query", function (needs) {
     assert
       .dom("div.query-results tbody td:nth-child(3)")
       .hasText("false", "renders 'false' values");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/2",
+      "running a query without inputs does not add a null params query string"
+    );
   });
 
   test("adds a new tag while editing a query", async function (assert) {
@@ -489,6 +501,17 @@ acceptance("Run Query", function (needs) {
 
     const tags = selectKit(".query-edit .query-tag-chooser");
     await tags.expand();
+    assert.false(
+      tags.displayedContent().some((row) => row.name === "default"),
+      "the system-only default tag is not offered on user queries"
+    );
+    await tags.fillInFilter("Default");
+    assert.deepEqual(
+      tags.displayedContent(),
+      [],
+      "the default tag cannot be created on user queries"
+    );
+    await tags.emptyFilter();
     await tags.fillInFilter("Monthly");
     await tags.selectRowByValue("Monthly");
 
@@ -500,9 +523,46 @@ acceptance("Run Query", function (needs) {
 
     assert.deepEqual(
       updateParams.getAll("query[tags][]"),
-      ["Existing", "Monthly"],
+      ["existing", "Monthly"],
       "the edited tags are saved"
     );
+    assert.strictEqual(
+      updateParams.get("query[group_ids_present]"),
+      "true",
+      "the group selection is explicitly submitted"
+    );
+    assert.deepEqual(
+      updateParams.getAll("query[group_ids][]"),
+      [],
+      "an empty group selection sends no group IDs"
+    );
+  });
+
+  test("removes the last tag while editing a query", async function (assert) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    const tags = selectKit(".query-edit .query-tag-chooser");
+    await tags.expand();
+    await tags.deselectItemByValue("existing");
+    await click(".query-run-split__primary");
+
+    assert.strictEqual(
+      updateParams.get("query[tags_present]"),
+      "true",
+      "the empty tag selection is explicitly submitted"
+    );
+    assert.deepEqual(
+      updateParams.getAll("query[tags][]"),
+      [],
+      "the removed tag is absent from the request"
+    );
+
+    await visit("/admin/plugins/discourse-data-explorer/queries");
+    await visit("/admin/plugins/discourse-data-explorer/queries/2");
+
+    assert
+      .dom(".query-edit .query-tag-chooser .selected-choice")
+      .doesNotExist("the removed tag stays absent after reloading the query");
   });
 
   test("edits additional tags on a default query", async function (assert) {
@@ -512,16 +572,16 @@ acceptance("Run Query", function (needs) {
     await tags.expand();
     assert
       .dom(".query-tag-chooser .tag-choice.disabled")
-      .hasText("Default", "the Default tag cannot be removed");
+      .hasText("default", "the default tag cannot be removed");
 
-    await tags.deselectItemByValue("Existing");
+    await tags.deselectItemByValue("existing");
     await tags.fillInFilter("Monthly");
     await tags.selectRowByValue("Monthly");
     await click(".query-run-split__primary");
 
     assert.deepEqual(
       updateParams.getAll("query[tags][]"),
-      ["Default", "Monthly"],
+      ["default", "Monthly"],
       "additional tags can be removed and added"
     );
   });
