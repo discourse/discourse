@@ -1,10 +1,13 @@
 import {
+  clearRender,
   click,
   fillIn,
   find,
   render,
+  settled,
   triggerEvent,
   waitFor,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -87,24 +90,37 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .exists("the email can still be corrected before verification");
   });
 
-  test("signup requests declare their intent", async function (assert) {
-    let signup;
+  test("signup requests declare their intent and context", async function (assert) {
+    let requestParams;
     pretender.get("/session/hp.json", () =>
       response({ value: "hp-value", challenge: "abc", expires_in: 300 })
     );
     pretender.post("/session/login-code", (request) => {
-      signup = new URLSearchParams(request.requestBody).get("signup");
+      requestParams = new URLSearchParams(request.requestBody);
       return response({ success: "OK" });
     });
 
-    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await render(
+      <template>
+        <CodeLoginForm @context="signup" @signupContext="opaque-context" />
+      </template>
+    );
     await fillIn(
       ".code-login-form__email-step .form-kit__control-input",
       "user@example.com"
     );
     await formKit().submit();
 
-    assert.strictEqual(signup, "true", "the request identifies signup intent");
+    assert.strictEqual(
+      requestParams.get("signup"),
+      "true",
+      "the request identifies signup intent"
+    );
+    assert.strictEqual(
+      requestParams.get("signup_context"),
+      "opaque-context",
+      "the request forwards the opaque signup context"
+    );
     assert
       .dom(".code-login-form__code-step")
       .exists("the form advances after the request succeeds");
@@ -231,14 +247,19 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       );
     });
 
-    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await render(
+      <template>
+        <CodeLoginForm @context="signup" @signupContext="opaque-context" />
+      </template>
+    );
     await fillIn(
       ".code-login-form__email-step .form-kit__control-input",
       "user@example.com"
     );
     await formKit().submit();
     await fillIn(".d-otp-input", "123456");
-    await waitFor(() => redirect.called);
+    await waitUntil(() => redirect.calledOnce);
+    await settled();
 
     assert.true(transformed, "the actual creation runs account security gates");
     assert.strictEqual(
@@ -251,9 +272,122 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       "generated-name",
       "the generated username is submitted through the normal endpoint"
     );
+    assert.deepEqual(
+      verificationParams.map((params) => params.get("signup_context")),
+      ["opaque-context", "opaque-context"],
+      "the context accompanies verification and account creation"
+    );
     assert
       .dom(".code-login-form__new-account")
       .doesNotExist("generated mode does not ask for identity details");
+  });
+
+  test("reveals a stable manual fallback after two generated retries", async function (assert) {
+    stubCodeRequest();
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+    const submittedUsernames = [];
+    pretender.post("/session/login-code/verify", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      submittedUsernames.push(params.get("username"));
+      return response({
+        username_required: true,
+        generated_username: true,
+        username: `generated-${submittedUsernames.length}`,
+      });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "123456");
+    await waitFor(".code-login-form__new-account");
+    await settled();
+
+    assert.deepEqual(
+      submittedUsernames,
+      [null, "generated-1", "generated-2"],
+      "the flow makes the initial verification and exactly two automatic retries"
+    );
+    assert
+      .dom("#code-login-username")
+      .hasValue("generated-3", "the final candidate remains editable");
+    assert.false(redirect.called, "the rejected attempts do not redirect");
+  });
+
+  test("does not mutate or redirect after an automatic verification is destroyed", async function (assert) {
+    stubCodeRequest();
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+    let resolveCreation;
+    let creationStarted = false;
+    withPluginApi((api) =>
+      api.registerBehaviorTransformer("create-account", async ({ next }) => {
+        creationStarted = true;
+        await new Promise((resolve) => (resolveCreation = resolve));
+        return next();
+      })
+    );
+    pretender.post("/session/login-code/verify", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      return response(
+        params.get("username")
+          ? { account_created: true, redirect_url: "/welcome" }
+          : {
+              username_required: true,
+              generated_username: true,
+              username: "generated-name",
+            }
+      );
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    const verification = fillIn(".d-otp-input", "123456");
+    await waitUntil(() => creationStarted);
+
+    const teardown = clearRender();
+    resolveCreation();
+    await Promise.all([verification, teardown]);
+    await settled();
+
+    assert.false(redirect.called, "the destroyed flow does not redirect");
+    assert.dom(".code-login-form").doesNotExist("the form stays destroyed");
+  });
+
+  test("ignores an in-flight username response after destruction", async function (assert) {
+    stubCodeRequest();
+    let resolveUsername;
+    let usernameRequestStarted = false;
+    pretender.post("/session/login-code/verify", () =>
+      response({ username_required: true, username: "generated-name" })
+    );
+    pretender.get("/u/check_username", async () => {
+      usernameRequestStarted = true;
+      await new Promise((resolve) => (resolveUsername = resolve));
+      return response({ available: true, avatar_template: "/letter/g.png" });
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    const verification = fillIn(".d-otp-input", "123456");
+    await waitUntil(() => usernameRequestStarted);
+
+    const teardown = clearRender();
+    resolveUsername();
+    await Promise.all([verification, teardown]);
+    await settled();
+
+    assert.dom(".code-login-form").doesNotExist("the form stays destroyed");
   });
 
   test("waits for interaction when automatic generated account creation is disabled", async function (assert) {
@@ -983,6 +1117,56 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert
       .dom(".code-login-form__continue-to-site")
       .isDisabled("an avatar does not replace the username requirement");
+  });
+
+  test("does not redirect when destroyed during the pending avatar upload", async function (assert) {
+    stubCodeRequest();
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+    let resolveUpload;
+    let uploadStarted = false;
+    pretender.post("/session/login-code/verify", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      return response(
+        params.get("username")
+          ? {
+              account_created: true,
+              user: {
+                id: 1,
+                username: "jane",
+                avatar_template: "/letter/j.png",
+              },
+              can_upload_avatar: true,
+              redirect_url: "/latest",
+            }
+          : { username_required: true, can_upload_avatar: true }
+      );
+    });
+    pretender.get("/u/check_username", () =>
+      response({ available: true, avatar_template: "/letter/j.png" })
+    );
+    pretender.post("/uploads.json", async () => {
+      uploadStarted = true;
+      await new Promise((resolve) => (resolveUpload = resolve));
+      return response({ id: 42 });
+    });
+    pretender.put("/u/jane/preferences/avatar/pick", () =>
+      response({ success: "OK" })
+    );
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+    await selectLocalAvatar();
+    await fillIn("#code-login-username", "jane");
+    const submission = click(".code-login-form__continue-to-site");
+    await waitUntil(() => uploadStarted);
+
+    const teardown = clearRender();
+    resolveUpload();
+    await Promise.all([submission, teardown]);
+    await settled();
+
+    assert.false(redirect.called, "the destroyed flow does not redirect");
+    assert.dom(".code-login-form").doesNotExist("the form stays destroyed");
   });
 
   for (const failure of [null, "upload", "pick"]) {

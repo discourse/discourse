@@ -98,6 +98,7 @@ export default class CodeLoginForm extends Component {
   #collectedUserFields = false;
   #generatedUsernameAutoSubmits = 0;
   #usernameCheckSeq = 0;
+  #usernameDebounce;
   @tracked _signupTrustLevel = 0;
   @tracked _step;
 
@@ -116,6 +117,8 @@ export default class CodeLoginForm extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#cooldownTimer);
+    cancel(this.#usernameDebounce);
+    this.#usernameCheckSeq++;
     this.#clearPendingAvatarUrl();
   }
 
@@ -418,6 +421,9 @@ export default class CodeLoginForm extends Component {
     if (this.isSignupDetailsStep) {
       data.username = this.username.trim();
     }
+    if (this.isSignup && this.args.signupContext) {
+      data.signup_context = this.args.signupContext;
+    }
 
     try {
       const endpoint = this.isPasswordReset
@@ -432,6 +438,10 @@ export default class CodeLoginForm extends Component {
         this.isSignupDetailsStep && !this.isInvite
           ? await applyBehaviorTransformer("create-account", verify)
           : await verify();
+
+      if (this.isDestroying) {
+        return;
+      }
 
       if (result?.success === false && result.message) {
         this.codeError = result.message;
@@ -505,19 +515,27 @@ export default class CodeLoginForm extends Component {
 
       if (result?.account_created) {
         await this.#savePendingAvatar(result);
+        if (this.isDestroying) {
+          return;
+        }
         this.redirectAfterLogin(result.redirect_url);
         return;
       }
 
       this.redirectAfterLogin(result?.redirect_url);
     } catch (e) {
+      if (this.isDestroying) {
+        return;
+      }
       if (isReadOnlyError(e)) {
         this.codeError = this.login.readOnlyLoginMessage;
       } else {
         popupAjaxError(e);
       }
     } finally {
-      this.verifying = false;
+      if (!this.isDestroying) {
+        this.verifying = false;
+      }
     }
   }
 
@@ -605,9 +623,13 @@ export default class CodeLoginForm extends Component {
       this.usernameAvailable = false;
       await this.checkUsernameAvailability();
     } catch (e) {
-      popupAjaxError(e);
+      if (!this.isDestroying) {
+        popupAjaxError(e);
+      }
     } finally {
-      this.regenerating = false;
+      if (!this.isDestroying) {
+        this.regenerating = false;
+      }
     }
   }
 
@@ -617,10 +639,19 @@ export default class CodeLoginForm extends Component {
     this.usernameAvailable = false;
     this.usernameError = null;
     this.avatarTemplate = null;
-    discourseDebounce(this, this.checkUsernameAvailability, 350);
+    cancel(this.#usernameDebounce);
+    this.#usernameDebounce = discourseDebounce(
+      this,
+      this.checkUsernameAvailability,
+      350
+    );
   }
 
   async checkUsernameAvailability() {
+    if (this.isDestroying) {
+      return;
+    }
+
     const username = this.username?.trim();
     if (!username) {
       this.usernameAvailable = false;
@@ -634,7 +665,11 @@ export default class CodeLoginForm extends Component {
     try {
       const result = await User.checkUsername(username, this.email);
 
-      if (seq !== this.#usernameCheckSeq || username !== this.username.trim()) {
+      if (
+        this.isDestroying ||
+        seq !== this.#usernameCheckSeq ||
+        username !== this.username.trim()
+      ) {
         return;
       }
 
@@ -655,11 +690,11 @@ export default class CodeLoginForm extends Component {
             : i18n("code_login.username_taken"));
       }
     } catch {
-      if (seq === this.#usernameCheckSeq) {
+      if (!this.isDestroying && seq === this.#usernameCheckSeq) {
         this.usernameAvailable = false;
       }
     } finally {
-      if (seq === this.#usernameCheckSeq) {
+      if (!this.isDestroying && seq === this.#usernameCheckSeq) {
         this.usernameChecking = false;
       }
     }
@@ -822,6 +857,10 @@ export default class CodeLoginForm extends Component {
           email: this.email,
           signup: this.isSignup,
           invite_key: this.isInvite ? this.args.inviteKey : undefined,
+          signup_context:
+            this.isSignup && this.args.signupContext
+              ? this.args.signupContext
+              : undefined,
           password_confirmation: honeypot.value,
           challenge: honeypot.challenge.split("").reverse().join(""),
         },

@@ -1427,9 +1427,77 @@ RSpec.describe SessionController do
 
         expect(response.parsed_body["username_required"]).to eq(true)
         expect(response.parsed_body["generated_username"]).to eq(false)
-        expect(request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_KEY]).to be_nil
+        expect(
+          request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_INDEX_KEY],
+        ).to be_nil
         expect(User.find_by_email("newuser@example.com")).to be_nil
         expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "rejects invalid generated candidates and falls back to manual selection after bounded retries" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+        UserNameSuggester.stubs(:suggest).returns("account-created")
+        RandomUsernameGenerator
+          .expects(:generate)
+          .times(4)
+          .returns("moderator", "account-created", "admin", "account-created")
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(
+          response.parsed_body.slice("username_required", "generated_username", "username"),
+        ).to eq("username_required" => true, "generated_username" => false, "username" => nil)
+        expect(login_code.reload.consumed_at).to be_nil
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
+      end
+
+      it "returns a fresh valid candidate when a generated username becomes route-conflicting" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+        UserNameSuggester.stubs(:suggest).returns("first-candidate", "second-candidate")
+        UsernameValidator
+          .stubs(:clashing_with_existing_route?)
+          .with("first-candidate")
+          .returns(false, true)
+        UsernameValidator
+          .stubs(:clashing_with_existing_route?)
+          .with("second-candidate")
+          .returns(false)
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "first-candidate",
+             }
+
+        expect(
+          response.parsed_body.slice("username_required", "generated_username", "username"),
+        ).to eq(
+          "username_required" => true,
+          "generated_username" => true,
+          "username" => "second-candidate",
+        )
+        expect(login_code.reload.consumed_at).to be_nil
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
       end
 
       it "returns a fresh generated candidate after a collision without consuming the code" do
@@ -1468,6 +1536,46 @@ RSpec.describe SessionController do
 
         expect(response.parsed_body["account_created"]).to eq(true)
         expect(User.find_by_email("newuser@example.com").username).to eq("second-candidate")
+        expect(
+          request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_INDEX_KEY],
+        ).to be_nil
+        expect(
+          request.server_session[
+            "#{SessionController::GENERATED_USERNAME_SIGNUP_KEY_PREFIX}#{login_code.id}"
+          ],
+        ).to be_nil
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
+      end
+
+      it "clears generated proofs when a different existing account authenticates" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        proof_key = "#{SessionController::GENERATED_USERNAME_SIGNUP_KEY_PREFIX}#{login_code.id}"
+        expect(request.server_session[proof_key]).to be_present
+
+        existing_user = Fabricate(:user, email: "existing@example.com")
+        existing_code = EmailLoginCode.generate!(email: existing_user.email)
+        post "/session/login-code/verify.json",
+             params: {
+               email: existing_user.email,
+               code: existing_code.code,
+             }
+
+        expect(session[:current_user_id]).to eq(existing_user.id)
+        expect(request.server_session[proof_key]).to be_nil
+        expect(
+          request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_INDEX_KEY],
+        ).to be_nil
       ensure
         if plugin_instance && modifier
           DiscoursePluginRegistry.unregister_modifier(
