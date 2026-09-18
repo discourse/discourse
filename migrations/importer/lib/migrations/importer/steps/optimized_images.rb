@@ -31,13 +31,22 @@ module Migrations
 
         total_rows_query <<~SQL, MappingType::UPLOADS
           SELECT COUNT(*)
-          FROM files.optimized_images oi
-          WHERE EXISTS (
-            SELECT 1
-            FROM files.upload_results ur
+          FROM (
+            SELECT DISTINCT
+                   mu.discourse_id AS upload_id,
+                   oi.sha1,
+                   oi.extension,
+                   oi.width,
+                   oi.height,
+                   oi.url,
+                   oi.filesize,
+                   oi.etag,
+                   oi.version,
+                   oi.created_at
+            FROM files.optimized_images oi
+                 JOIN files.upload_results ur ON ur.upload_id = oi.upload_id
                  JOIN mapped.ids mu ON ur.id = mu.original_id AND mu.type = ?1
-            WHERE ur.upload_id = oi.upload_id
-          )
+          ) optimized_image_rows
         SQL
 
         # SHA-1 deduplication can make several source upload results point to one
