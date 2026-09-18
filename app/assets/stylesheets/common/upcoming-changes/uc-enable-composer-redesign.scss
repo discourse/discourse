@@ -205,17 +205,19 @@
   }
 
   #reply-control .d-editor-textarea-wrapper {
-    --composer-slide-easing: cubic-bezier(0.2, 0, 0, 1);
     border: 0;
     border-radius: 0; // core overrule
 
     // padding and border-radius must animate in lockstep with margin,
     // otherwise the text counter-jumps when the focus state toggles
     transition:
-      margin 250ms var(--composer-slide-easing),
-      padding 250ms var(--composer-slide-easing),
-      border-radius 250ms var(--composer-slide-easing),
-      box-shadow 250ms ease;
+      margin var(--composer-transition-duration)
+        var(--composer-transition-easing),
+      padding var(--composer-transition-duration)
+        var(--composer-transition-easing),
+      border-radius var(--composer-transition-duration)
+        var(--composer-transition-easing),
+      box-shadow var(--composer-transition-duration) ease;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -315,6 +317,26 @@
 
     .d-editor-preview-wrapper {
       grid-area: preview;
+    }
+  }
+
+  // keep both tracks on desktop so the preview column collapses to 0fr
+  // and the toggle can animate; removing the track would snap
+  @include viewport.from(sm) {
+    #reply-control .d-editor-container.--markdown-editor-enabled {
+      transition: grid-template-columns var(--composer-transition-duration)
+        var(--composer-transition-easing);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    #reply-control.hide-preview .d-editor-container.--markdown-editor-enabled {
+      grid-template-columns: 1fr 0fr;
+      grid-template-areas:
+        "fields fields"
+        "editor preview";
     }
   }
 
