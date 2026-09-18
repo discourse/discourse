@@ -1,5 +1,5 @@
-import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
+import BrotliStore from "./brotli-store";
 
 // Strips the assets/js/ prefix and .digested.js suffix for a readable label.
 export function stem(file) {
@@ -33,13 +33,11 @@ export function matches(text, filter) {
 
 // Wraps the raw report JSON and answers the graph questions the UI needs:
 // static-import closures, per-chunk sizing, and which entrypoints reach a chunk.
-export default class Analysis {
-  // Brotli sizes are computed in the browser (see brotli-sizes.js) and land here
-  // incrementally; tracked so the UI re-renders as each chunk is measured.
-  @tracked brotli = new Map();
-  @tracked brotliDone = false;
+export default class Analysis extends BrotliStore {
+  brotliCacheKey = "discourse_bundle_analyzer_brotli";
 
   constructor(data) {
+    super();
     this.data = data;
     this.chunks = data.chunks;
     this.entrypoints = data.entrypoints;
@@ -47,37 +45,8 @@ export default class Analysis {
     this.usedByEntries = this.#computeUsedBy();
   }
 
-  get chunkCount() {
-    return Object.keys(this.chunks).length;
-  }
-
-  get brotliCount() {
-    return this.brotli.size;
-  }
-
-  setBrotli(file, size) {
-    const next = new Map(this.brotli);
-    next.set(file, size);
-    this.brotli = next;
-  }
-
-  setBrotliMany(entries) {
-    if (!entries.length) {
-      return;
-    }
-    const next = new Map(this.brotli);
-    for (const [file, size] of entries) {
-      next.set(file, size);
-    }
-    this.brotli = next;
-  }
-
-  brotliComplete() {
-    this.brotliDone = true;
-  }
-
-  brotliOf(file) {
-    return this.brotli.get(file);
+  urlFor(file) {
+    return file;
   }
 
   staticClosure(file, set = new Set()) {
@@ -97,24 +66,6 @@ export default class Analysis {
       this.staticClosure(f, set);
     }
     return set;
-  }
-
-  totals(files) {
-    let raw = 0;
-    let brotli = 0;
-    // The brotli total is only meaningful once every chunk in the set has been
-    // measured; until then the caller should show "…" rather than a low sum.
-    let brotliReady = true;
-    for (const f of files) {
-      raw += this.chunks[f].rawSize;
-      const b = this.brotli.get(f);
-      if (b == null) {
-        brotliReady = false;
-      } else {
-        brotli += b;
-      }
-    }
-    return { files: files.size ?? files.length, raw, brotli, brotliReady };
   }
 
   // True when a chunk matches the filter by its file path, its name, or any of

@@ -7,6 +7,7 @@ import DModal from "discourse/ui-kit/d-modal";
 import DTabs from "discourse/ui-kit/d-tabs";
 import { i18n } from "discourse-i18n";
 import Analysis from "./analysis";
+import PluginsAnalysis from "./plugins-analysis";
 import PluginsReport from "./plugins-report";
 import Report from "./report";
 
@@ -29,7 +30,8 @@ export default class BundleAnalyzerModal extends Component {
 
     // A plugin report only exists once plugins have been compiled, and its
     // absence should not take the core report down with it.
-    this.plugins = await this.#fetch("discourse/bundle-analysis-plugins").catch(
+    this.plugins = await this.#fetch("discourse/bundle-analysis-plugins").then(
+      (data) => data && new PluginsAnalysis(data),
       (e) => {
         this.pluginError = e.message;
       }
@@ -91,7 +93,7 @@ export default class BundleAnalyzerModal extends Component {
                   }}
                 </div>
               {{else if this.plugins}}
-                <PluginsReport @data={{this.plugins}} />
+                <PluginsReport @analysis={{this.plugins}} />
               {{/if}}
             </tabs.Tab>
           </DTabs>

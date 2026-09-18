@@ -5,7 +5,9 @@ import workerUrl from "virtual:dynamic-chunk-url:discourse/workers/bundle-analyz
 // (which embeds the content hash, so the cache is implicitly invalidated when a
 // chunk changes), and the work is spread across a pool of workers. Started via a
 // blob bootstrap like the media-optimization worker so it inherits the host CSP.
-const CACHE_KEY = "discourse_bundle_analyzer_brotli";
+//
+// The report says where its chunks live and which cache is its own, so core and
+// plugin chunks can be measured side by side without pruning each other.
 const POOL_SIZE = Math.max(
   1,
   Math.min((navigator.hardwareConcurrency || 4) - 1, 8)
@@ -31,7 +33,10 @@ export default class BrotliSizes {
       if (this.cache[file] != null) {
         this.cachedEntries.push([file, this.cache[file]]);
       } else {
-        this.queue.push({ file, url: new URL(file, root).href });
+        this.queue.push({
+          file,
+          url: new URL(analysis.urlFor(file), root).href,
+        });
       }
     }
 
@@ -112,7 +117,10 @@ export default class BrotliSizes {
 
   #readCache() {
     try {
-      return JSON.parse(window.localStorage.getItem(CACHE_KEY)) || {};
+      return (
+        JSON.parse(window.localStorage.getItem(this.analysis.brotliCacheKey)) ||
+        {}
+      );
     } catch {
       return {};
     }
@@ -128,7 +136,10 @@ export default class BrotliSizes {
       }
     }
     try {
-      window.localStorage.setItem(CACHE_KEY, JSON.stringify(kept));
+      window.localStorage.setItem(
+        this.analysis.brotliCacheKey,
+        JSON.stringify(kept)
+      );
     } catch {
       // Quota exceeded / unavailable — non-fatal, sizes were still computed.
     }
