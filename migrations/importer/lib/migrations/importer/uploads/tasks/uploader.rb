@@ -51,7 +51,7 @@ module Migrations
           UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
 
           def title
-            "Uploading uploads"
+            "Uploading files"
           end
 
           def max_count
