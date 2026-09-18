@@ -16,8 +16,15 @@ module PageObjects
         visit(user).click_edit_avatar_button
       end
 
-      def has_custom_uploaded_avatar_image?
-        has_css?(".pref-avatar img.avatar[src*='user_avatar']")
+      def has_no_avatar_editor?
+        has_no_css?("#edit-avatar")
+      end
+
+      def has_custom_uploaded_avatar_image?(upload_id)
+        has_css?(".pref-avatar img.avatar[src*='/#{upload_id}_']") do |avatar|
+          avatar.evaluate_script("this.complete && this.naturalWidth") ==
+            avatar[:src].split("/")[-2].to_i
+        end
       end
 
       def has_system_avatar_image?
