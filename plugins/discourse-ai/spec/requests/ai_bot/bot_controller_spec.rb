@@ -267,8 +267,8 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     it "does not expose a moderator's secure upload when a regular user retries the reply" do
       moderator = Fabricate(:moderator, refresh_auto_groups: true)
       llm_model.update!(vision_enabled: true)
-      ai_agent.update!(vision_enabled: true)
-      AiAgent.agent_cache.flush!
+      ai_persona.update!(vision_enabled: true)
+      AiPersona.persona_cache.flush!
 
       source_topic = Fabricate(:private_message_topic, user: moderator)
       source_post = Fabricate(:post, topic: source_topic, user: moderator)

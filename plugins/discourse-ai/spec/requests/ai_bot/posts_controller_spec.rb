@@ -12,19 +12,19 @@ RSpec.describe PostsController do
 
   describe "#create" do
     it "does not send a persisted secure upload to the provider after access is revoked" do
-      agent =
+      persona =
         Fabricate(
-          :ai_agent,
+          :ai_persona,
           default_llm_id: llm_model.id,
           allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
           allow_topic_mentions: true,
           vision_enabled: true,
         )
-      agent.create_user!
-      AiAgent.agent_cache.flush!
+      persona.create_user!
+      AiPersona.persona_cache.flush!
 
       conversation = Fabricate(:topic)
-      bot_reply = Fabricate(:post, topic: conversation, user: agent.user)
+      bot_reply = Fabricate(:post, topic: conversation, user: persona.user)
       source_owner = Fabricate(:user)
       source_topic = Fabricate(:private_message_topic, user: source_owner, recipient: user)
       source_post = Fabricate(:post, topic: source_topic, user: source_owner)
@@ -49,7 +49,7 @@ RSpec.describe PostsController do
         post "/posts.json",
              params: {
                topic_id: conversation.id,
-               raw: "Please help @#{agent.user.username}",
+               raw: "Please help @#{persona.user.username}",
              }
         prompts = recorded_prompts
       end
