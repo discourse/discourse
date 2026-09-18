@@ -180,11 +180,15 @@ RSpec.describe "users" do
 
         before do
           enable_auth_provider(:google_oauth2)
-          UserAssociatedAccount.create!(
-            user: user,
-            provider_uid: "myuid",
-            provider_name: "google_oauth2",
-          )
+          account =
+            UserAssociatedAccount.create!(
+              user: user,
+              provider_uid: "myuid",
+              provider_name: "google_oauth2",
+              avatar_upload: Fabricate(:upload, user: user),
+            )
+
+          user.user_avatar.update!(selected_user_associated_account_id: account.id)
         end
 
         it_behaves_like "a JSON endpoint", 200 do
@@ -219,6 +223,25 @@ RSpec.describe "users" do
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
           let(:expected_request_schema) { expected_request_schema }
+        end
+
+        context "with an associated account avatar" do
+          let(:account) do
+            Fabricate(
+              :user_associated_account,
+              user: user,
+              provider_name: "google_oauth2",
+              avatar_upload: upload,
+            )
+          end
+          let(:params) { { "associated_account_id" => account.id, "type" => "associated_account" } }
+
+          before { enable_auth_provider(:google_oauth2) }
+
+          it_behaves_like "a JSON endpoint", Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok] do
+            let(:expected_response_schema) { expected_response_schema }
+            let(:expected_request_schema) { expected_request_schema }
+          end
         end
       end
     end
