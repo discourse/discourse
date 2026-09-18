@@ -104,3 +104,4 @@ module Migrations
 end
 
 Migrations::Converters.setup_loader
+Migrations.register_locale_path(File.join(Migrations::Converters.root_path, "config", "locales"))
