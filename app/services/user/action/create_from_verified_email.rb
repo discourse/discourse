@@ -3,6 +3,7 @@
 class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :email
   option :username
+  option :generated_username, default: -> { false }
   option :ip_address, optional: true
   option :user_fields, optional: true
   option :name, optional: true

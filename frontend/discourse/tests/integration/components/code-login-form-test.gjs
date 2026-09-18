@@ -196,14 +196,126 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       "the transformer continues to account creation"
     );
     assert
-      .dom(".code-login-form__complete-step")
+      .dom(".code-login-form__signup-details-step")
       .exists("signup remains on the username step after rejection");
     assert
-      .dom(".code-login-form__complete-step > p.code-login-form__error")
+      .dom(".code-login-form__signup-details-step > p.code-login-form__error")
       .hasText(
         "Signup verification failed",
         "the account creation rejection is shown"
       );
+  });
+
+  test("automatically creates an account with a server-generated username", async function (assert) {
+    stubCodeRequest();
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+    let transformed = false;
+    const verificationParams = [];
+    withPluginApi((api) =>
+      api.registerBehaviorTransformer("create-account", async ({ next }) => {
+        transformed = true;
+        return next();
+      })
+    );
+    pretender.post("/session/login-code/verify", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      verificationParams.push(params);
+      return response(
+        params.get("username")
+          ? { account_created: true, redirect_url: "/welcome" }
+          : {
+              username_required: true,
+              generated_username: true,
+              username: "generated-name",
+            }
+      );
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "123456");
+    await waitFor(() => redirect.called);
+
+    assert.true(transformed, "the actual creation runs account security gates");
+    assert.strictEqual(
+      verificationParams.length,
+      2,
+      "creation is submitted once"
+    );
+    assert.strictEqual(
+      verificationParams[1].get("username"),
+      "generated-name",
+      "the generated username is submitted through the normal endpoint"
+    );
+    assert
+      .dom(".code-login-form__new-account")
+      .doesNotExist("generated mode does not ask for identity details");
+  });
+
+  test("waits for interaction when automatic generated account creation is disabled", async function (assert) {
+    stubCodeRequest();
+    let transformed = false;
+    let verificationRequests = 0;
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "code-login-auto-create-account",
+        () => false
+      );
+      api.registerBehaviorTransformer("create-account", async ({ next }) => {
+        transformed = true;
+        return next();
+      });
+    });
+    pretender.post("/session/login-code/verify", (request) => {
+      verificationRequests++;
+      const params = new URLSearchParams(request.requestBody);
+      return response(
+        params.get("username")
+          ? { success: false, message: "Interaction is required" }
+          : {
+              username_required: true,
+              generated_username: true,
+              username: "generated-name",
+            }
+      );
+    });
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.strictEqual(
+      verificationRequests,
+      1,
+      "creation does not run automatically"
+    );
+    assert.false(
+      transformed,
+      "the account security gate has not run prematurely"
+    );
+    assert
+      .dom(".code-login-form__signup-details-step")
+      .exists("the interaction step is visible");
+    assert
+      .dom(".code-login-form__continue-to-site")
+      .exists("the normal final action remains available");
+
+    await click(".code-login-form__continue-to-site");
+
+    assert.true(transformed, "the security gate runs after interaction");
+    assert.strictEqual(
+      verificationRequests,
+      2,
+      "creation uses the normal request"
+    );
   });
 
   test("shows a request error without advancing to the code step", async function (assert) {
@@ -657,7 +769,7 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       "Jane Doe",
       "the trimmed name is sent"
     );
-    assert.dom(".code-login-form__complete-step").exists();
+    assert.dom(".code-login-form__signup-details-step").exists();
     assert
       .dom("#code-login-username")
       .hasValue("jane", "the suggested username is prefilled");

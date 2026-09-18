@@ -74,6 +74,7 @@ export default class CodeLoginForm extends Component {
   @tracked usernameAvailable = false;
   @tracked usernameChecking = false;
   @tracked usernameError;
+  @tracked generatedUsername = false;
   @tracked regenerating = false;
   @tracked avatarTemplate;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
@@ -95,6 +96,7 @@ export default class CodeLoginForm extends Component {
   #cooldownTimer;
   #draftEmail;
   #collectedUserFields = false;
+  #generatedUsernameAutoSubmits = 0;
   #usernameCheckSeq = 0;
   @tracked _signupTrustLevel = 0;
   @tracked _step;
@@ -165,8 +167,8 @@ export default class CodeLoginForm extends Component {
     return this.step === "user-fields";
   }
 
-  get isCompleteStep() {
-    return this.step === "complete";
+  get isSignupDetailsStep() {
+    return this.step === "signup-details";
   }
 
   get isAccountDetailsStep() {
@@ -207,7 +209,7 @@ export default class CodeLoginForm extends Component {
           title: i18n("code_login.user_fields_title"),
           subtitle: i18n("code_login.user_fields_instructions"),
         };
-      case "complete":
+      case "signup-details":
         return {
           title: i18n("code_login.signup_details_title"),
         };
@@ -353,6 +355,8 @@ export default class CodeLoginForm extends Component {
     this.username = "";
     this.usernameAvailable = false;
     this.usernameError = null;
+    this.generatedUsername = false;
+    this.#generatedUsernameAutoSubmits = 0;
     this.avatarTemplate = null;
     this.pendingAvatar = null;
     this.#clearPendingAvatarUrl();
@@ -411,7 +415,7 @@ export default class CodeLoginForm extends Component {
       }
     }
 
-    if (this.isCompleteStep) {
+    if (this.isSignupDetailsStep) {
       data.username = this.username.trim();
     }
 
@@ -425,7 +429,7 @@ export default class CodeLoginForm extends Component {
           data,
         });
       const result =
-        this.isCompleteStep && !this.isInvite
+        this.isSignupDetailsStep && !this.isInvite
           ? await applyBehaviorTransformer("create-account", verify)
           : await verify();
 
@@ -436,7 +440,7 @@ export default class CodeLoginForm extends Component {
 
       if (result?.username_required) {
         this.setupSignupDetails(result);
-        this.step = "complete";
+        this.step = "signup-details";
         return;
       }
 
@@ -472,7 +476,7 @@ export default class CodeLoginForm extends Component {
         if (this.isSecondFactorStep) {
           this.securityKeyCredential = null;
           this.codeError = result.error;
-        } else if (this.isUserFieldsStep || this.isCompleteStep) {
+        } else if (this.isUserFieldsStep || this.isSignupDetailsStep) {
           this.codeError = result.error;
         } else {
           this.codeError = result.error;
@@ -557,11 +561,15 @@ export default class CodeLoginForm extends Component {
 
   setupSignupDetails(result) {
     this.username = result.username || "";
+    this.generatedUsername = !!result.generated_username;
     this.avatarTemplate = result.avatar_template;
     this._signupTrustLevel = result.trust_level ?? 0;
     this.canUploadAvatar =
       result.can_upload_avatar && allowsImages(false, this.siteSettings);
-    if (this.username) {
+    if (this.generatedUsername) {
+      this.usernameAvailable = !!this.username;
+      schedule("afterRender", () => this.#autoCreateGeneratedAccount());
+    } else if (this.username) {
       this.checkUsernameAvailability();
     }
   }
@@ -860,6 +868,29 @@ export default class CodeLoginForm extends Component {
       this.resendCooldown -= 1;
       this.tickCooldown();
     }, 1000);
+  }
+
+  #autoCreateGeneratedAccount() {
+    if (
+      this.isDestroying ||
+      !this.generatedUsername ||
+      !this.isSignupDetailsStep ||
+      !applyValueTransformer("code-login-auto-create-account", true, {
+        context: this.args.context,
+        generatedUsername: true,
+      })
+    ) {
+      return;
+    }
+
+    if (this.#generatedUsernameAutoSubmits >= 2) {
+      this.generatedUsername = false;
+      this.checkUsernameAvailability();
+      return;
+    }
+
+    this.#generatedUsernameAutoSubmits++;
+    this.verifyCode();
   }
 
   #setupSignupContinuation(result) {
@@ -1332,77 +1363,79 @@ export default class CodeLoginForm extends Component {
         </div>
       {{else if this.isPendingApprovalStep}}
         <div class="code-login-form__pending-approval-step" role="status"></div>
-      {{else if this.isCompleteStep}}
-        <div class="code-login-form__complete-step">
+      {{else if this.isSignupDetailsStep}}
+        <div class="code-login-form__signup-details-step">
           {{#unless this.isSignup}}
             <h2 class="code-login-form__title">
               {{i18n "code_login.signup_details_title"}}
             </h2>
           {{/unless}}
 
-          <div class="code-login-form__new-account">
-            <button
-              aria-label={{i18n "code_login.change_avatar"}}
-              class="code-login-form__avatar"
-              disabled={{this.verifying}}
-              title={{i18n "code_login.change_avatar"}}
-              type="button"
-              {{on "click" this.changeAvatar}}
-            >
-              {{#if this.previewAvatarTemplate}}
-                {{dBoundAvatarTemplate this.previewAvatarTemplate "huge"}}
-              {{else}}
-                <span class="code-login-form__avatar-placeholder">
-                  {{dIcon "user"}}
-                </span>
-              {{/if}}
-              <span class="code-login-form__avatar-edit">
-                {{dIcon "pencil"}}
-              </span>
-            </button>
-
-            <div class="code-login-form__username-field">
-              <label for="code-login-username">
-                {{i18n "code_login.username_label"}}
-              </label>
-              <div class="code-login-form__username-input">
-                <input
-                  aria-describedby="code-login-username-error"
-                  aria-invalid={{if this.usernameError "true"}}
-                  autocomplete="off"
-                  class="code-login-form__new-account-username
-                    {{if this.regenerating '--swapping'}}"
-                  disabled={{this.verifying}}
-                  id="code-login-username"
-                  name="username"
-                  placeholder={{i18n "code_login.username_placeholder"}}
-                  type="text"
-                  value={{this.username}}
-                  {{on "input" this.usernameChanged}}
-                />
-                {{#if this.siteSettings.enable_random_usernames}}
-                  <DButton
-                    aria-busy={{if this.regenerating "true"}}
-                    class="btn-default code-login-form__username-regen
-                      {{if this.regenerating '--rolling'}}"
-                    @action={{this.regenerateUsername}}
-                    @ariaLabel="code_login.regenerate_username"
-                    @disabled={{this.verifying}}
-                    @icon="dice"
-                    @title="code_login.regenerate_username"
-                  />
-                {{/if}}
-              </div>
-              <div
-                aria-live="polite"
-                class="code-login-form__error"
-                id="code-login-username-error"
-                role="alert"
+          {{#unless this.generatedUsername}}
+            <div class="code-login-form__new-account">
+              <button
+                aria-label={{i18n "code_login.change_avatar"}}
+                class="code-login-form__avatar"
+                disabled={{this.verifying}}
+                title={{i18n "code_login.change_avatar"}}
+                type="button"
+                {{on "click" this.changeAvatar}}
               >
-                {{this.usernameError}}
+                {{#if this.previewAvatarTemplate}}
+                  {{dBoundAvatarTemplate this.previewAvatarTemplate "huge"}}
+                {{else}}
+                  <span class="code-login-form__avatar-placeholder">
+                    {{dIcon "user"}}
+                  </span>
+                {{/if}}
+                <span class="code-login-form__avatar-edit">
+                  {{dIcon "pencil"}}
+                </span>
+              </button>
+
+              <div class="code-login-form__username-field">
+                <label for="code-login-username">
+                  {{i18n "code_login.username_label"}}
+                </label>
+                <div class="code-login-form__username-input">
+                  <input
+                    aria-describedby="code-login-username-error"
+                    aria-invalid={{if this.usernameError "true"}}
+                    autocomplete="off"
+                    class="code-login-form__new-account-username
+                      {{if this.regenerating '--swapping'}}"
+                    disabled={{this.verifying}}
+                    id="code-login-username"
+                    name="username"
+                    placeholder={{i18n "code_login.username_placeholder"}}
+                    type="text"
+                    value={{this.username}}
+                    {{on "input" this.usernameChanged}}
+                  />
+                  {{#if this.siteSettings.enable_random_usernames}}
+                    <DButton
+                      aria-busy={{if this.regenerating "true"}}
+                      class="btn-default code-login-form__username-regen
+                        {{if this.regenerating '--rolling'}}"
+                      @action={{this.regenerateUsername}}
+                      @ariaLabel="code_login.regenerate_username"
+                      @disabled={{this.verifying}}
+                      @icon="dice"
+                      @title="code_login.regenerate_username"
+                    />
+                  {{/if}}
+                </div>
+                <div
+                  aria-live="polite"
+                  class="code-login-form__error"
+                  id="code-login-username-error"
+                  role="alert"
+                >
+                  {{this.usernameError}}
+                </div>
               </div>
             </div>
-          </div>
+          {{/unless}}
 
           {{#unless this.isInvite}}
             <PluginOutlet

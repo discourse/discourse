@@ -1417,6 +1417,67 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(new_user.id)
       end
 
+      it "does not allow the client to enable generated username completion" do
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               generated_username: true,
+             }
+
+        expect(response.parsed_body["username_required"]).to eq(true)
+        expect(response.parsed_body["generated_username"]).to eq(false)
+        expect(request.server_session[SessionController::GENERATED_USERNAME_SIGNUP_KEY]).to be_nil
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      it "returns a fresh generated candidate after a collision without consuming the code" do
+        plugin_instance = Plugin::Instance.new
+        modifier = proc { |_, _, _| :generated }
+        plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+        UserNameSuggester.stubs(:suggest).returns("first-candidate", "second-candidate")
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+        Fabricate(:user, username: response.parsed_body["username"])
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "first-candidate",
+             }
+
+        expect(
+          response.parsed_body.slice("username_required", "generated_username", "username"),
+        ).to eq(
+          "username_required" => true,
+          "generated_username" => true,
+          "username" => "second-candidate",
+        )
+        expect(User.find_by_email("newuser@example.com")).to be_nil
+        expect(login_code.reload.consumed_at).to be_nil
+
+        post "/session/login-code/verify.json",
+             params: {
+               email: "newuser@example.com",
+               code:,
+               username: "second-candidate",
+               generated_username: false,
+             }
+
+        expect(response.parsed_body["account_created"]).to eq(true)
+        expect(User.find_by_email("newuser@example.com").username).to eq("second-candidate")
+      ensure
+        if plugin_instance && modifier
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :email_login_code_username_mode,
+            &modifier
+          )
+        end
+      end
+
       it "returns the default trust level for the deferred avatar selector" do
         SiteSetting.default_trust_level = 1
         SiteSetting.default_invitee_trust_level = 2

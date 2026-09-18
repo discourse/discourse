@@ -45,6 +45,34 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to be_nil
     end
 
+    it "requires CAPTCHA on final generated-username creation without consuming the code" do
+      plugin_instance = Plugin::Instance.new
+      modifier = proc { |_, _, _| :generated }
+      plugin_instance.register_modifier(:email_login_code_username_mode, &modifier)
+      email = "new.person@example.com"
+      login_code = EmailLoginCode.generate!(email:)
+
+      post "/session/login-code/verify.json", params: { email:, code: login_code.code }
+      username = response.parsed_body["username"]
+
+      expect(response.parsed_body["generated_username"]).to eq(true)
+      expect(User.find_by_email(email)).to be_nil
+
+      post "/session/login-code/verify.json", params: { email:, code: login_code.code, username: }
+
+      expect(response.parsed_body["error"]).to eq(I18n.t("captcha_verification_failed"))
+      expect(User.find_by_email(email)).to be_nil
+      expect(login_code.reload.consumed_at).to be_nil
+    ensure
+      if plugin_instance && modifier
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :email_login_code_username_mode,
+          &modifier
+        )
+      end
+    end
+
     it "creates an account after the CAPTCHA provider verifies the challenge" do
       email = "new.person@example.com"
       code = EmailLoginCode.generate!(email:).code

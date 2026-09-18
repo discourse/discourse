@@ -39,6 +39,7 @@ class SessionController < ApplicationController
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
   LOGIN_CODE_SIGNUP_KEY_PREFIX = "login-code-signup-"
+  GENERATED_USERNAME_SIGNUP_KEY = "login-code-generated-username"
 
   def csrf
     render json: { csrf: form_authenticity_token }
@@ -972,10 +973,12 @@ class SessionController < ApplicationController
       end
     end
 
+    generated_username = generated_username_signup?(params[:email], params[:username])
     EmailLoginCode::Redeem.call(
-      service_params.deep_merge(ip_address: request.remote_ip),
+      service_params.deep_merge(ip_address: request.remote_ip, options: { generated_username: }),
     ) do |result|
       on_success do |user:, existing_user:|
+        server_session.delete(GENERATED_USERNAME_SIGNUP_KEY) if generated_username
         login_with_login_code(user, created_account: existing_user.nil?)
       end
       on_failed_policy(:can_register_new_account) do
@@ -996,7 +999,13 @@ class SessionController < ApplicationController
       on_failed_policy(:required_username_provided) do
         render_signup_username_required(result[:params].email)
       end
-      on_model_errors(:user) { |user| render json: login_code_account_error(user) }
+      on_model_errors(:user) do |user|
+        if generated_username && user.errors[:username].present?
+          render_signup_username_required(result[:params].email)
+        else
+          render json: login_code_account_error(user)
+        end
+      end
       on_failed_contract do |contract|
         render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
       end
@@ -1251,10 +1260,29 @@ class SessionController < ApplicationController
   end
 
   def render_signup_username_required(email, invite: nil)
+    generated_username =
+      invite.nil? &&
+        DiscoursePluginRegistry.apply_modifier(
+          :email_login_code_username_mode,
+          :required,
+          email,
+          server_session,
+        ) == :generated
     username =
       UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
-        RandomUsernameGenerator.generate
+        RandomUsernameGenerator.generate(allow_when_disabled: generated_username)
     username = nil if UserNameSuggester.generic_username?(username)
+
+    if generated_username && username.present?
+      server_session.set(
+        GENERATED_USERNAME_SIGNUP_KEY,
+        { email: email.downcase, username: },
+        expires: EmailLoginCode::VALID_FOR,
+      )
+    else
+      generated_username = false
+      server_session.delete(GENERATED_USERNAME_SIGNUP_KEY)
+    end
 
     trust_level = invite ? SiteSetting.default_invitee_trust_level : SiteSetting.default_trust_level
     group_ids =
@@ -1267,11 +1295,17 @@ class SessionController < ApplicationController
     render json: {
              username_required: true,
              username: username,
+             generated_username: generated_username,
              trust_level: trust_level,
              avatar_template: username && User.default_template(username),
              can_upload_avatar:
                group_ids.intersect?(SiteSetting.uploaded_avatars_allowed_groups_map),
            }
+  end
+
+  def generated_username_signup?(email, username)
+    proof = server_session[GENERATED_USERNAME_SIGNUP_KEY]
+    proof.is_a?(Hash) && proof[:email] == email.to_s.downcase && proof[:username] == username.to_s
   end
 
   # A pending provider handoff would redirect as soon as the session exists,

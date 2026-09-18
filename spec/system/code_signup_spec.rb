@@ -50,7 +50,7 @@ describe "Sign up via email code" do
 
     fill_code(latest_emailed_code("new.person@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     screenshot_marker(label: "code-signup-complete-step")
 
     generated = find("#code-login-username").value
@@ -94,7 +94,7 @@ describe "Sign up via email code" do
 
     fill_code(latest_emailed_code("new.person@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     expect(page).to have_css(".login-welcome-header", count: 1)
     expect(page).to have_css(".login-title", text: I18n.t("js.code_login.signup_details_title"))
     expect(page).to have_no_css(".code-login-form__title")
@@ -107,7 +107,7 @@ describe "Sign up via email code" do
     submit_email("new.person@example.com")
     fill_code(latest_emailed_code("new.person@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
 
     fill_in("code-login-username", with: "takenname")
     expect(page).to have_css(".code-login-form__error", text: "username")
@@ -121,7 +121,7 @@ describe "Sign up via email code" do
     submit_email("jane@example.com")
     fill_code(latest_emailed_code("jane@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     expect(find("#code-login-username").value).to eq("jane")
   end
 
@@ -132,7 +132,7 @@ describe "Sign up via email code" do
     submit_email("no.random@example.com")
     fill_code(latest_emailed_code("no.random@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     expect(page).to have_no_css(".code-login-form__username-regen")
     expect(find("#code-login-username").value).to eq("")
     expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
@@ -156,7 +156,7 @@ describe "Sign up via email code" do
     submit_email("locked.name@example.com")
     fill_code(latest_emailed_code("locked.name@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     pick_username("locked-name")
 
     find(".code-login-form__continue-to-site").click
@@ -169,7 +169,7 @@ describe "Sign up via email code" do
     submit_email("abandoned.person@example.com")
     fill_code(latest_emailed_code("abandoned.person@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
 
     visit("/")
@@ -185,7 +185,7 @@ describe "Sign up via email code" do
     submit_email("avatar.person@example.com")
     fill_code(latest_emailed_code("avatar.person@example.com"))
 
-    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".code-login-form__signup-details-step")
     find(".code-login-form__avatar").click
     attach_file(
       "deferred-avatar-upload",
@@ -417,7 +417,7 @@ describe "Sign up via email code" do
       find(".user-field-occupation input").fill_in(with: "Dev")
       find(".code-login-form__user-fields-step .code-login-form__verify").click
 
-      expect(page).to have_css(".code-login-form__complete-step")
+      expect(page).to have_css(".code-login-form__signup-details-step")
       pick_username("fields-person")
       find(".code-login-form__continue-to-site").click
 
@@ -450,7 +450,7 @@ describe "Sign up via email code" do
       fill_in("code-login-name", with: "Jane Doe")
       find(".code-login-form__user-fields-step .code-login-form__verify").click
 
-      expect(page).to have_css(".code-login-form__complete-step")
+      expect(page).to have_css(".code-login-form__signup-details-step")
       pick_username("named-person")
       find(".code-login-form__continue-to-site").click
 

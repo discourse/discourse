@@ -31,6 +31,8 @@ class EmailLoginCode::Redeem
     validates :password, length: { maximum: User.max_password_length }, allow_nil: true
   end
 
+  options { attribute :generated_username, :boolean, default: false }
+
   model :login_code
   policy :code_matches
   model :existing_user, :fetch_existing_user, optional: true
@@ -138,7 +140,7 @@ class EmailLoginCode::Redeem
     fail!("code already redeemed") unless login_code.consume!
   end
 
-  def ensure_user(existing_user:, params:, ip_address:)
+  def ensure_user(existing_user:, params:, ip_address:, options:)
     existing_user ||
       User::Action::CreateFromVerifiedEmail.call(
         email: params.email,
@@ -147,6 +149,7 @@ class EmailLoginCode::Redeem
         name: params.name,
         password: params.password,
         username: params.username,
+        generated_username: options.generated_username,
       )
   end
 
