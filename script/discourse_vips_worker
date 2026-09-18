@@ -313,9 +313,7 @@ class DiscourseVipsWorker
       output_format:
     )
       new do
-        if !%w[true false].include?(sharpen)
-          raise ArgumentError, "invalid sharpening flag"
-        end
+        raise ArgumentError, "invalid sharpening flag" if !%w[true false].include?(sharpen)
         if !%w[true false].include?(strip_metadata)
           raise ArgumentError, "invalid metadata stripping flag"
         end
@@ -332,9 +330,7 @@ class DiscourseVipsWorker
         allowed = loaders.values
         if !input_format.empty?
           loader =
-            loaders.fetch(input_format.downcase) do
-              raise ArgumentError, "unsupported input format"
-            end
+            loaders.fetch(input_format.downcase) { raise ArgumentError, "unsupported input format" }
           allowed = [loader]
         end
         block_loaders(allowed: allowed)
@@ -350,19 +346,25 @@ class DiscourseVipsWorker
           width = Integer(width)
           height = Integer(height)
         else
+          max_pixels = max_pixels.empty? ? nil : Integer(max_pixels)
           scale =
-            if max_pixels.empty?
-              Float(scale)
-            else
-              max_pixels = Integer(max_pixels)
+            if max_pixels
               raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
 
+              source = source.autorot
               Math.sqrt(max_pixels.fdiv(source.width * source.height))
+            else
+              Float(scale)
             end
           raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
 
-          width = [([source.width, source.height].max * scale).round, 1].max
-          height = width
+          if max_pixels
+            width = (source.width * scale).floor.clamp(1, max_pixels)
+            height = (source.height * scale).floor.clamp(1, max_pixels)
+          else
+            width = [([source.width, source.height].max * scale).round, 1].max
+            height = width
+          end
         end
 
         image =
@@ -511,7 +513,12 @@ class DiscourseVipsWorker
 
   def run_sandboxed(request:, operation:)
     Dir.mktmpdir("discourse-vips-") do |scratch|
-      sandbox_paths = operation.sandbox_paths(scratch:, read: request.fetch("read"), write: request.fetch("write"))
+      sandbox_paths =
+        operation.sandbox_paths(
+          scratch:,
+          read: request.fetch("read"),
+          write: request.fetch("write"),
+        )
       result =
         Landlock.fork(
           read: sandbox_paths.fetch("read"),

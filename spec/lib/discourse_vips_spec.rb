@@ -968,6 +968,25 @@ RSpec.describe DiscourseVips do
       expect(FastImage.type(output_path)).to eq(:png)
     end
 
+    it "keeps resized images within the pixel limit" do
+      [[301, 199, 4000], [199, 301, 4000], [301, 1, 1]].each do |width, height, max_pixels|
+        ChunkyPNG::Image.new(width, height).save(input_path)
+
+        described_class.thumbnail(
+          input_path:,
+          output_path:,
+          max_pixels:,
+          timeout: 20,
+          operation: :optimized_image_downsize,
+          read: [input_path],
+          write: [directory],
+        )
+
+        output_width, output_height = FastImage.size(output_path)
+        expect(output_width * output_height).to be <= max_pixels
+      end
+    end
+
     it "rejects conflicting resize targets" do
       expect {
         described_class.thumbnail(
