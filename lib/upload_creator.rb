@@ -353,7 +353,7 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(from, to)
 
     read = [@file.path]
-    write = [File.dirname(jpeg_tempfile.path)]
+    write = [jpeg_tempfile.path]
 
     if GlobalSetting.enable_vips_image_processing
       DiscourseVips.heif_to_jpeg(
@@ -679,14 +679,14 @@ class UploadCreator
         quality:,
         timeout: MAX_CONVERT_FORMAT_SECONDS,
         read: [from],
-        write: [File.dirname(to)],
+        write: [jpeg_tempfile.path],
       )
     else
       from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
       to = OptimizedImage.prepend_decoder!(to)
       opts = { quality: }
       read = [@file.path]
-      write = [File.dirname(jpeg_tempfile.path)]
+      write = [jpeg_tempfile.path]
 
       begin
         execute_convert(from, to, opts, read:, write:)
