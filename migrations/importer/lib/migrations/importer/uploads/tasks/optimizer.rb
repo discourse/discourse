@@ -8,19 +8,8 @@ module Migrations
         # and avatars). Each worker rebakes against a throwaway post; only
         # {#write} records the results.
         class Optimizer < Base
-          OPTIMIZED_IMAGE_COLUMNS = %i[
-            id
-            created_at
-            etag
-            extension
-            filesize
-            height
-            sha1
-            upload_id
-            url
-            version
-            width
-          ].freeze
+          OPTIMIZED_IMAGE_COLUMNS =
+            Database::FilesDB::OptimizedImage.method(:create).parameters.map(&:last).freeze
 
           def title
             "Creating optimized images"
