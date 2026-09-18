@@ -454,6 +454,12 @@ class TagsController < ::ApplicationController
       new_synonym_names = params[:synonyms]
     end
 
+    new_synonym_names =
+      DiscourseTagging.tags_for_saving(new_synonym_names, Guardian.new(Discourse.system_user)) || []
+    synonyms = Tag.where(id: synonym_tag_ids).or(Tag.where_name(new_synonym_names))
+    synonym_tag_ids = DiscourseTagging.editable_synonym_ids(synonyms, guardian)
+    new_synonym_names -= synonyms.map(&:name)
+
     value = DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:, new_synonym_names:)
     if value.is_a?(Hash)
       render json: failed_json.merge(failed_tags: value)

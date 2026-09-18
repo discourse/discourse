@@ -945,6 +945,10 @@ module DiscourseTagging
     end
   end
 
+  def self.editable_synonym_ids(synonyms, guardian)
+    synonyms.filter_map { |synonym| synonym.id if guardian.can_edit_tag?(synonym) }
+  end
+
   # Add synonyms to a target tag.
   #
   # - ensures synonym tags do not already have synonyms,
