@@ -41,6 +41,25 @@ zh_CN:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "活动提醒"
+      subject_template: ":date: %{subject}"
+      text_body_template: |
+        **%{date_range} (%{timezone})**
+
+        %{description}
+
+        %{location_section}
+
+        #### 宾客
+
+        %{guests}
+
+        %{additional_guests}
+
+        %{join_event}
+
+        [前往事件话题](%{event_url})
   site_settings:
     map_events_to_color: "为每个标签或类别分配颜色。"
     map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
@@ -75,6 +94,7 @@ zh_CN:
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
     enable_events_category_type_setup: "在创建类别设置期间启用“活动”类别类型选项。"
+    enable_improved_event_reminders: "允许成员选择活动提醒：个人消息、通知发送，或者完全不发送。"
     livestream_allowed_hosts: "可以用作活动直播的主机。"
     livestream_allowed_hosts_invalid: "这些条目不是主机：%{hosts}。请输入单独的主机名（例如 zoom.us），这将允许访问该主机及其所有子域名下的每个 URL。"
     livestream_zoom_enabled: "为直播话题启用 Zoom 视频嵌入。"
@@ -83,6 +103,23 @@ zh_CN:
     livestream_embeddable_chat_allowed_paths: "允许嵌入式直播聊天的路径。"
     livestream_enable_modal_chat_on_mobile: "在移动设备上以模态框形式显示直播聊天信息。"
   discourse_events:
+    reminder:
+      subjects:
+        before: "%{title} 即将开始。"
+        ongoing: "%{title} 正在进行中"
+        after: "%{title} 已结束。"
+      location: |-
+        #### 位置
+
+        %{location}
+      guest: "- %{name}"
+      guest_with_role: "- %{name} (*%{role}*)"
+      roles:
+        organizer: "组织者"
+        host: "主持人"
+      additional_guests:
+        other: "  和其他 %{count} 人"
+      join_event: "[加入活动](%{url})"
     category_type:
       default_calendar_view:
         label: "默认日历视图"

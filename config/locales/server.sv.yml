@@ -2239,6 +2239,7 @@ sv:
     email_too_long: "E-postadressen du tillhandahöll är för lång. E-postadresser kan på sin höjd vara 254 tecken och domännamn 253 tecken."
     wrong_invite_code: "Inbjudningskoden som du har angett var felaktig."
     reserved_username: "Användarnamnet är inte tillåtet."
+    missing_username: "Ange ett användarnamn"
     auth_complete: "Autentisering är färdig."
     click_to_continue: "Klicka här för att fortsätta."
     already_logged_in: "Tyvärr är denna inbjudan avsedd för nya användare, som inte redan har ett befintligt konto."
@@ -3318,7 +3319,7 @@ sv:
     signup_after_approval:
       title: "Ny medlem efter godkännande"
       subject_template: "Du har blivit godkänd på %{site_name}!"
-      text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto hos %{site_name}.\n\nDu har nu tillgång till ditt nya konto genom att logga in från:\n%{base_url}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n"
+      text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto hos %{site_name}.\n\nDu har nu tillgång till ditt nya konto genom att logga in från:\n%{login_url}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n"
     signup_after_reject:
       title: "Registrering efter avslag"
       subject_template: "Du har avvisats på %{site_name}"
@@ -3924,6 +3925,8 @@ sv:
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
         title: "Återställ inlägg"
+      disagree_and_keep_deleted:
+        title: "Behåll inlägg raderat"
       disagree_bundle:
         title: "Nej"
       disagree:

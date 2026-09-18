@@ -1680,6 +1680,7 @@ hr:
     errors: "%{errors}"
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
     omniauth_confirm_button: "Nastavi"
+    missing_username: "Unesite korisničko ime"
     second_factor_title: "Dvofaktorska autentifikacija"
     second_factor_backup_description: "Unesite jedan od vaših rezervnih kodova:"
     second_factor_toggle:
@@ -2418,7 +2419,7 @@ hr:
         Član osoblja odobrio je vaš korisnički račun na %{site_name}.
 
         Sada možete pristupiti svom novom korisničkom računu tako da se prijavite na:
-        %{base_url}
+        %{login_url}
 
         Ako gornju poveznicu ne možete kliknuti, pokušajte je kopirati i zalijepiti u adresnu traku vaš web preglednik.
 

@@ -3109,6 +3109,7 @@ fr:
     wrong_invite_code: "Le code d'invitation est invalide."
     reserved_username: "Ce nom d'utilisateur n'est pas autorisé."
     missing_user_field: "Vous n'avez pas rempli tous les champs d'utilisateur obligatoires"
+    missing_username: "Veuillez entrer un nom d'utilisateur"
     missing_full_name: "Saisissez votre nom complet"
     auth_complete: "Authentification terminée."
     click_to_continue: "Cliquez ici pour continuer."
@@ -4616,7 +4617,7 @@ fr:
 
         Pour accéder à votre nouveau compte, vous pouvez utiliser le lien suivant :
 
-        %{base_url}
+        %{login_url}
 
         Dans le cas où le lien ci-dessus ne serait pas utilisable, nous vous invitons à le copier-coller dans la barre d'adresse de votre navigateur.
 
@@ -5564,6 +5565,9 @@ fr:
         title: "Rétablir la publication"
         description: "Rejeter le signalement et restaurer la publication"
         complete: "Publication restaurée."
+      disagree_and_keep_deleted:
+        title: "Conserver la suppression de la publication"
+        complete: "Publication maintenue supprimée."
       disagree_bundle:
         title: "Non"
       disagree:

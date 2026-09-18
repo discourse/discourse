@@ -2810,6 +2810,7 @@ es:
     wrong_invite_code: "El código de invitación que has introducido es incorrecto."
     reserved_username: "Ese nombre de usuario no está permitido."
     missing_user_field: "No has rellenado todos los campos de usuario requeridos"
+    missing_username: "Introduce un nombre de usuario"
     auth_complete: "Autenticación completa."
     click_to_continue: "Haz clic aquí para continuar."
     already_logged_in: "¡Vaya! Esta invitación es solo para nuevos usuarios que no tengan ya una cuenta."
@@ -4217,7 +4218,7 @@ es:
         Un miembro del equipo aprobó tu cuenta en %{site_name}.
 
         Puedes ahora acceder a tu nueva cuenta iniciando sesión en:
-        %{base_url}
+        %{login_url}
 
         Si no puedes hacer clic en el enlace, intenta copiarlo y pegarlo en la barra de direcciones de tu navegador.
 
@@ -5050,6 +5051,8 @@ es:
         title: "Restaurar publicación"
         description: "No aceptar la denuncia y restaurar la publicación"
         complete: "Publicación restaurada."
+      disagree_and_keep_deleted:
+        title: "Mantener publicación eliminada"
       disagree_bundle:
         title: "No"
       disagree:

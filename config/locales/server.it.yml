@@ -2683,6 +2683,7 @@ it:
     wrong_invite_code: "Il codice di invito che hai inserito non era corretto."
     reserved_username: "Questo nome utente non è consentito."
     missing_user_field: "Non hai inserito tutti i campi utente obbligatori"
+    missing_username: "Inserisci un nome utente"
     auth_complete: "L'autenticazione è completa"
     click_to_continue: "Clicca qui per continuare."
     already_logged_in: "Spiacenti! Questo invito è destinato ai nuovi utenti, che non dispongono di un account già esistente."
@@ -3856,7 +3857,7 @@ it:
         Un membro dello staff ha approvato il tuo account su %{site_name}.
 
         Ora puoi accedere al tuo nuovo account a questo indirizzo:
-        %{base_url}
+        %{login_url}
 
         Se il link qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
 
@@ -4605,6 +4606,8 @@ it:
       disagree_and_restore:
         title: "Ripristina messaggio"
         complete: "Messaggio ripristinato."
+      disagree_and_keep_deleted:
+        title: "Mantieni il messaggio cancellato"
       disagree_bundle:
         title: "No"
       disagree:

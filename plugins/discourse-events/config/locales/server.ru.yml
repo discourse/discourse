@@ -41,6 +41,8 @@ ru:
         ```text
         %{logs}
         ```
+    discourse_post_event_reminder:
+      title: "Напоминание о мероприятии"
   site_settings:
     map_events_to_color: "Назначать цвет каждому тегу или категории."
     map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
@@ -73,6 +75,17 @@ ru:
     enable_events_category_type_setup: "Включает опцию типа категории «События» при настройке создания категории."
     livestream_enable_modal_chat_on_mobile: "Отображение чата прямой трансляции в модальном окне на мобильных устройствах."
   discourse_events:
+    reminder:
+      subjects:
+        before: "Мероприятие «%{title}» вот-вот начнется"
+        ongoing: "Мероприятие «%{title}» продолжается"
+        after: "Мероприятие «%{title}» закончилось"
+      guest: "- %{name}"
+      additional_guests:
+        one: "  и ещё %{count}"
+        few: "  и ещё %{count}"
+        many: "  и ещё %{count}"
+        other: "  и ещё %{count}"
     category_type:
       default_calendar_view:
         label: "Стандартный вид календаря"

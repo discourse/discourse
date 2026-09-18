@@ -2846,6 +2846,7 @@ he:
     wrong_invite_code: "קוד ההזמנה שהקלדת שגוי."
     reserved_username: "שם משתמש זה אינו מורשה."
     missing_user_field: "לא מילאת את כל שדות המשתמש/ת הנחוצים"
+    missing_username: "נא למלא שם משתמש"
     auth_complete: "אימות הושלם."
     click_to_continue: "יש ללחוץ כאן כדי להמשיך."
     already_logged_in: "מחילה! ההזמנה הזו מיועדת למשתמשים חדשים, שעוד אין להם חשבון."
@@ -4206,7 +4207,7 @@ he:
         חבר סגל אישר את החשבון שלך אצל %{site_name}.
 
         מעתה יתאפשר לך לגשת לחשבון החדש שלך על ידי כניסה אליו בכתובת:
-        %{base_url}
+        %{login_url}
 
         אם אין אפשרות ללחוץ על הקישור שלהלן, כדאי לנסות להעתיק ולהדביק אותו לסרגל הכתובות של הדפדפן.
 
@@ -5021,6 +5022,8 @@ he:
       disagree_and_restore:
         title: "שחזור פוסט"
         complete: "הפוסט שוחזר."
+      disagree_and_keep_deleted:
+        title: "להשאיר את הפוסט מחוק"
       disagree_bundle:
         title: "לא"
       disagree:

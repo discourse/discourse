@@ -144,6 +144,7 @@ pl_PL:
         created_by: "Stworzono przez"
         show_older_cards: "Pokaż starsze karty: %{count}"
         errors:
+          category_unavailable: "Kategoria docelowa nie jest już dostępna. Zaktualizuj ustawienia tablicy lub kolumny przed utworzeniem tematu."
           acl_update_failed: "Nie udało się zaktualizować uprawnień tablicy."
           acl_create_failed: "Nie udało się utworzyć uprawnień do tablicy."
       manage:
