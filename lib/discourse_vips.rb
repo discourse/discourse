@@ -129,14 +129,16 @@ module DiscourseVips
             "provide exactly one resize target: scale, width and height, or max_pixels"
     end
 
-    Tempfile.create("thumbnail-", File.dirname(output_path)) do |output|
+    Tempfile.create(
+      ["thumbnail-", File.extname(output_path)],
+      File.dirname(output_path),
+    ) do |output|
       output.close
       Client.call(
         [
           "thumbnail",
           input_path,
           output.path,
-          output_path,
           width,
           height,
           scale,

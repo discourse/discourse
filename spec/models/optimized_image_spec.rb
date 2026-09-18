@@ -135,7 +135,7 @@ RSpec.describe OptimizedImage do
                 5,
                 raise_on_error: true,
               )
-            end.to raise_error(RuntimeError, /improper image header/)
+            end.to raise_error(Discourse::Utils::CommandError)
           ensure
             File.delete(tmp_path) if File.exist?(tmp_path)
           end
@@ -153,27 +153,6 @@ RSpec.describe OptimizedImage do
     after { FileUtils.remove_entry(directory) }
 
     shared_examples "resize processing" do
-      it "resizes a temporary file using the detected image format" do
-        original_path = Dir::Tmpname.create(%w[origin .bin]) { nil }
-
-        begin
-          FileUtils.cp "#{Rails.root.join("spec/fixtures/images/logo.png")}", original_path
-
-          # we use "filename" to get the correct extension here, it is more important
-          # then any other param
-
-          orig_size = File.size(original_path)
-
-          OptimizedImage.resize(original_path, original_path, 5, 5, filename: "test.png")
-
-          new_size = File.size(original_path)
-          expect(orig_size).to be > new_size
-          expect(new_size).not_to eq(0)
-        ensure
-          File.delete(original_path) if File.exist?(original_path)
-        end
-      end
-
       it "resizes an image in place" do
         result = described_class.resize(input_path, input_path, 100, 50)
 

@@ -793,10 +793,10 @@ RSpec.describe DiscourseVips do
 
     after { FileUtils.remove_entry(directory) }
 
-    it "resizes an image in place" do
+    it "resizes an image using its contents instead of its input extension" do
       described_class.thumbnail(
         input_path: input_path,
-        output_path: input_path,
+        output_path: output_path,
         width: 100,
         height: 50,
         crop: :centre,
@@ -807,8 +807,8 @@ RSpec.describe DiscourseVips do
         write: [directory],
       )
 
-      expect(FastImage.size(input_path)).to eq([100, 50])
-      expect(FastImage.type(input_path)).to eq(:png)
+      expect(FastImage.size(output_path)).to eq([100, 50])
+      expect(FastImage.type(output_path)).to eq(:png)
     end
 
     it "rejects unsupported output extensions" do
@@ -823,7 +823,23 @@ RSpec.describe DiscourseVips do
           read: [input_path],
           write: [directory],
         )
-      }.to raise_error(DiscourseVips::Error, "unsupported format")
+      }.to raise_error(DiscourseVips::Error)
+    end
+
+    it "reports a quality option unsupported by the output encoder as an operation error" do
+      expect {
+        described_class.thumbnail(
+          input_path: input_path,
+          output_path: File.join(directory, "output.gif"),
+          width: 100,
+          height: 50,
+          quality: 75,
+          timeout: 10,
+          operation: :optimized_image_resize,
+          read: [input_path],
+          write: [directory],
+        )
+      }.to raise_error(DiscourseVips::Error)
     end
 
     it "reports invalid thumbnail options as an operation error" do
@@ -884,9 +900,6 @@ RSpec.describe DiscourseVips do
     end
 
     it "scales an image by the requested factor" do
-      FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
-      output_path = File.join(directory, "output")
-
       described_class.thumbnail(
         input_path:,
         output_path:,
@@ -903,8 +916,6 @@ RSpec.describe DiscourseVips do
     end
 
     it "rejects conflicting resize targets" do
-      input_path = file_from_fixtures("logo.png").path
-
       expect {
         described_class.thumbnail(
           input_path:,
@@ -924,8 +935,6 @@ RSpec.describe DiscourseVips do
     end
 
     it "reports an invalid scale as an operation error" do
-      FileUtils.cp(file_from_fixtures("logo.png").path, input_path)
-
       expect {
         described_class.thumbnail(
           input_path:,

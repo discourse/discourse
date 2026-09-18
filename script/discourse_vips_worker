@@ -77,16 +77,15 @@ class DiscourseVipsWorker
         thumbnail(
           input_path: arguments[0],
           output_path: arguments[1],
-          destination_path: arguments[2],
-          width: arguments[3],
-          height: arguments[4],
-          scale: arguments[5],
-          max_pixels: arguments[6],
-          size: arguments[7],
-          crop: arguments[8],
-          sharpen: arguments[9],
-          quality: arguments[10],
-          strip_metadata: arguments[11],
+          width: arguments[2],
+          height: arguments[3],
+          scale: arguments[4],
+          max_pixels: arguments[5],
+          size: arguments[6],
+          crop: arguments[7],
+          sharpen: arguments[8],
+          quality: arguments[9],
+          strip_metadata: arguments[10],
         )
       else
         raise ArgumentError, "unsupported libvips operation"
@@ -297,7 +296,6 @@ class DiscourseVipsWorker
     def self.thumbnail(
       input_path:,
       output_path:,
-      destination_path:,
       width:,
       height:,
       scale:,
@@ -334,20 +332,6 @@ class DiscourseVipsWorker
             raise InvalidImage, error.message
           end
 
-        input_format = {
-          "jpegload" => "jpg",
-          "pngload" => "png",
-          "gifload" => "gif",
-          "webpload" => "webp",
-          "heifload" => "avif",
-        }.fetch(source.get("vips-loader"))
-        output_format =
-          if input_path == destination_path
-            input_format
-          else
-            image_format(path: destination_path, fallback: input_format)
-          end
-
         if !width.empty? && !height.empty?
           width = Integer(width)
           height = Integer(height)
@@ -378,27 +362,12 @@ class DiscourseVipsWorker
           )
         image = image.sharpen if sharpen == "true"
         options = { strip: strip_metadata == "true" }
-        options[:Q] = quality if quality &&
-          %w[jpg jpeg webp avif].include?(output_format)
-        image.write_to_target(
-          Vips::Target.new_to_file(output_path),
-          ".#{output_format}",
-          **options,
-        )
+        options[:Q] = quality if quality
+        image.write_to_file(output_path, **options)
         nil
       end
     end
     private_class_method :thumbnail
-
-    def self.image_format(path:, fallback: nil)
-      format = File.extname(path).delete_prefix(".").downcase
-      format = fallback if format.empty?
-      if !%w[jpg jpeg png gif webp avif].include?(format)
-        raise ArgumentError, "unsupported format"
-      end
-      format
-    end
-    private_class_method :image_format
 
     def self.normalize_color(image)
       image = image.colourspace(:srgb)
