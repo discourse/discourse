@@ -1399,6 +1399,39 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe "invitation email attribution" do
+    fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2], name: "Message Inviter") }
+    fab!(:invitee, :user)
+
+    %i[private_message topic].each do |destination|
+      it "identifies the inviter when another user started the #{destination}" do
+        SiteSetting.enable_names = true
+        SiteSetting.display_name_on_email_from = true
+        post =
+          if destination == :private_message
+            Fabricate(:private_message_post, recipient: inviter)
+          else
+            Fabricate(:post)
+          end
+
+        post.topic.invite(inviter, invitee.username)
+        notification = invitee.notifications.find_by!(topic_id: post.topic_id)
+        notification_type = "invited_to_#{destination}"
+        mail =
+          UserNotifications.public_send(
+            "user_#{notification_type}",
+            invitee,
+            notification_type: notification_type,
+            notification_data_hash: notification.data_hash,
+            post: notification.post,
+          )
+
+        expect(mail.text_part.body.decoded).to include("#{inviter.username} invited you")
+        expect(mail[:from].display_names).to eq([inviter.name])
+      end
+    end
+  end
+
   describe "user invited to a private message" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_private_message }
