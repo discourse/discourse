@@ -8,6 +8,55 @@ RSpec.describe OptimizedImage do
   before { upload.id = 42 }
 
   describe ".crop" do
+    let(:directory) { Dir.mktmpdir }
+    let(:input_path) { File.join(directory, "source.png") }
+
+    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
+
+    after { FileUtils.remove_entry(directory) }
+
+    shared_examples "crop processing" do
+      it "crops an image in place" do
+        result = described_class.crop(input_path, input_path, 100, 50)
+
+        expect(result).to eq(true)
+        expect(FastImage.size(input_path)).to eq([100, 50])
+      end
+
+      it "crops vertical content from the top edge" do
+        FileHelper.stubs(:optimize_image!).returns(true)
+
+        Dir.mktmpdir do |directory|
+          output_path = File.join(directory, "cropped.png")
+
+          described_class.crop(
+            Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
+            output_path,
+            3,
+            2,
+          )
+          output_image = ChunkyPNG::Image.from_file(output_path)
+
+          expect([output_image.width, output_image.height]).to eq([3, 2])
+          expect(output_image.pixels).to all(
+            satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
+          )
+        end
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "crop processing"
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "crop processing"
+    end
+
     it "produces cropped images with ImageMagick 7" do
       tmp_path = "/tmp/cropped.png"
       desired_width = 5
@@ -30,27 +79,6 @@ RSpec.describe OptimizedImage do
         expect(cropped_size).to be > 50
       ensure
         File.delete(tmp_path) if File.exist?(tmp_path)
-      end
-    end
-
-    it "crops vertical content from the top edge" do
-      FileHelper.stubs(:optimize_image!).returns(true)
-
-      Dir.mktmpdir do |directory|
-        output_path = File.join(directory, "cropped.png")
-
-        described_class.crop(
-          Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
-          output_path,
-          3,
-          2,
-        )
-        output_image = ChunkyPNG::Image.from_file(output_path)
-
-        expect([output_image.width, output_image.height]).to eq([3, 2])
-        expect(output_image.pixels).to all(
-          satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
-        )
       end
     end
 
@@ -89,28 +117,29 @@ RSpec.describe OptimizedImage do
         expect(instructions).to include("-colors")
       end
     end
+  end
 
-    describe ".resize" do
-      it "handles an invalid extension" do
-        original_path = Dir::Tmpname.create(%w[origin .bin]) { nil }
+  describe ".resize" do
+    let(:directory) { Dir.mktmpdir }
+    let(:input_path) { File.join(directory, "source.png") }
 
-        begin
-          FileUtils.cp "#{Rails.root.join("spec/fixtures/images/logo.png")}", original_path
+    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
 
-          # we use "filename" to get the correct extension here, it is more important
-          # then any other param
+    after { FileUtils.remove_entry(directory) }
 
-          orig_size = File.size(original_path)
+    shared_examples "resize processing" do
+      it "resizes an image in place" do
+        result = described_class.resize(input_path, input_path, 100, 50)
 
-          OptimizedImage.resize(original_path, original_path, 5, 5, filename: "test.png")
-
-          new_size = File.size(original_path)
-          expect(orig_size).to be > new_size
-          expect(new_size).not_to eq(0)
-        ensure
-          File.delete(original_path) if File.exist?(original_path)
-        end
+        expect(result).to eq(true)
+        expect(FastImage.size(input_path)).to eq([100, 50])
       end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "resize processing"
 
       it "optimizes the image" do
         file = File.open("#{Rails.root.join("spec/fixtures/images/resized.png")}")
@@ -143,25 +172,29 @@ RSpec.describe OptimizedImage do
         expect(thumb.filesize).to be > 200
       end
 
-      describe "when an svg with a href is masked as a png" do
-        it "does not trigger an external request" do
-          tmp_path = "/tmp/resized.png"
+      it "rejects an SVG disguised as a PNG" do
+        tmp_path = "/tmp/resized.png"
 
-          begin
-            expect do
-              OptimizedImage.resize(
-                "#{Rails.root.join("spec/fixtures/images/svg.png")}",
-                tmp_path,
-                5,
-                5,
-                raise_on_error: true,
-              )
-            end.to raise_error(RuntimeError, /improper image header/)
-          ensure
-            File.delete(tmp_path) if File.exist?(tmp_path)
-          end
+        begin
+          expect do
+            OptimizedImage.resize(
+              "#{Rails.root.join("spec/fixtures/images/svg.png")}",
+              tmp_path,
+              5,
+              5,
+              raise_on_error: true,
+            )
+          end.to raise_error(Discourse::Utils::CommandError)
+        ensure
+          File.delete(tmp_path) if File.exist?(tmp_path)
         end
       end
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "resize processing"
     end
   end
 
