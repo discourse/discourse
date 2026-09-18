@@ -86,7 +86,7 @@ RSpec.describe UserAvatarsController do
   end
 
   describe "#show" do
-    context "when invalid" do
+    shared_examples "avatar extension correction" do
       after { FileUtils.rm(Discourse.store.path_for(upload)) }
 
       let :upload do
@@ -102,32 +102,40 @@ RSpec.describe UserAvatarsController do
         user
       end
 
-      [false, true].each do |enabled|
-        it "corrects a PNG avatar mislabeled as JPEG with libvips #{enabled ? "enabled" : "disabled"}" do
-          GlobalSetting.stubs(:enable_vips_image_processing).returns(enabled)
+      it "corrects a PNG avatar mislabeled as JPEG" do
+        orig = Discourse.store.path_for(upload)
 
-          orig = Discourse.store.path_for(upload)
+        upload.update_columns(
+          original_filename: "bob.jpg",
+          extension: "jpg",
+          url: upload.url + ".jpg",
+        )
 
-          upload.update_columns(
-            original_filename: "bob.jpg",
-            extension: "jpg",
-            url: upload.url + ".jpg",
-          )
+        # at this point file is messed up
+        FileUtils.mv(orig, Discourse.store.path_for(upload))
 
-          # at this point file is messed up
-          FileUtils.mv(orig, Discourse.store.path_for(upload))
+        SiteSetting.avatar_sizes = "50"
 
-          SiteSetting.avatar_sizes = "50"
+        get "/user_avatar/default/#{user.username}/50/#{upload.id}.png"
 
-          get "/user_avatar/default/#{user.username}/50/#{upload.id}.png"
+        expect(OptimizedImage.where(upload_id: upload.id).count).to eq(1)
+        expect(response.status).to eq(200)
 
-          expect(OptimizedImage.where(upload_id: upload.id).count).to eq(1)
-          expect(response.status).to eq(200)
-
-          upload.reload
-          expect(upload.extension).to eq("png")
-        end
+        upload.reload
+        expect(upload.extension).to eq("png")
       end
+    end
+
+    context "when an avatar has an incorrect extension with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "avatar extension correction"
+    end
+
+    context "when an avatar has an incorrect extension with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "avatar extension correction"
     end
 
     it "serves sanitized SVG avatars without DTD entities" do
