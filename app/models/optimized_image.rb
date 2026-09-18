@@ -325,8 +325,35 @@ class OptimizedImage < ActiveRecord::Base
   private_class_method :resize_with_vips
 
   def self.crop(from, to, width, height, opts = {})
-    optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
+    if GlobalSetting.enable_vips_image_processing
+      ensure_safe_paths!(from, to)
+      crop_with_vips(from: from, to: to, width: width, height: height, opts: opts)
+    else
+      optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
+    end
   end
+
+  def self.crop_with_vips(from:, to:, width:, height:, opts:)
+    DiscourseVips.thumbnail(
+      input_path: from,
+      output_path: to,
+      width: width,
+      height: height,
+      crop: :all,
+      gravity: :north,
+      sharpen: true,
+      operation: :optimized_image_crop,
+      quality: opts[:quality],
+      strip_metadata: SiteSetting.strip_image_metadata,
+      timeout: MAX_CONVERT_SECONDS,
+      read: [from],
+      write: [File.dirname(to)],
+    )
+    optimize_image(to: to)
+  rescue => error
+    handle_optimization_error(error: error, to: to, opts: opts)
+  end
+  private_class_method :crop_with_vips
 
   def self.downsize(from:, to:, scale: nil, width: nil, height: nil, max_pixels: nil, **opts)
     if GlobalSetting.enable_vips_image_processing

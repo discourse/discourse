@@ -8,6 +8,55 @@ RSpec.describe OptimizedImage do
   before { upload.id = 42 }
 
   describe ".crop" do
+    let(:directory) { Dir.mktmpdir }
+    let(:input_path) { File.join(directory, "source.png") }
+
+    before { FileUtils.cp(file_from_fixtures("logo.png").path, input_path) }
+
+    after { FileUtils.remove_entry(directory) }
+
+    shared_examples "crop processing" do
+      it "crops an image in place" do
+        result = described_class.crop(input_path, input_path, 100, 50)
+
+        expect(result).to eq(true)
+        expect(FastImage.size(input_path)).to eq([100, 50])
+      end
+
+      it "crops vertical content from the top edge" do
+        FileHelper.stubs(:optimize_image!).returns(true)
+
+        Dir.mktmpdir do |directory|
+          output_path = File.join(directory, "cropped.png")
+
+          described_class.crop(
+            Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
+            output_path,
+            3,
+            2,
+          )
+          output_image = ChunkyPNG::Image.from_file(output_path)
+
+          expect([output_image.width, output_image.height]).to eq([3, 2])
+          expect(output_image.pixels).to all(
+            satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
+          )
+        end
+      end
+    end
+
+    context "with libvips disabled" do
+      before { global_setting :enable_vips_image_processing, false }
+
+      include_examples "crop processing"
+    end
+
+    context "with libvips enabled" do
+      before { global_setting :enable_vips_image_processing, true }
+
+      include_examples "crop processing"
+    end
+
     it "produces cropped images with ImageMagick 7" do
       tmp_path = "/tmp/cropped.png"
       desired_width = 5
@@ -30,27 +79,6 @@ RSpec.describe OptimizedImage do
         expect(cropped_size).to be > 50
       ensure
         File.delete(tmp_path) if File.exist?(tmp_path)
-      end
-    end
-
-    it "crops vertical content from the top edge" do
-      FileHelper.stubs(:optimize_image!).returns(true)
-
-      Dir.mktmpdir do |directory|
-        output_path = File.join(directory, "cropped.png")
-
-        described_class.crop(
-          Rails.root.join("spec/fixtures/images/crop_position.png").to_s,
-          output_path,
-          3,
-          2,
-        )
-        output_image = ChunkyPNG::Image.from_file(output_path)
-
-        expect([output_image.width, output_image.height]).to eq([3, 2])
-        expect(output_image.pixels).to all(
-          satisfy { |pixel| ChunkyPNG::Color.r(pixel) > ChunkyPNG::Color.b(pixel) },
-        )
       end
     end
 

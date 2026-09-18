@@ -120,6 +120,7 @@ module DiscourseVips
     max_pixels: nil,
     size: :both,
     crop: :none,
+    gravity: nil,
     sharpen: false,
     quality: nil,
     strip_metadata: false
@@ -148,6 +149,7 @@ module DiscourseVips
           sharpen,
           quality,
           strip_metadata,
+          gravity,
         ],
         operation:,
         read:,

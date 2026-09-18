@@ -86,6 +86,7 @@ class DiscourseVipsWorker
           sharpen: arguments[8],
           quality: arguments[9],
           strip_metadata: arguments[10],
+          gravity: arguments[11],
         )
       else
         raise ArgumentError, "unsupported libvips operation"
@@ -304,7 +305,8 @@ class DiscourseVipsWorker
       crop:,
       sharpen:,
       quality:,
-      strip_metadata:
+      strip_metadata:,
+      gravity:
     )
       new do
         if !%w[true false].include?(sharpen)
@@ -360,6 +362,7 @@ class DiscourseVipsWorker
             crop: crop.to_sym,
             output_profile: "srgb",
           )
+        image = image.gravity(gravity.to_sym, width, height) if !gravity.empty?
         image = image.sharpen if sharpen == "true"
         options = { strip: strip_metadata == "true" }
         options[:Q] = quality if quality
