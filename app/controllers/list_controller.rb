@@ -158,6 +158,7 @@ class ListController < ApplicationController
   end
 
   def topics_by
+    guardian.ensure_public_can_see_profiles! if request.format.md?
     list_opts = build_topic_list_options
     target_user =
       fetch_user_from_params(
@@ -168,6 +169,8 @@ class ListController < ApplicationController
         %i[user_stat user_option],
       )
     ensure_can_see_profile!(target_user)
+    raise Discourse::NotFound if request.format.md? && !current_user&.staff? && !target_user.active?
+    @target_user = target_user
 
     list = generate_list_for("topics_by", target_user, list_opts)
     list.more_topics_url = construct_url_with(:next, list_opts)

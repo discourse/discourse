@@ -550,7 +550,18 @@ class TagsController < ::ApplicationController
     end
 
     url += ".json" if request.format.json?
-    url += "?#{request.query_string}" if request.query_string.present?
+    url += ".md" if request.format.md?
+    if request.query_string.present?
+      query =
+        if request.format.md?
+          request.query_parameters.slice(
+            *MarkdownEndpoint::ControllerSupport::SAFE_QUERY_PARAMETERS,
+          )
+        else
+          request.query_parameters
+        end
+      url += "?#{query.to_query}" if query.present?
+    end
     redirect_to url, status: :moved_permanently
   end
 

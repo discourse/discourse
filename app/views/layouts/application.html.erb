@@ -88,6 +88,7 @@
     <%- end %>
 
     <%= yield :head %>
+    <%= markdown_alternate_link_tag %>
 
     <%= build_plugin_html 'server:before-head-close' %>
 

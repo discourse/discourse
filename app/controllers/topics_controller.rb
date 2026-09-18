@@ -194,6 +194,7 @@ class TopicsController < ApplicationController
         last_page = visible_posts_count > 0 ? ((visible_posts_count - 1) / chunk_size) + 1 : 1
         url = @topic_view.topic.relative_url
         url += ".json" if request.format.json?
+        url += ".md" if request.format.md?
         url += "?page=#{last_page}" if last_page > 1
         return redirect_to url, status: :moved_permanently
       end
@@ -1478,6 +1479,7 @@ class TopicsController < ApplicationController
     url = topic.relative_url
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
+    url << ".md" if request.format.md?
 
     opts.each do |k, v|
       s = url.include?("?") ? "&" : "?"
@@ -1543,6 +1545,8 @@ class TopicsController < ApplicationController
 
   def perform_show_response
     if request.head?
+      response.content_type = "text/markdown; charset=utf-8" if request.format.md?
+      merge_vary_accept if request.format.md?
       head :ok
       return
     end
@@ -1575,6 +1579,15 @@ class TopicsController < ApplicationController
       end
 
       format.json { render_json_dump(topic_view_serializer) }
+      format.md do
+        render_markdown(
+          MarkdownEndpoint::TopicRenderer.new(
+            @topic_view,
+            guardian: guardian,
+            post_number: params[:post_number],
+          ).render,
+        )
+      end
     end
   end
 
