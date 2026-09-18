@@ -9,7 +9,7 @@ module Migrations
     module FilesDB
       module OptimizedImage
         SQL = <<~SQL
-          INSERT INTO optimized_images (
+          INSERT OR IGNORE INTO optimized_images (
             id,
             created_at,
             etag,
@@ -27,6 +27,10 @@ module Migrations
           )
         SQL
         private_constant :SQL
+
+        def self.conflict_strategy
+          :ignore
+        end
 
         # Creates a new `optimized_images` record in the FilesDB.
         #

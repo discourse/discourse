@@ -70,6 +70,32 @@ RSpec.describe Migrations::Importer::Uploads::Tasks::Optimizer, :rails do
     end
   end
 
+  describe "#write" do
+    it "writes repeated optimized-image results idempotently" do
+      result = {
+        status: :ok,
+        optimized_images: [
+          {
+            id: 10,
+            extension: "png",
+            height: 100,
+            sha1: "optimized-sha1",
+            upload_id: 1,
+            url: "//optimized/1.png",
+            width: 100,
+          },
+        ],
+      }
+
+      Migrations::Database::FilesDB.with_connection(files_db) do
+        expect(optimizer.write(result)).to eq(:ok)
+        expect(optimizer.write(result)).to eq(:ok)
+      end
+
+      expect(files_db.count("SELECT COUNT(*) FROM optimized_images WHERE id = 10")).to eq(1)
+    end
+  end
+
   def run_enqueue
     optimizer.before_run
 
