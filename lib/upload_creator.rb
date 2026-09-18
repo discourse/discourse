@@ -536,8 +536,6 @@ class UploadCreator
         width,
         height,
         filename: filename_with_correct_ext,
-        quality:
-          @image_info.type == :jpeg ? SiteSetting.ImageQuality.image_preview_jpg_quality : nil,
       )
     when "profile_background"
       max_width = 850 * max_pixel_ratio
