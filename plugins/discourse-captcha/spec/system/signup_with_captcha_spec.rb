@@ -52,7 +52,7 @@ RSpec.describe "Signup with captcha" do
         code = ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1]
         find(".d-otp-input").fill_in(with: code)
 
-        expect(page).to have_css(".code-login-form__complete-step")
+        expect(page).to have_css(".code-login-form__signup-details-step")
         expect(captcha).to have_hcaptcha_widget
         screenshot_marker(label: "deferred-signup-captcha", only: :desktop)
       end
