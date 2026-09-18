@@ -64,6 +64,7 @@ export default <template>
         @action={{@controller.saveUsername}}
         @editing={{@controller.editingUsername}}
         @name="user.username.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingUsername"}}
         @value={{@controller.model.username}}
       />
     </div>
@@ -73,6 +74,7 @@ export default <template>
         @action={{@controller.saveName}}
         @editing={{@controller.editingName}}
         @name="user.name.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingName"}}
         @value={{@controller.model.name}}
       />
     </div>
@@ -220,6 +222,7 @@ export default <template>
         @action={{@controller.saveTitle}}
         @editing={{@controller.editingTitle}}
         @name="user.title.title"
+        @toggleEditing={{fn @controller.toggleEditing "editingTitle"}}
         @value={{@controller.model.title}}
       />
     </div>
