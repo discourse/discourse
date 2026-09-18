@@ -10,7 +10,7 @@ export default class ReviewIndex extends DiscourseRoute {
 
   model(params) {
     if (params.sort_order === null) {
-      if (params.status === "reviewed" || params.status === "all") {
+      if (["reviewed", "all", "dsa_classification"].includes(params.status)) {
         params.sort_order = "created_at";
       } else {
         params.sort_order = "score";
@@ -38,6 +38,7 @@ export default class ReviewIndex extends DiscourseRoute {
       reviewables: model,
       type: meta.type,
       filterType: meta.type,
+      filterDsaCategory: meta.dsa_category,
       filterStatus: meta.status,
       filterTopic: meta.topic_id,
       filterCategoryId: meta.category_id,

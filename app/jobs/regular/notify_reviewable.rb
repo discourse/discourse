@@ -21,6 +21,11 @@ class Jobs::NotifyReviewable < ::Jobs::Base
             status: r.status_for_database,
           }
 
+          if SiteSetting.enable_dsa_reporting
+            payload[:legal_basis] = r.legal_basis
+            payload[:dsa_category] = r.dsa_category
+          end
+
           all_updates[:admins][r.id] = payload
           all_updates[:moderators][r.id] = payload if r.reviewable_by_moderator?
 

@@ -573,6 +573,10 @@ Discourse::Application.routes.draw do
           action_id: /[a-z\_]+/,
         }
     put "review/:reviewable_id" => "reviewables#update", :constraints => { reviewable_id: /\d+/ }
+    put "review/:reviewable_id/dsa-classification" => "reviewables#classify_for_dsa",
+        :constraints => {
+          reviewable_id: /\d+/,
+        }
     put "review/:reviewable_id/scrub" => "reviewables#scrub",
         :constraints => {
           reviewable_id: /\d+/,

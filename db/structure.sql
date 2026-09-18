@@ -9488,7 +9488,13 @@ CREATE TABLE public.reviewables (
     force_review boolean DEFAULT false NOT NULL,
     reject_reason text,
     potentially_illegal boolean DEFAULT false,
-    type_source character varying DEFAULT 'unknown'::character varying NOT NULL
+    type_source character varying DEFAULT 'unknown'::character varying NOT NULL,
+    dsa_category character varying,
+    dsa_subcategory character varying,
+    dsa_subcategory_other character varying(500),
+    legal_basis character varying,
+    restriction_type character varying,
+    outcome_source character varying
 );
 
 
@@ -23169,6 +23175,13 @@ CREATE INDEX index_reviewable_scores_on_user_id ON public.reviewable_scores USIN
 
 
 --
+-- Name: index_reviewables_awaiting_dsa_classification; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviewables_awaiting_dsa_classification ON public.reviewables USING btree (status) WHERE ((legal_basis IS NOT NULL) AND (dsa_category IS NULL));
+
+
+--
 -- Name: index_reviewables_on_reviewable_by_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -25383,6 +25396,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260917155733'),
 ('20260915204557'),
 ('20260915191328'),
 ('20260914213908'),

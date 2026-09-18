@@ -1433,6 +1433,116 @@ RSpec.describe ReviewablesController do
       end
     end
 
+    describe "#index with DSA filters" do
+      fab!(:classified) do
+        Fabricate(
+          :reviewable_flagged_post,
+          status: :approved,
+          legal_basis: "DECISION_GROUND_ILLEGAL_CONTENT",
+          dsa_category: "STATEMENT_CATEGORY_SCAMS_AND_FRAUD",
+        )
+      end
+
+      before { SiteSetting.enable_dsa_reporting = true }
+
+      it "filters by classification status and category" do
+        get "/review.json?status=dsa_classification"
+        expect(response.parsed_body["reviewables"].map { |r| r["id"] }).to eq([classified.id])
+
+        get "/review.json?status=dsa_classification&dsa_category=STATEMENT_CATEGORY_SCAMS_AND_FRAUD"
+        expect(response.parsed_body["reviewables"].map { |r| r["id"] }).to eq([classified.id])
+
+        get "/review.json?status=dsa_classification&dsa_category=unclassified"
+        expect(response.parsed_body["reviewables"]).to be_empty
+      end
+
+      it "rejects categories outside the taxonomy" do
+        get "/review.json?status=dsa_classification&dsa_category=STATEMENT_CATEGORY_MADE_UP"
+        expect(response.status).to eq(400)
+      end
+    end
+
+    describe "#classify_for_dsa" do
+      fab!(:reviewable) do
+        Fabricate(
+          :reviewable_flagged_post,
+          status: :approved,
+          legal_basis: "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+        )
+      end
+
+      let(:classification) do
+        { dsa_category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC", dsa_subcategory: "KEYWORD_NUDITY" }
+      end
+
+      before { SiteSetting.enable_dsa_reporting = true }
+
+      it "classifies the reviewable and exposes it with its history" do
+        put "/review/#{reviewable.id}/dsa-classification.json", params: classification
+        expect(response.status).to eq(204)
+
+        get "/review/#{reviewable.id}.json"
+        json = response.parsed_body
+        expect(json["reviewable"]).to include(
+          "legal_basis" => "DECISION_GROUND_INCOMPATIBLE_CONTENT",
+          "dsa_category" => "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          "dsa_subcategory" => "KEYWORD_NUDITY",
+        )
+        expect(json["reviewable_histories"].last["dsa_classification"]).to include(
+          "dsa_subcategory" => "KEYWORD_NUDITY",
+        )
+      end
+
+      it "rejects classifications outside the taxonomy" do
+        put "/review/#{reviewable.id}/dsa-classification.json",
+            params: classification.merge(dsa_subcategory: "KEYWORD_PHISHING")
+        expect(response.status).to eq(400)
+      end
+
+      it "rejects categories from the other legal basis" do
+        put "/review/#{reviewable.id}/dsa-classification.json",
+            params: {
+              dsa_category: "STATEMENT_CATEGORY_VIOLENCE",
+            }
+        expect(response.status).to eq(422)
+      end
+
+      it "refuses to classify reviewables whose outcome doesn't need it" do
+        reviewable.update!(legal_basis: nil)
+
+        put "/review/#{reviewable.id}/dsa-classification.json", params: classification
+        expect(response.status).to eq(422)
+      end
+
+      it "returns 404 when DSA reporting is disabled" do
+        SiteSetting.enable_dsa_reporting = false
+
+        put "/review/#{reviewable.id}/dsa-classification.json", params: classification
+        expect(response.status).to eq(404)
+      end
+
+      it "denies users who can't see the review queue" do
+        sign_in(Fabricate(:user))
+
+        put "/review/#{reviewable.id}/dsa-classification.json", params: classification
+        expect(response.status).to eq(403)
+      end
+
+      it "only serializes DSA fields and the taxonomy when DSA reporting is enabled" do
+        get "/review/#{reviewable.id}.json"
+        expect(response.parsed_body["reviewable"]).to have_key("legal_basis")
+        get "/site.json"
+        expect(response.parsed_body).to have_key("dsa_taxonomy")
+
+        SiteSetting.enable_dsa_reporting = false
+
+        get "/review/#{reviewable.id}.json"
+        expect(response.parsed_body["reviewable"]).not_to have_key("legal_basis")
+        get "/site.json"
+        expect(response.parsed_body).not_to have_key("dsa_taxonomy")
+      end
+    end
+
     describe "#scrub" do
       let(:user) { Fabricate(:user).tap(&:activate) }
       let(:reviewable) { ReviewableUser.find_by(target: user) }
