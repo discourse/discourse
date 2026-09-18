@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Mirrors Discourse's `optimized_images`. `id` is the staging PK, `upload_id`
-# points at the staging `uploads.id`.
+# Mirrors Discourse's `optimized_images`. `id` is the migration-environment PK,
+# and `upload_id` points at the migration environment's `uploads.id`.
 Migrations::Tooling::Schema.table :optimized_images do
   include_all
 
