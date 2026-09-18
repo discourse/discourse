@@ -20,7 +20,7 @@ module DiscourseDataExplorer
       limit = INDEX_LIMIT
       offset = params[:offset].to_i
       filter = params[:filter]
-      tag = params[:tag]
+      tag_names = QueryTag.normalize_all((params[:tags].presence || params[:tag]).to_s.split(","))
 
       order_column = SORTABLE_COLUMNS.include?(params[:order]) ? params[:order] : "last_run_at"
       order_direction = params[:ascending] == "true" ? :asc : :desc
@@ -45,15 +45,12 @@ module DiscourseDataExplorer
           )
       end
 
-      if tag.present?
-        normalized_tag = DiscourseDataExplorer::QueryTag.normalize_name(tag)
-        base_scope = base_scope.filter_by_tags(normalized_tag)
-      end
+      base_scope = base_scope.filter_by_tags(tag_names) if tag_names.present?
 
       persisted_count = base_scope.count
 
       unpersisted_defaults =
-        DiscourseDataExplorer::Query.unpersisted_defaults(search: filter, tag: tag)
+        DiscourseDataExplorer::Query.unpersisted_defaults(search: filter, tags: tag_names)
 
       total_rows = persisted_count + unpersisted_defaults.size
 
@@ -77,7 +74,7 @@ module DiscourseDataExplorer
       if next_offset < persisted_count
         load_more_params = { offset: next_offset }
         load_more_params[:filter] = filter if filter.present?
-        load_more_params[:tag] = tag if tag.present?
+        load_more_params[:tags] = tag_names.join(",") if tag_names.present?
         load_more_params[:order] = order_column if order_column != "last_run_at"
         load_more_params[:ascending] = "true" if order_direction == :asc
         base_path = request.path.delete_suffix(".json")

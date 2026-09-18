@@ -101,9 +101,9 @@ module DiscourseDataExplorer
       (tag_names << DEFAULT_TAG).uniq.sort_by(&:downcase)
     end
 
-    def self.unpersisted_defaults(search: nil, tag: nil)
-      normalized_tag = QueryTag.normalize_name(tag)
-      return [] if normalized_tag.present? && normalized_tag != DEFAULT_TAG
+    def self.unpersisted_defaults(search: nil, tags: nil, tag: nil)
+      selected_tags = QueryTag.normalize_all(tags || tag)
+      return [] if selected_tags.any? { |name| name != DEFAULT_TAG }
 
       persisted_ids = where(hidden: false).where("id < 0").pluck(:id).to_set
       query_text = search&.downcase
