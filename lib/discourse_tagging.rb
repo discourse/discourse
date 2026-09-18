@@ -804,6 +804,10 @@ module DiscourseTagging
     end
   end
 
+  def self.editable_synonym_ids(synonyms, guardian)
+    synonyms.filter_map { |synonym| synonym.id if guardian.can_edit_tag?(synonym) }
+  end
+
   # Returns true if all were added successfully, or an Array of the
   # tags that failed to be added, with errors on each Tag.
   def self.add_or_create_synonyms_by_name(target_tag, synonym_names)
