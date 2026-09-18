@@ -5,7 +5,6 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { AUTO_GROUPS } from "discourse/lib/constants";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
@@ -70,7 +69,6 @@ const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 const DISCUSSION_TYPE_ID = "discussion";
 
 export default class EditCategoryTabsController extends Controller {
-  @service currentUser;
   @service dialog;
   @service site;
   @service siteSettings;
@@ -381,12 +379,18 @@ export default class EditCategoryTabsController extends Controller {
     const { visibility, ...categoryData } = data;
     this.model.setProperties(categoryData);
 
-    // If permissions is empty or not set, ensure it's an empty array (public category)
+    // Category serialization converts an empty permission list to staff-only access.
     if (!this.model.permissions || this.model.permissions.length === 0) {
       this.model.set("permissions", []);
     }
 
-    const lostAccess = this._wouldLoseAccess();
+    let lostAccess;
+    try {
+      lostAccess = await this.#wouldLoseAccess();
+    } catch (error) {
+      popupAjaxError(error);
+      return;
+    }
 
     if (lostAccess) {
       const confirmed = await this.dialog.yesNoConfirm({
@@ -560,27 +564,25 @@ export default class EditCategoryTabsController extends Controller {
     }
   }
 
-  _wouldLoseAccess(category = this.model) {
-    if (this.currentUser.admin) {
+  async #wouldLoseAccess(category = this.model) {
+    try {
+      await ajax("/categories/evaluate_permissions.json", {
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          group_ids: category.permissions.map(
+            (permission) => permission.group_id
+          ),
+        }),
+      });
       return false;
+    } catch (error) {
+      if (error.jqXHR?.responseJSON?.extras?.current_user_will_lose_access) {
+        return true;
+      }
+
+      throw error;
     }
-
-    const permissions = category.permissions;
-    if (!permissions?.length) {
-      return false;
-    }
-
-    const userGroupIds = new Set(
-      this.currentUser.visibleGroups.map((g) => g.id)
-    );
-
-    // TODO (martin) Update this with granular_anonymous_and_logged_in_groups_permissions to
-    // do a server-side check, since this is only checking against the current user's visible
-    // groups, it should check against _all_ their groups.
-    return !permissions.some(
-      (p) =>
-        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
-    );
   }
 
   _stashVisibleSiteTexts() {
