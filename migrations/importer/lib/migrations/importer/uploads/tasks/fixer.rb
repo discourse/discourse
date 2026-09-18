@@ -76,7 +76,8 @@ module Migrations
           private
 
           # Drops the upload everywhere it's recorded — the Discourse record, the
-          # staging row, its optimized images, and every result that points at it.
+          # migration-environment row, its optimized images, and every result that
+          # points at it.
           # With the result rows gone, the uploader's incremental skip no longer
           # sees those source ids and recreates them on the next run.
           def remove_missing_upload(upload_id)

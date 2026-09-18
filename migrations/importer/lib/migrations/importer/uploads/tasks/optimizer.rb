@@ -44,9 +44,9 @@ module Migrations
           end
 
           def produce(emit_work:, emit_result:)
-            # `upload_id` is the staging `uploads.id`; `source_id` is the original
-            # id from `upload_results`, which is what the post/avatar sets below are
-            # keyed on.
+            # `upload_id` is the migration environment's `uploads.id`; `source_id`
+            # is the original id from `upload_results`, which is what the
+            # post/avatar sets below are keyed on.
             sql = <<~SQL
               SELECT u.id AS upload_id, u.sha1 AS upload_sha1, r.id AS source_id, r.markdown
                 FROM upload_results r
@@ -192,7 +192,8 @@ module Migrations
             { id: row[:upload_id], status: :error }
           end
 
-          # The staging row's sha1 has no matching Discourse `Upload` record, so
+          # The migration-environment row's sha1 has no matching Discourse
+          # `Upload` record, so
           # there's nothing to optimize. Recorded as an error with a message
           # rather than left to crash on a nil upload later on.
           def upload_not_found_status(row)
