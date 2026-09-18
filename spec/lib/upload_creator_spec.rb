@@ -49,6 +49,10 @@ RSpec.describe UploadCreator do
         expect(upload).to be_persisted
         expect(upload.original_filename).to eq("wrong_upload.png")
         expect(upload.extension).to eq("png")
+        expect(upload).to have_attributes(
+          width: Discourse.avatar_sizes.max,
+          height: Discourse.avatar_sizes.max,
+        )
         expect(FastImage.type(Discourse.store.path_for(upload))).to eq(:png)
         expect(FastImage.size(Discourse.store.path_for(upload))).to eq(
           [Discourse.avatar_sizes.max, Discourse.avatar_sizes.max],
@@ -68,6 +72,20 @@ RSpec.describe UploadCreator do
       before { global_setting :enable_vips_image_processing, true }
 
       include_examples "image extension correction"
+
+      it "accepts JPEG uploads after downsizing them below the size limit" do
+        file = file_from_fixtures("logo.jpg")
+        SiteSetting.max_image_size_kb = 16
+        expect(File.size(file.path)).to be > SiteSetting.max_image_size_kb.kilobytes
+
+        upload = described_class.new(file, "large.jpg", force_optimize: true).create_for(user.id)
+
+        expect(upload).to be_persisted
+        stored_path = Discourse.store.path_for(upload)
+        width, height = FastImage.size(stored_path)
+        expect(upload).to have_attributes(width:, height:, filesize: File.size(stored_path))
+        expect(upload.filesize).to be < SiteSetting.max_image_size_kb.kilobytes
+      end
     end
 
     context "when the upload is an SVG" do
