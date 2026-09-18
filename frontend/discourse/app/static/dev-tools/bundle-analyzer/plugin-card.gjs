@@ -2,6 +2,7 @@ import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { fmt, matches } from "./analysis";
 import ExpandableRow from "./expandable-row";
+import PluginChunkRow from "./plugin-chunk-row";
 
 // Brotli totals read "…" until every chunk in the set is measured, so a card
 // never momentarily looks smaller than it is.
@@ -57,15 +58,18 @@ export default class PluginCard extends ExpandableRow {
     return rows.sort((a, b) => b.totals.raw - a.totals.raw);
   }
 
-  @cached
   get chunkRows() {
-    return Object.values(this.plugin.chunks)
-      .map((c) => ({ ...c, brotli: this.analysis.brotliOf(c.file) }))
-      .sort((a, b) => (b.brotli ?? b.rawSize) - (a.brotli ?? a.rawSize));
+    return Object.values(this.plugin.chunks).sort(
+      (a, b) => this.#sortSize(b) - this.#sortSize(a)
+    );
   }
 
   #closure(file) {
     return this.analysis.closureOf(this.plugin, file);
+  }
+
+  #sortSize(chunk) {
+    return this.analysis.brotliOf(chunk.file) ?? chunk.rawSize;
   }
 
   <template>
@@ -129,19 +133,11 @@ export default class PluginCard extends ExpandableRow {
           <div class="ba-pill" style="margin:8px 0 4px">Chunks</div>
           <div class="ba-sub-list">
             {{#each this.chunkRows as |c|}}
-              <div class="ba-plugin-line">
-                <span class="ba-name">
-                  {{#if c.isEntry}}
-                    <span class="ba-badge entry">entry</span>
-                  {{/if}}
-                  <span class="ba-label" title={{c.file}}>{{c.file}}</span>
-                </span>
-                <span class="ba-num">{{if c.brotli (fmt c.brotli) "…"}}
-                  <span class="ba-pill">br</span></span>
-                <span class="ba-num muted">{{fmt c.rawSize}}
-                  <span class="ba-pill">raw</span></span>
-                <span class="ba-num pill"></span>
-              </div>
+              <PluginChunkRow
+                @analysis={{@analysis}}
+                @chunk={{c}}
+                @filter={{@filter}}
+              />
             {{/each}}
           </div>
         </div>
@@ -157,7 +153,10 @@ export function pluginMatches(plugin, filter) {
   }
   return (
     matches(plugin.plugin, filter) ||
-    Object.keys(plugin.chunks).some((f) => matches(f, filter)) ||
+    Object.values(plugin.chunks).some(
+      (c) =>
+        matches(c.file, filter) || c.modules.some((m) => matches(m.id, filter))
+    ) ||
     Object.values(plugin.routeBundles)
       .flat()
       .some((b) => matches(b.url, filter))

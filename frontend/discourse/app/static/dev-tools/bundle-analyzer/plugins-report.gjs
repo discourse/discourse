@@ -63,7 +63,7 @@ export default class PluginsReport extends Component {
 
       <div class="ba-toolbar">
         <input
-          placeholder="Filter plugins / chunks / routes…"
+          placeholder="Filter plugins / chunks / modules / routes…"
           type="search"
           {{on "input" this.updateFilter}}
         />

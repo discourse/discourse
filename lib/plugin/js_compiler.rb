@@ -39,6 +39,8 @@ class Plugin::JsCompiler
       "#{@filename_prefix}main#{@filename_suffix}.js" => {
         "name" => "main",
         "imports" => [],
+        "dynamicImports" => [],
+        "modules" => [],
         "isEntry" => true,
         "code" => "throw new Error(#{message.to_json});\n",
         "map" => nil,

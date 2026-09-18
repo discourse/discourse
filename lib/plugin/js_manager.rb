@@ -275,6 +275,8 @@ module Plugin
             rawSize: code.bytesize,
             imports: info["imports"],
             dynamicImports: info["dynamicImports"],
+            moduleCount: info["modules"].length,
+            modules: info["modules"],
           }
 
           if info["isEntry"]
