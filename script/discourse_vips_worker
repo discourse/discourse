@@ -349,19 +349,25 @@ class DiscourseVipsWorker
           width = Integer(width)
           height = Integer(height)
         else
+          max_pixels = max_pixels.empty? ? nil : Integer(max_pixels)
           scale =
-            if max_pixels.empty?
-              Float(scale)
-            else
-              max_pixels = Integer(max_pixels)
+            if max_pixels
               raise ArgumentError, "invalid resize scale" if !max_pixels.positive?
 
+              source = source.autorot
               Math.sqrt(max_pixels.fdiv(source.width * source.height))
+            else
+              Float(scale)
             end
           raise ArgumentError, "invalid resize scale" if !scale.finite? || !scale.positive?
 
-          width = [([source.width, source.height].max * scale).round, 1].max
-          height = width
+          if max_pixels
+            width = (source.width * scale).floor.clamp(1, max_pixels)
+            height = (source.height * scale).floor.clamp(1, max_pixels)
+          else
+            width = [([source.width, source.height].max * scale).round, 1].max
+            height = width
+          end
         end
 
         image =
