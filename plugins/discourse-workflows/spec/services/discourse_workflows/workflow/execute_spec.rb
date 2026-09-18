@@ -10,7 +10,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
 
     fab!(:user)
     fab!(:workflow) do
-      graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:manual" }
+      graph = build_workflow_graph { |builder| builder.node "trigger-1", "trigger:manual" }
       Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
     end
 
@@ -50,10 +50,9 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
         )
       end
 
-      it { is_expected.to run_successfully }
-
       it "finds the workflow via dependency index" do
-        expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1)
+        expect(result).to run_successfully
+        expect(result[:execution]).to have_attributes(workflow_id: workflow.id, status: "success")
       end
     end
 
@@ -72,20 +71,11 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
         publish_workflow!(workflow)
       end
 
-      it { is_expected.to run_successfully }
-
       it "executes the matched version instead of the current active version" do
+        expect(result).to run_successfully
         expect(result[:workflow_version]).to eq(matched_version)
         workflow_data = result[:execution].execution_data.workflow_data
         expect(workflow_data["nodes"]).to contain_exactly(include("id" => "trigger-1"))
-      end
-    end
-
-    context "when everything's ok" do
-      it { is_expected.to run_successfully }
-
-      it "creates an execution record" do
-        expect { result }.to change { DiscourseWorkflows::Execution.count }.by(1)
       end
     end
 
@@ -338,9 +328,8 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
         { workflow_id: workflow.id, trigger_node_id: "trigger-1", user_id: execution_user.id }
       end
 
-      it { is_expected.to run_successfully }
-
       it "fetches the correct user" do
+        expect(result).to run_successfully
         expect(result[:user]).to eq(execution_user)
       end
     end

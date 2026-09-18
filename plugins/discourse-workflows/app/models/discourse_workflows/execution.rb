@@ -161,52 +161,48 @@ module DiscourseWorkflows
     def fail_with_timeout!
       message = I18n.t("discourse_workflows.errors.approval_timed_out")
       node_id = waiting_node_id
-      claimed = false
+      claimed =
+        transaction do
+          run_time_ms = execution_data && self.class.compute_run_time_ms(execution_data.steps_array)
 
-      transaction do
-        run_time_ms = execution_data && self.class.compute_run_time_ms(execution_data.steps_array)
+          affected =
+            self
+              .class
+              .where(
+                id: id,
+                status: :waiting,
+                resume_token: resume_token,
+                waiting_until: waiting_until,
+                timeout_action: timeout_action,
+              )
+              .update_all(
+                status: self.class.statuses[:error],
+                error: message,
+                finished_at: Time.current,
+                run_time_ms: run_time_ms,
+                waiting_node_id: nil,
+                waiting_until: nil,
+                resume_token: nil,
+                timeout_action: nil,
+                updated_at: Time.current,
+              )
 
-        affected =
-          self
-            .class
-            .where(
-              id: id,
-              status: :waiting,
-              resume_token: resume_token,
-              waiting_until: waiting_until,
-              timeout_action: timeout_action,
-            )
-            .update_all(
-              status: self.class.statuses[:error],
-              error: message,
-              finished_at: Time.current,
-              run_time_ms: run_time_ms,
-              waiting_node_id: nil,
-              waiting_until: nil,
-              resume_token: nil,
-              timeout_action: nil,
-              updated_at: Time.current,
-            )
+          next false if affected.zero?
+          update_step_status_in_data!(
+            node_id,
+            Executor::Step::WAITING,
+            Executor::Step::ERROR,
+            message,
+          )
+          true
+        end
+      return false unless claimed
 
-        next if affected.zero?
-
-        claimed = true
-        update_step_status_in_data!(
-          node_id,
-          Executor::Step::WAITING,
-          Executor::Step::ERROR,
-          message,
-        )
-      end
-
-      if claimed
-        reload
-        trigger_error_workflow(StandardError.new(message))
-        DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
-        DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)
-      end
-
-      claimed
+      reload
+      trigger_error_workflow(StandardError.new(message))
+      DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
+      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)
+      true
     end
 
     def trigger_error_workflow(error, steps: execution_data&.steps_array || [])
@@ -268,11 +264,11 @@ module DiscourseWorkflows
       full_data = execution_data.data.deep_dup
       (full_data["entries"] || {}).each_value do |steps|
         Array(steps).each do |step|
-          if step["node_id"] == node_id.to_s && step["status"] == from_status.to_s
-            step["status"] = to_status.to_s
-            step["error"] = error_msg if error_msg
-            step["finished_at"] = Time.current.iso8601
-          end
+          next unless step["node_id"] == node_id.to_s && step["status"] == from_status.to_s
+
+          step["status"] = to_status.to_s
+          step["error"] = error_msg if error_msg
+          step["finished_at"] = Time.current.iso8601
         end
       end
       execution_data.update!(data: full_data)
