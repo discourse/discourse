@@ -11,8 +11,7 @@ RSpec.describe EmailLoginCode::Redeem do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    let(:params) { { email:, code:, username: } }
-    let(:username) { "chosen_username" }
+    let(:params) { { email:, code: } }
     let(:dependencies) { { ip_address: "127.0.0.1" } }
     let(:email) { "newuser@example.com" }
 
@@ -105,6 +104,58 @@ RSpec.describe EmailLoginCode::Redeem do
       end
     end
 
+    context "when the email is unknown" do
+      let(:email) { "jane@example.com" }
+
+      it { is_expected.to run_successfully }
+
+      it "consumes the code" do
+        expect { result }.to change { login_code.reload.consumed_at }.from(nil)
+      end
+
+      it "creates an active user with a confirmed email and no password" do
+        user = result[:user]
+
+        expect(user).to be_active
+        expect(user.email).to eq(email)
+        expect(user).to be_email_confirmed
+        expect(user.password_hash).to be_nil
+        expect(user.registration_ip_address.to_s).to eq("127.0.0.1")
+      end
+
+      it "does not derive the username from the email by default" do
+        expect(result[:user].username).not_to include("jane")
+      end
+
+      it "derives the username from the email when email-based suggestions are enabled" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+
+        expect(result[:user].username).to eq("jane")
+      end
+
+      it "leaves the name blank rather than reusing the generated username" do
+        expect(result[:user].name).to be_blank
+      end
+
+      context "when a name is provided" do
+        let(:params) { { email:, code:, name: "Jane Doe" } }
+
+        it "saves the name even though it isn't required" do
+          expect(result[:user].name).to eq("Jane Doe")
+        end
+      end
+
+      it "enqueues the welcome message" do
+        SiteSetting.send_welcome_message = true
+
+        expect { result }.to change {
+          Jobs::SendSystemMessage.jobs.count do |job|
+            job["args"][0]["message_type"] == "welcome_user"
+          end
+        }.by(1)
+      end
+    end
+
     context "when required signup fields exist" do
       fab!(:user_field)
 
@@ -117,7 +168,7 @@ RSpec.describe EmailLoginCode::Redeem do
       end
 
       context "when the field values are provided" do
-        let(:params) { { email:, code:, username:, user_fields: { user_field.id.to_s => "Dev" } } }
+        let(:params) { { email:, code:, user_fields: { user_field.id.to_s => "Dev" } } }
 
         it { is_expected.to run_successfully }
 
@@ -134,7 +185,6 @@ RSpec.describe EmailLoginCode::Redeem do
             {
               email:,
               code:,
-              username:,
               user_fields: {
                 user_field.id.to_s => "Dev",
                 hidden_field.id.to_s => "Secret",
@@ -156,7 +206,7 @@ RSpec.describe EmailLoginCode::Redeem do
           Fabricate(:user_field, requirement: "for_all_users", show_on_signup: false)
         end
 
-        let(:params) { { email:, code:, username:, user_fields: { user_field.id.to_s => "Dev" } } }
+        let(:params) { { email:, code:, user_fields: { user_field.id.to_s => "Dev" } } }
 
         it "does not require fields the signup form can't collect" do
           expect(result).to run_successfully
@@ -164,7 +214,7 @@ RSpec.describe EmailLoginCode::Redeem do
       end
 
       context "when user_fields is malformed" do
-        let(:params) { { email:, code:, username:, user_fields: "not-a-hash" } }
+        let(:params) { { email:, code:, user_fields: "not-a-hash" } }
 
         it "fails as a missing field instead of raising" do
           expect { result }.not_to raise_error
@@ -193,13 +243,13 @@ RSpec.describe EmailLoginCode::Redeem do
       end
 
       context "when the name is only whitespace" do
-        let(:params) { { email:, code:, username:, name: "   " } }
+        let(:params) { { email:, code:, name: "   " } }
 
         it { is_expected.to fail_a_policy(:required_full_name_provided) }
       end
 
       context "when a name is provided" do
-        let(:params) { { email:, code:, username:, name: "Jane Doe" } }
+        let(:params) { { email:, code:, name: "Jane Doe" } }
 
         it { is_expected.to run_successfully }
 
@@ -214,128 +264,6 @@ RSpec.describe EmailLoginCode::Redeem do
         let(:email) { user.email }
 
         it { is_expected.to run_successfully }
-      end
-    end
-
-    context "when the username is missing" do
-      before { params.delete(:username) }
-
-      it "requires a username without consuming the code or creating an account" do
-        expect(result).to fail_a_policy(:required_username_provided)
-        expect(login_code.reload.consumed_at).to be_nil
-        expect(User.find_by_email(email)).to be_nil
-      end
-    end
-
-    context "when the username is only whitespace" do
-      let(:username) { "   " }
-
-      it "requires a username without consuming the code or creating an account" do
-        expect(result).to fail_a_policy(:required_username_provided)
-        expect(login_code.reload.consumed_at).to be_nil
-        expect(User.find_by_email(email)).to be_nil
-      end
-    end
-
-    context "when the username is reserved" do
-      let(:username) { "reserved_name" }
-
-      before { SiteSetting.reserved_usernames = "reserved_name" }
-
-      it "rejects the username without consuming the code or creating an account" do
-        expect(result).to fail_a_policy(:username_allowed)
-        expect(login_code.reload.consumed_at).to be_nil
-        expect(User.find_by_email(email)).to be_nil
-      end
-    end
-
-    context "when the username has surrounding whitespace" do
-      let(:username) { "  chosen_username  " }
-
-      it "creates the account with the trimmed username" do
-        expect(result).to run_successfully
-        expect(result[:user].username).to eq(username.strip)
-      end
-    end
-
-    context "when the username is invalid" do
-      let(:username) { "invalid username" }
-
-      it "rejects the username without consuming the code or creating an account" do
-        expect(result).to fail_with_an_invalid_model(:user)
-        expect(login_code.reload.consumed_at).to be_nil
-        expect(User.find_by_email(email)).to be_nil
-      end
-    end
-
-    context "when the username is already taken" do
-      fab!(:other_user) { Fabricate(:user, username: "taken_username") }
-
-      let(:username) { "taken_username" }
-
-      it "rejects the username without consuming the code or creating an account" do
-        expect(result).to fail_with_an_invalid_model(:user)
-        expect(login_code.reload.consumed_at).to be_nil
-        expect(User.find_by_email(email)).to be_nil
-      end
-    end
-
-    context "when the email is unknown" do
-      let(:email) { "jane@example.com" }
-
-      it { is_expected.to run_successfully }
-
-      it "consumes the code" do
-        expect { result }.to change { login_code.reload.consumed_at }.from(nil)
-      end
-
-      it "creates an active user with a confirmed email and no password" do
-        user = result[:user]
-
-        expect(user).to be_active
-        expect(user.email).to eq(email)
-        expect(user).to be_email_confirmed
-        expect(user.password_hash).to be_nil
-        expect(user.registration_ip_address.to_s).to eq("127.0.0.1")
-      end
-
-      it "uses the chosen username and leaves the optional name blank" do
-        expect(result[:user].username).to eq(username)
-        expect(result[:user].name).to be_blank
-      end
-
-      context "when a name is provided" do
-        let(:params) { { email:, code:, username:, name: "Jane Doe" } }
-
-        it "saves the name even though it isn't required" do
-          expect(result[:user].name).to eq("Jane Doe")
-        end
-      end
-
-      it "enqueues the welcome message" do
-        SiteSetting.send_welcome_message = true
-
-        expect { result }.to change {
-          Jobs::SendSystemMessage.jobs.count do |job|
-            job["args"][0]["message_type"] == "welcome_user"
-          end
-        }.by(1)
-      end
-    end
-
-    context "when a staged user chooses an invalid username" do
-      fab!(:staged_user) { Fabricate(:staged, email: "invited@example.com", active: false) }
-
-      let(:email) { staged_user.email }
-      let(:username) { "invalid username" }
-
-      it "preserves the staged account and code for another attempt" do
-        expect { result }.to not_change { staged_user.reload.username }.and(
-          not_change { staged_user.reload.staged },
-        )
-        expect(result).to fail_with_an_invalid_model(:user)
-        expect(staged_user.reload).not_to be_active
-        expect(login_code.reload.consumed_at).to be_nil
       end
     end
 
@@ -377,7 +305,6 @@ RSpec.describe EmailLoginCode::Redeem do
       fab!(:user)
 
       let(:email) { user.email }
-      let(:username) { nil }
 
       it { is_expected.to run_successfully }
 
@@ -391,13 +318,6 @@ RSpec.describe EmailLoginCode::Redeem do
 
           expect(login_code.reload.consumed_at).to be_nil
         end
-      end
-
-      it "ignores a supplied username when logging in" do
-        params[:username] = "replacement_name"
-
-        expect { result }.not_to change { user.reload.username }
-        expect(result).to run_successfully
       end
 
       it "returns the user and consumes the code" do

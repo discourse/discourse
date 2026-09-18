@@ -1,17 +1,7 @@
-import {
-  click,
-  fillIn,
-  find,
-  render,
-  triggerEvent,
-  waitFor,
-} from "@ember/test-helpers";
+import { click, fillIn, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import CodeLoginForm from "discourse/components/code-login-form";
-import ModalContainer from "discourse/components/modal-container";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
@@ -25,23 +15,12 @@ function stubCodeRequest() {
 }
 
 async function goToCodeStep() {
-  await render(<template><CodeLoginForm /><ModalContainer /></template>);
+  await render(<template><CodeLoginForm /></template>);
   await fillIn(
     ".code-login-form__email-step .form-kit__control-input",
     "user@example.com"
   );
   await formKit().submit();
-}
-
-async function selectLocalAvatar() {
-  await click(".code-login-form__avatar");
-  const file = new File(["avatar"], "avatar.png", { type: "image/png" });
-  const transfer = new DataTransfer();
-  transfer.items.add(file);
-  find("#deferred-avatar-upload").files = transfer.files;
-  await triggerEvent("#deferred-avatar-upload", "change");
-  await click(".avatar-selector-modal .btn-primary");
-  return file;
 }
 
 module("Integration | Component | CodeLoginForm", function (hooks) {
@@ -150,7 +129,7 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .doesNotExist("the scoped invitation address cannot be changed");
   });
 
-  test("runs create-account behavior transformers only when submitting the chosen username", async function (assert) {
+  test("runs create-account behavior transformers before verifying a signup code", async function (assert) {
     stubCodeRequest();
 
     let transformed = false;
@@ -161,18 +140,9 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
         return next();
       })
     );
-    pretender.post("/session/login-code/verify", (request) => {
+    pretender.post("/session/login-code/verify", () => {
       verificationRequests++;
-      const params = new URLSearchParams(request.requestBody);
-      return response(
-        params.get("username")
-          ? { success: false, message: "Signup verification failed" }
-          : {
-              username_required: true,
-              username: "jane",
-              avatar_template: "/letter/j.png",
-            }
-      );
+      return response({ error: i18n("email_login_code.invalid_code") });
     });
 
     await render(<template><CodeLoginForm @context="signup" /></template>);
@@ -181,29 +151,17 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       "user@example.com"
     );
     await formKit().submit();
-    await fillIn(".d-otp-input", "123456");
+    await fillIn(".d-otp-input", "000000");
 
-    assert.false(
+    assert.true(
       transformed,
-      "checking the email code does not run account creation challenges"
+      "the signup verification passes through the transformer"
     );
-    await click(".code-login-form__continue-to-site");
-
-    assert.true(transformed, "account creation passes through the transformer");
     assert.strictEqual(
       verificationRequests,
-      2,
-      "the transformer continues to account creation"
+      1,
+      "the transformer continues to code verification"
     );
-    assert
-      .dom(".code-login-form__complete-step")
-      .exists("signup remains on the username step after rejection");
-    assert
-      .dom(".code-login-form__complete-step > p.code-login-form__error")
-      .hasText(
-        "Signup verification failed",
-        "the account creation rejection is shown"
-      );
   });
 
   test("shows a request error without advancing to the code step", async function (assert) {
@@ -530,10 +488,10 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       verifyParams = new URLSearchParams(request.requestBody);
 
       return response({
-        username_required: true,
-        username: "jane",
-        avatar_template: "/letter/j.png",
-        can_upload_avatar: true,
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: true,
+        prefill_username: true,
       });
     });
 
@@ -548,19 +506,6 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert
       .dom(".code-login-form__user-fields-step")
       .doesNotExist("the fields are already answered, so the step is skipped");
-
-    await click(".code-login-form__continue-to-site");
-
-    assert.strictEqual(
-      verifyParams.get("username"),
-      "jane",
-      "the final request submits the chosen username"
-    );
-    assert.strictEqual(
-      verifyParams.get("user_fields[7]"),
-      "true",
-      "the prefilled answer is retained for account creation"
-    );
   });
 
   test("withholds prefilled user fields while a required one is unanswered", async function (assert) {
@@ -597,31 +542,18 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
   test("collects a required full name before completing signup", async function (assert) {
     stubCodeRequest();
-    const redirect = sinon.stub(DiscourseURL, "redirectTo");
 
     const verifyRequests = [];
     pretender.post("/session/login-code/verify", (request) => {
       const params = new URLSearchParams(request.requestBody);
       verifyRequests.push(params);
 
-      if (params.get("username")) {
-        return response({
-          account_created: true,
-          user: {
-            id: 1,
-            username: "jane",
-            avatar_template: "/letter/j.png",
-          },
-          redirect_url: "/latest",
-        });
-      }
-
       if (params.get("name")) {
         return response({
-          username_required: true,
-          username: "jane",
-          avatar_template: "/letter/j.png",
-          can_upload_avatar: true,
+          account_created: true,
+          user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+          can_edit_username: true,
+          prefill_username: true,
         });
       }
 
@@ -660,39 +592,17 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__complete-step").exists();
     assert
       .dom("#code-login-username")
-      .hasValue("jane", "the suggested username is prefilled");
-    await click(".code-login-form__continue-to-site");
-
-    assert.strictEqual(
-      verifyRequests.length,
-      3,
-      "Continue submits account creation"
-    );
-    assert.strictEqual(
-      verifyRequests[2].get("name"),
-      "Jane Doe",
-      "the full name is retained for account creation"
-    );
-    assert.strictEqual(
-      verifyRequests[2].get("username"),
-      "jane",
-      "the chosen username is submitted"
-    );
-    assert.true(
-      redirect.calledOnceWithExactly("/latest"),
-      "signup completes after username selection"
-    );
+      .hasValue("jane", "the assigned username is prefilled");
   });
 
-  test("regenerates a random username suggestion before creating the account", async function (assert) {
-    this.siteSettings.enable_random_usernames = true;
+  test("regenerates a random username suggestion on the account-ready step", async function (assert) {
     stubCodeRequest();
     pretender.post("/session/login-code/verify", () =>
       response({
-        username_required: true,
-        username: "jane",
-        avatar_template: "/letter/j.png",
-        can_upload_avatar: true,
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: true,
+        prefill_username: true,
       })
     );
     pretender.get("/u/random-username.json", () =>
@@ -718,14 +628,13 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
   });
 
   test("keeps continue disabled when the regenerated username is unavailable", async function (assert) {
-    this.siteSettings.enable_random_usernames = true;
     stubCodeRequest();
     pretender.post("/session/login-code/verify", () =>
       response({
-        username_required: true,
-        username: "jane",
-        avatar_template: "/letter/j.png",
-        can_upload_avatar: true,
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: true,
+        prefill_username: true,
       })
     );
     // The default pretender handler reports the username "taken" as
@@ -748,72 +657,15 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__continue-to-site").isDisabled();
   });
 
-  test("previews the avatar for a valid username and uses a person icon otherwise", async function (assert) {
+  test("hides the regenerate button and makes the user pick when random usernames are disabled", async function (assert) {
+    this.siteSettings.enable_random_usernames = false;
     stubCodeRequest();
     pretender.post("/session/login-code/verify", () =>
       response({
-        username_required: true,
-        username: null,
-        avatar_template: null,
-        can_upload_avatar: true,
-      })
-    );
-    pretender.get("/u/check_username", (request) =>
-      response(
-        request.queryParams.username === "taken"
-          ? { available: false }
-          : { available: true, avatar_template: "/letter/j.png" }
-      )
-    );
-
-    await goToCodeStep();
-    await fillIn(".d-otp-input", "123456");
-
-    assert
-      .dom(".code-login-form__avatar .d-icon-user")
-      .exists("a blank username has a neutral person icon");
-    assert
-      .dom(".code-login-form__avatar img")
-      .doesNotExist("the fallback avatar is hidden");
-
-    await fillIn("#code-login-username", "jane");
-
-    assert
-      .dom(".code-login-form__avatar img")
-      .hasAttribute(
-        "src",
-        /letter\/j/,
-        "the preview matches the validated username"
-      );
-    assert
-      .dom(".code-login-form__avatar .d-icon-user")
-      .doesNotExist("the letter avatar replaces the icon");
-
-    await fillIn("#code-login-username", "taken");
-
-    assert
-      .dom(".code-login-form__avatar .d-icon-user")
-      .exists("an unavailable username has no letter preview");
-
-    await fillIn("#code-login-username", "jane");
-    await fillIn("#code-login-username", "");
-
-    assert
-      .dom(".code-login-form__avatar .d-icon-user")
-      .exists("clearing the username restores the icon");
-    assert
-      .dom(".code-login-form__continue-to-site")
-      .isDisabled("a username is still required");
-  });
-
-  test("hides the regenerate button and makes the user pick by default", async function (assert) {
-    stubCodeRequest();
-    pretender.post("/session/login-code/verify", () =>
-      response({
-        username_required: true,
-        username: null,
-        avatar_template: null,
-        can_upload_avatar: true,
+        account_created: true,
+        user: { id: 1, username: "user1", avatar_template: "/letter/u.png" },
+        can_edit_username: true,
+        prefill_username: false,
       })
     );
 
@@ -827,149 +679,25 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__continue-to-site").isDisabled();
   });
 
-  test("keeps a local avatar preview without uploading before account creation", async function (assert) {
+  test("shows a fixed username without editing controls when it can't be changed", async function (assert) {
     stubCodeRequest();
-    this.siteSettings.selectable_avatars_mode = "tl2";
-    let uploads = 0;
-    pretender.post("/uploads.json", () => {
-      uploads++;
-      return response({ id: 42 });
-    });
     pretender.post("/session/login-code/verify", () =>
       response({
-        username_required: true,
-        can_upload_avatar: true,
-        trust_level: 2,
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: false,
+        prefill_username: true,
       })
-    );
-    pretender.get("/u/check_username", () =>
-      response({ available: true, avatar_template: "/letter/j.png" })
     );
 
     await goToCodeStep();
     await fillIn(".d-otp-input", "123456");
-    await selectLocalAvatar();
 
-    const preview = find(".code-login-form__avatar img").getAttribute("src");
-    assert.true(preview.startsWith("blob:"), "the preview uses a local file");
-
-    await fillIn("#code-login-username", "jane");
-    await fillIn("#code-login-username", "");
-
-    assert
-      .dom(".code-login-form__avatar img")
-      .hasAttribute(
-        "src",
-        preview,
-        "username changes preserve the selected image"
-      );
-    assert.strictEqual(
-      uploads,
-      0,
-      "no avatar is uploaded before signup completes"
-    );
-    assert
-      .dom(".code-login-form__continue-to-site")
-      .isDisabled("an avatar does not replace the username requirement");
+    assert.dom(".code-login-form__new-account-username").hasText("jane");
+    assert.dom("#code-login-username").doesNotExist();
+    assert.dom(".code-login-form__username-regen").doesNotExist();
+    assert.dom(".code-login-form__continue-to-site").isEnabled();
   });
-
-  for (const failure of [null, "upload", "pick"]) {
-    test(`creates the account before uploading and continues ${failure ? `after ${failure} failure` : "after selecting the avatar"}`, async function (assert) {
-      stubCodeRequest();
-      const requests = [];
-      const redirect = sinon.stub(DiscourseURL, "redirectTo").callsFake(() => {
-        requests.push("redirect");
-      });
-      const alert = sinon.spy(this.owner.lookup("service:dialog"), "alert");
-      let uploadBody;
-      let creationParams;
-      pretender.post("/session/login-code/verify", (request) => {
-        const params = new URLSearchParams(request.requestBody);
-        let result = { username_required: true, can_upload_avatar: true };
-        if (params.get("username")) {
-          requests.push("create");
-          creationParams = params;
-          result = {
-            account_created: true,
-            user: {
-              id: 1,
-              username: "jane",
-              avatar_template: "/letter/j.png",
-            },
-            can_upload_avatar: true,
-            redirect_url: "/latest",
-          };
-        }
-        return response(result);
-      });
-      pretender.get("/u/check_username", () =>
-        response({ available: true, avatar_template: "/letter/j.png" })
-      );
-      pretender.post("/uploads.json", (request) => {
-        requests.push("upload");
-        uploadBody = request.requestBody;
-        return failure === "upload"
-          ? response(500, { errors: ["Upload failed"] })
-          : response({ id: 42 });
-      });
-      pretender.put("/u/jane/preferences/avatar/pick", (request) => {
-        requests.push("pick");
-        const params = new URLSearchParams(request.requestBody);
-        assert.strictEqual(
-          params.get("upload_id"),
-          "42",
-          "the uploaded image is selected"
-        );
-        return failure === "pick"
-          ? response(500, { errors: ["Selection failed"] })
-          : response({ success: "OK" });
-      });
-
-      await goToCodeStep();
-      await fillIn(".d-otp-input", "123456");
-      const file = await selectLocalAvatar();
-      await fillIn("#code-login-username", "jane");
-      await click(".code-login-form__continue-to-site");
-
-      assert.strictEqual(
-        creationParams.get("username"),
-        "jane",
-        "account creation receives the chosen username"
-      );
-      assert.strictEqual(
-        creationParams.get("code"),
-        "123456",
-        "the verified code accompanies account creation"
-      );
-      assert.deepEqual(
-        requests,
-        failure === "upload"
-          ? ["create", "upload", "redirect"]
-          : ["create", "upload", "pick", "redirect"],
-        "signup finishes after attempting the authenticated avatar upload"
-      );
-      assert.strictEqual(
-        uploadBody.get("type"),
-        "avatar",
-        "the file is uploaded as an avatar"
-      );
-      assert.strictEqual(
-        uploadBody.get("user_id"),
-        "1",
-        "the upload belongs to the newly created user"
-      );
-      assert.strictEqual(
-        uploadBody.get("files[]").name,
-        file.name,
-        "the selected file is uploaded"
-      );
-      assert.true(
-        redirect.calledOnceWithExactly("/latest"),
-        "signup continues to the destination"
-      );
-      assert.false(alert.called, "avatar failures do not show a retry dialog");
-    });
-  }
 
   test("returns to the email step when using a different email", async function (assert) {
     stubCodeRequest();

@@ -696,7 +696,7 @@ login:
         - everyone
   enable_random_usernames:
     client: true
-    default: false
+    default: true
     area: "login"
     depends_on:
       - enable_local_logins_via_code

@@ -153,22 +153,6 @@
     }
   }
 
-  &__avatar-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 144px;
-    height: 144px;
-    border-radius: 50%;
-    background: var(--primary-low);
-    color: var(--primary-medium);
-
-    .d-icon {
-      width: 50%;
-      height: 50%;
-    }
-  }
-
   &__avatar-edit {
     position: absolute;
     right: 0;

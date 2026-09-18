@@ -118,7 +118,6 @@ RSpec.describe "Site archived" do
       expect do
         User::Action::CreateFromVerifiedEmail.call(
           email: "new-code-user@example.com",
-          username: "new-code-user",
           ip_address: "127.0.0.1",
         )
       end.to raise_error(Discourse::SiteArchived)

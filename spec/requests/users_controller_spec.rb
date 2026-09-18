@@ -2237,39 +2237,6 @@ RSpec.describe UsersController do
   end
 
   describe "#check_username" do
-    it "rejects anonymous checks against another account" do
-      get "/u/check_username.json", params: { username: "AvailableName", for_user_id: user1.id }
-
-      expect(response.status).to eq(403)
-    end
-
-    it "rejects checks against another account by a regular user" do
-      sign_in(user1)
-
-      get "/u/check_username.json", params: { username: "AvailableName", for_user_id: admin.id }
-
-      expect(response.status).to eq(403)
-    end
-
-    it "allows a new account to check its own username and avatar" do
-      sign_in(user1)
-
-      get "/u/check_username.json", params: { username: user1.username, for_user_id: user1.id }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["available"]).to eq(true)
-      expect(response.parsed_body["avatar_template"]).to eq(User.default_template(user1.username))
-    end
-
-    it "rejects account-specific checks when username editing is forbidden" do
-      sign_in(user1)
-      SiteSetting.username_change_period = 0
-
-      get "/u/check_username.json", params: { username: "AvailableName", for_user_id: user1.id }
-
-      expect(response.status).to eq(403)
-    end
-
     it "raises an error without any parameters" do
       get "/u/check_username.json"
       expect(response.status).to eq(400)
@@ -2340,9 +2307,6 @@ RSpec.describe UsersController do
       it "returns the username's availability" do
         expect(response.status).to eq(200)
         expect(response.parsed_body["available"]).to eq(true)
-        expect(response.parsed_body["avatar_template"]).to eq(
-          User.default_template(request.params[:username]),
-        )
       end
     end
 
@@ -2395,7 +2359,6 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["available"]).to eq(nil)
         expect(response.parsed_body["errors"]).to be_present
-        expect(response.parsed_body).not_to have_key("avatar_template")
       end
     end
 
@@ -2466,8 +2429,6 @@ RSpec.describe UsersController do
   end
 
   describe "#generate_random_username" do
-    before { SiteSetting.enable_random_usernames = true }
-
     it "returns a generated username" do
       get "/u/random-username.json"
 
