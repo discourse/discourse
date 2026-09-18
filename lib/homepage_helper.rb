@@ -39,7 +39,7 @@ class HomepageHelper
     return true if option.nil? || option[:available].nil?
 
     check = -> do
-      !!option[:available].call(guardian: current_user&.guardian || Guardian.new, request: request)
+      !!option[:available].call(guardian: Guardian.new(current_user, request), request: request)
     rescue StandardError => e
       # Every page load resolves the homepage, so a failing check must not
       # take the site down with it.

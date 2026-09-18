@@ -150,6 +150,20 @@ RSpec.describe HomepageHelper do
         expect(HomepageHelper.resolve(nil, user)).to eq("new")
       end
 
+      it "gives the availability check a guardian bound to the request" do
+        current_request = ActionDispatch::TestRequest.create
+        plugin.register_homepage(
+          "request_bound",
+          name: "plugin.request_bound",
+          path: "/request-bound",
+          route: "plugin#index",
+          available: ->(guardian:, request:) { guardian.request.equal?(request) },
+        )
+        SiteSetting.default_homepage = "request_bound"
+
+        expect(HomepageHelper.resolve(current_request, user)).to eq("request_bound")
+      end
+
       it "passes the request to the availability check" do
         crawler_request = ActionDispatch::TestRequest.create("HTTP_USER_AGENT" => "Googlebot")
         plugin.register_homepage(
