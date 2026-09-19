@@ -538,6 +538,65 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#evaluate_permissions" do
+    fab!(:permitted_group) { Fabricate(:group, visibility_level: Group.visibility_levels[:owners]) }
+
+    it "requires the user to be logged in" do
+      post "/categories/evaluate_permissions.json",
+           params: {
+             group_ids: [permitted_group.id],
+           },
+           as: :json
+
+      expect(response.status).to eq(403)
+    end
+
+    context "when logged in" do
+      before { sign_in(user) }
+
+      it "reports that the user retains access through a hidden group membership" do
+        permitted_group.add(user)
+
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [permitted_group.id],
+             },
+             as: :json
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "success" => "OK",
+          "current_user_will_lose_access" => false,
+        )
+      end
+
+      it "warns when the user would lose access" do
+        post "/categories/evaluate_permissions.json",
+             params: {
+               group_ids: [permitted_group.id],
+             },
+             as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body).to eq(
+          {
+            "errors" => [I18n.t("category.errors.self_lockout")],
+            "extras" => {
+              "current_user_will_lose_access" => true,
+            },
+          },
+        )
+      end
+
+      it "rejects non-integer group IDs" do
+        post "/categories/evaluate_permissions.json", params: { group_ids: ["invalid"] }, as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly("Group ids is invalid")
+      end
+    end
+  end
+
   describe "#create" do
     it "requires the user to be logged in" do
       post "/categories.json"
