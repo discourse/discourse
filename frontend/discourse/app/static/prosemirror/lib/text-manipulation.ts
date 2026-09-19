@@ -347,19 +347,37 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       return;
     }
 
-    const probeType = this.convertFromMarkdown(hval + "x").content.firstChild
-      ?.type;
+    const doc = this.convertFromMarkdown(hval + "x");
+    const probe = doc.firstChild;
+    const isList =
+      probe?.type === this.schema.nodes.bullet_list ||
+      probe?.type === this.schema.nodes.ordered_list;
+    const item = isList ? probe?.firstChild : null;
+    const paragraph = isList ? item?.firstChild : probe?.firstChild;
+    const text = paragraph?.firstChild;
+    const isPlainProbe =
+      doc.childCount === 1 &&
+      probe?.childCount === 1 &&
+      (!isList ||
+        (item?.type === this.schema.nodes.list_item &&
+          item.childCount === 1)) &&
+      paragraph?.type === this.schema.nodes.paragraph &&
+      paragraph.childCount === 1 &&
+      text?.isText &&
+      text.text === "x" &&
+      text.marks.length === 0;
 
     if (
-      probeType === this.schema.nodes.bullet_list ||
-      probeType === this.schema.nodes.ordered_list
+      isPlainProbe &&
+      isList &&
+      (probe.type !== this.schema.nodes.ordered_list || probe.attrs.order === 1)
     ) {
-      this.#toggleListType(probeType);
+      this.#toggleListType(probe.type);
       this.focus();
       return;
     }
 
-    if (probeType === this.schema.nodes.blockquote) {
+    if (isPlainProbe && probe.type === this.schema.nodes.blockquote) {
       const command = inNode(this.view.state, this.schema.nodes.blockquote)
         ? lift
         : wrapIn(this.schema.nodes.blockquote);

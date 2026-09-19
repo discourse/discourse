@@ -338,6 +338,54 @@ module(
       assert.strictEqual(getMarkdown(state).trim(), "? hello world");
     });
 
+    test("preserves additional content in list prefixes", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "* [x] ",
+        "list_item"
+      );
+
+      assert
+        .dom(".ProseMirror li")
+        .hasText("[x] hello world", "the prefix content is retained");
+    });
+
+    test("preserves additional content in blockquote prefixes", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "> prefix ",
+        "blockquote_text"
+      );
+
+      assert
+        .dom(".ProseMirror blockquote")
+        .hasText("prefix hello world", "the prefix content is retained");
+    });
+
+    test("preserves the starting number of an ordered list", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applyList(
+        state.textManipulation.getSelected(),
+        "3. ",
+        "list_item"
+      );
+
+      assert
+        .dom(".ProseMirror ol")
+        .hasAttribute("start", "3", "the parsed starting number is retained");
+    });
+
     test("handles multi-line selection in fallback path", async function (assert) {
       const state = await setupEditor();
       setContent(state, "line one\nline two");
