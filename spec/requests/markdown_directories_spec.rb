@@ -14,6 +14,8 @@ RSpec.describe "Markdown directories" do
     SiteSetting.tagging_enabled = true
   end
 
+  after { category.clear_url_cache }
+
   it "serves both directories by suffix and negotiation, with discovery on HTML" do
     %w[categories tags].each do |directory|
       get "/#{directory}.md", headers: { "ACCEPT" => "application/json" }

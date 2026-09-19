@@ -11,6 +11,22 @@ RSpec.describe "Markdown endpoints" do
   fab!(:post) { Fabricate(:post, topic: topic, user: user, raw: "Visible body") }
 
   before { SiteSetting.experimental_markdown_endpoints = true }
+  after { category.clear_url_cache }
+
+  it "keeps HTML tag-intersection redirects out of Markdown routes" do
+    tag = Fabricate(:tag)
+
+    [false, true].each do |enabled|
+      SiteSetting.experimental_markdown_endpoints = enabled
+      get "/tags/intersection/#{tag.name}/#{tag.name}", headers: { "ACCEPT" => "text/html" }
+      expect(response).to redirect_to("/tag/#{tag.name}")
+      follow_redirect!
+      expect(response).to redirect_to(tag.url)
+      follow_redirect!
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq("text/html")
+    end
+  end
 
   def vary_tokens
     response.headers.fetch("Vary", "").split(",").map(&:strip)

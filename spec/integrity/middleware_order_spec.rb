@@ -3,6 +3,7 @@
 RSpec.describe "Middleware order" do
   let(:expected_middlewares) do
     [
+      MarkdownEndpoint::VaryMiddleware,
       BlockRequestsMiddleware,
       TestMultisiteMiddleware,
       Middleware::ProcessingRequest,

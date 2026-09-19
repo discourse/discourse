@@ -23,9 +23,6 @@ Discourse::Application.routes.draw do
         constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
 
     scope format: false,
-          defaults: {
-            format: :md,
-          },
           constraints: {
             topic_id: /\d+/,
             post_number: /\d+/,
@@ -46,8 +43,14 @@ Discourse::Application.routes.draw do
         "t/:slug/:topic_id/:post_number" => "topics#show",
         "t/:slug/:topic_id" => "topics#show",
       }.each do |path, action|
-        get "#{path}.md", to: action
-        get path, to: action, constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
+        # Require the format so HTML URL generation cannot select a Markdown route.
+        get "#{path}.:format", to: action, constraints: { format: /md/ }
+        get path,
+            to: action,
+            defaults: {
+              format: :md,
+            },
+            constraints: MarkdownEndpoint::RequestConstraint.new(accept: true)
       end
     end
   end
