@@ -84,9 +84,9 @@ module JsonApiKit
           %i[fields bad_value] => {
             title: "Invalid fields value",
             detail: ->(error) do
-              "#{error.member_parameter(error.options[:type])} must be a list of field names."
+              "#{error.member_parameter(error.resource_type)} must be a list of field names."
             end,
-            source: ->(error) { error.member_parameter(error.options[:type]) },
+            source: ->(error) { error.member_parameter(error.resource_type) },
           },
           %i[sort bad_shape] => {
             title: "Invalid sort parameter",
