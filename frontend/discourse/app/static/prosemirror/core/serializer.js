@@ -13,6 +13,14 @@ export default class Serializer {
       state.write(state.inTable ? "<br>" : "\n");
 
     this.nodes.text = (state, node) => {
+      // A text run whose entire content is a single `[..]` pair comes from
+      // typed BBCode (e.g. `[details="Summary"]`, `[/details]`, `[spoiler]`).
+      // Escaping the brackets to `\[..\]` would let discourse-math's LaTeX
+      // delimiter mode consume the line as display math and lose the BBCode.
+      if (/^\s*\[[^\]]*\]\s*$/.test(node.text)) {
+        state.text(node.text, false);
+        return;
+      }
       state.text(node.text, !state.inAutolink);
     };
 
