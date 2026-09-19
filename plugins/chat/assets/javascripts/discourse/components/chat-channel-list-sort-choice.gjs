@@ -25,6 +25,13 @@ export const SORT_OPTIONS = [
     descriptionKey: "chat.channel_list.sort.priority_description",
     labelKey: "chat.channel_list.sort.priority",
   },
+  {
+    value: CHAT_CHANNEL_LIST_SORTS.UNREAD_FIRST,
+    className: "chat-channel-list-sort-menu__unread-first --with-description",
+    dataOptionId: "unread_first",
+    descriptionKey: "chat.channel_list.sort.unread_first_description",
+    labelKey: "chat.channel_list.sort.unread_first",
+  },
 ];
 
 /**
