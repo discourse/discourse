@@ -13,7 +13,14 @@ RSpec.describe JsonApiKit::Query::Individual do
       attribute :title
     end
   end
-  let(:request) { JsonApiKit::Request::Individual.new(params, guardian:) }
+  let(:request) do
+    JsonApiKit::Request::Individual.new(
+      JsonApiKit::Request::Input.with_defaults(params, resource:, default_sorts:),
+      guardian:,
+      default_sorts:,
+    )
+  end
+  let(:default_sorts) { JsonApiKit::Edition.current.default_sorts }
   let(:params) { { id: topic.id } }
   let(:guardian) { Guardian.new }
   let(:title) { JsonApiKit::Name::Field.new(value: "title", type: "topics") }

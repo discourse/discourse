@@ -4,8 +4,8 @@ RSpec.describe JsonApiKit::Document::Individual do
   subject(:document) { described_class.new(reading, client:, fieldsets:) }
 
   fab!(:topic) { Fabricate(:topic, title: "One record read on its own") }
-  let(:glossary) { JsonApiKit::Glossary.kit }
-  let(:client) { JsonApiKit::Client.new(guardian:, glossary:, urls:) }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:client) { JsonApiKit::Client.new(guardian:, edition:, urls:) }
   let(:fieldsets) { JsonApiKit::Request::Fieldsets.parse({}) }
   let(:resource) do
     Class.new(JsonApiKit::Resource) do

@@ -282,8 +282,8 @@ RSpec.describe JsonApiKit::Resource do
   end
 
   describe ".default_sort" do
-    it "orders a listing as the resource declares" do
-      expect(topic_resource.order.leading.name).to eq(:last_posted_at)
+    it "retains the declared ordering" do
+      expect(topic_resource.default_ordering).to eq("ran_at" => :desc)
     end
 
     context "when the resource declares no such sort" do
@@ -294,6 +294,67 @@ RSpec.describe JsonApiKit::Resource do
             default_sort creatd_at: :asc
           end
         }.to raise_error(JsonApiKit::Resource::Sorting::UndeclaredDefault, /creatd_at/)
+      end
+    end
+
+    context "when the direction is invalid" do
+      it "rejects the declaration" do
+        expect {
+          Class.new(described_class) do
+            model Topic
+            sort :created_at
+            default_sort created_at: :sideways
+          end
+        }.to raise_error(ArgumentError, /unknown direction: sideways/)
+      end
+    end
+  end
+
+  describe ".default_ordering" do
+    subject(:ordering) { topic_resource.default_ordering(historical_ordering) }
+
+    let(:historical_ordering) { { created_at: :asc } }
+
+    it "returns the supplied ordering with string names" do
+      expect(ordering).to eq("created_at" => :asc)
+    end
+
+    it "returns an immutable ordering" do
+      expect(ordering).to be_frozen
+    end
+
+    context "when a historical ordering has been requested" do
+      before { ordering }
+
+      it "preserves the resource's current default" do
+        expect(topic_resource.default_ordering).to eq("ran_at" => :desc)
+      end
+    end
+
+    context "when the ordering is empty" do
+      let(:historical_ordering) { {} }
+
+      it "preserves the empty ordering" do
+        expect(ordering).to be_empty
+      end
+    end
+
+    context "when the sort is undeclared" do
+      let(:historical_ordering) { { unknown: :asc } }
+
+      it "rejects the ordering" do
+        expect { ordering }.to raise_error(
+          JsonApiKit::Resource::Sorting::UndeclaredDefault,
+          /unknown/,
+        )
+      end
+    end
+
+    context "when the direction is invalid" do
+      let(:historical_ordering) { { created_at: :sideways } }
+
+      it "rejects the ordering" do
+        expect { ordering }.to raise_error(ArgumentError, /unknown direction: sideways/)
       end
     end
   end
@@ -528,7 +589,7 @@ RSpec.describe JsonApiKit::Resource do
     end
 
     context "when the resource declares no anchor by that name" do
-      it { is_expected.to be_anchored_by(anchor_name: :first_unread) }
+      it { is_expected.to be_anchored_by(anchor_name: :first_unread, ordering:) }
     end
   end
 
@@ -579,6 +640,35 @@ RSpec.describe JsonApiKit::Resource do
         topic_resource,
         an_object_having_attributes(ordering: { "created_at" => :asc }, guardian:),
         scoped_to: nil,
+      )
+    end
+
+    context "when the resource's default sort changes between queries" do
+      fab!(:first_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 1)) }
+      fab!(:second_topic) { Fabricate(:topic, created_at: Time.utc(2026, 8, 2)) }
+
+      before do
+        allow(JsonApiKit::Query::Collection).to receive(:new).and_call_original
+        topic_resource.default_sort created_at: :asc
+      end
+
+      it "uses the updated default for the next query" do
+        expect { topic_resource.default_sort created_at: :desc }.to change {
+          topic_resource.all(guardian:).records.map(&:record)
+        }.from([first_topic, second_topic]).to([second_topic, first_topic])
+      end
+    end
+  end
+
+  describe ".find" do
+    before { allow(JsonApiKit::Query::Individual).to receive(:new) }
+
+    it "resolves the default ordering before constructing the request" do
+      topic_resource.find(12, guardian:)
+
+      expect(JsonApiKit::Query::Individual).to have_received(:new).with(
+        topic_resource,
+        an_object_having_attributes(ordering: { "ran_at" => :desc }, guardian:),
       )
     end
   end
