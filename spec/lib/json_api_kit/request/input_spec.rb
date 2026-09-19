@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe JsonApiKit::Request::Input do
-  let(:resource) do
+  let(:resource) { resource_class.new(guardian:, edition:) }
+  let(:guardian) { Guardian.new }
+  let(:edition) { JsonApiKit::Edition.current }
+  let(:resource_class) do
     Class.new(JsonApiKit::Resource) do
       model Topic
       type :topics
@@ -9,7 +12,7 @@ RSpec.describe JsonApiKit::Request::Input do
       default_sort title: :asc
     end
   end
-  let(:default_sorts) { JsonApiKit::Edition.current.default_sorts }
+  let(:default_sorts) { edition.default_sorts }
 
   describe ".with_defaults" do
     subject(:parameters) { described_class.with_defaults(input, resource:, default_sorts:) }

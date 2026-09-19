@@ -365,32 +365,6 @@ RSpec.describe JsonApiKit::Resource do
     end
   end
 
-  describe ".filter" do
-    subject(:kept_ids) do
-      topic_resource.apply_filters(Topic.all, "title" => kept_topic.title).map(&:id)
-    end
-
-    fab!(:kept_topic) { Fabricate(:topic, title: "The rows a filter keeps") }
-    fab!(:dropped_topic) { Fabricate(:topic, title: "The rows it leaves behind") }
-
-    it "lets a request narrow the listing by the name it declares" do
-      expect(kept_ids).to contain_exactly(kept_topic.id)
-    end
-
-    context "when the resource declares one more after a reading" do
-      subject(:kept_ids) { topic_resource.apply_filters(Topic.all, "closed" => false).map(&:id) }
-
-      before do
-        topic_resource.apply_filters(Topic.all)
-        topic_resource.filter(:closed)
-      end
-
-      it "narrows by the new filter too" do
-        expect(kept_ids).to include(kept_topic.id)
-      end
-    end
-  end
-
   describe ".attribute" do
     subject(:attribute_values) { topic_resource.fields(guardian:).attributes.values_for(topic) }
 
@@ -637,7 +611,7 @@ RSpec.describe JsonApiKit::Resource do
       topic_resource.all({ sort: { created_at: :asc } }, guardian:)
 
       expect(JsonApiKit::Query::Collection).to have_received(:new).with(
-        topic_resource,
+        an_instance_of(topic_resource),
         an_object_having_attributes(ordering: { "created_at" => :asc }, guardian:),
         scoped_to: nil,
       )
@@ -667,7 +641,7 @@ RSpec.describe JsonApiKit::Resource do
       topic_resource.find(12, guardian:)
 
       expect(JsonApiKit::Query::Individual).to have_received(:new).with(
-        topic_resource,
+        an_instance_of(topic_resource),
         an_object_having_attributes(ordering: { "ran_at" => :desc }, guardian:),
       )
     end

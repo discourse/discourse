@@ -43,7 +43,7 @@ RSpec.describe JsonApiKit::Sideloads do
     JsonApiKit::Request::Collection.new(
       {},
       guardian: Guardian.new,
-      default_sorts: JsonApiKit::Edition.current.default_sorts,
+      edition: JsonApiKit::Edition.current,
     )
   end
   let(:schema) { JsonApiKit::Schema.new(Topic) }

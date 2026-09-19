@@ -11,8 +11,6 @@ module JsonApiKit
       end
 
       class_methods do
-        delegate :default_sorts, to: "JsonApiKit::Edition.current", prefix: :current, private: true
-
         def scope(&block)
           self.declared_scope = block
         end
@@ -22,28 +20,39 @@ module JsonApiKit
           declared_scope.call(guardian)
         end
 
-        def all(params = {}, guardian:, scoped_to: nil, default_sorts: current_default_sorts)
-          Query::Collection.new(
-            self,
-            Request::Collection.new(
-              Request::Input.with_defaults(params, resource: self, default_sorts:),
-              guardian:,
-              default_sorts:,
-            ),
-            scoped_to:,
-          )
+        def all(params = {}, guardian:, scoped_to: nil, edition: Edition.current)
+          new(guardian:, edition:).all(params, scoped_to:)
         end
 
-        def find(id, params = {}, guardian:, default_sorts: current_default_sorts)
-          Query::Individual.new(
-            self,
-            Request::Individual.new(
-              Request::Input.with_defaults(params, resource: self, default_sorts:).merge(id:),
-              guardian:,
-              default_sorts:,
-            ),
-          )
+        def find(id, params = {}, guardian:, edition: Edition.current)
+          new(guardian:, edition:).find(id, params)
         end
+      end
+
+      delegate :scope_for, to: :class
+      delegate :default_sorts, to: :edition, private: true
+
+      def all(params = {}, scoped_to: nil)
+        Query::Collection.new(
+          self,
+          Request::Collection.new(
+            Request::Input.with_defaults(params, resource: self, default_sorts:),
+            guardian:,
+            edition:,
+          ),
+          scoped_to:,
+        )
+      end
+
+      def find(id, params = {})
+        Query::Individual.new(
+          self,
+          Request::Individual.new(
+            Request::Input.with_defaults(params, resource: self, default_sorts:).merge(id:),
+            guardian:,
+            edition:,
+          ),
+        )
       end
     end
   end

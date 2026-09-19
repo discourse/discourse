@@ -5,13 +5,13 @@ module JsonApiKit
     LIST = ","
     SORT_DIRECTIONS = { "-" => :desc, "" => :asc }.freeze
 
-    attr_reader :guardian, :default_sorts
+    attr_reader :guardian, :edition
 
-    def initialize(params = {}, guardian:, default_sorts:)
+    def initialize(params = {}, guardian:, edition:)
       @params = ActiveSupport::HashWithIndifferentAccess.new(params)
       @page_params = @params[:page].to_h.symbolize_keys
       @guardian = guardian
-      @default_sorts = default_sorts
+      @edition = edition
     end
 
     def ordering = params.fetch(:sort)

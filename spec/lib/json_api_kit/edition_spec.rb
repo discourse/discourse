@@ -18,7 +18,9 @@ RSpec.describe JsonApiKit::Edition do
       .new(__FILE__)
   end
   let(:changes) { [version_change] }
-  let(:resource) do
+  let(:resource) { resource_class.new(guardian:, edition:) }
+  let(:guardian) { Guardian.new }
+  let(:resource_class) do
     Class.new(JsonApiKit::Resource) do
       model Topic
       type :topics
@@ -81,6 +83,12 @@ RSpec.describe JsonApiKit::Edition do
   describe "#default_sorts" do
     it "retains the resolver for the edition" do
       expect(edition.default_sorts).to equal(edition.default_sorts)
+    end
+  end
+
+  describe "#removed_filters" do
+    it "retains the resolver for the edition" do
+      expect(edition.removed_filters).to equal(edition.removed_filters)
     end
   end
 end

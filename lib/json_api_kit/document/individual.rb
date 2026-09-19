@@ -7,9 +7,7 @@ module JsonApiKit
         def input_class = Request::Input::Individual
 
         def for(id, parameters, resource:, client:)
-          build(parameters, resource:, client:) do
-            resource.find(id, it, guardian: client.guardian, default_sorts: client.default_sorts)
-          end
+          build(parameters, resource:, client:) { |params, instance| instance.find(id, params) }
         end
       end
 

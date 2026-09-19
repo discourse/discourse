@@ -5,7 +5,9 @@ RSpec.describe JsonApiKit::Request::Input::Individual do
 
   let(:parameters) { {} }
   let(:edition) { JsonApiKit::Edition.current }
-  let(:resource) do
+  let(:resource) { resource_class.new(guardian:, edition:) }
+  let(:guardian) { Guardian.new }
+  let(:resource_class) do
     Class.new(JsonApiKit::Resource) do
       model Topic
       type :topics

@@ -6,9 +6,10 @@ module JsonApiKit
       private
 
       def build(raw, resource:, client:)
+        resource = resource.new(guardian: client.guardian, edition: client.edition)
         input = input_class.new(raw, resource:, edition: client.edition)
         return Errors.new(*input.refusals) if input.invalid?
-        assemble(new(yield(input.to_h), client:, fieldsets: input.fieldsets))
+        assemble(new(yield(input.to_h, resource), client:, fieldsets: input.fieldsets))
       rescue Error => error
         Errors.new(error)
       end

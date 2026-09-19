@@ -40,27 +40,20 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
   let(:requested) { JsonApiKit::Page::Requested.for }
 
   describe "#listing" do
-    subject(:related_listing) do
-      relationship.listing(params, guardian:, scoped_to:, default_sorts:)
-    end
+    subject(:related_listing) { relationship.listing(params, guardian:, scoped_to:, edition:) }
 
     let(:params) { { fields: { "users" => %w[username] } } }
     let(:guardian) { Guardian.new(author) }
     let(:scoped_to) { JsonApiKit::Scoping.for(User.where(id: author.id)) }
     let(:listing) { instance_double(JsonApiKit::Query::Collection) }
-    let(:default_sorts) { JsonApiKit::Edition.current.default_sorts }
+    let(:edition) { JsonApiKit::Edition.current }
 
     before { allow(users_resource).to receive(:all).and_return(listing) }
 
     it "asks the resource on the other side for a listing" do
       related_listing
 
-      expect(users_resource).to have_received(:all).with(
-        params,
-        guardian:,
-        scoped_to:,
-        default_sorts:,
-      )
+      expect(users_resource).to have_received(:all).with(params, guardian:, scoped_to:, edition:)
     end
 
     it "returns the listing that resource reads" do

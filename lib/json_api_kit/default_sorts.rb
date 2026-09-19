@@ -7,7 +7,7 @@ module JsonApiKit
       @orderings = {}
     end
 
-    def for(resource) = orderings[resource] ||= History.new(resource:, changes:).ordering
+    def for(resource) = orderings[resource.class] ||= History.new(resource:, changes:).ordering
 
     private
 
