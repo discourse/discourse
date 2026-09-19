@@ -26,6 +26,24 @@ RSpec.describe JsonApiKit::Declarations::Sorts do
     end
   end
 
+  describe "#with" do
+    subject(:combined) { sorts.with([sort_class.new(:title)]) }
+
+    let(:unique_by) { %i[created_at id] }
+
+    it "combines current and additional declarations" do
+      expect(combined.names).to contain_exactly("created_at", "ran_at", "title")
+    end
+
+    it "preserves the unique keys" do
+      expect(combined.keyset("title" => :desc).keys.map(&:name)).to eq(%i[title created_at id])
+    end
+
+    it "preserves the original collection" do
+      expect { combined.names }.not_to change(sorts, :names)
+    end
+  end
+
   describe "#keyset" do
     subject(:keyset) { sorts.keyset(ordering) }
 
