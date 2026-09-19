@@ -124,6 +124,58 @@ module(
         .hasText("hello world", "both marks are applied");
     });
 
+    test("preserves formatting inside a block wrapper", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applySurroundSelection("> **", "**", "bold_text");
+
+      assert
+        .dom(".ProseMirror blockquote strong")
+        .hasText("hello world", "the quote retains its bold formatting");
+      assert.strictEqual(
+        getMarkdown(state).trim(),
+        "> **hello world**",
+        "both formatting layers survive serialization"
+      );
+    });
+
+    test("preserves literal content inside a block wrapper", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applySurroundSelection(
+        "> prefix ",
+        " suffix",
+        "blockquote_text"
+      );
+
+      assert
+        .dom(".ProseMirror blockquote")
+        .hasText(
+          "prefix hello world suffix",
+          "the wrapper retains its prefix and suffix"
+        );
+    });
+
+    test("preserves nested block wrappers", async function (assert) {
+      const state = await setupEditor();
+      setContent(state, "hello world");
+      selectAll(state);
+
+      state.textManipulation.applySurroundSelection(
+        "> > ",
+        "",
+        "blockquote_text"
+      );
+
+      assert
+        .dom(".ProseMirror blockquote blockquote")
+        .hasText("hello world", "both quote levels are retained");
+    });
+
     test("removes mark when already applied", async function (assert) {
       const state = await setupEditor();
       setContent(state, "**hello world**");

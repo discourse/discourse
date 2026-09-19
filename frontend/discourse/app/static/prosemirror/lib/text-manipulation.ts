@@ -801,6 +801,15 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
 
     // Standalone parsing can prefer a block variant of inline markup.
     if (outer.type.name !== "paragraph") {
+      const plainParagraph = this.schema.nodes.paragraph.create(
+        null,
+        this.schema.text("x")
+      );
+      // Native wrapping preserves only the outer node, not its parsed contents.
+      if (outer.childCount !== 1 || !outer.firstChild?.eq(plainParagraph)) {
+        return null;
+      }
+
       const inlineVariant = this.#probeInlineVariant(head, tail);
       return {
         kind: "node",
