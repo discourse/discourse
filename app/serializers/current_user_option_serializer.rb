@@ -29,7 +29,8 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :show_original_content,
              :send_shortcut,
              :automatically_translate,
-             :understood_languages
+             :understood_languages,
+             :bulk_permanent_topic_deletion
 
   def likes_notifications_disabled
     object.likes_notifications_disabled?

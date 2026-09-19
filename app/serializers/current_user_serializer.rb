@@ -88,7 +88,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :impersonation_expires_at,
              :can_change_post_owner,
              :show_site_owner_onboarding,
-             :can_run_design_wizard
+             :can_run_design_wizard,
+             :can_enable_bulk_permanent_topic_deletion
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -185,6 +186,15 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_run_design_wizard
+    true
+  end
+
+  def include_can_enable_bulk_permanent_topic_deletion?
+    object.admin? && SiteSetting.can_permanently_delete &&
+      SiteSetting.allow_bulk_permanent_topic_deletion
+  end
+
+  def can_enable_bulk_permanent_topic_deletion
     true
   end
 
