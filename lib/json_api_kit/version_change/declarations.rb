@@ -12,6 +12,8 @@ module JsonApiKit
 
       def merged_attributes(**) = declare(Declaration::MergedAttributes.new(type, **))
 
+      def split_attribute(**) = declare(Declaration::SplitAttribute.new(type, **))
+
       def renamed_sort(from:, to:)
         declare(Declaration::RenamedName.new(type, [Name::Sort], from:, to:))
       end

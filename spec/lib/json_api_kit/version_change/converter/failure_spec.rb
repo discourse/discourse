@@ -31,5 +31,17 @@ RSpec.describe JsonApiKit::VersionChange::Converter::Failure do
         )
       end
     end
+
+    context "when several names share one historical source" do
+      subject(:conversion_failure) { failure.convert_names { field } }
+
+      let(:failure) do
+        described_class.new([field.with(value: "width"), field.with(value: "height")])
+      end
+
+      it "reports the historical source once" do
+        expect(conversion_failure.names).to eq([field])
+      end
+    end
   end
 end
