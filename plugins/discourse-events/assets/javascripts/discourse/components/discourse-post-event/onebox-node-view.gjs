@@ -43,6 +43,8 @@ export function topicIdFromUrl(url) {
 export default class DiscoursePostEventOneboxNodeView extends Component {
   constructor() {
     super(...arguments);
+    // Keep rendered HTML from inheriting the editor's whitespace preservation.
+    this.args.dom.classList.add("onebox-wrapper");
     this.args.onSetup?.(this);
   }
 
